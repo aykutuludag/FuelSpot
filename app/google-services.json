@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "655393776544",
+    "firebase_url": "https://fuelify-123.firebaseio.com",
+    "project_id": "fuelify-123",
+    "storage_bucket": "fuelify-123.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655393776544:android:8e6a8cbf721eea50",
+        "android_client_info": {
+          "package_name": "org.uusoftware.fuelify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655393776544-0iqgk8pvu5ioi4923onerjpebfb1bsgh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.uusoftware.fuelify",
+            "certificate_hash": "da7384eec643c9e587a822971595db6a7b68aac7"
+          }
+        },
+        {
+          "client_id": "655393776544-rk5fjntbijbra2534bmg71vuh9q1sp5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655393776544-rk5fjntbijbra2534bmg71vuh9q1sp5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

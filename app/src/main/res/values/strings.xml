@@ -1,0 +1,125 @@
+<resources>
+    <string name="app_name">Fuelify</string>
+    <string name="facebook_app_id">380327342377274</string>
+    <string name="fb_login_protocol_scheme">fb380327342377274</string>
+
+    <string name="title_activity_login">Giriş yap</string>
+    <string name="account_created">Hesabınız oluşturuldu. Şimdi Sorbie zamanı&#8230;</string>
+    <string name="error_login_no_account">Hesap bulunamadı.</string>
+    <string name="error_login_fail">Giriş yaparken hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>
+    <string name="error_login_cancel">Giriş işlemi kullanıcı tarafından iptal edildi</string>
+    <string name="add_question">Yeni soru ekle!</string>
+    <string name="saveprofile">Log out</string>
+    <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_stations">Stations</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_car_information">CarInformation</string>
+    <string name="title_activity_vehicle_selection">Vehicle Selection</string>
+
+    <string-array name="car_makers">
+        <item>Acura</item>
+        <item>Alfa Romeo</item>
+        <item>Anadol</item>
+        <item>Aston Martin</item>
+        <item>Audi</item>
+        <item>Bentley</item>
+        <item>BMW</item>
+        <item>Bugatti</item>
+        <item>Buick</item>
+        <item>Cadillac</item>
+        <item>Chery</item>
+        <item>Chevrolet</item>
+        <item>Chrysler</item>
+        <item>Citroën</item>
+        <item>Dacia</item>
+        <item>Daewoo</item>
+        <item>Daihatsu</item>
+        <item>Dodge</item>
+        <item>DS Automobiles</item>
+        <item>Eagle</item>
+        <item>Ferrari</item>
+        <item>Fiat</item>
+        <item>Ford</item>
+        <item>GAZ</item>
+        <item>Geely</item>
+        <item>Honda</item>
+        <item>Hyundai</item>
+        <item>Ikco</item>
+        <item>Infiniti</item>
+        <item>Isuzu</item>
+        <item>Jaguar</item>
+        <item>Kia</item>
+        <item>Kral</item>
+        <item>Lada</item>
+        <item>Lamborghini</item>
+        <item>Lancia</item>
+        <item>Lexus</item>
+        <item>Lincoln</item>
+        <item>Lotus</item>
+        <item>Maserati</item>
+        <item>Maybach</item>
+        <item>Mazda</item>
+        <item>Mercury</item>
+        <item>MG</item>
+        <item>Mini</item>
+        <item>Mitsubishi</item>
+        <item>Moskwitsch</item>
+        <item>Nissan</item>
+        <item>Oldsmobile</item>
+        <item>Opel</item>
+        <item>Pagani</item>
+        <item>Peugeot</item>
+        <item>Plymouth</item>
+        <item>Pontiac</item>
+        <item>Porsche</item>
+        <item>Proton</item>
+        <item>Renault</item>
+        <item>Rolls-Royce</item>
+        <item>Rover</item>
+        <item>Saab</item>
+        <item>Seat</item>
+        <item>Skoda</item>
+        <item>Smart</item>
+        <item>Smart</item>
+        <item>Subaru</item>
+        <item>Suzuki</item>
+        <item>Tata</item>
+        <item>Tesla</item>
+        <item>Tofaş</item>
+        <item>Toyota</item>
+        <item>Volkswagen</item>
+        <item>Volvo</item>
+    </string-array>
+
+    <string-array name="renault_models">
+        <item>Clio</item>
+        <item>Espace</item>
+        <item>Fluence</item>
+        <item>Fluence Z.E.</item>
+        <item>Laguna</item>
+        <item>Latitude</item>
+        <item>Megane</item>
+        <item>Modus</item>
+        <item>Safrane</item>
+        <item>Symbol</item>
+        <item>Twizy</item>
+        <item>ZOE</item>
+        <item>Scenic</item>
+        <item>Grand Scenic</item>
+        <item>Talisman</item>
+        <item>Twingo</item>
+        <item>R 5</item>
+        <item>R 9</item>
+        <item>R 11</item>
+        <item>R 12</item>
+        <item>R 19</item>
+        <item>R 21</item>
+        <item>R 25</item>
+    </string-array>
+</resources>
