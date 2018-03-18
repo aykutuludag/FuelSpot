@@ -65,6 +65,7 @@
         <item>Maserati</item>
         <item>Maybach</item>
         <item>Mazda</item>
+        <item>Mercedes</item>
         <item>Mercury</item>
         <item>MG</item>
         <item>Mini</item>
@@ -86,7 +87,6 @@
         <item>Seat</item>
         <item>Skoda</item>
         <item>Smart</item>
-        <item>Smart</item>
         <item>Subaru</item>
         <item>Suzuki</item>
         <item>Tata</item>
@@ -95,31 +95,5 @@
         <item>Toyota</item>
         <item>Volkswagen</item>
         <item>Volvo</item>
-    </string-array>
-
-    <string-array name="renault_models">
-        <item>Clio</item>
-        <item>Espace</item>
-        <item>Fluence</item>
-        <item>Fluence Z.E.</item>
-        <item>Laguna</item>
-        <item>Latitude</item>
-        <item>Megane</item>
-        <item>Modus</item>
-        <item>Safrane</item>
-        <item>Symbol</item>
-        <item>Twizy</item>
-        <item>ZOE</item>
-        <item>Scenic</item>
-        <item>Grand Scenic</item>
-        <item>Talisman</item>
-        <item>Twingo</item>
-        <item>R 5</item>
-        <item>R 9</item>
-        <item>R 11</item>
-        <item>R 12</item>
-        <item>R 19</item>
-        <item>R 21</item>
-        <item>R 25</item>
-    </string-array>
+    </string-array>>
 </resources>

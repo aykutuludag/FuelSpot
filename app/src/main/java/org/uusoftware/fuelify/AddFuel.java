@@ -39,13 +39,8 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
 
-    static final int REQUEST_EXTERNAL_STORAGE = 0;
-    static String[] PERMISSIONS_STORAGE = {android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     String UPLOAD_URL = "http://granadagame.com/Sorbie/add_question.php";
-    String choosenImagePath;
     String question;
-
-    ImageView imageHolder;
     Button shareButton;
     Bitmap bitmap;
     EditText questionText;
@@ -68,20 +63,7 @@ public class AddFuel extends AppCompatActivity {
         window = this.getWindow();
         coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
 
-       /* imageHolder = findViewById(R.id.photoHolder);
-        imageHolder.setImageBitmap(bitmap);
-        imageHolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (verifyStoragePermissions()) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.MainTheme)
-                            .pickPhoto(UploadActivity.this);
-                } else {
-                    ActivityCompat.requestPermissions(UploadActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-                }
-            }
-        });
+       /*
 
         questionText = findViewById(R.id.questionHolder);
         questionText.addTextChangedListener(new TextWatcher() {
@@ -122,31 +104,12 @@ public class AddFuel extends AppCompatActivity {
         });*/
     }
 
-    public boolean verifyStoragePermissions() {
-        boolean hasStorage;
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            int permission = ActivityCompat.checkSelfPermission(AddFuel.this, Manifest.permission.CAMERA);
-            hasStorage = permission == PackageManager.PERMISSION_GRANTED;
-        } else {
-            hasStorage = true;
-        }
-        return hasStorage;
-    }
-
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) AddFuel.this.getSystemService(Context.CONNECTIVITY_SERVICE);
         return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
     }
 
-    public String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
-    }
-
-    private void uploadImage() {
+    private void uploadData() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
@@ -176,7 +139,7 @@ public class AddFuel extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("photo", getStringImage(bitmap));
+                params.put("photo", bitmap.toString());
                 params.put("question", question);
                 params.put("username", username);
                 params.put("user_photo", photo);
@@ -203,69 +166,6 @@ public class AddFuel extends AppCompatActivity {
             toolbar.setBackgroundColor(color2);
         }
     }
-
-    public void createFolder() {
-        File folder = new File(Environment.getExternalStorageDirectory() + "/Sorbie");
-        folder.mkdirs();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
-                    createFolder();
-                } else {
-                    Toast.makeText(AddFuel.this, "Error 001: Permission request rejected by user...", Toast.LENGTH_LONG)
-                            .show();
-                }
-                break;
-            }
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-      /*  switch (requestCode) {
-           case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    choosenImagePath = aq.get(0);
-
-                    System.out.println("file://" + choosenImagePath);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/Sorbie");
-                    folder.mkdirs();
-
-                    CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-                    String fileName = now + ".jpg";
-
-                    UCrop.of(Uri.parse("file://" + choosenImagePath), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(UploadActivity.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        imageHolder.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                }
-                break;
-        }*/
-    }
-
 
     @Override
     public void onBackPressed() {
