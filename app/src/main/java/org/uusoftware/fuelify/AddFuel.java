@@ -30,12 +30,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+
 import java.util.Hashtable;
 import java.util.Map;
-import static org.uusoftware.fuelify.MainActivity.photo;
-import static org.uusoftware.fuelify.MainActivity.username;
+
+import static org.uusoftware.fuelify.AnalyticsApplication.photo;
+import static org.uusoftware.fuelify.AnalyticsApplication.username;
 
 public class AddFuel extends AppCompatActivity {
 

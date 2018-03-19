@@ -220,7 +220,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView_exp3"
             android:layout_marginTop="8dp"
-            android:hint="12.750 km" />
+            android:hint="12.750 km"
+            android:inputType="numberSigned|numberDecimal" />
 
     </RelativeLayout>
 
@@ -230,6 +231,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:clickable="false"
         app:backgroundTint="#f0f0f0"
         app:srcCompat="@drawable/icon_go" />
 

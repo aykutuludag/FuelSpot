@@ -20,14 +20,13 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String name, email, photo, gender, birthday, location, username, job;
+
     FragmentTransaction transaction;
     Window window;
     Toolbar toolbar;
     BottomNavigationView navigation;
     BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     boolean doubleBackToExitPressedOnce;
-    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Window
         window = this.getWindow();
-
         coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
 
-        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        name = prefs.getString("Name", "-");
-        email = prefs.getString("Email", "-");
-        photo = prefs.getString("ProfilePhoto", "http://uusoftware.org/Fuelify/profile.png");
-        gender = prefs.getString("Gender", "-");
-        birthday = prefs.getString("Birthday", "-");
-        location = prefs.getString("Location", "-");
-        username = prefs.getString("UserName", "-");
-        job = prefs.getString("Job", "-");
+        AnalyticsApplication.getVariables(this);
 
         navigation = findViewById(R.id.bottom_navigation);
         mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -44,17 +44,17 @@ import java.text.Normalizer;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.uusoftware.fuelify.MainActivity.birthday;
-import static org.uusoftware.fuelify.MainActivity.email;
-import static org.uusoftware.fuelify.MainActivity.gender;
-import static org.uusoftware.fuelify.MainActivity.location;
-import static org.uusoftware.fuelify.MainActivity.name;
-import static org.uusoftware.fuelify.MainActivity.photo;
-import static org.uusoftware.fuelify.MainActivity.username;
+import static org.uusoftware.fuelify.AnalyticsApplication.birthday;
+import static org.uusoftware.fuelify.AnalyticsApplication.email;
+import static org.uusoftware.fuelify.AnalyticsApplication.gender;
+import static org.uusoftware.fuelify.AnalyticsApplication.location;
+import static org.uusoftware.fuelify.AnalyticsApplication.name;
+import static org.uusoftware.fuelify.AnalyticsApplication.photo;
+import static org.uusoftware.fuelify.AnalyticsApplication.username;
+
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    Tracker t;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     SharedPreferences prefs;
@@ -71,17 +71,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         // Analytics
-        t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
+        Tracker t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
         t.setScreenName("Login");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         isSigned = prefs.getBoolean("isSigned", false);
+
+        //Layout objects
         pb = findViewById(R.id.progressBar);
         signInButton = findViewById(R.id.sign_in_button);
         loginButton = findViewById(R.id.login_button);
 
+        //Check whether is logged or not
         if (isSigned) {
             signInButton.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
@@ -89,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(LoginActivity.this, VehicleSelection.class);
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
                 }
@@ -119,6 +123,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(Plus.API)
                 .build();
+        //END
 
         /* Facebook Login */
         callbackManager = CallbackManager.Factory.create();
@@ -149,6 +154,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     }
                                     prefs.edit().putString("UserName", username).apply();
 
+                                    Toast.makeText(LoginActivity.this, "BAŞARILIASD", Toast.LENGTH_SHORT).show();
+
                                     saveUserInfo();
                                 }
                             }
@@ -165,6 +172,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
             }
         });
+        //END
     }
 
     private void googleSignIn() {
@@ -180,7 +188,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onResponse(String s) {
                         loading.dismiss();
-                        Toast.makeText(LoginActivity.this, s, Toast.LENGTH_LONG).show();
                         signInButton.setVisibility(View.INVISIBLE);
                         prefs.edit().putBoolean("isSigned", true).apply();
                         new Handler().postDelayed(new Runnable() {
@@ -215,7 +222,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("gender", gender);
                 params.put("birthday", birthday);
                 params.put("location", location);
-                params.put("accType", "Android");
 
                 //returning parameters
                 return params;
@@ -237,7 +243,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 if (acct != null) {
-
                     //GOOGLE ID
                     String googleID = acct.getId();
                     prefs.edit().putString("GoogleAccountID", googleID).apply();
@@ -264,7 +269,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         photo = acct.getPhotoUrl().toString();
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     } else {
-                        photo = "http://granadagame.com/Sorbie/profile.png";
+                        photo = "http://uusoftware.org/Fuelify/profile.png";
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     }
 
