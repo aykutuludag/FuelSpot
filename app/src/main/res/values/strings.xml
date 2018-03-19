@@ -2,6 +2,7 @@
     <string name="app_name">Fuelify</string>
     <string name="facebook_app_id">380327342377274</string>
     <string name="fb_login_protocol_scheme">fb380327342377274</string>
+    <string name="google_maps_api_key">AIzaSyBZ5TaWeSnfsCUDidUDeLu64bausAmMpcU</string>
 
     <string name="title_activity_login">Giriş yap</string>
     <string name="account_created">Hesabınız oluşturuldu. Şimdi Sorbie zamanı&#8230;</string>
@@ -95,5 +96,6 @@
         <item>Toyota</item>
         <item>Volkswagen</item>
         <item>Volvo</item>
-    </string-array>>
+    </string-array>
+    >
 </resources>

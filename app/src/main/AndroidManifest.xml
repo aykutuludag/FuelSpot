@@ -3,6 +3,7 @@
     package="org.uusoftware.fuelify">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".AnalyticsApplication"
@@ -56,6 +57,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <!-- Google Maps -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_api_key"/>
 
         <!-- Firebase -->
         <meta-data
