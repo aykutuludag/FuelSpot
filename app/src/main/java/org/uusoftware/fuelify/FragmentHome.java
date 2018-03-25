@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -30,6 +31,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -69,6 +72,7 @@ public class FragmentHome extends Fragment {
 
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -76,16 +80,22 @@ public class FragmentHome extends Fragment {
                     public void onMyLocationChange(Location arg0) {
                         mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
+
+                        Circle circle =  googleMap.addCircle(new CircleOptions()
+                                .center(new LatLng(mCurrentLocation.latitude, mCurrentLocation.longitude))
+                                .radius(3000)
+                                .strokeColor(Color.RED)
+                                .fillColor(Color.parseColor("#90ffffff")));
                     }
                 });
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(13).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12.5f).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                         (cameraPosition));
 
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
-                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=2500&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
