@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/navigation_addQuestion"
+        android:id="@+id/action_addFuel"
         android:icon="@drawable/add"
-        android:title="@string/add_question"
+        android:title="@string/add_fuel"
         app:showAsAction="always" />
 
 </menu>

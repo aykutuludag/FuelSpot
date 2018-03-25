@@ -1,6 +1,5 @@
 package org.uusoftware.fuelify.service;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
@@ -17,8 +16,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import static android.content.ContentValues.TAG;
-import static org.uusoftware.fuelify.MainActivity.lat;
-import static org.uusoftware.fuelify.MainActivity.lon;
+import static org.uusoftware.fuelify.AnalyticsApplication.lat;
+import static org.uusoftware.fuelify.AnalyticsApplication.lon;
 
 public class LocationService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,

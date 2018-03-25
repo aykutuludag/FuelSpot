@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,13 +38,27 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import eu.amirs.JSON;
+
+import static org.uusoftware.fuelify.AnalyticsApplication.lat;
+import static org.uusoftware.fuelify.AnalyticsApplication.lon;
 
 public class FragmentHome extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
     LatLng mCurrentLocation = new LatLng(0, 0);
+
+    //Station variables
+    String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
+    String[] stationName = new String[99];
+    String[] placeID = new String[99];
+    String[] vicinity = new String[99];
+    String[] location = new String[99];
+    String[] photoURLs = new String[99];
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,105 +68,11 @@ public class FragmentHome extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        loadMap();
+        mCurrentLocation = new LatLng(lat, lon);
 
-        return rootView;
-    }
-
-    void loadMap() {
         checkLocationPermission();
 
-        //Detect location and set on map
-        MapsInitializer.initialize(getActivity().getApplicationContext());
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                googleMap.setMyLocationEnabled(true);
-
-                googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                googleMap.getUiSettings().setScrollGesturesEnabled(false);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                    @Override
-                    public void onMyLocationChange(Location arg0) {
-                        mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(arg0.getLatitude(), arg0.getLongitude())).title("It's Me!"));
-
-                        Circle circle =  googleMap.addCircle(new CircleOptions()
-                                .center(new LatLng(mCurrentLocation.latitude, mCurrentLocation.longitude))
-                                .radius(3000)
-                                .strokeColor(Color.RED)
-                                .fillColor(Color.parseColor("#90ffffff")));
-                    }
-                });
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12.5f).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
-                        (cameraPosition));
-
-                RequestQueue queue = Volley.newRequestQueue(getActivity());
-                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
-
-                // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                //System.out.println("Response is: " + response);
-                                JSON json = new JSON(response);
-
-                                for (int i = 0; i < json.key("results").count(); i++) {
-                                    String placeID = json.key("results").index(i).key("place_id").stringValue();
-                                    String name = json.key("results").index(i).key("name").stringValue();
-                                    double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
-                                    double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-
-                                    LatLng sydney = new LatLng(lat, lon);
-                                    googleMap.addMarker(new MarkerOptions().position(sydney).title(name).snippet(placeID));
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("That didn't work!");
-                    }
-                });
-
-                // Add the request to the RequestQueue.
-                queue.add(stringRequest);
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
+        return rootView;
     }
 
     public void checkLocationPermission() {
@@ -183,7 +105,147 @@ public class FragmentHome extends Fragment {
 
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
             mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+            loadMap();
         }
+    }
+
+    void loadMap() {
+        //Detect location and set on map
+        MapsInitializer.initialize(getActivity().getApplicationContext());
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+                googleMap.setMyLocationEnabled(true);
+
+                googleMap.getUiSettings().setCompassEnabled(true);
+                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(Location arg0) {
+                        mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
+                    }
+                });
+
+                //Call once after map loaded then call every 10 seconds
+                updateMapObject();
+
+                final Handler ha = new Handler();
+                ha.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //call function
+                        updateMapObject();
+                        ha.postDelayed(this, 10000);
+                    }
+                }, 10000);
+            }
+        });
+    }
+
+    private void updateMapObject() {
+        final Circle circle = googleMap.addCircle(new CircleOptions()
+                .center(new LatLng(mCurrentLocation.latitude, mCurrentLocation.longitude))
+                .radius(3000)
+                .strokeColor(Color.RED));
+
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12.5f).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+                (cameraPosition));
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //System.out.println("Response is: " + response);
+                        JSON json = new JSON(response);
+
+                        for (int i = 0; i < json.key("results").count(); i++) {
+                            stationName[i] = json.key("results").index(i).key("name").stringValue();
+                            vicinity[i] = json.key("results").index(i).key("vicinity").stringValue();
+                            placeID[i] = json.key("results").index(i).key("place_id").stringValue();
+
+                            double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                            double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+                            location[i] = lat + ";" + lon;
+
+                            LatLng sydney = new LatLng(lat, lon);
+                            googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(placeID[i]));
+
+                            registerStations(stationName[i], vicinity[i], location[i], placeID[i], "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("That didn't work!");
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
+        final Handler ha = new Handler();
+        ha.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                circle.remove();
+                googleMap.clear();
+                ha.postDelayed(this, 10000);
+            }
+        }, 10000);
+    }
+
+    private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        //   Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("name", name);
+                params.put("vicinity", vicinity);
+                params.put("location", location);
+                params.put("googleID", placeID);
+                params.put("photoURL", photoURL);
+                params.put("timeStamp", String.valueOf(System.currentTimeMillis()));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     @Override
@@ -193,6 +255,7 @@ public class FragmentHome extends Fragment {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(getActivity(), "İZİN VERİLDİ", Toast.LENGTH_LONG).show();
                         loadMap();
                     }
                 } else {
@@ -201,5 +264,29 @@ public class FragmentHome extends Fragment {
             }
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 }

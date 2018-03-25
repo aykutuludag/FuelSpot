@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     boolean doubleBackToExitPressedOnce;
-    public static double lat, lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +80,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       getMenuInflater().inflate(R.menu.current_place_menu, menu);
+       getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_addFuel:
+                Intent intent = new Intent(MainActivity.this, AddFuel.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
