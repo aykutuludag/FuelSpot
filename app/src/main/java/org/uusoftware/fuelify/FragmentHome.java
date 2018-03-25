@@ -24,9 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -44,9 +41,6 @@ public class FragmentHome extends Fragment {
     private GoogleMap googleMap;
     LatLng mCurrentLocation = new LatLng(0, 0);
 
-    protected GeoDataClient mGeoDataClient;
-    protected PlaceDetectionClient mPlaceDetectionClient;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
@@ -62,12 +56,6 @@ public class FragmentHome extends Fragment {
 
     void loadMap() {
         checkLocationPermission();
-
-        // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
-
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(getActivity(), null);
 
         //Detect location and set on map
         MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -108,7 +96,7 @@ public class FragmentHome extends Fragment {
                                 //System.out.println("Response is: " + response);
                                 JSON json = new JSON(response);
 
-                                for (int i = 0; i < json.key("results").count(); i++){
+                                for (int i = 0; i < json.key("results").count(); i++) {
                                     String placeID = json.key("results").index(i).key("place_id").stringValue();
                                     String name = json.key("results").index(i).key("name").stringValue();
                                     double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
@@ -129,29 +117,6 @@ public class FragmentHome extends Fragment {
                 queue.add(stringRequest);
             }
         });
-
-        /* @SuppressLint("MissingPermission")
-       Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
-        placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
-                PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-                for (PlaceLikelihood likelihood : likelyPlaces) {
-                    Log.i(TAG, String.format("Place '%s' has likelihood: %g", likelihood.getPlace().getName(), likelihood.getLikelihood()));
-                    if (likelihood.getPlace().getPlaceTypes().contains(Place.TYPE_GAS_STATION)) {
-                        // For dropping a marker at a point on the Map
-                        LatLng sydney = new LatLng(likelihood.getPlace().getLatLng().latitude, likelihood.getPlace().getLatLng().longitude);
-                        googleMap.addMarker(new MarkerOptions().position(sydney).title(likelihood.getPlace().getName().toString()).snippet(likelihood.getPlace().getPlaceTypes().toString()));
-                        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                                likelihood.getPlace().getName(),
-                                likelihood.getLikelihood()));
-                    }
-                }
-
-                likelyPlaces.release();
-            }
-        });*/
     }
 
     @Override
@@ -178,7 +143,7 @@ public class FragmentHome extends Fragment {
         mMapView.onLowMemory();
     }
 
-    public boolean checkLocationPermission() {
+    public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -200,7 +165,6 @@ public class FragmentHome extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
-            return false;
         } else {
             //Request location updates:
             LocationManager locationManager = (LocationManager)
@@ -209,8 +173,6 @@ public class FragmentHome extends Fragment {
 
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
             mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-            return true;
         }
     }
 
