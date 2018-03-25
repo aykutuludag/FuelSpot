@@ -1,8 +1,7 @@
 package org.uusoftware.fuelify;
 
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +17,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
 
+public class MainActivity extends AppCompatActivity {
 
     FragmentTransaction transaction;
     Window window;
@@ -27,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     boolean doubleBackToExitPressedOnce;
+    public static double lat, lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,26 +75,14 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Fragment fragment = new FragmentHome();
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+            navigation.setSelectedItemId(R.id.navigation_home);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.navigation, menu);
+       getMenuInflater().inflate(R.menu.current_place_menu, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navigation_addQuestion:
-                Intent i = new Intent(MainActivity.this, AddFuel.class);
-                startActivity(i);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     public void coloredBars(int color1, int color2) {
