@@ -8,15 +8,4 @@
         android:layout_width="match_parent"
         android:layout_height="170dp" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="170dp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/feedView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/mapView" />
 </RelativeLayout>
