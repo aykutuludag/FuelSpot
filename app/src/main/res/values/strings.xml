@@ -13,9 +13,25 @@
     <string name="saveprofile">Log out</string>
     <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_profile">Profile</string>
-    <string name="title_stations">Stations</string>
+    <string name="title_home"></string>
+    <string name="title_profile"></string>
+    <string name="title_stations"></string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string name="nav_text_home">Home</string>
+    <string name="nav_text_stations">Profile</string>
+    <string name="nav_text_profile">Stations</string>
+    <string name="nav_text_news">Haberler</string>
+    <string name="nav_text_help">Yardım</string>
+    <string name="nav_text_premium">Reklamsız sürüme geçin</string>
+    <string name="nav_text_puanla">Uygulamayı puanla</string>
+    <string name="nav_text_support">Uygulamayı paylaş</string>
+    <string name="nav_text_beta">Beta sürüme geçin</string>
+    <string name="nav_text_version"><small>Fuelify v1.0</small></string>
+
+    <!-- NavMenu Statues -->
+    <string name="navigation_drawer_open">Yan menü açıldı</string>
+    <string name="navigation_drawer_close">Yan menü kapandı</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -98,5 +114,4 @@
         <item>Volvo</item>
     </string-array>
     <string name="title_activity_permission">PermissionActivity</string>
-    >
 </resources>
