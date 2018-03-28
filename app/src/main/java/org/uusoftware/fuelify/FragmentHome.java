@@ -15,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -38,7 +42,15 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.uusoftware.fuelify.adapter.StationAdapter;
+import org.uusoftware.fuelify.model.StationItem;
+
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import eu.amirs.JSON;
@@ -60,6 +72,12 @@ public class FragmentHome extends Fragment {
     String[] location = new String[99];
     String[] photoURLs = new String[99];
 
+    RecyclerView mRecyclerView;
+    GridLayoutManager mLayoutManager;
+    RecyclerView.Adapter mAdapter;
+    List<StationItem> feedsList;
+    RequestQueue queue;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
@@ -71,6 +89,17 @@ public class FragmentHome extends Fragment {
         mCurrentLocation = new LatLng(lat, lon);
 
         checkLocationPermission();
+
+        // Analytics
+        Tracker t = ((AnalyticsApplication) getActivity().getApplicationContext()).getDefaultTracker();
+        t.setScreenName("Home");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        feedsList = new ArrayList<>();
+        mRecyclerView = rootView.findViewById(R.id.feedView);
+
+        queue = Volley.newRequestQueue(getActivity());
 
         return rootView;
     }
@@ -142,14 +171,15 @@ public class FragmentHome extends Fragment {
                     public void run() {
                         //call function
                         updateMapObject();
-                        ha.postDelayed(this, 10000);
+                        ha.postDelayed(this, 30000);
                     }
-                }, 10000);
+                }, 30000);
             }
         });
     }
 
     private void updateMapObject() {
+        //Draw a circle with radius of 3000m
         final Circle circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(mCurrentLocation.latitude, mCurrentLocation.longitude))
                 .radius(3000)
@@ -160,7 +190,7 @@ public class FragmentHome extends Fragment {
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        //Search stations in a radius of 3000m
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
@@ -181,10 +211,13 @@ public class FragmentHome extends Fragment {
                             double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
                             location[i] = lat + ";" + lon;
 
+                            photoURLs[i] = "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png";
+
                             LatLng sydney = new LatLng(lat, lon);
                             googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(placeID[i]));
 
-                            registerStations(stationName[i], vicinity[i], location[i], placeID[i], "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png");
+                            fetchPrices(placeID[i]);
+                            //registerStations(stationName[i], vicinity[i], location[i], placeID[i], "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png");
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -197,15 +230,14 @@ public class FragmentHome extends Fragment {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
-        final Handler ha = new Handler();
-        ha.postDelayed(new Runnable() {
+        final Handler ha2 = new Handler();
+        ha2.postDelayed(new Runnable() {
             @Override
             public void run() {
                 circle.remove();
-                googleMap.clear();
-                ha.postDelayed(this, 10000);
+                ha2.postDelayed(this, 30000);
             }
-        }, 10000);
+        }, 30000);
     }
 
     private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
@@ -239,6 +271,7 @@ public class FragmentHome extends Fragment {
                 //returning parameters
                 return params;
             }
+
         };
 
         //Creating a Request Queue
@@ -246,6 +279,69 @@ public class FragmentHome extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    public void fetchPrices(final String placeID) {
+        feedsList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelify/fetch-prices.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            for (int i = 0; i < res.length(); i++) {
+                                JSONObject obj = res.getJSONObject(i);
+
+                                System.out.println(response);
+
+                                StationItem item = new StationItem();
+                                item.setID(obj.getInt("id"));
+                                item.setStationName(obj.getString("name"));
+                                item.setVicinity(obj.getString("vicinity"));
+                                item.setLocation(obj.getString("location"));
+                                item.setGasolinePrice(obj.getDouble("gasolinePrice"));
+                                item.setDieselPrice(obj.getDouble("dieselPrice"));
+                                item.setLpgPrice(obj.getDouble("lpgPrice"));
+                                item.setElectricityPrice(obj.getDouble("electricityPrice"));
+                                item.setGoogleMapID(obj.getString("googleID"));
+                                item.setPhotoURL(obj.getString("photoURL"));
+                                item.setLastUpdated(obj.getLong("lastUpdated"));
+                                feedsList.add(item);
+
+                                mAdapter = new StationAdapter(getActivity(), feedsList);
+                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("placeID", placeID);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
     }
 
     @Override
