@@ -153,8 +153,6 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setZoomGesturesEnabled(true);
                 googleMap.getUiSettings().setScrollGesturesEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                //First call, other calls will due to location changes
-                updateMapObject();
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                     @Override

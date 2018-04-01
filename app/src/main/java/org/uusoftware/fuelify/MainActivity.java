@@ -1,8 +1,10 @@
 package org.uusoftware.fuelify;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +25,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.kobakei.ratethisapp.RateThisApp;
 
 
@@ -34,6 +42,80 @@ public class MainActivity extends AppCompatActivity {
     boolean doubleBackToExitPressedOnce;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
+    public static int adCount;
+    static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
+
+    public static boolean isNetworkConnected(Context mContext) {
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
+    }
+
+    //First try to load Audience Network, fails load AdMob
+    public static void AudienceNetwork(final Context mContext) {
+        if (adCount < 2) {
+            facebookInterstitial = new InterstitialAd(mContext, mContext.getString(R.string.interstitial_facebook));
+            facebookInterstitial.setAdListener(new InterstitialAdListener() {
+                @Override
+                public void onInterstitialDisplayed(Ad ad) {
+                    // Interstitial displayed callback
+                }
+
+                @Override
+                public void onInterstitialDismissed(Ad ad) {
+                    // Interstitial dismissed callback
+                    AudienceNetwork(mContext);
+                }
+
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    // Ad error callback
+                    AdMob(mContext);
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    // Show the ad when it's done loading.
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+                    // Ad clicked callback
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+            });
+            facebookInterstitial.loadAd();
+        }
+    }
+
+    public static void AdMob(final Context mContext) {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
+        admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
+        admobInterstitial.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                AudienceNetwork(mContext);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+                AudienceNetwork(mContext);
+            }
+        });
+        admobInterstitial.loadAd(adRequest);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

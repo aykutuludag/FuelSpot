@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -51,6 +50,8 @@ import static org.uusoftware.fuelify.AnalyticsApplication.location;
 import static org.uusoftware.fuelify.AnalyticsApplication.name;
 import static org.uusoftware.fuelify.AnalyticsApplication.photo;
 import static org.uusoftware.fuelify.AnalyticsApplication.username;
+import static org.uusoftware.fuelify.MainActivity.AudienceNetwork;
+import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -64,6 +65,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     int googleSign = 9001;
     ProgressBar pb;
     String REGISTER_URL = "http://uusoftware.org/Fuelify/register.php";
+    boolean premium = false;
+    Handler handler;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         isSigned = prefs.getBoolean("isSigned", false);
+        premium = prefs.getBoolean("Premium", false);
+        handler = new Handler();
+        intent = new Intent(LoginActivity.this, MainActivity.class);
 
         //Layout objects
         pb = findViewById(R.id.progressBar);
@@ -90,21 +97,48 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             signInButton.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             pb.setVisibility(View.VISIBLE);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            }, 2000);
+
+            if (isNetworkConnected(LoginActivity.this) && !premium) {
+                AudienceNetwork(LoginActivity.this);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (MainActivity.facebookInterstitial != null && MainActivity.facebookInterstitial.isAdLoaded()) {
+                            //Facebook ads loaded he will see Facebook
+                            startActivity(intent);
+                            MainActivity.facebookInterstitial.show();
+                            MainActivity.adCount++;
+                            MainActivity.facebookInterstitial = null;
+                        } else if (MainActivity.admobInterstitial != null && MainActivity.admobInterstitial.isLoaded()) {
+                            //Facebook ads doesnt loaded he will see AdMob
+                            startActivity(intent);
+                            MainActivity.admobInterstitial.show();
+                            MainActivity.adCount++;
+                            MainActivity.admobInterstitial = null;
+                        } else {
+                            //Both ads doesn't loaded.
+                            startActivity(intent);
+                        }
+                        finish();
+                    }
+                }, 3000);
+            } else {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                }, 1500);
+            }
         } else {
             signInButton.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.VISIBLE);
             pb.setVisibility(View.GONE);
         }
 
-          /* Google Sign-In */
+        /* Google Sign-In */
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,9 +187,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                         username = tmpusername;
                                     }
                                     prefs.edit().putString("UserName", username).apply();
-
-                                    Toast.makeText(LoginActivity.this, "BAŞARILIASD", Toast.LENGTH_SHORT).show();
-
                                     saveUserInfo();
                                 }
                             }
@@ -210,7 +241,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 

@@ -13,6 +13,8 @@
     <string name="saveprofile">Log out</string>
     <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="interstitial_admob">ca-app-pub-1576175228836763/7543225289</string>
+    <string name="interstitial_facebook">380327342377274_384927721917236</string>
 
     <!-- Nav Drawer Menu Items -->
     <string name="nav_text_home">Home</string>
