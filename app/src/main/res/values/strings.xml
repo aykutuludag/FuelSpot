@@ -111,4 +111,5 @@
         <item>Volvo</item>
     </string-array>
     <string name="title_activity_permission">PermissionActivity</string>
+    <string name="title_activity_station_details">StationDetails</string>
 </resources>

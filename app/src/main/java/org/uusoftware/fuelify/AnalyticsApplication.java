@@ -40,8 +40,8 @@ public class AnalyticsApplication extends Application {
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
-        lat = Double.parseDouble(prefs.getString("lastLoclat", "0"));
-        lon = Double.parseDouble(prefs.getString("lastLoclon", "0"));
+        lat = Double.parseDouble(prefs.getString("lat", "0"));
+        lon = Double.parseDouble(prefs.getString("lon", "0"));
     }
 
     synchronized public Tracker getDefaultTracker() {

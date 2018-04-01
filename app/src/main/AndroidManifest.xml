@@ -90,6 +90,15 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <activity
+            android:name=".StationDetails"
+            android:label="@string/title_activity_station_details"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -1,7 +1,8 @@
 package org.uusoftware.fuelify.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.squareup.picasso.Picasso;
 
 import org.uusoftware.fuelify.R;
+import org.uusoftware.fuelify.StationDetails;
 import org.uusoftware.fuelify.model.StationItem;
 
 import java.util.Date;
@@ -21,7 +23,6 @@ import java.util.List;
 
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
-    SharedPreferences prefs;
     private List<StationItem> feedItemList;
     private Context mContext;
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -29,11 +30,17 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         public void onClick(View view) {
             ViewHolder holder = (ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
-            int eventID = feedItemList.get(position).getID();
-
-           /* Intent intent = new Intent(mContext, SingleEvent.class);
-            intent.putExtra("EVENT_ID", eventID);
-            mContext.startActivity(intent);*/
+            Intent intent = new Intent(mContext, StationDetails.class);
+            intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
+            intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
+            intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
+            intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
+            intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
+            intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
+            intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
+            intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
+            intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+            mContext.startActivity(intent);
         }
     };
 
@@ -43,7 +50,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_stations, viewGroup, false);
         return new ViewHolder(v);
     }
@@ -51,10 +58,11 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
-        StationItem feedItem = feedItemList.get(i);
+        final StationItem feedItem = feedItemList.get(i);
 
         // Setting stationName
         viewHolder.stationName.setText(feedItem.getStationName());
+        viewHolder.vicinity.setText(feedItem.getVicinity());
 
         // Setting prices
         viewHolder.gasolinePrice.setText(String.valueOf(feedItem.getGasolinePrice()));
@@ -62,13 +70,16 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.lpgPrice.setText(String.valueOf(feedItem.getLpgPrice()));
         viewHolder.electricityPrice.setText(String.valueOf(feedItem.getElectricityPrice()));
 
+        //Distance
+        viewHolder.distance.setText((int) feedItem.getDistance() + " m");
+
         //Last updated
         Date date = new Date(feedItem.getLastUpdated());
         viewHolder.lastUpdated.setReferenceTime(date.getTime());
 
-        //Header pic
-       /* Picasso.with(mContext).load(feedItem.getPhotoURL()).error(R.drawable.header_station).placeholder(R.drawable.header_station)
-                .into(viewHolder.stationPic);*/
+        //Station Icon
+        Picasso.with(mContext).load(feedItem.getPhotoURL()).error(R.drawable.header_station).placeholder(R.drawable.header_station)
+                .into(viewHolder.stationPic);
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);
@@ -82,14 +93,16 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView stationName, gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
+        TextView stationName, vicinity, gasolinePrice, dieselPrice, lpgPrice, electricityPrice, distance;
         RelativeTimeTextView lastUpdated;
         ImageView stationPic;
         RelativeLayout background;
+//
 
         ViewHolder(View itemView) {
             super(itemView);
             stationName = itemView.findViewById(R.id.station_name);
+            vicinity = itemView.findViewById(R.id.station_vicinity);
             gasolinePrice = itemView.findViewById(R.id.gasoline_price);
             dieselPrice = itemView.findViewById(R.id.diesel_price);
             lpgPrice = itemView.findViewById(R.id.lpg_price);
@@ -97,6 +110,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             lastUpdated = itemView.findViewById(R.id.lastUpdated);
             stationPic = itemView.findViewById(R.id.station_photo);
             background = itemView.findViewById(R.id.single_station);
+            distance = itemView.findViewById(R.id.distance_ofStation);
         }
     }
 }

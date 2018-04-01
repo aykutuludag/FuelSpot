@@ -4,13 +4,13 @@ package org.uusoftware.fuelify;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -61,7 +61,7 @@ import static org.uusoftware.fuelify.AnalyticsApplication.lon;
 public class FragmentStations extends Fragment {
 
     MapView mMapView;
-    LatLng mCurrentLocation = new LatLng(0, 0);
+    LatLng mCurrentLocation = new LatLng(lat, lon);
     //Station variables
     String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
     String[] stationName = new String[99];
@@ -75,9 +75,11 @@ public class FragmentStations extends Fragment {
     List<StationItem> feedsList;
     RequestQueue queue;
     private GoogleMap googleMap;
+    SharedPreferences prefs;
+    Circle circle;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
@@ -87,19 +89,16 @@ public class FragmentStations extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        //Variables
+        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        feedsList = new ArrayList<>();
+        mRecyclerView = rootView.findViewById(R.id.feedView);
+        queue = Volley.newRequestQueue(getActivity());
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        mCurrentLocation = new LatLng(lat, lon);
-
         checkLocationPermission();
-
-        feedsList = new ArrayList<>();
-        mRecyclerView = rootView.findViewById(R.id.feedView);
-
-        queue = Volley.newRequestQueue(getActivity());
-
 
         return rootView;
     }
@@ -154,33 +153,47 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setZoomGesturesEnabled(true);
                 googleMap.getUiSettings().setScrollGesturesEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                //First call, other calls will due to location changes
+                updateMapObject();
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                     @Override
                     public void onMyLocationChange(Location arg0) {
-                        mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
+                        Location loc1 = new Location("");
+                        loc1.setLatitude(lat);
+                        loc1.setLongitude(lon);
+
+                        Location loc2 = new Location("");
+                        loc2.setLatitude(arg0.getLatitude());
+                        loc2.setLongitude(arg0.getLongitude());
+
+                        float distanceInMeters = loc1.distanceTo(loc2);
+                        if (distanceInMeters >= 100) {
+                            lat = arg0.getLatitude();
+                            lon = arg0.getLongitude();
+                            prefs.edit().putString("lat", String.valueOf(lat)).apply();
+                            prefs.edit().putString("lat", String.valueOf(lon)).apply();
+                            mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
+
+                            if (googleMap != null) {
+                                googleMap.clear();
+                            }
+
+                            if (circle != null) {
+                                circle.remove();
+                            }
+
+                            updateMapObject();
+                        }
                     }
                 });
-
-                //Call once after map loaded then call every 10 seconds
-                updateMapObject();
-
-                final Handler ha = new Handler();
-                ha.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //call function
-                        updateMapObject();
-                        ha.postDelayed(this, 30000);
-                    }
-                }, 30000);
             }
         });
     }
 
     private void updateMapObject() {
         //Draw a circle with radius of 3000m
-        final Circle circle = googleMap.addCircle(new CircleOptions()
+        circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(mCurrentLocation.latitude, mCurrentLocation.longitude))
                 .radius(3000)
                 .strokeColor(Color.RED));
@@ -216,8 +229,8 @@ public class FragmentStations extends Fragment {
                             LatLng sydney = new LatLng(lat, lon);
                             googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(placeID[i]));
 
+                            registerStations(stationName[i], vicinity[i], location[i], placeID[i], "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png");
                             fetchPrices(placeID[i]);
-                            //registerStations(stationName[i], vicinity[i], location[i], placeID[i], "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png");
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -229,56 +242,6 @@ public class FragmentStations extends Fragment {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
-        final Handler ha2 = new Handler();
-        ha2.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                circle.remove();
-                ha2.postDelayed(this, 30000);
-            }
-        }, 30000);
-    }
-
-    private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //   Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("name", name);
-                params.put("vicinity", vicinity);
-                params.put("location", location);
-                params.put("googleID", placeID);
-                params.put("photoURL", photoURL);
-                params.put("timeStamp", String.valueOf(System.currentTimeMillis()));
-
-                //returning parameters
-                return params;
-            }
-
-        };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
     }
 
     public void fetchPrices(final String placeID) {
@@ -305,6 +268,16 @@ public class FragmentStations extends Fragment {
                                 item.setElectricityPrice(obj.getDouble("electricityPrice"));
                                 item.setGoogleMapID(obj.getString("googleID"));
                                 item.setPhotoURL(obj.getString("photoURL"));
+                                //DISTANCE START
+                                Location loc1 = new Location("");
+                                loc1.setLatitude(lat);
+                                loc1.setLongitude(lon);
+                                Location loc2 = new Location("");
+                                loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
+                                loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                                float distanceInMeters = loc1.distanceTo(loc2);
+                                item.setDistance(distanceInMeters);
+                                //DISTANCE END
                                 item.setLastUpdated(obj.getLong("lastUpdated"));
                                 feedsList.add(item);
 
@@ -344,6 +317,46 @@ public class FragmentStations extends Fragment {
         queue.add(stringRequest);
     }
 
+    private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        //   Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("name", name);
+                params.put("vicinity", vicinity);
+                params.put("location", location);
+                params.put("googleID", placeID);
+                params.put("photoURL", photoURL);
+                params.put("timeStamp", String.valueOf(System.currentTimeMillis()));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -352,6 +365,14 @@ public class FragmentStations extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         Toast.makeText(getActivity(), "İZİN VERİLDİ", Toast.LENGTH_LONG).show();
+                        //Request location updates:
+                        LocationManager locationManager = (LocationManager)
+                                getActivity().getSystemService(Context.LOCATION_SERVICE);
+                        Criteria criteria = new Criteria();
+
+                        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
                         loadMap();
                     }
                 } else {
@@ -385,5 +406,4 @@ public class FragmentStations extends Fragment {
         super.onLowMemory();
         mMapView.onLowMemory();
     }
-
 }

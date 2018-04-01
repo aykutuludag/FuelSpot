@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StationDetails">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E0E0E0"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".StationDetails"
+        tools:showIn="@layout/activity_station_details">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.gms.maps.StreetViewPanoramaView
+                android:id="@+id/street_view_panorama"
+                android:layout_width="match_parent"
+                android:layout_height="330dp" />
+
+            <RelativeLayout
+                android:id="@+id/single_station"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/street_view_panorama">
+
+                <ImageView
+                    android:id="@+id/station_photo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentTop="true"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/shell" />
+
+                <TextView
+                    android:id="@+id/station_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/station_photo"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/station_photo"
+                    android:layout_toRightOf="@+id/station_photo"
+                    android:gravity="center"
+                    android:maxWidth="72dp"
+                    android:padding="4dp"
+                    android:text="Shell"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/station_vicinity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/electricity"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignRight="@+id/electricity"
+                    android:layout_below="@+id/station_name"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Şehit Osman Avcı Mah. Şehit Osman Avcı Mah. Şehit Osman Avcı Mah. Şehit Osman Avcı Mah."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/gasoline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/station_name"
+                    android:layout_toRightOf="@+id/station_name"
+                    android:background="#C8E6C9"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Gasoline"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/gasoline_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_name"
+                    android:layout_alignEnd="@+id/gasoline"
+                    android:layout_alignRight="@+id/gasoline"
+                    android:layout_below="@+id/gasoline"
+                    android:layout_toEndOf="@+id/station_name"
+                    android:layout_toRightOf="@+id/station_name"
+                    android:gravity="center"
+                    android:text="6.00 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/diesel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/gasoline"
+                    android:layout_toRightOf="@+id/gasoline"
+                    android:background="#C8E6C9"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Diesel"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/diesel_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_name"
+                    android:layout_alignEnd="@+id/diesel"
+                    android:layout_alignRight="@+id/diesel"
+                    android:layout_below="@+id/diesel"
+                    android:layout_toEndOf="@+id/gasoline_price"
+                    android:layout_toRightOf="@+id/gasoline_price"
+                    android:gravity="center"
+                    android:text="6.00 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lpg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/diesel"
+                    android:layout_toRightOf="@+id/diesel"
+                    android:background="#C8E6C9"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="LPG"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/lpg_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_name"
+                    android:layout_alignEnd="@+id/lpg"
+                    android:layout_alignRight="@+id/lpg"
+                    android:layout_below="@+id/lpg"
+                    android:layout_toEndOf="@+id/diesel_price"
+                    android:layout_toRightOf="@+id/diesel_price"
+                    android:gravity="center"
+                    android:text="6.00 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/electricity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/lpg"
+                    android:layout_toRightOf="@+id/lpg"
+                    android:background="#C8E6C9"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Electricity"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/electricity_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_name"
+                    android:layout_alignEnd="@+id/electricity"
+                    android:layout_alignRight="@+id/electricity"
+                    android:layout_below="@+id/electricity"
+                    android:layout_toEndOf="@+id/lpg_price"
+                    android:layout_toRightOf="@+id/lpg_price"
+                    android:gravity="center"
+                    android:text="0.00 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/electricity"
+                    android:layout_toRightOf="@+id/electricity"
+                    android:background="#C8E6C9"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Distance"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/distance_ofStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_name"
+                    android:layout_alignEnd="@+id/distance"
+                    android:layout_alignRight="@+id/distance"
+                    android:layout_below="@+id/distance"
+                    android:layout_toEndOf="@+id/electricity_price"
+                    android:layout_toRightOf="@+id/electricity_price"
+                    android:gravity="center"
+                    android:text="0.45 km"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/lastUpdated"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignBottom="@id/station_vicinity"
+                    android:layout_below="@id/distance_ofStation"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/station_vicinity"
+                    android:layout_toRightOf="@+id/station_vicinity"
+                    android:background="#fff"
+                    android:gravity="center" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+</android.support.design.widget.CoordinatorLayout>
