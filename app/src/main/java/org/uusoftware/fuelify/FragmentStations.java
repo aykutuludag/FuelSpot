@@ -55,13 +55,14 @@ import java.util.Map;
 
 import eu.amirs.JSON;
 
-import static org.uusoftware.fuelify.AnalyticsApplication.lat;
-import static org.uusoftware.fuelify.AnalyticsApplication.lon;
+import static org.uusoftware.fuelify.MainActivity.mCurrentLocation;
+import static org.uusoftware.fuelify.MainActivity.userlat;
+import static org.uusoftware.fuelify.MainActivity.userlon;
 
 public class FragmentStations extends Fragment {
 
     MapView mMapView;
-    LatLng mCurrentLocation = new LatLng(lat, lon);
+
     //Station variables
     String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
     String[] stationName = new String[99];
@@ -132,7 +133,10 @@ public class FragmentStations extends Fragment {
             Criteria criteria = new Criteria();
 
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-            mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+            if (location != null) {
+                mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            }
 
             loadMap();
         }
@@ -158,8 +162,8 @@ public class FragmentStations extends Fragment {
                     @Override
                     public void onMyLocationChange(Location arg0) {
                         Location loc1 = new Location("");
-                        loc1.setLatitude(lat);
-                        loc1.setLongitude(lon);
+                        loc1.setLatitude(userlat);
+                        loc1.setLongitude(userlon);
 
                         Location loc2 = new Location("");
                         loc2.setLatitude(arg0.getLatitude());
@@ -167,15 +171,11 @@ public class FragmentStations extends Fragment {
 
                         float distanceInMeters = loc1.distanceTo(loc2);
                         if (distanceInMeters >= 100) {
-                            lat = arg0.getLatitude();
-                            lon = arg0.getLongitude();
-                            prefs.edit().putString("lat", String.valueOf(lat)).apply();
-                            prefs.edit().putString("lat", String.valueOf(lon)).apply();
+                            userlat = arg0.getLatitude();
+                            userlon = arg0.getLongitude();
+                            prefs.edit().putString("lat", String.valueOf(userlat)).apply();
+                            prefs.edit().putString("lat", String.valueOf(userlon)).apply();
                             mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
-
-                            if (googleMap != null) {
-                                googleMap.clear();
-                            }
 
                             if (circle != null) {
                                 circle.remove();
@@ -225,9 +225,9 @@ public class FragmentStations extends Fragment {
                             photoURLs[i] = "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png";
 
                             LatLng sydney = new LatLng(lat, lon);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(placeID[i]));
+                            googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i]));
 
-                            registerStations(stationName[i], vicinity[i], location[i], placeID[i], "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png");
+                            registerStations(stationName[i], vicinity[i], location[i], placeID[i], photoURLs[i]);
                             fetchPrices(placeID[i]);
                         }
                     }
@@ -250,42 +250,40 @@ public class FragmentStations extends Fragment {
                     public void onResponse(String response) {
                         try {
                             JSONArray res = new JSONArray(response);
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                            JSONObject obj = res.getJSONObject(0);
 
-                                System.out.println(response);
+                            System.out.println(response);
 
-                                StationItem item = new StationItem();
-                                item.setID(obj.getInt("id"));
-                                item.setStationName(obj.getString("name"));
-                                item.setVicinity(obj.getString("vicinity"));
-                                item.setLocation(obj.getString("location"));
-                                item.setGasolinePrice(obj.getDouble("gasolinePrice"));
-                                item.setDieselPrice(obj.getDouble("dieselPrice"));
-                                item.setLpgPrice(obj.getDouble("lpgPrice"));
-                                item.setElectricityPrice(obj.getDouble("electricityPrice"));
-                                item.setGoogleMapID(obj.getString("googleID"));
-                                item.setPhotoURL(obj.getString("photoURL"));
-                                //DISTANCE START
-                                Location loc1 = new Location("");
-                                loc1.setLatitude(lat);
-                                loc1.setLongitude(lon);
-                                Location loc2 = new Location("");
-                                loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
-                                loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                                float distanceInMeters = loc1.distanceTo(loc2);
-                                item.setDistance(distanceInMeters);
-                                //DISTANCE END
-                                item.setLastUpdated(obj.getLong("lastUpdated"));
-                                feedsList.add(item);
+                            StationItem item = new StationItem();
+                            item.setID(obj.getInt("id"));
+                            item.setStationName(obj.getString("name"));
+                            item.setVicinity(obj.getString("vicinity"));
+                            item.setLocation(obj.getString("location"));
+                            item.setGasolinePrice(obj.getDouble("gasolinePrice"));
+                            item.setDieselPrice(obj.getDouble("dieselPrice"));
+                            item.setLpgPrice(obj.getDouble("lpgPrice"));
+                            item.setElectricityPrice(obj.getDouble("electricityPrice"));
+                            item.setGoogleMapID(obj.getString("googleID"));
+                            item.setPhotoURL(obj.getString("photoURL"));
+                            //DISTANCE START
+                            Location loc1 = new Location("");
+                            loc1.setLatitude(userlat);
+                            loc1.setLongitude(userlon);
+                            Location loc2 = new Location("");
+                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
+                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                            float distanceInMeters = loc1.distanceTo(loc2);
+                            item.setDistance(distanceInMeters);
+                            //DISTANCE END
+                            item.setLastUpdated(obj.getLong("lastUpdated"));
+                            feedsList.add(item);
 
-                                mAdapter = new StationAdapter(getActivity(), feedsList);
-                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                            mAdapter = new StationAdapter(getActivity(), feedsList);
+                            mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
-                                mAdapter.notifyDataSetChanged();
-                                mRecyclerView.setAdapter(mAdapter);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-                            }
+                            mAdapter.notifyDataSetChanged();
+                            mRecyclerView.setAdapter(mAdapter);
+                            mRecyclerView.setLayoutManager(mLayoutManager);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

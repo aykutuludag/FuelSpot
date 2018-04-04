@@ -43,15 +43,15 @@ import java.text.Normalizer;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.uusoftware.fuelify.AnalyticsApplication.birthday;
-import static org.uusoftware.fuelify.AnalyticsApplication.email;
-import static org.uusoftware.fuelify.AnalyticsApplication.gender;
-import static org.uusoftware.fuelify.AnalyticsApplication.location;
-import static org.uusoftware.fuelify.AnalyticsApplication.name;
-import static org.uusoftware.fuelify.AnalyticsApplication.photo;
-import static org.uusoftware.fuelify.AnalyticsApplication.username;
 import static org.uusoftware.fuelify.MainActivity.AudienceNetwork;
+import static org.uusoftware.fuelify.MainActivity.birthday;
+import static org.uusoftware.fuelify.MainActivity.email;
+import static org.uusoftware.fuelify.MainActivity.gender;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
+import static org.uusoftware.fuelify.MainActivity.location;
+import static org.uusoftware.fuelify.MainActivity.name;
+import static org.uusoftware.fuelify.MainActivity.photo;
+import static org.uusoftware.fuelify.MainActivity.username;
 
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {

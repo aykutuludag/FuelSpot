@@ -16,8 +16,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import static android.content.ContentValues.TAG;
-import static org.uusoftware.fuelify.AnalyticsApplication.lat;
-import static org.uusoftware.fuelify.AnalyticsApplication.lon;
+import static org.uusoftware.fuelify.MainActivity.userlat;
+import static org.uusoftware.fuelify.MainActivity.userlon;
 
 public class LocationService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -79,9 +79,9 @@ public class LocationService extends Service implements
         Log.d(TAG, "Location changed");
         if (location != null) {
             //call your API
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-            System.out.print("Şu anki pozisyon:" + lat + "sfdsd" + lon);
+            userlat = location.getLatitude();
+            userlon = location.getLongitude();
+            System.out.print("Şu anki pozisyon:" + userlat + "sfdsd" + userlon);
         }
     }
 }

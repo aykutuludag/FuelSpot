@@ -19,7 +19,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,13 +29,14 @@ import com.android.volley.toolbox.Volley;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.uusoftware.fuelify.AnalyticsApplication.carBrand;
-import static org.uusoftware.fuelify.AnalyticsApplication.carModel;
-import static org.uusoftware.fuelify.AnalyticsApplication.fuelPri;
-import static org.uusoftware.fuelify.AnalyticsApplication.fuelSec;
-import static org.uusoftware.fuelify.AnalyticsApplication.getVariables;
-import static org.uusoftware.fuelify.AnalyticsApplication.kilometer;
-import static org.uusoftware.fuelify.AnalyticsApplication.username;
+import static org.uusoftware.fuelify.MainActivity.carBrand;
+import static org.uusoftware.fuelify.MainActivity.carModel;
+import static org.uusoftware.fuelify.MainActivity.fuelPri;
+import static org.uusoftware.fuelify.MainActivity.fuelSec;
+import static org.uusoftware.fuelify.MainActivity.getVariables;
+import static org.uusoftware.fuelify.MainActivity.kilometer;
+import static org.uusoftware.fuelify.MainActivity.username;
+
 
 public class VehicleSelection extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -576,7 +576,7 @@ public class VehicleSelection extends AppCompatActivity implements AdapterView.O
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
