@@ -1,26 +1,16 @@
 package org.uusoftware.fuelify;
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,8 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -60,11 +48,9 @@ import static org.uusoftware.fuelify.MainActivity.mCurrentLocation;
 import static org.uusoftware.fuelify.MainActivity.userlat;
 import static org.uusoftware.fuelify.MainActivity.userlon;
 
-public class FragmentStations extends Fragment {
+public class ChooseStation extends AppCompatActivity {
 
-    MapView mMapView;
-
-    //Station variables
+    public static boolean isAddingFuel = true;
     String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
@@ -76,76 +62,38 @@ public class FragmentStations extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<StationItem> feedsList;
     RequestQueue queue;
-    private GoogleMap googleMap;
-    SharedPreferences prefs;
     Circle circle;
+    MapView mMapView;
+    SharedPreferences prefs;
+    private GoogleMap googleMap;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_choose_station);
 
-        // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplicationContext()).getDefaultTracker();
-        t.setScreenName("Home");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        isAddingFuel = true;
 
-        //Variables
-        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        // Initializing Toolbar and setting it as the actionbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         feedsList = new ArrayList<>();
-        mRecyclerView = rootView.findViewById(R.id.feedView);
-        queue = Volley.newRequestQueue(getActivity());
-        mMapView = rootView.findViewById(R.id.mapView);
+        mRecyclerView = findViewById(R.id.feedView);
+        queue = Volley.newRequestQueue(this);
+        mMapView = findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        checkLocationPermission();
-
-        return rootView;
-    }
-
-    public void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Konum izni gerekiyor")
-                        .setMessage("Size en yakın benzinlikleri ve fiyatlarını gösterebilmemiz için konum iznine ihtiyaç duyuyoruz")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(getActivity(), new String[]
-                                        {android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-        } else {
-            //Request location updates:
-            LocationManager locationManager = (LocationManager)
-                    getActivity().getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-            if (location != null) {
-                mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-
-            loadMap();
-        }
+        loadMap();
     }
 
     void loadMap() {
         //Detect location and set on map
-        MapsInitializer.initialize(getActivity().getApplicationContext());
+        MapsInitializer.initialize(getApplicationContext());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
@@ -172,13 +120,13 @@ public class FragmentStations extends Fragment {
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= 50) {
+                        if (distanceInMeters >= 25) {
                             userlat = arg0.getLatitude();
                             userlon = arg0.getLongitude();
                             prefs.edit().putString("lat", String.valueOf(userlat)).apply();
                             prefs.edit().putString("lon", String.valueOf(userlon)).apply();
                             mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
-                            MainActivity.getVariables(getActivity());
+                            MainActivity.getVariables(ChooseStation.this);
 
                             if (circle != null) {
                                 circle.remove();
@@ -257,7 +205,7 @@ public class FragmentStations extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ChooseStation.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -318,8 +266,8 @@ public class FragmentStations extends Fragment {
                             item.setLastUpdated(obj.getLong("lastUpdated"));
                             feedsList.add(item);
 
-                            mAdapter = new StationAdapter(getActivity(), feedsList);
-                            mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                            mAdapter = new StationAdapter(ChooseStation.this, feedsList);
+                            mLayoutManager = new GridLayoutManager(ChooseStation.this, 1);
 
                             mAdapter.notifyDataSetChanged();
                             mRecyclerView.setAdapter(mAdapter);
@@ -333,7 +281,7 @@ public class FragmentStations extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
-                        Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ChooseStation.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -364,52 +312,21 @@ public class FragmentStations extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(getActivity(), "İZİN VERİLDİ", Toast.LENGTH_LONG).show();
-                        //Request location updates:
-                        LocationManager locationManager = (LocationManager)
-                                getActivity().getSystemService(Context.LOCATION_SERVICE);
-                        Criteria criteria = new Criteria();
-
-                        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-                        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        loadMap();
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
-                }
-            }
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                isAddingFuel = false;
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
+    public void onBackPressed() {
+        super.onBackPressed();
+        isAddingFuel = false;
+        finish();
     }
 }

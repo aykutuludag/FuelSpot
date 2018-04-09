@@ -24,22 +24,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VehicleSelection"
-            android:label="@string/title_activity_vehicle_selection" />
-        <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".AddFuel"
+            android:name=".VehicleSelection"
+            android:label="@string/title_activity_vehicle_selection"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.MainActivity" />
         </activity>
-
-        <!-- LocationService -->
-        <!-- <service android:name=".service.LocationService" android:process=":my_service" /> -->
-
+        <activity
+            android:name=".AddFuel"
+            android:label="Yakıt ekle"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.MainActivity" />
+        </activity>
 
         <!-- Facebook -->
         <meta-data
@@ -98,6 +100,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ChooseStation"
+            android:parentActivityName=".AddFuel">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.AddFuel" />
         </activity>
     </application>
 

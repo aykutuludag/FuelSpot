@@ -43,7 +43,6 @@ import java.text.Normalizer;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.uusoftware.fuelify.MainActivity.AudienceNetwork;
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
@@ -99,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             pb.setVisibility(View.VISIBLE);
 
             if (isNetworkConnected(LoginActivity.this) && !premium) {
-                AudienceNetwork(LoginActivity.this);
+                //  AudienceNetwork(LoginActivity.this);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

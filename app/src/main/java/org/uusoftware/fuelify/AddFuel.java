@@ -1,27 +1,21 @@
 package org.uusoftware.fuelify;
 
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -31,45 +25,33 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
-import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
-import eu.amirs.JSON;
-
-import static org.uusoftware.fuelify.MainActivity.mCurrentLocation;
 import static org.uusoftware.fuelify.MainActivity.photo;
-import static org.uusoftware.fuelify.MainActivity.userlat;
-import static org.uusoftware.fuelify.MainActivity.userlon;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
 
+    public static String chosenStationName, chosenStationID;
+    public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     String UPLOAD_URL = "http://uusoftware.org/Fuelify/add-fuel.php";
     String question;
-    Button shareButton;
     Bitmap bitmap;
-    EditText questionText;
     Window window;
     Toolbar toolbar;
 
 
-    ExpandableRelativeLayout expandableLayout1, expandableLayout2, expandableLayout3;
-    List<Float> distance = new ArrayList<>(99);
-    String[] stationName = new String[99];
-    String[] placeID = new String[99];
-    String[] vicinity = new String[99];
-    String[] location = new String[99];
-    String[] photoURLs = new String[99];
-    RequestQueue queue;
+    ExpandableRelativeLayout expandableLayout1, expandableLayout2, expandableLayout3, expandableLayoutYakit, expandableLayoutYakit2;
+    EditText chooseStation, chooseTime;
+
+
+    SharedPreferences prefs;
+
+    Calendar calendar;
+    int hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,62 +61,63 @@ public class AddFuel extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
 
+        //Variables
+        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        MainActivity.getVariables(AddFuel.this);
+
         expandableLayout1 = findViewById(R.id.expandableLayout1);
         expandableLayout2 = findViewById(R.id.expandableLayout2);
         expandableLayout3 = findViewById(R.id.expandableLayout3);
+        expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
+        expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);
 
-        queue = Volley.newRequestQueue(AddFuel.this);
-
-        if (isNetworkConnected()) {
-            getLocation();
-        } else {
-            Toast.makeText(AddFuel.this, "İNTERNET BAĞLANTIIS YOK", Toast.LENGTH_LONG).show();
+        chooseStation = findViewById(R.id.editTextStation);
+        if (chosenStationName != null) {
+            chooseStation.setText(chosenStationName);
         }
-
-       /*
-
-        questionText = findViewById(R.id.questionHolder);
-        questionText.addTextChangedListener(new TextWatcher() {
+        // add button listener
+        chooseStation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.length() > 0) {
-                    question = editable.toString();
-                }
+            public void onClick(View arg0) {
+                Intent intent = new Intent(AddFuel.this, ChooseStation.class);
+                startActivity(intent);
             }
         });
 
-        shareButton = findViewById(R.id.shareIt);
-        shareButton.setOnClickListener(new View.OnClickListener() {
+        getTime();
+        chooseTime = findViewById(R.id.editTextTime);
+        chooseTime.setText(hour + ":" + minute);
+        chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (question == null) {
-                    Toast.makeText(UploadActivity.this, "Soru çok kısa. Bir şeyler daha yazmak ister misin?", Toast.LENGTH_SHORT).show();
-                } else if (bitmap == null) {
-                    Toast.makeText(UploadActivity.this, "Lütfen geçerli bir görsel seçiniz", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (isNetworkConnected()) {
-                        uploadImage();
-                    } else {
-                        Toast.makeText(UploadActivity.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_SHORT).show();
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(AddFuel.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        chooseTime.setText(selectedHour + ":" + selectedMinute);
                     }
-                }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
             }
-        });*/
+        });
+    }
+
+    public void getTime() {
+        calendar = Calendar.getInstance();
+        hour = calendar.getTime().getHours();
+        minute = calendar.getTime().getMinutes();
     }
 
     public boolean isNetworkConnected() {
@@ -200,12 +183,6 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
     public void buttonClick1(View view) {
         expandableLayout1.toggle(); // toggle expand and collapse
         expandableLayout2.collapse();
@@ -224,211 +201,27 @@ public class AddFuel extends AppCompatActivity {
         expandableLayout2.collapse();
     }
 
-    public void getLocation() {
-        if (ContextCompat.checkSelfPermission(AddFuel.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(AddFuel.this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(AddFuel.this)
-                        .setTitle("Konum izni gerekiyor")
-                        .setMessage("Size en yakın benzinlikleri ve fiyatlarını gösterebilmemiz için konum iznine ihtiyaç duyuyoruz")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(AddFuel.this, new String[]
-                                        {android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(AddFuel.this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-        } else {
-            //Request location updates:
-            LocationManager locationManager = (LocationManager)
-                    AddFuel.this.getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-            if (location != null) {
-                mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-
-            findNearStations();
-        }
+    public void buttonClickYakit1(View view) {
+        expandableLayoutYakit.toggle();
+        expandableLayoutYakit2.collapse();
     }
 
-    public void findNearStations() {
-        //Search stations in a radius of 3000m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSON json = new JSON(response);
-                        for (int i = 0; i < json.key("results").count(); i++) {
-                            stationName[i] = json.key("results").index(i).key("name").stringValue();
-                            vicinity[i] = json.key("results").index(i).key("vicinity").stringValue();
-                            placeID[i] = json.key("results").index(i).key("place_id").stringValue();
-
-                            double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
-                            double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-                            location[i] = lat + ";" + lon;
-
-                            //DISTANCE START
-                            Location loc1 = new Location("");
-                            loc1.setLatitude(lat);
-                            loc1.setLongitude(lon);
-
-                            Location loc2 = new Location("");
-                            loc2.setLatitude(userlat);
-                            loc2.setLongitude(userlon);
-                            float distanceInMeters = loc1.distanceTo(loc2);
-                            distance.add(i, distanceInMeters);
-                            //DISTANCE END
-
-                            photoURLs[i] = "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png";
-
-                            registerStations(stationName[i], vicinity[i], location[i], placeID[i], photoURLs[i]);
-                        }
-
-                        float min = Collections.min(distance);
-
-                        if (min <= 250) {
-                            int index = distance.indexOf(min);
-
-                            System.out.print("İSTASYON ADI: " + stationName[index]);
-                            System.out.print("GOOGLE ID: " + placeID[index]);
-                            System.out.println("MESAFE: " + min);
-                            fetchPrices(placeID[index]);
-                        } else {
-                            Toast.makeText(AddFuel.this, "Konumunuz şu an hiçbir benzinlikte görünmüyor. Lütfen istasyon seçiniz", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelify/add-station.php",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AddFuel.this, volleyError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("name", name);
-                params.put("vicinity", vicinity);
-                params.put("location", location);
-                params.put("googleID", placeID);
-                params.put("photoURL", photoURL);
-                params.put("timeStamp", String.valueOf(System.currentTimeMillis()));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    public void fetchPrices(final String placeID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelify/fetch-prices.php",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-
-                            //BURADA İSTASYON BİLGİLERİNİ ÇEKİP SET EDECEĞİZ.
-                           /* item.setID(obj.getInt("id"));
-                            item.setStationName(obj.getString("name"));
-                            item.setGasolinePrice(obj.getDouble("gasolinePrice"));
-                            item.setDieselPrice(obj.getDouble("dieselPrice"));
-                            item.setLpgPrice(obj.getDouble("lpgPrice"));
-                            item.setElectricityPrice(obj.getDouble("electricityPrice"));*/
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("placeID", placeID);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        queue.add(stringRequest);
+    public void buttonClickYakit2(View view) {
+        expandableLayoutYakit2.toggle();
+        expandableLayoutYakit.collapse();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(AddFuel.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(AddFuel.this, "İZİN VERİLDİ", Toast.LENGTH_LONG).show();
-                        //Request location updates:
-                        LocationManager locationManager = (LocationManager)
-                                AddFuel.this.getSystemService(Context.LOCATION_SERVICE);
-                        Criteria criteria = new Criteria();
-
-                        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-                        userlat = location.getLatitude();
-                        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        findNearStations();
-                    }
-                } else {
-                    Toast.makeText(AddFuel.this, "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
-                }
-            }
+    public void onResume() {
+        super.onResume();
+        if (chooseStation != null && chosenStationName != null) {
+            chooseStation.setText(chosenStationName);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

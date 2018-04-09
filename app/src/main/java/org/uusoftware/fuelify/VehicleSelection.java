@@ -123,8 +123,12 @@ public class VehicleSelection extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_selection);
+
+        // Initializing Toolbar and setting it as the actionbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         pos = prefs.getInt("carPos", 0);

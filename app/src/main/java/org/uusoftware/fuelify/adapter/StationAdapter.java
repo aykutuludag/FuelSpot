@@ -1,5 +1,6 @@
 package org.uusoftware.fuelify.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,12 +15,15 @@ import android.widget.TextView;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.squareup.picasso.Picasso;
 
+import org.uusoftware.fuelify.AddFuel;
 import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.StationDetails;
 import org.uusoftware.fuelify.model.StationItem;
 
 import java.util.Date;
 import java.util.List;
+
+import static org.uusoftware.fuelify.ChooseStation.isAddingFuel;
 
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
@@ -30,17 +34,29 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         public void onClick(View view) {
             ViewHolder holder = (ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
-            Intent intent = new Intent(mContext, StationDetails.class);
-            intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
-            intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
-            intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
-            intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
-            intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
-            intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
-            intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
-            intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
-            intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
-            mContext.startActivity(intent);
+
+            if (isAddingFuel) {
+                AddFuel.chosenStationID = String.valueOf(feedItemList.get(position).getID());
+                AddFuel.chosenStationName = feedItemList.get(position).getStationName();
+                AddFuel.gasolinePrice = feedItemList.get(position).getGasolinePrice();
+                AddFuel.dieselPrice = feedItemList.get(position).getDieselPrice();
+                AddFuel.LPGPrice = feedItemList.get(position).getLpgPrice();
+                AddFuel.electricityPrice = feedItemList.get(position).getElectricityPrice();
+                ((Activity) mContext).finish();
+            } else {
+                Intent intent = new Intent(mContext, StationDetails.class);
+                intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
+                intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
+                intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
+                intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
+                intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
+                intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
+                intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
+                intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
+                intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+                intent.putExtra("STATION_ID", feedItemList.get(position).getID());
+                mContext.startActivity(intent);
+            }
         }
     };
 

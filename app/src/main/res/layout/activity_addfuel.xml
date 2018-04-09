@@ -20,11 +20,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".AddFuel"
         tools:showIn="@layout/activity_vehicle_selection">
@@ -33,8 +34,8 @@
             android:id="@+id/expandableButton1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="buttonClick1"
             android:background="#212121"
+            android:onClick="buttonClick1"
             android:text="YER VE ZAMAN"
             android:textColor="#fff" />
 
@@ -45,10 +46,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/expandableButton1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             app:ael_duration="400"
-            app:ael_expanded="false"
+            app:ael_expanded="true"
             app:ael_interpolator="bounce"
             app:ael_orientation="vertical">
 
@@ -67,7 +66,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewStation"
                 android:layout_marginTop="4dp"
-                android:hint="BP Ümitköy" />
+                android:focusable="false"
+                android:hint="BP Ümitköy"
+                android:inputType="none" />
 
             <TextView
                 android:id="@+id/textViewTime"
@@ -84,20 +85,20 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewTime"
                 android:layout_marginTop="4dp"
+                android:focusable="false"
                 android:hint="21:32"
+                android:inputType="none"
                 android:textStyle="bold" />
 
         </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
         <Button
             android:id="@+id/expandableButton2"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:onClick="buttonClick2"
             android:layout_below="@+id/expandableLayout1"
             android:background="#212121"
+            android:onClick="buttonClick2"
             android:text="YAKIT BİLGİLERİ"
             android:textColor="#fff" />
 
@@ -106,112 +107,239 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/expandableButton2"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             app:ael_duration="400"
             app:ael_expanded="false"
             app:ael_interpolator="bounce"
             app:ael_orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewWhichFuel"
+            <Button
+                android:id="@+id/expandableButtonYakit1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="YAKIT TİPİ"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:background="#212121"
+                android:onClick="buttonClickYakit1"
+                android:text="1. yakıt"
+                android:textColor="#fff" />
 
-            <RadioGroup
-                android:id="@+id/radioGroup_fuel"
-                android:layout_width="wrap_content"
+            <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                android:id="@+id/expandableLayoutYakit1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewWhichFuel"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:orientation='horizontal'>
+                android:layout_below="@+id/expandableButtonYakit1"
+                app:ael_duration="400"
+                app:ael_expanded="false"
+                app:ael_interpolator="bounce"
+                app:ael_orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/gasoline"
+                <TextView
+                    android:id="@+id/textViewWhichFuel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="YAKIT TİPİ"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_fuel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="Benzin" />
+                    android:layout_below="@+id/textViewWhichFuel"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:orientation='horizontal'>
 
-                <RadioButton
-                    android:id="@+id/diesel"
+                    <RadioButton
+                        android:id="@+id/gasoline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Benzin" />
+
+                    <RadioButton
+                        android:id="@+id/diesel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Dizel" />
+
+                    <RadioButton
+                        android:id="@+id/lpg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="LPG" />
+
+                    <RadioButton
+                        android:id="@+id/electricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Elektrik" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/textViewPrice1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/radioGroup_fuel"
+                    android:layout_marginTop="8dp"
+                    android:text="FİYAT VE TUTAR"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+                <EditText
+                    android:id="@+id/editTextPricePerLiter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPrice1"
+                    android:layout_marginTop="4dp"
+                    android:hint="6.02 TL / litre"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editTextPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextPricePerLiter"
+                    android:layout_marginTop="4dp"
+                    android:hint="50 TL"
+                    android:textStyle="bold" />
+
+
+                <EditText
+                    android:id="@+id/editTextLiter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextPrice"
+                    android:layout_marginTop="4dp"
+                    android:hint="8,31 litre"
+                    android:textStyle="bold" />
+
+            </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+            <Button
+                android:id="@+id/expandableButtonYakit2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/expandableLayoutYakit1"
+                android:background="#212121"
+                android:onClick="buttonClickYakit2"
+                android:text="2. yakıt"
+                android:textColor="#fff" />
+
+            <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                android:id="@+id/expandableLayoutYakit2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/expandableButtonYakit2"
+                app:ael_duration="400"
+                app:ael_expanded="false"
+                app:ael_interpolator="bounce"
+                app:ael_orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewWhichFuel2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="YAKIT TİPİ"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup_fuel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="Dizel" />
+                    android:layout_below="@+id/textViewWhichFuel2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:orientation='horizontal'>
 
-                <RadioButton
-                    android:id="@+id/lpg"
-                    android:layout_width="wrap_content"
+                    <RadioButton
+                        android:id="@+id/gasoline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Benzin" />
+
+                    <RadioButton
+                        android:id="@+id/diesel2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Dizel" />
+
+                    <RadioButton
+                        android:id="@+id/lpg2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="LPG" />
+
+                    <RadioButton
+                        android:id="@+id/electricity2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Elektrik" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/textViewPrice2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="LPG" />
+                    android:layout_below="@+id/radioGroup_fuel2"
+                    android:layout_marginTop="8dp"
+                    android:text="FİYAT VE TUTAR"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <RadioButton
-                    android:id="@+id/electricity"
-                    android:layout_width="wrap_content"
+
+                <EditText
+                    android:id="@+id/editTextPricePerLiter2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="Elektrik" />
-            </RadioGroup>
+                    android:layout_below="@+id/textViewPrice2"
+                    android:layout_marginTop="4dp"
+                    android:hint="6.02 TL / litre"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textViewPrice1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/radioGroup_fuel"
-                android:layout_marginTop="8dp"
-                android:text="FİYAT VE TUTAR"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-
-            <EditText
-                android:id="@+id/editTextPricePerLiter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewPrice1"
-                android:layout_marginTop="4dp"
-                android:hint="6.02 TL / litre"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editTextPrice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextPricePerLiter"
-                android:layout_marginTop="4dp"
-                android:hint="50 TL"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/editTextPrice2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextPricePerLiter2"
+                    android:layout_marginTop="4dp"
+                    android:hint="50 TL"
+                    android:textStyle="bold" />
 
 
-            <EditText
-                android:id="@+id/editTextLiter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextPrice"
-                android:layout_marginTop="4dp"
-                android:hint="8,31 litre"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/editTextLiter2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextPrice2"
+                    android:layout_marginTop="4dp"
+                    android:hint="8,31 litre"
+                    android:textStyle="bold" />
+
+            </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
         </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
         <Button
             android:id="@+id/expandableButton3"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:onClick="buttonClick3"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/expandableLayout2"
             android:background="#212121"
+            android:onClick="buttonClick3"
             android:text="DİĞER"
             android:textColor="#fff" />
 
@@ -220,9 +348,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/expandableButton3"
-            android:layout_margin="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             app:ael_duration="400"
             app:ael_expanded="false"
             app:ael_interpolator="bounce"

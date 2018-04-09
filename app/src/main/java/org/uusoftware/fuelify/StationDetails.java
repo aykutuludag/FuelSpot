@@ -17,7 +17,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class StationDetails extends AppCompatActivity {
 
-
     String stationName, stationVicinity, stationLocation;
     float stationDistance;
     double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
