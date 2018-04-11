@@ -48,6 +48,7 @@
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -91,6 +92,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.MainActivity" />
         </activity>
+
+        <!-- ImageCrop -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- Facebook -->
         <meta-data

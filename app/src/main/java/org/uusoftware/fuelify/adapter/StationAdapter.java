@@ -1,6 +1,5 @@
 package org.uusoftware.fuelify.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.squareup.picasso.Picasso;
 
+import org.uusoftware.fuelify.ChooseStation;
 import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.StationDetails;
 import org.uusoftware.fuelify.model.StationItem;
@@ -22,12 +22,12 @@ import org.uusoftware.fuelify.model.StationItem;
 import java.util.Date;
 import java.util.List;
 
+import static org.uusoftware.fuelify.AddFuel.LPGPrice;
 import static org.uusoftware.fuelify.AddFuel.chosenStationID;
 import static org.uusoftware.fuelify.AddFuel.chosenStationName;
-import static org.uusoftware.fuelify.AddFuel.gasolinePrice;
 import static org.uusoftware.fuelify.AddFuel.dieselPrice;
-import static org.uusoftware.fuelify.AddFuel.LPGPrice;
 import static org.uusoftware.fuelify.AddFuel.electricityPrice;
+import static org.uusoftware.fuelify.AddFuel.gasolinePrice;
 import static org.uusoftware.fuelify.ChooseStation.isAddingFuel;
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
@@ -47,7 +47,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 dieselPrice = feedItemList.get(position).getDieselPrice();
                 LPGPrice = feedItemList.get(position).getLpgPrice();
                 electricityPrice = feedItemList.get(position).getElectricityPrice();
-                ((Activity) mContext).finish();
+                ((ChooseStation) mContext).finish();
             } else {
                 System.out.println("İSTASYON DETAYI");
                 Intent intent = new Intent(mContext, StationDetails.class);

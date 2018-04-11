@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 -dontwarn com.squareup.okhttp.**
+-dontwarn okio.**
