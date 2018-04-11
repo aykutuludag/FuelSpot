@@ -133,7 +133,7 @@ public class VehicleSelection extends AppCompatActivity implements AdapterView.O
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         pos = prefs.getInt("carPos", 0);
         pos2 = prefs.getInt("carPos2", 0);
-        getVariables(this);
+        getVariables(prefs);
 
         //MARKA SEÇİMİ
         spinner = findViewById(R.id.spinner_brands);

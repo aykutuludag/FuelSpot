@@ -44,13 +44,12 @@ import java.util.Map;
 import eu.amirs.JSON;
 
 import static org.uusoftware.fuelify.MainActivity.fuelPri;
-import static org.uusoftware.fuelify.MainActivity.mCurrentLocation;
 import static org.uusoftware.fuelify.MainActivity.userlat;
 import static org.uusoftware.fuelify.MainActivity.userlon;
 
 public class ChooseStation extends AppCompatActivity {
 
-    public static boolean isAddingFuel = true;
+    public static boolean isAddingFuel;
     String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
@@ -99,13 +98,13 @@ public class ChooseStation extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                updateMapObject();
                 googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(true);
-                googleMap.getUiSettings().setScrollGesturesEnabled(true);
+                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                     @Override
@@ -120,40 +119,45 @@ public class ChooseStation extends AppCompatActivity {
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= 25) {
+                        if (distanceInMeters >= 10) {
                             userlat = arg0.getLatitude();
                             userlon = arg0.getLongitude();
                             prefs.edit().putString("lat", String.valueOf(userlat)).apply();
                             prefs.edit().putString("lon", String.valueOf(userlon)).apply();
-                            mCurrentLocation = new LatLng(arg0.getLatitude(), arg0.getLongitude());
-                            MainActivity.getVariables(ChooseStation.this);
-
-                            if (circle != null) {
-                                circle.remove();
-                            }
+                            MainActivity.getVariables(prefs);
 
                             updateMapObject();
                         }
                     }
                 });
+                updateMapObject();
             }
         });
     }
 
     private void updateMapObject() {
+        if (circle != null) {
+            circle.remove();
+        }
+
+        if (googleMap != null) {
+            googleMap.clear();
+        }
+
         //Draw a circle with radius of 3000m
         circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(mCurrentLocation.latitude, mCurrentLocation.longitude))
+                .center(new LatLng(userlat, userlon))
                 .radius(3000)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
+        LatLng mCurrentLocation = new LatLng(userlat, userlon);
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12.5f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 3000m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + mCurrentLocation.latitude + "," + mCurrentLocation.longitude + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,

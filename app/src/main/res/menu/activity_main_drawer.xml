@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_slider_home"
             android:title="@string/nav_text_home" />
         <item
+            android:id="@+id/nav_vehicle"
+            android:icon="@drawable/ic_slider_home"
+            android:title="@string/nav_text_vehicle" />
+        <item
             android:id="@+id/nav_stations"
             android:icon="@drawable/ic_slider_uyum"
             android:title="@string/nav_text_stations" />

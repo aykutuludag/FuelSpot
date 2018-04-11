@@ -14,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -24,12 +27,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static org.uusoftware.fuelify.MainActivity.fuelPri;
+import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.photo;
 import static org.uusoftware.fuelify.MainActivity.username;
 
@@ -42,15 +46,12 @@ public class AddFuel extends AppCompatActivity {
     Bitmap bitmap;
     Window window;
     Toolbar toolbar;
-
-
-    ExpandableRelativeLayout expandableLayout1, expandableLayout2, expandableLayout3, expandableLayoutYakit, expandableLayoutYakit2;
+    RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
+    Button expandableButton1, expandableButton2;
     EditText chooseStation, chooseTime;
-
-
     SharedPreferences prefs;
-
     Calendar calendar;
+    RadioGroup chooseFuel, chooseFuel2;
     int hour, minute;
 
     @Override
@@ -70,19 +71,16 @@ public class AddFuel extends AppCompatActivity {
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        MainActivity.getVariables(AddFuel.this);
+        MainActivity.getVariables(prefs);
 
-        expandableLayout1 = findViewById(R.id.expandableLayout1);
-        expandableLayout2 = findViewById(R.id.expandableLayout2);
-        expandableLayout3 = findViewById(R.id.expandableLayout3);
         expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
         expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);
 
+        //İSTASYON SEÇİMİ
         chooseStation = findViewById(R.id.editTextStation);
         if (chosenStationName != null) {
             chooseStation.setText(chosenStationName);
         }
-        // add button listener
         chooseStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -91,6 +89,7 @@ public class AddFuel extends AppCompatActivity {
             }
         });
 
+        //SAAT SEÇİMİ
         getTime();
         chooseTime = findViewById(R.id.editTextTime);
         chooseTime.setText(hour + ":" + minute);
@@ -112,6 +111,50 @@ public class AddFuel extends AppCompatActivity {
                 mTimePicker.show();
             }
         });
+
+        //1. YAKIT TİPİ
+        chooseFuel = findViewById(R.id.radioGroup_fuel);
+        expandableButton1 = findViewById(R.id.expandableButton1);
+        switch (fuelPri) {
+            case 0:
+                chooseFuel.check(R.id.gasoline);
+                break;
+            case 1:
+                chooseFuel.check(R.id.diesel);
+                break;
+            case 2:
+                chooseFuel.check(R.id.lpg);
+                break;
+            case 3:
+                chooseFuel.check(R.id.electricity);
+                break;
+            default:
+                expandableLayoutYakit.setVisibility(View.GONE);
+                expandableButton1.setVisibility(View.GONE);
+                break;
+        }
+
+        //2. YAKIT TİPİ
+        chooseFuel2 = findViewById(R.id.radioGroup_fuel2);
+        expandableButton2 = findViewById(R.id.expandableButtonYakit2);
+        switch (fuelSec) {
+            case 0:
+                chooseFuel2.check(R.id.gasoline2);
+                break;
+            case 1:
+                chooseFuel2.check(R.id.diesel2);
+                break;
+            case 2:
+                chooseFuel2.check(R.id.lpg2);
+                break;
+            case 3:
+                chooseFuel2.check(R.id.electricity2);
+                break;
+            default:
+                expandableLayoutYakit2.setVisibility(View.GONE);
+                expandableButton2.setVisibility(View.GONE);
+                break;
+        }
     }
 
     public void getTime() {
@@ -181,34 +224,6 @@ public class AddFuel extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    public void buttonClick1(View view) {
-        expandableLayout1.toggle(); // toggle expand and collapse
-        expandableLayout2.collapse();
-        expandableLayout3.collapse();
-    }
-
-    public void buttonClick2(View view) {
-        expandableLayout2.toggle(); // toggle expand and collapse
-        expandableLayout1.collapse();
-        expandableLayout3.collapse();
-    }
-
-    public void buttonClick3(View view) {
-        expandableLayout3.toggle(); // toggle expand and collapse
-        expandableLayout1.collapse();
-        expandableLayout2.collapse();
-    }
-
-    public void buttonClickYakit1(View view) {
-        expandableLayoutYakit.toggle();
-        expandableLayoutYakit2.collapse();
-    }
-
-    public void buttonClickYakit2(View view) {
-        expandableLayoutYakit2.toggle();
-        expandableLayoutYakit.collapse();
     }
 
     @Override

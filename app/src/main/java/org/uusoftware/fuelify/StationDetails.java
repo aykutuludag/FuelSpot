@@ -41,10 +41,10 @@ public class StationDetails extends AppCompatActivity {
         stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
         stationLocation = getIntent().getStringExtra("STATION_LOCATION");
         stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0.00f);
-        gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.00);
-        dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.00);
-        lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00);
-        electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00);
+        gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.00f);
+        dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.00f);
+        lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00f);
+        electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00f);
         lastUpdated = getIntent().getLongExtra("STATION_LASTUPDATED", 0);
 
         textName = findViewById(R.id.station_name);
@@ -70,7 +70,6 @@ public class StationDetails extends AppCompatActivity {
 
         textLastUpdated = findViewById(R.id.lastUpdated);
         textLastUpdated.setReferenceTime(lastUpdated);
-
 
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);

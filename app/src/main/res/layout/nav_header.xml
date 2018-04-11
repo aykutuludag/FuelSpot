@@ -17,24 +17,24 @@
         android:gravity="bottom|center">
 
         <ImageView
-            android:id="@+id/imageViewFav"
+            android:id="@+id/imageViewPurchases"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_margin="5dp"
-            app:srcCompat="@drawable/ic_favorite" />
+            app:srcCompat="@drawable/header_purchases" />
 
         <ImageView
-            android:id="@+id/imageViewShare"
+            android:id="@+id/imageViewSettings"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_margin="5dp"
-            android:layout_toEndOf="@+id/imageViewFav"
-            android:layout_toRightOf="@+id/imageViewFav"
-            app:srcCompat="@drawable/ic_share" />
+            android:layout_toEndOf="@+id/imageViewPurchases"
+            android:layout_toRightOf="@+id/imageViewPurchases"
+            app:srcCompat="@drawable/header_settings" />
 
         <ImageView
             android:id="@+id/imageViewHelp"
@@ -42,8 +42,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_margin="5dp"
-            android:layout_toEndOf="@+id/imageViewShare"
-            android:layout_toRightOf="@+id/imageViewShare"
+            android:layout_toEndOf="@+id/imageViewSettings"
+            android:layout_toRightOf="@+id/imageViewSettings"
             app:srcCompat="@drawable/ic_slider_help" />
     </RelativeLayout>
 
@@ -59,7 +59,7 @@
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="32dp"
             android:src="@drawable/profile"
             app:civ_border_color="#f0f0f0"
             app:civ_border_width="2dp" />
@@ -70,12 +70,22 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/profile_image"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:text="Büşra Gözübüyük"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#fff"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewCarName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewName"
+            android:layout_centerHorizontal="true"
+            android:text="Renault Symbol"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     </RelativeLayout>
 

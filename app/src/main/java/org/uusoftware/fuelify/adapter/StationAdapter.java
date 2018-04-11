@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.squareup.picasso.Picasso;
 
-import org.uusoftware.fuelify.AddFuel;
 import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.StationDetails;
 import org.uusoftware.fuelify.model.StationItem;
@@ -23,8 +22,13 @@ import org.uusoftware.fuelify.model.StationItem;
 import java.util.Date;
 import java.util.List;
 
+import static org.uusoftware.fuelify.AddFuel.chosenStationID;
+import static org.uusoftware.fuelify.AddFuel.chosenStationName;
+import static org.uusoftware.fuelify.AddFuel.gasolinePrice;
+import static org.uusoftware.fuelify.AddFuel.dieselPrice;
+import static org.uusoftware.fuelify.AddFuel.LPGPrice;
+import static org.uusoftware.fuelify.AddFuel.electricityPrice;
 import static org.uusoftware.fuelify.ChooseStation.isAddingFuel;
-
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
     private List<StationItem> feedItemList;
@@ -36,14 +40,16 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             int position = holder.getAdapterPosition();
 
             if (isAddingFuel) {
-                AddFuel.chosenStationID = String.valueOf(feedItemList.get(position).getID());
-                AddFuel.chosenStationName = feedItemList.get(position).getStationName();
-                AddFuel.gasolinePrice = feedItemList.get(position).getGasolinePrice();
-                AddFuel.dieselPrice = feedItemList.get(position).getDieselPrice();
-                AddFuel.LPGPrice = feedItemList.get(position).getLpgPrice();
-                AddFuel.electricityPrice = feedItemList.get(position).getElectricityPrice();
+                System.out.println("İSTASYON SEÇİMİ");
+                chosenStationID = String.valueOf(feedItemList.get(position).getID());
+                chosenStationName = feedItemList.get(position).getStationName();
+                gasolinePrice = feedItemList.get(position).getGasolinePrice();
+                dieselPrice = feedItemList.get(position).getDieselPrice();
+                LPGPrice = feedItemList.get(position).getLpgPrice();
+                electricityPrice = feedItemList.get(position).getElectricityPrice();
                 ((Activity) mContext).finish();
             } else {
+                System.out.println("İSTASYON DETAYI");
                 Intent intent = new Intent(mContext, StationDetails.class);
                 intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
                 intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
@@ -65,6 +71,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         this.mContext = context;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_stations, viewGroup, false);
@@ -72,7 +79,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         final StationItem feedItem = feedItemList.get(i);
 
@@ -87,7 +94,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.electricityPrice.setText(String.valueOf(feedItem.getElectricityPrice()));
 
         //Distance
-        viewHolder.distance.setText((int) feedItem.getDistance() + " m");
+        String distance = (int) feedItem.getDistance() + " m";
+        viewHolder.distance.setText(distance);
 
         //Last updated
         Date date = new Date(feedItem.getLastUpdated());
@@ -113,7 +121,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         RelativeTimeTextView lastUpdated;
         ImageView stationPic;
         RelativeLayout background;
-//
 
         ViewHolder(View itemView) {
             super(itemView);

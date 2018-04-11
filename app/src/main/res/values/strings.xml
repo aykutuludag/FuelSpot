@@ -114,4 +114,11 @@
     </string-array>
     <string name="title_activity_permission">PermissionActivity</string>
     <string name="title_activity_station_details">StationDetails</string>
+    <string name="nav_text_vehicle">Vehicle</string>
+    <string name="buy_premium_ads_title">Reklamsız sürüme geçin</string>
+    <string name="buy_premium_ads_content">Uygulama içerisindeki reklamlardan sıkıldınız mı? Günlük Burçlar Premium\'a geçerek uygulamadaki tüm reklamlardan kurtulabilirsiniz.</string>
+    <string name="buy_premium_ads_okay">SATIN AL!</string>
+    <string name="buy_premium_ads_later">Başka zaman</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_help">ActivityHelp</string>
 </resources>
