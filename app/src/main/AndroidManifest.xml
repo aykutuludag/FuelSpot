@@ -75,6 +75,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.MainActivity" />
         </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ProfileEditActivity"
+            android:label="@string/title_activity_profile_edit"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.MainActivity" />
+        </activity>
 
         <!-- Facebook -->
         <meta-data
@@ -124,16 +140,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
-        <activity
-            android:name=".HelpActivity"
-            android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
     </application>
 
 </manifest>

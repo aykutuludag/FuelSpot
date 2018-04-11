@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/header_profile"
+    android:id="@+id/header_user"
     android:layout_width="match_parent"
     android:layout_height="170dp"
     android:background="#212121">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/car_picture"
+        android:id="@+id/user_picture"
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_alignParentLeft="true"
@@ -23,24 +23,24 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/car_picture"
-        android:layout_alignLeft="@+id/car_picture"
-        android:layout_alignRight="@+id/car_picture"
-        android:layout_alignStart="@+id/car_picture"
-        android:layout_below="@+id/car_picture"
+        android:layout_alignEnd="@+id/user_picture"
+        android:layout_alignLeft="@+id/user_picture"
+        android:layout_alignRight="@+id/user_picture"
+        android:layout_alignStart="@+id/user_picture"
+        android:layout_below="@+id/user_picture"
         android:gravity="center"
         android:text="aykutuludag"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
     <TextView
-        android:id="@+id/car_kilometer"
+        android:id="@+id/userFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/car_picture"
+        android:layout_alignTop="@+id/user_picture"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/car_picture"
-        android:layout_toRightOf="@+id/car_picture"
+        android:layout_toEndOf="@+id/user_picture"
+        android:layout_toRightOf="@+id/user_picture"
         android:maxLength="16"
         android:text="Aykut Uludağ"
         android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
@@ -49,9 +49,9 @@
         android:id="@+id/fuelTypeIndicator"
         android:layout_width="17dp"
         android:layout_height="17dp"
-        android:layout_alignLeft="@+id/car_kilometer"
-        android:layout_alignStart="@+id/car_kilometer"
-        android:layout_below="@+id/car_kilometer"
+        android:layout_alignLeft="@+id/userFullName"
+        android:layout_alignStart="@+id/userFullName"
+        android:layout_below="@+id/userFullName"
         android:layout_marginTop="7dp"
         app:srcCompat="@drawable/profile_email" />
 
@@ -100,7 +100,7 @@
         app:srcCompat="@drawable/profile_birthday" />
 
     <TextView
-        android:id="@+id/car_monthlyCons"
+        android:id="@+id/userBirthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/montlyConsumptionIndicator"
@@ -116,7 +116,7 @@
         android:layout_height="17dp"
         android:layout_alignLeft="@+id/montlyConsumptionIndicator"
         android:layout_alignStart="@+id/montlyConsumptionIndicator"
-        android:layout_below="@+id/car_monthlyCons"
+        android:layout_below="@+id/userBirthday"
         android:layout_marginTop="7dp"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/profile_sex" />
@@ -143,18 +143,18 @@
         app:srcCompat="@drawable/profile_email" />
 
     <TextView
-        android:id="@+id/profile_car"
+        android:id="@+id/profile_CarName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/lastUpdatedIndicator"
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/lastUpdatedIndicator"
         android:layout_toRightOf="@+id/lastUpdatedIndicator"
-        android:text="Renault Symbol Diesel"
+        android:text="Renault Symbol"
         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
     <ImageView
-        android:id="@+id/updateCarInfo"
+        android:id="@+id/updateUserInfo"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"

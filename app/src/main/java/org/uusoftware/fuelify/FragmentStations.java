@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -78,6 +79,7 @@ public class FragmentStations extends Fragment {
     private GoogleMap googleMap;
     SharedPreferences prefs;
     Circle circle;
+    Marker[] markes = new Marker[99];
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -236,7 +238,7 @@ public class FragmentStations extends Fragment {
                             photoURLs[i] = "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png";
 
                             LatLng sydney = new LatLng(lat, lon);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i]));
+                            markes[i] = googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i]));
 
                             registerStations(stationName[i], vicinity[i], location[i], placeID[i], photoURLs[i]);
                             fetchPrices(placeID[i]);

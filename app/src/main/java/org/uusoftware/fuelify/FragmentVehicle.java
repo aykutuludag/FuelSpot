@@ -75,7 +75,8 @@ public class FragmentVehicle extends Fragment {
 
         //Marka-model
         TextView fullname = headerView.findViewById(R.id.carFullname);
-        fullname.setText(carBrand + " " + carModel);
+        String fullad = carBrand + " " + carModel;
+        fullname.setText(fullad);
 
         //Kilometre
         TextView kilometerText = headerView.findViewById(R.id.car_kilometer);

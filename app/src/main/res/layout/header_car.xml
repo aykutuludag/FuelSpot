@@ -6,7 +6,6 @@
     android:layout_height="200dp"
     android:background="#626262">
 
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/car_picture"
         android:layout_width="125dp"
