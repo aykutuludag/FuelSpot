@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         purchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PurchasesActivity.class);
+                Intent intent = new Intent(MainActivity.this, PurchaseDetails.class);
                 startActivity(intent);
             }
         });
@@ -161,9 +161,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawers();
-                navigationView.setCheckedItem(R.id.nav_profile);
-                Fragment fragment3 = new FragmentProfile();
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment3, "Profile").commit();
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -189,10 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_stations:
                         Fragment fragment2 = new FragmentStations();
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment2, "Stations").commit();
-                        return true;
-                    case R.id.nav_profile:
-                        Fragment fragment3 = new FragmentProfile();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment3, "Profile").commit();
                         return true;
                     case R.id.nav_news:
                         Fragment fragment4 = new FragmentNews();
@@ -529,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("Vehicle");
-        if (fragment != null && fragment.isVisible()){
+        if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -546,8 +541,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentHome fragment0 = (FragmentHome) getSupportFragmentManager().findFragmentByTag("Home");
             FragmentVehicle fragment1 = (FragmentVehicle) getSupportFragmentManager().findFragmentByTag("Vehicle");
             FragmentStations fragment2 = (FragmentStations) getSupportFragmentManager().findFragmentByTag("Stations");
-            FragmentProfile fragment3 = (FragmentProfile) getSupportFragmentManager().findFragmentByTag("Profile");
-            FragmentNews fragment4 = (FragmentNews) getSupportFragmentManager().findFragmentByTag("News");
+            FragmentNews fragment3 = (FragmentNews) getSupportFragmentManager().findFragmentByTag("News");
 
             // FragmentHome OnBackPressed
             if (fragment0 != null) {
@@ -582,14 +576,8 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
             }
 
-            // FragmentProfile OnBackPressed
-            if (fragment3 != null && fragment3.isVisible()) {
-                Fragment fragment = new FragmentHome();
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
-            }
-
             // FragmentNews OnBackPressed
-            if (fragment4 != null && fragment4.isVisible()) {
+            if (fragment3 != null && fragment3.isVisible()) {
                 Fragment fragment = new FragmentHome();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
             }

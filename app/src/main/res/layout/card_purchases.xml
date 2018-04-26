@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:id="@+id/single_purchase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#E0E0E0">
+
+            <TextView
+                android:id="@+id/stationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Shell Ümitköy"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="22sp" />
+
+            <com.github.curioustechizen.ago.RelativeTimeTextView
+                android:id="@+id/purchaseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:background="#fff"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/section1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stationName"
+                android:layout_centerHorizontal="true"
+                android:text="Alınan yakıt"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/bill_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/section1"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/title_type"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="Tür"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/title_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/title_type"
+                    android:gravity="center"
+                    android:text="Miktar"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/title_tax"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/title_amount"
+                    android:layout_toRightOf="@+id/title_amount"
+                    android:gravity="center"
+                    android:text="Vergi"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/title_price"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="Tutar"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/type1"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/title_type"
+                    android:gravity="center"
+                    android:text="-"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/amount1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_type"
+                    android:layout_toEndOf="@+id/title_type"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/tax1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/type1"
+                    android:layout_toEndOf="@+id/amount1"
+                    android:layout_toRightOf="@+id/amount1"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/price1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/title_type"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/type2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/type1"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/amount2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/type1"
+                    android:layout_toEndOf="@+id/title_type"
+                    android:layout_toRightOf="@+id/title_type"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/tax2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tax1"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/amount2"
+                    android:layout_toRightOf="@id/amount2"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/price2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/type1"
+                    android:gravity="center"
+                    android:text="-"
+                    card_view:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/totalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="68dp"
+                    android:gravity="center"
+                    android:text="TOPLAM: -"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold"
+                    app:layout_widthPercent="75%" />
+
+            </android.support.percent.PercentRelativeLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

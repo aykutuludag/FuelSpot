@@ -35,7 +35,7 @@
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="330dp" />
+                android:layout_height="350dp" />
 
             <RelativeLayout
                 android:id="@+id/single_station"
@@ -46,7 +46,7 @@
                 <ImageView
                     android:id="@+id/station_photo"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_height="75dp"
                     android:layout_alignParentTop="true"
                     android:padding="8dp"
                     app:srcCompat="@drawable/shell" />

@@ -62,6 +62,7 @@ public class AddFuel extends AppCompatActivity {
     public static final int REQUEST_EXTERNAL_STORAGE = 0;
     private static String[] PERMISSIONS_STORAGE = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
     String UPLOAD_URL = "http://uusoftware.org/Fuelify/add-fuel.php";
+    String UPDATE_STATION_URL = "http://uusoftware.org/Fuelify/update-station.php";
     public static String chosenStationName, chosenStationID;
     public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     Bitmap bitmap;
@@ -71,10 +72,9 @@ public class AddFuel extends AppCompatActivity {
     Button expandableButton1, expandableButton2;
     EditText chooseStation, chooseTime;
     SharedPreferences prefs;
-    Calendar calendar;
     RadioGroup chooseFuel, chooseFuel2;
     int hour, minute;
-    long purchaseTime = System.currentTimeMillis();
+    long purchaseTime;
     String fuelType, fuelType2 = "-";
     double totalPrice;
     double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
@@ -120,7 +120,7 @@ public class AddFuel extends AppCompatActivity {
         //SAAT SEÇİMİ
         getTime();
         chooseTime = findViewById(R.id.editTextTime);
-        chooseTime.setText(hour + ":" + minute);
+        chooseTime.setText(pad(hour) + ":" + pad(minute));
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,9 +133,9 @@ public class AddFuel extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         Calendar calendar = Calendar.getInstance();
-                        calendar.set(selectedHour, selectedMinute, new Date().getDate());
+                        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), selectedHour, selectedMinute);
                         purchaseTime = calendar.getTimeInMillis();
-                        chooseTime.setText(selectedHour + ":" + selectedMinute);
+                        chooseTime.setText(pad(selectedHour) + ":" + pad(selectedMinute));
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -171,7 +171,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s != null && s.length() > 0) {
                     selectedUnitPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-                    String literText = String.format("%.2f", buyedLiter) + "litre";
+                    String literText = String.format("%.2f", buyedLiter) + " " + "litre";
                     textViewLitre.setText(literText);
                 }
             }
@@ -263,63 +263,129 @@ public class AddFuel extends AppCompatActivity {
         sendVariables.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNetworkConnected()) {
-                    //Showing the progress dialog
-                    final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
-                            new Response.Listener<String>() {
+                if (chosenStationName != null && chosenStationName.length() >= 3) {
+                    if (isNetworkConnected()) {
+                        if (totalPrice > 0) {
+                            //Showing the progress dialog
+                            final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String s) {
+                                            //Disimissing the progress dialog
+                                            loading.dismiss();
+                                            Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                                            updateStationPrices();
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError volleyError) {
+                                            //Dismissing the progress dialog
+                                            loading.dismiss();
+                                            //Showing toast
+                                            Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }) {
                                 @Override
-                                public void onResponse(String s) {
-                                    //Disimissing the progress dialog
-                                    loading.dismiss();
-                                    //Showing toast message of the response
-                                    Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                                    finish();
+                                protected Map<String, String> getParams() {
+                                    //Creating parameters
+                                    Map<String, String> params = new Hashtable<>();
+
+                                    //Adding parameters
+                                    params.put("purchaseTime", String.valueOf(purchaseTime));
+                                    params.put("username", username);
+                                    params.put("stationID", chosenStationID);
+                                    params.put("stationNAME", chosenStationName);
+                                    params.put("fuelType", fuelType);
+                                    params.put("fuelPrice", String.valueOf(selectedUnitPrice));
+                                    params.put("fuelLiter", String.valueOf(buyedLiter));
+                                    params.put("fuelType2", fuelType2);
+                                    params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
+                                    params.put("fuelLiter2", String.valueOf(buyedLiter2));
+                                    params.put("totalPrice", String.valueOf(totalPrice));
+                                    if (bitmap != null) {
+                                        params.put("billPhoto", getStringImage(bitmap));
+                                    }
+
+                                    //returning parameters
+                                    return params;
                                 }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError volleyError) {
-                                    //Dismissing the progress dialog
-                                    loading.dismiss();
+                            };
 
-                                    //Showing toast
-                                    Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            //Creating parameters
-                            Map<String, String> params = new Hashtable<>();
+                            //Creating a Request Queue
+                            RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
 
-                            //Adding parameters
-                            params.put("purchaseTime", String.valueOf(purchaseTime));
-                            params.put("username", username);
-                            params.put("stationID", chosenStationID);
-                            params.put("fuelType", fuelType);
-                            params.put("fuelPrice", String.valueOf(selectedUnitPrice));
-                            params.put("fuelLiter", String.valueOf(buyedLiter));
-                            params.put("fuelType2", fuelType2);
-                            params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
-                            params.put("fuelLiter2", String.valueOf(buyedLiter2));
-                            params.put("totalPrice", String.valueOf(totalPrice));
-                            params.put("billPhoto", getStringImage(bitmap));
-
-                            //returning parameters
-                            return params;
+                            //Adding request to the queue
+                            requestQueue.add(stringRequest);
+                        } else {
+                            Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
                         }
-                    };
-
-                    //Creating a Request Queue
-                    RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
-
-                    //Adding request to the queue
-                    requestQueue.add(stringRequest);
+                    } else {
+                        Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda olmadığınız için yakıt ekleyemezsiniz.", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    private void updateStationPrices() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPDATE_STATION_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", chosenStationID);
+                if (fuelType != null && fuelType.length() > 0 && selectedUnitPrice > 0) {
+                    if (fuelType.contains("gasoline")) {
+                        params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
+                    } else if (fuelType.contains("diesel")) {
+                        params.put("dieselPrice", String.valueOf(selectedUnitPrice));
+                    } else if (fuelType.contains("lpg")) {
+                        params.put("lpgPrice", String.valueOf(selectedUnitPrice));
+                    } else {
+                        params.put("electricityPrice", String.valueOf(selectedUnitPrice));
+                    }
+                }
+                if (fuelType2 != null && fuelType2.length() > 0 && selectedUnitPrice > 0) {
+                    if (fuelType2.contains("gasoline")) {
+                        params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
+                    } else if (fuelType2.contains("diesel")) {
+                        params.put("dieselPrice", String.valueOf(selectedUnitPrice));
+                    } else if (fuelType2.contains("lpg")) {
+                        params.put("lpgPrice", String.valueOf(selectedUnitPrice));
+                    } else {
+                        params.put("electricityPrice", String.valueOf(selectedUnitPrice));
+                    }
+                }
+                params.put("lastUpdated", String.valueOf(purchaseTime));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     public void updatePrices() {
@@ -404,9 +470,11 @@ public class AddFuel extends AppCompatActivity {
     }
 
     public void getTime() {
-        calendar = Calendar.getInstance();
-        hour = calendar.getTime().getHours();
-        minute = calendar.getTime().getMinutes();
+        Calendar calendar = Calendar.getInstance();
+        hour = calendar.get(Calendar.HOUR);
+        minute = calendar.get(Calendar.MINUTE);
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, minute);
+        purchaseTime = calendar.getTimeInMillis();
     }
 
     public boolean verifyStoragePermissions() {
@@ -502,6 +570,14 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
+    public String pad(int input) {
+        if (input >= 10) {
+            return String.valueOf(input);
+        } else {
+            return "0" + String.valueOf(input);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -514,6 +590,14 @@ public class AddFuel extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        //Remove variables
+        bitmap = null;
+        chosenStationName = null;
+        chosenStationID = null;
+        gasolinePrice = 0;
+        dieselPrice = 0;
+        electricityPrice = 0;
+        LPGPrice = 0;
         finish();
     }
 }

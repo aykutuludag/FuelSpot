@@ -235,7 +235,17 @@ public class FragmentStations extends Fragment {
                             double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
                             location[i] = lat + ";" + lon;
 
-                            photoURLs[i] = "https://maps.gstatic.com/mapfiles/place_api/icons/gas_station-71.png";
+                            if (stationName[i].contains("Shell")) {
+                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/shell.png";
+                            } else if (stationName[i].contains("Opet")) {
+                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/opet.jpg";
+                            } else if (stationName[i].contains("BP")) {
+                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/bp.png";
+                            } else if (stationName[i].contains("Kadoil")) {
+                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/kadoil.jpg";
+                            } else {
+                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/unknown.png";
+                            }
 
                             LatLng sydney = new LatLng(lat, lon);
                             markes[i] = googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i]));

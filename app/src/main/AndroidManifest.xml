@@ -62,7 +62,7 @@
                 android:value="org.uusoftware.fuelify.AddFuel" />
         </activity>
         <activity
-            android:name=".PurchasesActivity"
+            android:name=".PurchaseDetails"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -85,12 +85,20 @@
                 android:value="org.uusoftware.fuelify.MainActivity" />
         </activity>
         <activity
-            android:name=".ProfileEditActivity"
-            android:label="@string/title_activity_profile_edit"
+            android:name=".ProfileActivity"
+            android:label="@string/nav_text_profile"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ProfileEditActivity"
+            android:label="@string/title_activity_profile_edit"
+            android:parentActivityName=".ProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.ProfileActivity" />
         </activity>
 
         <!-- ImageCrop -->

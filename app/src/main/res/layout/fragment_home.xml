@@ -23,16 +23,6 @@
         app:layout_widthPercent="100%" />
 
     <ImageView
-        android:id="@+id/user_card"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_below="@+id/stations_card"
-        android:scaleType="fitXY"
-        android:src="@drawable/user_profile"
-        app:layout_heightPercent="33.34%"
-        app:layout_widthPercent="50%" />
-
-    <ImageView
         android:id="@+id/latest_news"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -41,6 +31,6 @@
         android:scaleType="fitXY"
         android:src="@drawable/latest_news"
         app:layout_heightPercent="33.34%"
-        app:layout_widthPercent="50%" />
+        app:layout_widthPercent="100%" />
 
 </android.support.percent.PercentRelativeLayout>

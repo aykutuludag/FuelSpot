@@ -13,7 +13,7 @@ import com.google.android.gms.analytics.Tracker;
 
 public class FragmentHome extends Fragment {
 
-    ImageView vehicleCard, stationsCard, userCard, latestNews;
+    ImageView vehicleCard, stationsCard, latestNews;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,15 +45,6 @@ public class FragmentHome extends Fragment {
             }
         });
 
-        userCard = rootView.findViewById(R.id.user_card);
-        userCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_profile);
-                Fragment fragment = new FragmentProfile();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Profile").commit();
-            }
-        });
 
         latestNews = rootView.findViewById(R.id.latest_news);
         latestNews.setOnClickListener(new View.OnClickListener() {

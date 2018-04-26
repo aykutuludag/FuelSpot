@@ -60,6 +60,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
                 intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
                 intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+                intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
                 intent.putExtra("STATION_ID", feedItemList.get(position).getID());
                 mContext.startActivity(intent);
             }
@@ -88,10 +89,37 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.vicinity.setText(feedItem.getVicinity());
 
         // Setting prices
-        viewHolder.gasolinePrice.setText(String.valueOf(feedItem.getGasolinePrice()));
-        viewHolder.dieselPrice.setText(String.valueOf(feedItem.getDieselPrice()));
-        viewHolder.lpgPrice.setText(String.valueOf(feedItem.getLpgPrice()));
-        viewHolder.electricityPrice.setText(String.valueOf(feedItem.getElectricityPrice()));
+        String gasolineHolder;
+        if (String.valueOf(feedItem.getGasolinePrice()).contains("0.0")) {
+            gasolineHolder = "-";
+        } else {
+            gasolineHolder = feedItem.getGasolinePrice() + " TL";
+        }
+        viewHolder.gasolinePrice.setText(gasolineHolder);
+
+        String dieselHolder;
+        if (String.valueOf(feedItem.getDieselPrice()).contains("0.0")) {
+            dieselHolder = "-";
+        } else {
+            dieselHolder = feedItem.getGasolinePrice() + " TL";
+        }
+        viewHolder.dieselPrice.setText(dieselHolder);
+
+        String lpgHolder;
+        if (String.valueOf(feedItem.getLpgPrice()).contains("0.0")) {
+            lpgHolder = "-";
+        } else {
+            lpgHolder = feedItem.getLpgPrice() + " TL";
+        }
+        viewHolder.lpgPrice.setText(lpgHolder);
+
+        String elecHolder;
+        if (String.valueOf(feedItem.getElectricityPrice()).contains("0.0")) {
+            elecHolder = "-";
+        } else {
+            elecHolder = feedItem.getElectricityPrice() + " TL";
+        }
+        viewHolder.electricityPrice.setText(elecHolder);
 
         //Distance
         String distance = (int) feedItem.getDistance() + " m";
@@ -102,7 +130,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.lastUpdated.setReferenceTime(date.getTime());
 
         //Station Icon
-        Picasso.with(mContext).load(feedItem.getPhotoURL()).error(R.drawable.header_station).placeholder(R.drawable.header_station)
+        Picasso.with(mContext).load(feedItem.getPhotoURL()).error(R.drawable.unknown).placeholder(R.drawable.unknown)
                 .into(viewHolder.stationPic);
 
         // Handle click event on image click
@@ -124,6 +152,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         ViewHolder(View itemView) {
             super(itemView);
+            background = itemView.findViewById(R.id.single_station);
             stationName = itemView.findViewById(R.id.station_name);
             vicinity = itemView.findViewById(R.id.station_vicinity);
             gasolinePrice = itemView.findViewById(R.id.gasoline_price);
@@ -132,7 +161,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             electricityPrice = itemView.findViewById(R.id.electricity_price);
             lastUpdated = itemView.findViewById(R.id.lastUpdated);
             stationPic = itemView.findViewById(R.id.station_photo);
-            background = itemView.findViewById(R.id.single_station);
             distance = itemView.findViewById(R.id.distance_ofStation);
         }
     }

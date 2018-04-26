@@ -132,6 +132,7 @@
                         android:layout_below="@+id/textViewWhichFuel"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
+                        android:alpha="0.5"
                         android:clickable="false"
                         android:orientation='horizontal'>
 
@@ -140,16 +141,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp"
                             android:clickable="false"
+                            android:padding="8dp"
                             android:text="Benzin" />
 
                         <RadioButton
                             android:id="@+id/diesel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:clickable="false"
                             android:layout_weight="1"
+                            android:clickable="false"
                             android:padding="8dp"
                             android:text="Dizel" />
 
@@ -158,8 +159,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp"
                             android:clickable="false"
+                            android:padding="8dp"
                             android:text="LPG" />
 
                         <RadioButton
@@ -277,6 +278,7 @@
                         android:layout_below="@+id/textViewWhichFuel2"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
+                        android:alpha="0.5"
                         android:clickable="false"
                         android:orientation='horizontal'>
 
@@ -293,8 +295,8 @@
                             android:id="@+id/diesel2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:clickable="false"
                             android:layout_weight="1"
+                            android:clickable="false"
                             android:padding="8dp"
                             android:text="Dizel" />
 
@@ -303,8 +305,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="8dp"
                             android:clickable="false"
+                            android:padding="8dp"
                             android:text="LPG" />
 
                         <RadioButton

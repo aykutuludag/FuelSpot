@@ -7,17 +7,22 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
+import com.squareup.picasso.Picasso;
 
 public class StationDetails extends AppCompatActivity {
 
-    String stationName, stationVicinity, stationLocation;
+    String stationName, stationVicinity, stationLocation, iconURL;
+    ImageView stationIcon;
     float stationDistance;
     double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
     long lastUpdated;
@@ -46,6 +51,7 @@ public class StationDetails extends AppCompatActivity {
         lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00f);
         electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00f);
         lastUpdated = getIntent().getLongExtra("STATION_LASTUPDATED", 0);
+        iconURL = getIntent().getStringExtra("STATION_ICON");
 
         textName = findViewById(R.id.station_name);
         textName.setText(stationName);
@@ -71,6 +77,11 @@ public class StationDetails extends AppCompatActivity {
         textLastUpdated = findViewById(R.id.lastUpdated);
         textLastUpdated.setReferenceTime(lastUpdated);
 
+        //Station Icon
+        stationIcon = findViewById(R.id.station_photo);
+        Picasso.with(this).load(iconURL).error(R.drawable.unknown).placeholder(R.drawable.unknown)
+                .into(stationIcon);
+
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);
         mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
@@ -78,6 +89,16 @@ public class StationDetails extends AppCompatActivity {
             public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
                 panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
                 mPanorama = panorama;
+                mPanorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+                    @Override
+                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
+                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
+                            Toast.makeText(StationDetails.this, "Sokak görünümü mevcut", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(StationDetails.this, "Sokak görünümü yok", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
 

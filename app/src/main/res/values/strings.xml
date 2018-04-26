@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Fuelify</string>
+    <string name="app_name">FuelSpot</string>
     <string name="facebook_app_id">380327342377274</string>
     <string name="fb_login_protocol_scheme">fb380327342377274</string>
     <string name="google_maps_api_key">AIzaSyBZ5TaWeSnfsCUDidUDeLu64bausAmMpcU</string>
 
     <string name="title_activity_login">Giriş yap</string>
-    <string name="account_created">Hesabınız oluşturuldu. Şimdi Sorbie zamanı&#8230;</string>
+    <string name="account_created">Hesabınız oluşturuldu. Şimdi FuelSpot zamanı&#8230;</string>
     <string name="error_login_no_account">Hesap bulunamadı.</string>
     <string name="error_login_fail">Giriş yaparken hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>
     <string name="error_login_cancel">Giriş işlemi kullanıcı tarafından iptal edildi</string>
@@ -26,7 +26,7 @@
     <string name="nav_text_puanla">Uygulamayı puanla</string>
     <string name="nav_text_support">Uygulamayı paylaş</string>
     <string name="nav_text_beta">Beta sürüme geçin</string>
-    <string name="nav_text_version"><small>Fuelify v1.0</small></string>
+    <string name="nav_text_version"><small>FuelSpot v1.0</small></string>
 
     <!-- NavMenu Statues -->
     <string name="navigation_drawer_open">Yan menü açıldı</string>
