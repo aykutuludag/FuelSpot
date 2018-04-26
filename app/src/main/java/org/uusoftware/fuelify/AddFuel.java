@@ -337,6 +337,7 @@ public class AddFuel extends AppCompatActivity {
                     @Override
                     public void onResponse(String s) {
                         Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {
@@ -363,15 +364,15 @@ public class AddFuel extends AppCompatActivity {
                         params.put("electricityPrice", String.valueOf(selectedUnitPrice));
                     }
                 }
-                if (fuelType2 != null && fuelType2.length() > 0 && selectedUnitPrice > 0) {
+                if (fuelType2 != null && fuelType2.length() > 0 && selectedUnitPrice2 > 0) {
                     if (fuelType2.contains("gasoline")) {
-                        params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
+                        params.put("gasolinePrice", String.valueOf(selectedUnitPrice2));
                     } else if (fuelType2.contains("diesel")) {
-                        params.put("dieselPrice", String.valueOf(selectedUnitPrice));
+                        params.put("dieselPrice", String.valueOf(selectedUnitPrice2));
                     } else if (fuelType2.contains("lpg")) {
-                        params.put("lpgPrice", String.valueOf(selectedUnitPrice));
+                        params.put("lpgPrice", String.valueOf(selectedUnitPrice2));
                     } else {
-                        params.put("electricityPrice", String.valueOf(selectedUnitPrice));
+                        params.put("electricityPrice", String.valueOf(selectedUnitPrice2));
                     }
                 }
                 params.put("lastUpdated", String.valueOf(purchaseTime));

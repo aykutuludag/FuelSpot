@@ -101,7 +101,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (String.valueOf(feedItem.getDieselPrice()).contains("0.0")) {
             dieselHolder = "-";
         } else {
-            dieselHolder = feedItem.getGasolinePrice() + " TL";
+            dieselHolder = feedItem.getDieselPrice() + " TL";
         }
         viewHolder.dieselPrice.setText(dieselHolder);
 
