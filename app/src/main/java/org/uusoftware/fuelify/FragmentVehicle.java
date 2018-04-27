@@ -60,7 +60,7 @@ public class FragmentVehicle extends Fragment {
     ImageView carPhotoHolder;
     SharedPreferences prefs;
 
-    String FETCH_URL = "http://uusoftware.org/Fuelify/fetch-purchases.php";
+    String FETCH_URL = "http://uusoftware.org/Fuelspot/api/fetch-purchases.php";
 
     SwipeRefreshLayout swipeContainer;
     RecyclerView mRecyclerView;

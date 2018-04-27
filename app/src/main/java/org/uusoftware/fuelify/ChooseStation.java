@@ -50,7 +50,7 @@ import static org.uusoftware.fuelify.MainActivity.userlon;
 public class ChooseStation extends AppCompatActivity {
 
     public static boolean isAddingFuel;
-    String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
+    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
     String[] vicinity = new String[99];
@@ -236,7 +236,7 @@ public class ChooseStation extends AppCompatActivity {
 
     public void fetchPrices(final String placeID) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelify/fetch-prices.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelspot/fetch-prices.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

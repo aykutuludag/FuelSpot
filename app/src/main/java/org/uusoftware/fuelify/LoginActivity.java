@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     LoginButton loginButton;
     int googleSign = 9001;
     ProgressBar pb;
-    String REGISTER_URL = "http://uusoftware.org/Fuelify/register.php";
+    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/register.php";
     boolean premium = false;
     Handler handler;
     Intent intent;

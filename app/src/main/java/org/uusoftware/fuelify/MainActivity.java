@@ -69,6 +69,96 @@ public class MainActivity extends AppCompatActivity {
     public static String name, email, photo, carPhoto, gender, birthday, location, username, carBrand, carModel;
     public static int fuelPri, fuelSec, kilometer;
 
+    public static void getVariables(SharedPreferences prefs) {
+        name = prefs.getString("Name", "-");
+        email = prefs.getString("Email", "-");
+        photo = prefs.getString("ProfilePhoto", "http://uusoftware.org/Fuelify/profile.png");
+        carPhoto = prefs.getString("CarPhoto", "http://uusoftware.org/Fuelify/car.png");
+        gender = prefs.getString("Gender", "-");
+        birthday = prefs.getString("Birthday", "-");
+        location = prefs.getString("Location", "-");
+        username = prefs.getString("UserName", "-");
+        carBrand = prefs.getString("carBrand", "Acura");
+        carModel = prefs.getString("carModel", "RSX");
+        fuelPri = prefs.getInt("FuelPrimary", 0);
+        fuelSec = prefs.getInt("FuelSecondary", -1);
+        kilometer = prefs.getInt("Kilometer", 0);
+        userlat = Double.parseDouble(prefs.getString("lat", "0"));
+        userlon = Double.parseDouble(prefs.getString("lon", "0"));
+        premium = prefs.getBoolean("hasPremium", false);
+    }
+
+    public static boolean isNetworkConnected(Context mContext) {
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
+    }
+
+    //First try to load Audience Network, fails load AdMob
+    public static void AudienceNetwork(final Context mContext) {
+        if (adCount < 2) {
+            facebookInterstitial = new InterstitialAd(mContext, mContext.getString(R.string.interstitial_facebook));
+            facebookInterstitial.setAdListener(new InterstitialAdListener() {
+                @Override
+                public void onInterstitialDisplayed(Ad ad) {
+                    // Interstitial displayed callback
+                }
+
+                @Override
+                public void onInterstitialDismissed(Ad ad) {
+                    // Interstitial dismissed callback
+                    AudienceNetwork(mContext);
+                }
+
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    // Ad error callback
+                    AdMob(mContext);
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    // Show the ad when it's done loading.
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+                    // Ad clicked callback
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+            });
+            facebookInterstitial.loadAd();
+        }
+    }
+
+    public static void AdMob(final Context mContext) {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
+        admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
+        admobInterstitial.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                AudienceNetwork(mContext);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+                AudienceNetwork(mContext);
+            }
+        });
+        admobInterstitial.loadAd(adRequest);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.sorbie);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         //Window
         window = this.getWindow();
@@ -243,96 +333,6 @@ public class MainActivity extends AppCompatActivity {
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
-    }
-
-    public static boolean isNetworkConnected(Context mContext) {
-        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
-    }
-
-    //First try to load Audience Network, fails load AdMob
-    public static void AudienceNetwork(final Context mContext) {
-        if (adCount < 2) {
-            facebookInterstitial = new InterstitialAd(mContext, mContext.getString(R.string.interstitial_facebook));
-            facebookInterstitial.setAdListener(new InterstitialAdListener() {
-                @Override
-                public void onInterstitialDisplayed(Ad ad) {
-                    // Interstitial displayed callback
-                }
-
-                @Override
-                public void onInterstitialDismissed(Ad ad) {
-                    // Interstitial dismissed callback
-                    AudienceNetwork(mContext);
-                }
-
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    // Ad error callback
-                    AdMob(mContext);
-                }
-
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    // Show the ad when it's done loading.
-                }
-
-                @Override
-                public void onAdClicked(Ad ad) {
-                    // Ad clicked callback
-                }
-
-                @Override
-                public void onLoggingImpression(Ad ad) {
-
-                }
-            });
-            facebookInterstitial.loadAd();
-        }
-    }
-
-    public static void AdMob(final Context mContext) {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
-        admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
-        admobInterstitial.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
-
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                AudienceNetwork(mContext);
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
-                AudienceNetwork(mContext);
-            }
-        });
-        admobInterstitial.loadAd(adRequest);
-    }
-
-    public static void getVariables(SharedPreferences prefs) {
-        name = prefs.getString("Name", "-");
-        email = prefs.getString("Email", "-");
-        photo = prefs.getString("ProfilePhoto", "http://uusoftware.org/Fuelify/profile.png");
-        carPhoto = prefs.getString("CarPhoto", "http://uusoftware.org/Fuelify/profile.png");
-        gender = prefs.getString("Gender", "-");
-        birthday = prefs.getString("Birthday", "-");
-        location = prefs.getString("Location", "-");
-        username = prefs.getString("UserName", "-");
-        carBrand = prefs.getString("carBrand", "Acura");
-        carModel = prefs.getString("carModel", "RSX");
-        fuelPri = prefs.getInt("FuelPrimary", 0);
-        fuelSec = prefs.getInt("FuelSecondary", -1);
-        kilometer = prefs.getInt("Kilometer", 0);
-        userlat = Double.parseDouble(prefs.getString("lat", "0"));
-        userlon = Double.parseDouble(prefs.getString("lon", "0"));
-        premium = prefs.getBoolean("hasPremium", false);
     }
 
     private void buyPremiumPopup() {

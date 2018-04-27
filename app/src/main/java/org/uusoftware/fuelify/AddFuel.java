@@ -61,8 +61,8 @@ public class AddFuel extends AppCompatActivity {
 
     public static final int REQUEST_EXTERNAL_STORAGE = 0;
     private static String[] PERMISSIONS_STORAGE = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
-    String UPLOAD_URL = "http://uusoftware.org/Fuelify/add-fuel.php";
-    String UPDATE_STATION_URL = "http://uusoftware.org/Fuelify/update-station.php";
+    String UPLOAD_URL = "http://uusoftware.org/Fuelspot/api/add-fuel.php";
+    String UPDATE_STATION_URL = "http://uusoftware.org/Fuelspot/api/update-station.php";
     public static String chosenStationName, chosenStationID;
     public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     Bitmap bitmap;
@@ -329,6 +329,7 @@ public class AddFuel extends AppCompatActivity {
                 }
             }
         });
+        updatePrices();
     }
 
     private void updateStationPrices() {

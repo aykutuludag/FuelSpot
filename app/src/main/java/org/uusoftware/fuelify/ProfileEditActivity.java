@@ -55,7 +55,7 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    String UPDATE_USER_INFO = "http://uusoftware.org/Fuelify/update-user.php";
+    String UPDATE_USER_INFO = "http://uusoftware.org/Fuelspot/api/update-user.php";
 
     Toolbar toolbar;
     Window window;
@@ -76,7 +76,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.sorbie);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         //Window
         window = this.getWindow();

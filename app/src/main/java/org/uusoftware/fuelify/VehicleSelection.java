@@ -116,7 +116,7 @@ public class VehicleSelection extends AppCompatActivity implements AdapterView.O
     Spinner spinner, spinner2;
     SharedPreferences prefs;
     RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
-    String REGISTER_URL = "http://uusoftware.org/Fuelify/register-car.php";
+    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/register-car.php";
     int pos, pos2;
 
     @Override

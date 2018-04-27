@@ -65,7 +65,7 @@ public class FragmentStations extends Fragment {
     MapView mMapView;
 
     //Station variables
-    String REGISTER_URL = "http://uusoftware.org/Fuelify/add-station.php";
+    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
     String[] vicinity = new String[99];
@@ -236,15 +236,15 @@ public class FragmentStations extends Fragment {
                             location[i] = lat + ";" + lon;
 
                             if (stationName[i].contains("Shell")) {
-                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/shell.png";
+                                photoURLs[i] = "http://uusoftware.org/Fuelspot/station_icons/shell.png";
                             } else if (stationName[i].contains("Opet")) {
-                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/opet.jpg";
+                                photoURLs[i] = "http://uusoftware.org/Fuelspot/station_icons/opet.jpg";
                             } else if (stationName[i].contains("BP")) {
-                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/bp.png";
+                                photoURLs[i] = "http://uusoftware.org/Fuelspot/station_icons/bp.png";
                             } else if (stationName[i].contains("Kadoil")) {
-                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/kadoil.jpg";
+                                photoURLs[i] = "http://uusoftware.org/Fuelspot/station_icons/kadoil.jpg";
                             } else {
-                                photoURLs[i] = "http://uusoftware.org/Fuelify/station_icons/unknown.png";
+                                photoURLs[i] = "http://uusoftware.org/Fuelspot/station_icons/unknown.png";
                             }
 
                             LatLng sydney = new LatLng(lat, lon);
@@ -304,7 +304,7 @@ public class FragmentStations extends Fragment {
 
     public void fetchPrices(final String placeID) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelify/fetch-prices.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelspot/api/fetch-prices.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
