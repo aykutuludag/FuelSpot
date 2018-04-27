@@ -332,7 +332,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     } else {
                         //Default values
                         gender = "Erkek";
-                        birthday = "01-01-2000";
+                        birthday = "01/01/2000";
                         location = "-";
                         prefs.edit().putString("Gender", gender).apply();
                         prefs.edit().putString("Birthday", null).apply();

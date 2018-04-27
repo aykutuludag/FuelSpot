@@ -6,7 +6,7 @@ android {
         applicationId "org.uusoftware.fuelify"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 8
+        versionCode 9
         versionName "1.0"
     }
     buildTypes {
@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-plus:15.0.0'
     implementation 'com.google.android.gms:play-services-maps:15.0.0'
     implementation 'com.google.firebase:firebase-ads:15.0.0'
+    implementation 'com.google.android.gms:play-services-places:15.0.0'
 
     implementation 'com.facebook.android:facebook-android-sdk:4.29.0'
     implementation 'com.facebook.android:audience-network-sdk:4.28.0'

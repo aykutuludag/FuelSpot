@@ -202,20 +202,20 @@ public class FragmentStations extends Fragment {
             googleMap.clear();
         }
 
-        //Draw a circle with radius of 3000m
+        //Draw a circle with radius of 5000m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(userlat, userlon))
-                .radius(3000)
+                .radius(5000)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(userlat, userlon);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12.5f).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(11.75f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
-        //Search stations in a radius of 3000m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=3000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+        //Search stations in a radius of 5000m
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=5000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,

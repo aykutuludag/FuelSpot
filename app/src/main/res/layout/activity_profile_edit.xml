@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileEditActivity">
+    tools:context="org.uusoftware.fuelify.ProfileEditActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,22 +20,271 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ProfileEditActivity">
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/event_photo"
+                android:layout_width="142dp"
+                android:layout_height="142dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@drawable/profile" />
+
+            <ImageView
+                android:id="@+id/indicator_title"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignTop="@+id/event_photo"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/event_photo"
+                android:layout_toRightOf="@+id/event_photo"
+                app:srcCompat="@drawable/event_edit_title" />
+
+            <TextView
+                android:id="@+id/post_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/indicator_title"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/indicator_title"
+                android:layout_toRightOf="@+id/indicator_title"
+                android:gravity="center"
+                android:text="Ad - Soyad"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <EditText
+                android:id="@+id/editEventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/indicator_title"
+                android:layout_alignStart="@+id/indicator_title"
+                android:layout_below="@+id/post_name"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:gravity="bottom"
+                android:hint="Sheldon Cooper"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+
+            <ImageView
+                android:id="@+id/indicator_desc"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignLeft="@+id/editEventName"
+                android:layout_alignStart="@+id/editEventName"
+                android:layout_below="@+id/editEventName"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/profile_edit_email" />
+
+            <TextView
+                android:id="@+id/mail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/indicator_desc"
+                android:layout_alignTop="@+id/indicator_desc"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/indicator_desc"
+                android:layout_toRightOf="@+id/indicator_desc"
+                android:gravity="center"
+                android:text="E-posta"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <EditText
+                android:id="@+id/editTextDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/event_photo"
+                android:layout_alignLeft="@+id/indicator_desc"
+                android:layout_alignStart="@+id/indicator_desc"
+                android:layout_below="@+id/indicator_desc"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="bottom"
+                android:hint="sheldon.cooper@caltech.edu"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <TextView
+                android:id="@+id/text_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/editTextDesc"
+                android:layout_alignLeft="@+id/event_photo"
+                android:layout_alignRight="@+id/editTextDesc"
+                android:layout_alignStart="@+id/event_photo"
+                android:layout_below="@+id/event_photo"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Profil fotosu ve isminizi başka hesapla girerek değiştirebilirsiniz."
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            <ImageView
+                android:id="@+id/indicator_loc"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignLeft="@+id/text_info"
+                android:layout_alignStart="@+id/text_info"
+                android:layout_below="@+id/text_info"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/event_edit_location" />
+
+            <TextView
+                android:id="@+id/desc_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/indicator_loc"
+                android:layout_alignTop="@+id/indicator_loc"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/indicator_loc"
+                android:layout_toRightOf="@+id/indicator_loc"
+                android:gravity="center"
+                android:text="Konum"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <EditText
+                android:id="@+id/editTextLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/indicator_loc"
+                android:layout_alignStart="@+id/indicator_loc"
+                android:layout_below="@+id/indicator_loc"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="Pasadena, California"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <ImageView
+                android:id="@+id/indicator_date"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignLeft="@+id/editTextLocation"
+                android:layout_alignStart="@+id/editTextLocation"
+                android:layout_below="@+id/editTextLocation"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/event_edit_date" />
+
+            <TextView
+                android:id="@+id/birthday_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/indicator_date"
+                android:layout_alignLeft="@+id/desc_title"
+                android:layout_alignStart="@+id/desc_title"
+                android:layout_alignTop="@+id/indicator_date"
+                android:gravity="center"
+                android:text="Doğum günü"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <EditText
+                android:id="@+id/editTextBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/indicator_date"
+                android:layout_alignStart="@+id/indicator_date"
+                android:layout_below="@+id/indicator_date"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:enabled="true"
+                android:focusableInTouchMode="false"
+                android:hint="May 3, 1993"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <ImageView
+                android:id="@+id/indicator_gender"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignLeft="@+id/editTextBirthday"
+                android:layout_alignStart="@+id/editTextBirthday"
+                android:layout_below="@+id/editTextBirthday"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/icon_gender_dark" />
+
+            <TextView
+                android:id="@+id/gender_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/indicator_gender"
+                android:layout_alignLeft="@+id/birthday_title"
+                android:layout_alignStart="@+id/birthday_title"
+                android:layout_alignTop="@+id/indicator_gender"
+                android:gravity="center"
+                android:text="Cinsiyet"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/indicator_gender"
+                android:layout_alignStart="@+id/indicator_gender"
+                android:layout_below="@+id/indicator_gender"
+                android:layout_marginTop="10dp"
+                android:checkedButton="@+id/genderMale"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/genderMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:text="Erkek" />
+
+                <RadioButton
+                    android:id="@+id/genderFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="Kadın" />
+
+                <RadioButton
+                    android:id="@+id/genderOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="Diğer" />
+            </RadioGroup>
+        </RelativeLayout>
+    </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
