@@ -52,7 +52,6 @@ import java.util.Map;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static org.uusoftware.fuelify.MainActivity.carPhoto;
 import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.username;
@@ -81,6 +80,7 @@ public class AddFuel extends AppCompatActivity {
     EditText textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
     ImageView photoHolder;
     Button sendVariables;
+    String billPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -513,6 +513,14 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
+    public String pad(int input) {
+        if (input >= 10) {
+            return String.valueOf(input);
+        } else {
+            return "0" + String.valueOf(input);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -537,19 +545,19 @@ public class AddFuel extends AppCompatActivity {
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    carPhoto = aq.get(0);
+                    billPhoto = aq.get(0);
 
-                    System.out.println("file://" + carPhoto);
+                    System.out.println("file://" + billPhoto);
 
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/Fuelify");
+                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/Bills");
                     folder.mkdirs();
 
                     CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
                     String fileName = now + ".jpg";
 
-                    UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(9, 16)
-                            .withMaxResultSize(1080, 1920)
+                    UCrop.of(Uri.parse("file://" + billPhoto), Uri.fromFile(new File(folder, fileName)))
+                            .withAspectRatio(1, 1)
+                            .withMaxResultSize(1080, 1080)
                             .start(AddFuel.this);
                 }
                 break;
@@ -569,14 +577,6 @@ public class AddFuel extends AppCompatActivity {
                     }
                 }
                 break;
-        }
-    }
-
-    public String pad(int input) {
-        if (input >= 10) {
-            return String.valueOf(input);
-        } else {
-            return "0" + String.valueOf(input);
         }
     }
 
@@ -600,6 +600,7 @@ public class AddFuel extends AppCompatActivity {
         dieselPrice = 0;
         electricityPrice = 0;
         LPGPrice = 0;
+        billPhoto = null;
         finish();
     }
 }

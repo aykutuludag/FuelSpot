@@ -265,6 +265,9 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.navigation_save:
                 editor.putString("Email", email);
                 editor.putString("Gender", gender);

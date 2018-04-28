@@ -155,11 +155,11 @@
 
     <ImageView
         android:id="@+id/updateUserInfo"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:padding="8dp"
+        android:padding="6dp"
         android:src="@drawable/edit_icon" />
 </RelativeLayout>

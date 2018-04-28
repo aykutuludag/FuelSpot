@@ -11,28 +11,22 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -43,7 +37,6 @@ import com.facebook.ads.InterstitialAdListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.kobakei.ratethisapp.RateThisApp;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -56,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     SharedPreferences prefs;
-    NavigationView navigationView;
-    DrawerLayout drawerLayout;
     public static int adCount;
     static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;
     int openCount;
+    MyPagerAdapter mSectionsPagerAdapter;
+    PagerTitleStrip pagertabstrip;
+    ViewPager mViewPager;
 
     //User values
     public static boolean premium;
@@ -173,161 +167,32 @@ public class MainActivity extends AppCompatActivity {
 
         //Window
         window = this.getWindow();
-        coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+        mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        mViewPager = findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        pagertabstrip = findViewById(R.id.pager_title_strip);
+        pagertabstrip.setBackgroundColor(Color.parseColor("#FF7439"));
+
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         InAppBilling();
         getVariables(prefs);
         buyPremiumPopup();
 
-        // Initializing Drawer Layout and ActionBarToggle
-        drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+        Fragment fragmentVehicle = new FragmentVehicle();
+        getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragmentVehicle, "Vehicle").commit();
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                super.onDrawerClosed(drawerView);
-            }
+        Fragment fragment2 = new FragmentStations();
+        getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment2, "Stations").commit();
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer openes as we dont want anything to happen so we leave this blank
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-        //Setting the actionbarToggle to drawer layout
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-
-        //calling sync state is necessay or else your hamburger icon wont show up
-        actionBarDrawerToggle.syncState();
-
-        //Initializing NavigationView
-        navigationView = findViewById(R.id.nav_view);
-
-        //Add Navigation header and its ClickListeners
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header);
-
-        ImageView userPhotoHolder = headerView.findViewById(R.id.profile_image);
-        Picasso.with(this).load(Uri.parse(photo)).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(userPhotoHolder);
-
-        TextView userName = headerView.findViewById(R.id.textViewName);
-        userName.setText(name);
-
-        TextView carName = headerView.findViewById(R.id.textViewCarName);
-        String carText = carBrand + " " + carModel;
-        carName.setText(carText);
-
-        ImageView purchases = headerView.findViewById(R.id.imageViewPurchases);
-        purchases.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PurchaseDetails.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView settings = headerView.findViewById(R.id.imageViewSettings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        ImageView help = headerView.findViewById(R.id.imageViewHelp);
-        help.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, HelpActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
-            // This method will trigger on item Click of navigation menu
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                //Closing drawer on item click
-                drawerLayout.closeDrawers();
-                menuItem.setChecked(true);
-                //Check to see which item was being clicked and perform appropriate action
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_home:
-                        Fragment fragment = new FragmentHome();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
-                        return true;
-                    case R.id.nav_vehicle:
-                        Fragment fragmentVehicle = new FragmentVehicle();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragmentVehicle, "Vehicle").commit();
-                        return true;
-                    case R.id.nav_stations:
-                        Fragment fragment2 = new FragmentStations();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment2, "Stations").commit();
-                        return true;
-                    case R.id.nav_news:
-                        Fragment fragment4 = new FragmentNews();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment4, "News").commit();
-                        return true;
-                    case R.id.nav_premium:
-                        if (!premium) {
-                            try {
-                                buyPremium();
-                            } catch (RemoteException | IntentSender.SendIntentException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            menuItem.setVisible(false);
-                            Toast.makeText(getApplicationContext(), "Zaten daha önce premium sürüme geçmiş yapmışsınız...", Toast.LENGTH_LONG).show();
-                        }
-                        return true;
-                    case R.id.nav_puanla:
-                        //PUANLA
-                        Intent intent4 = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.uusoftware.fuelify"));
-                        startActivity(intent4);
-                        return true;
-                    case R.id.nav_support:
-                        //PAYLAŞ
-                        Intent sendIntent = new Intent();
-                        sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Günlük Burçlar: Astroloji, burç uyumu, yükselen burç ve daha fazlası! https://play.google.com/store/apps/details?id=org.uusoftware.fuelify");
-                        sendIntent.setType("text/plain");
-                        startActivity(Intent.createChooser(sendIntent, "Uygulamayı paylaş"));
-                        return true;
-                    case R.id.nav_beta:
-                        //Beta
-                        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                        CustomTabsIntent customTabsIntent = builder.build();
-                        builder.enableUrlBarHiding();
-                        builder.setShowTitle(true);
-                        builder.setToolbarColor(Color.parseColor("#212121"));
-                        customTabsIntent.launchUrl(MainActivity.this, Uri.parse("https://play.google.com/apps/testing/org.uusoftware.burclar"));
-                        return true;
-                    default:
-                        Toast.makeText(getApplicationContext(), "Bir hata oluştu! Lütfen daha sonra tekrar deneyiniz...", Toast.LENGTH_LONG).show();
-                        return true;
-                }
-            }
-        });
+        Fragment fragment4 = new FragmentNews();
+        getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment4, "News").commit();
 
         if (savedInstanceState == null) {
-            Fragment fragment = new FragmentHome();
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
-            navigationView.setCheckedItem(R.id.nav_home);
+            Fragment fragment = new FragmentVehicle();
+            getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "Vehicle").commit();
         }
 
         // AppRater
@@ -433,51 +298,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   /* public void loadBanner() {
-        bannerLayout = findViewById(R.id.bannerLayout);
-        adViewContainer = findViewById(R.id.adFacebook);
-        bannerAdmob = findViewById(R.id.adView);
-
-        if (premium) {
-            bannerLayout.setVisibility(View.GONE);
-            adViewContainer.setVisibility(View.GONE);
-            bannerAdmob.setVisibility(View.GONE);
-            FrameLayout layout = findViewById(R.id.frame_container);
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) layout.getLayoutParams();
-            params.bottomMargin = 0;
-            layout.setLayoutParams(params);
-        } else {
-            bannerFacebook = new AdView(MainActivity.this, getString(R.string.banner_facebook), AdSize.BANNER_HEIGHT_50);
-            adViewContainer.addView(bannerFacebook);
-            bannerFacebook.setAdListener(new com.facebook.ads.AdListener() {
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    // Ad error callback
-                    adViewContainer.setVisibility(View.GONE);
-                    AdRequest adRequest = new AdRequest.Builder().build();
-                    bannerAdmob.loadAd(adRequest);
-                }
-
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    // Ad loaded callback
-                    bannerAdmob.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAdClicked(Ad ad) {
-                    // Ad clicked callback
-                }
-
-                @Override
-                public void onLoggingImpression(Ad ad) {
-
-                }
-            });
-            bannerFacebook.loadAd();
-        }
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -494,7 +314,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override
@@ -505,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 1001) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
@@ -531,56 +351,78 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            navigationView.setCheckedItem(R.id.nav_home);
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
 
-            // Fragments
-            FragmentHome fragment0 = (FragmentHome) getSupportFragmentManager().findFragmentByTag("Home");
-            FragmentVehicle fragment1 = (FragmentVehicle) getSupportFragmentManager().findFragmentByTag("Vehicle");
-            FragmentStations fragment2 = (FragmentStations) getSupportFragmentManager().findFragmentByTag("Stations");
-            FragmentNews fragment3 = (FragmentNews) getSupportFragmentManager().findFragmentByTag("News");
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
 
-            // FragmentHome OnBackPressed
-            if (fragment0 != null) {
-                if (fragment0.isVisible()) {
-                    if (doubleBackToExitPressedOnce) {
-                        super.onBackPressed();
-                        return;
-                    }
+        new Handler().postDelayed(new Runnable() {
 
-                    this.doubleBackToExitPressedOnce = true;
-                    Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
-
-                    new Handler().postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            doubleBackToExitPressedOnce = false;
-                        }
-                    }, 2000);
-                }
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
             }
+        }, 2000);
+    }
 
-            // FragmentVehicle OnBackPressed
-            if (fragment1 != null && fragment1.isVisible()) {
-                Fragment fragment = new FragmentHome();
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
-            }
 
-            // FragmentStations OnBackPressed
-            if (fragment2 != null && fragment2.isVisible()) {
-                Fragment fragment = new FragmentHome();
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
-            }
+    private class MyPagerAdapter extends FragmentPagerAdapter {
 
-            // FragmentNews OnBackPressed
-            if (fragment3 != null && fragment3.isVisible()) {
-                Fragment fragment = new FragmentHome();
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, "Home").commit();
+        private Fragment fragment = null;
+        private Context mContext;
+
+        MyPagerAdapter(FragmentManager fm, Context c) {
+            super(fm);
+            mContext = c;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    fragment = new FragmentVehicle();
+                    break;
+                case 1:
+                    fragment = new FragmentStations();
+                    break;
+                case 2:
+                    fragment = new FragmentNews();
+                    break;
+                case 3:
+                    fragment = new FragmentProfile();
+                    break;
+                case 4:
+                    fragment = new FragmentStats();
+                    break;
+                default:
+                    break;
             }
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return mContext.getString(R.string.nav_text_vehicle);
+                case 1:
+                    return mContext.getString(R.string.nav_text_stations);
+                case 2:
+                    return mContext.getString(R.string.nav_text_news);
+                case 3:
+                    return mContext.getString(R.string.nav_text_profile);
+                case 4:
+                    return mContext.getString(R.string.nav_text_stats);
+            }
+            return null;
         }
     }
 }

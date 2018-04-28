@@ -20,7 +20,8 @@
     <string name="nav_text_home">Home</string>
     <string name="nav_text_stations">Stations</string>
     <string name="nav_text_profile">Profile</string>
-    <string name="nav_text_news">Latest news</string>
+    <string name="nav_text_stats">Statistics</string>
+    <string name="nav_text_news">News</string>
     <string name="nav_text_help">Yardım</string>
     <string name="nav_text_premium">Reklamsız sürüme geçin</string>
     <string name="nav_text_puanla">Uygulamayı puanla</string>
@@ -114,7 +115,7 @@
     </string-array>
     <string name="title_activity_permission">PermissionActivity</string>
     <string name="title_activity_station_details">StationDetails</string>
-    <string name="nav_text_vehicle">Vehicle</string>
+    <string name="nav_text_vehicle">Vehicles</string>
     <string name="buy_premium_ads_title">Reklamsız sürüme geçin</string>
     <string name="buy_premium_ads_content">Uygulama içerisindeki reklamlardan sıkıldınız mı? Günlük Burçlar Premium\'a geçerek uygulamadaki tüm reklamlardan kurtulabilirsiniz.</string>
     <string name="buy_premium_ads_okay">SATIN AL!</string>
