@@ -35,9 +35,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorites_added">Added to your favorites</string>
+    <string name="unfavorited">Removed from your favorites</string>
 
     <string name="title_activity_car_information">CarInformation</string>
     <string name="title_activity_vehicle_selection">Vehicle selection</string>
+
+    <string name="action_favorite">Add to favorites</string>
+    <string name="action_search">Search</string>
+    <string name="action_share">Share</string>
 
     <string-array name="car_makers">
         <item>Acura</item>

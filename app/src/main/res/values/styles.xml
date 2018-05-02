@@ -23,4 +23,11 @@
         <item name="android:textColorPrimary">@color/colorAccent</item>
     </style>
 
+    <!-- Theme for ContentActivity -->
+    <style name="ContentTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
 </resources>

@@ -149,7 +149,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
-    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/register-car.php";
+    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI/api/register-car.php";
     int pos, pos2;
     Window window;
     Toolbar toolbar;
@@ -705,7 +705,11 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 return true;
             case R.id.navigation_save:
                 editor.apply();
-                saveUserInfo();
+                if (isNetworkConnected()) {
+                    saveUserInfo();
+                } else {
+                    Toast.makeText(VehicleEditActivity.this, "Internet bağlantısında bir sorun var", Toast.LENGTH_LONG).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -758,7 +762,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        editor.putString("CarPhoto", "http://uusoftware.org/Fuelspot/uploads/" + username + "-CARPHOTO.jpeg");
+                        editor.putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPI/uploads/" + username + "-CARPHOTO.jpeg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

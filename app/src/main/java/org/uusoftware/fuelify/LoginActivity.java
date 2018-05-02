@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     LoginButton loginButton;
     int googleSign = 9001;
     ProgressBar pb;
-    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/register.php";
+    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI/api/register.php";
     boolean premium = false;
     Handler handler;
     Intent intent;
@@ -299,7 +299,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         photo = acct.getPhotoUrl().toString();
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     } else {
-                        photo = "http://uusoftware.org/Fuelify/profile.png";
+                        photo = "http://fuel-spot.com/FUELSPOTAPI/profile.png";
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     }
 
@@ -308,13 +308,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     if (person != null) {
                         //GENDER
                         if (person.getGender() == 0) {
-                            gender = "Erkek";
+                            gender = "male";
                             prefs.edit().putString("Gender", gender).apply();
                         } else if (person.getGender() == 1) {
-                            gender = "Kadın";
+                            gender = "female";
                             prefs.edit().putString("Gender", gender).apply();
                         } else {
-                            gender = "Other";
+                            gender = "transsexual";
                             prefs.edit().putString("Gender", gender).apply();
                         }
 
@@ -331,7 +331,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }
                     } else {
                         //Default values
-                        gender = "Erkek";
+                        gender = "male";
                         birthday = "01/01/2000";
                         location = "-";
                         prefs.edit().putString("Gender", gender).apply();

@@ -4,9 +4,9 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "org.uusoftware.fuelify"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 27
-        versionCode 10
+        versionCode 11
         versionName "1.0"
     }
     buildTypes {

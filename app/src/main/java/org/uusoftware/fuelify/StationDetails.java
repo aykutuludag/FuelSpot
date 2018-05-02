@@ -71,8 +71,8 @@ public class StationDetails extends AppCompatActivity {
     String comment;
     Toolbar toolbar;
     Window window;
-    private String FETCH_COMMENT = "http://uusoftware.org/Fuelspot/api/fetch-comments.php";
-    private String SEND_COMMENT = "http://uusoftware.org/Fuelspot/api/add-comment.php";
+    private String FETCH_COMMENT = "http://fuel-spot.com/FUELSPOTAPI/api/fetch-comments.php";
+    private String SEND_COMMENT = "http://fuel-spot.com/FUELSPOTAPI/api/add-comment.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

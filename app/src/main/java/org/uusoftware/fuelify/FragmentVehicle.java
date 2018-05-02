@@ -1,9 +1,7 @@
 package org.uusoftware.fuelify;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,8 +51,7 @@ public class FragmentVehicle extends Fragment {
 
 
     CircleImageView carPhotoHolder;
-    SharedPreferences prefs;
-    String FETCH_URL = "http://uusoftware.org/Fuelspot/api/fetch-purchases.php";
+    String FETCH_URL = "http://fuel-spot.com/FUELSPOTAPI/api/fetch-purchases.php";
     SwipeRefreshLayout swipeContainer;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -71,8 +68,6 @@ public class FragmentVehicle extends Fragment {
         t.setScreenName("Vehicle Profile");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
-
-        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         //SETTING HEADER VEHICLE VARIABLES
         View headerView = view.findViewById(R.id.header_vehicle);

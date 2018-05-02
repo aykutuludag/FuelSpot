@@ -50,7 +50,7 @@ import static org.uusoftware.fuelify.MainActivity.userlon;
 public class ChooseStation extends AppCompatActivity {
 
     public static boolean isAddingFuel;
-    String REGISTER_URL = "http://uusoftware.org/Fuelspot/api/add-station.php";
+    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI//api/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
     String[] vicinity = new String[99];
@@ -156,7 +156,7 @@ public class ChooseStation extends AppCompatActivity {
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
-        //Search stations in a radius of 3000m
+        //Search stations in a radius of 3500m
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=3500&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
@@ -236,7 +236,7 @@ public class ChooseStation extends AppCompatActivity {
 
     public void fetchPrices(final String placeID) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://uusoftware.org/Fuelspot/fetch-prices.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://fuel-spot.com/FUELSPOTAPI//api/fetch-prices.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

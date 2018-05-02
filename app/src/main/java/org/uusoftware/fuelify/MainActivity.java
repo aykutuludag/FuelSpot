@@ -60,14 +60,14 @@ public class MainActivity extends AppCompatActivity {
     //User values
     public static boolean premium;
     public static double userlat, userlon;
-    public static String name, email, photo, carPhoto, gender, birthday, location, username, carBrand, carModel;
+    public static String name, email, photo, carPhoto, gender, birthday, location, username, carBrand, carModel, deviceLanguage;
     public static int fuelPri, fuelSec, kilometer;
 
     public static void getVariables(SharedPreferences prefs) {
         name = prefs.getString("Name", "-");
         email = prefs.getString("Email", "-");
-        photo = prefs.getString("ProfilePhoto", "http://uusoftware.org/Fuelify/profile.png");
-        carPhoto = prefs.getString("CarPhoto", "http://uusoftware.org/Fuelify/car.png");
+        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPI/profile.png");
+        carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPI/car.png");
         gender = prefs.getString("Gender", "-");
         birthday = prefs.getString("Birthday", "-");
         location = prefs.getString("Location", "-");
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         userlat = Double.parseDouble(prefs.getString("lat", "0"));
         userlon = Double.parseDouble(prefs.getString("lon", "0"));
         premium = prefs.getBoolean("hasPremium", false);
+        deviceLanguage = prefs.getString("deviceLanguage", "en");
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -181,23 +182,14 @@ public class MainActivity extends AppCompatActivity {
         getVariables(prefs);
         buyPremiumPopup();
 
-        Fragment fragmentVehicle = new FragmentVehicle();
-        getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragmentVehicle, "Vehicle").commit();
-
-        Fragment fragment2 = new FragmentStations();
-        getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment2, "Stations").commit();
-
-        Fragment fragment4 = new FragmentNews();
-        getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment4, "News").commit();
+        // AppRater
+        RateThisApp.onCreate(this);
+        RateThisApp.showRateDialogIfNeeded(this);
 
         if (savedInstanceState == null) {
             Fragment fragment = new FragmentVehicle();
             getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "Vehicle").commit();
         }
-
-        // AppRater
-        RateThisApp.onCreate(this);
-        RateThisApp.showRateDialogIfNeeded(this);
     }
 
     private void buyPremiumPopup() {

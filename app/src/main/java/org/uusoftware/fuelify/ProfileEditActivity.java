@@ -55,7 +55,7 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    String UPDATE_USER_INFO = "http://uusoftware.org/Fuelspot/api/update-user.php";
+    String UPDATE_USER_INFO = "http://fuel-spot.com/FUELSPOTAPI/api/update-user.php";
 
     Toolbar toolbar;
     Window window;
@@ -180,9 +180,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         //  Set gender and retrieve changes
-        if (gender.equals("Erkek")) {
+        if (gender.equals("male")) {
             bMale.setChecked(true);
-        } else if (gender.equals("Kadın")) {
+        } else if (gender.equals("female")) {
             bFemale.setChecked(true);
         } else {
             bOther.setChecked(true);
@@ -191,11 +191,11 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int checkedId) {
                 if (checkedId == R.id.genderMale) {
-                    gender = "Erkek";
+                    gender = "male";
                 } else if (checkedId == R.id.genderFemale) {
-                    gender = "Kadın";
+                    gender = "female";
                 } else {
-                    gender = "Diğer";
+                    gender = "transsexual";
                 }
             }
         });

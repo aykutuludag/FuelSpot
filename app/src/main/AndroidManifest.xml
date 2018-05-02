@@ -26,6 +26,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="fuel-spot.com"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -100,6 +110,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.ProfileActivity" />
+        </activity>
+        <activity
+            android:name=".NewsContent"
+            android:label=""
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ContentTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.MainActivity" />
         </activity>
 
         <!-- ImageCrop -->
