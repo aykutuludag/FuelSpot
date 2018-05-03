@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -40,7 +41,6 @@ import com.kobakei.ratethisapp.RateThisApp;
 
 import java.util.ArrayList;
 
-
 public class MainActivity extends AppCompatActivity {
 
     IInAppBillingService mService;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager mViewPager;
 
     //User values
-    public static boolean premium;
+    public static boolean premium, isSigned;
     public static double userlat, userlon;
     public static String name, email, photo, carPhoto, gender, birthday, location, username, carBrand, carModel, deviceLanguage;
     public static int fuelPri, fuelSec, kilometer;
@@ -66,12 +66,12 @@ public class MainActivity extends AppCompatActivity {
     public static void getVariables(SharedPreferences prefs) {
         name = prefs.getString("Name", "-");
         email = prefs.getString("Email", "-");
-        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPI/profile.png");
-        carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPI/car.png");
-        gender = prefs.getString("Gender", "-");
-        birthday = prefs.getString("Birthday", "-");
-        location = prefs.getString("Location", "-");
-        username = prefs.getString("UserName", "-");
+        photo = prefs.getString("ProfilePhoto", "");
+        carPhoto = prefs.getString("CarPhoto", "");
+        gender = prefs.getString("Gender", "");
+        birthday = prefs.getString("Birthday", "");
+        location = prefs.getString("Location", "");
+        username = prefs.getString("UserName", "");
         carBrand = prefs.getString("carBrand", "Acura");
         carModel = prefs.getString("carModel", "RSX");
         fuelPri = prefs.getInt("FuelPrimary", 0);
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         userlat = Double.parseDouble(prefs.getString("lat", "0"));
         userlon = Double.parseDouble(prefs.getString("lon", "0"));
         premium = prefs.getBoolean("hasPremium", false);
+        isSigned = prefs.getBoolean("isSigned", false);
         deviceLanguage = prefs.getString("deviceLanguage", "en");
     }
 
@@ -186,10 +187,20 @@ public class MainActivity extends AppCompatActivity {
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
 
+        createLocalDatabase();
+
         if (savedInstanceState == null) {
             Fragment fragment = new FragmentVehicle();
             getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "Vehicle").commit();
         }
+    }
+
+    public void createLocalDatabase() {
+        //Create databese
+        SQLiteDatabase mobiledatabase = openOrCreateDatabase("fuelspot_local", MODE_PRIVATE, null);
+        mobiledatabase.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local(Title TEXT,Thumbnail VARCHAR, Link VARCHAR);");
+        SQLiteDatabase mobiledatabase2 = openOrCreateDatabase("fuelspot_local2", MODE_PRIVATE, null);
+        mobiledatabase2.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local2(Title TEXT,Thumbnail VARCHAR, Link VARCHAR);");
     }
 
     private void buyPremiumPopup() {

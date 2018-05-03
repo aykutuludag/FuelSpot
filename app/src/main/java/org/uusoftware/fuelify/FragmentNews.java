@@ -35,7 +35,6 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class FragmentNews extends Fragment {
 
-    String FETCH_NEWS = "http://fuel-spot.com/feed/json";
     SwipeRefreshLayout swipeContainer;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -76,7 +75,7 @@ public class FragmentNews extends Fragment {
 
     private void fetchNews() {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_NEWS,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_NEWS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

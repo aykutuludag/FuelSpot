@@ -1,4 +1,17 @@
 <resources>
+    <string name="API_CREATE_NEW_USER">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>
+    <string name="API_UPDATE_CAR">http://fuel-spot.com/FUELSPOTAPP/api/update-car.php</string>
+    <string name="API_FETCH_USER_PURCHASE">http://fuel-spot.com/FUELSPOTAPP/api/fetch-purchases.php</string>
+    <string name="API_REGISTER_STATION">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
+    <string name="API_FETCH_STATION_PRICES">http://fuel-spot.com/FUELSPOTAPP/api/fetch-prices.php</string>
+    <string name="API_ADD_COMMENT">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
+    <string name="API_FETCH_COMMENTS">http://fuel-spot.com/FUELSPOTAPP/api/fetch-comments.php</string>
+    <string name="API_DELETE_COMMENT">http://fuel-spot.com/FUELSPOTAPP/api/delete-comment.php</string>
+    <string name="API_ADD_FUEL">http://fuel-spot.com/FUELSPOTAPP/api/add-fuel.php</string>
+    <string name="API_UPDATE_STATION">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
+    <string name="API_UPDATE_USER">http://fuel-spot.com/FUELSPOTAPP/api/update-user.php</string>
+    <string name="API_FETCH_NEWS">http://fuel-spot.com/feed/json</string>
+
     <string name="app_name">FuelSpot</string>
     <string name="facebook_app_id">380327342377274</string>
     <string name="fb_login_protocol_scheme">fb380327342377274</string>

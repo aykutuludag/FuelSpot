@@ -71,8 +71,6 @@ public class StationDetails extends AppCompatActivity {
     String comment;
     Toolbar toolbar;
     Window window;
-    private String FETCH_COMMENT = "http://fuel-spot.com/FUELSPOTAPI/api/fetch-comments.php";
-    private String SEND_COMMENT = "http://fuel-spot.com/FUELSPOTAPI/api/add-comment.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +211,7 @@ public class StationDetails extends AppCompatActivity {
 
     public void fetchComments() {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_COMMENT,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -268,7 +266,7 @@ public class StationDetails extends AppCompatActivity {
 
     private void sendComment() {
         final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Uploading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, SEND_COMMENT,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

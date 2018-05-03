@@ -32,8 +32,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
@@ -63,8 +65,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     LoginButton loginButton;
     int googleSign = 9001;
     ProgressBar pb;
-    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI/api/register.php";
-    boolean premium = false;
+    boolean premium;
     Handler handler;
     Intent intent;
 
@@ -147,8 +148,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.PROFILE))
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .requestProfile()
                 .requestEmail()
-                .requestScopes(Plus.SCOPE_PLUS_LOGIN)
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -213,7 +216,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_NEW_USER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -299,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         photo = acct.getPhotoUrl().toString();
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     } else {
-                        photo = "http://fuel-spot.com/FUELSPOTAPI/profile.png";
+                        photo = "http://fuel-spot.com/FUELSPOTAPP/profile.png";
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     }
 

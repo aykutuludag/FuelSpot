@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,6 +61,8 @@ import static org.uusoftware.fuelify.MainActivity.carPhoto;
 import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.getVariables;
+import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
+import static org.uusoftware.fuelify.MainActivity.isSigned;
 import static org.uusoftware.fuelify.MainActivity.kilometer;
 import static org.uusoftware.fuelify.MainActivity.username;
 
@@ -149,7 +150,6 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
-    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI/api/register-car.php";
     int pos, pos2;
     Window window;
     Toolbar toolbar;
@@ -358,13 +358,15 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(VehicleEditActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_CAR),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         loading.dismiss();
                         Toast.makeText(VehicleEditActivity.this, s, Toast.LENGTH_LONG).show();
-                        finish();
+                        if (isSigned) {
+                            finish();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -373,7 +375,9 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                         //Dismissing the progress dialog
                         loading.dismiss();
                         Toast.makeText(VehicleEditActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
-                        finish();
+                        if (isSigned) {
+                            finish();
+                        }
                     }
                 }) {
             @Override
@@ -414,11 +418,6 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
             hasStorage = true;
         }
         return hasStorage;
-    }
-
-    public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
     }
 
     public String getStringImage(Bitmap bmp) {
@@ -705,7 +704,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 return true;
             case R.id.navigation_save:
                 editor.apply();
-                if (isNetworkConnected()) {
+                if (isNetworkConnected(VehicleEditActivity.this)) {
                     saveUserInfo();
                 } else {
                     Toast.makeText(VehicleEditActivity.this, "Internet bağlantısında bir sorun var", Toast.LENGTH_LONG).show();
@@ -762,7 +761,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        editor.putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPI/uploads/" + username + "-CARPHOTO.jpeg");
+                        editor.putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -42,7 +42,7 @@
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/car_picture"
         android:layout_toRightOf="@+id/car_picture"
-        android:maxLength="16"
+        android:maxLength="25"
         android:text="Renault Symbol"
         android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
 

@@ -85,6 +85,25 @@
                     android:inputType="none"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/textViewKilometer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextTime"
+                    android:layout_marginTop="8dp"
+                    android:text="KİLOMETRE:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <EditText
+                    android:id="@+id/editTextKM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewKilometer"
+                    android:layout_marginTop="4dp"
+                    android:hint="145.500"
+                    android:inputType="number"
+                    android:textStyle="bold" />
+
             </RelativeLayout>
 
             <Button
@@ -232,17 +251,28 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-
                     <EditText
                         android:id="@+id/editTextLiter"
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPrice"
                         android:layout_marginTop="4dp"
                         android:focusable="false"
                         android:gravity="center"
-                        android:hint="8.31 litre"
+                        android:hint="8.31"
                         android:inputType="none"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewLiter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextLiter"
+                        android:layout_alignTop="@+id/editTextLiter"
+                        android:layout_toEndOf="@+id/editTextLiter"
+                        android:gravity="center"
+                        android:text="Litre"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                 </RelativeLayout>

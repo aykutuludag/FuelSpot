@@ -91,7 +91,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     private void deleteComment(final int id) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://fuel-spot.com/FUELSPOTAPI/api/delete-comment.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_DELETE_COMMENT),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

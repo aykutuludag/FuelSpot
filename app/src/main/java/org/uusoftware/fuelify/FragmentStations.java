@@ -65,7 +65,6 @@ public class FragmentStations extends Fragment {
     MapView mMapView;
 
     //Station variables
-    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI/api/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
     String[] vicinity = new String[99];
@@ -101,6 +100,7 @@ public class FragmentStations extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
+        checkLocationPermission();
         checkLocationPermission();
 
         return rootView;
@@ -236,15 +236,15 @@ public class FragmentStations extends Fragment {
                             location[i] = lat + ";" + lon;
 
                             if (stationName[i].contains("Shell")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPI/station_icons/shell.png";
+                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
                             } else if (stationName[i].contains("Opet")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPI/station_icons/opet.jpg";
+                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
                             } else if (stationName[i].contains("BP")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPI/station_icons/bp.png";
+                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
                             } else if (stationName[i].contains("Kadoil")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPI/station_icons/kadoil.jpg";
+                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
                             } else {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPI/station_icons/unknown.png";
+                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
                             }
 
                             LatLng sydney = new LatLng(lat, lon);
@@ -267,7 +267,7 @@ public class FragmentStations extends Fragment {
 
     private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REGISTER_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -304,7 +304,7 @@ public class FragmentStations extends Fragment {
 
     public void fetchPrices(final String placeID) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://fuel-spot.com/FUELSPOTAPI/api/fetch-prices.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

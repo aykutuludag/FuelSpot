@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,21 +46,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static org.uusoftware.fuelify.MainActivity.carBrand;
+import static org.uusoftware.fuelify.MainActivity.carModel;
+import static org.uusoftware.fuelify.MainActivity.carPhoto;
 import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
+import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
+import static org.uusoftware.fuelify.MainActivity.kilometer;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
 
     public static final int REQUEST_EXTERNAL_STORAGE = 0;
     private static String[] PERMISSIONS_STORAGE = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
-    String UPLOAD_URL = "http://fuel-spot.com/FUELSPOTAPI/api/add-fuel.php";
-    String UPDATE_STATION_URL = "http://fuel-spot.com/FUELSPOTAPI/api/update-station.php";
     public static String chosenStationName, chosenStationID;
     public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     Bitmap bitmap;
@@ -69,7 +72,7 @@ public class AddFuel extends AppCompatActivity {
     Toolbar toolbar;
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
-    EditText chooseStation, chooseTime;
+    EditText chooseStation, chooseTime, enterKilometer;
     SharedPreferences prefs;
     RadioGroup chooseFuel, chooseFuel2;
     int hour, minute;
@@ -143,6 +146,26 @@ public class AddFuel extends AppCompatActivity {
             }
         });
 
+        enterKilometer = findViewById(R.id.editTextKM);
+        enterKilometer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 1) {
+                    kilometer = Integer.parseInt(s.toString());
+                }
+            }
+        });
+
         chooseFuel = findViewById(R.id.radioGroup_fuel);
         expandableButton1 = findViewById(R.id.expandableButton1);
         textViewLitreFiyati = findViewById(R.id.editTextPricePerLiter);
@@ -168,10 +191,10 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
+                if (s != null && s.length() > 3) {
                     selectedUnitPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-                    String literText = String.format("%.2f", buyedLiter) + " " + "litre";
+                    String literText = String.format("%.2f", buyedLiter);
                     textViewLitre.setText(literText);
                 }
             }
@@ -193,7 +216,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s.length() > 0) {
                     entryPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-                    String literText = String.format("%.2f", buyedLiter) + "litre";
+                    String literText = String.format("%.2f", buyedLiter);
                     textViewLitre.setText(literText);
                     totalPrice = entryPrice + entryPrice2;
                 }
@@ -213,10 +236,10 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
+                if (s != null && s.length() > 3) {
                     selectedUnitPrice2 = Double.parseDouble(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-                    String literText2 = String.format("%.2f", buyedLiter2) + " litre";
+                    String literText2 = String.format("%.2f", buyedLiter2);
                     textViewLitre.setText(literText2);
                 }
             }
@@ -238,7 +261,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s.length() > 0) {
                     entryPrice2 = Double.parseDouble(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-                    String literText2 = String.format("%.2f", buyedLiter2) + " litre";
+                    String literText2 = String.format("%.2f", buyedLiter2);
                     textViewLitre2.setText(literText2);
                     totalPrice = entryPrice + entryPrice2;
                 }
@@ -264,11 +287,11 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (chosenStationName != null && chosenStationName.length() >= 3) {
-                    if (isNetworkConnected()) {
+                    if (isNetworkConnected(AddFuel.this)) {
                         if (totalPrice > 0) {
                             //Showing the progress dialog
                             final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_FUEL),
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String s) {
@@ -325,7 +348,7 @@ public class AddFuel extends AppCompatActivity {
                         Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda olmadığınız için yakıt ekleyemezsiniz.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda değilsiniz. Yakıt aldığınız istasyonu seçiniz.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -333,12 +356,12 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateStationPrices() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPDATE_STATION_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                        finish();
+                        updateCarInfo();
                     }
                 },
                 new Response.ErrorListener() {
@@ -390,63 +413,104 @@ public class AddFuel extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void updateCarInfo() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_CAR),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                        prefs.edit().putInt("Kilometer", kilometer).apply();
+                        bitmap = null;
+                        chosenStationName = null;
+                        chosenStationID = null;
+                        gasolinePrice = 0;
+                        dieselPrice = 0;
+                        electricityPrice = 0;
+                        LPGPrice = 0;
+                        billPhoto = null;
+                        finish();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("carBrand", carBrand);
+                params.put("carModel", carModel);
+                params.put("fuelPri", String.valueOf(fuelPri));
+                params.put("fuelSec", String.valueOf(fuelSec));
+                params.put("km", String.valueOf(kilometer));
+                if (carPhoto != null) {
+                    params.put("carPhoto", carPhoto);
+                }
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     public void updatePrices() {
         //1. YAKIT TİPİ
         switch (fuelPri) {
             case 0:
                 chooseFuel.check(R.id.gasoline);
                 selectedUnitPrice = gasolinePrice;
-                textViewLitreFiyati.setText("" + gasolinePrice);
                 fuelType = "gasoline";
                 break;
             case 1:
                 chooseFuel.check(R.id.diesel);
                 selectedUnitPrice = dieselPrice;
-                textViewLitreFiyati.setText("" + dieselPrice);
                 fuelType = "diesel";
                 break;
             case 2:
                 chooseFuel.check(R.id.lpg);
                 selectedUnitPrice = LPGPrice;
-                textViewLitreFiyati.setText("" + LPGPrice);
                 fuelType = "lpg";
                 break;
             case 3:
                 chooseFuel.check(R.id.electricity);
                 selectedUnitPrice = electricityPrice;
-                textViewLitreFiyati.setText("" + electricityPrice);
                 fuelType = "electric";
                 break;
-            default:
-                expandableLayoutYakit.setVisibility(View.GONE);
-                expandableButton1.setVisibility(View.GONE);
-                break;
         }
+        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
 
         //2. YAKIT TİPİ
         switch (fuelSec) {
             case 0:
                 chooseFuel2.check(R.id.gasoline2);
                 selectedUnitPrice2 = gasolinePrice;
-                textViewLitreFiyati2.setText("" + gasolinePrice);
                 fuelType2 = "gasoline";
                 break;
             case 1:
                 chooseFuel2.check(R.id.diesel2);
                 selectedUnitPrice2 = dieselPrice;
-                textViewLitreFiyati2.setText("" + dieselPrice);
                 fuelType2 = "diesel";
                 break;
             case 2:
                 chooseFuel2.check(R.id.lpg2);
                 selectedUnitPrice2 = LPGPrice;
-                textViewLitreFiyati2.setText("" + LPGPrice);
                 fuelType2 = "lpg";
                 break;
             case 3:
                 chooseFuel2.check(R.id.electricity2);
                 selectedUnitPrice2 = electricityPrice;
-                textViewLitreFiyati2.setText("" + electricityPrice);
                 fuelType2 = "electric";
                 break;
             default:
@@ -454,17 +518,18 @@ public class AddFuel extends AppCompatActivity {
                 expandableButton2.setVisibility(View.GONE);
                 break;
         }
+        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
 
         buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-        String literText = String.format("%.2f", buyedLiter) + " " + "litre";
+        String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
         textViewLitre.setText(literText);
-        textViewTotalFiyat.setText("" + entryPrice);
+        textViewTotalFiyat.setText(String.valueOf(entryPrice));
 
 
         buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-        String literText2 = String.format("%.2f", buyedLiter2) + " " + "litre";
+        String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
         textViewLitre2.setText(literText2);
-        textViewTotalFiyat2.setText("" + entryPrice2);
+        textViewTotalFiyat2.setText(String.valueOf(entryPrice2));
     }
 
     public double howManyLiter(double priceForUnit, double totalPrice) {
@@ -495,11 +560,6 @@ public class AddFuel extends AppCompatActivity {
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
-    public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) AddFuel.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
     }
 
     public void coloredBars(int color1, int color2) {

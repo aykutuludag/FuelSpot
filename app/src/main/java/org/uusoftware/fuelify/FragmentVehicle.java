@@ -49,9 +49,7 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class FragmentVehicle extends Fragment {
 
-
     CircleImageView carPhotoHolder;
-    String FETCH_URL = "http://fuel-spot.com/FUELSPOTAPI/api/fetch-purchases.php";
     SwipeRefreshLayout swipeContainer;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -110,19 +108,16 @@ public class FragmentVehicle extends Fragment {
 
         switch (fuelSec) {
             case 0:
-                fuelText += ", Gasoline";
+                fuelText = fuelText + ", Gasoline";
                 break;
             case 1:
-                fuelText = ", Diesel";
+                fuelText = fuelText + ", Diesel";
                 break;
             case 2:
-                fuelText = ", LPG";
+                fuelText = fuelText + ", LPG";
                 break;
             case 3:
-                fuelText = ", Electric";
-                break;
-            default:
-                fuelText = "-";
+                fuelText = fuelText + ", Electric";
                 break;
         }
         fuelType.setText(fuelText);
@@ -161,7 +156,7 @@ public class FragmentVehicle extends Fragment {
 
     private void fetchUserPurchases() {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PURCHASE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

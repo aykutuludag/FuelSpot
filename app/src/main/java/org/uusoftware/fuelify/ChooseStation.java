@@ -50,7 +50,6 @@ import static org.uusoftware.fuelify.MainActivity.userlon;
 public class ChooseStation extends AppCompatActivity {
 
     public static boolean isAddingFuel;
-    String REGISTER_URL = "http://fuel-spot.com/FUELSPOTAPI//api/add-station.php";
     String[] stationName = new String[99];
     String[] placeID = new String[99];
     String[] vicinity = new String[99];
@@ -199,7 +198,7 @@ public class ChooseStation extends AppCompatActivity {
 
     private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REGISTER_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -236,7 +235,7 @@ public class ChooseStation extends AppCompatActivity {
 
     public void fetchPrices(final String placeID) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://fuel-spot.com/FUELSPOTAPI//api/fetch-prices.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

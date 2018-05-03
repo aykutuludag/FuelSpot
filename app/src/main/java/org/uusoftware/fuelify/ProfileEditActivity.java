@@ -55,8 +55,6 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    String UPDATE_USER_INFO = "http://fuel-spot.com/FUELSPOTAPI/api/update-user.php";
-
     Toolbar toolbar;
     Window window;
     EditText editName, editMail, editLocation, editBirthday;
@@ -202,7 +200,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void updateUserInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPDATE_USER_INFO,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
