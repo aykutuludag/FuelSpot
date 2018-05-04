@@ -52,6 +52,9 @@ import java.util.Map;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static org.uusoftware.fuelify.ChooseStation.isAddingFuel;
+import static org.uusoftware.fuelify.MainActivity.PERMISSIONS_STORAGE;
+import static org.uusoftware.fuelify.MainActivity.REQUEST_EXTERNAL_STORAGE;
 import static org.uusoftware.fuelify.MainActivity.carBrand;
 import static org.uusoftware.fuelify.MainActivity.carModel;
 import static org.uusoftware.fuelify.MainActivity.carPhoto;
@@ -63,8 +66,6 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
 
-    public static final int REQUEST_EXTERNAL_STORAGE = 0;
-    private static String[] PERMISSIONS_STORAGE = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String chosenStationName, chosenStationID;
     public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     Bitmap bitmap;
@@ -147,6 +148,7 @@ public class AddFuel extends AppCompatActivity {
         });
 
         enterKilometer = findViewById(R.id.editTextKM);
+        enterKilometer.setText(String.valueOf(kilometer));
         enterKilometer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -194,7 +196,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s != null && s.length() > 3) {
                     selectedUnitPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-                    String literText = String.format("%.2f", buyedLiter);
+                    String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
                     textViewLitre.setText(literText);
                 }
             }
@@ -216,7 +218,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s.length() > 0) {
                     entryPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-                    String literText = String.format("%.2f", buyedLiter);
+                    String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
                     textViewLitre.setText(literText);
                     totalPrice = entryPrice + entryPrice2;
                 }
@@ -428,6 +430,7 @@ public class AddFuel extends AppCompatActivity {
                         electricityPrice = 0;
                         LPGPrice = 0;
                         billPhoto = null;
+                        isAddingFuel = false;
                         finish();
                     }
                 },
@@ -451,6 +454,8 @@ public class AddFuel extends AppCompatActivity {
                 params.put("km", String.valueOf(kilometer));
                 if (carPhoto != null) {
                     params.put("carPhoto", carPhoto);
+                } else {
+                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
                 }
 
                 //returning parameters
@@ -538,7 +543,7 @@ public class AddFuel extends AppCompatActivity {
 
     public void getTime() {
         Calendar calendar = Calendar.getInstance();
-        hour = calendar.get(Calendar.HOUR);
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, minute);
         purchaseTime = calendar.getTimeInMillis();
@@ -661,6 +666,7 @@ public class AddFuel extends AppCompatActivity {
         electricityPrice = 0;
         LPGPrice = 0;
         billPhoto = null;
+        isAddingFuel = false;
         finish();
     }
 }

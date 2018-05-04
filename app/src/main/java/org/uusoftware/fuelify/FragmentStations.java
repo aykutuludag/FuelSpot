@@ -304,6 +304,7 @@ public class FragmentStations extends Fragment {
 
     public void fetchPrices(final String placeID) {
         feedsList.clear();
+        mAdapter = null;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override

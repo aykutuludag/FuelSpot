@@ -35,8 +35,15 @@
                 <data
                     android:host="fuel-spot.com"
                     android:scheme="http" />
+
+                <data
+                    android:host="fuel-spot.com"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:label="Welcome" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
@@ -59,8 +66,8 @@
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.MainActivity" />

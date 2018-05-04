@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.uusoftware.fuelify.VehicleEditActivity">
+    tools:context="org.uusoftware.fuelify.WelcomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,10 +20,61 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="FuelSpot'a hoşgeldiniz"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="43dp"
+            android:gravity="center"
+            android:text="FuelSpot kullanıcılarına en uygun fiyatlı benzinliği gösteren, araçlarının yakıt takibini yapan, akaryakıt fiyat indirim-zamlarını anında haber veren ve bunun gibi sayısız özelliği bir araya getiren bir platformdur." />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Üyeliğiniz oluşturuldu. Biraz da aracınız hakkında bilgi almamız lazım. Devam etmek için aşağıdaki butona dokunun."
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:alpha="0.5"
+            android:clickable="false"
+            android:text="DEVAM" />
+    </RelativeLayout>
+
     <ScrollView
+        android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -229,10 +280,53 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView_exp3"
+                android:layout_marginEnd="75dp"
+                android:layout_marginRight="75dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:hint="12.750"
+                android:inputType="numberSigned|numberDecimal" />
+
+            <TextView
+                android:id="@+id/textViewUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/editText_km"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/editText_km"
+                android:gravity="center"
+                android:text="Kilometer"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/editText_km"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:hint="12.750 km"
-                android:inputType="numberSigned|numberDecimal" />
+                android:text="DEVAM" />
         </RelativeLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/layout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/howto"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:text="DEVAM" />
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

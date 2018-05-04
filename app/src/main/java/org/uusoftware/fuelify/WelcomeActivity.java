@@ -21,16 +21,17 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -40,8 +41,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,6 +70,7 @@ import static org.uusoftware.fuelify.MainActivity.anadol_models;
 import static org.uusoftware.fuelify.MainActivity.astonMartin_models;
 import static org.uusoftware.fuelify.MainActivity.audi_models;
 import static org.uusoftware.fuelify.MainActivity.bentley_models;
+import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.bmw_models;
 import static org.uusoftware.fuelify.MainActivity.bugatti_models;
 import static org.uusoftware.fuelify.MainActivity.buick_models;
@@ -80,6 +88,7 @@ import static org.uusoftware.fuelify.MainActivity.daihatsu_models;
 import static org.uusoftware.fuelify.MainActivity.dodge_models;
 import static org.uusoftware.fuelify.MainActivity.ds_models;
 import static org.uusoftware.fuelify.MainActivity.eagle_models;
+import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.ferrari_models;
 import static org.uusoftware.fuelify.MainActivity.fiat_models;
 import static org.uusoftware.fuelify.MainActivity.ford_models;
@@ -87,12 +96,11 @@ import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.gaz_models;
 import static org.uusoftware.fuelify.MainActivity.geely_models;
-import static org.uusoftware.fuelify.MainActivity.getVariables;
+import static org.uusoftware.fuelify.MainActivity.gender;
 import static org.uusoftware.fuelify.MainActivity.honda_models;
 import static org.uusoftware.fuelify.MainActivity.hyundai_models;
 import static org.uusoftware.fuelify.MainActivity.ikco_models;
 import static org.uusoftware.fuelify.MainActivity.infiniti_models;
-import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.isuzu_models;
 import static org.uusoftware.fuelify.MainActivity.jaguar_models;
 import static org.uusoftware.fuelify.MainActivity.kia_models;
@@ -103,6 +111,7 @@ import static org.uusoftware.fuelify.MainActivity.lamborghini_models;
 import static org.uusoftware.fuelify.MainActivity.lancia_models;
 import static org.uusoftware.fuelify.MainActivity.lexus_models;
 import static org.uusoftware.fuelify.MainActivity.lincoln_models;
+import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.lotus_models;
 import static org.uusoftware.fuelify.MainActivity.maserati_models;
 import static org.uusoftware.fuelify.MainActivity.maybach_models;
@@ -113,11 +122,13 @@ import static org.uusoftware.fuelify.MainActivity.mg_models;
 import static org.uusoftware.fuelify.MainActivity.mini_models;
 import static org.uusoftware.fuelify.MainActivity.mitsubishi_models;
 import static org.uusoftware.fuelify.MainActivity.moskwitsch_models;
+import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.nissan_models;
 import static org.uusoftware.fuelify.MainActivity.oldsmobile_models;
 import static org.uusoftware.fuelify.MainActivity.opel_models;
 import static org.uusoftware.fuelify.MainActivity.pagani_models;
 import static org.uusoftware.fuelify.MainActivity.peugeot_models;
+import static org.uusoftware.fuelify.MainActivity.photo;
 import static org.uusoftware.fuelify.MainActivity.plymouth_models;
 import static org.uusoftware.fuelify.MainActivity.pontiac_models;
 import static org.uusoftware.fuelify.MainActivity.porsche_models;
@@ -141,14 +152,15 @@ import static org.uusoftware.fuelify.MainActivity.username;
 import static org.uusoftware.fuelify.MainActivity.volvo_models;
 import static org.uusoftware.fuelify.MainActivity.vw_models;
 
+public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-public class VehicleEditActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
+    SharedPreferences prefs;
+    Button continueButton, saveCarButton, finishButton;
+    RelativeLayout layout1, layout3;
+    ScrollView layout2;
     Bitmap bitmap;
     CircleImageView carPic;
     Spinner spinner, spinner2;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
     RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
     Window window;
     Toolbar toolbar;
@@ -156,12 +168,11 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vehicle_selection);
+        setContentView(R.layout.activity_welcome);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setIcon(R.drawable.brand_logo);
 
@@ -169,13 +180,138 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         window = this.getWindow();
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
-        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        editor = prefs.edit();
-        getVariables(prefs);
+        // Analytics
+        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        t.setScreenName("Welcome");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        layout1 = findViewById(R.id.layout1);
+        layout2 = findViewById(R.id.layout2);
+        layout3 = findViewById(R.id.layout3);
+
+        continueButton = findViewById(R.id.button2);
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout1.setVisibility(View.GONE);
+                layout2.setVisibility(View.VISIBLE);
+                loadCarSelection();
+            }
+        });
+
+        saveCarButton = findViewById(R.id.button4);
+        saveCarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUserInfo();
+            }
+        });
+
+        finishButton = findViewById(R.id.button3);
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
+        fetchUserInfo();
+    }
+
+    public void fetchUserInfo() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PROFILE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            name = obj.getString("name");
+                            prefs.edit().putString("Name", name).apply();
+
+                            email = obj.getString("email");
+                            prefs.edit().putString("Email", email).apply();
+
+                            photo = obj.getString("photo");
+                            prefs.edit().putString("ProfilePhoto", photo).apply();
+
+                            gender = obj.getString("gender");
+                            prefs.edit().putString("Gender", gender).apply();
+
+                            birthday = obj.getString("birthday");
+                            prefs.edit().putString("Birthday", birthday).apply();
+
+                            location = obj.getString("location");
+                            prefs.edit().putString("Location", location).apply();
+
+                            carBrand = obj.getString("car_brand");
+                            prefs.edit().putString("CarBrand", carBrand).apply();
+
+                            carModel = obj.getString("car_model");
+                            prefs.edit().putString("CarModel", carModel).apply();
+
+                            fuelPri = obj.getInt("fuelPri");
+                            prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+                            fuelSec = obj.getInt("fuelSec");
+                            prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+                            kilometer = obj.getInt("kilometer");
+                            prefs.edit().putInt("Kilometer", kilometer).apply();
+
+                            carPhoto = obj.getString("carPhoto");
+                            prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+                            pos = obj.getInt("posIn1");
+                            prefs.edit().putInt("carPos", pos).apply();
+
+                            pos2 = obj.getInt("posIn2");
+                            prefs.edit().putInt("carPos2", pos2).apply();
+
+                            continueButton.setAlpha(1.0f);
+                            continueButton.setClickable(true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void loadCarSelection() {
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        Picasso.with(VehicleEditActivity.this).load(Uri.parse(carPhoto)).error(R.drawable.empty).placeholder(R.drawable.empty)
+        Picasso.with(WelcomeActivity.this).load(Uri.parse(carPhoto)).error(R.drawable.empty).placeholder(R.drawable.empty)
                 .into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,11 +319,9 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 if (verifyStoragePermissions()) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(VehicleEditActivity.this);
-                    Toast.makeText(VehicleEditActivity.this, "izin var", Toast.LENGTH_LONG).show();
+                            .pickPhoto(WelcomeActivity.this);
                 } else {
-                    ActivityCompat.requestPermissions(VehicleEditActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-                    Toast.makeText(VehicleEditActivity.this, "izin yok", Toast.LENGTH_LONG).show();
+                    ActivityCompat.requestPermissions(WelcomeActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
                 }
             }
         });
@@ -347,7 +481,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
             public void afterTextChanged(Editable s) {
                 if (s.length() >= 1) {
                     kilometer = Integer.parseInt(s.toString());
-                    editor.putInt("Kilometer", kilometer);
+                    prefs.edit().putInt("Kilometer", kilometer).apply();
                 }
             }
         });
@@ -355,17 +489,15 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
     private void saveUserInfo() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(VehicleEditActivity.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_CAR),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         loading.dismiss();
-                        Toast.makeText(VehicleEditActivity.this, s, Toast.LENGTH_LONG).show();
-                        Intent i = getBaseContext().getPackageManager()
-                                .getLaunchIntentForPackage(getBaseContext().getPackageName());
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
+                        Toast.makeText(WelcomeActivity.this, s, Toast.LENGTH_LONG).show();
+                        layout2.setVisibility(View.GONE);
+                        layout3.setVisibility(View.VISIBLE);
                     }
                 },
                 new Response.ErrorListener() {
@@ -373,7 +505,10 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(VehicleEditActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(WelcomeActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        layout2.setVisibility(View.GONE);
+                        layout3.setVisibility(View.VISIBLE);
+
                     }
                 }) {
             @Override
@@ -402,7 +537,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         };
 
         //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(VehicleEditActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -689,32 +824,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //Do nothing
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_edit, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.navigation_save:
-                editor.apply();
-                if (isNetworkConnected(VehicleEditActivity.this)) {
-                    saveUserInfo();
-                } else {
-                    Toast.makeText(VehicleEditActivity.this, "Internet bağlantısında bir sorun var", Toast.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        //DoNothing
     }
 
     @Override
@@ -722,10 +832,10 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(VehicleEditActivity.this, "Settings saved...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WelcomeActivity.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(VehicleEditActivity.this);
+                            .pickPhoto(WelcomeActivity.this);
                 }
                 break;
             }
@@ -754,7 +864,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
                             .withAspectRatio(1, 1)
                             .withMaxResultSize(1080, 1080)
-                            .start(VehicleEditActivity.this);
+                            .start(WelcomeActivity.this);
                 }
                 break;
             case UCrop.REQUEST_CROP:
@@ -763,23 +873,17 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        editor.putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
+                        prefs.edit().putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg").apply();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     final Throwable cropError = UCrop.getError(data);
                     if (cropError != null) {
-                        Toast.makeText(VehicleEditActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(WelcomeActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

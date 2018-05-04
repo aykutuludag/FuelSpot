@@ -226,11 +226,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent i = new Intent(LoginActivity.this, VehicleEditActivity.class);
+                                Intent i = new Intent(LoginActivity.this, WelcomeActivity.class);
                                 startActivity(i);
                                 finish();
                             }
-                        }, 2000);
+                        }, 1500);
                     }
                 },
                 new Response.ErrorListener() {
@@ -302,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         photo = acct.getPhotoUrl().toString();
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     } else {
-                        photo = "http://fuel-spot.com/FUELSPOTAPP/profile.png";
+                        photo = "";
                         prefs.edit().putString("ProfilePhoto", photo).apply();
                     }
 
@@ -310,25 +310,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
                     if (person != null) {
                         //GENDER
-                        if (person.getGender() == 0) {
-                            gender = "male";
-                            prefs.edit().putString("Gender", gender).apply();
-                        } else if (person.getGender() == 1) {
-                            gender = "female";
-                            prefs.edit().putString("Gender", gender).apply();
-                        } else {
-                            gender = "transsexual";
-                            prefs.edit().putString("Gender", gender).apply();
+                        if (person.hasGender()) {
+
+                            if (person.getGender() == 0) {
+                                gender = "male";
+                                prefs.edit().putString("Gender", gender).apply();
+                            } else if (person.getGender() == 1) {
+                                gender = "female";
+                                prefs.edit().putString("Gender", gender).apply();
+                            } else {
+                                gender = "transsexual";
+                                prefs.edit().putString("Gender", gender).apply();
+                            }
                         }
 
                         //BIRTHDAY
-                        if (person.getBirthday() != null) {
+                        if (person.hasGender()) {
                             birthday = person.getBirthday();
                             prefs.edit().putString("Birthday", birthday).apply();
                         }
 
                         //LOCATION
-                        if (person.getCurrentLocation() != null) {
+                        if (person.hasCurrentLocation()) {
                             location = person.getCurrentLocation();
                             prefs.edit().putString("Location", location).apply();
                         }
