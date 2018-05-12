@@ -125,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
 
+    public static ArrayList<Long> purchaseTimes = new ArrayList<>();
+    public static ArrayList<Double> purchasePrices = new ArrayList<>();
+    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
+
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     Window window;

@@ -101,7 +101,6 @@ public class FragmentStations extends Fragment {
         mMapView.onResume();
 
         checkLocationPermission();
-        checkLocationPermission();
 
         return rootView;
     }
@@ -235,17 +234,7 @@ public class FragmentStations extends Fragment {
                             double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
                             location[i] = lat + ";" + lon;
 
-                            if (stationName[i].contains("Shell")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
-                            } else if (stationName[i].contains("Opet")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
-                            } else if (stationName[i].contains("BP")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
-                            } else if (stationName[i].contains("Kadoil")) {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
-                            } else {
-                                photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
-                            }
+                            stationPhotoChooser(i);
 
                             LatLng sydney = new LatLng(lat, lon);
                             markes[i] = googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i]));
@@ -263,6 +252,24 @@ public class FragmentStations extends Fragment {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    private void stationPhotoChooser(int i) {
+        if (stationName[i].contains("Shell")) {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
+        } else if (stationName[i].contains("Opet")) {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
+        } else if (stationName[i].contains("BP")) {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
+        } else if (stationName[i].contains("Kadoil")) {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
+        } else if (stationName[i].contains("Petrol Ofisi")) {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
+        } else if (stationName[i].contains("Lukoil")) {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+        } else {
+            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
+        }
     }
 
     private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
@@ -391,7 +398,6 @@ public class FragmentStations extends Fragment {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(getActivity(), "İZİN VERİLDİ", Toast.LENGTH_LONG).show();
                         //Request location updates:
                         LocationManager locationManager = (LocationManager)
                                 getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -413,7 +419,6 @@ public class FragmentStations extends Fragment {
                     Toast.makeText(getActivity(), "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
                 }
             }
-
         }
     }
 

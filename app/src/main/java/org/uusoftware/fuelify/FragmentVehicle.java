@@ -33,6 +33,7 @@ import org.uusoftware.fuelify.adapter.PurchaseAdapter;
 import org.uusoftware.fuelify.model.PurchaseItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,9 @@ import static org.uusoftware.fuelify.MainActivity.carPhoto;
 import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.kilometer;
+import static org.uusoftware.fuelify.MainActivity.purchaseKilometers;
+import static org.uusoftware.fuelify.MainActivity.purchasePrices;
+import static org.uusoftware.fuelify.MainActivity.purchaseTimes;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class FragmentVehicle extends Fragment {
@@ -70,6 +74,7 @@ public class FragmentVehicle extends Fragment {
         //SETTING HEADER VEHICLE VARIABLES
         View headerView = view.findViewById(R.id.header_vehicle);
 
+        //ProfilePhoto
         carPhotoHolder = headerView.findViewById(R.id.car_picture);
         System.out.println(carPhoto);
         Picasso.with(getActivity()).load(Uri.parse(carPhoto)).error(R.drawable.empty).placeholder(R.drawable.empty)
@@ -156,6 +161,7 @@ public class FragmentVehicle extends Fragment {
 
     private void fetchUserPurchases() {
         feedsList.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PURCHASE),
                 new Response.Listener<String>() {
                     @Override
@@ -179,6 +185,10 @@ public class FragmentVehicle extends Fragment {
                                 item.setBillPhoto(obj.getString("billPhoto"));
                                 feedsList.add(item);
 
+                                purchaseTimes.add(i, obj.getLong("time"));
+                                purchasePrices.add(i, obj.getDouble("totalPrice"));
+                                purchaseKilometers.add(i, obj.getInt("kilometer"));
+
                                 mAdapter = new PurchaseAdapter(getActivity(), feedsList);
                                 mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
@@ -187,6 +197,10 @@ public class FragmentVehicle extends Fragment {
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 swipeContainer.setRefreshing(false);
                             }
+                            //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
+                            Collections.reverse(purchaseTimes);
+                            Collections.reverse(purchasePrices);
+                            Collections.reverse(purchaseKilometers);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -241,7 +241,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s != null && s.length() > 3) {
                     selectedUnitPrice2 = Double.parseDouble(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-                    String literText2 = String.format("%.2f", buyedLiter2);
+                    String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
                     textViewLitre.setText(literText2);
                 }
             }
@@ -329,6 +329,7 @@ public class AddFuel extends AppCompatActivity {
                                     params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
                                     params.put("fuelLiter2", String.valueOf(buyedLiter2));
                                     params.put("totalPrice", String.valueOf(totalPrice));
+                                    params.put("kilometer", String.valueOf(kilometer));
                                     if (bitmap != null) {
                                         params.put("billPhoto", getStringImage(bitmap));
                                     }
@@ -494,7 +495,14 @@ public class AddFuel extends AppCompatActivity {
                 fuelType = "electric";
                 break;
         }
-        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
+
+        if (selectedUnitPrice < 0.01) {
+            textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
+            buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
+            String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
+            textViewLitre.setText(literText);
+            textViewTotalFiyat.setText(String.valueOf(entryPrice));
+        }
 
         //2. YAKIT TİPİ
         switch (fuelSec) {
@@ -523,18 +531,13 @@ public class AddFuel extends AppCompatActivity {
                 expandableButton2.setVisibility(View.GONE);
                 break;
         }
-        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
-
-        buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-        String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
-        textViewLitre.setText(literText);
-        textViewTotalFiyat.setText(String.valueOf(entryPrice));
-
-
-        buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-        String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
-        textViewLitre2.setText(literText2);
-        textViewTotalFiyat2.setText(String.valueOf(entryPrice2));
+        if (selectedUnitPrice2 < 0.01) {
+            textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
+            buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
+            String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
+            textViewLitre2.setText(literText2);
+            textViewTotalFiyat2.setText(String.valueOf(entryPrice2));
+        }
     }
 
     public double howManyLiter(double priceForUnit, double totalPrice) {
