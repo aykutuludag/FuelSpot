@@ -89,7 +89,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
     <ImageView
-        android:id="@+id/montlyConsumptionIndicator"
+        android:id="@+id/avgPriceIndicator"
         android:layout_width="17dp"
         android:layout_height="17dp"
         android:layout_alignLeft="@+id/avgConsumptionIndicator"
@@ -103,10 +103,10 @@
         android:id="@+id/userBirthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/montlyConsumptionIndicator"
+        android:layout_alignTop="@+id/avgPriceIndicator"
         android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/montlyConsumptionIndicator"
-        android:layout_toRightOf="@+id/montlyConsumptionIndicator"
+        android:layout_toEndOf="@+id/avgPriceIndicator"
+        android:layout_toRightOf="@+id/avgPriceIndicator"
         android:text="01-05-1965"
         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
@@ -114,8 +114,8 @@
         android:id="@+id/montlyCostIndicator"
         android:layout_width="17dp"
         android:layout_height="17dp"
-        android:layout_alignLeft="@+id/montlyConsumptionIndicator"
-        android:layout_alignStart="@+id/montlyConsumptionIndicator"
+        android:layout_alignLeft="@+id/avgPriceIndicator"
+        android:layout_alignStart="@+id/avgPriceIndicator"
         android:layout_below="@+id/userBirthday"
         android:layout_marginTop="7dp"
         android:scaleType="fitStart"

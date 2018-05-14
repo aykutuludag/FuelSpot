@@ -57,6 +57,7 @@ import java.util.Map;
 import eu.amirs.JSON;
 
 import static org.uusoftware.fuelify.MainActivity.fuelPri;
+import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.userlat;
 import static org.uusoftware.fuelify.MainActivity.userlon;
 
@@ -136,11 +137,11 @@ public class FragmentStations extends Fragment {
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
             if (location != null) {
-                userlat = location.getLatitude();
-                userlon = location.getLongitude();
-                prefs.edit().putString("lat", String.valueOf(userlat)).apply();
-                prefs.edit().putString("lon", String.valueOf(userlon)).apply();
-                MainActivity.getVariables(prefs);
+                userlat = (float) location.getLatitude();
+                userlon = (float) location.getLongitude();
+                prefs.edit().putFloat("lat", userlat).apply();
+                prefs.edit().putFloat("lon", userlon).apply();
+                getVariables(prefs);
             }
 
             loadMap();
@@ -177,11 +178,11 @@ public class FragmentStations extends Fragment {
                         float distanceInMeters = loc1.distanceTo(loc2);
 
                         if (distanceInMeters >= 10) {
-                            userlat = arg0.getLatitude();
-                            userlon = arg0.getLongitude();
-                            prefs.edit().putString("lat", String.valueOf(userlat)).apply();
-                            prefs.edit().putString("lon", String.valueOf(userlon)).apply();
-                            MainActivity.getVariables(prefs);
+                            userlat = (float) arg0.getLatitude();
+                            userlon = (float) arg0.getLongitude();
+                            prefs.edit().putFloat("lat", userlat).apply();
+                            prefs.edit().putFloat("lon", userlon).apply();
+                            getVariables(prefs);
 
                             updateMapObject();
                         }
@@ -406,11 +407,11 @@ public class FragmentStations extends Fragment {
                         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
                         if (location != null) {
-                            userlat = location.getLatitude();
-                            userlon = location.getLongitude();
-                            prefs.edit().putString("lat", String.valueOf(userlat)).apply();
-                            prefs.edit().putString("lon", String.valueOf(userlon)).apply();
-                            MainActivity.getVariables(prefs);
+                            userlat = (float) location.getLatitude();
+                            userlon = (float) location.getLongitude();
+                            prefs.edit().putFloat("lat", userlat).apply();
+                            prefs.edit().putFloat("lon", userlon).apply();
+                            getVariables(prefs);
                         }
 
                         loadMap();
@@ -425,24 +426,32 @@ public class FragmentStations extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 }

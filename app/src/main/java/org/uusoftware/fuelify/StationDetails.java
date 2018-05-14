@@ -111,9 +111,7 @@ public class StationDetails extends AppCompatActivity {
                 mPanorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
                     @Override
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
-                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
-                            Toast.makeText(StationDetails.this, "Sokak görünümü mevcut", Toast.LENGTH_LONG).show();
-                        } else {
+                        if (streetViewPanoramaLocation == null) {
                             Toast.makeText(StationDetails.this, "Sokak görünümü yok", Toast.LENGTH_LONG).show();
                         }
                     }

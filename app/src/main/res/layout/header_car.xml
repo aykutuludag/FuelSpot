@@ -86,11 +86,11 @@
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/avgConsumptionIndicator"
         android:layout_toRightOf="@+id/avgConsumptionIndicator"
-        android:text="5.2 lt / 100 km"
+        android:text="0.0 lt / 100 km"
         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
     <ImageView
-        android:id="@+id/montlyConsumptionIndicator"
+        android:id="@+id/avgPriceIndicator"
         android:layout_width="17dp"
         android:layout_height="17dp"
         android:layout_alignLeft="@+id/avgConsumptionIndicator"
@@ -101,36 +101,36 @@
         app:srcCompat="@drawable/profile_birthday" />
 
     <TextView
-        android:id="@+id/car_monthlyCons"
+        android:id="@+id/car_avgPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/montlyConsumptionIndicator"
+        android:layout_alignTop="@+id/avgPriceIndicator"
         android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/montlyConsumptionIndicator"
-        android:layout_toRightOf="@+id/montlyConsumptionIndicator"
-        android:text="60 lt / month"
+        android:layout_toEndOf="@+id/avgPriceIndicator"
+        android:layout_toRightOf="@+id/avgPriceIndicator"
+        android:text="0 TL / 100 km"
         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
     <ImageView
         android:id="@+id/montlyCostIndicator"
         android:layout_width="17dp"
         android:layout_height="17dp"
-        android:layout_alignLeft="@+id/montlyConsumptionIndicator"
-        android:layout_alignStart="@+id/montlyConsumptionIndicator"
-        android:layout_below="@+id/car_monthlyCons"
+        android:layout_alignLeft="@+id/avgPriceIndicator"
+        android:layout_alignStart="@+id/avgPriceIndicator"
+        android:layout_below="@+id/car_avgPrice"
         android:layout_marginTop="7dp"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/profile_sex" />
 
     <TextView
-        android:id="@+id/car_monthlyCost"
+        android:id="@+id/car_range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/montlyCostIndicator"
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/montlyCostIndicator"
         android:layout_toRightOf="@+id/montlyCostIndicator"
-        android:text="300 TL / month"
+        android:text="0 km"
         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
     <ImageView

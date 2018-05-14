@@ -62,6 +62,7 @@ import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.kilometer;
+import static org.uusoftware.fuelify.MainActivity.stationPhotoChooser;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
@@ -78,7 +79,7 @@ public class AddFuel extends AppCompatActivity {
     RadioGroup chooseFuel, chooseFuel2;
     int hour, minute;
     long purchaseTime;
-    String fuelType, fuelType2 = "-";
+    String fuelType, fuelType2 = "";
     double totalPrice;
     double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
     EditText textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
@@ -322,6 +323,7 @@ public class AddFuel extends AppCompatActivity {
                                     params.put("username", username);
                                     params.put("stationID", chosenStationID);
                                     params.put("stationNAME", chosenStationName);
+                                    params.put("stationICON", stationPhotoChooser(chosenStationName));
                                     params.put("fuelType", fuelType);
                                     params.put("fuelPrice", String.valueOf(selectedUnitPrice));
                                     params.put("fuelLiter", String.valueOf(buyedLiter));
@@ -355,7 +357,10 @@ public class AddFuel extends AppCompatActivity {
                 }
             }
         });
-        updatePrices();
+
+        if (savedInstanceState == null) {
+            updatePrices();
+        }
     }
 
     private void updateStationPrices() {
@@ -494,15 +499,18 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice = electricityPrice;
                 fuelType = "electric";
                 break;
+            default:
+                expandableLayoutYakit.setVisibility(View.GONE);
+                expandableButton1.setVisibility(View.GONE);
+                break;
         }
 
-        if (selectedUnitPrice < 0.01) {
-            textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
-            buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-            String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
-            textViewLitre.setText(literText);
-            textViewTotalFiyat.setText(String.valueOf(entryPrice));
-        }
+        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
+        buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
+        String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
+        textViewLitre.setText(literText);
+        textViewTotalFiyat.setText(String.valueOf(entryPrice));
+
 
         //2. YAKIT TİPİ
         switch (fuelSec) {
@@ -531,17 +539,20 @@ public class AddFuel extends AppCompatActivity {
                 expandableButton2.setVisibility(View.GONE);
                 break;
         }
-        if (selectedUnitPrice2 < 0.01) {
-            textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
-            buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-            String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
-            textViewLitre2.setText(literText2);
-            textViewTotalFiyat2.setText(String.valueOf(entryPrice2));
-        }
+
+        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
+        buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
+        String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
+        textViewLitre2.setText(literText2);
+        textViewTotalFiyat2.setText(String.valueOf(entryPrice2));
     }
 
     public double howManyLiter(double priceForUnit, double totalPrice) {
-        return totalPrice / priceForUnit;
+        if (priceForUnit == 0) {
+            return 0.00;
+        } else {
+            return totalPrice / priceForUnit;
+        }
     }
 
     public void getTime() {

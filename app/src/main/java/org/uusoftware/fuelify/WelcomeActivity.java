@@ -847,6 +847,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
+        String fileName = now + ".jpg";
+
         switch (requestCode) {
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -857,9 +861,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                     File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
                     folder.mkdirs();
-
-                    CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-                    String fileName = now + ".jpg";
 
                     UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
                             .withAspectRatio(1, 1)
@@ -873,7 +874,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        prefs.edit().putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg").apply();
+                        prefs.edit().putString("CarPhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + fileName).apply();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

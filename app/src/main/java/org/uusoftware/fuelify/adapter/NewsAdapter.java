@@ -2,9 +2,6 @@ package org.uusoftware.fuelify.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.squareup.picasso.Picasso;
 
 import org.uusoftware.fuelify.NewsContent;
 import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.model.NewsItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
@@ -33,20 +35,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             NewsItem feedItem = feedItemList.get(position);
             Intent intent;
 
-            if (feedItem.getLink().contains("ftw396f90b1a")) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                CustomTabsIntent customTabsIntent = builder.build();
-                builder.enableUrlBarHiding();
-                builder.setShowTitle(true);
-                builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(mContext, Uri.parse(feedItem.getLink()));
-            } else {
-                intent = new Intent(mContext, NewsContent.class);
-                intent.putExtra("title", feedItem.getTitle());
-                intent.putExtra("content", feedItem.getContent());
-                intent.putExtra("link", feedItem.getLink());
-                mContext.startActivity(intent);
-            }
+            intent = new Intent(mContext, NewsContent.class);
+            intent.putExtra("title", feedItem.getTitle());
+            intent.putExtra("content", feedItem.getContent());
+            intent.putExtra("link", feedItem.getLink());
+            mContext.startActivity(intent);
         }
     };
 
@@ -77,6 +70,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         // Setting text view title
         viewHolder.text.setText(feedItem.getTitle());
 
+        // NewsTime
+        System.out.println(feedItem.getPublishDate());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+        Date date = null;
+        try {
+            date = sdf.parse(feedItem.getPublishDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date != null) {
+            viewHolder.newsTime.setReferenceTime(date.getTime());
+        }
+
         // Handle click event on both title and image click
         viewHolder.text.setOnClickListener(clickListener);
         viewHolder.image.setOnClickListener(clickListener);
@@ -94,11 +100,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         public ImageView image;
         public TextView text;
+        public RelativeTimeTextView newsTime;
 
         ViewHolder(View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.img_thumbnail);
             text = itemView.findViewById(R.id.txt_text);
+            newsTime = itemView.findViewById(R.id.news_published);
         }
     }
 }

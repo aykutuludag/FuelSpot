@@ -119,8 +119,8 @@ public class ChooseStation extends AppCompatActivity {
                         float distanceInMeters = loc1.distanceTo(loc2);
 
                         if (distanceInMeters >= 10) {
-                            userlat = arg0.getLatitude();
-                            userlon = arg0.getLongitude();
+                            userlat = (float) arg0.getLatitude();
+                            userlon = (float) arg0.getLongitude();
                             prefs.edit().putString("lat", String.valueOf(userlat)).apply();
                             prefs.edit().putString("lon", String.valueOf(userlon)).apply();
                             MainActivity.getVariables(prefs);

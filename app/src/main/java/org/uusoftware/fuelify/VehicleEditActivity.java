@@ -737,19 +737,18 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
+        String fileName = now + ".jpg";
+
         switch (requestCode) {
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     carPhoto = aq.get(0);
 
-                    System.out.println("file://" + carPhoto);
-
                     File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
                     folder.mkdirs();
-
-                    CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-                    String fileName = now + ".jpg";
 
                     UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
                             .withAspectRatio(1, 1)
@@ -763,7 +762,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        editor.putString("CarPhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
+                        editor.putString("CarPhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + fileName);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

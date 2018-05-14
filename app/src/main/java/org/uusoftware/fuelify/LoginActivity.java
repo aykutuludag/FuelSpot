@@ -43,15 +43,18 @@ import org.json.JSONObject;
 
 import java.text.Normalizer;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
+import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
+import static org.uusoftware.fuelify.MainActivity.userCountry;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 
@@ -83,9 +86,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         isSigned = prefs.getBoolean("isSigned", false);
-        premium = prefs.getBoolean("Premium", false);
+        getVariables(prefs);
+
         handler = new Handler();
         intent = new Intent(LoginActivity.this, MainActivity.class);
+
+        //COUNTRY FOR GETTING TAX RATES
+        userCountry = Locale.getDefault().getCountry();
+        prefs.edit().putString("userCountry", userCountry).apply();
 
         //Layout objects
         pb = findViewById(R.id.progressBar);
@@ -255,6 +263,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("gender", gender);
                 params.put("birthday", birthday);
                 params.put("location", location);
+                params.put("country", userCountry);
 
                 //returning parameters
                 return params;
@@ -311,7 +320,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     if (person != null) {
                         //GENDER
                         if (person.hasGender()) {
-
                             if (person.getGender() == 0) {
                                 gender = "male";
                                 prefs.edit().putString("Gender", gender).apply();
@@ -337,9 +345,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }
                     } else {
                         //Default values
-                        gender = "male";
+                        gender = "";
                         birthday = "01/01/2000";
-                        location = "-";
+                        location = "";
                         prefs.edit().putString("Gender", gender).apply();
                         prefs.edit().putString("Birthday", null).apply();
                         prefs.edit().putString("Location", null).apply();

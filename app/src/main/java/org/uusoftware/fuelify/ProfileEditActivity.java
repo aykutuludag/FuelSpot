@@ -34,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.squareup.picasso.Picasso;
@@ -51,6 +52,7 @@ import static org.uusoftware.fuelify.MainActivity.gender;
 import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
+import static org.uusoftware.fuelify.MainActivity.userCountry;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class ProfileEditActivity extends AppCompatActivity {
@@ -127,7 +129,8 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(ProfileEditActivity.this);
+                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(userCountry).build();
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(ProfileEditActivity.this);
                     startActivityForResult(intent, 1320);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -229,6 +232,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 params.put("gender", gender);
                 params.put("birthday", birthday);
                 params.put("location", location);
+                params.put("country", userCountry);
 
                 //returning parameters
                 return params;

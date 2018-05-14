@@ -128,6 +128,9 @@
                 android:value="org.uusoftware.fuelify.MainActivity" />
         </activity>
 
+        <!-- BackgroundLocation - Geofence - Register stations -->
+        <service android:name=".service.LocationService" />
+
         <!-- ImageCrop -->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

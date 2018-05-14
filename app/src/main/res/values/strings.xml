@@ -149,4 +149,5 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_help">ActivityHelp</string>
     <string name="title_activity_profile_edit">ProfileEditActivity</string>
+    <string name="nav_text_settings">Ayarlar</string>
 </resources>

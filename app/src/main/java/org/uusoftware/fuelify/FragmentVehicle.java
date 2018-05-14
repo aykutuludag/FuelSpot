@@ -1,7 +1,9 @@
 package org.uusoftware.fuelify;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,10 +38,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static org.uusoftware.fuelify.MainActivity.averageCons;
+import static org.uusoftware.fuelify.MainActivity.averagePrice;
 import static org.uusoftware.fuelify.MainActivity.carBrand;
 import static org.uusoftware.fuelify.MainActivity.carModel;
 import static org.uusoftware.fuelify.MainActivity.carPhoto;
@@ -47,8 +52,11 @@ import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.kilometer;
 import static org.uusoftware.fuelify.MainActivity.purchaseKilometers;
+import static org.uusoftware.fuelify.MainActivity.purchaseLiters;
 import static org.uusoftware.fuelify.MainActivity.purchasePrices;
 import static org.uusoftware.fuelify.MainActivity.purchaseTimes;
+import static org.uusoftware.fuelify.MainActivity.purchaseUnitPrice;
+import static org.uusoftware.fuelify.MainActivity.purchaseUnitPrice2;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class FragmentVehicle extends Fragment {
@@ -59,6 +67,9 @@ public class FragmentVehicle extends Fragment {
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     List<PurchaseItem> feedsList;
+    SharedPreferences prefs;
+
+    TextView kilometerText, fullname, fuelType, avgText, avgPrice;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -71,6 +82,8 @@ public class FragmentVehicle extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
         //SETTING HEADER VEHICLE VARIABLES
         View headerView = view.findViewById(R.id.header_vehicle);
 
@@ -81,17 +94,17 @@ public class FragmentVehicle extends Fragment {
                 .into(carPhotoHolder);
 
         //Marka-model
-        TextView fullname = headerView.findViewById(R.id.carFullname);
+        fullname = headerView.findViewById(R.id.carFullname);
         String fullad = carBrand + " " + carModel;
         fullname.setText(fullad);
 
         //Kilometre
-        TextView kilometerText = headerView.findViewById(R.id.car_kilometer);
+        kilometerText = headerView.findViewById(R.id.car_kilometer);
         String kmHolder = kilometer + " " + "km";
         kilometerText.setText(kmHolder);
 
         //Yakıt tipi başlangıç
-        TextView fuelType = headerView.findViewById(R.id.car_fuelType);
+        fuelType = headerView.findViewById(R.id.car_fuelType);
         String fuelText;
         switch (fuelPri) {
             case 0:
@@ -128,6 +141,16 @@ public class FragmentVehicle extends Fragment {
         fuelType.setText(fuelText);
         //Yakıt tipi bitiş
 
+        //Ortalama tüketim
+        avgText = headerView.findViewById(R.id.car_avgCons);
+        String avgDummy = String.format(Locale.getDefault(), "%.2f", averageCons) + " lt/100km";
+        avgText.setText(avgDummy);
+
+        //Ortalama maliyet
+        avgPrice = headerView.findViewById(R.id.car_avgPrice);
+        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
+        avgPrice.setText(avgPriceDummy);
+
         ImageView updateCar = headerView.findViewById(R.id.updateCarInfo);
         updateCar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,13 +177,16 @@ public class FragmentVehicle extends Fragment {
         feedsList = new ArrayList<>();
         mRecyclerView = view.findViewById(R.id.feedView);
 
-        fetchUserPurchases();
-
         return view;
     }
 
     private void fetchUserPurchases() {
         feedsList.clear();
+        purchaseTimes.clear();
+        purchaseKilometers.clear();
+        purchasePrices.clear();
+        purchaseUnitPrice.clear();
+        purchaseUnitPrice2.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PURCHASE),
                 new Response.Listener<String>() {
@@ -175,6 +201,7 @@ public class FragmentVehicle extends Fragment {
                                 item.setID(obj.getInt("id"));
                                 item.setPurchaseTime(obj.getLong("time"));
                                 item.setStationName(obj.getString("stationName"));
+                                item.setStationIcon(obj.getString("stationIcon"));
                                 item.setFuelType(obj.getString("fuelType"));
                                 item.setFuelPrice(obj.getDouble("fuelPrice"));
                                 item.setFuelLiter(obj.getDouble("fuelLiter"));
@@ -186,8 +213,11 @@ public class FragmentVehicle extends Fragment {
                                 feedsList.add(item);
 
                                 purchaseTimes.add(i, obj.getLong("time"));
+                                purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
+                                purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
                                 purchasePrices.add(i, obj.getDouble("totalPrice"));
                                 purchaseKilometers.add(i, obj.getInt("kilometer"));
+                                purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
 
                                 mAdapter = new PurchaseAdapter(getActivity(), feedsList);
                                 mLayoutManager = new GridLayoutManager(getActivity(), 1);
@@ -201,6 +231,27 @@ public class FragmentVehicle extends Fragment {
                             Collections.reverse(purchaseTimes);
                             Collections.reverse(purchasePrices);
                             Collections.reverse(purchaseKilometers);
+
+                            //Calculate avg fuel consumption and update
+                            if (avgText != null) {
+                                calculateAverageCons();
+                                String avgDummy = String.format(Locale.getDefault(), "%.2f", averageCons) + " lt/100km";
+                                avgText.setText(avgDummy);
+                            }
+
+                            //update kilometer
+                            if (kilometerText != null) {
+                                String kmHolder = kilometer + " " + "km";
+                                kilometerText.setText(kmHolder);
+                            }
+
+                            //update avg price
+                            if (avgPrice != null) {
+                                calculateAvgPrice();
+                                String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
+                                avgPrice.setText(avgPriceDummy);
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -232,5 +283,45 @@ public class FragmentVehicle extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    public float calculateAverageCons() {
+        float totalLiter = 0;
+        float kilometerDifference = 0;
+        if (purchaseTimes.size() > 1) {
+            for (int i = 0; i < purchaseTimes.size(); i++) {
+                totalLiter += purchaseLiters.get(i);
+                kilometerDifference = purchaseKilometers.get(purchaseKilometers.size() - 1) - purchaseKilometers.get(0);
+            }
+            averageCons = (totalLiter / kilometerDifference) * 100f;
+            prefs.edit().putFloat("averageConsumption", averageCons).apply();
+        } else {
+            averageCons = 0;
+        }
+        return averageCons;
+    }
+
+    public float calculateAvgPrice() {
+        float totalPrice = 0;
+        float kilometerDifference = 0;
+        if (purchaseTimes.size() > 1) {
+            for (int i = 0; i < purchaseTimes.size(); i++) {
+                totalPrice += purchasePrices.get(i);
+                kilometerDifference = purchaseKilometers.get(purchaseKilometers.size() - 1) - purchaseKilometers.get(0);
+            }
+            averagePrice = (totalPrice / kilometerDifference) * 100f;
+            prefs.edit().putFloat("averagePrice", averagePrice).apply();
+        } else {
+            averageCons = 0;
+        }
+        return averageCons;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRecyclerView != null) {
+            fetchUserPurchases();
+        }
     }
 }

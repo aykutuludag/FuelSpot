@@ -44,14 +44,18 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static float TAX_GASOLINE;
+    public static float TAX_DIESEL;
+    public static float TAX_LPG;
+    public static float TAX_ELECTRICITY;
+
     // Static values
     public static final int REQUEST_EXTERNAL_STORAGE = 0;
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
     public static boolean premium, isSigned;
-    public static double userlat, userlon;
-    public static String name, email, photo, carPhoto, gender, birthday, location, username, carBrand, carModel, deviceLanguage;
-    public static int fuelPri, fuelSec, kilometer;
-    public static int pos, pos2;
+    public static float userlat, userlon, averageCons, averagePrice;
+    public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
+    public static int fuelPri, fuelSec, kilometer, pos, pos2;
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
     public static String[] anadol_models = {"A"};
@@ -126,8 +130,11 @@ public class MainActivity extends AppCompatActivity {
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
 
     public static ArrayList<Long> purchaseTimes = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
+    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
 
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
@@ -157,13 +164,15 @@ public class MainActivity extends AppCompatActivity {
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
-        userlat = Double.parseDouble(prefs.getString("lat", "0"));
-        userlon = Double.parseDouble(prefs.getString("lon", "0"));
+        userlat = prefs.getFloat("lat", 0);
+        userlon = prefs.getFloat("lon", 0);
         premium = prefs.getBoolean("hasPremium", false);
         isSigned = prefs.getBoolean("isSigned", false);
-        deviceLanguage = prefs.getString("deviceLanguage", "en");
+        userCountry = prefs.getString("userCountry", "US");
         pos = prefs.getInt("carPos", 0);
         pos2 = prefs.getInt("carPos2", 0);
+        averageCons = prefs.getFloat("averageConsumption", 0);
+        averagePrice = prefs.getFloat("averagePrice", 0);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -259,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
         pagertabstrip = findViewById(R.id.pager_title_strip);
         pagertabstrip.setBackgroundColor(Color.parseColor("#FF7439"));
 
-
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         InAppBilling();
         getVariables(prefs);
@@ -272,8 +280,8 @@ public class MainActivity extends AppCompatActivity {
         createLocalDatabase();
 
         if (savedInstanceState == null) {
-            Fragment fragment = new FragmentVehicle();
-            getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "Vehicle").commit();
+            Fragment fragment = new FragmentStations();
+            getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "Stations").commit();
         }
     }
 
@@ -381,6 +389,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static String stationPhotoChooser(String stationName) {
+        String stationURI;
+        if (stationName.contains("Shell")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
+        } else if (stationName.contains("Opet")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
+        } else if (stationName.contains("BP")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
+        } else if (stationName.contains("Kadoil")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
+        } else if (stationName.contains("Petrol Ofisi")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
+        } else if (stationName.contains("Lukoil")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+        } else {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
+        }
+        return stationURI;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -451,6 +479,16 @@ public class MainActivity extends AppCompatActivity {
         }, 2000);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mServiceConn != null) {
+            unbindService(mServiceConn);
+        }
+        if (facebookInterstitial != null) {
+            facebookInterstitial.destroy();
+        }
+    }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
@@ -466,10 +504,10 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    fragment = new FragmentVehicle();
+                    fragment = new FragmentStations();
                     break;
                 case 1:
-                    fragment = new FragmentStations();
+                    fragment = new FragmentVehicle();
                     break;
                 case 2:
                     fragment = new FragmentNews();
@@ -479,6 +517,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 4:
                     fragment = new FragmentStats();
+                    break;
+                case 5:
+                    fragment = new FragmentSettings();
                     break;
                 default:
                     break;
@@ -495,15 +536,18 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return mContext.getString(R.string.nav_text_vehicle);
-                case 1:
                     return mContext.getString(R.string.nav_text_stations);
+
+                case 1:
+                    return mContext.getString(R.string.nav_text_vehicle);
                 case 2:
-                    return mContext.getString(R.string.nav_text_news);
-                case 3:
                     return mContext.getString(R.string.nav_text_profile);
+                case 3:
+                    return mContext.getString(R.string.nav_text_news);
                 case 4:
                     return mContext.getString(R.string.nav_text_stats);
+                case 5:
+                    return mContext.getString(R.string.nav_text_settings);
             }
             return null;
         }

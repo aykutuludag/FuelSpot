@@ -1,21 +1,26 @@
 package org.uusoftware.fuelify.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.squareup.picasso.Picasso;
 
+import org.uusoftware.fuelify.PurchaseDetails;
 import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.model.PurchaseItem;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHolder> {
     private List<PurchaseItem> feedItemList;
@@ -26,31 +31,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             ViewHolder holder = (ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
-           /* if (isAddingFuel) {
-                System.out.println("İSTASYON SEÇİMİ");
-                chosenStationID = String.valueOf(feedItemList.get(position).getID());
-                chosenStationName = feedItemList.get(position).getStationName();
-                gasolinePrice = feedItemList.get(position).getGasolinePrice();
-                dieselPrice = feedItemList.get(position).getDieselPrice();
-                LPGPrice = feedItemList.get(position).getLpgPrice();
-                electricityPrice = feedItemList.get(position).getElectricityPrice();
-                ((ChooseStation) mContext).finish();
-            } else {
-                System.out.println("İSTASYON DETAYI");
-                Intent intent = new Intent(mContext, StationDetails.class);
-                intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
-                intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
-                intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
-                intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
-                intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
-                intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
-                intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
-                intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
-                intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
-                intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
-                intent.putExtra("STATION_ID", feedItemList.get(position).getID());
-                mContext.startActivity(intent);
-            }*/
+            Intent intent = new Intent(mContext, PurchaseDetails.class);
+           /* intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
+            intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
+            intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
+            intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
+            intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
+            intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
+            intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
+            intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
+            intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+            intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
+            intent.putExtra("STATION_ID", feedItemList.get(position).getID());*/
+            mContext.startActivity(intent);
         }
     };
 
@@ -82,7 +75,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         // TAX 1
         double tax = feedItem.getFuelPrice() * 0.67f;
-        viewHolder.tax1.setText(String.format("%.2f", tax) + " TL (%67)");
+        viewHolder.tax1.setText(String.format(Locale.getDefault(), "%.2f", tax) + " TL (%67)");
 
         // PRICE 1
         viewHolder.price1.setText(feedItem.getFuelPrice() + " TL");
@@ -93,19 +86,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             viewHolder.type2.setText(feedItem.getFuelType2());
 
             // AMOUNT 2
-            viewHolder.amount2.setText(feedItem.getFuelLiter() + " LT");
+            viewHolder.amount2.setText(feedItem.getFuelLiter2() + " LT");
 
             // TAX 2
             double tax2 = feedItem.getFuelPrice() * 0.67f;
-            viewHolder.tax2.setText(String.format("%.2f", tax2) + " TL (%67)");
+            viewHolder.tax2.setText(String.format(Locale.getDefault(),"%.2f", tax2) + " TL (%67)");
 
             // PRICE 2
             viewHolder.price2.setText(feedItem.getFuelPrice2() + " TL");
         } else {
-            viewHolder.type2.setVisibility(View.INVISIBLE);
-            viewHolder.amount2.setVisibility(View.INVISIBLE);
-            viewHolder.tax2.setVisibility(View.INVISIBLE);
-            viewHolder.price2.setVisibility(View.INVISIBLE);
+            viewHolder.type2.setVisibility(View.GONE);
+            viewHolder.amount2.setVisibility(View.GONE);
+            viewHolder.tax2.setVisibility(View.GONE);
+            viewHolder.price2.setVisibility(View.GONE);
         }
 
         //TotalPrice
@@ -114,6 +107,10 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         // PurchaseTıme
         Date date = new Date(feedItem.getPurchaseTime());
         viewHolder.purchaseTime.setReferenceTime(date.getTime());
+
+        //Station Icon
+        Picasso.with(mContext).load(feedItem.getStationIcon()).error(R.drawable.unknown).placeholder(R.drawable.unknown)
+                .into(viewHolder.stationLogo);
 
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);
@@ -129,12 +126,14 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         RelativeLayout backgroundClick;
         TextView stationName, type1, price1, tax1, amount1, type2, price2, tax2, amount2, totalPrice;
+        ImageView stationLogo;
         RelativeTimeTextView purchaseTime;
 
         ViewHolder(View itemView) {
             super(itemView);
             backgroundClick = itemView.findViewById(R.id.single_purchase);
             stationName = itemView.findViewById(R.id.stationName);
+            stationLogo = itemView.findViewById(R.id.stationLogo);
             type1 = itemView.findViewById(R.id.type1);
             price1 = itemView.findViewById(R.id.price1);
             tax1 = itemView.findViewById(R.id.tax1);
