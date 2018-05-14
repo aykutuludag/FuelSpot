@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.squareup.picasso.Picasso;
 
 import org.uusoftware.fuelify.ChooseStation;
 import org.uusoftware.fuelify.R;
@@ -130,8 +130,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.lastUpdated.setReferenceTime(date.getTime());
 
         //Station Icon
-        Picasso.with(mContext).load(feedItem.getPhotoURL()).error(R.drawable.unknown).placeholder(R.drawable.unknown)
-                .into(viewHolder.stationPic);
+        Glide.with(mContext).load(feedItem.getPhotoURL()).into(viewHolder.stationPic);
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);

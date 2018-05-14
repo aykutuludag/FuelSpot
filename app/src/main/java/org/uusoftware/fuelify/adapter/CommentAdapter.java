@@ -20,8 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.squareup.picasso.Picasso;
 
 import org.uusoftware.fuelify.MainActivity;
 import org.uusoftware.fuelify.R;
@@ -35,6 +35,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
@@ -149,8 +150,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         viewHolder.commentHolder.setText(feedItem.getComment());
 
-        Picasso.with(mContext).load(feedItem.getProfile_pic()).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(viewHolder.profilePic);
+        Glide.with(mContext).load(feedItem.getProfile_pic()).into(viewHolder.profilePic);
 
         // Handle click event on image click
         viewHolder.card.setOnClickListener(clickListener);

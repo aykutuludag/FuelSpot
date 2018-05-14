@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -31,13 +32,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -120,8 +121,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         // Setting photo
         ImageView profilePic = findViewById(R.id.event_photo);
-        Picasso.with(this).load(photo).error(R.drawable.profile).placeholder(R.drawable.profile)
-                .into(profilePic);
+        Glide.with(this).load(Uri.parse(photo)).into(profilePic);
 
         //  Setting location and retrieving changes
         editLocation.setText(location);

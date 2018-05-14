@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.squareup.picasso.Picasso;
 
 import org.uusoftware.fuelify.PurchaseDetails;
 import org.uusoftware.fuelify.R;
@@ -90,7 +90,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
             // TAX 2
             double tax2 = feedItem.getFuelPrice() * 0.67f;
-            viewHolder.tax2.setText(String.format(Locale.getDefault(),"%.2f", tax2) + " TL (%67)");
+            viewHolder.tax2.setText(String.format(Locale.getDefault(), "%.2f", tax2) + " TL (%67)");
 
             // PRICE 2
             viewHolder.price2.setText(feedItem.getFuelPrice2() + " TL");
@@ -109,8 +109,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         viewHolder.purchaseTime.setReferenceTime(date.getTime());
 
         //Station Icon
-        Picasso.with(mContext).load(feedItem.getStationIcon()).error(R.drawable.unknown).placeholder(R.drawable.unknown)
-                .into(viewHolder.stationLogo);
+        Glide.with(mContext).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);
 
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);

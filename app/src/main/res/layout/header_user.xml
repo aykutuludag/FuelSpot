@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_user"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="225dp"
     android:background="#212121">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -157,9 +157,9 @@
         android:id="@+id/updateUserInfo"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/username"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:padding="6dp"
-        android:src="@drawable/edit_icon" />
+        android:src="@drawable/edit_icon"
+        android:layout_alignParentRight="true" />
 </RelativeLayout>

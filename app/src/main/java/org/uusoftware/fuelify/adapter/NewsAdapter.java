@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.squareup.picasso.Picasso;
 
 import org.uusoftware.fuelify.NewsContent;
 import org.uusoftware.fuelify.R;
@@ -63,9 +63,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
                 .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
                 .replace("Ü", "%C3%9C");
-
-        Picasso.with(mContext).load(encodedUrl).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(viewHolder.image);
+        Glide.with(mContext).load(encodedUrl).into(viewHolder.image);
 
         // Setting text view title
         viewHolder.text.setText(feedItem.getTitle());

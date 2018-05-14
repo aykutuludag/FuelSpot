@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.carBrand;
@@ -42,8 +42,7 @@ public class FragmentProfile extends Fragment {
         View headerView = rootView.findViewById(R.id.header_user);
 
         ImageView userProfileHolder = headerView.findViewById(R.id.user_picture);
-        Picasso.with(getActivity()).load(Uri.parse(photo)).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(userProfileHolder);
+        Glide.with(getActivity()).load(Uri.parse(photo)).into(userProfileHolder);
 
         TextView userName = headerView.findViewById(R.id.username);
         userName.setText(username);

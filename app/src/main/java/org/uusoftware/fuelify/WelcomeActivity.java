@@ -41,9 +41,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
@@ -311,8 +311,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     public void loadCarSelection() {
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        Picasso.with(WelcomeActivity.this).load(Uri.parse(carPhoto)).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(carPic);
+        Glide.with(this).load(Uri.parse(carPhoto)).into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

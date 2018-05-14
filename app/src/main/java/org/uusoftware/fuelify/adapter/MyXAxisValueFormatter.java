@@ -11,7 +11,7 @@ public class MyXAxisValueFormatter implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm", Locale.US);
         return sdf.format(new Date((long) value));
     }
 }

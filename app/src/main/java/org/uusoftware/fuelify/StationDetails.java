@@ -2,6 +2,7 @@ package org.uusoftware.fuelify;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,13 +26,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -146,8 +147,7 @@ public class StationDetails extends AppCompatActivity {
 
         //Station Icon
         stationIcon = findViewById(R.id.station_photo);
-        Picasso.with(this).load(iconURL).error(R.drawable.unknown).placeholder(R.drawable.unknown)
-                .into(stationIcon);
+        Glide.with(this).load(Uri.parse(iconURL)).into(stationIcon);
 
         //Comments
         feedsList = new ArrayList<>();

@@ -24,9 +24,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +71,7 @@ public class FragmentVehicle extends Fragment {
     SharedPreferences prefs;
 
     TextView kilometerText, fullname, fuelType, avgText, avgPrice;
+    RelativeTimeTextView lastUpdated;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -89,9 +91,7 @@ public class FragmentVehicle extends Fragment {
 
         //ProfilePhoto
         carPhotoHolder = headerView.findViewById(R.id.car_picture);
-        System.out.println(carPhoto);
-        Picasso.with(getActivity()).load(Uri.parse(carPhoto)).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(carPhotoHolder);
+        Glide.with(getActivity()).load(Uri.parse(carPhoto)).into(carPhotoHolder);
 
         //Marka-model
         fullname = headerView.findViewById(R.id.carFullname);
@@ -151,6 +151,13 @@ public class FragmentVehicle extends Fragment {
         String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
+        //Lastupdated
+        lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
+        if (purchaseTimes.size() > 1) {
+            lastUpdated.setReferenceTime(purchaseTimes.get(purchaseTimes.size() - 1));
+        }
+
+        //EditProfile
         ImageView updateCar = headerView.findViewById(R.id.updateCarInfo);
         updateCar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,6 +259,10 @@ public class FragmentVehicle extends Fragment {
                                 avgPrice.setText(avgPriceDummy);
                             }
 
+                            //Lastupdated
+                            if (purchaseTimes.size() > 1 && lastUpdated != null) {
+                                lastUpdated.setReferenceTime(purchaseTimes.get(purchaseTimes.size() - 1));
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

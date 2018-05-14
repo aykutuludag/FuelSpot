@@ -510,10 +510,10 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new FragmentVehicle();
                     break;
                 case 2:
-                    fragment = new FragmentNews();
+                    fragment = new FragmentProfile();
                     break;
                 case 3:
-                    fragment = new FragmentProfile();
+                    fragment = new FragmentNews();
                     break;
                 case 4:
                     fragment = new FragmentStats();
@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
 
         @Override
@@ -537,7 +537,6 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return mContext.getString(R.string.nav_text_stations);
-
                 case 1:
                     return mContext.getString(R.string.nav_text_vehicle);
                 case 2:

@@ -40,7 +40,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
@@ -175,8 +175,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        Picasso.with(VehicleEditActivity.this).load(Uri.parse(carPhoto)).error(R.drawable.empty).placeholder(R.drawable.empty)
-                .into(carPic);
+        Glide.with(this).load(Uri.parse(carPhoto)).into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

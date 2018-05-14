@@ -2,7 +2,6 @@ package org.uusoftware.fuelify;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +27,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -37,11 +35,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,7 +78,6 @@ public class AddFuel extends AppCompatActivity {
     EditText chooseStation, chooseTime, enterKilometer;
     SharedPreferences prefs;
     RadioGroup chooseFuel, chooseFuel2;
-    int hour, minute;
     long purchaseTime;
     String fuelType, fuelType2 = "";
     double totalPrice;
@@ -86,6 +86,23 @@ public class AddFuel extends AppCompatActivity {
     ImageView photoHolder;
     Button sendVariables;
     String billPhoto;
+    SimpleDateFormat mFormatter = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
+
+    //Listener for startTime
+    SlideDateTimeListener listener = new SlideDateTimeListener() {
+
+        @Override
+        public void onDateTimeSet(Date date) {
+            chooseTime.setText(mFormatter.format(date));
+            purchaseTime = date.getTime();
+        }
+
+        // Optional cancel listener
+        @Override
+        public void onDateTimeCancel() {
+            // Do nothing
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,12 +142,20 @@ public class AddFuel extends AppCompatActivity {
         //SAAT SEÇİMİ
         getTime();
         chooseTime = findViewById(R.id.editTextTime);
-        chooseTime.setText(pad(hour) + ":" + pad(minute));
+        chooseTime.setText(mFormatter.format(new Date(purchaseTime)));
         chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new SlideDateTimePicker.Builder(getSupportFragmentManager())
+                        .setListener(listener)
+                        .setInitialDate(new Date(purchaseTime))
+                        .setMaxDate(new Date(purchaseTime))
+                        .setIs24HourTime(true)
+                        .build()
+                        .show();
+
                 // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
+              /*  Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
@@ -144,7 +169,7 @@ public class AddFuel extends AppCompatActivity {
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
+                mTimePicker.show();*/
             }
         });
 
@@ -557,9 +582,7 @@ public class AddFuel extends AppCompatActivity {
 
     public void getTime() {
         Calendar calendar = Calendar.getInstance();
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, minute);
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
         purchaseTime = calendar.getTimeInMillis();
     }
 
