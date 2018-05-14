@@ -6,7 +6,7 @@ android {
         applicationId "org.uusoftware.fuelify"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 13
+        versionCode 14
         versionName "1.0"
     }
     buildTypes {
@@ -50,5 +50,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.github.yalantis:ucrop:2.2.2'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.github.pwiniars:SlideDateTimePicker:v1.0.8'
 }
 apply plugin: 'com.google.gms.google-services'
