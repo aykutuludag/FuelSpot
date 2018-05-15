@@ -24,10 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-<<<<<<< HEAD
 import com.bumptech.glide.Glide;
-=======
->>>>>>> origin/master
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
