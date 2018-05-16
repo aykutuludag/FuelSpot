@@ -4,10 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -50,75 +48,39 @@
         <activity
             android:name=".VehicleEditActivity"
             android:label="@string/title_activity_vehicle_selection"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StationDetails"
             android:label="@string/title_activity_station_details"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ChooseStation"
-            android:parentActivityName=".AddFuel">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AddFuel" />
-        </activity>
+            android:parentActivityName=".AddFuel" />
         <activity
             android:name=".PurchaseDetails"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileEditActivity"
             android:label="@string/title_activity_profile_edit"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".NewsContent"
             android:label=""
             android:parentActivityName=".MainActivity"
-            android:theme="@style/ContentTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:theme="@style/ContentTheme" />
 
         <!-- BackgroundLocation - Geofence - Register stations -->
         <service android:name=".service.LocationService" />

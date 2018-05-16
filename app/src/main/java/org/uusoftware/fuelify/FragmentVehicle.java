@@ -209,6 +209,7 @@ public class FragmentVehicle extends Fragment {
                                 item.setPurchaseTime(obj.getLong("time"));
                                 item.setStationName(obj.getString("stationName"));
                                 item.setStationIcon(obj.getString("stationIcon"));
+                                item.setStationLocation(obj.getString("stationLocation"));
                                 item.setFuelType(obj.getString("fuelType"));
                                 item.setFuelPrice(obj.getDouble("fuelPrice"));
                                 item.setFuelLiter(obj.getDouble("fuelLiter"));

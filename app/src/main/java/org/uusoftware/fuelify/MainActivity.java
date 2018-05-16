@@ -52,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
     // Static values
     public static final int REQUEST_EXTERNAL_STORAGE = 0;
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+
     public static boolean premium, isSigned;
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
     public static int fuelPri, fuelSec, kilometer, pos, pos2;
+
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
     public static String[] anadol_models = {"A"};
@@ -173,6 +176,10 @@ public class MainActivity extends AppCompatActivity {
         pos2 = prefs.getInt("carPos2", 0);
         averageCons = prefs.getFloat("averageConsumption", 0);
         averagePrice = prefs.getFloat("averagePrice", 0);
+        TAX_GASOLINE = prefs.getFloat("taxGasoline", 0);
+        TAX_DIESEL = prefs.getFloat("taxDiesel", 0);
+        TAX_LPG = prefs.getFloat("taxLPG", 0);
+        TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -407,6 +414,25 @@ public class MainActivity extends AppCompatActivity {
             stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
         }
         return stationURI;
+    }
+
+    public static float taxCalculator(String fuelType, float price) {
+        float tax;
+        switch (fuelType) {
+            case "gasoline":
+                tax = price * TAX_GASOLINE;
+                break;
+            case "diesel":
+                tax = price * TAX_DIESEL;
+                break;
+            case "lpg":
+                tax = price * TAX_LPG;
+                break;
+            default:
+                tax = price * TAX_ELECTRICITY;
+                break;
+        }
+        return tax;
     }
 
     @Override

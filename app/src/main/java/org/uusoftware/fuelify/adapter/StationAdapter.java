@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.uusoftware.fuelify.AddFuel.LPGPrice;
 import static org.uusoftware.fuelify.AddFuel.chosenStationID;
+import static org.uusoftware.fuelify.AddFuel.chosenStationLoc;
 import static org.uusoftware.fuelify.AddFuel.chosenStationName;
 import static org.uusoftware.fuelify.AddFuel.dieselPrice;
 import static org.uusoftware.fuelify.AddFuel.electricityPrice;
@@ -43,6 +44,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 System.out.println("İSTASYON SEÇİMİ");
                 chosenStationID = String.valueOf(feedItemList.get(position).getID());
                 chosenStationName = feedItemList.get(position).getStationName();
+                chosenStationLoc = feedItemList.get(position).getLocation();
                 gasolinePrice = feedItemList.get(position).getGasolinePrice();
                 dieselPrice = feedItemList.get(position).getDieselPrice();
                 LPGPrice = feedItemList.get(position).getLpgPrice();

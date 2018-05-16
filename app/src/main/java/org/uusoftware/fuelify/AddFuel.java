@@ -19,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,12 +65,14 @@ import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.kilometer;
+import static org.uusoftware.fuelify.MainActivity.pos;
+import static org.uusoftware.fuelify.MainActivity.pos2;
 import static org.uusoftware.fuelify.MainActivity.stationPhotoChooser;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
 
-    public static String chosenStationName, chosenStationID;
+    public static String chosenStationName, chosenStationID, chosenStationLoc;
     public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     Bitmap bitmap;
     Window window;
@@ -153,23 +157,6 @@ public class AddFuel extends AppCompatActivity {
                         .setIs24HourTime(true)
                         .build()
                         .show();
-
-                // TODO Auto-generated method stub
-              /*  Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(AddFuel.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), selectedHour, selectedMinute);
-                        purchaseTime = calendar.getTimeInMillis();
-                        chooseTime.setText(pad(selectedHour) + ":" + pad(selectedMinute));
-                    }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();*/
             }
         });
 
@@ -349,6 +336,7 @@ public class AddFuel extends AppCompatActivity {
                                     params.put("stationID", chosenStationID);
                                     params.put("stationNAME", chosenStationName);
                                     params.put("stationICON", stationPhotoChooser(chosenStationName));
+                                    params.put("stationLOC", chosenStationLoc);
                                     params.put("fuelType", fuelType);
                                     params.put("fuelPrice", String.valueOf(selectedUnitPrice));
                                     params.put("fuelLiter", String.valueOf(buyedLiter));
@@ -456,6 +444,7 @@ public class AddFuel extends AppCompatActivity {
                         bitmap = null;
                         chosenStationName = null;
                         chosenStationID = null;
+                        chosenStationLoc = null;
                         gasolinePrice = 0;
                         dieselPrice = 0;
                         electricityPrice = 0;
@@ -488,6 +477,8 @@ public class AddFuel extends AppCompatActivity {
                 } else {
                     params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
                 }
+                params.put("posIn1", String.valueOf(pos));
+                params.put("posIn2", String.valueOf(pos2));
 
                 //returning parameters
                 return params;
@@ -615,11 +606,31 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
-    public String pad(int input) {
-        if (input >= 10) {
-            return String.valueOf(input);
-        } else {
-            return "0" + String.valueOf(input);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                //Remove variables
+                bitmap = null;
+                chosenStationName = null;
+                chosenStationID = null;
+                chosenStationLoc = null;
+                gasolinePrice = 0;
+                dieselPrice = 0;
+                electricityPrice = 0;
+                LPGPrice = 0;
+                billPhoto = null;
+                isAddingFuel = false;
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -698,6 +709,7 @@ public class AddFuel extends AppCompatActivity {
         bitmap = null;
         chosenStationName = null;
         chosenStationID = null;
+        chosenStationLoc = null;
         gasolinePrice = 0;
         dieselPrice = 0;
         electricityPrice = 0;

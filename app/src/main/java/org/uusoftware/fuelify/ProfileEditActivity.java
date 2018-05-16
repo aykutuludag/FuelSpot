@@ -129,7 +129,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(userCountry).build();
+                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(userCountry).setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
                     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(ProfileEditActivity.this);
                     startActivityForResult(intent, 1320);
                 } catch (GooglePlayServicesRepairableException e) {
@@ -288,7 +288,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (requestCode == 1320) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-                location = place.getName().toString();
+                location = place.getAddress().toString();
                 editLocation.setText(location);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);

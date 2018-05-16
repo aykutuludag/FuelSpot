@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static org.uusoftware.fuelify.MainActivity.taxCalculator;
+
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHolder> {
     private List<PurchaseItem> feedItemList;
     private Context mContext;
@@ -32,17 +34,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             int position = holder.getAdapterPosition();
 
             Intent intent = new Intent(mContext, PurchaseDetails.class);
-           /* intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
-            intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
-            intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
-            intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
-            intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
-            intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
-            intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
-            intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
-            intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
-            intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
-            intent.putExtra("STATION_ID", feedItemList.get(position).getID());*/
+            intent.putExtra("ID", feedItemList.get(position).getID());
+            intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
+            intent.putExtra("STATION_ICON", feedItemList.get(position).getStationIcon());
+            intent.putExtra("STATION_LOC", feedItemList.get(position).getStationLocation());
+            intent.putExtra("PURCHASE_TIME", feedItemList.get(position).getPurchaseTime());
+            intent.putExtra("FUEL_TYPE_1", feedItemList.get(position).getFuelType());
+            intent.putExtra("FUEL_PRICE_1", feedItemList.get(position).getFuelPrice());
+            intent.putExtra("FUEL_LITER_1", feedItemList.get(position).getFuelLiter());
+            intent.putExtra("FUEL_TYPE_2", feedItemList.get(position).getFuelType2());
+            intent.putExtra("FUEL_PRICE_2", feedItemList.get(position).getFuelPrice2());
+            intent.putExtra("FUEL_LITER_2", feedItemList.get(position).getFuelLiter2());
+            intent.putExtra("TOTAL_PRICE", feedItemList.get(position).getTotalPrice());
+            intent.putExtra("BILL_PHOTO", feedItemList.get(position).getBillPhoto());
             mContext.startActivity(intent);
         }
     };
@@ -73,12 +77,14 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         // AMOUNT 1
         viewHolder.amount1.setText(feedItem.getFuelLiter() + " LT");
 
-        // TAX 1
-        double tax = feedItem.getFuelPrice() * 0.67f;
-        viewHolder.tax1.setText(String.format(Locale.getDefault(), "%.2f", tax) + " TL (%67)");
+        // UNIT 1
+        String unitHolder = feedItem.getFuelPrice() + " TL";
+        viewHolder.unitPrice1.setText(unitHolder);
 
         // PRICE 1
-        viewHolder.price1.setText(feedItem.getFuelPrice() + " TL");
+        float priceOne = (float) (feedItem.getFuelPrice() * feedItem.getFuelLiter());
+        String priceHolder = String.format(Locale.getDefault(), "%.2f", priceOne) + " TL";
+        viewHolder.price1.setText(priceHolder);
 
         // If user didn't purchased second type of fuel just hide these textViews
         if (feedItem.getFuelType2() != null && feedItem.getFuelType2().length() > 0) {
@@ -88,21 +94,28 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             // AMOUNT 2
             viewHolder.amount2.setText(feedItem.getFuelLiter2() + " LT");
 
-            // TAX 2
-            double tax2 = feedItem.getFuelPrice() * 0.67f;
-            viewHolder.tax2.setText(String.format(Locale.getDefault(), "%.2f", tax2) + " TL (%67)");
+            // UNIT 2
+            String unitHolder2 = feedItem.getFuelPrice2() + " TL";
+            viewHolder.unitPrice2.setText(unitHolder2);
 
             // PRICE 2
             viewHolder.price2.setText(feedItem.getFuelPrice2() + " TL");
         } else {
             viewHolder.type2.setVisibility(View.GONE);
             viewHolder.amount2.setVisibility(View.GONE);
-            viewHolder.tax2.setVisibility(View.GONE);
+            viewHolder.unitPrice2.setVisibility(View.GONE);
             viewHolder.price2.setVisibility(View.GONE);
         }
 
+        //TOTALTAX
+        float tax1 = taxCalculator(feedItem.getFuelType(), (float) (feedItem.getFuelPrice() * feedItem.getFuelLiter()));
+        float tax2 = taxCalculator(feedItem.getFuelType2(), (float) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2()));
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2);
+        viewHolder.totalTax.setText(taxHolder);
+
         //TotalPrice
-        viewHolder.totalPrice.setText(feedItem.getTotalPrice() + " TL");
+        String totalPriceHolder = "TOPLAM: " + feedItem.getTotalPrice() + " TL";
+        viewHolder.totalPrice.setText(totalPriceHolder);
 
         // PurchaseTıme
         Date date = new Date(feedItem.getPurchaseTime());
@@ -124,7 +137,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout backgroundClick;
-        TextView stationName, type1, price1, tax1, amount1, type2, price2, tax2, amount2, totalPrice;
+        TextView stationName, type1, price1, unitPrice1, amount1, type2, price2, unitPrice2, amount2, totalTax, totalPrice;
         ImageView stationLogo;
         RelativeTimeTextView purchaseTime;
 
@@ -135,12 +148,13 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             stationLogo = itemView.findViewById(R.id.stationLogo);
             type1 = itemView.findViewById(R.id.type1);
             price1 = itemView.findViewById(R.id.price1);
-            tax1 = itemView.findViewById(R.id.tax1);
+            unitPrice1 = itemView.findViewById(R.id.unitPrice1);
             amount1 = itemView.findViewById(R.id.amount1);
             type2 = itemView.findViewById(R.id.type2);
             price2 = itemView.findViewById(R.id.price2);
-            tax2 = itemView.findViewById(R.id.tax2);
+            unitPrice2 = itemView.findViewById(R.id.unitPrice2);
             amount2 = itemView.findViewById(R.id.amount2);
+            totalTax = itemView.findViewById(R.id.totalTax);
             totalPrice = itemView.findViewById(R.id.totalPrice);
             purchaseTime = itemView.findViewById(R.id.purchaseTime);
         }

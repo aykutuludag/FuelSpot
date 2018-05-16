@@ -5,6 +5,7 @@ public class PurchaseItem {
     private int ID;
     private String stationName;
     private String stationIcon;
+    private String stationLocation;
     private long purchaseTime;
     private String fuelType1;
     private double fuelPrice1;
@@ -37,6 +38,14 @@ public class PurchaseItem {
 
     public void setStationIcon(String stationIcon) {
         this.stationIcon = stationIcon;
+    }
+
+    public String getStationLocation() {
+        return stationLocation;
+    }
+
+    public void setStationLocation(String stationLocation) {
+        this.stationLocation = stationLocation;
     }
 
     public long getPurchaseTime() {

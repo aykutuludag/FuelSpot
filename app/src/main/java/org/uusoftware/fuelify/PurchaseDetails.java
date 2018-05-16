@@ -9,22 +9,34 @@ import android.view.View;
 
 public class PurchaseDetails extends AppCompatActivity {
 
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_purchases);
+        setContentView(R.layout.activity_purchase_details);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Satın alma silinecek", Snackbar.LENGTH_LONG)
+                        .setAction("SİL", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deletePurchase();
+                            }
+                        })
+                        .show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void deletePurchase() {
+
     }
 }

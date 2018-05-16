@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="Üyeliğiniz oluşturuldu. Biraz da aracınız hakkında bilgi almamız lazım. Devam etmek için aşağıdaki butona dokunun."
+            android:text="Üyeliğiniz oluşturuldu. Devam edebilmemiz için depolama ve konum iznine ihtiyaç duyuyoruz."
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Button

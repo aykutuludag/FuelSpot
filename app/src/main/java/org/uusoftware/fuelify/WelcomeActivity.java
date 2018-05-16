@@ -9,6 +9,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -62,8 +66,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static org.uusoftware.fuelify.MainActivity.PERMISSIONS_LOCATION;
 import static org.uusoftware.fuelify.MainActivity.PERMISSIONS_STORAGE;
 import static org.uusoftware.fuelify.MainActivity.REQUEST_EXTERNAL_STORAGE;
+import static org.uusoftware.fuelify.MainActivity.TAX_DIESEL;
+import static org.uusoftware.fuelify.MainActivity.TAX_ELECTRICITY;
+import static org.uusoftware.fuelify.MainActivity.TAX_GASOLINE;
+import static org.uusoftware.fuelify.MainActivity.TAX_LPG;
 import static org.uusoftware.fuelify.MainActivity.acura_models;
 import static org.uusoftware.fuelify.MainActivity.alfaRomeo_models;
 import static org.uusoftware.fuelify.MainActivity.anadol_models;
@@ -97,6 +106,7 @@ import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.gaz_models;
 import static org.uusoftware.fuelify.MainActivity.geely_models;
 import static org.uusoftware.fuelify.MainActivity.gender;
+import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.honda_models;
 import static org.uusoftware.fuelify.MainActivity.hyundai_models;
 import static org.uusoftware.fuelify.MainActivity.ikco_models;
@@ -148,6 +158,9 @@ import static org.uusoftware.fuelify.MainActivity.tata_models;
 import static org.uusoftware.fuelify.MainActivity.tesla_models;
 import static org.uusoftware.fuelify.MainActivity.tofas_models;
 import static org.uusoftware.fuelify.MainActivity.toyota_models;
+import static org.uusoftware.fuelify.MainActivity.userCountry;
+import static org.uusoftware.fuelify.MainActivity.userlat;
+import static org.uusoftware.fuelify.MainActivity.userlon;
 import static org.uusoftware.fuelify.MainActivity.username;
 import static org.uusoftware.fuelify.MainActivity.volvo_models;
 import static org.uusoftware.fuelify.MainActivity.vw_models;
@@ -196,9 +209,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layout1.setVisibility(View.GONE);
-                layout2.setVisibility(View.VISIBLE);
-                loadCarSelection();
+                ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]
+                        {PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION}, 99);
             }
         });
 
@@ -274,6 +286,61 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             pos2 = obj.getInt("posIn2");
                             prefs.edit().putInt("carPos2", pos2).apply();
 
+                            fetchTaxRates();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Creating a Request Queue
+        RequestQueue requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void fetchTaxRates() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                            prefs.edit().putFloat("taxGasoline", TAX_GASOLINE).apply();
+
+                            TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                            prefs.edit().putFloat("taxDiesel", TAX_DIESEL).apply();
+
+                            TAX_LPG = (float) obj.getDouble("taxLPG");
+                            prefs.edit().putFloat("taxLPG", TAX_LPG).apply();
+
+                            TAX_ELECTRICITY = (float) obj.getDouble("taxElectricity");
+                            prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
+
+                            getVariables(prefs);
                             continueButton.setAlpha(1.0f);
                             continueButton.setClickable(true);
                         } catch (JSONException e) {
@@ -294,7 +361,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", username);
+                params.put("country", userCountry);
 
                 //returning parameters
                 return params;
@@ -829,12 +896,28 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case 99: {
+                if (ContextCompat.checkSelfPermission(WelcomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    //Request location updates:
+                    LocationManager locationManager = (LocationManager)
+                            this.getSystemService(Context.LOCATION_SERVICE);
+                    Criteria criteria = new Criteria();
+
+                    Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+                    if (location != null) {
+                        userlat = (float) location.getLatitude();
+                        userlon = (float) location.getLongitude();
+                        prefs.edit().putFloat("lat", userlat).apply();
+                        prefs.edit().putFloat("lon", userlon).apply();
+                        getVariables(prefs);
+                    }
+
+                    layout1.setVisibility(View.GONE);
+                    layout2.setVisibility(View.VISIBLE);
+                    loadCarSelection();
+
                     Toast.makeText(WelcomeActivity.this, "Settings saved...", Toast.LENGTH_SHORT).show();
-                    FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(WelcomeActivity.this);
                 }
                 break;
             }
@@ -872,7 +955,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     final Uri resultUri = UCrop.getOutput(data);
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        carPic.setImageBitmap(bitmap);
+                        Glide.with(this).load(bitmap).into(carPic);
                         prefs.edit().putString("CarPhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + fileName).apply();
                     } catch (IOException e) {
                         e.printStackTrace();
