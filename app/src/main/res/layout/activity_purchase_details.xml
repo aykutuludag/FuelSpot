@@ -88,7 +88,8 @@
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
-                    <android.support.percent.PercentRelativeLayout
+                    <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/bill_section"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -107,6 +108,7 @@
 
                         <TextView
                             android:id="@+id/title_amount"
+                            android:textStyle="italic"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
@@ -115,17 +117,16 @@
                             android:gravity="center"
                             android:text="Miktar"
                             android:textSize="20sp"
-                            android:textStyle="italic"
                             app:layout_widthPercent="25%" />
 
                         <TextView
-                            android:id="@+id/title_tax"
+                            android:id="@+id/title_unit"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_toEndOf="@+id/title_amount"
                             android:layout_toRightOf="@+id/title_amount"
                             android:gravity="center"
-                            android:text="Vergi"
+                            android:text="Birim fiyat"
                             android:textSize="20sp"
                             android:textStyle="italic"
                             app:layout_widthPercent="25%" />
@@ -208,7 +209,7 @@
                             app:layout_widthPercent="25%" />
 
                         <TextView
-                            android:id="@+id/tax2"
+                            android:id="@+id/unitPrice2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/unitPrice1"
@@ -231,12 +232,23 @@
                             app:layout_widthPercent="25%" />
 
                         <TextView
+                            android:id="@+id/totalTax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/type2"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="VERGİ: -"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold"
+                            app:layout_widthPercent="75%" />
+
+                        <TextView
                             android:id="@+id/totalPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
+                            android:layout_below="@+id/totalTax"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="68dp"
                             android:gravity="center"
                             android:text="TOPLAM: -"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"

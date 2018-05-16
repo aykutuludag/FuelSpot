@@ -608,7 +608,7 @@ public class AddFuel extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_save, menu);
         return true;
     }
 

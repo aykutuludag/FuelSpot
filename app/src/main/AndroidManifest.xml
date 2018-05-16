@@ -65,14 +65,6 @@
             android:name=".PurchaseDetails"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".HelpActivity"
-            android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".ProfileEditActivity"
             android:label="@string/title_activity_profile_edit"
             android:parentActivityName=".MainActivity" />
@@ -83,7 +75,7 @@
             android:theme="@style/ContentTheme" />
 
         <!-- BackgroundLocation - Geofence - Register stations -->
-        <service android:name=".service.LocationService" />
+        <service android:name=".service.GeofenceService" />
 
         <!-- ImageCrop -->
         <activity

@@ -220,7 +220,7 @@ public class StationDetails extends AppCompatActivity {
 
                                 CommentItem item = new CommentItem();
                                 item.setID(obj.getInt("id"));
-                                item.setComment(obj.getString("comment"));
+                                item.setComment(obj.getString("comment_menu"));
                                 item.setTime(obj.getString("time"));
                                 item.setProfile_pic(obj.getString("user_photo"));
                                 item.setUsername(obj.getString("username"));
@@ -289,7 +289,7 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("comment", comment);
+                params.put("comment_menu", comment);
                 params.put("station_id", String.valueOf(stationID));
                 params.put("username", username);
                 params.put("user_photo", photo);

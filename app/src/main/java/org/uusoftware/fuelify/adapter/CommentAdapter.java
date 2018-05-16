@@ -60,7 +60,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             } else {
                 popup = new PopupMenu(mContext, view);
             }
-            popup.getMenuInflater().inflate(R.menu.comment, popup.getMenu());
+            popup.getMenuInflater().inflate(R.menu.comment_menu, popup.getMenu());
 
 
             String localUser = MainActivity.username;

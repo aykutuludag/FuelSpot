@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }
                         finish();
                     }
-                }, 3000);
+                }, 2500);
             } else {
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         startActivity(i);
                         finish();
                     }
-                }, 1500);
+                }, 1250);
             }
         } else {
             signInButton.setVisibility(View.VISIBLE);

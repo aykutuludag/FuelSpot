@@ -969,4 +969,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        //Do nothing
+    }
 }

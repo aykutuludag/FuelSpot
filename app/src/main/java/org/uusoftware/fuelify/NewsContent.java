@@ -219,7 +219,7 @@ public class NewsContent extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.activity_content_menu, menu);
+        getMenuInflater().inflate(R.menu.news_menu, menu);
         MenuItem mFav = menu.findItem(R.id.action_favorite);
         MenuItem mShare = menu.findItem(R.id.action_share);
         mFav.setIcon(favorite);

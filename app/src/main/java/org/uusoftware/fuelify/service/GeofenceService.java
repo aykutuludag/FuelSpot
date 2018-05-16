@@ -21,8 +21,8 @@ import static org.uusoftware.fuelify.MainActivity.userlon;
  * Created by roberto on 9/29/16.
  */
 
-public class LocationService extends Service {
-    private static final String TAG = "LocationService";
+public class GeofenceService extends Service {
+    private static final String TAG = "GeofenceService";
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 10000;
     private static final float LOCATION_DISTANCE = 100f;
@@ -40,7 +40,7 @@ public class LocationService extends Service {
             Log.e(TAG, "onLocationChanged: " + location);
             userlat = (float) location.getLatitude();
             userlon = (float) location.getLongitude();
-            Toast.makeText(LocationService.this, "LATİTUDE: " + userlat + " LONGTITUDE: " + userlon, Toast.LENGTH_SHORT).show();
+            Toast.makeText(GeofenceService.this, "LATİTUDE: " + userlat + " LONGTITUDE: " + userlon, Toast.LENGTH_SHORT).show();
             mLastLocation.set(location);
         }
 
