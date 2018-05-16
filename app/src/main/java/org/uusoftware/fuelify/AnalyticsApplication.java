@@ -18,7 +18,6 @@ public class AnalyticsApplication extends Application {
         AppEventsLogger.activateApp(this);
     }
 
-
     synchronized public Tracker getDefaultTracker() {
         if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
