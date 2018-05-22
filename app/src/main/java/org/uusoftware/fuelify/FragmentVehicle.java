@@ -70,7 +70,8 @@ public class FragmentVehicle extends Fragment {
     List<PurchaseItem> feedsList;
     SharedPreferences prefs;
 
-    TextView kilometerText, fullname, fuelType, avgText, avgPrice;
+    ImageView fuelTypeIndicator, fuelTypeIndicator2;
+    TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice;
     RelativeTimeTextView lastUpdated;
 
     @Override
@@ -98,47 +99,59 @@ public class FragmentVehicle extends Fragment {
         String fullad = carBrand + " " + carModel;
         fullname.setText(fullad);
 
-        //Kilometre
-        kilometerText = headerView.findViewById(R.id.car_kilometer);
-        String kmHolder = kilometer + " " + "km";
-        kilometerText.setText(kmHolder);
-
         //Yakıt tipi başlangıç
-        fuelType = headerView.findViewById(R.id.car_fuelType);
+        fuelType = headerView.findViewById(R.id.car_fuelTypeText);
+        fuelTypeIndicator = headerView.findViewById(R.id.car_fuelType);
         String fuelText;
         switch (fuelPri) {
             case 0:
                 fuelText = "Gasoline";
+                fuelTypeIndicator.setImageResource(R.drawable.gasoline);
                 break;
             case 1:
                 fuelText = "Diesel";
+                fuelTypeIndicator.setImageResource(R.drawable.diesel);
                 break;
             case 2:
                 fuelText = "LPG";
+                fuelTypeIndicator.setImageResource(R.drawable.lpg);
                 break;
             case 3:
                 fuelText = "Electric";
+                fuelTypeIndicator.setImageResource(R.drawable.electricity);
                 break;
             default:
-                fuelText = "-";
-                break;
-        }
-
-        switch (fuelSec) {
-            case 0:
-                fuelText = fuelText + ", Gasoline";
-                break;
-            case 1:
-                fuelText = fuelText + ", Diesel";
-                break;
-            case 2:
-                fuelText = fuelText + ", LPG";
-                break;
-            case 3:
-                fuelText = fuelText + ", Electric";
+                fuelText = "";
+                fuelTypeIndicator.setImageDrawable(null);
                 break;
         }
         fuelType.setText(fuelText);
+
+        fuelType2 = headerView.findViewById(R.id.car_fuelTypeText2);
+        fuelTypeIndicator2 = headerView.findViewById(R.id.car_fuelType2);
+        String fuelText2;
+        switch (fuelSec) {
+            case 0:
+                fuelText2 = "Gasoline";
+                fuelTypeIndicator.setImageResource(R.drawable.gasoline);
+                break;
+            case 1:
+                fuelText2 = "Diesel";
+                fuelTypeIndicator.setImageResource(R.drawable.diesel);
+                break;
+            case 2:
+                fuelText2 = "LPG";
+                fuelTypeIndicator.setImageResource(R.drawable.lpg);
+                break;
+            case 3:
+                fuelText2 = "Electric";
+                fuelTypeIndicator.setImageResource(R.drawable.electricity);
+                break;
+            default:
+                fuelText2 = "";
+                fuelTypeIndicator2.setImageDrawable(null);
+        }
+        fuelType2.setText(fuelText2);
         //Yakıt tipi bitiş
 
         //Ortalama tüketim
@@ -219,6 +232,8 @@ public class FragmentVehicle extends Fragment {
                                 item.setTotalPrice(obj.getDouble("totalPrice"));
                                 item.setBillPhoto(obj.getString("billPhoto"));
                                 feedsList.add(item);
+
+                                System.out.print("AQQ: " + obj.getString("fuelType2"));
 
                                 purchaseTimes.add(i, obj.getLong("time"));
                                 purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));

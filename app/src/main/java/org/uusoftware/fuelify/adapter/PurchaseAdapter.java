@@ -68,11 +68,21 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         final PurchaseItem feedItem = feedItemList.get(i);
 
-        // STATION NAME
-        viewHolder.stationName.setText(feedItem.getStationName());
-
         // FUEL TYPE 1
-        viewHolder.type1.setText(feedItem.getFuelType());
+        switch (feedItem.getFuelType()) {
+            case "gasoline":
+                Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type1);
+                break;
+            case "diesel":
+                Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type1);
+                break;
+            case "lpg":
+                Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type1);
+                break;
+            case "electric":
+                Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type1);
+                break;
+        }
 
         // AMOUNT 1
         viewHolder.amount1.setText(feedItem.getFuelLiter() + " LT");
@@ -82,14 +92,27 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         viewHolder.unitPrice1.setText(unitHolder);
 
         // PRICE 1
-        float priceOne = (float) (feedItem.getFuelPrice() * feedItem.getFuelLiter());
-        String priceHolder = String.format(Locale.getDefault(), "%.2f", priceOne) + " TL";
+        int priceOne = (int) (feedItem.getFuelPrice() * feedItem.getFuelLiter());
+        String priceHolder = priceOne + " TL";
         viewHolder.price1.setText(priceHolder);
 
         // If user didn't purchased second type of fuel just hide these textViews
         if (feedItem.getFuelType2() != null && feedItem.getFuelType2().length() > 0) {
             // FUEL TYPE 2
-            viewHolder.type2.setText(feedItem.getFuelType2());
+            switch (feedItem.getFuelType2()) {
+                case "gasoline":
+                    Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type2);
+                    break;
+                case "diesel":
+                    Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type2);
+                    break;
+                case "lpg":
+                    Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type2);
+                    break;
+                case "electric":
+                    Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type2);
+                    break;
+            }
 
             // AMOUNT 2
             viewHolder.amount2.setText(feedItem.getFuelLiter2() + " LT");
@@ -99,7 +122,9 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             viewHolder.unitPrice2.setText(unitHolder2);
 
             // PRICE 2
-            viewHolder.price2.setText(feedItem.getFuelPrice2() + " TL");
+            int priceTwo = (int) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2());
+            String priceHolder2 = priceTwo + " TL";
+            viewHolder.price2.setText(priceHolder2);
         } else {
             viewHolder.type2.setVisibility(View.GONE);
             viewHolder.amount2.setVisibility(View.GONE);
@@ -110,11 +135,11 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         //TOTALTAX
         float tax1 = taxCalculator(feedItem.getFuelType(), (float) (feedItem.getFuelPrice() * feedItem.getFuelLiter()));
         float tax2 = taxCalculator(feedItem.getFuelType2(), (float) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2()));
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2);
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " TL";
         viewHolder.totalTax.setText(taxHolder);
 
         //TotalPrice
-        String totalPriceHolder = "TOPLAM: " + feedItem.getTotalPrice() + " TL";
+        String totalPriceHolder = "TOPLAM: " + (int) feedItem.getTotalPrice() + " TL";
         viewHolder.totalPrice.setText(totalPriceHolder);
 
         // PurchaseTıme
@@ -137,14 +162,13 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout backgroundClick;
-        TextView stationName, type1, price1, unitPrice1, amount1, type2, price2, unitPrice2, amount2, totalTax, totalPrice;
-        ImageView stationLogo;
+        TextView price1, unitPrice1, amount1, price2, unitPrice2, amount2, totalTax, totalPrice;
+        ImageView stationLogo, type1, type2;
         RelativeTimeTextView purchaseTime;
 
         ViewHolder(View itemView) {
             super(itemView);
             backgroundClick = itemView.findViewById(R.id.single_purchase);
-            stationName = itemView.findViewById(R.id.stationName);
             stationLogo = itemView.findViewById(R.id.stationLogo);
             type1 = itemView.findViewById(R.id.type1);
             price1 = itemView.findViewById(R.id.price1);

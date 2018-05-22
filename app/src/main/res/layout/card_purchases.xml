@@ -21,41 +21,46 @@
 
             <ImageView
                 android:id="@+id/stationLogo"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="4dp"
                 card_view:srcCompat="@drawable/shell" />
-
-            <com.github.curioustechizen.ago.RelativeTimeTextView
-                android:id="@+id/purchaseTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="#fff"
-                android:gravity="center"
-                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/section1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="Detaylar"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:text="Alınan yakıt"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <com.github.curioustechizen.ago.RelativeTimeTextView
+                android:id="@+id/purchaseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/stationLogo"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:textSize="16sp" />
 
             <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/bill_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/section1">
+                android:layout_below="@id/section1"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:id="@+id/title_type"
@@ -104,14 +109,14 @@
                     android:textStyle="italic"
                     app:layout_widthPercent="25%" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/type1"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/amount1"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/title_type"
-                    android:gravity="center"
-                    android:text="-"
+                    android:src="@drawable/gasoline"
                     app:layout_widthPercent="25%" />
 
                 <TextView
@@ -147,15 +152,16 @@
                     android:text="-"
                     card_view:layout_widthPercent="25%" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/type2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="16dp"
+                    android:layout_alignBottom="@+id/amount2"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/type1"
-                    android:gravity="center"
-                    android:text="-"
+                    android:layout_marginTop="4dp"
+                    android:src="@drawable/diesel"
                     card_view:layout_widthPercent="25%" />
 
                 <TextView
@@ -163,6 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/type1"
+                    android:layout_marginTop="4dp"
                     android:layout_toEndOf="@+id/title_type"
                     android:layout_toRightOf="@+id/title_type"
                     android:gravity="center"
@@ -175,6 +182,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/unitPrice1"
                     android:layout_centerVertical="true"
+                    android:layout_marginTop="4dp"
                     android:layout_toEndOf="@id/amount2"
                     android:layout_toRightOf="@id/amount2"
                     android:gravity="center"
@@ -188,6 +196,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/type1"
+                    android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:text="-"
                     card_view:layout_widthPercent="25%" />
@@ -198,6 +207,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/type2"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="VERGİ: -"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"

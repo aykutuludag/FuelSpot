@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -53,6 +54,7 @@ import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
 import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
+import static org.uusoftware.fuelify.MainActivity.isSigned;
 import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
@@ -62,11 +64,11 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    RelativeLayout notLogged;
     VideoView background;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     SharedPreferences prefs;
-    boolean isSigned;
     CallbackManager callbackManager;
     LoginButton loginButton;
     int googleSign = 9001;
@@ -79,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //Load background
+        //Load background and login layout
         background = findViewById(R.id.videoViewBackground);
         background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
         background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -90,6 +92,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
         background.start();
 
+        notLogged = findViewById(R.id.notLoggedLayout);
+
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
         t.setScreenName("Login");
@@ -98,15 +102,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        isSigned = prefs.getBoolean("isSigned", false);
         getVariables(prefs);
 
         handler = new Handler();
         intent = new Intent(LoginActivity.this, MainActivity.class);
-
-        //COUNTRY FOR GETTING TAX RATES
-        userCountry = Locale.getDefault().getCountry();
-        prefs.edit().putString("userCountry", userCountry).apply();
 
         //Layout objects
         signInButton = findViewById(R.id.sign_in_button);
@@ -114,8 +113,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //Check whether is logged or not
         if (isSigned) {
-            signInButton.setVisibility(View.GONE);
-            loginButton.setVisibility(View.GONE);
+            notLogged.setVisibility(View.GONE);
 
             if (isNetworkConnected(LoginActivity.this) && !premium) {
                 //  AudienceNetwork(LoginActivity.this);
@@ -152,8 +150,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }, 1500);
             }
         } else {
-            signInButton.setVisibility(View.VISIBLE);
-            loginButton.setVisibility(View.VISIBLE);
+            //COUNTRY FOR GETTING TAX RATES THEY WILL BE PULLED IN WELCOMEACTIVITY
+            userCountry = Locale.getDefault().getCountry();
+            prefs.edit().putString("userCountry", userCountry).apply();
         }
 
         /* Google Sign-In */
@@ -239,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onResponse(String s) {
                         loading.dismiss();
-                        signInButton.setVisibility(View.INVISIBLE);
+                        notLogged.setVisibility(View.GONE);
                         prefs.edit().putBoolean("isSigned", true).apply();
                         new Handler().postDelayed(new Runnable() {
                             @Override

@@ -19,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -604,12 +603,6 @@ public class AddFuel extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return true;
     }
 
     @Override

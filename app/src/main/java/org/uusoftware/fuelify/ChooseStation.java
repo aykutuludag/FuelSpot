@@ -121,8 +121,8 @@ public class ChooseStation extends AppCompatActivity {
                         if (distanceInMeters >= 10) {
                             userlat = (float) arg0.getLatitude();
                             userlon = (float) arg0.getLongitude();
-                            prefs.edit().putString("lat", String.valueOf(userlat)).apply();
-                            prefs.edit().putString("lon", String.valueOf(userlon)).apply();
+                            prefs.edit().putFloat("lat", userlat).apply();
+                            prefs.edit().putFloat("lon", userlon).apply();
                             MainActivity.getVariables(prefs);
 
                             updateMapObject();

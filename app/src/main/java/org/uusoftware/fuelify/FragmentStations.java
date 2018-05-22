@@ -222,8 +222,6 @@ public class FragmentStations extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //System.out.println("Response is: " + response);
                         JSON json = new JSON(response);
 
                         for (int i = 0; i < json.key("results").count(); i++) {
@@ -320,8 +318,6 @@ public class FragmentStations extends Fragment {
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
-
-                            System.out.println(response);
 
                             StationItem item = new StationItem();
                             item.setID(obj.getInt("id"));

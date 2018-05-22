@@ -4,6 +4,7 @@
     <string name="API_UPDATE_CAR" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-car.php</string>
     <string name="API_FETCH_USER_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user.php</string>
     <string name="API_FETCH_USER_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-purchases.php</string>
+    <string name="API_FETCH_USER_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-comments.php</string>
     <string name="API_REGISTER_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
     <string name="API_FETCH_STATION_PRICES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-stations.php</string>
     <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
