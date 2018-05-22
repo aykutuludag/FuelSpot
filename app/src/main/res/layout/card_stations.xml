@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,33 +11,36 @@
         android:layout_height="wrap_content"
         card_view:cardUseCompatPadding="true">
 
-        <RelativeLayout
+        <android.support.percent.PercentRelativeLayout
             android:id="@+id/single_station"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#E0E0E0">
+            android:background="#EDEDED">
 
             <ImageView
                 android:id="@+id/station_photo"
-                android:layout_width="60dp"
-                android:layout_height="75dp"
-                android:layout_alignParentTop="true"
-                android:padding="8dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/gasoline"
+                android:padding="4dp"
+                card_view:layout_widthPercent="12.5%"
                 card_view:srcCompat="@drawable/shell" />
 
             <TextView
                 android:id="@+id/station_name"
-                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/station_photo"
-                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/station_photo"
+                android:layout_alignTop="@+id/station_photo"
+                android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/station_photo"
                 android:layout_toRightOf="@+id/station_photo"
                 android:gravity="center"
-                android:padding="8dp"
-                android:text="Shell"
+                android:text="StationName"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="16sp" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                card_view:layout_widthPercent="10%" />
 
             <TextView
                 android:id="@+id/station_vicinity"
@@ -44,121 +48,123 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/electricity"
-                android:layout_below="@+id/station_name"
-                android:background="#fff"
+                android:layout_below="@+id/station_photo"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Şehit Osman Avcı Mah. Şehit Osman Avcı Mah. Şehit Osman Avcı Mah. Şehit Osman Avcı Mah."
+                android:text="Station Address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#6D6D6D"
                 android:textSize="12sp" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/gasoline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/station_name"
                 android:layout_toRightOf="@+id/station_name"
-                android:background="#C8E6C9"
-                android:gravity="center"
                 android:padding="5dp"
-                android:text="Gasoline"
+                android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                card_view:layout_widthPercent="15.5%" />
 
             <TextView
                 android:id="@+id/gasoline_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/station_name"
+                android:layout_alignBottom="@+id/station_photo"
+                android:layout_alignEnd="@+id/gasoline"
                 android:layout_alignRight="@+id/gasoline"
                 android:layout_below="@+id/gasoline"
                 android:layout_toEndOf="@+id/station_name"
                 android:layout_toRightOf="@+id/station_name"
                 android:gravity="center"
-                android:text="6.00 TL"
+                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#6D6D6D"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/diesel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/gasoline"
                 android:layout_toRightOf="@+id/gasoline"
-                android:background="#C8E6C9"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Diesel"
+                android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                card_view:layout_widthPercent="15.5%" />
 
             <TextView
                 android:id="@+id/diesel_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/station_name"
+                android:layout_alignBottom="@+id/station_photo"
+                android:layout_alignEnd="@+id/diesel"
                 android:layout_alignRight="@+id/diesel"
                 android:layout_below="@+id/diesel"
                 android:layout_toEndOf="@+id/gasoline_price"
                 android:layout_toRightOf="@+id/gasoline_price"
                 android:gravity="center"
-                android:text="6.00 TL"
+                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#6D6D6D"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/lpg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/diesel"
                 android:layout_toRightOf="@+id/diesel"
-                android:background="#C8E6C9"
-                android:gravity="center"
                 android:padding="5dp"
-                android:text="LPG"
+                android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                card_view:layout_widthPercent="15.5%" />
 
             <TextView
                 android:id="@+id/lpg_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/station_name"
+                android:layout_alignBottom="@+id/station_photo"
+                android:layout_alignEnd="@+id/lpg"
                 android:layout_alignRight="@+id/lpg"
                 android:layout_below="@+id/lpg"
                 android:layout_toEndOf="@+id/diesel_price"
                 android:layout_toRightOf="@+id/diesel_price"
                 android:gravity="center"
-                android:text="6.00 TL"
+                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#6D6D6D"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="RtlHardcoded" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/electricity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/lpg"
                 android:layout_toRightOf="@+id/lpg"
-                android:background="#C8E6C9"
-                android:gravity="center"
                 android:padding="5dp"
-                android:text="Electricity"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                android:src="@drawable/electricity"
+                card_view:layout_widthPercent="15.5%" />
 
             <TextView
                 android:id="@+id/electricity_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/station_name"
+                android:layout_alignBottom="@+id/station_photo"
+                android:layout_alignEnd="@+id/electricity"
                 android:layout_alignRight="@+id/electricity"
                 android:layout_below="@+id/electricity"
                 android:layout_toEndOf="@+id/lpg_price"
@@ -166,50 +172,49 @@
                 android:gravity="center"
                 android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#6D6D6D"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/electricity"
                 android:layout_toRightOf="@+id/electricity"
-                android:background="#C8E6C9"
-                android:gravity="center"
                 android:padding="5dp"
-                android:text="Distance"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                android:src="@drawable/distance"
+                card_view:layout_widthPercent="15.5%" />
 
             <TextView
                 android:id="@+id/distance_ofStation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/station_name"
+                android:layout_alignBottom="@+id/station_photo"
+                android:layout_alignEnd="@+id/distance"
                 android:layout_alignRight="@+id/distance"
                 android:layout_below="@+id/distance"
                 android:layout_toEndOf="@+id/electricity_price"
                 android:layout_toRightOf="@+id/electricity_price"
                 android:gravity="center"
-                android:text="0.45 km"
+                android:text="0.00 km"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#6D6D6D"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/lastUpdated"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@id/station_vicinity"
-                android:layout_below="@id/distance_ofStation"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/station_vicinity"
-                android:layout_toRightOf="@+id/station_vicinity"
-                android:background="#fff"
-                android:gravity="center" />
-        </RelativeLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="#6D6D6D" />
+        </android.support.percent.PercentRelativeLayout>
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

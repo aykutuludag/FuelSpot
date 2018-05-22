@@ -1,23 +1,23 @@
 <resources>
-    <string name="API_CREATE_NEW_USER">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>
-    <string name="API_UPDATE_USER">http://fuel-spot.com/FUELSPOTAPP/api/update-user.php</string>
-    <string name="API_UPDATE_CAR">http://fuel-spot.com/FUELSPOTAPP/api/update-car.php</string>
-    <string name="API_FETCH_USER_PROFILE">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user.php</string>
-    <string name="API_FETCH_USER_PURCHASE">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-purchases.php</string>
-    <string name="API_REGISTER_STATION">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
-    <string name="API_FETCH_STATION_PRICES">http://fuel-spot.com/FUELSPOTAPP/api/fetch-stations.php</string>
-    <string name="API_ADD_COMMENT">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
-    <string name="API_FETCH_COMMENTS">http://fuel-spot.com/FUELSPOTAPP/api/fetch-comments.php</string>
-    <string name="API_DELETE_COMMENT">http://fuel-spot.com/FUELSPOTAPP/api/delete-comment.php</string>
-    <string name="API_ADD_FUEL">http://fuel-spot.com/FUELSPOTAPP/api/add-fuel.php</string>
-    <string name="API_UPDATE_STATION">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
-    <string name="API_FETCH_TAX_RATES">http://fuel-spot.com/FUELSPOTAPP/api/fetch-taxes.php</string>
-    <string name="API_FETCH_NEWS">http://fuel-spot.com/feed/json</string>
+    <string name="API_CREATE_NEW_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>
+    <string name="API_UPDATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-user.php</string>
+    <string name="API_UPDATE_CAR" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-car.php</string>
+    <string name="API_FETCH_USER_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user.php</string>
+    <string name="API_FETCH_USER_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-purchases.php</string>
+    <string name="API_REGISTER_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
+    <string name="API_FETCH_STATION_PRICES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-stations.php</string>
+    <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
+    <string name="API_FETCH_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-comments.php</string>
+    <string name="API_DELETE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-comment.php</string>
+    <string name="API_ADD_FUEL" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-fuel.php</string>
+    <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
+    <string name="API_FETCH_TAX_RATES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-taxes.php</string>
+    <string name="API_FETCH_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>
 
-    <string name="app_name">FuelSpot</string>
-    <string name="facebook_app_id">380327342377274</string>
-    <string name="fb_login_protocol_scheme">fb380327342377274</string>
-    <string name="google_maps_api_key">AIzaSyBZ5TaWeSnfsCUDidUDeLu64bausAmMpcU</string>
+    <string name="app_name" translatable="false">FuelSpot</string>
+    <string name="facebook_app_id" translatable="false">380327342377274</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
+    <string name="google_maps_api_key" translatable="false">AIzaSyBZ5TaWeSnfsCUDidUDeLu64bausAmMpcU</string>
 
     <string name="title_activity_login">Giriş yap</string>
     <string name="account_created">Hesabınız oluşturuldu. Şimdi FuelSpot zamanı&#8230;</string>
@@ -70,4 +70,80 @@
     <string name="title_activity_help">ActivityHelp</string>
     <string name="title_activity_profile_edit">ProfileEditActivity</string>
     <string name="nav_text_settings">Ayarlar</string>
+
+    <string-array name="car_makers">
+        <item>Acura</item>
+        <item>Alfa Romeo</item>
+        <item>Anadol</item>
+        <item>Aston Martin</item>
+        <item>Audi</item>
+        <item>Bentley</item>
+        <item>BMW</item>
+        <item>Bugatti</item>
+        <item>Buick</item>
+        <item>Cadillac</item>
+        <item>Chery</item>
+        <item>Chevrolet</item>
+        <item>Chrysler</item>
+        <item>Citroën</item>
+        <item>Dacia</item>
+        <item>Daewoo</item>
+        <item>Daihatsu</item>
+        <item>Dodge</item>
+        <item>DS Automobiles</item>
+        <item>Eagle</item>
+        <item>Ferrari</item>
+        <item>Fiat</item>
+        <item>Ford</item>
+        <item>GAZ</item>
+        <item>Geely</item>
+        <item>Honda</item>
+        <item>Hyundai</item>
+        <item>Ikco</item>
+        <item>Infiniti</item>
+        <item>Isuzu</item>
+        <item>Jaguar</item>
+        <item>Kia</item>
+        <item>Kral</item>
+        <item>Lada</item>
+        <item>Lamborghini</item>
+        <item>Lancia</item>
+        <item>Lexus</item>
+        <item>Lincoln</item>
+        <item>Lotus</item>
+        <item>Maserati</item>
+        <item>Maybach</item>
+        <item>Mazda</item>
+        <item>Mercedes</item>
+        <item>Mercury</item>
+        <item>MG</item>
+        <item>Mini</item>
+        <item>Mitsubishi</item>
+        <item>Moskwitsch</item>
+        <item>Nissan</item>
+        <item>Oldsmobile</item>
+        <item>Opel</item>
+        <item>Pagani</item>
+        <item>Peugeot</item>
+        <item>Plymouth</item>
+        <item>Pontiac</item>
+        <item>Porsche</item>
+        <item>Proton</item>
+        <item>Renault</item>
+        <item>Rolls-Royce</item>
+        <item>Rover</item>
+        <item>Saab</item>
+        <item>Seat</item>
+        <item>Skoda</item>
+        <item>Smart</item>
+        <item>Subaru</item>
+        <item>Suzuki</item>
+        <item>Tata</item>
+        <item>Tesla</item>
+        <item>Tofaş</item>
+        <item>Toyota</item>
+        <item>Volkswagen</item>
+        <item>Volvo</item>
+    </string-array>
+    <string name="title_activity_admin">AdminActivity</string>
 </resources>

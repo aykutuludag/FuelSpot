@@ -4,13 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -60,6 +62,7 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    VideoView background;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     SharedPreferences prefs;
@@ -67,7 +70,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     CallbackManager callbackManager;
     LoginButton loginButton;
     int googleSign = 9001;
-    ProgressBar pb;
     boolean premium;
     Handler handler;
     Intent intent;
@@ -76,6 +78,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Load background
+        background = findViewById(R.id.videoViewBackground);
+        background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
+        background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                background.start();
+            }
+        });
+        background.start();
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
@@ -96,7 +109,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         prefs.edit().putString("userCountry", userCountry).apply();
 
         //Layout objects
-        pb = findViewById(R.id.progressBar);
         signInButton = findViewById(R.id.sign_in_button);
         loginButton = findViewById(R.id.login_button);
 
@@ -104,7 +116,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (isSigned) {
             signInButton.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
-            pb.setVisibility(View.VISIBLE);
 
             if (isNetworkConnected(LoginActivity.this) && !premium) {
                 //  AudienceNetwork(LoginActivity.this);
@@ -129,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }
                         finish();
                     }
-                }, 2500);
+                }, 3000);
             } else {
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -138,12 +149,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         startActivity(i);
                         finish();
                     }
-                }, 1250);
+                }, 1500);
             }
         } else {
             signInButton.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.VISIBLE);
-            pb.setVisibility(View.GONE);
         }
 
         /* Google Sign-In */

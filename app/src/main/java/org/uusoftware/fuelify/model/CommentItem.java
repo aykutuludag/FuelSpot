@@ -7,6 +7,7 @@ public class CommentItem {
     private String time;
     private String username;
     private String profile_pic;
+    private int rate;
 
     public int getID() {
         return ID;
@@ -46,5 +47,13 @@ public class CommentItem {
 
     public void setProfile_pic(String profile_pic) {
         this.profile_pic = profile_pic;
+    }
+
+    public int getRating() {
+        return rate;
+    }
+
+    public void setRating(int rate) {
+        this.rate = rate;
     }
 }

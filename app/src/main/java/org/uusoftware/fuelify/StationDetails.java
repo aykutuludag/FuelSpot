@@ -4,18 +4,16 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +31,8 @@ import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +41,7 @@ import org.uusoftware.fuelify.adapter.CommentAdapter;
 import org.uusoftware.fuelify.model.CommentItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +49,11 @@ import java.util.Map;
 import static org.uusoftware.fuelify.MainActivity.photo;
 import static org.uusoftware.fuelify.MainActivity.username;
 
-public class StationDetails extends AppCompatActivity {
+public class StationDetails extends AppCompatActivity implements RatingDialogListener {
 
     int stationID;
-    String stationName, stationVicinity, stationLocation, iconURL;
+    int stars;
+    String stationName, stationVicinity, stationLocation, iconURL, userComment;
     ImageView stationIcon;
     float stationDistance;
     double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
@@ -62,14 +64,11 @@ public class StationDetails extends AppCompatActivity {
 
     StreetViewPanoramaView mStreetViewPanoramaView;
     StreetViewPanorama mPanorama;
-    EditText commentHolder;
-    ImageView sendComment;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     List<CommentItem> feedsList;
     SwipeRefreshLayout swipeContainer;
-    String comment;
     Toolbar toolbar;
     Window window;
 
@@ -153,34 +152,6 @@ public class StationDetails extends AppCompatActivity {
         feedsList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.commentView);
 
-        commentHolder = findViewById(R.id.editText);
-        commentHolder.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.length() > 0) {
-                    comment = editable.toString();
-                }
-            }
-        });
-
-        sendComment = findViewById(R.id.imageView4);
-        sendComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendComment();
-            }
-        });
-
         swipeContainer = findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -195,16 +166,36 @@ public class StationDetails extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-
-       /* FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                new AppRatingDialog.Builder()
+                        .setPositiveButtonText("Gönder")
+                        .setNegativeButtonText("İptal")
+                        .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                        .setDefaultRating(5)
+                        .setTitle("Bu istasyonu puanlayın")
+                        .setDescription("Please select some stars and give your feedback")
+                        .setDefaultComment("Bu istasyonda en uygun fiyatlar var!")
+                        .setHint("Please write your comment here ...")
+                        .create(StationDetails.this)
+                        .show();
+
+
+                /*Snackbar.make(view, "Yorum ekle?", Snackbar.LENGTH_LONG)
+                        .setAction("Ekle", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        })
+                        .show();*/
+
+                /*Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
-                startActivity(intent);
+                startActivity(intent);*/
             }
-        });*/
+        });
     }
 
     public void fetchComments() {
@@ -220,10 +211,11 @@ public class StationDetails extends AppCompatActivity {
 
                                 CommentItem item = new CommentItem();
                                 item.setID(obj.getInt("id"));
-                                item.setComment(obj.getString("comment_menu"));
+                                item.setComment(obj.getString("comment"));
                                 item.setTime(obj.getString("time"));
                                 item.setProfile_pic(obj.getString("user_photo"));
                                 item.setUsername(obj.getString("username"));
+                                item.setRating(obj.getInt("stars"));
                                 feedsList.add(item);
 
                                 mAdapter = new CommentAdapter(StationDetails.this, feedsList);
@@ -270,7 +262,6 @@ public class StationDetails extends AppCompatActivity {
                     public void onResponse(String response) {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                        commentHolder.setText("");
                         fetchComments();
                     }
                 },
@@ -279,7 +270,6 @@ public class StationDetails extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
                         loading.dismiss();
-                        commentHolder.setText("");
                         Toast.makeText(StationDetails.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -289,10 +279,11 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("comment_menu", comment);
+                params.put("comment", userComment);
                 params.put("station_id", String.valueOf(stationID));
                 params.put("username", username);
                 params.put("user_photo", photo);
+                params.put("stars", String.valueOf(stars));
 
                 //returning parameters
                 return params;
@@ -317,6 +308,23 @@ public class StationDetails extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPositiveButtonClicked(int rate, String comment) {
+        // interpret results, send it to analytics etc...
+        stars = rate;
+        userComment = comment;
+        sendComment();
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

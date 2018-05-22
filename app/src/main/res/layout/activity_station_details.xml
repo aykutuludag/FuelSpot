@@ -35,7 +35,7 @@
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                android:layout_height="225dp" />
 
             <RelativeLayout
                 android:id="@+id/single_station"
@@ -249,7 +249,6 @@
                 android:id="@+id/swipeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/editText"
                 android:layout_below="@+id/single_station">
 
                 <android.support.v7.widget.RecyclerView
@@ -257,32 +256,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </android.support.v4.widget.SwipeRefreshLayout>
-
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:background="#F0F0F0"
-                android:gravity="left|center"
-                android:hint="Cevapla!"
-                android:paddingLeft="16dp"
-                android:singleLine="true"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/swipeContainer"
-                android:layout_marginRight="8dp"
-                android:padding="8dp"
-                app:srcCompat="@drawable/send" />
         </RelativeLayout>
-
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/comment"
+        app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>

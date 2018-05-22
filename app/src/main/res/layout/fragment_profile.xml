@@ -1,24 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/card_user"
-        android:layout_width="match_parent"
-        android:layout_height="170dp" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_picture"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/profile"
+        app:civ_border_color="#EA6C34"
+        app:civ_border_width="1dp" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
+    <TextView
+        android:id="@+id/userFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="134dp"
+        android:maxLength="16"
+        android:text="Aykut Uludağ"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+
+    <TextView
+        android:id="@+id/profile_mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userFullName"
+        android:layout_centerHorizontal="true"
+        android:text="aykutuludag1@gmail.com"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+
+    <ImageView
+        android:id="@+id/updateUserInfo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:padding="6dp"
+        android:src="@drawable/edit_icon" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/car_picture"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/profile_mail"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toStartOf="@+id/imageView"
+        android:src="@drawable/profile"
+        app:civ_border_color="#EA6C34"
+        app:civ_border_width="1dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/profile_mail"
+        android:layout_marginTop="50dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/profilarac" />
+
+    <TextView
+        android:id="@+id/profile_CarName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/imageView"
+        android:layout_alignEnd="@id/imageView"
+        android:layout_alignLeft="@id/imageView"
+        android:layout_alignRight="@id/imageView"
+        android:layout_alignStart="@id/imageView"
+        android:layout_alignTop="@id/imageView"
+        android:layout_marginLeft="56dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/car_picture"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Gallery"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/galleryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
-        android:background="#CECECE">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/feedView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_below="@+id/textView4"
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>

@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         pagertabstrip = findViewById(R.id.pager_title_strip);
-        pagertabstrip.setBackgroundColor(Color.parseColor("#FF7439"));
+        pagertabstrip.setBackgroundColor(Color.TRANSPARENT);
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         InAppBilling();

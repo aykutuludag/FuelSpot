@@ -2,14 +2,13 @@ package org.uusoftware.fuelify.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,36 +52,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             commentID = feedItemList.get(position).getID();
             userName = feedItemList.get(position).getUsername();
 
-            //Creating the instance of PopupMenu
-            PopupMenu popup;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                popup = new PopupMenu(mContext, view, Gravity.RIGHT);
-            } else {
-                popup = new PopupMenu(mContext, view);
-            }
-            popup.getMenuInflater().inflate(R.menu.comment_menu, popup.getMenu());
-
-
             String localUser = MainActivity.username;
             if (localUser.equals(userName)) {
-                popup.getMenu().findItem(R.id.comment_delete).setVisible(true);
-            } else {
-                popup.getMenu().findItem(R.id.comment_delete).setVisible(false);
+                Snackbar.make(view, "Yorum sil?", Snackbar.LENGTH_LONG)
+                        .setAction("Sil", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteComment(commentID);
+                            }
+                        })
+                        .show();
             }
-
-            popup.show();
-
-            //registering popup with OnMenuItemClickListener
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.comment_delete:
-                            deleteComment(commentID);
-                            break;
-                    }
-                    return true;
-                }
-            });
         }
     };
 
@@ -152,6 +132,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         Glide.with(mContext).load(feedItem.getProfile_pic()).into(viewHolder.profilePic);
 
+        viewHolder.rating.setRating(feedItem.getRating());
+
         // Handle click event on image click
         viewHolder.card.setOnClickListener(clickListener);
         viewHolder.card.setTag(viewHolder);
@@ -169,14 +151,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         TextView username;
         RelativeTimeTextView time;
         ImageView profilePic;
+        RatingBar rating;
 
         ViewHolder(View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.single_comment);
-            commentHolder = itemView.findViewById(R.id.question);
+            commentHolder = itemView.findViewById(R.id.comment);
             username = itemView.findViewById(R.id.username);
             time = itemView.findViewById(R.id.time);
             profilePic = itemView.findViewById(R.id.other_profile_pic);
+            rating = itemView.findViewById(R.id.ratingBar);
         }
     }
 }

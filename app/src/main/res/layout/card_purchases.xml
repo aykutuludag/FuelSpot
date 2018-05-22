@@ -17,26 +17,16 @@
             android:id="@+id/single_purchase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f0f0f0">
+            android:background="#EDEDED">
 
             <ImageView
                 android:id="@+id/stationLogo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentLeft="true"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_margin="4dp"
                 card_view:srcCompat="@drawable/shell" />
-
-            <TextView
-                android:id="@+id/stationName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:text="Shell Ümitköy"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="22sp" />
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/purchaseTime"
@@ -53,9 +43,8 @@
                 android:id="@+id/section1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/stationName"
+                android:layout_alignBottom="@+id/stationLogo"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
                 android:text="Detaylar"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="22sp"
@@ -66,8 +55,7 @@
                 android:id="@+id/bill_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/section1"
-                android:background="#fff">
+                android:layout_below="@id/section1">
 
                 <TextView
                     android:id="@+id/title_type"

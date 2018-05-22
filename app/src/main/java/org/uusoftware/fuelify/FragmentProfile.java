@@ -16,17 +16,18 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import static org.uusoftware.fuelify.MainActivity.birthday;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static org.uusoftware.fuelify.MainActivity.carBrand;
 import static org.uusoftware.fuelify.MainActivity.carModel;
+import static org.uusoftware.fuelify.MainActivity.carPhoto;
 import static org.uusoftware.fuelify.MainActivity.email;
-import static org.uusoftware.fuelify.MainActivity.gender;
-import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
-import static org.uusoftware.fuelify.MainActivity.username;
 
 public class FragmentProfile extends Fragment {
+
+    CircleImageView carPhotoHolder;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,35 +39,37 @@ public class FragmentProfile extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        //SETTING HEADER VEHICLE VARIABLES
-        View headerView = rootView.findViewById(R.id.header_user);
 
-        ImageView userProfileHolder = headerView.findViewById(R.id.user_picture);
+        ImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
         Glide.with(getActivity()).load(Uri.parse(photo)).into(userProfileHolder);
 
-        TextView userName = headerView.findViewById(R.id.username);
-        userName.setText(username);
+       /* TextView userName = headerView.findViewById(R.id.username);
+        userName.setText(username);*/
 
-        TextView userFullname = headerView.findViewById(R.id.userFullName);
+        TextView userFullname = rootView.findViewById(R.id.userFullName);
         userFullname.setText(name);
 
-        TextView eposta = headerView.findViewById(R.id.profile_mail);
+        TextView eposta = rootView.findViewById(R.id.profile_mail);
         eposta.setText(email);
 
-        TextView adres = headerView.findViewById(R.id.profile_loc);
-        adres.setText(location);
+        /*TextView adres = headerView.findViewById(R.id.profile_loc);
+        adres.setText(location);*/
 
-        TextView dogumgunu = headerView.findViewById(R.id.userBirthday);
-        dogumgunu.setText(birthday);
+       /* TextView dogumgunu = headerView.findViewById(R.id.userBirthday);
+        dogumgunu.setText(birthday);*/
 
-        TextView cinsiyet = headerView.findViewById(R.id.profile_gender);
-        cinsiyet.setText(gender);
+        /*TextView cinsiyet = headerView.findViewById(R.id.profile_gender);
+        cinsiyet.setText(gender);*/
 
-        TextView fullCarName = headerView.findViewById(R.id.profile_CarName);
+        TextView fullCarName = rootView.findViewById(R.id.profile_CarName);
         String fullad = carBrand + " " + carModel;
         fullCarName.setText(fullad);
 
-        ImageView updateUser = headerView.findViewById(R.id.updateUserInfo);
+        //CarPhoto
+        carPhotoHolder = rootView.findViewById(R.id.car_picture);
+        Glide.with(getActivity()).load(Uri.parse(carPhoto)).into(carPhotoHolder);
+
+        ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
         updateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
