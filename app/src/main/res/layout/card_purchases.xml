@@ -17,7 +17,7 @@
             android:id="@+id/single_purchase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EDEDED">
+            android:background="#90EDEDED">
 
             <ImageView
                 android:id="@+id/stationLogo"

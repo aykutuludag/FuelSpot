@@ -23,6 +23,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".PurchaseDetails">
 
@@ -37,56 +38,50 @@
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/mapView"
                     android:layout_width="match_parent"
-                    android:layout_height="275dp" />
+                    android:layout_height="225dp" />
 
                 <RelativeLayout
                     android:id="@+id/single_purchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mapView"
-                    android:background="#f0f0f0">
+                    android:background="#90EDEDED">
 
                     <ImageView
                         android:id="@+id/stationLogo"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
+                        android:layout_margin="4dp"
                         app:srcCompat="@drawable/shell" />
-
-                    <TextView
-                        android:id="@+id/stationName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="Shell Ümitköy"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="22sp" />
-
-                    <com.github.curioustechizen.ago.RelativeTimeTextView
-                        android:id="@+id/purchaseTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:background="#fff"
-                        android:gravity="center"
-                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/section1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/stationName"
+                        android:layout_alignBottom="@+id/stationLogo"
+                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:text="Detaylar"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:text="Alınan yakıt"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="22sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <com.github.curioustechizen.ago.RelativeTimeTextView
+                        android:id="@+id/purchaseTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/stationLogo"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:textSize="16sp" />
 
                     <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -94,7 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/section1"
-                        android:background="#fff">
+                        android:layout_marginTop="16dp">
 
                         <TextView
                             android:id="@+id/title_type"
@@ -143,14 +138,14 @@
                             android:textStyle="italic"
                             app:layout_widthPercent="25%" />
 
-                        <TextView
+                        <ImageView
                             android:id="@+id/type1"
                             android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/amount1"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/title_type"
-                            android:gravity="center"
-                            android:text="-"
+                            android:src="@drawable/gasoline"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -186,15 +181,16 @@
                             android:text="-"
                             app:layout_widthPercent="25%" />
 
-                        <TextView
+                        <ImageView
                             android:id="@+id/type2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="16dp"
+                            android:layout_alignBottom="@+id/amount2"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/type1"
-                            android:gravity="center"
-                            android:text="-"
+                            android:layout_marginTop="4dp"
+                            android:src="@drawable/diesel"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -202,6 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/type1"
+                            android:layout_marginTop="4dp"
                             android:layout_toEndOf="@+id/title_type"
                             android:layout_toRightOf="@+id/title_type"
                             android:gravity="center"
@@ -214,6 +211,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/unitPrice1"
                             android:layout_centerVertical="true"
+                            android:layout_marginTop="4dp"
                             android:layout_toEndOf="@id/amount2"
                             android:layout_toRightOf="@id/amount2"
                             android:gravity="center"
@@ -227,6 +225,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/type1"
+                            android:layout_marginTop="4dp"
                             android:gravity="center"
                             android:text="-"
                             app:layout_widthPercent="25%" />
@@ -237,6 +236,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/type2"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:text="VERGİ: -"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -258,6 +258,24 @@
                     </android.support.percent.PercentRelativeLayout>
 
                 </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/billTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/single_purchase"
+                    android:layout_centerHorizontal="true"
+                    android:text="FATURA"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/billPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="225dp"
+                    android:layout_below="@id/billTitle"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/photo_placeholder" />
 
             </RelativeLayout>
         </ScrollView>

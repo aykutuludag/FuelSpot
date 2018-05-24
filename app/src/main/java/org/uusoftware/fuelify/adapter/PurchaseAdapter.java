@@ -12,9 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.uusoftware.fuelify.PurchaseDetails;
@@ -71,26 +68,20 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         final PurchaseItem feedItem = feedItemList.get(i);
 
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
 
         // FUEL TYPE 1
         switch (feedItem.getFuelType()) {
             case "gasoline":
-                Glide.with(mContext).load(R.drawable.gasoline).apply(options).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type1);
                 break;
             case "diesel":
-                Glide.with(mContext).load(R.drawable.diesel).apply(options).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type1);
                 break;
             case "lpg":
-                Glide.with(mContext).load(R.drawable.lpg).apply(options).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type1);
                 break;
             case "electric":
-                Glide.with(mContext).load(R.drawable.electricity).apply(options).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type1);
                 break;
         }
 
@@ -111,16 +102,16 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             // FUEL TYPE 2
             switch (feedItem.getFuelType2()) {
                 case "gasoline":
-                    Glide.with(mContext).load(R.drawable.gasoline).apply(options).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type2);
                     break;
                 case "diesel":
-                    Glide.with(mContext).load(R.drawable.diesel).apply(options).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type2);
                     break;
                 case "lpg":
-                    Glide.with(mContext).load(R.drawable.lpg).apply(options).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type2);
                     break;
                 case "electric":
-                    Glide.with(mContext).load(R.drawable.electricity).apply(options).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type2);
                     break;
             }
 

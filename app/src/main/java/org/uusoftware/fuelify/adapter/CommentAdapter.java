@@ -56,7 +56,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             String localUser = MainActivity.username;
             if (localUser.equals(userName)) {
-                Snackbar.make(view, "Yorum sil?", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Yorumu?", Snackbar.LENGTH_LONG)
                         .setAction("Sil", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -153,7 +153,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return (null != feedItemList ? feedItemList.size() : 0);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout card;
         TextView commentHolder;

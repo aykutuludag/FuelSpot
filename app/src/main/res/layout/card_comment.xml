@@ -18,7 +18,7 @@
             android:id="@+id/single_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EFEFEF">
+            android:background="#90FDFDFD">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/other_profile_pic"

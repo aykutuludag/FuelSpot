@@ -15,7 +15,7 @@
             android:id="@+id/single_station"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EDEDED">
+            android:background="#90EDEDED">
 
             <ImageView
                 android:id="@+id/station_photo"
@@ -211,6 +211,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/gasoline"
+                android:alpha="@+id/gasoline"
                 android:gravity="center"
                 android:padding="8dp"
                 android:textColor="#6D6D6D" />
