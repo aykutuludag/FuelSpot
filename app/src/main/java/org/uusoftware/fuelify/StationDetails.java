@@ -26,6 +26,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaView;
@@ -87,6 +89,12 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+
+        // Analytics
+        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        t.setScreenName("İstasyon detay");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         stationName = getIntent().getStringExtra("STATION_NAME");
         stationVicinity = getIntent().getStringExtra("STATION_VICINITY");

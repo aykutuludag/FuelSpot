@@ -142,11 +142,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <activity
-            android:name=".AdminActivity"
-            android:label="@string/title_activity_admin"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

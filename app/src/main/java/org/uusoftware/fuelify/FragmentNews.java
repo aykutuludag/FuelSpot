@@ -47,7 +47,7 @@ public class FragmentNews extends Fragment {
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("Vehicle Profile");
+        t.setScreenName("Haberler");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 

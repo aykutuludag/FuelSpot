@@ -49,6 +49,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.uusoftware.fuelify.MainActivity.AudienceNetwork;
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
@@ -58,6 +59,7 @@ import static org.uusoftware.fuelify.MainActivity.isSigned;
 import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
+import static org.uusoftware.fuelify.MainActivity.premium;
 import static org.uusoftware.fuelify.MainActivity.userCountry;
 import static org.uusoftware.fuelify.MainActivity.username;
 
@@ -66,13 +68,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     RelativeLayout notLogged;
     VideoView background;
+
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
-    SharedPreferences prefs;
+    int googleSign = 9001;
+
     CallbackManager callbackManager;
     LoginButton loginButton;
-    int googleSign = 9001;
-    boolean premium;
+
+    SharedPreferences prefs;
+
     Handler handler;
     Intent intent;
 
@@ -96,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
-        t.setScreenName("Login");
+        t.setScreenName("Giriş");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -111,12 +116,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton = findViewById(R.id.sign_in_button);
         loginButton = findViewById(R.id.login_button);
 
+        //Check the user trip another country
+        if (!userCountry.equals(Locale.getDefault().getCountry())) {
+            //User has changes his/her country. Fetch the tax rates/unit/currency.
+            //Language will be automatically changed
+            isSigned = false;
+            prefs.edit().putBoolean("isSigned", false);
+            userCountry = Locale.getDefault().getCountry();
+            prefs.edit().putString("userCountry", userCountry).apply();
+        }
+
         //Check whether is logged or not
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
 
             if (isNetworkConnected(LoginActivity.this) && !premium) {
-                //  AudienceNetwork(LoginActivity.this);
+                AudienceNetwork(LoginActivity.this);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -149,10 +164,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 }, 1500);
             }
-        } else {
-            //COUNTRY FOR GETTING TAX RATES THEY WILL BE PULLED IN WELCOMEACTIVITY
-            userCountry = Locale.getDefault().getCountry();
-            prefs.edit().putString("userCountry", userCountry).apply();
         }
 
         /* Google Sign-In */
@@ -238,6 +249,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onResponse(String s) {
                         loading.dismiss();
+                        Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                         notLogged.setVisibility(View.GONE);
                         prefs.edit().putBoolean("isSigned", true).apply();
                         new Handler().postDelayed(new Runnable() {
@@ -255,7 +267,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(LoginActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {
@@ -363,7 +375,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                     saveUserInfo();
                 } else {
-                    Toast.makeText(this, getString(R.string.error_login_no_account), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                     prefs.edit().putBoolean("isSigned", false).apply();
                 }
             } else {

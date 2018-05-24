@@ -21,8 +21,7 @@
     <string name="google_maps_api_key" translatable="false">AIzaSyBZ5TaWeSnfsCUDidUDeLu64bausAmMpcU</string>
 
     <string name="title_activity_login">Giriş yap</string>
-    <string name="account_created">Hesabınız oluşturuldu. Şimdi FuelSpot zamanı&#8230;</string>
-    <string name="error_login_no_account">Hesap bulunamadı.</string>
+    <string name="login_successful">Giriş başarılı. Uygulamaya yönlendiriliyorsunuz&#8230;</string>
     <string name="error_login_fail">Giriş yaparken hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>
     <string name="error_login_cancel">Giriş işlemi kullanıcı tarafından iptal edildi</string>
     <string name="add_fuel">Yakıt ekle</string>
@@ -147,4 +146,6 @@
         <item>Volvo</item>
     </string-array>
     <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_activity_admin_register">AdminRegister</string>
+    <string name="action_settings">Settings</string>
 </resources>

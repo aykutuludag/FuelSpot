@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.uusoftware.fuelify.ChooseStation;
@@ -132,7 +135,13 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.lastUpdated.setReferenceTime(date.getTime());
 
         //Station Icon
-        Glide.with(mContext).load(feedItem.getPhotoURL()).into(viewHolder.stationPic);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).into(viewHolder.stationPic);
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);

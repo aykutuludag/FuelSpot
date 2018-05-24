@@ -13,6 +13,8 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.uusoftware.fuelify.adapter.MyXAxisValueFormatter;
 
@@ -30,6 +32,12 @@ public class FragmentStats extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stats, container, false);
+
+        // Analytics
+        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+        t.setScreenName("İstatistikler");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         mLineChart = rootView.findViewById(R.id.chart1);
         if (purchaseTimes.size() > 0) {

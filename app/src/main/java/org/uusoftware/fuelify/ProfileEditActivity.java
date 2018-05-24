@@ -33,6 +33,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -82,6 +84,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+
+        // Analytics
+        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        t.setScreenName("Profil düzenle");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();

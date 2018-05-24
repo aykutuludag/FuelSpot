@@ -38,6 +38,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
@@ -125,6 +127,12 @@ public class AddFuel extends AppCompatActivity {
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         MainActivity.getVariables(prefs);
+
+        // Analytics
+        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        t.setScreenName("Yakıt ekle");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
         expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);

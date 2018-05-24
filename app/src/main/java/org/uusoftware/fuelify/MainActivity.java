@@ -44,13 +44,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Static values
+    public static final int REQUEST_EXTERNAL_STORAGE = 0;
     public static float TAX_GASOLINE;
     public static float TAX_DIESEL;
     public static float TAX_LPG;
     public static float TAX_ELECTRICITY;
-
-    // Static values
-    public static final int REQUEST_EXTERNAL_STORAGE = 0;
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -138,16 +137,15 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
     public static ArrayList<Double> purchaseLiters = new ArrayList<>();
-
+    public static int adCount;
+    static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     Window window;
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     SharedPreferences prefs;
-    public static int adCount;
-    static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
     int openCount;
     MyPagerAdapter mSectionsPagerAdapter;
     PagerTitleStrip pagertabstrip;
@@ -253,6 +251,45 @@ public class MainActivity extends AppCompatActivity {
         admobInterstitial.loadAd(adRequest);
     }
 
+    public static String stationPhotoChooser(String stationName) {
+        String stationURI;
+        if (stationName.contains("Shell")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
+        } else if (stationName.contains("Opet")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
+        } else if (stationName.contains("BP")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
+        } else if (stationName.contains("Kadoil")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
+        } else if (stationName.contains("Petrol Ofisi")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
+        } else if (stationName.contains("Lukoil")) {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+        } else {
+            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
+        }
+        return stationURI;
+    }
+
+    public static float taxCalculator(String fuelType, float price) {
+        float tax;
+        switch (fuelType) {
+            case "gasoline":
+                tax = price * TAX_GASOLINE;
+                break;
+            case "diesel":
+                tax = price * TAX_DIESEL;
+                break;
+            case "lpg":
+                tax = price * TAX_LPG;
+                break;
+            default:
+                tax = price * TAX_ELECTRICITY;
+                break;
+        }
+        return tax;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -335,7 +372,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mService = null;
-                //  loadBanner();
             }
 
             @Override
@@ -362,20 +398,16 @@ public class MainActivity extends AppCompatActivity {
             if (ownedSkus.contains("premium")) {
                 premium = true;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
-                // loadBanner();
             } else {
                 premium = false;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
-                //  loadBanner();
             }
-        } else {
-            // loadBanner();
         }
     }
 
     public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(MainActivity.this,
-                "Premium sürüme geçerek uygulama içerisindeki tüm reklamları kaldırabilirsiniz.", Toast.LENGTH_LONG)
+                "Premium sürüme geçerek uygulama içerisindeki tüm reklamları kaldırabilirsiniz. Ayrıca 50 km'ye kadar çevrenizdeki bütün istasyon fiyatlarını görebilirsiniz.", Toast.LENGTH_LONG)
                 .show();
         Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium", "subs",
                 "/tYMgwhg1DVikb4R4iLNAO5pNj/QWh19+vwajyUFbAyw93xVnDkeTZFdhdSdJ8M");
@@ -394,45 +426,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    public static String stationPhotoChooser(String stationName) {
-        String stationURI;
-        if (stationName.contains("Shell")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
-        } else if (stationName.contains("Opet")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
-        } else if (stationName.contains("BP")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
-        } else if (stationName.contains("Kadoil")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
-        } else if (stationName.contains("Petrol Ofisi")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
-        } else if (stationName.contains("Lukoil")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
-        } else {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
-        }
-        return stationURI;
-    }
-
-    public static float taxCalculator(String fuelType, float price) {
-        float tax;
-        switch (fuelType) {
-            case "gasoline":
-                tax = price * TAX_GASOLINE;
-                break;
-            case "diesel":
-                tax = price * TAX_DIESEL;
-                break;
-            case "lpg":
-                tax = price * TAX_LPG;
-                break;
-            default:
-                tax = price * TAX_ELECTRICITY;
-                break;
-        }
-        return tax;
     }
 
     @Override
@@ -461,12 +454,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1001) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
                 prefs.edit().putBoolean("hasPremium", true).apply();
-
                 Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
                 if (i != null) {
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -479,7 +470,6 @@ public class MainActivity extends AppCompatActivity {
                 prefs.edit().putBoolean("hasPremium", false).apply();
             }
         }
-
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("Vehicle");
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
@@ -492,7 +482,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
 

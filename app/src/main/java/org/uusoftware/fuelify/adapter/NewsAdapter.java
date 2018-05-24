@@ -2,6 +2,7 @@ package org.uusoftware.fuelify.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.uusoftware.fuelify.NewsContent;
@@ -48,14 +52,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         this.mContext = context;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_news, viewGroup, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         NewsItem feedItem = feedItemList.get(i);
 
         // Download image using picasso library
@@ -63,13 +68,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
                 .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
                 .replace("Ü", "%C3%9C");
-        Glide.with(mContext).load(encodedUrl).into(viewHolder.image);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(mContext).load(encodedUrl).apply(options).into(viewHolder.image);
 
         // Setting text view title
-        viewHolder.text.setText(feedItem.getTitle());
+        String encodedTitle = feedItem.getTitle().replace("ç", "%C3%A7").replace("Ç", "%C3%87").replace("ğ", "%C4%9F")
+                .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
+                .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
+                .replace("Ü", "%C3%9C");
+        viewHolder.text.setText(encodedTitle);
 
         // NewsTime
-        System.out.println(feedItem.getPublishDate());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
         Date date = null;
         try {
@@ -98,7 +112,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         public ImageView image;
         public TextView text;
-        public RelativeTimeTextView newsTime;
+        RelativeTimeTextView newsTime;
 
         ViewHolder(View itemView) {
             super(itemView);

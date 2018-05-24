@@ -71,15 +71,15 @@ public class NewsContent extends AppCompatActivity {
         thumbnail = extras.getString("thumbnail");
         link = extras.getString("link");
 
+        // Analytics
+        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        t.setScreenName("Haber: " + link);
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
         if (!link.contains("/amp")) {
             link = link + "amp";
         }
-
-        // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
-        t.setScreenName(link);
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             back = ContextCompat.getDrawable(this, R.drawable.ic_menu_back);

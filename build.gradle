@@ -16,8 +16,6 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-apply plugin: 'kotlin'
-
 allprojects {
     repositories {
         google()
@@ -27,12 +25,4 @@ allprojects {
 }
 repositories {
     mavenCentral()
-}
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }

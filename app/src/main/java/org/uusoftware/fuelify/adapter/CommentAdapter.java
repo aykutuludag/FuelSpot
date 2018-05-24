@@ -20,6 +20,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.uusoftware.fuelify.MainActivity;
@@ -39,7 +42,6 @@ import java.util.Map;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
     private int commentID;
-    private CommentItem feedItem;
     private List<CommentItem> feedItemList;
     private Context mContext;
     private String userName;
@@ -104,6 +106,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         requestQueue.add(stringRequest);
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_comment, viewGroup, false);
@@ -111,8 +114,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        feedItem = feedItemList.get(i);
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        CommentItem feedItem = feedItemList.get(i);
         commentID = feedItem.getID();
         userName = feedItem.getUsername();
 
@@ -130,7 +133,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         viewHolder.commentHolder.setText(feedItem.getComment());
 
-        Glide.with(mContext).load(feedItem.getProfile_pic()).into(viewHolder.profilePic);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
 
         viewHolder.rating.setRating(feedItem.getRating());
 

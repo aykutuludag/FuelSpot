@@ -61,7 +61,7 @@ public class FragmentProfile extends Fragment {
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("User Profile");
+        t.setScreenName("Profil");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 

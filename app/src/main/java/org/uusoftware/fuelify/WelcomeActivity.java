@@ -46,6 +46,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
@@ -195,7 +198,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Welcome");
+        t.setScreenName("Hoşgeldin");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -295,8 +298,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -351,8 +352,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -378,7 +377,15 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     public void loadCarSelection() {
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        Glide.with(this).load(Uri.parse(carPhoto)).into(carPic);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(WelcomeActivity.this).load(carPhoto)
+                .apply(options)
+                .into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -571,10 +578,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(WelcomeActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                         layout2.setVisibility(View.GONE);
                         layout3.setVisibility(View.VISIBLE);
-
                     }
                 }) {
             @Override
@@ -916,8 +921,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.VISIBLE);
                     loadCarSelection();
-
-                    Toast.makeText(WelcomeActivity.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }

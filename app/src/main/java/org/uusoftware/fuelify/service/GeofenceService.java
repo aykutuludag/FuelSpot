@@ -23,46 +23,12 @@ import static org.uusoftware.fuelify.MainActivity.userlon;
 
 public class GeofenceService extends Service {
     private static final String TAG = "GeofenceService";
-    private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 10000;
     private static final float LOCATION_DISTANCE = 100f;
-
-    private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
-
-        LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.e(TAG, "onLocationChanged: " + location);
-            userlat = (float) location.getLatitude();
-            userlon = (float) location.getLongitude();
-            Toast.makeText(GeofenceService.this, "LATİTUDE: " + userlat + " LONGTITUDE: " + userlon, Toast.LENGTH_SHORT).show();
-            mLastLocation.set(location);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
-        }
-    }
-
     LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.PASSIVE_PROVIDER)
     };
+    private LocationManager mLocationManager = null;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -116,6 +82,39 @@ public class GeofenceService extends Service {
         Log.e(TAG, "initializeLocationManager - LOCATION_INTERVAL: " + LOCATION_INTERVAL + " LOCATION_DISTANCE: " + LOCATION_DISTANCE);
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        }
+    }
+
+    private class LocationListener implements android.location.LocationListener {
+        Location mLastLocation;
+
+        LocationListener(String provider) {
+            Log.e(TAG, "LocationListener " + provider);
+            mLastLocation = new Location(provider);
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.e(TAG, "onLocationChanged: " + location);
+            userlat = (float) location.getLatitude();
+            userlon = (float) location.getLongitude();
+            Toast.makeText(GeofenceService.this, "LATİTUDE: " + userlat + " LONGTITUDE: " + userlon, Toast.LENGTH_SHORT).show();
+            mLastLocation.set(location);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.e(TAG, "onProviderDisabled: " + provider);
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.e(TAG, "onProviderEnabled: " + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.e(TAG, "onStatusChanged: " + provider);
         }
     }
 }

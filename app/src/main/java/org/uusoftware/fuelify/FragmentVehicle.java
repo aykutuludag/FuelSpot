@@ -81,7 +81,7 @@ public class FragmentVehicle extends Fragment {
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("Vehicle Profile");
+        t.setScreenName("Araç");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 

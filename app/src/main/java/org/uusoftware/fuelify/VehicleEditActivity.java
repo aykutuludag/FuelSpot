@@ -41,6 +41,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
@@ -165,6 +170,12 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setIcon(R.drawable.brand_logo);
 
+        // Analytics
+        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        t.setScreenName("Araç düzenle");
+        t.enableAdvertisingIdCollection(true);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
@@ -175,7 +186,15 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        Glide.with(this).load(Uri.parse(carPhoto)).into(carPic);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(this).load(carPhoto)
+                .apply(options)
+                .into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,10 +202,8 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(VehicleEditActivity.this);
-                    Toast.makeText(VehicleEditActivity.this, "izin var", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(VehicleEditActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-                    Toast.makeText(VehicleEditActivity.this, "izin yok", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -721,7 +738,6 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(VehicleEditActivity.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(VehicleEditActivity.this);

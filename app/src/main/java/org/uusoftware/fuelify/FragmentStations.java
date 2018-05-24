@@ -56,7 +56,6 @@ import java.util.Map;
 
 import eu.amirs.JSON;
 
-import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.userlat;
 import static org.uusoftware.fuelify.MainActivity.userlon;
@@ -76,10 +75,10 @@ public class FragmentStations extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<StationItem> feedsList;
     RequestQueue queue;
-    private GoogleMap googleMap;
     SharedPreferences prefs;
     Circle circle;
     Marker[] markes = new Marker[99];
+    private GoogleMap googleMap;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -87,8 +86,8 @@ public class FragmentStations extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplicationContext()).getDefaultTracker();
-        t.setScreenName("Home");
+        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+        t.setScreenName("İstasyonlar");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -177,7 +176,7 @@ public class FragmentStations extends Fragment {
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= 10) {
+                        if (distanceInMeters >= 100) {
                             userlat = (float) arg0.getLatitude();
                             userlon = (float) arg0.getLongitude();
                             prefs.edit().putFloat("lat", userlat).apply();
@@ -369,16 +368,6 @@ public class FragmentStations extends Fragment {
                 //Adding parameters
                 params.put("placeID", placeID);
 
-                if (fuelPri == 0) {
-                    params.put("orderBy", "gasolinePrice");
-                } else if (fuelPri == 1) {
-                    params.put("orderBy", "dieselPrice");
-                } else if (fuelPri == 2) {
-                    params.put("orderBy", "lpgPrice");
-                } else {
-                    params.put("orderBy", "electricityPrice");
-                }
-
                 //returning parameters
                 return params;
             }
@@ -392,7 +381,7 @@ public class FragmentStations extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1: {
-                // If request is cancelled, the result arrays are empty.
+                // If request is cancelled, the result arrays are car_placeholder.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         //Request location updates:
