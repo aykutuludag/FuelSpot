@@ -34,7 +34,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             int position = holder.getAdapterPosition();
 
             Intent intent = new Intent(mContext, PurchaseDetails.class);
-            intent.putExtra("ID", feedItemList.get(position).getID());
+            intent.putExtra("PURCHASE_ID", feedItemList.get(position).getID());
             intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
             intent.putExtra("STATION_ICON", feedItemList.get(position).getStationIcon());
             intent.putExtra("STATION_LOC", feedItemList.get(position).getStationLocation());
@@ -67,7 +67,6 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         final PurchaseItem feedItem = feedItemList.get(i);
-
 
         // FUEL TYPE 1
         switch (feedItem.getFuelType()) {

@@ -12,6 +12,7 @@
     <string name="API_FETCH_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-comments.php</string>
     <string name="API_DELETE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-comment.php</string>
     <string name="API_ADD_FUEL" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-fuel.php</string>
+    <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-purchase.php</string>
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
     <string name="API_FETCH_TAX_RATES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-taxes.php</string>
     <string name="API_FETCH_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>

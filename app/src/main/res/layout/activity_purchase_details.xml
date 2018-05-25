@@ -38,7 +38,7 @@
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/mapView"
                     android:layout_width="match_parent"
-                    android:layout_height="225dp" />
+                    android:layout_height="250dp" />
 
                 <RelativeLayout
                     android:id="@+id/single_purchase"
@@ -145,7 +145,6 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/title_type"
-                            android:src="@drawable/gasoline"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -156,7 +155,6 @@
                             android:layout_toEndOf="@+id/title_type"
                             android:layout_toRightOf="@+id/title_type"
                             android:gravity="center"
-                            android:text="-"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -167,7 +165,6 @@
                             android:layout_toEndOf="@+id/amount1"
                             android:layout_toRightOf="@+id/amount1"
                             android:gravity="center"
-                            android:text="-"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -178,7 +175,6 @@
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/title_type"
                             android:gravity="center"
-                            android:text="-"
                             app:layout_widthPercent="25%" />
 
                         <ImageView
@@ -190,7 +186,6 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/type1"
                             android:layout_marginTop="4dp"
-                            android:src="@drawable/diesel"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -202,7 +197,6 @@
                             android:layout_toEndOf="@+id/title_type"
                             android:layout_toRightOf="@+id/title_type"
                             android:gravity="center"
-                            android:text="-"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -215,7 +209,6 @@
                             android:layout_toEndOf="@id/amount2"
                             android:layout_toRightOf="@id/amount2"
                             android:gravity="center"
-                            android:text="-"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -227,7 +220,6 @@
                             android:layout_below="@+id/type1"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="-"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -238,7 +230,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
-                            android:text="VERGİ: -"
+                            android:text="VERGİ:"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textStyle="bold"
                             app:layout_widthPercent="75%" />
@@ -250,7 +242,7 @@
                             android:layout_below="@+id/totalTax"
                             android:layout_centerHorizontal="true"
                             android:gravity="center"
-                            android:text="TOPLAM: -"
+                            android:text="TOPLAM:"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textStyle="bold"
                             app:layout_widthPercent="75%" />

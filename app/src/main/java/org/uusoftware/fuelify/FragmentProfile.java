@@ -2,9 +2,11 @@ package org.uusoftware.fuelify;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -99,6 +101,30 @@ public class FragmentProfile extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        rootView.<ImageView>findViewById(R.id.imageViewPrivacy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#212121"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
+            }
+        });
+
+        rootView.<ImageView>findViewById(R.id.imageViewHelp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#212121"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/faq"));
             }
         });
 
