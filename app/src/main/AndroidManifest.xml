@@ -72,6 +72,14 @@
             android:label=""
             android:parentActivityName=".MainActivity"
             android:theme="@style/ContentTheme" />
+        <activity
+            android:name=".ActivityFavorites"
+            android:label="Favoriler"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ActivityShared"
+            android:label="Paylaşılanlar"
+            android:parentActivityName=".MainActivity" />
 
         <!-- BackgroundLocation - Geofence - Register stations -->
         <service android:name=".service.GeofenceService" />

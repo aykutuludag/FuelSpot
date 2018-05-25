@@ -1,5 +1,6 @@
 package org.uusoftware.fuelify;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -40,6 +42,7 @@ public class FragmentNews extends Fragment {
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     List<NewsItem> feedsList;
+    Button buttonFav, buttonShared;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +71,24 @@ public class FragmentNews extends Fragment {
         feedsList = new ArrayList<>();
         mRecyclerView = rootView.findViewById(R.id.feedView);
 
+        buttonFav = rootView.findViewById(R.id.buttonFav);
+        buttonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ActivityFavorites.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonShared = rootView.findViewById(R.id.buttonShared);
+        buttonShared.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ActivityShared.class);
+                startActivity(intent);
+            }
+        });
+
         fetchNews();
 
         return rootView;
@@ -90,7 +111,6 @@ public class FragmentNews extends Fragment {
                                 item.setTitle(obj.getString("title"));
                                 String[] thumbNailHolder = obj.getString("content_html").split("\"");
                                 item.setThumbnail(thumbNailHolder[5]);
-                                item.setContent(obj.getString("content_html"));
                                 item.setPublishDate(obj.getString("date_published"));
                                 feedsList.add(item);
 

@@ -2,6 +2,7 @@ package org.uusoftware.fuelify.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,21 +32,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private List<NewsItem> feedItemList;
     private Context mContext;
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            ViewHolder holder = (ViewHolder) view.getTag();
-            int position = holder.getPosition();
-            NewsItem feedItem = feedItemList.get(position);
-            Intent intent;
-
-            intent = new Intent(mContext, NewsContent.class);
-            intent.putExtra("title", feedItem.getTitle());
-            intent.putExtra("content", feedItem.getContent());
-            intent.putExtra("link", feedItem.getLink());
-            mContext.startActivity(intent);
-        }
-    };
 
     public NewsAdapter(Context context, List<NewsItem> feedItemList) {
         this.feedItemList = feedItemList;
@@ -60,47 +46,67 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         NewsItem feedItem = feedItemList.get(i);
 
         // Download image using picasso library
-        String encodedUrl = feedItem.getThumbnail().replace("ç", "%C3%A7").replace("Ç", "%C3%87").replace("ğ", "%C4%9F")
-                .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
-                .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
-                .replace("Ü", "%C3%9C");
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
-        Glide.with(mContext).load(encodedUrl).apply(options).into(viewHolder.image);
+        if (feedItem.getThumbnail() != null && feedItem.getThumbnail().length() > 0) {
+            String encodedUrl = feedItem.getThumbnail().replace("ç", "%C3%A7").replace("Ç", "%C3%87").replace("ğ", "%C4%9F")
+                    .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
+                    .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
+                    .replace("Ü", "%C3%9C");
+
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.photo_placeholder)
+                    .error(R.drawable.photo_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .priority(Priority.HIGH);
+            Glide.with(mContext).load(Uri.parse(encodedUrl)).apply(options).into(viewHolder.image);
+        }
+
 
         // Setting text view title
-        String encodedTitle = feedItem.getTitle().replace("ç", "%C3%A7").replace("Ç", "%C3%87").replace("ğ", "%C4%9F")
-                .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
-                .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
-                .replace("Ü", "%C3%9C");
-        viewHolder.text.setText(encodedTitle);
+        if (feedItem.getTitle() != null && feedItem.getTitle().length() > 0) {
+            viewHolder.text.setText(feedItem.getTitle());
+        }
 
         // NewsTime
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
-        Date date = null;
-        try {
-            date = sdf.parse(feedItem.getPublishDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (date != null) {
-            viewHolder.newsTime.setReferenceTime(date.getTime());
+        if (feedItem.getPublishDate() != null && feedItem.getPublishDate().length() > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+            try {
+                Date date = sdf.parse(feedItem.getPublishDate());
+                viewHolder.newsTime.setReferenceTime(date.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         // Handle click event on both title and image click
-        viewHolder.text.setOnClickListener(clickListener);
-        viewHolder.image.setOnClickListener(clickListener);
+        viewHolder.text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNews(viewHolder.getAdapterPosition());
+            }
+        });
+        viewHolder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNews(viewHolder.getAdapterPosition());
+            }
+        });
+    }
 
-        viewHolder.text.setTag(viewHolder);
-        viewHolder.image.setTag(viewHolder);
+    void openNews(int position) {
+        NewsItem feedItem = feedItemList.get(position);
+        Intent intent;
+
+        intent = new Intent(mContext, NewsContent.class);
+        intent.putExtra("title", feedItem.getTitle());
+        intent.putExtra("thumbnail", feedItem.getThumbnail());
+        intent.putExtra("link", feedItem.getLink());
+        intent.putExtra("date", feedItem.getPublishDate());
+        mContext.startActivity(intent);
     }
 
     @Override

@@ -145,7 +145,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);
-        viewHolder.background.setTag(viewHolder);
     }
 
     @Override

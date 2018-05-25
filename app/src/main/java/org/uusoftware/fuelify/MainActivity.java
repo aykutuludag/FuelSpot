@@ -332,9 +332,9 @@ public class MainActivity extends AppCompatActivity {
     public void createLocalDatabase() {
         //Create databese
         SQLiteDatabase mobiledatabase = openOrCreateDatabase("fuelspot_local", MODE_PRIVATE, null);
-        mobiledatabase.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local(Title TEXT,Thumbnail VARCHAR, Link VARCHAR);");
+        mobiledatabase.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local(Title TEXT,Thumbnail VARCHAR, Link VARCHAR, Date TEXT);");
         SQLiteDatabase mobiledatabase2 = openOrCreateDatabase("fuelspot_local2", MODE_PRIVATE, null);
-        mobiledatabase2.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local2(Title TEXT,Thumbnail VARCHAR, Link VARCHAR);");
+        mobiledatabase2.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local2(Title TEXT,Thumbnail VARCHAR, Link VARCHAR, Date TEXT);");
     }
 
     private void buyPremiumPopup() {

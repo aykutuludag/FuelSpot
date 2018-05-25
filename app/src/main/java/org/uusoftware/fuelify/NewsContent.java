@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 public class NewsContent extends AppCompatActivity {
 
-    String title, thumbnail, link;
+    String title, thumbnail, link, date;
     int alpha = 0;
     int color = 255;
     Drawable back, favorite, share;
@@ -70,6 +70,7 @@ public class NewsContent extends AppCompatActivity {
         title = extras.getString("title");
         thumbnail = extras.getString("thumbnail");
         link = extras.getString("link");
+        date = extras.getString("date");
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
@@ -166,15 +167,15 @@ public class NewsContent extends AppCompatActivity {
         values.put("Title", title);
         values.put("Thumbnail", thumbnail);
         values.put("Link", link);
+        values.put("Date", date);
         mobiledatabase2.insert("fuelspot_local2", null, values);
     }
 
     public void favorite() {
         if (links.contains(link)) {
             mobiledatabase.delete("fuelspot_local",
-                    "Title" + "=? AND " + "Thumbnail" + "=? AND " +
-                            "Link" + "=?",
-                    new String[]{title, thumbnail, link});
+                    "Title =? AND Thumbnail =? AND Link =? AND Date =?",
+                    new String[]{title, thumbnail, link, date});
             Toast.makeText(this, getString(R.string.unfavorited), Toast.LENGTH_SHORT).show();
             favorite.setColorFilter(Color.argb(255, color, color, color), PorterDuff.Mode.SRC_IN);
         } else {
@@ -182,6 +183,7 @@ public class NewsContent extends AppCompatActivity {
             values.put("Title", title);
             values.put("Thumbnail", thumbnail);
             values.put("Link", link);
+            values.put("Date", date);
             mobiledatabase.insert("fuelspot_local", null, values);
             Toast.makeText(this, getString(R.string.favorites_added), Toast.LENGTH_SHORT).show();
             favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);

@@ -5,7 +5,6 @@ public class NewsItem {
     private String title;
     private String thumbnail;
     private String link;
-    private String content;
     private String publishDate;
 
     public String getTitle() {
@@ -30,14 +29,6 @@ public class NewsItem {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getPublishDate() {
