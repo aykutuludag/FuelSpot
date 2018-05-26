@@ -50,6 +50,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -91,6 +94,7 @@ import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -538,7 +542,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         //Draw a circle with radius of 150m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(userlat, userlon))
-                .radius(1500)
+                .radius(75)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
@@ -548,7 +552,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 (cameraPosition));
 
         //Search stations in a radius of 75m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=1500&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=75&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -577,6 +581,15 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                             registerOwnedStation(superStationName, superStationAddress, superStationLocation, placeID, stationPhotoChooser(superStationName));
                             fetchOwnedStation(placeID);
+                        } else {
+                            superStationName = "";
+                            superStationAddress = "";
+                            superStationLocation = "";
+                            superStationLogo = "";
+
+                            textViewStationName.setText(superStationName);
+                            textViewAddress.setText(superStationAddress);
+                            stationHint.setTextColor(Color.parseColor("#ff0000"));
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -761,9 +774,11 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
             try {
                 Date birthDateasDate = sdf.parse(birthday);
-                calendarYear = birthDateasDate.getYear() + 1900;
-                calendarMonth = birthDateasDate.getMonth() + 1;
-                calendarDay = birthDateasDate.getDate();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(birthDateasDate);
+                calendarYear = calendar.get(Calendar.YEAR);
+                calendarMonth = calendar.get(Calendar.MONTH) + 1;
+                calendarDay = calendar.get(Calendar.DATE);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -879,7 +894,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
         applicationForm = findViewById(R.id.imageViewLicense);
-        Glide.with(AdminRegister.this).load(contractPhoto).into(applicationForm);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(AdminRegister.this).load(contractPhoto).apply(options).into(applicationForm);
         applicationForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -151,8 +151,8 @@
         <item>Volkswagen</item>
         <item>Volvo</item>
     </string-array>
-    <string name="title_activity_admin">AdminActivity</string>
-    <string name="title_activity_admin_register">AdminRegister</string>
+    <string name="title_activity_admin">FuelSpot Business</string>
+    <string name="title_activity_admin_register">FuelSpot Business</string>
     <string name="action_settings">Settings</string>
     <string name="go_station">İstasyona git</string>
     <string name="no_internet">İnternet bağlantısında bir sorun var</string>
