@@ -1,4 +1,8 @@
 <resources>
+    <string name="API_CREATE_NEW_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register-superuser.php</string>
+    <string name="API_UPDATE_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-superuser.php</string>
+    <string name="API_FETCH_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-superuser.php</string>
+
     <string name="API_CREATE_NEW_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>
     <string name="API_UPDATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-user.php</string>
     <string name="API_UPDATE_CAR" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-car.php</string>
@@ -152,4 +156,8 @@
     <string name="action_settings">Settings</string>
     <string name="go_station">İstasyona git</string>
     <string name="no_internet">İnternet bağlantısında bir sorun var</string>
+    <string name="title_activity_admin_main">AdminMainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

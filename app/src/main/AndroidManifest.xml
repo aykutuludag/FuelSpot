@@ -80,6 +80,18 @@
             android:name=".ActivityShared"
             android:label="Paylaşılanlar"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".AdminMainActivity"
+            android:label="@string/title_activity_admin_main" />
+        <activity
+            android:name=".AdminRegister"
+            android:label="@string/title_activity_admin_register"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.uusoftware.fuelify.LoginActivity" />
+        </activity>
 
         <!-- BackgroundLocation - Geofence - Register stations -->
         <service android:name=".service.GeofenceService" />

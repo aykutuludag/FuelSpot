@@ -52,6 +52,7 @@ import java.util.Map;
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
+import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
@@ -279,12 +280,16 @@ public class ProfileEditActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.navigation_save:
-                editor.putString("Email", email);
-                editor.putString("Gender", gender);
-                editor.putString("Location", location);
-                editor.putString("Birthday", birthday);
-                editor.apply();
-                updateUserInfo();
+                if (isNetworkConnected(this)) {
+                    editor.putString("Email", email);
+                    editor.putString("Gender", gender);
+                    editor.putString("Location", location);
+                    editor.putString("Birthday", birthday);
+                    editor.apply();
+                    updateUserInfo();
+                } else {
+                    Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

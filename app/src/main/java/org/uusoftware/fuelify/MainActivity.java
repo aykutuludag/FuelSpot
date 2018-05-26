@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -45,11 +47,14 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     // Static values
-    public static final int REQUEST_EXTERNAL_STORAGE = 0;
     public static float TAX_GASOLINE;
     public static float TAX_DIESEL;
     public static float TAX_LPG;
     public static float TAX_ELECTRICITY;
+    public static final int REQUEST_EXTERNAL_STORAGE = 0;
+    public static final int REQUEST_LOCATION = 1;
+    public static final int UNIFIED_REQUEST = 99;
+    public static final int GOOGLE_LOGIN = 100;
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -183,6 +188,18 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isNetworkConnected(Context mContext) {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
+    }
+
+    public static boolean verifyStoragePermissions(Context mContext) {
+        boolean hasStorage = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (mContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                hasStorage = true;
+            }
+        } else {
+            hasStorage = true;
+        }
+        return hasStorage;
     }
 
     //First try to load Audience Network, fails load AdMob

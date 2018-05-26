@@ -1,6 +1,5 @@
 package org.uusoftware.fuelify;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -69,107 +67,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static org.uusoftware.fuelify.MainActivity.PERMISSIONS_LOCATION;
-import static org.uusoftware.fuelify.MainActivity.PERMISSIONS_STORAGE;
-import static org.uusoftware.fuelify.MainActivity.REQUEST_EXTERNAL_STORAGE;
-import static org.uusoftware.fuelify.MainActivity.TAX_DIESEL;
-import static org.uusoftware.fuelify.MainActivity.TAX_ELECTRICITY;
-import static org.uusoftware.fuelify.MainActivity.TAX_GASOLINE;
-import static org.uusoftware.fuelify.MainActivity.TAX_LPG;
-import static org.uusoftware.fuelify.MainActivity.acura_models;
-import static org.uusoftware.fuelify.MainActivity.alfaRomeo_models;
-import static org.uusoftware.fuelify.MainActivity.anadol_models;
-import static org.uusoftware.fuelify.MainActivity.astonMartin_models;
-import static org.uusoftware.fuelify.MainActivity.audi_models;
-import static org.uusoftware.fuelify.MainActivity.bentley_models;
-import static org.uusoftware.fuelify.MainActivity.birthday;
-import static org.uusoftware.fuelify.MainActivity.bmw_models;
-import static org.uusoftware.fuelify.MainActivity.bugatti_models;
-import static org.uusoftware.fuelify.MainActivity.buick_models;
-import static org.uusoftware.fuelify.MainActivity.cadillac_models;
-import static org.uusoftware.fuelify.MainActivity.carBrand;
-import static org.uusoftware.fuelify.MainActivity.carModel;
-import static org.uusoftware.fuelify.MainActivity.carPhoto;
-import static org.uusoftware.fuelify.MainActivity.cherry_models;
-import static org.uusoftware.fuelify.MainActivity.chevrolet_models;
-import static org.uusoftware.fuelify.MainActivity.chyrsler_models;
-import static org.uusoftware.fuelify.MainActivity.citroen_models;
-import static org.uusoftware.fuelify.MainActivity.dacia_models;
-import static org.uusoftware.fuelify.MainActivity.daeweo_models;
-import static org.uusoftware.fuelify.MainActivity.daihatsu_models;
-import static org.uusoftware.fuelify.MainActivity.dodge_models;
-import static org.uusoftware.fuelify.MainActivity.ds_models;
-import static org.uusoftware.fuelify.MainActivity.eagle_models;
-import static org.uusoftware.fuelify.MainActivity.email;
-import static org.uusoftware.fuelify.MainActivity.ferrari_models;
-import static org.uusoftware.fuelify.MainActivity.fiat_models;
-import static org.uusoftware.fuelify.MainActivity.ford_models;
-import static org.uusoftware.fuelify.MainActivity.fuelPri;
-import static org.uusoftware.fuelify.MainActivity.fuelSec;
-import static org.uusoftware.fuelify.MainActivity.gaz_models;
-import static org.uusoftware.fuelify.MainActivity.geely_models;
-import static org.uusoftware.fuelify.MainActivity.gender;
-import static org.uusoftware.fuelify.MainActivity.getVariables;
-import static org.uusoftware.fuelify.MainActivity.honda_models;
-import static org.uusoftware.fuelify.MainActivity.hyundai_models;
-import static org.uusoftware.fuelify.MainActivity.ikco_models;
-import static org.uusoftware.fuelify.MainActivity.infiniti_models;
-import static org.uusoftware.fuelify.MainActivity.isuzu_models;
-import static org.uusoftware.fuelify.MainActivity.jaguar_models;
-import static org.uusoftware.fuelify.MainActivity.kia_models;
-import static org.uusoftware.fuelify.MainActivity.kilometer;
-import static org.uusoftware.fuelify.MainActivity.kral_models;
-import static org.uusoftware.fuelify.MainActivity.lada_models;
-import static org.uusoftware.fuelify.MainActivity.lamborghini_models;
-import static org.uusoftware.fuelify.MainActivity.lancia_models;
-import static org.uusoftware.fuelify.MainActivity.lexus_models;
-import static org.uusoftware.fuelify.MainActivity.lincoln_models;
-import static org.uusoftware.fuelify.MainActivity.location;
-import static org.uusoftware.fuelify.MainActivity.lotus_models;
-import static org.uusoftware.fuelify.MainActivity.maserati_models;
-import static org.uusoftware.fuelify.MainActivity.maybach_models;
-import static org.uusoftware.fuelify.MainActivity.mazda_models;
-import static org.uusoftware.fuelify.MainActivity.mercedes_models;
-import static org.uusoftware.fuelify.MainActivity.mercury_models;
-import static org.uusoftware.fuelify.MainActivity.mg_models;
-import static org.uusoftware.fuelify.MainActivity.mini_models;
-import static org.uusoftware.fuelify.MainActivity.mitsubishi_models;
-import static org.uusoftware.fuelify.MainActivity.moskwitsch_models;
-import static org.uusoftware.fuelify.MainActivity.name;
-import static org.uusoftware.fuelify.MainActivity.nissan_models;
-import static org.uusoftware.fuelify.MainActivity.oldsmobile_models;
-import static org.uusoftware.fuelify.MainActivity.opel_models;
-import static org.uusoftware.fuelify.MainActivity.pagani_models;
-import static org.uusoftware.fuelify.MainActivity.peugeot_models;
-import static org.uusoftware.fuelify.MainActivity.photo;
-import static org.uusoftware.fuelify.MainActivity.plymouth_models;
-import static org.uusoftware.fuelify.MainActivity.pontiac_models;
-import static org.uusoftware.fuelify.MainActivity.porsche_models;
-import static org.uusoftware.fuelify.MainActivity.pos;
-import static org.uusoftware.fuelify.MainActivity.pos2;
-import static org.uusoftware.fuelify.MainActivity.proton_models;
-import static org.uusoftware.fuelify.MainActivity.renault_models;
-import static org.uusoftware.fuelify.MainActivity.rollsRoyce_models;
-import static org.uusoftware.fuelify.MainActivity.rover_models;
-import static org.uusoftware.fuelify.MainActivity.saab_models;
-import static org.uusoftware.fuelify.MainActivity.seat_models;
-import static org.uusoftware.fuelify.MainActivity.skoda_models;
-import static org.uusoftware.fuelify.MainActivity.smart_models;
-import static org.uusoftware.fuelify.MainActivity.subaru_models;
-import static org.uusoftware.fuelify.MainActivity.suzuki_models;
-import static org.uusoftware.fuelify.MainActivity.tata_models;
-import static org.uusoftware.fuelify.MainActivity.tesla_models;
-import static org.uusoftware.fuelify.MainActivity.tofas_models;
-import static org.uusoftware.fuelify.MainActivity.toyota_models;
-import static org.uusoftware.fuelify.MainActivity.userCountry;
-import static org.uusoftware.fuelify.MainActivity.userlat;
-import static org.uusoftware.fuelify.MainActivity.userlon;
-import static org.uusoftware.fuelify.MainActivity.username;
-import static org.uusoftware.fuelify.MainActivity.volvo_models;
-import static org.uusoftware.fuelify.MainActivity.vw_models;
+import static org.uusoftware.fuelify.MainActivity.*;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    RequestQueue requestQueue;
     SharedPreferences prefs;
     Button continueButton, saveCarButton, finishButton;
     RelativeLayout layout1, layout3;
@@ -203,6 +105,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
 
         layout1 = findViewById(R.id.layout1);
         layout2 = findViewById(R.id.layout2);
@@ -298,6 +201,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+
                     }
                 }) {
             @Override
@@ -312,9 +216,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 return params;
             }
         };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -367,9 +268,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         };
 
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
-
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
@@ -389,7 +287,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyStoragePermissions()) {
+                if (verifyStoragePermissions(WelcomeActivity.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(WelcomeActivity.this);
@@ -571,6 +469,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         Toast.makeText(WelcomeActivity.this, s, Toast.LENGTH_LONG).show();
                         layout2.setVisibility(View.GONE);
                         layout3.setVisibility(View.VISIBLE);
+                        isSigned = true;
+                        prefs.edit().putBoolean("isSigned", isSigned).apply();
                     }
                 },
                 new Response.ErrorListener() {
@@ -594,11 +494,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("fuelPri", String.valueOf(fuelPri));
                 params.put("fuelSec", String.valueOf(fuelSec));
                 params.put("km", String.valueOf(kilometer));
-                if (bitmap != null) {
-                    params.put("carPhoto", getStringImage(bitmap));
-                } else {
-                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
-                }
+                params.put("carPhoto", getStringImage(bitmap));
                 params.put("posIn1", String.valueOf(pos));
                 params.put("posIn2", String.valueOf(pos2));
 
@@ -607,24 +503,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         };
 
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
-
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
 
-    public boolean verifyStoragePermissions() {
-        boolean hasStorage = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                hasStorage = true;
-            }
-        } else {
-            hasStorage = true;
-        }
-        return hasStorage;
-    }
 
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -49,6 +50,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.uusoftware.fuelify.AdminMainActivity.isSuperUser;
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
@@ -61,7 +63,6 @@ import static org.uusoftware.fuelify.MainActivity.photo;
 import static org.uusoftware.fuelify.MainActivity.premium;
 import static org.uusoftware.fuelify.MainActivity.userCountry;
 import static org.uusoftware.fuelify.MainActivity.username;
-
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -79,6 +80,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     Handler handler;
     Intent intent;
+
+    TextView doUHaveStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +118,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton = findViewById(R.id.sign_in_button);
         loginButton = findViewById(R.id.login_button);
 
-        //Check the user trip another country
+        //Check the user trip another country and re-logged him
         if (!userCountry.equals(Locale.getDefault().getCountry())) {
             //User has changes his/her country. Fetch the tax rates/unit/currency.
             //Language will be automatically changed
             isSigned = false;
-            prefs.edit().putBoolean("isSigned", false);
+            prefs.edit().putBoolean("isSigned", false).apply();
             userCountry = Locale.getDefault().getCountry();
             prefs.edit().putString("userCountry", userCountry).apply();
         }
@@ -128,51 +131,56 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //Check whether is logged or not
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
-            if (isNetworkConnected(LoginActivity.this) && !premium) {
-                // AudienceNetwork(LoginActivity.this);
+            //Check user is regular or superUser
+            if (isSuperUser) {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (MainActivity.facebookInterstitial != null && MainActivity.facebookInterstitial.isAdLoaded()) {
-                            //Facebook ads loaded he will see Facebook
-                            startActivity(intent);
-                            MainActivity.facebookInterstitial.show();
-                            MainActivity.adCount++;
-                            MainActivity.facebookInterstitial = null;
-                        } else if (MainActivity.admobInterstitial != null && MainActivity.admobInterstitial.isLoaded()) {
-                            //Facebook ads doesnt loaded he will see AdMob
-                            startActivity(intent);
-                            MainActivity.admobInterstitial.show();
-                            MainActivity.adCount++;
-                            MainActivity.admobInterstitial = null;
-                        } else {
-                            //Both ads doesn't loaded.
-                            startActivity(intent);
-                        }
+                        Intent i = new Intent(LoginActivity.this, AdminMainActivity.class);
+                        startActivity(i);
                         finish();
                     }
                 }, 3000);
             } else {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
-                }, 1500);
+                //Check user has premium
+                if (isNetworkConnected(LoginActivity.this) && !premium) {
+                    // AudienceNetwork(LoginActivity.this);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (MainActivity.facebookInterstitial != null && MainActivity.facebookInterstitial.isAdLoaded()) {
+                                //Facebook ads loaded he will see Facebook
+                                startActivity(intent);
+                                MainActivity.facebookInterstitial.show();
+                                MainActivity.adCount++;
+                                MainActivity.facebookInterstitial = null;
+                            } else if (MainActivity.admobInterstitial != null && MainActivity.admobInterstitial.isLoaded()) {
+                                //Facebook ads doesnt loaded he will see AdMob
+                                startActivity(intent);
+                                MainActivity.admobInterstitial.show();
+                                MainActivity.adCount++;
+                                MainActivity.admobInterstitial = null;
+                            } else {
+                                //Both ads doesn't loaded.
+                                startActivity(intent);
+                            }
+                            finish();
+                        }
+                    }, 3000);
+                } else {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    }, 3000);
+                }
             }
         }
 
         /* Google Sign-In */
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                googleSignIn();
-            }
-        });
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PROFILE))
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
@@ -185,9 +193,99 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(Plus.API)
                 .build();
+
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, googleSign);
+            }
+        });
         //END
 
         /* Facebook Login */
+        facebookLogin();
+        //END
+
+        /*StationOwnerRegister */
+        doUHaveStation = findViewById(R.id.textViewisHaveStation);
+        doUHaveStation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, AdminRegister.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    private void googleSignIn(Intent data) {
+        GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+        if (result.isSuccess()) {
+            GoogleSignInAccount acct = result.getSignInAccount();
+            if (acct != null) {
+                //NAME
+                name = acct.getDisplayName();
+                prefs.edit().putString("Name", name).apply();
+
+                //USERNAME
+                String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                if (tmpusername.length() > 16) {
+                    username = tmpusername.substring(0, 15);
+                } else {
+                    username = tmpusername;
+                }
+                prefs.edit().putString("UserName", username).apply();
+
+                //EMAİL
+                email = acct.getEmail();
+                prefs.edit().putString("Email", email).apply();
+
+                //PHOTO
+                if (acct.getPhotoUrl() != null) {
+                    photo = acct.getPhotoUrl().toString();
+                    prefs.edit().putString("ProfilePhoto", photo).apply();
+                }
+
+                // G+
+                Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+                if (person != null) {
+                    //GENDER
+                    if (person.hasGender()) {
+                        if (person.getGender() == 0) {
+                            gender = "male";
+                        } else if (person.getGender() == 1) {
+                            gender = "female";
+                        } else {
+                            gender = "transsexual";
+                        }
+                        prefs.edit().putString("Gender", gender).apply();
+                    }
+
+                    //BIRTHDAY
+                    if (person.hasGender()) {
+                        birthday = person.getBirthday();
+                        prefs.edit().putString("Birthday", birthday).apply();
+                    }
+
+                    //LOCATION
+                    if (person.hasCurrentLocation()) {
+                        location = person.getCurrentLocation();
+                        prefs.edit().putString("Location", location).apply();
+                    }
+                }
+                saveUserInfo();
+            } else {
+                Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                prefs.edit().putBoolean("isSigned", false).apply();
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+            prefs.edit().putBoolean("isSigned", false).apply();
+        }
+    }
+
+    private void facebookLogin() {
         callbackManager = CallbackManager.Factory.create();
         loginButton.setReadPermissions("email");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -200,12 +298,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 if (response.getError() != null) {
                                     Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    name = me.optString("first_name");
-                                    name += " " + me.optString("last_name");
+                                    name = me.optString("first_name") + " " + me.optString("last_name");
+                                    prefs.edit().putString("Name", name).apply();
+
                                     email = me.optString("email");
+                                    prefs.edit().putString("Email", email).apply();
+
                                     photo = me.optString("profile_pic");
+                                    prefs.edit().putString("ProfilePhoto", photo).apply();
+
                                     gender = me.optString("gender");
+                                    prefs.edit().putString("Gender", gender).apply();
+
                                     location = me.optString("location");
+                                    prefs.edit().putString("Location", location).apply();
 
                                     //USERNAME
                                     String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
@@ -231,12 +337,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
             }
         });
-        //END
-    }
-
-    private void googleSignIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, googleSign);
     }
 
     private void saveUserInfo() {
@@ -300,86 +400,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == googleSign) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                GoogleSignInAccount acct = result.getSignInAccount();
-                if (acct != null) {
-                    //GOOGLE ID
-                    String googleID = acct.getId();
-                    prefs.edit().putString("GoogleAccountID", googleID).apply();
-
-                    //NAME
-                    name = acct.getDisplayName();
-                    prefs.edit().putString("Name", name).apply();
-
-                    //USERNAME
-                    String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                    if (tmpusername.length() > 16) {
-                        username = tmpusername.substring(0, 15);
-                    } else {
-                        username = tmpusername;
-                    }
-                    prefs.edit().putString("UserName", username).apply();
-
-                    //EMAİL
-                    email = acct.getEmail();
-                    prefs.edit().putString("Email", email).apply();
-
-                    //PHOTO
-                    if (acct.getPhotoUrl() != null) {
-                        photo = acct.getPhotoUrl().toString();
-                        prefs.edit().putString("ProfilePhoto", photo).apply();
-                    } else {
-                        photo = "";
-                        prefs.edit().putString("ProfilePhoto", photo).apply();
-                    }
-
-                    // G+
-                    Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                    if (person != null) {
-                        //GENDER
-                        if (person.hasGender()) {
-                            if (person.getGender() == 0) {
-                                gender = "male";
-                                prefs.edit().putString("Gender", gender).apply();
-                            } else if (person.getGender() == 1) {
-                                gender = "female";
-                                prefs.edit().putString("Gender", gender).apply();
-                            } else {
-                                gender = "transsexual";
-                                prefs.edit().putString("Gender", gender).apply();
-                            }
-                        }
-
-                        //BIRTHDAY
-                        if (person.hasGender()) {
-                            birthday = person.getBirthday();
-                            prefs.edit().putString("Birthday", birthday).apply();
-                        }
-
-                        //LOCATION
-                        if (person.hasCurrentLocation()) {
-                            location = person.getCurrentLocation();
-                            prefs.edit().putString("Location", location).apply();
-                        }
-                    } else {
-                        //Default values
-                        gender = "";
-                        birthday = "";
-                        location = "";
-                        prefs.edit().putString("Gender", gender).apply();
-                        prefs.edit().putString("Birthday", null).apply();
-                        prefs.edit().putString("Location", null).apply();
-                    }
-                    saveUserInfo();
-                } else {
-                    Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                    prefs.edit().putBoolean("isSigned", false).apply();
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                prefs.edit().putBoolean("isSigned", false).apply();
-            }
+            googleSignIn(data);
         }
     }
 
