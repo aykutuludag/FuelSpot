@@ -50,13 +50,13 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.uusoftware.fuelify.AdminMainActivity.isSuperUser;
 import static org.uusoftware.fuelify.MainActivity.birthday;
 import static org.uusoftware.fuelify.MainActivity.email;
 import static org.uusoftware.fuelify.MainActivity.gender;
 import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.isSigned;
+import static org.uusoftware.fuelify.MainActivity.isSuperUser;
 import static org.uusoftware.fuelify.MainActivity.location;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
@@ -349,7 +349,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         loading.dismiss();
                         Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                         notLogged.setVisibility(View.GONE);
-                        prefs.edit().putBoolean("isSigned", true).apply();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

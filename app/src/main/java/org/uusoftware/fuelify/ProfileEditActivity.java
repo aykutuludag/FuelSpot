@@ -95,8 +95,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();
 
-        editName = findViewById(R.id.editEventName);
-        editMail = findViewById(R.id.editTextDesc);
+        editName = findViewById(R.id.editFullName);
+        editMail = findViewById(R.id.editTextMail);
         editLocation = findViewById(R.id.editTextLocation);
         editBirthday = findViewById(R.id.editTextBirthday);
         editGender = findViewById(R.id.radioGroupGender);
@@ -129,7 +129,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         // Setting photo
-        ImageView profilePic = findViewById(R.id.event_photo);
+        ImageView profilePic = findViewById(R.id.userPhoto);
         Glide.with(this).load(Uri.parse(photo)).into(profilePic);
 
         //  Setting location and retrieving changes
@@ -151,7 +151,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //  Setting birthday and retrieving changes
         editBirthday.setText(birthday);
-        if (!birthday.contains("-")) {
+        if (birthday.length() > 0) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
             try {
                 Date birthDateasDate = sdf.parse(birthday);
@@ -177,15 +177,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                 datePicker.setButton(DatePickerDialog.BUTTON_POSITIVE, "Set", datePicker);
                 datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", datePicker);
                 datePicker.show();
-
-                SimpleDateFormat dateForm = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
-                try {
-                    Date convertedDate = dateForm.parse(birthday);
-                    System.out.println(convertedDate);
-                } catch (ParseException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
             }
         });
 

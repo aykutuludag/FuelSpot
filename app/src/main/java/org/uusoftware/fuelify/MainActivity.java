@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    public static boolean premium, isSigned;
+    public static boolean premium, isSigned, isSuperUser;
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
     public static int fuelPri, fuelSec, kilometer, pos, pos2;
@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         userlon = prefs.getFloat("lon", 0);
         premium = prefs.getBoolean("hasPremium", false);
         isSigned = prefs.getBoolean("isSigned", false);
+        isSuperUser = prefs.getBoolean("isSuperUser", false);
         userCountry = prefs.getString("userCountry", "US");
         pos = prefs.getInt("carPos", 0);
         pos2 = prefs.getInt("carPos2", 0);
@@ -200,6 +201,26 @@ public class MainActivity extends AppCompatActivity {
             hasStorage = true;
         }
         return hasStorage;
+    }
+
+    public static String stationPhotoChooser(String stationName) {
+        String photoURL;
+        if (stationName.contains("Shell")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
+        } else if (stationName.contains("Opet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
+        } else if (stationName.contains("BP")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
+        } else if (stationName.contains("Kadoil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
+        } else if (stationName.contains("Petrol Ofisi")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
+        } else if (stationName.contains("Lukoil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+        } else {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
+        }
+        return photoURL;
     }
 
     //First try to load Audience Network, fails load AdMob
@@ -266,26 +287,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         admobInterstitial.loadAd(adRequest);
-    }
-
-    public static String stationPhotoChooser(String stationName) {
-        String stationURI;
-        if (stationName.contains("Shell")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
-        } else if (stationName.contains("Opet")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
-        } else if (stationName.contains("BP")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
-        } else if (stationName.contains("Kadoil")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
-        } else if (stationName.contains("Petrol Ofisi")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
-        } else if (stationName.contains("Lukoil")) {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
-        } else {
-            stationURI = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
-        }
-        return stationURI;
     }
 
     public static float taxCalculator(String fuelType, float price) {

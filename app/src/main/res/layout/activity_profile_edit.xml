@@ -30,7 +30,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/event_photo"
+                android:id="@+id/userPhoto"
                 android:layout_width="142dp"
                 android:layout_height="142dp"
                 android:layout_alignParentLeft="true"
@@ -42,36 +42,36 @@
                 app:srcCompat="@drawable/profile" />
 
             <ImageView
-                android:id="@+id/indicator_title"
+                android:id="@+id/dummyImage1"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignTop="@+id/event_photo"
+                android:layout_alignTop="@+id/userPhoto"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/event_photo"
-                android:layout_toRightOf="@+id/event_photo"
+                android:layout_toEndOf="@+id/userPhoto"
+                android:layout_toRightOf="@+id/userPhoto"
                 app:srcCompat="@drawable/event_edit_title" />
 
             <TextView
-                android:id="@+id/post_name"
+                android:id="@+id/dummyText1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/indicator_title"
+                android:layout_alignTop="@+id/dummyImage1"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/indicator_title"
-                android:layout_toRightOf="@+id/indicator_title"
+                android:layout_toEndOf="@+id/dummyImage1"
+                android:layout_toRightOf="@+id/dummyImage1"
                 android:gravity="center"
                 android:text="Ad - Soyad"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
-                android:id="@+id/editEventName"
+                android:id="@+id/editFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/indicator_title"
-                android:layout_alignStart="@+id/indicator_title"
-                android:layout_below="@+id/post_name"
+                android:layout_alignLeft="@+id/dummyImage1"
+                android:layout_alignStart="@+id/dummyImage1"
+                android:layout_below="@+id/dummyText1"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 android:enabled="false"
@@ -85,12 +85,12 @@
 
 
             <ImageView
-                android:id="@+id/indicator_desc"
+                android:id="@+id/dummyImage2"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignLeft="@+id/editEventName"
-                android:layout_alignStart="@+id/editEventName"
-                android:layout_below="@+id/editEventName"
+                android:layout_alignLeft="@+id/editFullName"
+                android:layout_alignStart="@+id/editFullName"
+                android:layout_below="@+id/editFullName"
                 android:layout_marginTop="8dp"
                 app:srcCompat="@drawable/profile_edit_email" />
 
@@ -98,24 +98,24 @@
                 android:id="@+id/mail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/indicator_desc"
-                android:layout_alignTop="@+id/indicator_desc"
+                android:layout_alignBottom="@+id/dummyImage2"
+                android:layout_alignTop="@+id/dummyImage2"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/indicator_desc"
-                android:layout_toRightOf="@+id/indicator_desc"
+                android:layout_toEndOf="@+id/dummyImage2"
+                android:layout_toRightOf="@+id/dummyImage2"
                 android:gravity="center"
                 android:text="E-posta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
-                android:id="@+id/editTextDesc"
+                android:id="@+id/editTextMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/event_photo"
-                android:layout_alignLeft="@+id/indicator_desc"
-                android:layout_alignStart="@+id/indicator_desc"
-                android:layout_below="@+id/indicator_desc"
+                android:layout_alignBottom="@+id/userPhoto"
+                android:layout_alignLeft="@+id/dummyImage2"
+                android:layout_alignStart="@+id/dummyImage2"
+                android:layout_below="@+id/dummyImage2"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
@@ -131,14 +131,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <TextView
-                android:id="@+id/text_info"
+                android:id="@+id/dummyText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/editTextDesc"
-                android:layout_alignLeft="@+id/event_photo"
-                android:layout_alignRight="@+id/editTextDesc"
-                android:layout_alignStart="@+id/event_photo"
-                android:layout_below="@+id/event_photo"
+                android:layout_alignEnd="@+id/editTextMail"
+                android:layout_alignLeft="@+id/userPhoto"
+                android:layout_alignRight="@+id/editTextMail"
+                android:layout_alignStart="@+id/userPhoto"
+                android:layout_below="@+id/userPhoto"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
@@ -149,9 +149,9 @@
                 android:id="@+id/indicator_loc"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignLeft="@+id/text_info"
-                android:layout_alignStart="@+id/text_info"
-                android:layout_below="@+id/text_info"
+                android:layout_alignLeft="@+id/dummyText2"
+                android:layout_alignStart="@+id/dummyText2"
+                android:layout_below="@+id/dummyText2"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_location" />
@@ -186,7 +186,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView
-                android:id="@+id/indicator_date"
+                android:id="@+id/dummyImage4"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignLeft="@+id/editTextLocation"
@@ -197,13 +197,13 @@
                 app:srcCompat="@drawable/event_edit_date" />
 
             <TextView
-                android:id="@+id/birthday_title"
+                android:id="@+id/dummyText5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/indicator_date"
+                android:layout_alignBottom="@+id/dummyImage4"
                 android:layout_alignLeft="@+id/desc_title"
                 android:layout_alignStart="@+id/desc_title"
-                android:layout_alignTop="@+id/indicator_date"
+                android:layout_alignTop="@+id/dummyImage4"
                 android:gravity="center"
                 android:text="Doğum günü"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -212,9 +212,9 @@
                 android:id="@+id/editTextBirthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/indicator_date"
-                android:layout_alignStart="@+id/indicator_date"
-                android:layout_below="@+id/indicator_date"
+                android:layout_alignLeft="@+id/dummyImage4"
+                android:layout_alignStart="@+id/dummyImage4"
+                android:layout_below="@+id/dummyImage4"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
@@ -224,7 +224,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView
-                android:id="@+id/indicator_gender"
+                android:id="@+id/dummyImage5"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignLeft="@+id/editTextBirthday"
@@ -238,10 +238,10 @@
                 android:id="@+id/gender_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/indicator_gender"
-                android:layout_alignLeft="@+id/birthday_title"
-                android:layout_alignStart="@+id/birthday_title"
-                android:layout_alignTop="@+id/indicator_gender"
+                android:layout_alignBottom="@+id/dummyImage5"
+                android:layout_alignLeft="@+id/dummyText5"
+                android:layout_alignStart="@+id/dummyText5"
+                android:layout_alignTop="@+id/dummyImage5"
                 android:gravity="center"
                 android:text="Cinsiyet"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -250,9 +250,9 @@
                 android:id="@+id/radioGroupGender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/indicator_gender"
-                android:layout_alignStart="@+id/indicator_gender"
-                android:layout_below="@+id/indicator_gender"
+                android:layout_alignLeft="@+id/dummyImage5"
+                android:layout_alignStart="@+id/dummyImage5"
+                android:layout_below="@+id/dummyImage5"
                 android:layout_marginTop="10dp"
                 android:checkedButton="@+id/genderMale"
                 android:orientation="horizontal">

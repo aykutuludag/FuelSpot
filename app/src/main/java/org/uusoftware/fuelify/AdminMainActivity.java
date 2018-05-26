@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 public class AdminMainActivity extends AppCompatActivity {
 
-    public static boolean isSuperUser, isSuperVerified;
+    public static boolean isSuperVerified;
     public static int superStationID;
-    public static String superStationName, superStationLocation, superStationLogo, userPhoneNumber, contractPhoto;
+    public static String superStationName, superStationLocation, superStationLogo, superStationAddress, userPhoneNumber, contractPhoto;
 
     private TextView mTextMessage;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -36,14 +36,14 @@ public class AdminMainActivity extends AppCompatActivity {
     };
 
     public static void getSuperVariables(SharedPreferences prefs) {
-        isSuperUser = prefs.getBoolean("isSuperUser", false);
-        isSuperVerified = prefs.getBoolean("Verified", false);
         superStationID = prefs.getInt("StationID", 0);
         superStationName = prefs.getString("SuperStationName", "");
         superStationLocation = prefs.getString("SuperStationLocation", "");
+        superStationAddress = prefs.getString("SuperStationAddress", "");
         superStationLogo = prefs.getString("SuperStationLogo", "");
         contractPhoto = prefs.getString("contractPhoto", "");
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
+        isSuperVerified = prefs.getBoolean("Verified", false);
     }
 
     @Override

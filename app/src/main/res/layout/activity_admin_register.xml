@@ -27,17 +27,6 @@
         tools:context=".AdminRegister"
         tools:showIn="@layout/activity_admin_register">
 
-        <VideoView
-            android:id="@+id/videoViewBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
-
         <RelativeLayout
             android:id="@+id/layout_promo"
             android:layout_width="match_parent"
@@ -156,9 +145,7 @@
                     android:layout_height="250dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp" />
-
+                    android:layout_margin="8dp" />
 
                 <TextView
                     android:id="@+id/superStationName"
@@ -166,16 +153,27 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mapView"
                     android:layout_centerHorizontal="true"
-                    android:text="Station Name"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-                    android:textStyle="bold" />
+                    android:layout_margin="4dp"
+                    android:text="İstasyon Adı"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <TextView
+                    android:id="@+id/superStationAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/superStationName"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="2dp"
+                    android:text="İstasyon Adresi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
                     android:id="@+id/stationHint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/superStationName"
+                    android:layout_below="@id/superStationAddress"
                     android:layout_centerHorizontal="true"
+                    android:layout_margin="2dp"
                     android:gravity="center"
                     android:text="Kayıt işlemini tamamlayabilmek için sahip olduğunuz istasyonda bulunmanız gerekmektedir. Konumunuz onayladığında bu yazı yeşile dönecektir."
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
@@ -183,59 +181,266 @@
                     android:textSize="12sp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/user_picture"
-                    android:layout_width="125dp"
-                    android:layout_height="125dp"
+                    android:id="@+id/userPhoto"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_below="@id/stationHint"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
-                    android:src="@drawable/profile"
+                    android:layout_margin="16dp"
                     app:civ_border_color="#EA6C34"
-                    app:civ_border_width="1dp" />
+                    app:civ_border_width="1dp"
+                    app:srcCompat="@drawable/image_placeholder" />
+
+                <ImageView
+                    android:id="@+id/dummyImage1"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_below="@id/userPhoto"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    app:srcCompat="@drawable/event_edit_title" />
 
                 <TextView
-                    android:id="@+id/superFullName"
+                    android:id="@+id/dummyText1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/user_picture"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
+                    android:layout_alignTop="@+id/dummyImage1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@+id/dummyImage1"
+                    android:layout_toRightOf="@+id/dummyImage1"
                     android:gravity="center"
-                    android:text="Aykut Uludağ"
+                    android:text="Ad - Soyad"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <EditText
+                    android:id="@+id/editFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/dummyImage1"
+                    android:layout_alignStart="@+id/dummyImage1"
+                    android:layout_below="@+id/dummyText1"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:enabled="false"
+                    android:gravity="bottom"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/dummyText2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editFullName"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Profil fotosu ve isminizi başka hesapla girerek değiştirebilirsiniz."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                <ImageView
+                    android:id="@+id/dummyImage2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignLeft="@+id/editFullName"
+                    android:layout_alignStart="@+id/editFullName"
+                    android:layout_below="@+id/dummyText2"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/profile_edit_email" />
+
+                <TextView
+                    android:id="@+id/dummyText3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/dummyImage2"
+                    android:layout_alignTop="@+id/dummyImage2"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@+id/dummyImage2"
+                    android:layout_toRightOf="@+id/dummyImage2"
+                    android:gravity="center"
+                    android:text="E-posta"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <EditText
                     android:id="@+id/editTextMail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/superFullName"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="istasyonsahibi@mail.com"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/dummyImage2"
+                    android:layout_alignStart="@+id/dummyImage2"
+                    android:layout_below="@+id/dummyImage2"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="bottom"
                     android:inputType="textEmailAddress"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/dummyImage3"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignLeft="@+id/editFullName"
+                    android:layout_alignStart="@+id/editFullName"
+                    android:layout_below="@+id/editTextMail"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/profile_edit_email" />
+
+                <TextView
+                    android:id="@+id/dummyText4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/dummyImage3"
+                    android:layout_alignTop="@+id/dummyImage3"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@+id/dummyImage3"
+                    android:layout_toRightOf="@+id/dummyImage3"
+                    android:gravity="center"
+                    android:text="Telefon"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <EditText
                     android:id="@+id/editTextPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/dummyImage2"
+                    android:layout_alignStart="@+id/dummyImage2"
+                    android:layout_below="@+id/dummyImage3"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="bottom"
+                    android:inputType="phone"
+                    android:paddingBottom="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/dummyImage4"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignLeft="@+id/dummyImage3"
+                    android:layout_alignStart="@+id/dummyImage3"
+                    android:layout_below="@+id/editTextPhone"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="fitStart"
+                    app:srcCompat="@drawable/event_edit_date" />
+
+                <TextView
+                    android:id="@+id/dummyText5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/editTextMail"
-                    android:layout_centerHorizontal="true"
-                    android:ems="10"
+                    android:layout_alignBottom="@+id/dummyImage4"
+                    android:layout_alignLeft="@+id/dummyText4"
+                    android:layout_alignStart="@+id/dummyText4"
+                    android:layout_alignTop="@+id/dummyImage4"
                     android:gravity="center"
-                    android:hint="+905556894732"
-                    android:inputType="phone" />
+                    android:text="Doğum günü"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <EditText
+                    android:id="@+id/editTextBirthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/dummyImage4"
+                    android:layout_alignStart="@+id/dummyImage4"
+                    android:layout_below="@+id/dummyImage4"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:enabled="true"
+                    android:focusableInTouchMode="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/dummyImage5"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignLeft="@+id/editTextBirthday"
+                    android:layout_alignStart="@+id/editTextBirthday"
+                    android:layout_below="@+id/editTextBirthday"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="fitStart"
+                    app:srcCompat="@drawable/icon_gender_dark" />
+
+                <TextView
+                    android:id="@+id/dummyText6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/dummyImage5"
+                    android:layout_alignLeft="@+id/dummyText5"
+                    android:layout_alignStart="@+id/dummyText5"
+                    android:layout_alignTop="@+id/dummyImage5"
+                    android:gravity="center"
+                    android:text="Cinsiyet"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroupGender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/dummyImage5"
+                    android:layout_alignStart="@+id/dummyImage5"
+                    android:layout_below="@+id/dummyImage5"
+                    android:layout_marginTop="8dp"
+                    android:checkedButton="@+id/genderMale"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/genderMale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:text="Erkek" />
+
+                    <RadioButton
+                        android:id="@+id/genderFemale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="Kadın" />
+
+                    <RadioButton
+                        android:id="@+id/genderOther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="Diğer" />
+                </RadioGroup>
 
 
                 <ImageView
                     android:id="@+id/imageViewLicense"
                     android:layout_width="wrap_content"
                     android:layout_height="250dp"
-                    android:layout_below="@id/editTextPhone"
+                    android:layout_below="@id/radioGroupGender"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
+                    android:layout_margin="16dp"
                     android:scaleType="fitXY"
                     app:srcCompat="@drawable/photo_placeholder" />
 
@@ -248,7 +453,6 @@
                     android:layout_margin="4dp"
                     android:gravity="center"
                     android:text="Lütfen istasyon sahibi olduğunuzu doğrulamamıza yardımcı olacak bir döküman yükleyiniz."
-                    android:textColor="#fff"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -258,8 +462,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView8"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
-                    android:text="Şartlar ve Koşulları okudum, kabul ediyorum." />
+                    android:layout_margin="16dp"
+                    android:gravity="center"
+                    android:text="Şartlar ve Koşulları okudum, kabul ediyorum."
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/finishRegistration"
