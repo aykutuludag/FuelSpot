@@ -3,6 +3,7 @@ package org.uusoftware.fuelify;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -17,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static org.uusoftware.fuelify.AdminMainActivity.isSuperVerified;
 import static org.uusoftware.fuelify.AdminMainActivity.superGoogleID;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationAddress;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationLocation;
@@ -65,6 +68,7 @@ public class FragmentOwnedStation extends Fragment {
     TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
     RelativeTimeTextView textLastUpdated;
     ImageView stationIcon;
+    Button openPurchases, openComments, openCampaings, openPosts;
     private GoogleMap googleMap;
 
     @Override
@@ -98,6 +102,51 @@ public class FragmentOwnedStation extends Fragment {
         textLastUpdated = rootView.findViewById(R.id.lastUpdateTime);
         stationIcon = rootView.findViewById(R.id.stationLogo);
 
+        //Buttons
+        openPurchases = rootView.findViewById(R.id.buttonPurchases);
+        openPurchases.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperPurchases.class);
+                    startActivity(i);
+                }
+            }
+        });
+
+        openComments = rootView.findViewById(R.id.buttonComments);
+        openComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperComments.class);
+                    startActivity(i);
+                }
+            }
+        });
+
+        openCampaings = rootView.findViewById(R.id.buttonCampaings);
+        openCampaings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperCampaings.class);
+                    startActivity(i);
+                }
+            }
+        });
+
+        openPosts = rootView.findViewById(R.id.buttonPosts);
+        openPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperPosts.class);
+                    startActivity(i);
+                }
+            }
+        });
+
         checkLocationPermission();
 
         return rootView;
@@ -127,16 +176,6 @@ public class FragmentOwnedStation extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(true);
 
-                //Add marker to stationLoc
-                String[] locationHolder = superStationLocation.split(";");
-                LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
-                googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
-
-                //Zoom-in camera
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
-                        (cameraPosition));
-
                 loadStationDetails();
             }
         });
@@ -147,7 +186,6 @@ public class FragmentOwnedStation extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("AQQQ" + response);
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
@@ -167,6 +205,16 @@ public class FragmentOwnedStation extends Fragment {
                             textElectricity.setText(obj.getDouble("electricityPrice") + "TL");
                             textLastUpdated.setReferenceTime(obj.getLong("lastUpdated"));
                             Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
+
+                            //Add marker to stationLoc
+                            String[] locationHolder = superStationLocation.split(";");
+                            LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
+                            googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
+
+                            //Zoom-in camera
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+                                    (cameraPosition));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

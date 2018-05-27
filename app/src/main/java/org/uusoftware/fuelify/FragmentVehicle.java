@@ -103,6 +103,7 @@ public class FragmentVehicle extends Fragment {
         fuelType = headerView.findViewById(R.id.car_fuelTypeText);
         fuelTypeIndicator = headerView.findViewById(R.id.car_fuelType);
         String fuelText;
+
         switch (fuelPri) {
             case 0:
                 fuelText = "Gasoline";
@@ -133,19 +134,19 @@ public class FragmentVehicle extends Fragment {
         switch (fuelSec) {
             case 0:
                 fuelText2 = "Gasoline";
-                fuelTypeIndicator.setImageResource(R.drawable.gasoline);
+                fuelTypeIndicator2.setImageResource(R.drawable.gasoline);
                 break;
             case 1:
                 fuelText2 = "Diesel";
-                fuelTypeIndicator.setImageResource(R.drawable.diesel);
+                fuelTypeIndicator2.setImageResource(R.drawable.diesel);
                 break;
             case 2:
                 fuelText2 = "LPG";
-                fuelTypeIndicator.setImageResource(R.drawable.lpg);
+                fuelTypeIndicator2.setImageResource(R.drawable.lpg);
                 break;
             case 3:
                 fuelText2 = "Electric";
-                fuelTypeIndicator.setImageResource(R.drawable.electricity);
+                fuelTypeIndicator2.setImageResource(R.drawable.electricity);
                 break;
             default:
                 fuelText2 = "";

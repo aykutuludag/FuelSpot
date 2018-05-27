@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean premium, isSigned, isSuperUser;
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
-    public static int fuelPri, fuelSec, kilometer, pos, pos2;
+    public static int fuelPri, fuelSec, kilometer;
 
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
@@ -156,6 +156,13 @@ public class MainActivity extends AppCompatActivity {
     PagerTitleStrip pagertabstrip;
     ViewPager mViewPager;
 
+    public static int getIndexOf(String[] strings, String item) {
+        for (int i = 0; i < strings.length; i++) {
+            if (item.equals(strings[i])) return i;
+        }
+        return -1;
+    }
+
     public static void getVariables(SharedPreferences prefs) {
         name = prefs.getString("Name", "");
         email = prefs.getString("Email", "");
@@ -176,8 +183,6 @@ public class MainActivity extends AppCompatActivity {
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);
         userCountry = prefs.getString("userCountry", "US");
-        pos = prefs.getInt("carPos", 0);
-        pos2 = prefs.getInt("carPos2", 0);
         averageCons = prefs.getFloat("averageConsumption", 0);
         averagePrice = prefs.getFloat("averagePrice", 0);
         TAX_GASOLINE = prefs.getFloat("taxGasoline", 0);
@@ -191,10 +196,10 @@ public class MainActivity extends AppCompatActivity {
         return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
     }
 
-    public static boolean verifyStoragePermissions(Context mContext) {
+    public static boolean verifyStoragePermissions(Context context) {
         boolean hasStorage = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (mContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 hasStorage = true;
             }
         } else {

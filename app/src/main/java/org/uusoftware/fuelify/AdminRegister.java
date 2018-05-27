@@ -768,6 +768,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     if (contractPhoto != null) {
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(AdminRegister.this.getContentResolver(), Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/License.jpg"));
+                            params.put("contractPhoto", getStringImage(bitmap));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

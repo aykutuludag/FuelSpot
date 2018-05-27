@@ -66,8 +66,6 @@ import static org.uusoftware.fuelify.MainActivity.fuelPri;
 import static org.uusoftware.fuelify.MainActivity.fuelSec;
 import static org.uusoftware.fuelify.MainActivity.isNetworkConnected;
 import static org.uusoftware.fuelify.MainActivity.kilometer;
-import static org.uusoftware.fuelify.MainActivity.pos;
-import static org.uusoftware.fuelify.MainActivity.pos2;
 import static org.uusoftware.fuelify.MainActivity.stationPhotoChooser;
 import static org.uusoftware.fuelify.MainActivity.username;
 
@@ -484,8 +482,6 @@ public class AddFuel extends AppCompatActivity {
                 } else {
                     params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
                 }
-                params.put("posIn1", String.valueOf(pos));
-                params.put("posIn2", String.valueOf(pos2));
 
                 //returning parameters
                 return params;

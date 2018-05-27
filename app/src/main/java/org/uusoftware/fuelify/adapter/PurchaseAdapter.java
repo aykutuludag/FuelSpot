@@ -151,6 +151,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);
+        viewHolder.backgroundClick.setTag(viewHolder);
     }
 
     @Override

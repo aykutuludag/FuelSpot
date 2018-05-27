@@ -145,6 +145,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         // Handle click event on image click
         viewHolder.card.setOnClickListener(clickListener);
+        viewHolder.card.setTag(viewHolder);
     }
 
     @Override

@@ -90,15 +90,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //Load background and login layout
         background = findViewById(R.id.videoViewBackground);
-        background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
-        background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                background.start();
-            }
-        });
-        background.start();
-
         notLogged = findViewById(R.id.notLoggedLayout);
 
         // Analytics
@@ -129,6 +120,48 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
 
         //Check whether is logged or not
+        arrangeLayouts();
+
+        /* Google Sign-In */
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.PROFILE))
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .requestProfile()
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addApi(Plus.API)
+                .build();
+
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, googleSign);
+            }
+        });
+        //END
+
+        /* Facebook Login */
+        facebookLogin();
+        //END
+
+        /*StationOwnerRegister */
+        doUHaveStation = findViewById(R.id.textViewisHaveStation);
+        doUHaveStation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, AdminRegister.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    void arrangeLayouts() {
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
             //Check user is regular or superUser
@@ -179,44 +212,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             }
         }
-
-        /* Google Sign-In */
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(Scopes.PROFILE))
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
-                .requestProfile()
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addApi(Plus.API)
-                .build();
-
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, googleSign);
-            }
-        });
-        //END
-
-        /* Facebook Login */
-        facebookLogin();
-        //END
-
-        /*StationOwnerRegister */
-        doUHaveStation = findViewById(R.id.textViewisHaveStation);
-        doUHaveStation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, AdminRegister.class);
-                startActivity(i);
-            }
-        });
     }
 
     private void googleSignIn(Intent data) {
@@ -354,7 +349,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             public void run() {
                                 Intent i = new Intent(LoginActivity.this, WelcomeActivity.class);
                                 startActivity(i);
-                                finish();
                             }
                         }, 1500);
                     }
@@ -393,6 +387,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (background != null) {
+            background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
+            background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    background.start();
+                }
+            });
+            background.start();
+        }
+        arrangeLayouts();
     }
 
     @Override
