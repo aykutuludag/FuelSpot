@@ -107,6 +107,7 @@ import eu.amirs.JSON;
 import static org.uusoftware.fuelify.AdminMainActivity.contractPhoto;
 import static org.uusoftware.fuelify.AdminMainActivity.getSuperVariables;
 import static org.uusoftware.fuelify.AdminMainActivity.isSuperVerified;
+import static org.uusoftware.fuelify.AdminMainActivity.superGoogleID;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationAddress;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationID;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationLocation;
@@ -431,7 +432,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             prefs.edit().putString("Birthday", birthday).apply();
 
                             userPhoneNumber = obj.getString("userPhone");
-                            prefs.edit().putString("userPhone", userPhoneNumber).apply();
+                            prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
 
                             superStationID = obj.getInt("stationID");
                             prefs.edit().putInt("SuperStationID", superStationID).apply();
@@ -451,8 +452,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             contractPhoto = obj.getString("contractPhoto");
                             prefs.edit().putString("contractPhoto", contractPhoto).apply();
 
-                            isSuperVerified = obj.getBoolean("isVerified");
-                            prefs.edit().putBoolean("isSuperVerified", isSuperVerified).apply();
+                            isSuperVerified = obj.getInt("isVerified");
+                            prefs.edit().putInt("isSuperVerified", isSuperVerified).apply();
 
                             getVariables(prefs);
                             getSuperVariables(prefs);
@@ -526,6 +527,35 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
                 updateMapObject();
+            }
+        });
+    }
+
+    void loadVerifiedMap() {
+        //Detect location and set on map
+        MapsInitializer.initialize(this.getApplicationContext());
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setCompassEnabled(true);
+                googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                googleMap.getUiSettings().setScrollGesturesEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setMapToolbarEnabled(true);
+
+                //Add marker to stationLoc
+                String[] locationHolder = superStationLocation.split(";");
+                LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
+                googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
+
+                //Zoom-in camera
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+                        (cameraPosition));
             }
         });
     }
@@ -649,11 +679,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
                             superStationID = obj.getInt("id");
+                            superGoogleID = obj.getString("googleID");
                             superStationName = obj.getString("name");
                             superStationLocation = obj.getString("location");
                             superStationLogo = obj.getString("photoURL");
 
                             prefs.edit().putInt("SuperStationID", superStationID).apply();
+                            prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
                             prefs.edit().putString("SuperStationName", superStationName).apply();
                             prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
                             prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
@@ -725,6 +757,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 params.put("birthday", birthday);
                 params.put("phoneNumber", userPhoneNumber);
                 params.put("stationID", String.valueOf(superStationID));
+                params.put("googleID", superGoogleID);
                 params.put("stationName", superStationName);
                 params.put("stationLocation", superStationLocation);
                 params.put("stationAddress", superStationAddress);
@@ -752,11 +785,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     private void layout4() {
         /* LAYOUT 04 */
-        loadMap();
-
-        userPhoto = findViewById(R.id.userPhoto);
-        Glide.with(this).load(photo).into(userPhoto);
-
         stationHint = findViewById(R.id.stationHint);
 
         textViewStationName = findViewById(R.id.superStationName);
@@ -764,6 +792,17 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
         textViewAddress = findViewById(R.id.superStationAddress);
         textViewAddress.setText(superStationAddress);
+
+        if (isSuperVerified == 1) {
+            loadVerifiedMap();
+            stationHint.setText("Daha önce sistemimimzde onaylı hesabınız olduğu için bilgiler otomatik yüklendi...");
+            stationHint.setTextColor(Color.parseColor("#00801e"));
+        } else {
+            loadMap();
+        }
+
+        userPhoto = findViewById(R.id.userPhoto);
+        Glide.with(this).load(photo).into(userPhoto);
 
         textViewFullName = findViewById(R.id.editFullName);
         textViewFullName.setText(name);
@@ -937,7 +976,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         Toast.makeText(AdminRegister.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(AdminRegister.this, "Kayıt işlemini tamamlamak için lütfen istasyonunuza gidiniz.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminRegister.this, "Kayıt işlemini tamamlayabilmek için istasyonunuzda olmanız gerekmektedir", Toast.LENGTH_LONG).show();
                 }
             }
         });

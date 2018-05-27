@@ -62,11 +62,11 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
     int userCommentID;
     boolean hasAlreadyCommented;
     String stationName, stationVicinity, stationLocation, iconURL, userComment;
-    ImageView stationIcon;
     float stationDistance;
     double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
     long lastUpdated;
 
+    ImageView stationIcon;
     TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
     RelativeTimeTextView textLastUpdated;
 
