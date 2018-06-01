@@ -1,8 +1,11 @@
 package org.uusoftware.fuelify;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +16,7 @@ import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -105,6 +109,8 @@ public class AdminMainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "OwnedStation").commit();
         }
 
+        createLocalDatabase();
+
         fetchSuperUser();
     }
 
@@ -162,9 +168,7 @@ public class AdminMainActivity extends AppCompatActivity {
                             getVariables(prefs);
                             getSuperVariables(prefs);
 
-                            if (isSuperVerified == 0) {
-                                //ALERTDİALOG
-                            }
+                            checkVerifyStatus();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -190,6 +194,39 @@ public class AdminMainActivity extends AppCompatActivity {
 
         //Adding request to the queue
         queue.add(stringRequest);
+    }
+
+    private void checkVerifyStatus() {
+        if (isSuperVerified == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AdminMainActivity.this);
+            builder.setMessage("Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir. Teşekkürler...");
+            builder.setCancelable(false);
+            builder.setIcon(R.drawable.onaybekleniyor);
+            builder.setNeutralButton("Tamam", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    AdminMainActivity.this.finish();
+                }
+            });
+            builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+                        AdminMainActivity.this.finish();
+                    return false;
+                }
+            });
+            builder.create();
+            builder.show();
+        }
+    }
+
+    public void createLocalDatabase() {
+        //Create databese
+        SQLiteDatabase mobiledatabase = openOrCreateDatabase("fuelspot_local", MODE_PRIVATE, null);
+        mobiledatabase.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local(Title TEXT,Thumbnail VARCHAR, Link VARCHAR, Date TEXT);");
+        SQLiteDatabase mobiledatabase2 = openOrCreateDatabase("fuelspot_local2", MODE_PRIVATE, null);
+        mobiledatabase2.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local2(Title TEXT,Thumbnail VARCHAR, Link VARCHAR, Date TEXT);");
     }
 
     public void coloredBars(int color1, int color2) {
@@ -257,7 +294,7 @@ public class AdminMainActivity extends AppCompatActivity {
                 if (i != null) {
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
-                    finish();
+                    this.finish();
                 }
             } else {
                 Toast.makeText(AdminMainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
@@ -292,9 +329,6 @@ public class AdminMainActivity extends AppCompatActivity {
                 case 3:
                     fragment = new FragmentProfile();
                     break;
-                case 4:
-                    fragment = new FragmentSettings();
-                    break;
                 default:
                     break;
             }
@@ -303,7 +337,7 @@ public class AdminMainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
 
         @Override
@@ -317,8 +351,6 @@ public class AdminMainActivity extends AppCompatActivity {
                     return mContext.getString(R.string.title_news);
                 case 3:
                     return mContext.getString(R.string.title_profile);
-                case 4:
-                    return mContext.getString(R.string.title_settings);
             }
             return null;
         }

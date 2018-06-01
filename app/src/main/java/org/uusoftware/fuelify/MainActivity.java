@@ -556,9 +556,6 @@ public class MainActivity extends AppCompatActivity {
                 case 4:
                     fragment = new FragmentStats();
                     break;
-                case 5:
-                    fragment = new FragmentSettings();
-                    break;
                 default:
                     break;
             }
@@ -567,7 +564,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 6;
+            return 5;
         }
 
         @Override
@@ -583,8 +580,6 @@ public class MainActivity extends AppCompatActivity {
                     return mContext.getString(R.string.nav_text_news);
                 case 4:
                     return mContext.getString(R.string.nav_text_stats);
-                case 5:
-                    return mContext.getString(R.string.nav_text_settings);
             }
             return null;
         }

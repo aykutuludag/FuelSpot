@@ -14,6 +14,15 @@
         app:srcCompat="@android:drawable/ic_menu_help" />
 
     <ImageView
+        android:id="@+id/imageViewSettings"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignTop="@+id/imageViewHelp"
+        android:layout_toEndOf="@+id/imageViewHelp"
+        android:layout_toRightOf="@+id/imageViewHelp"
+        app:srcCompat="@drawable/header_settings" />
+
+    <ImageView
         android:id="@+id/imageViewPrivacy"
         android:layout_width="48dp"
         android:layout_height="48dp"

@@ -65,13 +65,7 @@
         </activity>
         <activity
             android:name=".StationDetails"
-            android:label="@string/title_activity_station_details"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:label="@string/title_activity_station_details" />
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
@@ -100,41 +94,19 @@
         </activity>
         <activity
             android:name=".ProfileEditActivity"
-            android:label="@string/title_activity_profile_edit"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:label="@string/title_activity_profile_edit" />
         <activity
             android:name=".NewsContent"
-            android:label=""
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/ContentTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:label="" />
         <activity
             android:name=".ActivityFavorites"
-            android:label="Favoriler"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:label="Favoriler" />
         <activity
             android:name=".ActivityShared"
-            android:label="Paylaşılanlar"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:label="Paylaşılanlar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
 
         <!-- SuperUser Class -->
         <activity
@@ -219,7 +191,6 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">

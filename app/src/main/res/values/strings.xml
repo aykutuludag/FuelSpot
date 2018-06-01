@@ -168,4 +168,5 @@
     <string name="title_activity_super_comments">SuperComments</string>
     <string name="title_activity_super_campaings">SuperCampaings</string>
     <string name="title_activity_super_posts">SuperPosts</string>
+    <string name="title_activity_super_settings">SuperSettingsActivity</string>
 </resources>

@@ -55,6 +55,7 @@ import static org.uusoftware.fuelify.MainActivity.carBrand;
 import static org.uusoftware.fuelify.MainActivity.carModel;
 import static org.uusoftware.fuelify.MainActivity.carPhoto;
 import static org.uusoftware.fuelify.MainActivity.email;
+import static org.uusoftware.fuelify.MainActivity.isSuperUser;
 import static org.uusoftware.fuelify.MainActivity.name;
 import static org.uusoftware.fuelify.MainActivity.photo;
 import static org.uusoftware.fuelify.MainActivity.username;
@@ -104,19 +105,39 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        rootView.<ImageView>findViewById(R.id.imageViewPrivacy).setOnClickListener(new View.OnClickListener() {
+        ImageView openHelp = rootView.findViewById(R.id.imageViewHelp);
+        openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                CustomTabsIntent customTabsIntent = builder.build();
-                builder.enableUrlBarHiding();
-                builder.setShowTitle(true);
-                builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
+                if (!isSuperUser) {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    builder.enableUrlBarHiding();
+                    builder.setShowTitle(true);
+                    builder.setToolbarColor(Color.parseColor("#212121"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/help"));
+                } else {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    builder.enableUrlBarHiding();
+                    builder.setShowTitle(true);
+                    builder.setToolbarColor(Color.parseColor("#212121"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/help-for-superuser"));
+                }
             }
         });
 
-        rootView.<ImageView>findViewById(R.id.imageViewHelp).setOnClickListener(new View.OnClickListener() {
+        ImageView openSettings = rootView.findViewById(R.id.imageViewSettings);
+        openSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView openPrivacy = rootView.findViewById(R.id.imageViewPrivacy);
+        openPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
@@ -124,7 +145,7 @@ public class FragmentProfile extends Fragment {
                 builder.enableUrlBarHiding();
                 builder.setShowTitle(true);
                 builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/faq"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/privacy"));
             }
         });
 

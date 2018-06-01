@@ -531,35 +531,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         });
     }
 
-    void loadVerifiedMap() {
-        //Detect location and set on map
-        MapsInitializer.initialize(this.getApplicationContext());
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
-                googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(true);
-                googleMap.getUiSettings().setScrollGesturesEnabled(true);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setMapToolbarEnabled(true);
-
-                //Add marker to stationLoc
-                String[] locationHolder = superStationLocation.split(";");
-                LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
-                googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
-
-                //Zoom-in camera
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
-                        (cameraPosition));
-            }
-        });
-    }
-
     private void updateMapObject() {
         if (circle != null) {
             circle.remove();
@@ -572,17 +543,17 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         //Draw a circle with radius of 150m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(userlat, userlon))
-                .radius(75)
+                .radius(1500)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(userlat, userlon);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(16f).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 75m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=75&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=1500&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -794,13 +765,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         textViewAddress = findViewById(R.id.superStationAddress);
         textViewAddress.setText(superStationAddress);
 
-        if (isSuperVerified == 1) {
-            loadVerifiedMap();
-            stationHint.setText("Daha önce sistemimimzde onaylı hesabınız olduğu için bilgiler otomatik yüklendi...");
-            stationHint.setTextColor(Color.parseColor("#00801e"));
-        } else {
-            loadMap();
-        }
+        loadMap();
 
         userPhoto = findViewById(R.id.userPhoto);
         Glide.with(this).load(photo).into(userPhoto);
@@ -1056,9 +1021,22 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         getVariables(prefs);
                     }
 
-                    welcome1.setVisibility(View.GONE);
-                    welcome2.setVisibility(View.VISIBLE);
-                    layout4();
+                    if (isSuperVerified == 1) {
+                        Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_SHORT).show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(AdminRegister.this, AdminMainActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }, 1500);
+                    } else {
+                        welcome1.setVisibility(View.GONE);
+                        welcome2.setVisibility(View.VISIBLE);
+
+                        layout4();
+                    }
                 }
                 break;
             }

@@ -7,9 +7,10 @@ android {
         applicationId "org.uusoftware.fuelify"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 17
+        versionCode 18
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
