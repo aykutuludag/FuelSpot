@@ -258,8 +258,7 @@ public class FragmentVehicle extends Fragment {
 
                             //Calculate avg fuel consumption and update
                             if (avgText != null) {
-                                calculateAverageCons();
-                                String avgDummy = String.format(Locale.getDefault(), "%.2f", averageCons) + " lt/100km";
+                                String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
                                 avgText.setText(avgDummy);
                             }
 
@@ -271,8 +270,7 @@ public class FragmentVehicle extends Fragment {
 
                             //update avg price
                             if (avgPrice != null) {
-                                calculateAvgPrice();
-                                String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
+                                String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
                                 avgPrice.setText(avgPriceDummy);
                             }
 
@@ -340,9 +338,9 @@ public class FragmentVehicle extends Fragment {
             averagePrice = (totalPrice / kilometerDifference) * 100f;
             prefs.edit().putFloat("averagePrice", averagePrice).apply();
         } else {
-            averageCons = 0;
+            averagePrice = 0;
         }
-        return averageCons;
+        return averagePrice;
     }
 
     @Override

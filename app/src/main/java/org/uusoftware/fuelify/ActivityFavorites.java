@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,10 +28,6 @@ import org.uusoftware.fuelify.model.NewsItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-
 public class ActivityFavorites extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
@@ -39,7 +36,6 @@ public class ActivityFavorites extends AppCompatActivity {
 
     List<NewsItem> feedsList = new ArrayList<>();
     ProgressBar pb;
-    HostnameVerifier hostnameVerifier;
     SQLiteDatabase mobiledatabase;
     Cursor cur;
     ArrayList<String> arraytitle = new ArrayList<>();
@@ -79,15 +75,6 @@ public class ActivityFavorites extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-
-        // SSL Verifier
-        hostnameVerifier = new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-                return hv.verify("gaiadergi.com", session);
-            }
-        };
 
         //getFavorites
         mobiledatabase = openOrCreateDatabase("fuelspot_local", MODE_PRIVATE, null);
@@ -161,6 +148,18 @@ public class ActivityFavorites extends AppCompatActivity {
             toolbar.setBackgroundColor(color2);
         } else {
             toolbar.setBackgroundColor(color2);
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

@@ -153,7 +153,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return (null != feedItemList ? feedItemList.size() : 0);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout card;
         TextView commentHolder;

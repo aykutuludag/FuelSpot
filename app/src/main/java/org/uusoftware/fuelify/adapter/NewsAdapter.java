@@ -97,7 +97,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         });
     }
 
-    void openNews(int position) {
+    private void openNews(int position) {
         NewsItem feedItem = feedItemList.get(position);
         Intent intent;
 
