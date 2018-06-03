@@ -48,9 +48,12 @@ import static org.uusoftware.fuelify.MainActivity.username;
 
 public class AdminMainActivity extends AppCompatActivity {
 
+    // General variables for SuperUser
     public static int isSuperVerified, superStationID;
     public static boolean superPremium;
+    public static double ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superStationName, superStationLocation, superStationLogo, superStationAddress, userPhoneNumber, contractPhoto, superGoogleID;
+
     boolean doubleBackToExitPressedOnce;
     RequestQueue queue;
     MyPagerAdapter mSectionsPagerAdapter;
@@ -110,7 +113,6 @@ public class AdminMainActivity extends AppCompatActivity {
         }
 
         createLocalDatabase();
-
         fetchSuperUser();
     }
 
@@ -251,7 +253,7 @@ public class AdminMainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_editPrices:
                 if (isSuperVerified == 1) {
-                    Intent intent = new Intent(AdminMainActivity.this, EditPrices.class);
+                    Intent intent = new Intent(AdminMainActivity.this, SuperEditPrices.class);
                     startActivity(intent);
                 }
                 return true;

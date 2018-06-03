@@ -209,7 +209,7 @@ public class FragmentVehicle extends Fragment {
         purchaseUnitPrice.clear();
         purchaseUnitPrice2.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PURCHASE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

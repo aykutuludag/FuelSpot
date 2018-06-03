@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditPrices">
+    tools:context=".SuperEditPrices">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,14 +20,141 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_edit_prices" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/gasoline" />
+
+        <EditText
+            android:id="@+id/editTextGasoline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextGasoline"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_toEndOf="@+id/editTextGasoline"
+            android:layout_toRightOf="@+id/editTextGasoline"
+            android:gravity="center"
+            android:text="TL" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignLeft="@+id/imageView2"
+            android:layout_alignStart="@+id/imageView2"
+            android:layout_below="@+id/imageView2"
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/diesel" />
+
+        <EditText
+            android:id="@+id/editTextDiesel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextDiesel"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_toEndOf="@+id/editTextGasoline"
+            android:layout_toRightOf="@+id/editTextGasoline"
+            android:gravity="center"
+            android:text="TL" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignLeft="@+id/imageView2"
+            android:layout_alignStart="@+id/imageView2"
+            android:layout_below="@+id/imageView3"
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/lpg" />
+
+        <EditText
+            android:id="@+id/editTextLPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView4"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextLPG"
+            android:layout_alignTop="@+id/imageView4"
+            android:layout_toEndOf="@+id/editTextGasoline"
+            android:layout_toRightOf="@+id/editTextGasoline"
+            android:gravity="center"
+            android:text="TL" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignLeft="@+id/imageView2"
+            android:layout_alignStart="@+id/imageView2"
+            android:layout_below="@+id/imageView4"
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/electricity" />
+
+        <EditText
+            android:id="@+id/editTextElectricity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView5"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextElectricity"
+            android:layout_alignTop="@+id/imageView5"
+            android:layout_toEndOf="@+id/editTextGasoline"
+            android:layout_toRightOf="@+id/editTextGasoline"
+            android:gravity="center"
+            android:text="TL" />
+
+        <Button
+            android:id="@+id/sendFiyat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView5"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="GÖNDER" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

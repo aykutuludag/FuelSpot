@@ -97,6 +97,7 @@
             android:label="@string/title_activity_profile_edit" />
         <activity
             android:name=".NewsContent"
+            android:theme="@style/ContentTheme"
             android:label="" />
         <activity
             android:name=".ActivityFavorites"
@@ -123,7 +124,7 @@
             android:name=".AdminMainActivity"
             android:label="@string/title_activity_admin_main" />
         <activity
-            android:name=".EditPrices"
+            android:name=".SuperEditPrices"
             android:label="@string/title_activity_edit_prices"
             android:parentActivityName=".AdminMainActivity"
             android:theme="@style/AppTheme"

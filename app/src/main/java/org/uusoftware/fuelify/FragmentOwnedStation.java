@@ -50,6 +50,10 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import static org.uusoftware.fuelify.AdminMainActivity.isSuperVerified;
+import static org.uusoftware.fuelify.AdminMainActivity.ownedDieselPrice;
+import static org.uusoftware.fuelify.AdminMainActivity.ownedElectricityPrice;
+import static org.uusoftware.fuelify.AdminMainActivity.ownedGasolinePrice;
+import static org.uusoftware.fuelify.AdminMainActivity.ownedLPGPrice;
 import static org.uusoftware.fuelify.AdminMainActivity.superGoogleID;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationAddress;
 import static org.uusoftware.fuelify.AdminMainActivity.superStationLocation;
@@ -199,10 +203,19 @@ public class FragmentOwnedStation extends Fragment {
                             loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
                             float distanceInMeters = loc1.distanceTo(loc2);
                             textDistance.setText((int) distanceInMeters + " m");
-                            textGasoline.setText(obj.getDouble("gasolinePrice") + "TL");
-                            textDiesel.setText(obj.getDouble("dieselPrice") + "TL");
-                            textLPG.setText(obj.getDouble("lpgPrice") + "TL");
-                            textElectricity.setText(obj.getDouble("electricityPrice") + "TL");
+
+                            ownedGasolinePrice = obj.getDouble("gasolinePrice");
+                            textGasoline.setText(ownedGasolinePrice + "TL");
+
+                            ownedDieselPrice = obj.getDouble("dieselPrice");
+                            textDiesel.setText(ownedDieselPrice + "TL");
+
+                            ownedLPGPrice = obj.getDouble("lpgPrice");
+                            textLPG.setText(ownedLPGPrice + "TL");
+
+                            ownedElectricityPrice = obj.getDouble("electricityPrice");
+                            textElectricity.setText(ownedElectricityPrice + "TL");
+
                             textLastUpdated.setReferenceTime(obj.getLong("lastUpdated"));
                             Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
 
