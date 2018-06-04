@@ -642,7 +642,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void fetchOwnedStation(final String placeID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -1023,14 +1023,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                     if (isSuperVerified == 1) {
                         Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_SHORT).show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(AdminRegister.this, AdminMainActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }, 1500);
+                        updateSuperUser();
                     } else {
                         welcome1.setVisibility(View.GONE);
                         welcome2.setVisibility(View.VISIBLE);

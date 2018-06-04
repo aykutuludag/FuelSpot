@@ -47,7 +47,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             int position = holder.getAdapterPosition();
 
             if (isAddingFuel) {
-                System.out.println("İSTASYON SEÇİMİ");
                 chosenStationID = String.valueOf(feedItemList.get(position).getID());
                 chosenStationName = feedItemList.get(position).getStationName();
                 chosenStationLoc = feedItemList.get(position).getLocation();
@@ -57,7 +56,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 electricityPrice = feedItemList.get(position).getElectricityPrice();
                 ((ChooseStation) mContext).finish();
             } else {
-                System.out.println("İSTASYON DETAYI");
                 Intent intent = new Intent(mContext, StationDetails.class);
                 intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
                 intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
@@ -89,8 +87,16 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        StationItem feedItem = feedItemList.get(i);
 
-        final StationItem feedItem = feedItemList.get(i);
+        //Station Icon
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).into(viewHolder.stationPic);
 
         // Setting stationName
         viewHolder.stationName.setText(feedItem.getStationName());
@@ -141,15 +147,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        //Station Icon
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
-        Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).into(viewHolder.stationPic);
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);

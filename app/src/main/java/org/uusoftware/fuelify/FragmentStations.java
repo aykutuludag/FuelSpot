@@ -186,11 +186,11 @@ public class FragmentStations extends Fragment {
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(userlat, userlon);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12f).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(11.5f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
-        //Search stations in a radius of 3500m
+        //Search stations in a radius of 5000m
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=5000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
@@ -285,7 +285,7 @@ public class FragmentStations extends Fragment {
     public void fetchPrices(final String placeID) {
         feedsList.clear();
         mAdapter = null;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

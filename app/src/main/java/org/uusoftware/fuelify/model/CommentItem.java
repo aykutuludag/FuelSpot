@@ -5,9 +5,13 @@ public class CommentItem {
     private int ID;
     private String comment;
     private String time;
+    private int stationID;
     private String username;
     private String profile_pic;
     private int rate;
+    private String answer;
+    private String replyTime;
+    private String logo;
 
     public int getID() {
         return ID;
@@ -41,6 +45,14 @@ public class CommentItem {
         this.time = time;
     }
 
+    public int getStationID() {
+        return stationID;
+    }
+
+    public void setStationID(int stationID) {
+        this.stationID = stationID;
+    }
+
     public String getProfile_pic() {
         return profile_pic;
     }
@@ -55,5 +67,29 @@ public class CommentItem {
 
     public void setRating(int rate) {
         this.rate = rate;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getReplyTime() {
+        return replyTime;
+    }
+
+    public void setReplyTime(String replyTime) {
+        this.replyTime = replyTime;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

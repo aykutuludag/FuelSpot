@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -188,6 +186,7 @@ public class FragmentProfile extends Fragment {
                                     item.setID(obj.getInt("id"));
                                     item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("station_id"));
                                     item.setProfile_pic(obj.getString("user_photo"));
                                     item.setUsername(obj.getString("username"));
                                     item.setRating(obj.getInt("stars"));
@@ -235,7 +234,6 @@ public class FragmentProfile extends Fragment {
 
     public class CommentAdapterforProfile extends RecyclerView.Adapter<CommentAdapterforProfile.ViewHolder2> {
 
-        private int commentID;
         private List<CommentItem> feedItemList;
         private Context mContext;
         private String userName;
@@ -244,20 +242,14 @@ public class FragmentProfile extends Fragment {
             @Override
             public void onClick(View view) {
                 ViewHolder2 holder2 = (ViewHolder2) view.getTag();
-                int position = holder2.getAdapterPosition();
-                commentID = feedItemList.get(position).getID();
+                final int position = holder2.getAdapterPosition();
                 userName = feedItemList.get(position).getUsername();
 
                 String localUser = MainActivity.username;
                 if (localUser.equals(userName)) {
-                    Snackbar.make(view, "Yorumu?", Snackbar.LENGTH_LONG)
-                            .setAction("Sil", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    deleteComment(commentID);
-                                }
-                            })
-                            .show();
+                    Intent intent = new Intent(mContext, StationDetails.class);
+                    intent.putExtra("STATION_ID", feedItemList.get(position).getStationID());
+                    mContext.startActivity(intent);
                 }
             }
         };
@@ -265,39 +257,6 @@ public class FragmentProfile extends Fragment {
         CommentAdapterforProfile(Context context, List<CommentItem> feedItemList) {
             this.feedItemList = feedItemList;
             this.mContext = context;
-        }
-
-        private void deleteComment(final int id) {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_DELETE_COMMENT),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
-                            fetchComments();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    //Creating parameters
-                    Map<String, String> params = new Hashtable<>();
-
-                    //Adding parameters
-                    params.put("id", String.valueOf(id));
-
-                    //returning parameters
-                    return params;
-                }
-            };
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
-            //Adding request to the queue
-            requestQueue.add(stringRequest);
         }
 
         @NonNull
@@ -310,7 +269,6 @@ public class FragmentProfile extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder2 viewHolder, int i) {
             CommentItem feedItem = feedItemList.get(i);
-            commentID = feedItem.getID();
             userName = feedItem.getUsername();
 
             viewHolder.username.setText(userName);

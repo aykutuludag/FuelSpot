@@ -46,7 +46,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.uusoftware.fuelify.AdminMainActivity.ownedDieselPrice;
@@ -93,6 +97,7 @@ public class FragmentOwnedStation extends Fragment {
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
+        MapsInitializer.initialize(getActivity().getApplicationContext());
 
         //Card
         textName = rootView.findViewById(R.id.ownedStationName);
@@ -156,7 +161,6 @@ public class FragmentOwnedStation extends Fragment {
 
     void loadMap() {
         //Detect location and set on map
-        MapsInitializer.initialize(getActivity().getApplicationContext());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
@@ -176,7 +180,7 @@ public class FragmentOwnedStation extends Fragment {
     }
 
     void loadStationDetails() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -210,7 +214,15 @@ public class FragmentOwnedStation extends Fragment {
                             prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
                             textElectricity.setText(ownedElectricityPrice + "TL");
 
-                            textLastUpdated.setReferenceTime(obj.getLong("lastUpdated"));
+                            //Last updated
+                            try {
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                Date date = format.parse(obj.getString("lastUpdated"));
+                                textLastUpdated.setReferenceTime(date.getTime());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
                             Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
 
                             //Add marker to stationLoc

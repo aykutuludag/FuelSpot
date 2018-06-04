@@ -493,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
                 prefs.edit().putBoolean("hasPremium", false).apply();
             }
         }
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Vehicle");
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Stations");
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }

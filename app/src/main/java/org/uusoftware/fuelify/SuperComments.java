@@ -54,6 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.uusoftware.fuelify.AdminMainActivity.superStationID;
+import static org.uusoftware.fuelify.AdminMainActivity.superStationLogo;
 
 public class SuperComments extends AppCompatActivity {
 
@@ -62,6 +63,9 @@ public class SuperComments extends AppCompatActivity {
     RecyclerView.Adapter mAdapter;
     List<CommentItem> feedsList;
     SwipeRefreshLayout swipeContainer;
+    RequestQueue requestQueue;
+    PopupWindow mPopupWindow;
+    Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,12 @@ public class SuperComments extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get timestamp
+        calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+
         //Comments
+        requestQueue = Volley.newRequestQueue(SuperComments.this);
         feedsList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.commentView);
 
@@ -111,6 +120,9 @@ public class SuperComments extends AppCompatActivity {
                                 item.setProfile_pic(obj.getString("user_photo"));
                                 item.setUsername(obj.getString("username"));
                                 item.setRating(obj.getInt("stars"));
+                                item.setAnswer(obj.getString("answer"));
+                                item.setReplyTime(obj.getString("replyTime"));
+                                item.setLogo(obj.getString("logo"));
                                 feedsList.add(item);
                             }
 
@@ -145,7 +157,72 @@ public class SuperComments extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(SuperComments.this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void addAnswer(final int commentID, final String userAnswer) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_ADD_ANSWER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(SuperComments.this, response, Toast.LENGTH_LONG).show();
+                        mPopupWindow.dismiss();
+                        fetchSuperComments();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("commentID", String.valueOf(commentID));
+                params.put("answer", userAnswer);
+                params.put("time", String.valueOf(calendar.getTimeInMillis()));
+                params.put("logo", superStationLogo);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void deleteAnswer(final int commentID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_DELETE_ANSWER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("commentID", String.valueOf(commentID));
+
+                //returning parameters
+                return params;
+            }
+        };
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -170,24 +247,16 @@ public class SuperComments extends AppCompatActivity {
 
     public class SuperCommentsAdapter extends RecyclerView.Adapter<SuperComments.SuperCommentsAdapter.ViewHolder3> {
 
-        PopupWindow mPopupWindow;
-        Calendar calendar;
-        private int commentID;
         private String userAnswer;
         private List<CommentItem> feedItemList;
         private Context mContext;
-        private String userName;
+
         private View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 SuperCommentsAdapter.ViewHolder3 holder3 = (SuperCommentsAdapter.ViewHolder3) view.getTag();
                 int position = holder3.getAdapterPosition();
-                commentID = feedItemList.get(position).getID();
-                userName = feedItemList.get(position).getUsername();
-
-                // Get timestamp
-                calendar = Calendar.getInstance();
-                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                final int commentID = feedItemList.get(position).getID();
 
                 Snackbar.make(view, "Cevapla?", Snackbar.LENGTH_LONG)
                         .setAction("Evet", new View.OnClickListener() {
@@ -199,13 +268,12 @@ public class SuperComments extends AppCompatActivity {
                                 if (Build.VERSION.SDK_INT >= 21) {
                                     mPopupWindow.setElevation(5.0f);
                                 }
-
                                 Button sendAnswer = customView.findViewById(R.id.buttonAddAnswer);
                                 sendAnswer.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         if (userAnswer != null && userAnswer.length() > 0) {
-                                            addAnswer();
+                                            addAnswer(commentID, userAnswer);
                                         } else {
                                             Toast.makeText(mContext, "Lütfen cevap giriniz.", Toast.LENGTH_SHORT).show();
                                         }
@@ -249,45 +317,26 @@ public class SuperComments extends AppCompatActivity {
             }
         };
 
+        private View.OnClickListener clickListener2 = new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                SuperCommentsAdapter.ViewHolder3 holder3 = (SuperCommentsAdapter.ViewHolder3) view.getTag();
+                int position = holder3.getAdapterPosition();
+                final int commentID = feedItemList.get(position).getID();
+
+                Snackbar.make(view, "Cevabı sil?", Snackbar.LENGTH_LONG)
+                        .setAction("SİL", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteAnswer(commentID);
+                            }
+                        }).show();
+            }
+        };
+
         SuperCommentsAdapter(Context context, List<CommentItem> feedItemList) {
             this.feedItemList = feedItemList;
             this.mContext = context;
-        }
-
-        private void addAnswer() {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_ADD_ANSWER),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
-                            mPopupWindow.dismiss();
-                            fetchSuperComments();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    //Creating parameters
-                    Map<String, String> params = new Hashtable<>();
-
-                    //Adding parameters
-                    params.put("commentID", String.valueOf(commentID));
-                    params.put("answer", userAnswer);
-                    params.put("time", String.valueOf(calendar.getTimeInMillis()));
-
-                    //returning parameters
-                    return params;
-                }
-            };
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
-            //Adding request to the queue
-            requestQueue.add(stringRequest);
         }
 
         @NonNull
@@ -300,20 +349,18 @@ public class SuperComments extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull SuperComments.SuperCommentsAdapter.ViewHolder3 viewHolder, int i) {
             CommentItem feedItem = feedItemList.get(i);
-            commentID = feedItem.getID();
-            userName = feedItem.getUsername();
+            String userName = feedItem.getUsername();
 
             viewHolder.username.setText(userName);
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            Date date = new Date();
             try {
-                date = format.parse(feedItem.getTime());
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                Date date = format.parse(feedItem.getTime());
+                viewHolder.time.setReferenceTime(date.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            viewHolder.time.setReferenceTime(date.getTime());
 
             viewHolder.commentHolder.setText(feedItem.getComment());
 
@@ -327,10 +374,31 @@ public class SuperComments extends AppCompatActivity {
 
             viewHolder.rating.setRating(feedItem.getRating());
 
+
+            if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
+                viewHolder.answerView.setVisibility(View.VISIBLE);
+
+                viewHolder.answerHolder.setText(feedItem.getAnswer());
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    Date date = format.parse(feedItem.getReplyTime());
+                    viewHolder.replyTime.setReferenceTime(date.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                //Station Icon
+                Glide.with(mContext).load(feedItem.getLogo()).into(viewHolder.logo);
+            }
+
             // Handle click event on image click
             viewHolder.card.setOnClickListener(clickListener);
             viewHolder.card.setTag(viewHolder);
+
+            viewHolder.answerView.setOnClickListener(clickListener2);
+            viewHolder.answerView.setTag(viewHolder);
         }
+
 
         @Override
         public int getItemCount() {
@@ -339,11 +407,11 @@ public class SuperComments extends AppCompatActivity {
 
         class ViewHolder3 extends RecyclerView.ViewHolder {
 
-            RelativeLayout card;
-            TextView commentHolder;
+            RelativeLayout card, answerView;
+            TextView commentHolder, answerHolder;
             TextView username;
-            RelativeTimeTextView time;
-            ImageView profilePic;
+            RelativeTimeTextView time, replyTime;
+            ImageView profilePic, logo;
             RatingBar rating;
 
             ViewHolder3(View itemView) {
@@ -354,6 +422,10 @@ public class SuperComments extends AppCompatActivity {
                 time = itemView.findViewById(R.id.time);
                 profilePic = itemView.findViewById(R.id.other_profile_pic);
                 rating = itemView.findViewById(R.id.ratingBar);
+                answerView = itemView.findViewById(R.id.answerView);
+                answerHolder = itemView.findViewById(R.id.answer);
+                replyTime = itemView.findViewById(R.id.textViewReplyTime);
+                logo = itemView.findViewById(R.id.imageViewLogo);
             }
         }
     }

@@ -3,6 +3,7 @@ package org.uusoftware.fuelify;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,6 +64,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.uusoftware.fuelify.MainActivity.photo;
+import static org.uusoftware.fuelify.MainActivity.userlat;
+import static org.uusoftware.fuelify.MainActivity.userlon;
 import static org.uusoftware.fuelify.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
@@ -91,6 +94,7 @@ public class StationDetails extends AppCompatActivity {
     Window window;
     FloatingActionButton fab;
     PopupWindow mPopupWindow;
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,71 +118,39 @@ public class StationDetails extends AppCompatActivity {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        stationName = getIntent().getStringExtra("STATION_NAME");
-        stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
-        stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-        stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0.00f);
-        gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.00f);
-        dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.00f);
-        lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00f);
-        electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00f);
-        lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
-        iconURL = getIntent().getStringExtra("STATION_ICON");
-        stationID = getIntent().getIntExtra("STATION_ID", 0);
-
-        //Panorama
+        requestQueue = Volley.newRequestQueue(StationDetails.this);
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);
-        mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
-            @Override
-            public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
-                panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
-                mPanorama = panorama;
-                mPanorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
-                    @Override
-                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
-                        if (streetViewPanoramaLocation == null) {
-                            Toast.makeText(StationDetails.this, "Sokak görünümü yok", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        });
-
-        //SingleStation
         textName = findViewById(R.id.station_name);
-        textName.setText(stationName);
-
         textVicinity = findViewById(R.id.station_vicinity);
-        textVicinity.setText(stationVicinity);
-
         textDistance = findViewById(R.id.distance_ofStation);
-        textDistance.setText((int) stationDistance + " m");
-
         textGasoline = findViewById(R.id.gasoline_price);
-        textGasoline.setText(String.valueOf(gasolinePrice));
-
         textDiesel = findViewById(R.id.diesel_price);
-        textDiesel.setText(String.valueOf(dieselPrice));
-
         textLPG = findViewById(R.id.lpg_price);
-        textLPG.setText(String.valueOf(lpgPrice));
-
         textElectricity = findViewById(R.id.electricity_price);
-        textElectricity.setText(String.valueOf(electricityPrice));
-
         textLastUpdated = findViewById(R.id.lastUpdated);
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            Date date = format.parse(lastUpdated);
-            textLastUpdated.setReferenceTime(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //Station Icon
         stationIcon = findViewById(R.id.station_photo);
-        Glide.with(this).load(Uri.parse(iconURL)).into(stationIcon);
+
+        // Nerden gelirse gelsin stationID boş olamaz.
+        stationID = getIntent().getIntExtra("STATION_ID", 0);
+        stationName = getIntent().getStringExtra("STATION_NAME");
+        if (stationName == null || stationName.length() == 0) {
+            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor
+            // olmalı. İnternetten çek verileri
+            fetchStationByID(stationID);
+        } else {
+            //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
+            stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
+            stationLocation = getIntent().getStringExtra("STATION_LOCATION");
+            stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0.00f);
+            gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.00f);
+            dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.00f);
+            lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00f);
+            electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00f);
+            lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
+            iconURL = getIntent().getStringExtra("STATION_ICON");
+            loadStationDetails();
+        }
 
         //Comments
         feedsList = new ArrayList<>();
@@ -208,6 +180,97 @@ public class StationDetails extends AppCompatActivity {
                 addUpdateCommentPopup(view);
             }
         });
+    }
+
+    void loadStationDetails() {
+        //Panorama
+        mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
+            @Override
+            public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
+                panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
+                mPanorama = panorama;
+                mPanorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+                    @Override
+                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
+                        if (streetViewPanoramaLocation == null) {
+                            Toast.makeText(StationDetails.this, "Sokak görünümü yok", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
+        //SingleStation
+        textName.setText(stationName);
+        textVicinity.setText(stationVicinity);
+        textDistance.setText((int) stationDistance + " m");
+        textGasoline.setText(String.valueOf(gasolinePrice));
+        textDiesel.setText(String.valueOf(dieselPrice));
+        textLPG.setText(String.valueOf(lpgPrice));
+        textElectricity.setText(String.valueOf(electricityPrice));
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = format.parse(lastUpdated);
+            textLastUpdated.setReferenceTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Glide.with(this).load(Uri.parse(iconURL)).into(stationIcon);
+    }
+
+    void fetchStationByID(final int stationID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_BY_ID),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            stationName = obj.getString("name");
+                            stationVicinity = obj.getString("vicinity");
+                            stationLocation = obj.getString("location");
+                            //DISTANCE START
+                            Location loc1 = new Location("");
+                            loc1.setLatitude(userlat);
+                            loc1.setLongitude(userlon);
+                            Location loc2 = new Location("");
+                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
+                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                            stationDistance = loc1.distanceTo(loc2);
+                            //DISTANCE END
+                            gasolinePrice = obj.getDouble("gasolinePrice");
+                            dieselPrice = obj.getDouble("dieselPrice");
+                            lpgPrice = obj.getDouble("lpgPrice");
+                            electricityPrice = obj.getDouble("electricityPrice");
+                            lastUpdated = obj.getString("lastUpdated");
+                            iconURL = obj.getString("photoURL");
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("id", String.valueOf(stationID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     void addUpdateCommentPopup(View view) {
@@ -294,6 +357,7 @@ public class StationDetails extends AppCompatActivity {
                                     item.setID(obj.getInt("id"));
                                     item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("station_id"));
                                     item.setProfile_pic(obj.getString("user_photo"));
                                     item.setUsername(obj.getString("username"));
                                     item.setRating(obj.getInt("stars"));
@@ -346,7 +410,6 @@ public class StationDetails extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(StationDetails.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -387,9 +450,6 @@ public class StationDetails extends AppCompatActivity {
                 return params;
             }
         };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(StationDetails.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -432,9 +492,6 @@ public class StationDetails extends AppCompatActivity {
             }
         };
 
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(StationDetails.this);
-
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
@@ -449,28 +506,6 @@ public class StationDetails extends AppCompatActivity {
             toolbar.setBackgroundColor(color2);
         }
     }
-
-   /* @Override
-    public void onPositiveButtonClicked(int rate, String comment) {
-        // interpret results, send it to analytics etc...
-        stars = rate;
-        userComment = comment;
-        if (hasAlreadyCommented) {
-            updateComment();
-        } else {
-            sendComment();
-        }
-    }
-
-    @Override
-    public void onNegativeButtonClicked() {
-
-    }
-
-    @Override
-    public void onNeutralButtonClicked() {
-
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

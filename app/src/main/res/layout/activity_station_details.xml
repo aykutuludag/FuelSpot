@@ -35,7 +35,7 @@
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="225dp" />
+                android:layout_height="250dp" />
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/single_station"
