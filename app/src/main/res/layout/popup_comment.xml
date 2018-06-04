@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/single_comment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F0F0F0">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="YORUM EKLE"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editTextComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ratingBar"
+        android:layout_margin="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:stepSize="1" />
+
+    <Button
+        android:id="@+id/buttonSendComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editTextComment"
+        android:layout_alignLeft="@id/editTextComment"
+        android:layout_alignRight="@+id/editTextComment"
+        android:layout_alignStart="@+id/editTextComment"
+        android:layout_below="@+id/editTextComment"
+        android:layout_marginTop="16dp"
+        android:background="#FF6838"
+        android:text="GÖNDER"
+        android:textColor="#f0f0f0" />
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        app:srcCompat="@drawable/cancel" />
+
+</RelativeLayout>

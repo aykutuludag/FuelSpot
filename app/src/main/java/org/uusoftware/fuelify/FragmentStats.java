@@ -9,21 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-
-import org.uusoftware.fuelify.adapter.MyXAxisValueFormatter;
-
-import java.util.ArrayList;
-
-import static org.uusoftware.fuelify.MainActivity.purchasePrices;
-import static org.uusoftware.fuelify.MainActivity.purchaseTimes;
-import static org.uusoftware.fuelify.MainActivity.purchaseUnitPrice;
-import static org.uusoftware.fuelify.MainActivity.purchaseUnitPrice2;
 
 public class FragmentStats extends Fragment {
 
@@ -39,7 +26,7 @@ public class FragmentStats extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        mLineChart = rootView.findViewById(R.id.chart1);
+        /*mLineChart = rootView.findViewById(R.id.chart1);
         if (purchaseTimes.size() > 0) {
             createTable1();
         }
@@ -50,12 +37,12 @@ public class FragmentStats extends Fragment {
         mLineChart3 = rootView.findViewById(R.id.chart3);
         if (purchaseTimes.size() > 0) {
             createTable3();
-        }
+        }*/
 
         return rootView;
     }
 
-    public void createTable1() {
+   /*public void createTable1() {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for (int i = 0; i < purchaseTimes.size(); i++) {
@@ -120,5 +107,5 @@ public class FragmentStats extends Fragment {
         LineDataSet dataSet = new LineDataSet(entries, "Tax over time");
         LineData data = new LineData(dataSet);
         mLineChart3.setData(data);
-    }
+    }*/
 }

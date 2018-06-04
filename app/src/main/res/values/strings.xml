@@ -4,6 +4,7 @@
     <string name="API_FETCH_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-superuser.php</string>
     <string name="API_FETCH_SUPER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-super-purchases.php</string>
     <string name="API_FETCH_SUPER_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-super-comments.php</string>
+    <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-answer.php</string>
 
     <string name="API_CREATE_NEW_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>
     <string name="API_UPDATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-user.php</string>

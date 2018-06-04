@@ -22,8 +22,11 @@ import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.StationDetails;
 import org.uusoftware.fuelify.model.StationItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.uusoftware.fuelify.AddFuel.LPGPrice;
 import static org.uusoftware.fuelify.AddFuel.chosenStationID;
@@ -131,8 +134,13 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.distance.setText(distance);
 
         //Last updated
-        Date date = new Date(feedItem.getLastUpdated());
-        viewHolder.lastUpdated.setReferenceTime(date.getTime());
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = format.parse(feedItem.getLastUpdated());
+            viewHolder.lastUpdated.setReferenceTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         //Station Icon
         RequestOptions options = new RequestOptions()
@@ -169,7 +177,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             dieselPrice = itemView.findViewById(R.id.diesel_price);
             lpgPrice = itemView.findViewById(R.id.lpg_price);
             electricityPrice = itemView.findViewById(R.id.electricity_price);
-            lastUpdated = itemView.findViewById(R.id.lastUpdated);
+            lastUpdated = itemView.findViewById(R.id.stationLastUpdate);
             stationPic = itemView.findViewById(R.id.station_photo);
             distance = itemView.findViewById(R.id.distance_ofStation);
         }

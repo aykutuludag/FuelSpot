@@ -178,29 +178,34 @@ public class FragmentProfile extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-                                CommentItem item = new CommentItem();
-                                item.setID(obj.getInt("id"));
-                                item.setComment(obj.getString("comment"));
-                                item.setTime(obj.getString("time"));
-                                item.setProfile_pic(obj.getString("user_photo"));
-                                item.setUsername(obj.getString("username"));
-                                item.setRating(obj.getInt("stars"));
-                                feedsList.add(item);
+                                    CommentItem item = new CommentItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setComment(obj.getString("comment"));
+                                    item.setTime(obj.getString("time"));
+                                    item.setProfile_pic(obj.getString("user_photo"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setRating(obj.getInt("stars"));
+                                    feedsList.add(item);
+                                }
+                                mAdapter = new CommentAdapterforProfile(getActivity(), feedsList);
+                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                                swipeContainer.setRefreshing(false);
+                            } catch (JSONException e) {
+                                swipeContainer.setRefreshing(false);
+                                e.printStackTrace();
                             }
-                            mAdapter = new CommentAdapterforProfile(getActivity(), feedsList);
-                            mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
-                            mAdapter.notifyDataSetChanged();
-                            mRecyclerView.setAdapter(mAdapter);
-                            mRecyclerView.setLayoutManager(mLayoutManager);
+                        } else {
                             swipeContainer.setRefreshing(false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
                     }
                 },

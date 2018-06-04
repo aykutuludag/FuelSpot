@@ -12,7 +12,7 @@ public class StationItem {
     private double electricityPrice;
     private String googleMapID;
     private String photoURL;
-    private long lastUpdated;
+    private String lastUpdated;
     private float distance;
 
     public int getID() {
@@ -103,11 +103,11 @@ public class StationItem {
         this.distance = distance;
     }
 
-    public long getLastUpdated() {
+    public String getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(long lastUpdated) {
+    public void setLastUpdated(String lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 }

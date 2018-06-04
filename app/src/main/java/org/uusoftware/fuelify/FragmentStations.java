@@ -3,7 +3,6 @@ package org.uusoftware.fuelify;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,6 +54,7 @@ import java.util.Map;
 
 import eu.amirs.JSON;
 
+import static org.uusoftware.fuelify.MainActivity.REQUEST_LOCATION;
 import static org.uusoftware.fuelify.MainActivity.getVariables;
 import static org.uusoftware.fuelify.MainActivity.userlat;
 import static org.uusoftware.fuelify.MainActivity.userlon;
@@ -100,6 +99,7 @@ public class FragmentStations extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
+        MapsInitializer.initialize(getActivity().getApplicationContext());
         checkLocationPermission();
 
         return rootView;
@@ -107,30 +107,10 @@ public class FragmentStations extends Fragment {
 
     public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Konum izni gerekiyor")
-                        .setMessage("Size en yakın benzinlikleri ve fiyatlarını gösterebilmemiz için konum iznine ihtiyaç duyuyoruz")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(getActivity(), new String[]
-                                        {android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         } else {
             //Request location updates:
-            LocationManager locationManager = (LocationManager)
-                    getActivity().getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
 
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
@@ -149,18 +129,15 @@ public class FragmentStations extends Fragment {
 
     void loadMap() {
         //Detect location and set on map
-        MapsInitializer.initialize(getActivity().getApplicationContext());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -176,7 +153,7 @@ public class FragmentStations extends Fragment {
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= 100) {
+                        if (distanceInMeters >= 75) {
                             userlat = (float) arg0.getLatitude();
                             userlon = (float) arg0.getLongitude();
                             prefs.edit().putFloat("lat", userlat).apply();
@@ -204,7 +181,7 @@ public class FragmentStations extends Fragment {
         //Draw a circle with radius of 5000m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(userlat, userlon))
-                .radius(3500)
+                .radius(5000)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
@@ -214,7 +191,7 @@ public class FragmentStations extends Fragment {
                 (cameraPosition));
 
         //Search stations in a radius of 3500m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=3500&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=5000&type=gas_station&opennow=true&key=AIzaSyAOE5dwDvW_IOVmw-Plp9y5FLD9_1qb4vc";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -295,7 +272,6 @@ public class FragmentStations extends Fragment {
                 params.put("location", location);
                 params.put("googleID", placeID);
                 params.put("photoURL", photoURL);
-                params.put("timeStamp", String.valueOf(System.currentTimeMillis()));
 
                 //returning parameters
                 return params;
@@ -338,7 +314,7 @@ public class FragmentStations extends Fragment {
                             float distanceInMeters = loc1.distanceTo(loc2);
                             item.setDistance(distanceInMeters);
                             //DISTANCE END
-                            item.setLastUpdated(obj.getLong("lastUpdated"));
+                            item.setLastUpdated(obj.getString("lastUpdated"));
                             feedsList.add(item);
 
                             mAdapter = new StationAdapter(getActivity(), feedsList);

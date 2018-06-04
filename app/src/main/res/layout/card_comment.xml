@@ -79,8 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comment"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="-8dp"
                 android:clickable="false"
+                android:isIndicator="true"
                 android:scaleX="0.6"
                 android:scaleY="0.6" />
 

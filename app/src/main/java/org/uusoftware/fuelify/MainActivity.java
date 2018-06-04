@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
 
-    public static ArrayList<Long> purchaseTimes = new ArrayList<>();
+    public static ArrayList<String> purchaseTimes = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
@@ -172,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
         birthday = prefs.getString("Birthday", "");
         location = prefs.getString("Location", "");
         username = prefs.getString("UserName", "");
-        carBrand = prefs.getString("carBrand", "Acura");
-        carModel = prefs.getString("carModel", "RSX");
+        carBrand = prefs.getString("CarBrand", "");
+        carModel = prefs.getString("CarModel", "");
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         premium = prefs.getBoolean("hasPremium", false);
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);
-        userCountry = prefs.getString("userCountry", "US");
+        userCountry = prefs.getString("userCountry", "");
         averageCons = prefs.getFloat("averageConsumption", 0);
         averagePrice = prefs.getFloat("averagePrice", 0);
         TAX_GASOLINE = prefs.getFloat("taxGasoline", 0);

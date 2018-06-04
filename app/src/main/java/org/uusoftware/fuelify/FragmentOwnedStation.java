@@ -49,7 +49,6 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.uusoftware.fuelify.AdminMainActivity.isSuperVerified;
 import static org.uusoftware.fuelify.AdminMainActivity.ownedDieselPrice;
 import static org.uusoftware.fuelify.AdminMainActivity.ownedElectricityPrice;
 import static org.uusoftware.fuelify.AdminMainActivity.ownedGasolinePrice;
@@ -111,10 +110,8 @@ public class FragmentOwnedStation extends Fragment {
         openPurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperPurchases.class);
-                    startActivity(i);
-                }
+                Intent i = new Intent(getActivity(), SuperPurchases.class);
+                startActivity(i);
             }
         });
 
@@ -122,10 +119,8 @@ public class FragmentOwnedStation extends Fragment {
         openComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperComments.class);
-                    startActivity(i);
-                }
+                Intent i = new Intent(getActivity(), SuperComments.class);
+                startActivity(i);
             }
         });
 
@@ -133,10 +128,8 @@ public class FragmentOwnedStation extends Fragment {
         openCampaings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperCampaings.class);
-                    startActivity(i);
-                }
+                Intent i = new Intent(getActivity(), SuperCampaings.class);
+                startActivity(i);
             }
         });
 
@@ -144,10 +137,7 @@ public class FragmentOwnedStation extends Fragment {
         openPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperPosts.class);
-                    startActivity(i);
-                }
+                Toast.makeText(getActivity(), "Coming soon...", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -205,15 +195,19 @@ public class FragmentOwnedStation extends Fragment {
                             textDistance.setText((int) distanceInMeters + " m");
 
                             ownedGasolinePrice = obj.getDouble("gasolinePrice");
+                            prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
                             textGasoline.setText(ownedGasolinePrice + "TL");
 
                             ownedDieselPrice = obj.getDouble("dieselPrice");
+                            prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
                             textDiesel.setText(ownedDieselPrice + "TL");
 
                             ownedLPGPrice = obj.getDouble("lpgPrice");
+                            prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
                             textLPG.setText(ownedLPGPrice + "TL");
 
                             ownedElectricityPrice = obj.getDouble("electricityPrice");
+                            prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
                             textElectricity.setText(ownedElectricityPrice + "TL");
 
                             textLastUpdated.setReferenceTime(obj.getLong("lastUpdated"));

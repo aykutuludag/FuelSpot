@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -12,12 +13,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +46,6 @@ import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
-import com.stepstone.apprating.AppRatingDialog;
-import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,26 +53,28 @@ import org.json.JSONObject;
 import org.uusoftware.fuelify.adapter.CommentAdapter;
 import org.uusoftware.fuelify.model.CommentItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.uusoftware.fuelify.MainActivity.photo;
 import static org.uusoftware.fuelify.MainActivity.username;
 
-public class StationDetails extends AppCompatActivity implements RatingDialogListener {
+public class StationDetails extends AppCompatActivity {
 
-    public static boolean isStationDetails;
     int stationID;
-    int stars;
+    int stars = 5;
     int userCommentID;
     boolean hasAlreadyCommented;
     String stationName, stationVicinity, stationLocation, iconURL, userComment;
     float stationDistance;
     double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
-    long lastUpdated;
+    String lastUpdated;
 
     ImageView stationIcon;
     TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
@@ -80,6 +90,7 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
     Toolbar toolbar;
     Window window;
     FloatingActionButton fab;
+    PopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +122,7 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
         dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.00f);
         lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00f);
         electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00f);
-        lastUpdated = getIntent().getLongExtra("STATION_LASTUPDATED", 0);
+        lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
         iconURL = getIntent().getStringExtra("STATION_ICON");
         stationID = getIntent().getIntExtra("STATION_ID", 0);
 
@@ -157,7 +168,13 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
         textElectricity.setText(String.valueOf(electricityPrice));
 
         textLastUpdated = findViewById(R.id.lastUpdated);
-        textLastUpdated.setReferenceTime(lastUpdated);
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = format.parse(lastUpdated);
+            textLastUpdated.setReferenceTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         //Station Icon
         stationIcon = findViewById(R.id.station_photo);
@@ -184,40 +201,81 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
         fab = findViewById(R.id.fab);
         if (hasAlreadyCommented) {
             fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new AppRatingDialog.Builder()
-                            .setPositiveButtonText("Gönder")
-                            .setNegativeButtonText("İptal")
-                            .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-                            .setDefaultRating(5)
-                            .setTitle("Bu istasyonu puanlayın")
-                            .setDescription("Please select some stars and give your feedback")
-                            .setDefaultComment("Bu istasyonda en uygun fiyatlar var!")
-                            .setHint("Please write your comment here ...")
-                            .create(StationDetails.this)
-                            .show();
-                }
-            });
-        } else {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new AppRatingDialog.Builder()
-                            .setPositiveButtonText("Gönder")
-                            .setNegativeButtonText("İptal")
-                            .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-                            .setDefaultRating(5)
-                            .setTitle("Bu istasyonu puanlayın")
-                            .setDescription("Please select some stars and give your feedback")
-                            .setDefaultComment("Bu istasyonda en uygun fiyatlar var!")
-                            .setHint("Please write your comment here ...")
-                            .create(StationDetails.this)
-                            .show();
-                }
-            });
         }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addUpdateCommentPopup(view);
+            }
+        });
+    }
+
+    void addUpdateCommentPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_comment, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
+        sendAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userComment != null && userComment.length() > 0) {
+                    if (hasAlreadyCommented) {
+                        updateComment();
+                    } else {
+                        sendComment();
+                    }
+
+                } else {
+                    Toast.makeText(StationDetails.this, "Lütfen yorum ekleyiniz", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        EditText getComment = customView.findViewById(R.id.editTextComment);
+        getComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    userComment = s.toString();
+                }
+            }
+        });
+
+        final RatingBar ratingBar = customView.findViewById(R.id.ratingBar);
+        ratingBar.setRating(stars);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                stars = (int) rating;
+            }
+        });
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     public void fetchComments() {
@@ -226,39 +284,45 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-                                CommentItem item = new CommentItem();
-                                item.setID(obj.getInt("id"));
-                                item.setComment(obj.getString("comment"));
-                                item.setTime(obj.getString("time"));
-                                item.setProfile_pic(obj.getString("user_photo"));
-                                item.setUsername(obj.getString("username"));
-                                item.setRating(obj.getInt("stars"));
-                                feedsList.add(item);
+                                    CommentItem item = new CommentItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setComment(obj.getString("comment"));
+                                    item.setTime(obj.getString("time"));
+                                    item.setProfile_pic(obj.getString("user_photo"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setRating(obj.getInt("stars"));
+                                    feedsList.add(item);
 
-                                if (obj.getString("username").equals(username)) {
-                                    hasAlreadyCommented = true;
-                                    userCommentID = obj.getInt("id");
-                                    fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
+                                    if (obj.getString("username").equals(username)) {
+                                        hasAlreadyCommented = true;
+                                        userCommentID = obj.getInt("id");
+                                        fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
+                                    }
                                 }
+
+                                mAdapter = new CommentAdapter(StationDetails.this, feedsList);
+                                mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
+
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                                swipeContainer.setRefreshing(false);
+                            } catch (JSONException e) {
+                                hasAlreadyCommented = false;
+                                fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                                swipeContainer.setRefreshing(false);
+                                e.printStackTrace();
                             }
-
-                            mAdapter = new CommentAdapter(StationDetails.this, feedsList);
-                            mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
-
-                            mAdapter.notifyDataSetChanged();
-                            mRecyclerView.setAdapter(mAdapter);
-                            mRecyclerView.setLayoutManager(mLayoutManager);
-                            swipeContainer.setRefreshing(false);
-                        } catch (JSONException e) {
+                        } else {
                             hasAlreadyCommented = false;
                             fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
                             swipeContainer.setRefreshing(false);
-                            e.printStackTrace();
                         }
                     }
                 },
@@ -296,6 +360,7 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
                     public void onResponse(String response) {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                        mPopupWindow.dismiss();
                         fetchComments();
                     }
                 },
@@ -338,6 +403,7 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
                     public void onResponse(String response) {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                        mPopupWindow.dismiss();
                         fetchComments();
                     }
                 },
@@ -384,7 +450,7 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
         }
     }
 
-    @Override
+   /* @Override
     public void onPositiveButtonClicked(int rate, String comment) {
         // interpret results, send it to analytics etc...
         stars = rate;
@@ -404,7 +470,7 @@ public class StationDetails extends AppCompatActivity implements RatingDialogLis
     @Override
     public void onNeutralButtonClicked() {
 
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

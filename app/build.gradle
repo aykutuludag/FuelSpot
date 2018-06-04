@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.android.support:customtabs:27.1.1'
     implementation 'com.android.support:percent:27.1.1'
     implementation 'com.android.support:customtabs:27.1.1'
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
@@ -55,8 +56,6 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.github.pwiniars:SlideDateTimePicker:v1.0.8'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-    implementation 'com.android.support:support-vector-drawable:27.1.1'
-    implementation 'com.stepstone.apprating:app-rating:2.2.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

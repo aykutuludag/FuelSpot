@@ -275,7 +275,7 @@ public class ChooseStation extends AppCompatActivity {
                             float distanceInMeters = loc1.distanceTo(loc2);
                             item.setDistance(distanceInMeters);
                             //DISTANCE END
-                            item.setLastUpdated(obj.getLong("lastUpdated"));
+                            item.setLastUpdated(obj.getString("lastUpdated"));
                             feedsList.add(item);
 
                             mAdapter = new StationAdapter(ChooseStation.this, feedsList);

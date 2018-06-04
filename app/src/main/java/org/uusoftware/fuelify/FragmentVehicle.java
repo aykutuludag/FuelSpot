@@ -35,8 +35,11 @@ import org.json.JSONObject;
 import org.uusoftware.fuelify.adapter.PurchaseAdapter;
 import org.uusoftware.fuelify.model.PurchaseItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -165,10 +168,16 @@ public class FragmentVehicle extends Fragment {
         String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
-        //Lastupdated
+        //Last updated
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
-        if (purchaseTimes.size() > 1) {
-            lastUpdated.setReferenceTime(purchaseTimes.get(purchaseTimes.size() - 1));
+        if (purchaseTimes.size() > 0) {
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
+                lastUpdated.setReferenceTime(date.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         //EditProfile
@@ -213,73 +222,83 @@ public class FragmentVehicle extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                        if (response != null && response.length() > 0) {
 
-                                PurchaseItem item = new PurchaseItem();
-                                item.setID(obj.getInt("id"));
-                                item.setPurchaseTime(obj.getLong("time"));
-                                item.setStationName(obj.getString("stationName"));
-                                item.setStationIcon(obj.getString("stationIcon"));
-                                item.setStationLocation(obj.getString("stationLocation"));
-                                item.setFuelType(obj.getString("fuelType"));
-                                item.setFuelPrice(obj.getDouble("fuelPrice"));
-                                item.setFuelLiter(obj.getDouble("fuelLiter"));
-                                item.setFuelType2(obj.getString("fuelType2"));
-                                item.setFuelPrice2(obj.getDouble("fuelPrice2"));
-                                item.setFuelLiter2(obj.getDouble("fuelLiter2"));
-                                item.setTotalPrice(obj.getDouble("totalPrice"));
-                                item.setBillPhoto(obj.getString("billPhoto"));
-                                feedsList.add(item);
 
-                                System.out.print("AQQ: " + obj.getString("fuelType2"));
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-                                purchaseTimes.add(i, obj.getLong("time"));
-                                purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
-                                purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
-                                purchasePrices.add(i, obj.getDouble("totalPrice"));
-                                purchaseKilometers.add(i, obj.getInt("kilometer"));
-                                purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
+                                    PurchaseItem item = new PurchaseItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setPurchaseTime(obj.getString("time"));
+                                    item.setStationName(obj.getString("stationName"));
+                                    item.setStationIcon(obj.getString("stationIcon"));
+                                    item.setStationLocation(obj.getString("stationLocation"));
+                                    item.setFuelType(obj.getString("fuelType"));
+                                    item.setFuelPrice(obj.getDouble("fuelPrice"));
+                                    item.setFuelLiter(obj.getDouble("fuelLiter"));
+                                    item.setFuelType2(obj.getString("fuelType2"));
+                                    item.setFuelPrice2(obj.getDouble("fuelPrice2"));
+                                    item.setFuelLiter2(obj.getDouble("fuelLiter2"));
+                                    item.setTotalPrice(obj.getDouble("totalPrice"));
+                                    item.setBillPhoto(obj.getString("billPhoto"));
+                                    feedsList.add(item);
 
-                                mAdapter = new PurchaseAdapter(getActivity(), feedsList);
-                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                                    purchaseTimes.add(i, obj.getString("time"));
+                                    purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
+                                    purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
+                                    purchasePrices.add(i, obj.getDouble("totalPrice"));
+                                    purchaseKilometers.add(i, obj.getInt("kilometer"));
+                                    purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
 
-                                mAdapter.notifyDataSetChanged();
-                                mRecyclerView.setAdapter(mAdapter);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-                                swipeContainer.setRefreshing(false);
+                                    mAdapter = new PurchaseAdapter(getActivity(), feedsList);
+                                    mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
+                                    mAdapter.notifyDataSetChanged();
+                                    mRecyclerView.setAdapter(mAdapter);
+                                    mRecyclerView.setLayoutManager(mLayoutManager);
+                                    swipeContainer.setRefreshing(false);
+                                }
+                                //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
+                                Collections.reverse(purchaseTimes);
+                                Collections.reverse(purchasePrices);
+                                Collections.reverse(purchaseKilometers);
+
+                                //Calculate avg fuel consumption and update
+                                if (avgText != null) {
+                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
+                                    avgText.setText(avgDummy);
+                                }
+
+                                //update kilometer
+                                if (kilometerText != null) {
+                                    String kmHolder = kilometer + " " + "km";
+                                    kilometerText.setText(kmHolder);
+                                }
+
+                                //update avg price
+                                if (avgPrice != null) {
+                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
+                                    avgPrice.setText(avgPriceDummy);
+                                }
+
+                                if (purchaseTimes.size() > 0) {
+                                    try {
+                                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                        Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
+                                        lastUpdated.setReferenceTime(date.getTime());
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
-                            Collections.reverse(purchaseTimes);
-                            Collections.reverse(purchasePrices);
-                            Collections.reverse(purchaseKilometers);
-
-                            //Calculate avg fuel consumption and update
-                            if (avgText != null) {
-                                String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
-                                avgText.setText(avgDummy);
-                            }
-
-                            //update kilometer
-                            if (kilometerText != null) {
-                                String kmHolder = kilometer + " " + "km";
-                                kilometerText.setText(kmHolder);
-                            }
-
-                            //update avg price
-                            if (avgPrice != null) {
-                                String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
-                                avgPrice.setText(avgPriceDummy);
-                            }
-
-                            //Lastupdated
-                            if (purchaseTimes.size() > 1 && lastUpdated != null) {
-                                lastUpdated.setReferenceTime(purchaseTimes.get(purchaseTimes.size() - 1));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } else {
+                            swipeContainer.setRefreshing(false);
                         }
                     }
                 },

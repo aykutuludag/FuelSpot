@@ -6,7 +6,7 @@ public class PurchaseItem {
     private String stationName;
     private String stationIcon;
     private String stationLocation;
-    private long purchaseTime;
+    private String purchaseTime;
     private String fuelType1;
     private double fuelPrice1;
     private double fuelLiter1;
@@ -48,11 +48,11 @@ public class PurchaseItem {
         this.stationLocation = stationLocation;
     }
 
-    public long getPurchaseTime() {
+    public String getPurchaseTime() {
         return purchaseTime;
     }
 
-    public void setPurchaseTime(Long purchaseTime) {
+    public void setPurchaseTime(String purchaseTime) {
         this.purchaseTime = purchaseTime;
     }
 

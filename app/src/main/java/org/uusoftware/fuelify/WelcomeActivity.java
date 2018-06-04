@@ -191,6 +191,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             carPhoto = obj.getString("carPhoto");
                             prefs.edit().putString("CarPhoto", carPhoto).apply();
 
+                            getVariables(prefs);
                             fetchTaxRates();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -235,10 +236,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             TAX_DIESEL = (float) obj.getDouble("dieselTax");
                             prefs.edit().putFloat("taxDiesel", TAX_DIESEL).apply();
 
-                            TAX_LPG = (float) obj.getDouble("taxLPG");
+                            TAX_LPG = (float) obj.getDouble("LPGTax");
                             prefs.edit().putFloat("taxLPG", TAX_LPG).apply();
 
-                            TAX_ELECTRICITY = (float) obj.getDouble("taxElectricity");
+                            TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
                             prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
 
                             getVariables(prefs);
@@ -295,15 +296,18 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         });
 
         //MARKA SEÇİMİ
-
-
         spinner = findViewById(R.id.spinner_brands);
         adapter = ArrayAdapter.createFromResource(this, R.array.CAR_PRODUCER, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
         String[] foo_array = this.getResources().getStringArray(R.array.CAR_PRODUCER);
-        spinner.setSelection(getIndexOf(foo_array, carBrand), true);
+        for (int i = 0; i < foo_array.length; i++) {
+            if (carBrand.equals(foo_array[i])) {
+                spinner.setSelection(i, true);
+                break;
+            }
+        }
 
         //MODEL SEÇİMİ
         spinner2 = findViewById(R.id.spinner_models);

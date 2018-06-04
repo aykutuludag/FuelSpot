@@ -74,6 +74,10 @@ public class AdminMainActivity extends AppCompatActivity {
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
         isSuperVerified = prefs.getInt("isSuperVerified", 0);
         superPremium = prefs.getBoolean("hasSuperPremium", false);
+        ownedGasolinePrice = prefs.getFloat("superGasolinePrice", 0);
+        ownedDieselPrice = prefs.getFloat("superDieselPrice", 0);
+        ownedLPGPrice = prefs.getFloat("superLPGPrice", 0);
+        ownedElectricityPrice = prefs.getFloat("superElectricityPrice", 0);
     }
 
     @Override

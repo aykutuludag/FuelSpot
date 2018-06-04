@@ -18,6 +18,8 @@ import org.uusoftware.fuelify.PurchaseDetails;
 import org.uusoftware.fuelify.R;
 import org.uusoftware.fuelify.model.PurchaseItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -142,9 +144,14 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         String totalPriceHolder = "TOPLAM: " + (int) feedItem.getTotalPrice() + " TL";
         viewHolder.totalPrice.setText(totalPriceHolder);
 
-        // PurchaseTıme
-        Date date = new Date(feedItem.getPurchaseTime());
-        viewHolder.purchaseTime.setReferenceTime(date.getTime());
+        // PurchaseTime
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = format.parse(feedItem.getPurchaseTime());
+            viewHolder.purchaseTime.setReferenceTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         //Station Icon
         Glide.with(mContext).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);

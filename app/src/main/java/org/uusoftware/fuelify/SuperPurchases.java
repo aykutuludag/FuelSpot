@@ -79,7 +79,7 @@ public class SuperPurchases extends AppCompatActivity {
 
                                 PurchaseItem item = new PurchaseItem();
                                 item.setID(obj.getInt("id"));
-                                item.setPurchaseTime(obj.getLong("time"));
+                                item.setPurchaseTime(obj.getString("time"));
                                 item.setStationName(obj.getString("stationName"));
                                 item.setStationIcon(obj.getString("stationIcon"));
                                 item.setStationLocation(obj.getString("stationLocation"));

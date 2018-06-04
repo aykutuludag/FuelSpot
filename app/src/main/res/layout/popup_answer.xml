@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#f0f0f0"
+    android:padding="32dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:text="CEVAPLA"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editTextAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/buttonAddAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editTextAnswer"
+        android:layout_alignLeft="@id/editTextAnswer"
+        android:layout_alignRight="@+id/editTextAnswer"
+        android:layout_alignStart="@+id/editTextAnswer"
+        android:layout_below="@+id/editTextAnswer"
+        android:layout_marginTop="16dp"
+        android:background="#FF6838"
+        android:text="GÖNDER"
+        android:textColor="#f0f0f0" />
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/cancel" />
+</RelativeLayout>

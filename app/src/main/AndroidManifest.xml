@@ -163,16 +163,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.uusoftware.fuelify.AdminMainActivity" />
         </activity>
-        <activity
-            android:name=".SuperPosts"
-            android:label="@string/title_activity_super_posts"
-            android:parentActivityName=".AdminMainActivity"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AdminMainActivity" />
-        </activity>
 
         <!-- BackgroundLocation - Geofence - Register stations -->
         <service android:name=".service.GeofenceService" />
