@@ -1,4 +1,10 @@
 <resources>
+    <!-- Base things -->
+    <string name="app_name" translatable="false">FuelSpot</string>
+    <string name="facebook_app_id" translatable="false">380327342377274</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
+    <string name="GOOGLE_API_KEY" translatable="false">AIzaSyAkHTgByMhK6hV2GZvKlXXhXtYXQEgEj4w</string>
+
     <!-- SUPERUSER APIs -->
     <string name="API_CREATE_NEW_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register-superuser.php</string>
     <string name="API_UPDATE_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-superuser.php</string>
@@ -37,11 +43,6 @@
     <string name="API_FETCH_TAX_RATES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-taxes.php</string>
     <string name="API_FETCH_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>
 
-    <string name="app_name" translatable="false">FuelSpot</string>
-    <string name="facebook_app_id" translatable="false">380327342377274</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
-    <string name="google_maps_api_key" translatable="false">AIzaSyBZ5TaWeSnfsCUDidUDeLu64bausAmMpcU</string>
-
     <string name="title_activity_login">Giriş yap</string>
     <string name="login_successful">Giriş başarılı. Uygulamaya yönlendiriliyorsunuz&#8230;</string>
     <string name="error_login_fail">Giriş yaparken hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>
@@ -54,24 +55,12 @@
     <string name="interstitial_facebook">380327342377274_384927721917236</string>
 
     <!-- Nav Drawer Menu Items -->
-    <string name="nav_text_home">Home</string>
-    <string name="nav_text_stations">Stations</string>
-    <string name="nav_text_profile">Profile</string>
-    <string name="nav_text_stats">Statistics</string>
-    <string name="nav_text_news">News</string>
-    <string name="nav_text_help">Yardım</string>
     <string name="nav_text_premium">Reklamsız sürüme geçin</string>
     <string name="nav_text_puanla">Uygulamayı puanla</string>
     <string name="nav_text_support">Uygulamayı paylaş</string>
     <string name="nav_text_beta">Beta sürüme geçin</string>
     <string name="nav_text_version"><small>FuelSpot v1.0</small></string>
 
-    <!-- NavMenu Statues -->
-    <string name="navigation_drawer_open">Yan menü açıldı</string>
-    <string name="navigation_drawer_close">Yan menü kapandı</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favorites_added">Added to your favorites</string>
     <string name="unfavorited">Removed from your favorites</string>
 
@@ -185,4 +174,10 @@
     <string name="title_activity_super_campaings">SuperCampaings</string>
     <string name="title_activity_super_posts">SuperPosts</string>
     <string name="title_activity_super_settings">SuperSettingsActivity</string>
+
+    <string name="tab_1">Stations</string>
+    <string name="tab_2">News</string>
+    <string name="tab_3">Vehicle</string>
+    <string name="tab_4">Profile</string>
+    <string name="tab_5">Settings</string>
 </resources>

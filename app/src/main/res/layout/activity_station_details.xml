@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StationDetails">
+    tools:context="com.fuelspot.StationDetails">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".StationDetails"
+        tools:context="com.fuelspot.fuelify.StationDetails"
         tools:showIn="@layout/activity_station_details">
 
         <RelativeLayout
@@ -147,15 +147,15 @@
                 <ImageView
                     android:id="@+id/lpg"
                     android:layout_height="32dp"
-                    android:layout_marginTop="4dp"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/lpg"
+                    android:layout_marginTop="4dp"
                     android:layout_toEndOf="@+id/diesel"
                     android:layout_toRightOf="@+id/diesel"
                     android:padding="5dp"
-                    app:layout_widthPercent="15.5%"
+                    android:src="@drawable/lpg"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_widthPercent="15.5%" />
 
                 <TextView
                     android:id="@+id/lpg_price"
@@ -178,12 +178,12 @@
                 <ImageView
                     android:id="@+id/electricity"
                     android:layout_height="32dp"
-                    android:layout_marginTop="4dp"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/electricity"
+                    android:layout_marginTop="4dp"
                     android:layout_toEndOf="@+id/lpg"
                     android:layout_toRightOf="@+id/lpg"
                     android:padding="5dp"
+                    android:src="@drawable/electricity"
                     app:layout_widthPercent="15.5%" />
 
                 <TextView
@@ -206,12 +206,12 @@
                 <ImageView
                     android:id="@+id/distance"
                     android:layout_height="32dp"
-                    android:layout_marginTop="4dp"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/distance"
+                    android:layout_marginTop="4dp"
                     android:layout_toEndOf="@+id/electricity"
                     android:layout_toRightOf="@+id/electricity"
                     android:padding="5dp"
+                    android:src="@drawable/distance"
                     app:layout_widthPercent="15.5%" />
 
                 <TextView

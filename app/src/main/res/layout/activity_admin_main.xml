@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".AdminMainActivity">
+        tools:context="com.fuelspot.fuelify.AdminMainActivity">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"

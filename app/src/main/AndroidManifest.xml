@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.uusoftware.fuelify">
+    package="com.fuelspot">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -26,43 +26,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="fuel-spot.com"
-                    android:scheme="http" />
-                <data
-                    android:host="fuel-spot.com"
-                    android:scheme="https" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".WelcomeActivity"
             android:label="Welcome"
-            android:parentActivityName=".LoginActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.LoginActivity" />
-        </activity>
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".VehicleEditActivity"
+            android:name="VehicleEditActivity"
             android:label="@string/title_activity_vehicle_selection"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StationDetails"
             android:label="@string/title_activity_station_details" />
@@ -70,56 +45,23 @@
             android:name=".AddFuel"
             android:label="Yakıt ekle"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ChooseStation"
-            android:parentActivityName=".AddFuel"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AddFuel" />
-        </activity>
+            android:parentActivityName=".AddFuel" />
         <activity
             android:name=".PurchaseDetails"
-            android:parentActivityName=".MainActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileEditActivity"
             android:label="@string/title_activity_profile_edit" />
-        <activity
-            android:name=".NewsContent"
-            android:theme="@style/ContentTheme"
-            android:label="" />
-        <activity
-            android:name=".ActivityFavorites"
-            android:label="Favoriler" />
-        <activity
-            android:name=".ActivityShared"
-            android:label="Paylaşılanlar" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
 
         <!-- SuperUser Class -->
         <activity
             android:name=".AdminRegister"
             android:label="@string/title_activity_admin_register"
             android:parentActivityName=".LoginActivity"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.LoginActivity" />
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AdminMainActivity"
             android:label="@string/title_activity_admin_main" />
@@ -127,42 +69,22 @@
             android:name=".SuperEditPrices"
             android:label="@string/title_activity_edit_prices"
             android:parentActivityName=".AdminMainActivity"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AdminMainActivity" />
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SuperPurchases"
             android:label="@string/title_activity_super_purchases"
             android:parentActivityName=".AdminMainActivity"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AdminMainActivity" />
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SuperComments"
             android:label="@string/title_activity_super_comments"
             android:parentActivityName=".AdminMainActivity"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AdminMainActivity" />
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SuperCampaings"
             android:label="@string/title_activity_super_campaings"
             android:parentActivityName=".AdminMainActivity"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.uusoftware.fuelify.AdminMainActivity" />
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <!-- BackgroundLocation - Geofence - Register stations -->
         <service android:name=".service.GeofenceService" />
@@ -198,7 +120,7 @@
         <!-- Google Maps && PlaceAutoComplete -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_api_key" />
+            android:value="@string/GOOGLE_API_KEY" />
 
         <!-- Firebase -->
         <meta-data
