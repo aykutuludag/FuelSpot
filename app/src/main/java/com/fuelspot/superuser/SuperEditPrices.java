@@ -1,4 +1,4 @@
-package com.fuelspot;
+package com.fuelspot.superuser;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,16 +17,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fuelspot.R;
 
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.fuelspot.AdminMainActivity.ownedDieselPrice;
-import static com.fuelspot.AdminMainActivity.ownedElectricityPrice;
-import static com.fuelspot.AdminMainActivity.ownedGasolinePrice;
-import static com.fuelspot.AdminMainActivity.ownedLPGPrice;
-import static com.fuelspot.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 
 public class SuperEditPrices extends AppCompatActivity {
 

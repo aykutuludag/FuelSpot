@@ -1,4 +1,4 @@
-package com.fuelspot;
+package com.fuelspot.superuser;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fuelspot.R;
 import com.fuelspot.adapter.PurchaseAdapter;
 import com.fuelspot.model.PurchaseItem;
 

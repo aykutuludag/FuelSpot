@@ -1,4 +1,4 @@
-package com.fuelspot;
+package com.fuelspot.superuser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -60,6 +60,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.fuelspot.MainActivity;
+import com.fuelspot.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;

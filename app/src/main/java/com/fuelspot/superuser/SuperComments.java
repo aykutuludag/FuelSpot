@@ -1,4 +1,4 @@
-package com.fuelspot;
+package com.fuelspot.superuser;
 
 import android.content.Context;
 import android.os.Build;
@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.fuelspot.R;
 import com.fuelspot.model.CommentItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 

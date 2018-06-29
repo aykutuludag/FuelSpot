@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.fuelspot.ChooseStation;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
@@ -27,15 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.fuelspot.AddFuel.LPGPrice;
-import static com.fuelspot.AddFuel.chosenStationID;
-import static com.fuelspot.AddFuel.chosenStationLoc;
-import static com.fuelspot.AddFuel.chosenStationName;
-import static com.fuelspot.AddFuel.dieselPrice;
-import static com.fuelspot.AddFuel.electricityPrice;
-import static com.fuelspot.AddFuel.gasolinePrice;
-import static com.fuelspot.ChooseStation.isAddingFuel;
-
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
     private List<StationItem> feedItemList;
     private Context mContext;
@@ -45,30 +35,19 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             ViewHolder holder = (ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
-            if (isAddingFuel) {
-                chosenStationID = String.valueOf(feedItemList.get(position).getID());
-                chosenStationName = feedItemList.get(position).getStationName();
-                chosenStationLoc = feedItemList.get(position).getLocation();
-                gasolinePrice = feedItemList.get(position).getGasolinePrice();
-                dieselPrice = feedItemList.get(position).getDieselPrice();
-                LPGPrice = feedItemList.get(position).getLpgPrice();
-                electricityPrice = feedItemList.get(position).getElectricityPrice();
-                ((ChooseStation) mContext).finish();
-            } else {
-                Intent intent = new Intent(mContext, StationDetails.class);
-                intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
-                intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
-                intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
-                intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
-                intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
-                intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
-                intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
-                intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
-                intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
-                intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
-                intent.putExtra("STATION_ID", feedItemList.get(position).getID());
-                mContext.startActivity(intent);
-            }
+            Intent intent = new Intent(mContext, StationDetails.class);
+            intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
+            intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
+            intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
+            intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
+            intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
+            intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
+            intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
+            intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
+            intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+            intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
+            intent.putExtra("STATION_ID", feedItemList.get(position).getID());
+            mContext.startActivity(intent);
         }
     };
 

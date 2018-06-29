@@ -56,7 +56,6 @@ import java.util.Map;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static com.fuelspot.ChooseStation.isAddingFuel;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
 import static com.fuelspot.MainActivity.carBrand;
@@ -143,8 +142,7 @@ public class AddFuel extends AppCompatActivity {
         chooseStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(AddFuel.this, ChooseStation.class);
-                startActivity(intent);
+
             }
         });
 
@@ -455,7 +453,6 @@ public class AddFuel extends AppCompatActivity {
                         electricityPrice = 0;
                         LPGPrice = 0;
                         billPhoto = null;
-                        isAddingFuel = false;
                         finish();
                     }
                 },
@@ -623,7 +620,6 @@ public class AddFuel extends AppCompatActivity {
                 electricityPrice = 0;
                 LPGPrice = 0;
                 billPhoto = null;
-                isAddingFuel = false;
                 finish();
                 return true;
             default:
@@ -712,7 +708,6 @@ public class AddFuel extends AppCompatActivity {
         electricityPrice = 0;
         LPGPrice = 0;
         billPhoto = null;
-        isAddingFuel = false;
         finish();
     }
 }

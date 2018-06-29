@@ -47,9 +47,6 @@
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ChooseStation"
-            android:parentActivityName=".AddFuel" />
-        <activity
             android:name=".PurchaseDetails"
             android:parentActivityName=".MainActivity" />
         <activity
@@ -58,32 +55,32 @@
 
         <!-- SuperUser Class -->
         <activity
-            android:name=".AdminRegister"
+            android:name=".superuser.AdminRegister"
             android:label="@string/title_activity_admin_register"
             android:parentActivityName=".LoginActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".AdminMainActivity"
+            android:name=".superuser.AdminMainActivity"
             android:label="@string/title_activity_admin_main" />
         <activity
-            android:name=".SuperEditPrices"
+            android:name=".superuser.SuperEditPrices"
             android:label="@string/title_activity_edit_prices"
-            android:parentActivityName=".AdminMainActivity"
+            android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SuperPurchases"
+            android:name=".superuser.SuperPurchases"
             android:label="@string/title_activity_super_purchases"
-            android:parentActivityName=".AdminMainActivity"
+            android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SuperComments"
+            android:name=".superuser.SuperComments"
             android:label="@string/title_activity_super_comments"
-            android:parentActivityName=".AdminMainActivity"
+            android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SuperCampaings"
+            android:name=".superuser.SuperCampaings"
             android:label="@string/title_activity_super_campaings"
-            android:parentActivityName=".AdminMainActivity"
+            android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
 
         <!-- BackgroundLocation - Geofence - Register stations -->

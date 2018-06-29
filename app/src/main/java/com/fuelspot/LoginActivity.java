@@ -29,6 +29,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.fuelspot.superuser.AdminMainActivity;
+import com.fuelspot.superuser.AdminRegister;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.Auth;
@@ -161,7 +163,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 }, 3000);
             } else {
-                //Check user has premium
+                // Check user has premium and connected to internet
                 if (MainActivity.isNetworkConnected(LoginActivity.this) && !MainActivity.premium) {
                     // AudienceNetwork(LoginActivity.this);
                     handler.postDelayed(new Runnable() {
