@@ -7,7 +7,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +39,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.model.CommentItem;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -87,7 +87,8 @@ public class StationDetails extends AppCompatActivity {
     SwipeRefreshLayout swipeContainer;
     Toolbar toolbar;
     Window window;
-    FloatingActionButton fab;
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton floatingActionButton1, floatingActionButton2;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
 
@@ -165,14 +166,20 @@ public class StationDetails extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        fab = findViewById(R.id.fab);
-        if (hasAlreadyCommented) {
-            fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
-        }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addUpdateCommentPopup(view);
+        materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
+        floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
+        floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
+
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
+                startActivity(intent);
+            }
+        });
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                addUpdateCommentPopup(v);
             }
         });
     }
@@ -364,7 +371,7 @@ public class StationDetails extends AppCompatActivity {
                                     if (obj.getString("username").equals(MainActivity.username)) {
                                         hasAlreadyCommented = true;
                                         userCommentID = obj.getInt("id");
-                                        fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
+                                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
                                     }
                                 }
 
@@ -377,13 +384,13 @@ public class StationDetails extends AppCompatActivity {
                                 swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
-                                fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                                floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
                                 swipeContainer.setRefreshing(false);
                                 e.printStackTrace();
                             }
                         } else {
                             hasAlreadyCommented = false;
-                            fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                            floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
                             swipeContainer.setRefreshing(false);
                         }
                     }
@@ -392,7 +399,7 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
-                        fab.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
                         swipeContainer.setRefreshing(false);
                     }
                 }) {
@@ -506,30 +513,14 @@ public class StationDetails extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_station_details, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_goStation:
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
-                startActivity(intent);
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

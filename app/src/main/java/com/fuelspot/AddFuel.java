@@ -36,8 +36,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
-import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
@@ -91,7 +89,7 @@ public class AddFuel extends AppCompatActivity {
     SimpleDateFormat mFormatter = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
 
     //Listener for startTime
-    SlideDateTimeListener listener = new SlideDateTimeListener() {
+    /*SlideDateTimeListener listener = new SlideDateTimeListener() {
 
         @Override
         public void onDateTimeSet(Date date) {
@@ -104,7 +102,7 @@ public class AddFuel extends AppCompatActivity {
         public void onDateTimeCancel() {
             // Do nothing
         }
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,21 +134,19 @@ public class AddFuel extends AppCompatActivity {
 
         //İSTASYON SEÇİMİ
         chooseStation = findViewById(R.id.editTextStation);
-        if (chosenStationName != null) {
-            chooseStation.setText(chosenStationName);
-        }
-        chooseStation.setOnClickListener(new View.OnClickListener() {
+        chooseStation.setText(chosenStationName);
+        /*chooseStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
 
             }
-        });
+        });*/
 
         //SAAT SEÇİMİ
         getTime();
         chooseTime = findViewById(R.id.editTextTime);
         chooseTime.setText(mFormatter.format(new Date(purchaseTime)));
-        chooseTime.setOnClickListener(new View.OnClickListener() {
+        /*chooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new SlideDateTimePicker.Builder(getSupportFragmentManager())
@@ -161,7 +157,7 @@ public class AddFuel extends AppCompatActivity {
                         .build()
                         .show();
             }
-        });
+        });*/
 
         enterKilometer = findViewById(R.id.editTextKM);
         enterKilometer.setText(String.valueOf(kilometer));

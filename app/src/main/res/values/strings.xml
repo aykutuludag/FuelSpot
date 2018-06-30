@@ -1,9 +1,12 @@
 <resources>
-    <!-- Base things -->
+    <!-- GENERAL -->
     <string name="app_name" translatable="false">FuelSpot</string>
     <string name="facebook_app_id" translatable="false">380327342377274</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="GOOGLE_API_KEY" translatable="false">AIzaSyAkHTgByMhK6hV2GZvKlXXhXtYXQEgEj4w</string>
+    <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
+    <string name="interstitial_facebook" translatable="false">380327342377274_384927721917236</string>
+    <string name="inline_facebook" translatable="false">380327342377274_421669164909758</string>
 
     <!-- SUPERUSER APIs -->
     <string name="API_CREATE_NEW_SUPERUSER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register-superuser.php</string>
@@ -51,8 +54,7 @@
     <string name="saveprofile">Log out</string>
     <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="interstitial_admob">ca-app-pub-1576175228836763/7543225289</string>
-    <string name="interstitial_facebook">380327342377274_384927721917236</string>
+
 
     <!-- Nav Drawer Menu Items -->
     <string name="nav_text_premium">Reklamsız sürüme geçin</string>

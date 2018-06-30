@@ -34,7 +34,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -53,6 +52,8 @@ import java.util.List;
 import java.util.Map;
 
 import eu.amirs.JSON;
+
+import static com.fuelspot.MainActivity.stationPhotoChooser;
 
 public class FragmentStations extends Fragment {
 
@@ -102,7 +103,7 @@ public class FragmentStations extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        MapsInitializer.initialize(getActivity().getApplicationContext());
+
         checkLocationPermission();
 
         return rootView;
@@ -114,19 +115,18 @@ public class FragmentStations extends Fragment {
         } else {
             //Request location updates:
             LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-            if (location != null) {
-                MainActivity.userlat = (float) location.getLatitude();
-                MainActivity.userlon = (float) location.getLongitude();
-                prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                MainActivity.getVariables(prefs);
+            if (locationManager != null) {
+                Criteria criteria = new Criteria();
+                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                if (location != null) {
+                    MainActivity.userlat = (float) location.getLatitude();
+                    MainActivity.userlon = (float) location.getLongitude();
+                    prefs.edit().putFloat("lat", MainActivity.userlat).apply();
+                    prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                    MainActivity.getVariables(prefs);
+                    loadMap();
+                }
             }
-
-            loadMap();
         }
     }
 
@@ -212,7 +212,7 @@ public class FragmentStations extends Fragment {
                             double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
                             location[i] = lat + ";" + lon;
 
-                            stationPhotoChooser(i);
+                            stationPhotoChooser(stationName[i]);
 
                             LatLng sydney = new LatLng(lat, lon);
                             markes[i] = googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i]));
@@ -230,24 +230,6 @@ public class FragmentStations extends Fragment {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-
-    private void stationPhotoChooser(int i) {
-        if (stationName[i].contains("Shell")) {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.png";
-        } else if (stationName[i].contains("Opet")) {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
-        } else if (stationName[i].contains("BP")) {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.png";
-        } else if (stationName[i].contains("Kadoil")) {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
-        } else if (stationName[i].contains("Petrol Ofisi")) {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
-        } else if (stationName[i].contains("Lukoil")) {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
-        } else {
-            photoURLs[i] = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
-        }
     }
 
     private void registerStations(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
@@ -316,6 +298,10 @@ public class FragmentStations extends Fragment {
                             loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
                             float distanceInMeters = loc1.distanceTo(loc2);
                             item.setDistance(distanceInMeters);
+
+                            if (distanceInMeters <= 75f) {
+                                MainActivity.isAtStation = true;
+                            }
                             //DISTANCE END
                             item.setLastUpdated(obj.getString("lastUpdated"));
                             feedsList.add(item);
