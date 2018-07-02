@@ -151,39 +151,48 @@ public class FragmentStations extends Fragment {
             case 0:
                 Collections.sort(feedsList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
+                        if (obj1.getGasolinePrice() == 0 || obj2.getGasolinePrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else {
+                            return Double.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
+                        }
                     }
                 });
                 break;
             case 1:
                 Collections.sort(feedsList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
+                        if (obj1.getDieselPrice() == 0 || obj2.getDieselPrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else {
+                            return Double.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
+                        }
                     }
                 });
                 break;
             case 2:
                 Collections.sort(feedsList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
+                        if (obj1.getLpgPrice() == 0 || obj2.getLpgPrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else {
+                            return Double.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
+                        }
                     }
                 });
                 break;
             case 3:
                 Collections.sort(feedsList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
+                        if (obj1.getElectricityPrice() == 0 || obj2.getElectricityPrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else {
+                            return Double.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
+                        }
                     }
                 });
                 break;
             case 4:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getDistance(), obj2.getDistance());
-                    }
-                });
-                break;
-            default:
                 Collections.sort(feedsList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
                         return Double.compare(obj1.getDistance(), obj2.getDistance());
@@ -379,9 +388,6 @@ public class FragmentStations extends Fragment {
                             // Default - Sort by Distance
                             tabLayout.getTabAt(4).select();
                             sortBy(4);
-
-                            // Updating layout
-                            mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -453,7 +459,6 @@ public class FragmentStations extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
-            loadMap();
         }
     }
 
