@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -94,7 +95,8 @@ public class FragmentNews extends Fragment {
 
                                 NewsItem item = new NewsItem();
                                 item.setLink(obj.getString("url"));
-                                item.setTitle(obj.getString("title"));
+                                String title = new String(obj.getString("title").getBytes("ISO-8859-1"), "UTF-8");
+                                item.setTitle(title);
                                 String[] thumbNailHolder = obj.getString("content_html").split("\"");
                                 item.setThumbnail(thumbNailHolder[5]);
                                 item.setPublishDate(obj.getString("date_published"));
@@ -109,6 +111,8 @@ public class FragmentNews extends Fragment {
                                 swipeContainer.setRefreshing(false);
                             }
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
                     }

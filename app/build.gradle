@@ -12,13 +12,10 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -36,6 +33,10 @@ dependencies {
     implementation 'com.android.support:customtabs:27.1.1'
     implementation 'com.android.support:support-vector-drawable:27.1.1'
 
+    implementation 'com.android.volley:volley:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support:multidex:1.0.3'
+
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
@@ -47,9 +48,6 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
     implementation 'com.facebook.android:audience-network-sdk:4.99.0'
-
-    implementation 'com.android.volley:volley:1.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.amirdew:JSON:v1.0.0'

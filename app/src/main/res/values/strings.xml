@@ -22,23 +22,21 @@
     <string name="API_FETCH_USER_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user.php</string>
 
     <!-- Station APIs -->
-    <string name="API_REGISTER_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
-    <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station.php</string>
-    <string name="API_FETCH_STATION_BY_ID" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-by-id.php</string>
+    <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
+    <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station.php</string>
 
     <!-- Comment-Answer APIs -->
     <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
     <string name="API_UPDATE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-comment.php</string>
     <string name="API_FETCH_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-comments.php</string>
     <string name="API_DELETE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-comment.php</string>
-    <string name="API_SET_AS_ANSWERED" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/set-as-answered.php</string>
     <string name="API_FETCH_USER_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-comments.php</string>
     <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-answer.php</string>
     <string name="API_DELETE_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-answer.php</string>
 
     <!-- Purchase APIs -->
-    <string name="API_ADD_FUEL" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-fuel.php</string>
+    <string name="API_ADD_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-purchase.php</string>
     <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-purchases.php</string>
     <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-purchase.php</string>
 

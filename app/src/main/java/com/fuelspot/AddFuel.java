@@ -305,7 +305,7 @@ public class AddFuel extends AppCompatActivity {
                         if (totalPrice > 0) {
                             //Showing the progress dialog
                             final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_FUEL),
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String s) {

@@ -576,7 +576,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     private void registerOwnedStation(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REGISTER_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
