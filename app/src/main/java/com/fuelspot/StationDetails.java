@@ -288,12 +288,9 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userComment != null && userComment.length() > 0) {
-                    if (hasAlreadyCommented) {
-                        updateComment();
-                    } else {
+                    if (!hasAlreadyCommented) {
                         sendComment();
                     }
-
                 } else {
                     Toast.makeText(StationDetails.this, "Lütfen yorum ekleyiniz", Toast.LENGTH_SHORT).show();
                 }
@@ -345,7 +342,7 @@ public class StationDetails extends AppCompatActivity {
 
     public void fetchComments() {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COMMENTS),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -460,7 +457,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void updateComment() {
+  /*  private void updateComment() {
         final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
                 new Response.Listener<String>() {
@@ -499,7 +496,7 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
+    }*/
 
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {

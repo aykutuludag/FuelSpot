@@ -18,14 +18,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    public static boolean premium, isSigned, isSuperUser, isAtStation;
+    public static boolean premium, isSigned, isSuperUser;
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
     public static int fuelPri, fuelSec, kilometer;
@@ -488,19 +486,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addFuel:
-                if (isAtStation) {
-                    Intent intent = new Intent(MainActivity.this, AddFuel.class);
-                    startActivity(intent);
-                } else {
-                    final Snackbar snackBar = Snackbar.make(findViewById(R.id.mainContainer), "Şu anda bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz.", Snackbar.LENGTH_LONG);
+
+                Intent intent = new Intent(MainActivity.this, AddFuel.class);
+                startActivity(intent);
+
+                /*final Snackbar snackBar = Snackbar.make(findViewById(R.id.mainContainer), "Şu anda bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz.", Snackbar.LENGTH_LONG);
                     snackBar.setAction("Tamam", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             snackBar.dismiss();
                         }
                     });
-                    snackBar.show();
-                }
+                 snackBar.show();*/
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

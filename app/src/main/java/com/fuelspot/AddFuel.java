@@ -8,11 +8,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,9 +38,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fuelspot.model.StationItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,6 +60,7 @@ import java.util.Map;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
+import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
@@ -68,41 +76,32 @@ import static com.fuelspot.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
 
-    public static String chosenStationName, chosenStationID, chosenStationLoc;
-    public static double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
-    Bitmap bitmap;
     Window window;
     Toolbar toolbar;
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
-    EditText chooseStation, chooseTime, enterKilometer;
     SharedPreferences prefs;
-    RadioGroup chooseFuel, chooseFuel2;
+    Button sendVariables;
+    RequestQueue requestQueue;
+
+    /* LAYOUT 1 ÖĞELER */
+    String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
+    SimpleDateFormat mFormatter = new SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault());
     long purchaseTime;
+    EditText chooseStation, chooseTime, enterKilometer;
+
+    /* LAYOUT 2 ÖĞELER */
     String fuelType, fuelType2 = "";
+    RadioGroup chooseFuel, chooseFuel2;
+    double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     double totalPrice;
     double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
     EditText textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
-    ImageView photoHolder;
-    Button sendVariables;
+
+    /* Layout 3 */
+    Bitmap bitmap;
     String billPhoto;
-    SimpleDateFormat mFormatter = new SimpleDateFormat("dd MMMM HH:mm", Locale.getDefault());
-
-    //Listener for startTime
-    /*SlideDateTimeListener listener = new SlideDateTimeListener() {
-
-        @Override
-        public void onDateTimeSet(Date date) {
-            chooseTime.setText(mFormatter.format(date));
-            purchaseTime = date.getTime();
-        }
-
-        // Optional cancel listener
-        @Override
-        public void onDateTimeCancel() {
-            // Do nothing
-        }
-    };*/
+    ImageView photoHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,18 +128,19 @@ public class AddFuel extends AppCompatActivity {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        //Creating a Request Queue
+        requestQueue = Volley.newRequestQueue(AddFuel.this);
+
+        // Check whether user is at station or not
+        checkIsAtStation();
+
         expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
         expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);
 
         //İSTASYON SEÇİMİ
         chooseStation = findViewById(R.id.editTextStation);
         chooseStation.setText(chosenStationName);
-        /*chooseStation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
 
-            }
-        });*/
 
         //SAAT SEÇİMİ
         getTime();
@@ -332,7 +332,7 @@ public class AddFuel extends AppCompatActivity {
                                     //Adding parameters
                                     params.put("purchaseTime", String.valueOf(purchaseTime));
                                     params.put("username", username);
-                                    params.put("stationID", chosenStationID);
+                                    params.put("googleID", chosenGoogleID);
                                     params.put("stationNAME", chosenStationName);
                                     params.put("stationICON", stationPhotoChooser(chosenStationName));
                                     params.put("stationLOC", chosenStationLoc);
@@ -375,6 +375,124 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
+    public void checkIsAtStation() {
+        //Search stations in a radius of 100m
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=10000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSON json = new JSON(response);
+                        if (json.key("results").count() > 0) {
+                            // Yes! He is in station. Probably there is only one station in 100m  so get the first value
+                            chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
+
+                            chosenStationName = json.key("results").index(0).key("name").stringValue();
+                            chooseStation.setText(chosenStationName);
+
+                            chosenStationAddress = json.key("results").index(0).key("vicinity").stringValue();
+
+                            double lat = json.key("results").index(0).key("geometry").key("location").key("lat").doubleValue();
+                            double lon = json.key("results").index(0).key("geometry").key("location").key("lng").doubleValue();
+                            chosenStationLoc = lat + ";" + lon;
+
+                            fetchStation(chosenGoogleID);
+                        } else {
+                            chosenStationName = "";
+                            chosenStationLoc = "";
+                            chosenGoogleID = "";
+                            chosenStationAddress = "";
+
+                            Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
+                                    .setAction("CLOSE", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            finish();
+                                        }
+                                    })
+                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                    .show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("That didn't work!");
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+    }
+
+    /* This method add station. If station exists in db, then update it (except prices). Returns stationInfo.
+     * To update stationPrices, use API_UPDATE_STATION */
+    private void fetchStation(final String googleID) {
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            StationItem item = new StationItem();
+                            item.setID(obj.getInt("id"));
+                            item.setStationName(obj.getString("name"));
+                            item.setVicinity(obj.getString("vicinity"));
+                            item.setLocation(obj.getString("location"));
+                            item.setGasolinePrice(obj.getDouble("gasolinePrice"));
+                            item.setDieselPrice(obj.getDouble("dieselPrice"));
+                            item.setLpgPrice(obj.getDouble("lpgPrice"));
+                            item.setElectricityPrice(obj.getDouble("electricityPrice"));
+                            item.setGoogleMapID(obj.getString("googleID"));
+                            item.setPhotoURL(obj.getString("photoURL"));
+
+                            //DISTANCE START
+                            Location loc1 = new Location("");
+                            loc1.setLatitude(MainActivity.userlat);
+                            loc1.setLongitude(MainActivity.userlon);
+                            Location loc2 = new Location("");
+                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
+                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                            float distanceInMeters = loc1.distanceTo(loc2);
+                            item.setDistance(distanceInMeters);
+
+                            //DISTANCE END
+
+                            //Lastupdated
+                            item.setLastUpdated(obj.getString("lastUpdated"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("googleID", googleID);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     private void updateStationPrices() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
@@ -396,7 +514,7 @@ public class AddFuel extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("stationID", chosenStationID);
+                params.put("googleID", chosenGoogleID);
                 if (fuelType != null && fuelType.length() > 0 && selectedUnitPrice > 0) {
                     if (fuelType.contains("gasoline")) {
                         params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
@@ -434,7 +552,7 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateCarInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_CAR),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -442,7 +560,7 @@ public class AddFuel extends AppCompatActivity {
                         prefs.edit().putInt("Kilometer", kilometer).apply();
                         bitmap = null;
                         chosenStationName = null;
-                        chosenStationID = null;
+                        chosenGoogleID = null;
                         chosenStationLoc = null;
                         gasolinePrice = 0;
                         dieselPrice = 0;
@@ -609,7 +727,7 @@ public class AddFuel extends AppCompatActivity {
                 //Remove variables
                 bitmap = null;
                 chosenStationName = null;
-                chosenStationID = null;
+                chosenGoogleID = null;
                 chosenStationLoc = null;
                 gasolinePrice = 0;
                 dieselPrice = 0;
@@ -697,7 +815,7 @@ public class AddFuel extends AppCompatActivity {
         //Remove variables
         bitmap = null;
         chosenStationName = null;
-        chosenStationID = null;
+        chosenGoogleID = null;
         chosenStationLoc = null;
         gasolinePrice = 0;
         dieselPrice = 0;

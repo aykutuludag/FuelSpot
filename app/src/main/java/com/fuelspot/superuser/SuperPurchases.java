@@ -67,7 +67,7 @@ public class SuperPurchases extends AppCompatActivity {
     private void fetchSuperPurchases() {
         feedsList.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPER_PURCHASES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

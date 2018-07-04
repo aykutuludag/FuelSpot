@@ -83,6 +83,8 @@ public class FragmentStations extends Fragment {
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
 
+    int stationCount;
+
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
 
@@ -108,10 +110,6 @@ public class FragmentStations extends Fragment {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         queue = Volley.newRequestQueue(getActivity());
-
-        mMapView = rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
 
         tabLayout = rootView.findViewById(R.id.sortBar);
         tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
@@ -140,6 +138,9 @@ public class FragmentStations extends Fragment {
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mMapView = rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
 
         checkLocationPermission();
 
@@ -223,7 +224,7 @@ public class FragmentStations extends Fragment {
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(60000);
-                                mLocationRequest.setFastestInterval(15000);
+                                mLocationRequest.setFastestInterval(5000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                             }
                         }
@@ -273,7 +274,7 @@ public class FragmentStations extends Fragment {
                                 } else {
                                     LocationRequest mLocationRequest = new LocationRequest();
                                     mLocationRequest.setInterval(60000);
-                                    mLocationRequest.setFastestInterval(15000);
+                                    mLocationRequest.setFastestInterval(5000);
                                     mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                 }
                             }
@@ -312,8 +313,9 @@ public class FragmentStations extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         JSON json = new JSON(response);
-
                         for (int i = 0; i < json.key("results").count(); i++) {
+                            stationCount++;
+
                             stationName[i] = json.key("results").index(i).key("name").stringValue();
                             vicinity[i] = json.key("results").index(i).key("vicinity").stringValue();
                             googleID[i] = json.key("results").index(i).key("place_id").stringValue();
@@ -321,7 +323,6 @@ public class FragmentStations extends Fragment {
                             double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
                             double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
                             location[i] = lat + ";" + lon;
-
 
                             LatLng sydney = new LatLng(lat, lon);
                             markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i])));
@@ -350,6 +351,8 @@ public class FragmentStations extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            stationCount--;
+
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
 
@@ -374,10 +377,6 @@ public class FragmentStations extends Fragment {
                             loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
                             float distanceInMeters = loc1.distanceTo(loc2);
                             item.setDistance(distanceInMeters);
-
-                            if (distanceInMeters <= 75f) {
-                                MainActivity.isAtStation = true;
-                            }
                             //DISTANCE END
 
                             //Lastupdated
@@ -386,8 +385,10 @@ public class FragmentStations extends Fragment {
                             feedsList.add(item);
 
                             // Default - Sort by Distance
-                            tabLayout.getTabAt(4).select();
-                            sortBy(4);
+                            if (stationCount == 0) {
+                                tabLayout.getTabAt(4).select();
+                                sortBy(4);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -441,7 +442,7 @@ public class FragmentStations extends Fragment {
                                         } else {
                                             LocationRequest mLocationRequest = new LocationRequest();
                                             mLocationRequest.setInterval(60000);
-                                            mLocationRequest.setFastestInterval(15000);
+                                            mLocationRequest.setFastestInterval(5000);
                                             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                         }
                                     }
@@ -476,6 +477,12 @@ public class FragmentStations extends Fragment {
         if (mMapView != null) {
             mMapView.onDestroy();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMapView.onSaveInstanceState(outState);
     }
 
     @Override

@@ -330,7 +330,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_NEW_USER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REGISTER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

@@ -281,7 +281,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(VehicleEditActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_CAR),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

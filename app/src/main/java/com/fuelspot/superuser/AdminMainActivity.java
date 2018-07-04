@@ -125,7 +125,7 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     void fetchSuperUser() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH_PROFILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

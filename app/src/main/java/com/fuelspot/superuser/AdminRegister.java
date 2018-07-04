@@ -328,7 +328,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_NEW_SUPERUSER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_REGISTER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -378,7 +378,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void fetchSuperUserInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH_PROFILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -523,7 +523,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 (cameraPosition));
 
         //Search stations in a radius of 75m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=1500&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=100&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -660,7 +660,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     public void updateSuperUser() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_SUPERUSER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE_PROFILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

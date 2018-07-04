@@ -83,8 +83,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/profile_mail"
         android:layout_marginTop="50dp"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/profilarac" />
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/profile_CarName"
