@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_vehicle"
     android:layout_width="match_parent"
-    android:layout_height="175dp"
+    android:layout_height="wrap_content"
     android:background="#EDEDED">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -121,10 +121,9 @@
         android:id="@+id/car_lastUpdated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/car_picture"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="8dp"
+        android:layout_marginRight="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <ImageView

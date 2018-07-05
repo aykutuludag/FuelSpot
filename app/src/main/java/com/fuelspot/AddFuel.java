@@ -1,7 +1,6 @@
 package com.fuelspot;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,8 +17,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,16 +59,13 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
-import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
-import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
-import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.username;
 
 public class AddFuel extends AppCompatActivity {
@@ -131,16 +125,13 @@ public class AddFuel extends AppCompatActivity {
         //Creating a Request Queue
         requestQueue = Volley.newRequestQueue(AddFuel.this);
 
+
         // Check whether user is at station or not
         checkIsAtStation();
 
-        expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
-        expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);
-
-        //İSTASYON SEÇİMİ
+       /* //İSTASYON SEÇİMİ
         chooseStation = findViewById(R.id.editTextStation);
         chooseStation.setText(chosenStationName);
-
 
         //SAAT SEÇİMİ
         getTime();
@@ -157,7 +148,7 @@ public class AddFuel extends AppCompatActivity {
                         .build()
                         .show();
             }
-        });*/
+        });
 
         enterKilometer = findViewById(R.id.editTextKM);
         enterKilometer.setText(String.valueOf(kilometer));
@@ -179,6 +170,9 @@ public class AddFuel extends AppCompatActivity {
                 }
             }
         });
+
+        expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
+        expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);
 
         chooseFuel = findViewById(R.id.radioGroup_fuel);
         expandableButton1 = findViewById(R.id.expandableButton1);
@@ -368,7 +362,7 @@ public class AddFuel extends AppCompatActivity {
                     Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda değilsiniz. Yakıt aldığınız istasyonu seçiniz.", Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        });*/
 
         if (savedInstanceState == null) {
             updatePrices();
@@ -427,8 +421,6 @@ public class AddFuel extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    /* This method add station. If station exists in db, then update it (except prices). Returns stationInfo.
-     * To update stationPrices, use API_UPDATE_STATION */
     private void fetchStation(final String googleID) {
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
