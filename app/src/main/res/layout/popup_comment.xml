@@ -4,7 +4,8 @@
     android:id="@+id/single_comment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F0F0F0">
+    android:background="#F0F0F0"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/title"

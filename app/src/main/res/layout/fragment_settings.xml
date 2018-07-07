@@ -7,59 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="Satın almalar"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart1"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_below="@+id/title1"
-            android:layout_margin="8dp"
-            android:background="#f0f0f0" />
-
-        <TextView
-            android:id="@+id/title2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/chart1"
-            android:layout_centerHorizontal="true"
-            android:text="Litre fiyatı"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart2"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_below="@+id/title2"
-            android:layout_margin="8dp"
-            android:background="#f0f0f0" />
-
-        <TextView
-            android:id="@+id/title3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/chart2"
-            android:layout_centerHorizontal="true"
-            android:text="Vergi"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart3"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_below="@+id/title3"
-            android:layout_margin="8dp"
-            android:background="#f0f0f0" />
     </RelativeLayout>
 
 </ScrollView>

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -57,6 +58,7 @@ public class FragmentProfile extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<CommentItem> feedsList;
     SwipeRefreshLayout swipeContainer;
+    Snackbar snackBar;
 
     public static FragmentProfile newInstance() {
 
@@ -76,6 +78,14 @@ public class FragmentProfile extends Fragment {
         t.setScreenName("Profil");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), "Henüz hiç yorum yazmamışsınız.", Snackbar.LENGTH_LONG);
+        snackBar.setAction("Tamam", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackBar.dismiss();
+            }
+        });
 
         ImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
         Glide.with(getActivity()).load(Uri.parse(MainActivity.photo)).into(userProfileHolder);
@@ -195,6 +205,7 @@ public class FragmentProfile extends Fragment {
                                 e.printStackTrace();
                             }
                         } else {
+                            snackBar.show();
                             swipeContainer.setRefreshing(false);
                         }
                     }

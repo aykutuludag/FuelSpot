@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity {
             photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.png";
         } else if (stationName.contains("Lukoil")) {
             photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+        } else if (stationName.contains("TP")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkiye-petrolleri.jpg";
         } else {
             photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.png";
         }

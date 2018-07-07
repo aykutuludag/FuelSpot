@@ -8,13 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 public class FragmentSettings extends Fragment {
-
-    LineChart mLineChart, mLineChart2, mLineChart3;
 
     public static FragmentSettings newInstance() {
 

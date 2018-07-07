@@ -32,6 +32,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.userCountry;
+
 public class FragmentNews extends Fragment {
 
     SwipeRefreshLayout swipeContainer;
@@ -39,6 +41,7 @@ public class FragmentNews extends Fragment {
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     List<NewsItem> feedsList;
+    String feedURL;
 
     public static FragmentNews newInstance() {
 
@@ -64,7 +67,9 @@ public class FragmentNews extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchNews();
+                if (feedURL != null && feedURL.length() > 0) {
+                    fetchNews(feedURL);
+                }
             }
         });
         // Configure the refreshing colors
@@ -76,14 +81,34 @@ public class FragmentNews extends Fragment {
         feedsList = new ArrayList<>();
         mRecyclerView = rootView.findViewById(R.id.feedView);
 
-        fetchNews();
+        contentChooserByCountry(userCountry);
 
         return rootView;
     }
 
-    private void fetchNews() {
+    private void contentChooserByCountry(String country) {
+        feedURL = "";
+        switch (country) {
+            case "DE":
+                feedURL = "http://fuel-spot.com/category/countries/germany/feed/json";
+                break;
+            case "TR":
+                feedURL = "http://fuel-spot.com/category/countries/turkey/feed/json";
+                break;
+            case "US":
+                feedURL = "http://fuel-spot.com/category/countries/united-states/feed/json";
+                break;
+            default:
+                feedURL = "http://fuel-spot.com/category/countries/united-states/feed/json";
+                break;
+
+        }
+        fetchNews(feedURL);
+    }
+
+    private void fetchNews(String url) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_NEWS),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

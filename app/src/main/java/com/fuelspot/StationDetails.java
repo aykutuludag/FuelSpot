@@ -7,8 +7,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -84,13 +84,16 @@ public class StationDetails extends AppCompatActivity {
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     List<CommentItem> feedsList;
-    SwipeRefreshLayout swipeContainer;
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
+    TabLayout tabLayout;
+    TextView campaingDetails;
+
+    String[] currentCampaings = new String[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,23 +151,33 @@ public class StationDetails extends AppCompatActivity {
             loadStationDetails();
         }
 
+        //Campaigns
+        campaingDetails = findViewById(R.id.campaingDetails);
+        tabLayout = findViewById(R.id.campaignBar);
+        tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                campaingDetails.setText(currentCampaings[position]);
+            }
+
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // DO NOTHING
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // DO NOTHING
+            }
+        });
+        loadCampaigns();
+
         //Comments
         feedsList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.commentView);
-
-        swipeContainer = findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchComments();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
@@ -172,14 +185,14 @@ public class StationDetails extends AppCompatActivity {
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
-                startActivity(intent);
+                addUpdateCommentPopup(v);
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                addUpdateCommentPopup(v);
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
+                startActivity(intent);
             }
         });
     }
@@ -220,7 +233,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void fetchStationByID(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_BY_ID),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -247,7 +260,7 @@ public class StationDetails extends AppCompatActivity {
                             lastUpdated = obj.getString("lastUpdated");
                             iconURL = obj.getString("photoURL");
 
-
+                            loadStationDetails();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -264,7 +277,7 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(stationID));
+                params.put("stationID", String.valueOf(stationID));
 
                 //returning parameters
                 return params;
@@ -273,6 +286,15 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    void loadCampaigns() {
+        currentCampaings[0] = "KAMPANYA 1 AÇIKLAMASI";
+        currentCampaings[1] = "KAMPANYA 2 AÇIKLAMASI";
+        currentCampaings[2] = "KAMPANYA 3 AÇIKLAMASI";
+
+        //DEFAULT
+        campaingDetails.setText(currentCampaings[0]);
     }
 
     void addUpdateCommentPopup(View view) {
@@ -378,17 +400,14 @@ public class StationDetails extends AppCompatActivity {
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
-                                swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
                                 floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
-                                swipeContainer.setRefreshing(false);
                                 e.printStackTrace();
                             }
                         } else {
                             hasAlreadyCommented = false;
                             floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
-                            swipeContainer.setRefreshing(false);
                         }
                     }
                 },
@@ -397,7 +416,6 @@ public class StationDetails extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
                         floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
-                        swipeContainer.setRefreshing(false);
                     }
                 }) {
             @Override

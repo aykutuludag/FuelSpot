@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -60,6 +61,7 @@ public class FragmentVehicle extends Fragment {
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
     TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice;
     RelativeTimeTextView lastUpdated;
+    Snackbar snackBar;
 
     public static FragmentVehicle newInstance() {
 
@@ -82,6 +84,14 @@ public class FragmentVehicle extends Fragment {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG);
+        snackBar.setAction("Tamam", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackBar.dismiss();
+            }
+        });
 
         //SETTING HEADER VEHICLE VARIABLES
         View headerView = view.findViewById(R.id.header_vehicle);
@@ -216,8 +226,6 @@ public class FragmentVehicle extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-
-
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -291,6 +299,7 @@ public class FragmentVehicle extends Fragment {
                                 e.printStackTrace();
                             }
                         } else {
+                            snackBar.show();
                             swipeContainer.setRefreshing(false);
                         }
                     }

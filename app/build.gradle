@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:15.0.1'
 
     implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
-    implementation 'com.facebook.android:audience-network-sdk:4.99.0'
+    implementation 'com.facebook.android:audience-network-sdk:4.99.1'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.amirdew:JSON:v1.0.0'
@@ -55,7 +55,6 @@ dependencies {
     implementation 'io.github.kobakei:ratethisapp:1.2.0'
     implementation 'com.droidninja:filepicker:2.1.5'
     implementation 'com.github.yalantis:ucrop:2.2.2'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.github.pwiniars:SlideDateTimePicker:v1.0.8'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'

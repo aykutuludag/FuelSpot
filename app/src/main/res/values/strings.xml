@@ -12,6 +12,7 @@
     <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
     <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station.php</string>
+    <string name="API_FETCH_STATION_BY_ID" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-by-id.php</string>
 
     <!-- USER APIs -->
     <string name="API_REGISTER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>

@@ -5,44 +5,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fuelspot.StationDetails">
+    android:background="@drawable/background_main"
+    tools:context=".StationDetails">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/Appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:background="@android:color/transparent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_header"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_main"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.fuelspot.fuelify.StationDetails"
-        tools:showIn="@layout/activity_station_details">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:contentScrim="@color/colorAccent"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="32dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                android:layout_height="300dp" />
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/single_station"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/street_view_panorama"
+                android:layout_marginTop="300dp"
                 android:background="#90EDEDED">
 
                 <ImageView
@@ -246,17 +236,91 @@
                     android:textColor="#6D6D6D" />
             </android.support.percent.PercentRelativeLayout>
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeContainer"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/single_station">
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/commentView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </android.support.v4.widget.SwipeRefreshLayout>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".StationDetails"
+        tools:showIn="@layout/activity_station_details">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_campaigns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="4dp"
+                android:text="Kampanyalar"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/campaignBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_campaigns"
+                android:background="#fff">
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/itemGasoline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/gasoline"
+                    android:text="KAMPANYA 1" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/itemDiesel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/diesel"
+                    android:text="KAMPANYA 2" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/itemLPG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/lpg"
+                    android:text="KAMPANYA 3" />
+            </android.support.design.widget.TabLayout>
+
+            <TextView
+                android:id="@+id/campaingDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/campaignBar"
+                android:layout_margin="4dp"
+                android:background="#fff"
+                android:gravity="center"
+                android:text="KAMPANYA 1 AÇIKLAMASI"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <TextView
+                android:id="@+id/title_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/campaingDetails"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="4dp"
+                android:text="Son yorumlar"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/commentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_comments" />
         </RelativeLayout>
     </android.support.constraint.ConstraintLayout>
 
@@ -264,41 +328,8 @@
         android:id="@+id/material_design_android_floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginRight="11dp"
-        fab:menu_animationDelayPerItem="55"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_buttonSpacing="0dp"
-        fab:menu_colorNormal="#da3c2f"
-        fab:menu_colorPressed="#dc4b3f"
-        fab:menu_colorRipple="#99d4d4d4"
-        fab:menu_fab_label="Floating Action Menu"
-        fab:menu_fab_size="normal"
-        fab:menu_icon="@drawable/fab_add"
-        fab:menu_labels_colorNormal="#333"
-        fab:menu_labels_colorPressed="#444"
-        fab:menu_labels_colorRipple="#66efecec"
-        fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        fab:menu_labels_margin="0dp"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_padding="8dp"
-        fab:menu_labels_position="left"
-        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="false"
-        fab:menu_labels_textColor="#f2f1f1"
-        fab:menu_labels_textSize="15sp"
-        fab:menu_openDirection="up"
-        fab:menu_shadowColor="#66aff198"
-        fab:menu_shadowRadius="4dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="4dp"
-        fab:menu_showShadow="true">
+        app:layout_anchor="@+id/constraintLayout"
+        app:layout_anchorGravity="right|bottom">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item1"
