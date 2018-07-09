@@ -14,25 +14,36 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_header"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="@color/colorAccent"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="32dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="350dp" />
+                android:layout_height="250dp" />
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/single_station"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="350dp"
+                android:layout_below="@id/street_view_panorama"
                 android:background="#90EDEDED">
 
                 <ImageView
@@ -236,33 +247,13 @@
                     android:textColor="#6D6D6D" />
             </android.support.percent.PercentRelativeLayout>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".StationDetails"
-        tools:showIn="@layout/activity_station_details">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <TextView
                 android:id="@+id/title_campaigns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/single_station"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
+                android:layout_margin="8dp"
                 android:text="Kampanyalar"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
@@ -298,9 +289,9 @@
             <TextView
                 android:id="@+id/campaingDetails"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_below="@id/campaignBar"
-                android:layout_margin="4dp"
+                android:layout_margin="8dp"
                 android:background="#fff"
                 android:gravity="center"
                 android:text="KAMPANYA 1 AÇIKLAMASI"
@@ -312,7 +303,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/campaingDetails"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
+                android:layout_margin="8dp"
                 android:text="Son yorumlar"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
@@ -322,13 +313,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title_comments" />
         </RelativeLayout>
-    </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/material_design_android_floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@+id/constraintLayout"
+        android:layout_marginBottom="16dp"
+        app:layout_anchor="@+id/scrollView"
         app:layout_anchorGravity="right|bottom"
         app:menu_colorNormal="#000">
 

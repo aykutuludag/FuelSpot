@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -86,6 +87,7 @@ public class FragmentStations extends Fragment {
     TabLayout tabLayout;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    ImageView noStationError;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -108,6 +110,8 @@ public class FragmentStations extends Fragment {
 
         //Variables
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        noStationError = rootView.findViewById(R.id.errorPicture);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         queue = Volley.newRequestQueue(getActivity());
@@ -336,13 +340,15 @@ public class FragmentStations extends Fragment {
                                 addStation(i);
                             }
                         } else {
+                            noStationError.setVisibility(View.VISIBLE);
                             Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
+                noStationError.setVisibility(View.VISIBLE);
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
             }
         });
 

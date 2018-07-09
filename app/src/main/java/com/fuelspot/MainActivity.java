@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_LOCATION = 1;
     public static final int UNIFIED_REQUEST = 99;
     public static final int GOOGLE_LOGIN = 100;
+    public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
     // Static values
     public static float TAX_GASOLINE;
     public static float TAX_DIESEL;

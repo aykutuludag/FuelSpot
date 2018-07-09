@@ -316,7 +316,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 } else {
-                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + MainActivity.username + "-CARPHOTO.jpeg");
+                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + MainActivity.username + "-CARPHOTO.jpg");
                 }
 
                 //returning parameters

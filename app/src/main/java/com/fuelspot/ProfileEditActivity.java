@@ -1,18 +1,24 @@
 package com.fuelspot;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,26 +49,38 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
+
+import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
+import static com.fuelspot.MainActivity.photo;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     Window window;
+    CircleImageView userPic;
     EditText editName, editMail, editLocation, editBirthday;
     RadioGroup editGender;
     RadioButton bMale, bFemale, bOther;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     int calendarYear, calendarMonth, calendarDay;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,15 +140,23 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        // Setting photo
-        CircleImageView profilePic = findViewById(R.id.userPhoto);
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.profile)
-                .error(R.drawable.profile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
-        Glide.with(this).load(Uri.parse(MainActivity.photo)).apply(options).into(profilePic);
+        //UserPhoto
+        userPic = findViewById(R.id.userPhoto);
+        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+        Glide.with(this).load(MainActivity.photo).apply(options).into(userPic);
+        userPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.verifyStoragePermissions(ProfileEditActivity.this)) {
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setActivityTheme(R.style.AppTheme)
+                            .pickPhoto(ProfileEditActivity.this);
+                } else {
+                    ActivityCompat.requestPermissions(ProfileEditActivity.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
+                }
+            }
+        });
 
         //  Setting location and retrieving changes
         editLocation.setText(MainActivity.location);
@@ -138,9 +164,9 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(MainActivity.userCountry).setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
+                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(MainActivity.userCountry).setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS).build();
                     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(ProfileEditActivity.this);
-                    startActivityForResult(intent, 1320);
+                    startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -233,6 +259,11 @@ public class ProfileEditActivity extends AppCompatActivity {
                 params.put("birthday", MainActivity.birthday);
                 params.put("location", MainActivity.location);
                 params.put("country", MainActivity.userCountry);
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + MainActivity.username + "-USERPHOTO.jpg");
+                }
 
                 //returning parameters
                 return params;
@@ -244,6 +275,13 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     public void coloredBars(int color1, int color2) {
@@ -288,16 +326,54 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1320) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                MainActivity.location = place.getAddress().toString();
-                editLocation.setText(MainActivity.location);
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                Log.i("Error", status.getStatusMessage());
-            }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
+        String fileName = now + ".jpg";
+
+        switch (requestCode) {
+            case GOOGLE_PLACE_AUTOCOMPLETE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(this, data);
+                    MainActivity.location = place.getAddress().toString();
+                    editLocation.setText(MainActivity.location);
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(this, data);
+                    Log.i("Error", status.getStatusMessage());
+                }
+                break;
+            case FilePickerConst.REQUEST_CODE_PHOTO:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
+                    photo = aq.get(0);
+
+                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos");
+                    folder.mkdirs();
+
+                    UCrop.of(Uri.parse("file://" + photo), Uri.fromFile(new File(folder, fileName)))
+                            .withAspectRatio(1, 1)
+                            .withMaxResultSize(1080, 1080)
+                            .start(ProfileEditActivity.this);
+                }
+                break;
+            case UCrop.REQUEST_CROP:
+                if (resultCode == RESULT_OK) {
+                    final Uri resultUri = UCrop.getOutput(data);
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
+                        userPic.setImageBitmap(bitmap);
+                        editor.putString("ProfilePhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (resultCode == UCrop.RESULT_ERROR) {
+                    final Throwable cropError = UCrop.getError(data);
+                    if (cropError != null) {
+                        Toast.makeText(ProfileEditActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
         }
     }
 

@@ -131,28 +131,13 @@
                 android:paddingTop="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <TextView
-                android:id="@+id/dummyText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/editTextMail"
-                android:layout_alignLeft="@+id/userPhoto"
-                android:layout_alignRight="@+id/editTextMail"
-                android:layout_alignStart="@+id/userPhoto"
-                android:layout_below="@+id/userPhoto"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Profil fotosu ve isminizi başka hesapla girerek değiştirebilirsiniz."
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
             <ImageView
                 android:id="@+id/indicator_loc"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignLeft="@+id/dummyText2"
-                android:layout_alignStart="@+id/dummyText2"
-                android:layout_below="@+id/dummyText2"
+                android:layout_alignLeft="@+id/userPhoto"
+                android:layout_alignStart="@+id/userPhoto"
+                android:layout_below="@+id/editTextMail"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_location" />
@@ -183,6 +168,7 @@
                 android:layout_marginTop="8dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
+                android:inputType="none"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView
@@ -220,6 +206,7 @@
                 android:layout_marginTop="8dp"
                 android:enabled="true"
                 android:focusableInTouchMode="false"
+                android:inputType="none"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView

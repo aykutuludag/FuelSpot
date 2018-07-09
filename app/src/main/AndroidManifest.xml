@@ -118,7 +118,7 @@
         <!-- Google Maps && PlaceAutoComplete -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/GOOGLE_API_KEY" />
+            android:value="@string/g_api_key" />
 
         <!-- Firebase -->
         <meta-data

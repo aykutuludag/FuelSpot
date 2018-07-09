@@ -1,94 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_main"
-    android:fitsSystemWindows="true">
+    android:layout_height="wrap_content">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/Appbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
+        android:layout_height="wrap_content">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_header"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="@color/colorAccent"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="32dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            map:cameraTargetLat="39.925054"
+            map:cameraTargetLng="32.8347552"
+            map:cameraZoom="11.5" />
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                map:cameraTargetLat="39.925054"
-                map:cameraTargetLng="32.8347552"
-                map:cameraZoom="11.5" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sortBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mapView"
+            android:layout_marginTop="16dp"
+            android:background="#fff">
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/sortBar"
-                android:layout_width="match_parent"
+            <android.support.design.widget.TabItem
+                android:id="@+id/itemGasoline"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:layout_marginTop="268dp"
-                android:background="#fff">
+                android:icon="@drawable/gasoline"
+                android:text="SIRALA" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemGasoline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/gasoline"
-                    android:text="SIRALA" />
+            <android.support.design.widget.TabItem
+                android:id="@+id/itemDiesel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/diesel"
+                android:text="SIRALA" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemDiesel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/diesel"
-                    android:text="SIRALA" />
+            <android.support.design.widget.TabItem
+                android:id="@+id/itemLPG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/lpg"
+                android:text="SIRALA" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemLPG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/lpg"
-                    android:text="SIRALA" />
+            <android.support.design.widget.TabItem
+                android:id="@+id/itemElectricity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/electricity"
+                android:text="SIRALA" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemElectricity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/electricity"
-                    android:text="SIRALA" />
+            <android.support.design.widget.TabItem
+                android:id="@+id/itemDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/distance"
+                android:text="SIRALA" />
+        </android.support.design.widget.TabLayout>
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/distance"
-                    android:text="SIRALA" />
-            </android.support.design.widget.TabLayout>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <ImageView
+            android:id="@+id/errorPicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sortBar"
+            android:layout_marginTop="16dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/error_general" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/feedView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/sortBar"
+            android:layout_marginTop="16dp"
             android:background="@android:color/transparent" />
-    </android.support.v4.widget.NestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>
