@@ -89,6 +89,9 @@ public class FragmentNews extends Fragment {
     private void contentChooserByCountry(String country) {
         feedURL = "";
         switch (country) {
+            case "AZ":
+                feedURL = "http://fuel-spot.com/category/countries/azerbaijan/feed/json";
+                break;
             case "DE":
                 feedURL = "http://fuel-spot.com/category/countries/germany/feed/json";
                 break;

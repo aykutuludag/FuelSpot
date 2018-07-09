@@ -82,7 +82,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         // Setting prices
         String gasolineHolder;
-        if (String.valueOf(feedItem.getGasolinePrice()).contains("0.0")) {
+        if (feedItem.getGasolinePrice() == 0) {
             gasolineHolder = "-";
         } else {
             gasolineHolder = feedItem.getGasolinePrice() + " TL";
@@ -90,7 +90,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.gasolinePrice.setText(gasolineHolder);
 
         String dieselHolder;
-        if (String.valueOf(feedItem.getDieselPrice()).contains("0.0")) {
+        if (feedItem.getDieselPrice() == 0) {
             dieselHolder = "-";
         } else {
             dieselHolder = feedItem.getDieselPrice() + " TL";
@@ -98,7 +98,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.dieselPrice.setText(dieselHolder);
 
         String lpgHolder;
-        if (String.valueOf(feedItem.getLpgPrice()).contains("0.0")) {
+        if (feedItem.getLpgPrice() == 0) {
             lpgHolder = "-";
         } else {
             lpgHolder = feedItem.getLpgPrice() + " TL";
@@ -106,7 +106,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.lpgPrice.setText(lpgHolder);
 
         String elecHolder;
-        if (String.valueOf(feedItem.getElectricityPrice()).contains("0.0")) {
+        if (feedItem.getElectricityPrice() == 0) {
             elecHolder = "-";
         } else {
             elecHolder = feedItem.getElectricityPrice() + " TL";

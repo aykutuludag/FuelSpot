@@ -77,8 +77,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
                         ((StationDetails) mContext).fetchComments();
+                        Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {

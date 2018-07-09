@@ -62,6 +62,7 @@ public class FragmentVehicle extends Fragment {
     TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice;
     RelativeTimeTextView lastUpdated;
     Snackbar snackBar;
+    CircleImageView errorImage;
 
     public static FragmentVehicle newInstance() {
 
@@ -84,6 +85,8 @@ public class FragmentVehicle extends Fragment {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        errorImage = view.findViewById(R.id.errorImage);
 
         snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG);
         snackBar.setAction("Tamam", new View.OnClickListener() {
@@ -170,6 +173,8 @@ public class FragmentVehicle extends Fragment {
         avgPrice = headerView.findViewById(R.id.car_avgPrice);
         String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", MainActivity.averagePrice) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
+
+        //Aylık maliyet
 
         //Last updated
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
@@ -299,6 +304,7 @@ public class FragmentVehicle extends Fragment {
                                 e.printStackTrace();
                             }
                         } else {
+                            errorImage.setVisibility(View.VISIBLE);
                             snackBar.show();
                             swipeContainer.setRefreshing(false);
                         }

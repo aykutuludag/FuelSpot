@@ -7,6 +7,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -65,14 +66,15 @@ import java.util.Map;
 
 public class StationDetails extends AppCompatActivity {
 
-    int stationID;
-    int stars = 5;
-    int userCommentID;
-    boolean hasAlreadyCommented;
-    String stationName, stationVicinity, stationLocation, iconURL, userComment;
     float stationDistance;
     double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
     String lastUpdated;
+
+    int stationID, userCommentID;
+    String stationName, stationVicinity, stationLocation, iconURL, userComment;
+
+    int stars = 5;
+    boolean hasAlreadyCommented;
 
     ImageView stationIcon;
     TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
@@ -141,11 +143,11 @@ public class StationDetails extends AppCompatActivity {
             //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
             stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
             stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-            stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0.00f);
-            gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.00f);
-            dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.00f);
-            lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.00f);
-            electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.00f);
+            stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0.0f);
+            gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.0);
+            dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.0);
+            lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.0);
+            electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.0);
             lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
             iconURL = getIntent().getStringExtra("STATION_ICON");
             loadStationDetails();
@@ -185,11 +187,13 @@ public class StationDetails extends AppCompatActivity {
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                materialDesignFAM.close(true);
                 addUpdateCommentPopup(v);
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                materialDesignFAM.close(true);
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
                 startActivity(intent);
@@ -208,20 +212,44 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
                         if (streetViewPanoramaLocation == null) {
-                            Toast.makeText(StationDetails.this, "Sokak görünümü yok", Toast.LENGTH_LONG).show();
+                            Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
+
         //SingleStation
         textName.setText(stationName);
+
         textVicinity.setText(stationVicinity);
+
         textDistance.setText((int) stationDistance + " m");
-        textGasoline.setText(String.valueOf(gasolinePrice));
-        textDiesel.setText(String.valueOf(dieselPrice));
-        textLPG.setText(String.valueOf(lpgPrice));
-        textElectricity.setText(String.valueOf(electricityPrice));
+
+        if (gasolinePrice == 0) {
+            textGasoline.setText("-");
+        } else {
+            textGasoline.setText(String.valueOf(gasolinePrice));
+        }
+
+        if (dieselPrice == 0) {
+            textDiesel.setText("-");
+        } else {
+            textDiesel.setText(String.valueOf(dieselPrice));
+        }
+
+        if (lpgPrice == 0) {
+            textLPG.setText("-");
+        } else {
+            textLPG.setText(String.valueOf(lpgPrice));
+        }
+
+        if (electricityPrice == 0) {
+            textElectricity.setText("-");
+        } else {
+            textElectricity.setText(String.valueOf(electricityPrice));
+        }
+
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             Date date = format.parse(lastUpdated);
@@ -310,7 +338,9 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userComment != null && userComment.length() > 0) {
-                    if (!hasAlreadyCommented) {
+                    if (hasAlreadyCommented) {
+                        updateComment();
+                    } else {
                         sendComment();
                     }
                 } else {
@@ -320,6 +350,9 @@ public class StationDetails extends AppCompatActivity {
         });
 
         EditText getComment = customView.findViewById(R.id.editTextComment);
+        if (userComment != null && userComment.length() > 0) {
+            getComment.setText(userComment);
+        }
         getComment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -390,7 +423,10 @@ public class StationDetails extends AppCompatActivity {
                                     if (obj.getString("username").equals(MainActivity.username)) {
                                         hasAlreadyCommented = true;
                                         userCommentID = obj.getInt("id");
+                                        userComment = obj.getString("comment");
+                                        stars = obj.getInt("stars");
                                         floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
+                                        floatingActionButton1.setLabelText("Edit comment");
                                     }
                                 }
 
@@ -475,7 +511,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-  /*  private void updateComment() {
+    private void updateComment() {
         final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
                 new Response.Listener<String>() {
@@ -514,7 +550,7 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }*/
+    }
 
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {

@@ -26,13 +26,13 @@
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="350dp" />
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/single_station"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="350dp"
                 android:background="#90EDEDED">
 
                 <ImageView
@@ -329,7 +329,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@+id/constraintLayout"
-        app:layout_anchorGravity="right|bottom">
+        app:layout_anchorGravity="right|bottom"
+        app:menu_colorNormal="#000">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item1"

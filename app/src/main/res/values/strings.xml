@@ -25,22 +25,20 @@
     <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-purchase.php</string>
     <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-purchases.php</string>
 
-    <!-- Comment APIs -->
+    <!-- Comment-Answer APIs -->
     <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
+    <string name="API_UPDATE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-comment.php</string>
     <string name="API_DELETE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-comment.php</string>
-    <string name="API_FETCH_STATION_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-comments.php</string>
     <string name="API_FETCH_USER_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-comments.php</string>
+    <string name="API_FETCH_STATION_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-comments.php</string>
+    <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-answer.php</string>
+    <string name="API_DELETE_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-answer.php</string>
 
     <!-- SUPERUSER APIs -->
     <string name="API_SUPERUSER_REGISTER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-register.php</string>
     <string name="API_SUPERUSER_UPDATE_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-update.php</string>
     <string name="API_SUPERUSER_FETCH_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-fetch.php</string>
     <string name="API_SUPERUSER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-purchases.php</string>
-    <string name="API_SUPERUSER_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-comments.php</string>
-
-    <!-- Answer APIs -->
-    <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-answer.php</string>
-    <string name="API_DELETE_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-answer.php</string>
 
     <!-- Campaings APIs -->
     <string name="API_ADD_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-campaign.php</string>

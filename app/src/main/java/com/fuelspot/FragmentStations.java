@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -67,10 +68,11 @@ public class FragmentStations extends Fragment {
     List<StationItem> feedsList = new ArrayList<>();
 
     //Station variables
-    String[] stationName = new String[99];
-    String[] googleID = new String[99];
-    String[] vicinity = new String[99];
-    String[] location = new String[99];
+    List<String> stationName = new ArrayList<>();
+    List<String> googleID = new ArrayList<>();
+    List<String> vicinity = new ArrayList<>();
+    List<String> location = new ArrayList<>();
+    List<String> stationIcons = new ArrayList<>();
 
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -82,8 +84,6 @@ public class FragmentStations extends Fragment {
     TabLayout tabLayout;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
-
-    int stationCount;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -141,8 +141,6 @@ public class FragmentStations extends Fragment {
 
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
-        checkLocationPermission();
 
         return rootView;
     }
@@ -242,8 +240,9 @@ public class FragmentStations extends Fragment {
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 updateMapObject();
 
                 mFusedLocationClient.getLastLocation()
@@ -284,6 +283,12 @@ public class FragmentStations extends Fragment {
     }
 
     private void updateMapObject() {
+        stationName.clear();
+        vicinity.clear();
+        googleID.clear();
+        location.clear();
+        stationIcons.clear();
+
         if (circle != null) {
             circle.remove();
         }
@@ -292,17 +297,17 @@ public class FragmentStations extends Fragment {
             googleMap.clear();
         }
 
-        //Draw a circle with radius of 5000m
-        circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
-                .radius(5000)
-                .strokeColor(Color.RED));
-
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(MainActivity.userlat, MainActivity.userlon);
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(11.5f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
+
+        //Draw a circle with radius of 5000m
+        circle = googleMap.addCircle(new CircleOptions()
+                .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
+                .radius(5000)
+                .strokeColor(Color.RED));
 
         //Search stations in a radius of 5000m
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=5000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
@@ -313,21 +318,25 @@ public class FragmentStations extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         JSON json = new JSON(response);
-                        for (int i = 0; i < json.key("results").count(); i++) {
-                            stationCount++;
+                        if (response != null && response.length() > 0) {
+                            for (int i = 0; i < json.key("results").count(); i++) {
+                                stationName.add(json.key("results").index(i).key("name").stringValue());
+                                vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
+                                googleID.add(json.key("results").index(i).key("place_id").stringValue());
 
-                            stationName[i] = json.key("results").index(i).key("name").stringValue();
-                            vicinity[i] = json.key("results").index(i).key("vicinity").stringValue();
-                            googleID[i] = json.key("results").index(i).key("place_id").stringValue();
+                                double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                                double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+                                location.add(lat + ";" + lon);
 
-                            double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
-                            double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-                            location[i] = lat + ";" + lon;
+                                stationIcons.add(stationPhotoChooser(stationName.get(i)));
 
-                            LatLng sydney = new LatLng(lat, lon);
-                            markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName[i]).snippet(vicinity[i])));
+                                LatLng sydney = new LatLng(lat, lon);
+                                markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName.get(i)).snippet(vicinity.get(i))));
 
-                            addStation(stationName[i], vicinity[i], location[i], googleID[i], stationPhotoChooser(stationName[i]));
+                                addStation(i);
+                            }
+                        } else {
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -341,9 +350,9 @@ public class FragmentStations extends Fragment {
         queue.add(stringRequest);
     }
 
-    /* This method add station. If station exists in db, then update it (except prices). Returns stationInfo.
+    /* This method add stations. If station exists in db, then update it (except prices). Returns stationInfos.
      * To update stationPrices, use API_UPDATE_STATION */
-    private void addStation(final String name, final String vicinity, final String location, final String googleID, final String photoURL) {
+    private void addStation(final int index) {
         feedsList.clear();
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
@@ -351,41 +360,42 @@ public class FragmentStations extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            stationCount--;
+                            if (response != null && response.length() > 0) {
+                                JSONArray res = new JSONArray(response);
 
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-                            StationItem item = new StationItem();
-                            item.setID(obj.getInt("id"));
-                            item.setStationName(obj.getString("name"));
-                            item.setVicinity(obj.getString("vicinity"));
-                            item.setLocation(obj.getString("location"));
-                            item.setGasolinePrice(obj.getDouble("gasolinePrice"));
-                            item.setDieselPrice(obj.getDouble("dieselPrice"));
-                            item.setLpgPrice(obj.getDouble("lpgPrice"));
-                            item.setElectricityPrice(obj.getDouble("electricityPrice"));
-                            item.setGoogleMapID(obj.getString("googleID"));
-                            item.setPhotoURL(obj.getString("photoURL"));
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setGasolinePrice(obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice(obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice(obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice(obj.getDouble("electricityPrice"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setPhotoURL(obj.getString("photoURL"));
 
-                            //DISTANCE START
-                            Location loc1 = new Location("");
-                            loc1.setLatitude(MainActivity.userlat);
-                            loc1.setLongitude(MainActivity.userlon);
-                            Location loc2 = new Location("");
-                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
-                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                            float distanceInMeters = loc1.distanceTo(loc2);
-                            item.setDistance(distanceInMeters);
-                            //DISTANCE END
+                                    //DISTANCE START
+                                    Location loc1 = new Location("");
+                                    loc1.setLatitude(MainActivity.userlat);
+                                    loc1.setLongitude(MainActivity.userlon);
+                                    Location loc2 = new Location("");
+                                    loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
+                                    loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                                    float distanceInMeters = loc1.distanceTo(loc2);
+                                    item.setDistance(distanceInMeters);
+                                    //DISTANCE END
 
-                            //Lastupdated
-                            item.setLastUpdated(obj.getString("lastUpdated"));
+                                    //Lastupdated
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
 
-                            feedsList.add(item);
+                                    feedsList.add(item);
+                                }
 
-                            // Default - Sort by Distance
-                            if (stationCount == 0) {
+                                // Default - Sort by Distance
                                 tabLayout.getTabAt(4).select();
                                 sortBy(4);
                             }
@@ -405,11 +415,11 @@ public class FragmentStations extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("name", name);
-                params.put("vicinity", vicinity);
-                params.put("location", location);
-                params.put("googleID", googleID);
-                params.put("photoURL", photoURL);
+                params.put("name", stationName.get(index));
+                params.put("vicinity", vicinity.get(index));
+                params.put("location", location.get(index));
+                params.put("googleID", googleID.get(index));
+                params.put("photoURL", stationIcons.get(index));
 
                 //returning parameters
                 return params;
@@ -460,6 +470,7 @@ public class FragmentStations extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+            checkLocationPermission();
         }
     }
 
