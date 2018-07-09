@@ -21,7 +21,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -33,6 +32,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -48,6 +50,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
@@ -119,8 +123,14 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         // Setting photo
-        ImageView profilePic = findViewById(R.id.userPhoto);
-        Glide.with(this).load(Uri.parse(MainActivity.photo)).into(profilePic);
+        CircleImageView profilePic = findViewById(R.id.userPhoto);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.profile)
+                .error(R.drawable.profile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(this).load(Uri.parse(MainActivity.photo)).apply(options).into(profilePic);
 
         //  Setting location and retrieving changes
         editLocation.setText(MainActivity.location);

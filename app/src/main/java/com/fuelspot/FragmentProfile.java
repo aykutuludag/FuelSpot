@@ -2,11 +2,9 @@ package com.fuelspot;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -52,13 +50,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FragmentProfile extends Fragment {
 
-    CircleImageView carPhotoHolder;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
-    List<CommentItem> feedsList;
+    List<CommentItem> feedsList = new ArrayList<>();
     SwipeRefreshLayout swipeContainer;
     Snackbar snackBar;
+    ImageView errorPhoto;
 
     public static FragmentProfile newInstance() {
 
@@ -87,22 +85,19 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        ImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
-        Glide.with(getActivity()).load(Uri.parse(MainActivity.photo)).into(userProfileHolder);
+        CircleImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.profile)
+                .error(R.drawable.profile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(getActivity()).load(Uri.parse(MainActivity.photo)).apply(options).into(userProfileHolder);
 
         TextView userFullname = rootView.findViewById(R.id.userFullName);
         userFullname.setText(MainActivity.name);
 
-        TextView eposta = rootView.findViewById(R.id.profile_mail);
-        eposta.setText(MainActivity.email);
-
-        TextView fullCarName = rootView.findViewById(R.id.profile_CarName);
-        String fullad = MainActivity.carBrand + " " + MainActivity.carModel;
-        fullCarName.setText(fullad);
-
-        //CarPhoto
-        carPhotoHolder = rootView.findViewById(R.id.car_picture);
-        Glide.with(getActivity()).load(Uri.parse(MainActivity.carPhoto)).into(carPhotoHolder);
+        errorPhoto = rootView.findViewById(R.id.errorPhoto);
 
         ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
         updateUser.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +108,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        ImageView openHelp = rootView.findViewById(R.id.imageViewHelp);
+       /* ImageView openHelp = rootView.findViewById(R.id.imageViewHelp);
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,10 +141,9 @@ public class FragmentProfile extends Fragment {
                 builder.setToolbarColor(Color.parseColor("#212121"));
                 customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/privacy"));
             }
-        });
+        });*/
 
         //Comments
-        feedsList = new ArrayList<>();
         mRecyclerView = rootView.findViewById(R.id.commentView);
 
         swipeContainer = rootView.findViewById(R.id.swipeContainer);
@@ -165,8 +159,6 @@ public class FragmentProfile extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        fetchComments();
 
         return rootView;
     }
@@ -201,10 +193,13 @@ public class FragmentProfile extends Fragment {
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
+                                errorPhoto.setVisibility(View.VISIBLE);
+                                snackBar.show();
                                 swipeContainer.setRefreshing(false);
                                 e.printStackTrace();
                             }
                         } else {
+                            errorPhoto.setVisibility(View.VISIBLE);
                             snackBar.show();
                             swipeContainer.setRefreshing(false);
                         }
@@ -213,6 +208,8 @@ public class FragmentProfile extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        errorPhoto.setVisibility(View.VISIBLE);
+                        snackBar.show();
                         swipeContainer.setRefreshing(false);
                     }
                 }) {
@@ -325,6 +322,14 @@ public class FragmentProfile extends Fragment {
                 profilePic = itemView.findViewById(R.id.other_profile_pic);
                 rating = itemView.findViewById(R.id.ratingBar);
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRecyclerView != null) {
+            fetchComments();
         }
     }
 }

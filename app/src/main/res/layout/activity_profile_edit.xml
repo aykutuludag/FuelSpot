@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userPhoto"
                 android:layout_width="142dp"
                 android:layout_height="142dp"
@@ -39,7 +39,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/profile" />
+                android:src="@drawable/profile"
+                app:civ_border_color="#EA6C34"
+                app:civ_border_width="1dp" />
 
             <ImageView
                 android:id="@+id/dummyImage1"
@@ -76,7 +78,7 @@
                 android:layout_marginTop="8dp"
                 android:enabled="false"
                 android:gravity="bottom"
-                android:hint="Sheldon Cooper"
+                android:inputType="none"
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
@@ -120,7 +122,6 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
                 android:gravity="bottom"
-                android:hint="sheldon.cooper@caltech.edu"
                 android:inputType="textEmailAddress"
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
@@ -182,7 +183,6 @@
                 android:layout_marginTop="8dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:hint="Pasadena, California"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView
@@ -220,7 +220,6 @@
                 android:layout_marginTop="8dp"
                 android:enabled="true"
                 android:focusableInTouchMode="false"
-                android:hint="May 3, 1993"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView

@@ -333,6 +333,13 @@ public class StationDetails extends AppCompatActivity {
             mPopupWindow.setElevation(5.0f);
         }
 
+        TextView titlePopup = customView.findViewById(R.id.title);
+        if (hasAlreadyCommented) {
+            titlePopup.setText("Yorumu güncelle");
+        } else {
+            titlePopup.setText("Yorum yaz");
+        }
+
         Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
         sendAnswer.setOnClickListener(new View.OnClickListener() {
             @Override

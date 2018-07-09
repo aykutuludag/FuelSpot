@@ -59,6 +59,8 @@ import java.util.Map;
 
 import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.mapDefaultRange;
+import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 
 public class FragmentStations extends Fragment {
@@ -103,7 +105,6 @@ public class FragmentStations extends Fragment {
         t.setScreenName("İstasyonlar");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
-
 
         //Variables
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
@@ -240,7 +241,7 @@ public class FragmentStations extends Fragment {
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 updateMapObject();
@@ -299,9 +300,8 @@ public class FragmentStations extends Fragment {
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(MainActivity.userlat, MainActivity.userlon);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(11.5f).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
-                (cameraPosition));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         //Draw a circle with radius of 5000m
         circle = googleMap.addCircle(new CircleOptions()
@@ -310,7 +310,7 @@ public class FragmentStations extends Fragment {
                 .strokeColor(Color.RED));
 
         //Search stations in a radius of 5000m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=5000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultRange + "&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,

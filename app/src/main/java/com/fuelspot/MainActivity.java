@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
     public static int fuelPri, fuelSec, kilometer;
+    public static float mapDefaultZoom = 11.5f;
+    public static int mapDefaultRange = 5000;
 
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
@@ -174,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
-        userlat = prefs.getFloat("lat", 0);
-        userlon = prefs.getFloat("lon", 0);
+        userlat = prefs.getFloat("lat", 39.925054f);
+        userlon = prefs.getFloat("lon", 32.8347552f);
         premium = prefs.getBoolean("hasPremium", false);
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);
