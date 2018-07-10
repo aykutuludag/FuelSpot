@@ -75,24 +75,21 @@ public class AddFuel extends AppCompatActivity {
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
     SharedPreferences prefs;
-    Button sendVariables;
     RequestQueue requestQueue;
 
-    /* LAYOUT 1 ÖĞELER */
     String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
     SimpleDateFormat mFormatter = new SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault());
     long purchaseTime;
-    EditText chooseStation, chooseTime, enterKilometer;
 
-    /* LAYOUT 2 ÖĞELER */
+    /* LAYOUT 1 ÖĞELER */
     String fuelType, fuelType2 = "";
     RadioGroup chooseFuel, chooseFuel2;
     double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
     double totalPrice;
     double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
-    EditText textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
+    EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
 
-    /* Layout 3 */
+    /* LAYOUT 2 ÖĞELER */
     Bitmap bitmap;
     String billPhoto;
     ImageView photoHolder;
@@ -384,7 +381,7 @@ public class AddFuel extends AppCompatActivity {
                             chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
 
                             chosenStationName = json.key("results").index(0).key("name").stringValue();
-                            chooseStation.setText(chosenStationName);
+                            //chooseStation.setText(chosenStationName);
 
                             chosenStationAddress = json.key("results").index(0).key("vicinity").stringValue();
 
@@ -795,8 +792,8 @@ public class AddFuel extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (chooseStation != null && chosenStationName != null) {
-            chooseStation.setText(chosenStationName);
+        if (chosenGoogleID != null && chosenStationName != null) {
+            //chooseStation.setText(chosenStationName);
             updatePrices();
         }
     }

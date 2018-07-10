@@ -24,87 +24,7 @@
         android:id="@+id/addfuel_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp" />
-
-            <TextView
-                android:id="@+id/StationName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/mapView"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:text="İstasyon Adı"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <TextView
-                android:id="@+id/StationAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/StationName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="2dp"
-                android:text="İstasyon Adresi"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/textViewTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/StationAddress"
-                android:layout_marginTop="8dp"
-                android:text="SAAT:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <EditText
-                android:id="@+id/editTextTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewTime"
-                android:layout_marginTop="4dp"
-                android:focusable="false"
-                android:hint="21:32"
-                android:inputType="none"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewKilometer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextTime"
-                android:layout_marginTop="8dp"
-                android:text="KİLOMETRE:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <EditText
-                android:id="@+id/editTextKM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewKilometer"
-                android:layout_marginTop="4dp"
-                android:hint="145.500"
-                android:inputType="number"
-                android:textStyle="bold" />
-        </RelativeLayout>
-    </ScrollView>
-
-    <ScrollView
-        android:id="@+id/addfuel_layout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -112,10 +32,43 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:id="@+id/expandableButtonKM"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#212121"
+                android:clickable="false"
+                android:text="KİLOMETRE"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/kilometerTEXT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/expandableButtonKM"
+                android:gravity="center"
+                android:text="Aracın kilometresi"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <EditText
+                android:id="@+id/editTextKilometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/kilometerTEXT"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:hint="30000"
+                android:inputType="number"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/expandableButtonYakit1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#212121"
+                android:layout_below="@id/editTextKilometer"
+                android:clickable="false"
                 android:text="1. yakıt"
                 android:textColor="#fff" />
 
@@ -250,6 +203,7 @@
                 android:layout_below="@+id/seekBar1"
                 android:layout_marginTop="8dp"
                 android:background="#212121"
+                android:clickable="false"
                 android:text="2. yakıt"
                 android:textColor="#fff" />
 
@@ -395,10 +349,10 @@
     </ScrollView>
 
     <ScrollView
-        android:id="@+id/addfuel_layout3"
+        android:id="@+id/addfuel_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout

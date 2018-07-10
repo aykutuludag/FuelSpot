@@ -90,7 +90,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         //Window
@@ -1063,6 +1062,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onBackPressed() {
-        finish();
+        // Do nothing
     }
 }

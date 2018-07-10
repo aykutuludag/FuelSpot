@@ -411,6 +411,7 @@ public class StationDetails extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
+
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
 
