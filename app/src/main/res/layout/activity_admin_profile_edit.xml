@@ -21,8 +21,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/welcome2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -31,14 +33,10 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userPhoto"
-                android:layout_width="142dp"
-                android:layout_height="142dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
                 android:src="@drawable/profile"
                 app:civ_border_color="#EA6C34"
                 app:civ_border_width="1dp" />
@@ -47,11 +45,10 @@
                 android:id="@+id/dummyImage1"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignTop="@+id/userPhoto"
+                android:layout_below="@id/userPhoto"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/userPhoto"
-                android:layout_toRightOf="@+id/userPhoto"
+                android:layout_marginTop="8dp"
                 app:srcCompat="@drawable/event_edit_title" />
 
             <TextView
@@ -78,13 +75,12 @@
                 android:layout_marginTop="8dp"
                 android:enabled="false"
                 android:gravity="bottom"
-                android:inputType="none"
                 android:paddingBottom="8dp"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/dummyImage2"
@@ -97,7 +93,7 @@
                 app:srcCompat="@drawable/profile_edit_email" />
 
             <TextView
-                android:id="@+id/mail_title"
+                android:id="@+id/dummyText3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/dummyImage2"
@@ -114,7 +110,6 @@
                 android:id="@+id/editTextMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/userPhoto"
                 android:layout_alignLeft="@+id/dummyImage2"
                 android:layout_alignStart="@+id/dummyImage2"
                 android:layout_below="@+id/dummyImage2"
@@ -129,56 +124,62 @@
                 android:paddingRight="8dp"
                 android:paddingStart="8dp"
                 android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/indicator_loc"
+                android:id="@+id/dummyImage3"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignLeft="@+id/userPhoto"
-                android:layout_alignStart="@+id/userPhoto"
+                android:layout_alignLeft="@+id/editFullName"
+                android:layout_alignStart="@+id/editFullName"
                 android:layout_below="@+id/editTextMail"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitStart"
-                app:srcCompat="@drawable/event_edit_location" />
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/profile_edit_email" />
 
             <TextView
-                android:id="@+id/desc_title"
+                android:id="@+id/dummyText4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/indicator_loc"
-                android:layout_alignTop="@+id/indicator_loc"
+                android:layout_alignBottom="@+id/dummyImage3"
+                android:layout_alignTop="@+id/dummyImage3"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/indicator_loc"
-                android:layout_toRightOf="@+id/indicator_loc"
+                android:layout_toEndOf="@+id/dummyImage3"
+                android:layout_toRightOf="@+id/dummyImage3"
                 android:gravity="center"
-                android:text="Konum"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:text="Telefon"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
-                android:id="@+id/editTextLocation"
+                android:id="@+id/editTextPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/indicator_loc"
-                android:layout_alignStart="@+id/indicator_loc"
-                android:layout_below="@+id/indicator_loc"
+                android:layout_alignLeft="@+id/dummyImage2"
+                android:layout_alignStart="@+id/dummyImage2"
+                android:layout_below="@+id/dummyImage3"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:gravity="bottom"
+                android:inputType="phone"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/dummyImage4"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignLeft="@+id/editTextLocation"
-                android:layout_alignStart="@+id/editTextLocation"
-                android:layout_below="@+id/editTextLocation"
-                android:layout_marginTop="10dp"
+                android:layout_alignLeft="@+id/dummyImage3"
+                android:layout_alignStart="@+id/dummyImage3"
+                android:layout_below="@+id/editTextPhone"
+                android:layout_marginTop="8dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_date" />
 
@@ -187,8 +188,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/dummyImage4"
-                android:layout_alignLeft="@+id/desc_title"
-                android:layout_alignStart="@+id/desc_title"
+                android:layout_alignLeft="@+id/dummyText4"
+                android:layout_alignStart="@+id/dummyText4"
                 android:layout_alignTop="@+id/dummyImage4"
                 android:gravity="center"
                 android:text="Doğum günü"
@@ -206,8 +207,8 @@
                 android:layout_marginTop="8dp"
                 android:enabled="true"
                 android:focusableInTouchMode="false"
-                android:inputType="none"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/dummyImage5"
@@ -216,12 +217,12 @@
                 android:layout_alignLeft="@+id/editTextBirthday"
                 android:layout_alignStart="@+id/editTextBirthday"
                 android:layout_below="@+id/editTextBirthday"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/icon_gender_dark" />
 
             <TextView
-                android:id="@+id/gender_title"
+                android:id="@+id/dummyText6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/dummyImage5"
@@ -239,7 +240,7 @@
                 android:layout_alignLeft="@+id/dummyImage5"
                 android:layout_alignStart="@+id/dummyImage5"
                 android:layout_below="@+id/dummyImage5"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:checkedButton="@+id/genderMale"
                 android:orientation="horizontal">
 
@@ -270,7 +271,7 @@
                     android:layout_weight="1"
                     android:text="Diğer" />
             </RadioGroup>
+
         </RelativeLayout>
     </ScrollView>
-
 </android.support.design.widget.CoordinatorLayout>

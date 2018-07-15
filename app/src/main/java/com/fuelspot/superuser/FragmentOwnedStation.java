@@ -159,8 +159,8 @@ public class FragmentOwnedStation extends Fragment {
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setZoomGesturesEnabled(true);
-                googleMap.getUiSettings().setScrollGesturesEnabled(true);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(true);
 
                 loadStationDetails();

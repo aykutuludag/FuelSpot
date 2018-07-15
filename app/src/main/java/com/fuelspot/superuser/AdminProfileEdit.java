@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
@@ -19,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -46,12 +47,6 @@ import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
@@ -60,6 +55,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -69,22 +65,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
 import static com.fuelspot.MainActivity.photo;
 
 public class AdminProfileEdit extends AppCompatActivity {
 
     Toolbar toolbar;
     Window window;
-    CircleImageView userPic;
-    EditText editName, editMail, editLocation, editBirthday;
-    RadioGroup editGender;
-    RadioButton bMale, bFemale, bOther;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     int calendarYear, calendarMonth, calendarDay;
     Bitmap bitmap;
     RequestQueue requestQueue;
+    RadioGroup editGender;
+    RadioButton bMale, bFemale, bOther;
+    EditText editTextEmail, editTextPhone, editTextBirthday;
+    CircleImageView userPhoto;
+    TextView textViewFullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,45 +109,11 @@ public class AdminProfileEdit extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(AdminProfileEdit.this);
 
-        editName = findViewById(R.id.editFullName);
-        editMail = findViewById(R.id.editTextMail);
-        editLocation = findViewById(R.id.editTextLocation);
-        editBirthday = findViewById(R.id.editTextBirthday);
-        editGender = findViewById(R.id.radioGroupGender);
-        bMale = findViewById(R.id.genderMale);
-        bFemale = findViewById(R.id.genderFemale);
-        bOther = findViewById(R.id.genderOther);
-
-        // Setting name
-        editName.setText(MainActivity.name);
-
-        // Setting email
-        editMail.setText(MainActivity.email);
-        editMail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0 && s.toString().contains("@")) {
-                    MainActivity.email = s.toString();
-                }
-            }
-        });
-
-        //UserPhoto
-        userPic = findViewById(R.id.userPhoto);
+        userPhoto = findViewById(R.id.userPhoto);
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
-        Glide.with(this).load(MainActivity.photo).apply(options).into(userPic);
-        userPic.setOnClickListener(new View.OnClickListener() {
+        Glide.with(this).load(MainActivity.photo).apply(options).into(userPhoto);
+        userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyStoragePermissions(AdminProfileEdit.this)) {
@@ -164,44 +126,32 @@ public class AdminProfileEdit extends AppCompatActivity {
             }
         });
 
-        //  Setting location and retrieving changes
-        editLocation.setText(MainActivity.location);
-        editLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(MainActivity.userCountry).setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS).build();
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(AdminProfileEdit.this);
-                    startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        textViewFullName = findViewById(R.id.editFullName);
+        textViewFullName.setText(MainActivity.name);
 
-        //  Setting birthday and retrieving changes
-        editBirthday.setText(MainActivity.birthday);
+        editTextBirthday = findViewById(R.id.editTextBirthday);
+        editTextBirthday.setText(MainActivity.birthday);
         if (MainActivity.birthday.length() > 0) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
             try {
                 Date birthDateasDate = sdf.parse(MainActivity.birthday);
-                calendarYear = birthDateasDate.getYear() + 1900;
-                calendarMonth = birthDateasDate.getMonth() + 1;
-                calendarDay = birthDateasDate.getDate();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(birthDateasDate);
+                calendarYear = calendar.get(Calendar.YEAR);
+                calendarMonth = calendar.get(Calendar.MONTH) + 1;
+                calendarDay = calendar.get(Calendar.DATE);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-        editBirthday.setOnClickListener(new View.OnClickListener() {
+        editTextBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 DatePickerDialog datePicker = new DatePickerDialog(AdminProfileEdit.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        MainActivity.birthday = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                        editBirthday.setText(MainActivity.birthday);
+                        MainActivity.birthday = pad(dayOfMonth) + "/" + pad(monthOfYear + 1) + "/" + year;
+                        editTextBirthday.setText(MainActivity.birthday);
                     }
                 }, calendarYear, calendarMonth, calendarDay);
 
@@ -210,15 +160,75 @@ public class AdminProfileEdit extends AppCompatActivity {
                 datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", datePicker);
                 datePicker.show();
             }
+
+            private String pad(int number) {
+                String returnedValue;
+                if (number < 10) {
+                    returnedValue = "0" + number;
+                } else {
+                    returnedValue = String.valueOf(number);
+                }
+                return returnedValue;
+            }
+        });
+
+        editTextPhone = findViewById(R.id.editTextPhone);
+        editTextPhone.setText(AdminMainActivity.userPhoneNumber);
+        editTextPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    AdminMainActivity.userPhoneNumber = s.toString();
+                }
+            }
+        });
+
+        editTextEmail = findViewById(R.id.editTextMail);
+        editTextEmail.setText(MainActivity.email);
+        editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    MainActivity.email = s.toString();
+                }
+            }
         });
 
         //  Set gender and retrieve changes
-        if (MainActivity.gender.equals("male")) {
-            bMale.setChecked(true);
-        } else if (MainActivity.gender.equals("female")) {
-            bFemale.setChecked(true);
-        } else {
-            bOther.setChecked(true);
+        editGender = findViewById(R.id.radioGroupGender);
+        bMale = findViewById(R.id.genderMale);
+        bFemale = findViewById(R.id.genderFemale);
+        bOther = findViewById(R.id.genderOther);
+        switch (MainActivity.gender) {
+            case "male":
+                bMale.setChecked(true);
+                break;
+            case "female":
+                bFemale.setChecked(true);
+                break;
+            default:
+                bOther.setChecked(true);
+                break;
         }
         editGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -234,23 +244,31 @@ public class AdminProfileEdit extends AppCompatActivity {
         });
     }
 
-    private void updateUserInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+    public void updateSuperUser() {
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE_PROFILE),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(AdminProfileEdit.this, response.toString(), Toast.LENGTH_LONG).show();
-                        Intent i = getBaseContext().getPackageManager()
-                                .getLaunchIntentForPackage(getBaseContext().getPackageName());
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
+                    public void onResponse(String s) {
+                        // Register process ended redirect user to AdminMainActivity to wait verification process.
+                        MainActivity.isSigned = true;
+                        prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
+                        MainActivity.isSuperUser = true;
+                        prefs.edit().putBoolean("isSuperUser", MainActivity.isSuperUser).apply();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(AdminProfileEdit.this, AdminMainActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }, 1500);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(AdminProfileEdit.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
                 }) {
             @Override
@@ -263,8 +281,13 @@ public class AdminProfileEdit extends AppCompatActivity {
                 params.put("email", MainActivity.email);
                 params.put("gender", MainActivity.gender);
                 params.put("birthday", MainActivity.birthday);
-                params.put("location", MainActivity.location);
-                params.put("country", MainActivity.userCountry);
+                params.put("phoneNumber", AdminMainActivity.userPhoneNumber);
+                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
+                params.put("googleID", AdminMainActivity.superGoogleID);
+                params.put("stationName", AdminMainActivity.superStationName);
+                params.put("stationLocation", AdminMainActivity.superStationLocation);
+                params.put("stationAddress", AdminMainActivity.superStationAddress);
+                params.put("stationLogo", AdminMainActivity.superStationLogo);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 } else {
@@ -315,10 +338,10 @@ public class AdminProfileEdit extends AppCompatActivity {
                 if (MainActivity.isNetworkConnected(this)) {
                     editor.putString("Email", MainActivity.email);
                     editor.putString("Gender", MainActivity.gender);
-                    editor.putString("Location", MainActivity.location);
                     editor.putString("Birthday", MainActivity.birthday);
+                    editor.putString("userPhoneNumber", AdminMainActivity.userPhoneNumber);
                     editor.apply();
-                    updateUserInfo();
+                    updateSuperUser();
                 } else {
                     Toast.makeText(AdminProfileEdit.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
                 }
@@ -336,16 +359,6 @@ public class AdminProfileEdit extends AppCompatActivity {
         String fileName = now + ".jpg";
 
         switch (requestCode) {
-            case GOOGLE_PLACE_AUTOCOMPLETE:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    MainActivity.location = place.getAddress().toString();
-                    editLocation.setText(MainActivity.location);
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(this, data);
-                    Log.i("Error", status.getStatusMessage());
-                }
-                break;
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
@@ -367,7 +380,7 @@ public class AdminProfileEdit extends AppCompatActivity {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
-                        Glide.with(this).load(bitmap).apply(options).into(userPic);
+                        Glide.with(this).load(bitmap).apply(options).into(userPhoto);
                         editor.putString("ProfilePhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName);
                     } catch (IOException e) {
                         e.printStackTrace();
