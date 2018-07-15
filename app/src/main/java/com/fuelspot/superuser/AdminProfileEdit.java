@@ -1,4 +1,4 @@
-package com.fuelspot;
+package com.fuelspot.superuser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,6 +41,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.fuelspot.AnalyticsApplication;
+import com.fuelspot.MainActivity;
+import com.fuelspot.R;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -69,7 +72,7 @@ import droidninja.filepicker.FilePickerConst;
 import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
 import static com.fuelspot.MainActivity.photo;
 
-public class ProfileEditActivity extends AppCompatActivity {
+public class AdminProfileEdit extends AppCompatActivity {
 
     Toolbar toolbar;
     Window window;
@@ -86,7 +89,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_edit);
+        setContentView(R.layout.activity_admin_profile_edit);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
@@ -108,7 +111,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();
 
-        requestQueue = Volley.newRequestQueue(ProfileEditActivity.this);
+        requestQueue = Volley.newRequestQueue(AdminProfileEdit.this);
 
         editName = findViewById(R.id.editFullName);
         editMail = findViewById(R.id.editTextMail);
@@ -151,12 +154,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyStoragePermissions(ProfileEditActivity.this)) {
+                if (MainActivity.verifyStoragePermissions(AdminProfileEdit.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(ProfileEditActivity.this);
+                            .pickPhoto(AdminProfileEdit.this);
                 } else {
-                    ActivityCompat.requestPermissions(ProfileEditActivity.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(AdminProfileEdit.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
                 }
             }
         });
@@ -168,7 +171,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(MainActivity.userCountry).setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS).build();
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(ProfileEditActivity.this);
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(AdminProfileEdit.this);
                     startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -194,7 +197,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         editBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePicker = new DatePickerDialog(ProfileEditActivity.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(AdminProfileEdit.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         MainActivity.birthday = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
@@ -236,7 +239,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(ProfileEditActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminProfileEdit.this, response.toString(), Toast.LENGTH_LONG).show();
                         Intent i = getBaseContext().getPackageManager()
                                 .getLaunchIntentForPackage(getBaseContext().getPackageName());
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -247,7 +250,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
-                        Toast.makeText(ProfileEditActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminProfileEdit.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -317,7 +320,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     editor.apply();
                     updateUserInfo();
                 } else {
-                    Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminProfileEdit.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:
@@ -354,7 +357,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     UCrop.of(Uri.parse("file://" + photo), Uri.fromFile(new File(folder, fileName)))
                             .withAspectRatio(1, 1)
                             .withMaxResultSize(1080, 1080)
-                            .start(ProfileEditActivity.this);
+                            .start(AdminProfileEdit.this);
                 }
                 break;
             case UCrop.REQUEST_CROP:
@@ -372,7 +375,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     final Throwable cropError = UCrop.getError(data);
                     if (cropError != null) {
-                        Toast.makeText(ProfileEditActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminProfileEdit.this, cropError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
                 break;

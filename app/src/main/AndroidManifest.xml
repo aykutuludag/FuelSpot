@@ -40,7 +40,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StationDetails"
-            android:label="@string/title_activity_station_details" />
+            android:label="@string/title_activity_station_details"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
@@ -51,7 +52,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileEditActivity"
-            android:label="@string/title_activity_profile_edit" />
+            android:label="@string/title_activity_profile_edit"
+            android:parentActivityName=".MainActivity" />
 
         <!-- SuperUser Class -->
         <activity
@@ -67,6 +69,10 @@
             android:label="@string/title_activity_edit_prices"
             android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".superuser.AdminProfileEdit"
+            android:label="@string/title_activity_profile_edit"
+            android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperPurchases"
             android:label="@string/title_activity_super_purchases"

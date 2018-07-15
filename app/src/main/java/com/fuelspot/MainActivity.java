@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int UNIFIED_REQUEST = 99;
     public static final int GOOGLE_LOGIN = 100;
     public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
+    public static final int PURCHASE_NORMAL_PREMIUM = 1000;
+    public static final int PURCHASE_ADMIN_PREMIUM = 1001;
     // Static values
     public static float TAX_GASOLINE;
     public static float TAX_DIESEL;
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom = 11.5f;
     public static int mapDefaultRange = 5000;
+    public static int openCount;
 
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
@@ -154,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     SharedPreferences prefs;
-    int openCount;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -404,7 +406,9 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             try {
                                 buyPremium();
-                            } catch (RemoteException | IntentSender.SendIntentException e) {
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            } catch (IntentSender.SendIntentException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -466,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
                 "/tYMgwhg1DVikb4R4iLNAO5pNj/QWh19+vwajyUFbAyw93xVnDkeTZFdhdSdJ8M");
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
         assert pendingIntent != null;
-        startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0,
+        startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_NORMAL_PREMIUM, new Intent(), 0,
                 0, 0);
     }
 
@@ -518,22 +522,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1001) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
-                prefs.edit().putBoolean("hasPremium", true).apply();
-                Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                if (i != null) {
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    finish();
+        switch (requestCode) {
+            case PURCHASE_NORMAL_PREMIUM:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
+                    prefs.edit().putBoolean("hasPremium", true).apply();
+                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+                    if (i != null) {
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
+                            Toast.LENGTH_LONG).show();
+                    prefs.edit().putBoolean("hasPremium", false).apply();
                 }
-            } else {
-                Toast.makeText(MainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
-                        Toast.LENGTH_LONG).show();
-                prefs.edit().putBoolean("hasPremium", false).apply();
-            }
+                break;
         }
+
+        //Irrelevant
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("Stations");
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);

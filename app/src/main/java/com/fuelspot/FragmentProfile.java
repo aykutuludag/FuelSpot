@@ -2,9 +2,13 @@ package com.fuelspot;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,6 +33,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.model.CommentItem;
+import com.fuelspot.superuser.AdminMainActivity;
+import com.fuelspot.superuser.AdminProfileEdit;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -57,6 +63,7 @@ public class FragmentProfile extends Fragment {
     SwipeRefreshLayout swipeContainer;
     Snackbar snackBar;
     ImageView errorPhoto;
+    TextView title;
 
     public static FragmentProfile newInstance() {
 
@@ -77,7 +84,11 @@ public class FragmentProfile extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), "Henüz hiç yorum yazmamışsınız.", Snackbar.LENGTH_LONG);
+        String snackBarText = "Henüz hiç yorum yazmamışsınız.";
+        if (MainActivity.isSuperUser) {
+            snackBarText = "Henüz hiç cevap yazmamışsınız.";
+        }
+        snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), snackBarText, Snackbar.LENGTH_LONG);
         snackBar.setAction("Tamam", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,18 +108,52 @@ public class FragmentProfile extends Fragment {
         TextView userFullname = rootView.findViewById(R.id.userFullName);
         userFullname.setText(MainActivity.name);
 
+        title = rootView.findViewById(R.id.viewTitle);
+        if (MainActivity.isSuperUser) {
+            title.setText("Son cevaplarınız");
+        }
+
         errorPhoto = rootView.findViewById(R.id.errorPhoto);
 
         ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
         updateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                startActivity(intent);
+                if (MainActivity.isSuperUser) {
+                    Intent intent = new Intent(getActivity(), AdminProfileEdit.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
-       /* ImageView openHelp = rootView.findViewById(R.id.imageViewHelp);
+        ImageView getPremium = rootView.findViewById(R.id.button_premium);
+        getPremium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.isSuperUser) {
+                    try {
+                        ((AdminMainActivity) getActivity()).buyAdminPremium();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        ((MainActivity) getActivity()).buyPremium();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        ImageView openHelp = rootView.findViewById(R.id.button_help);
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +175,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        ImageView openPrivacy = rootView.findViewById(R.id.imageViewPrivacy);
+        ImageView openPrivacy = rootView.findViewById(R.id.button_privacy);
         openPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +186,7 @@ public class FragmentProfile extends Fragment {
                 builder.setToolbarColor(Color.parseColor("#212121"));
                 customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/privacy"));
             }
-        });*/
+        });
 
         //Comments
         mRecyclerView = rootView.findViewById(R.id.commentView);
@@ -165,7 +210,11 @@ public class FragmentProfile extends Fragment {
 
     public void fetchComments() {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_COMMENTS),
+        String whichApi = getString(R.string.API_FETCH_USER_COMMENTS);
+        if (MainActivity.isSuperUser) {
+            whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, whichApi,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -179,10 +228,12 @@ public class FragmentProfile extends Fragment {
                                     item.setID(obj.getInt("id"));
                                     item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
-                                    item.setStationID(obj.getInt("station_id"));
                                     item.setProfile_pic(obj.getString("user_photo"));
                                     item.setUsername(obj.getString("username"));
                                     item.setRating(obj.getInt("stars"));
+                                    item.setAnswer(obj.getString("answer"));
+                                    item.setReplyTime(obj.getString("replyTime"));
+                                    item.setLogo(obj.getString("logo"));
                                     feedsList.add(item);
                                 }
                                 mAdapter = new CommentAdapterforProfile(getActivity(), feedsList);
@@ -294,6 +345,21 @@ public class FragmentProfile extends Fragment {
 
             viewHolder.rating.setRating(feedItem.getRating());
 
+            if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
+                viewHolder.answerView.setVisibility(View.VISIBLE);
+
+                viewHolder.answerHolder.setText(feedItem.getAnswer());
+                try {
+                    Date date2 = format.parse(feedItem.getReplyTime());
+                    viewHolder.replyTime.setReferenceTime(date2.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                //Station Icon
+                Glide.with(mContext).load(feedItem.getLogo()).into(viewHolder.logo);
+            }
+
             // Handle click event on image click
             viewHolder.card.setOnClickListener(clickListener);
             viewHolder.card.setTag(viewHolder);
@@ -306,11 +372,11 @@ public class FragmentProfile extends Fragment {
 
         class ViewHolder2 extends RecyclerView.ViewHolder {
 
-            RelativeLayout card;
-            TextView commentHolder;
+            RelativeLayout card, answerView;
+            TextView commentHolder, answerHolder;
             TextView username;
-            RelativeTimeTextView time;
-            ImageView profilePic;
+            RelativeTimeTextView time, replyTime;
+            ImageView profilePic, logo;
             RatingBar rating;
 
             ViewHolder2(View itemView) {
@@ -321,6 +387,10 @@ public class FragmentProfile extends Fragment {
                 time = itemView.findViewById(R.id.time);
                 profilePic = itemView.findViewById(R.id.other_profile_pic);
                 rating = itemView.findViewById(R.id.ratingBar);
+                answerView = itemView.findViewById(R.id.answerView);
+                answerHolder = itemView.findViewById(R.id.answer);
+                replyTime = itemView.findViewById(R.id.textViewReplyTime);
+                logo = itemView.findViewById(R.id.imageViewLogo);
             }
         }
     }

@@ -147,6 +147,8 @@ public class FragmentStations extends Fragment {
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
+        checkLocationPermission();
+
         return rootView;
     }
 
@@ -278,7 +280,7 @@ public class FragmentStations extends Fragment {
                                 } else {
                                     LocationRequest mLocationRequest = new LocationRequest();
                                     mLocationRequest.setInterval(60000);
-                                    mLocationRequest.setFastestInterval(5000);
+                                    mLocationRequest.setFastestInterval(15000);
                                     mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                 }
                             }
@@ -458,7 +460,7 @@ public class FragmentStations extends Fragment {
                                         } else {
                                             LocationRequest mLocationRequest = new LocationRequest();
                                             mLocationRequest.setInterval(60000);
-                                            mLocationRequest.setFastestInterval(5000);
+                                            mLocationRequest.setFastestInterval(15000);
                                             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                         }
                                     }
@@ -476,7 +478,6 @@ public class FragmentStations extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
-            checkLocationPermission();
         }
     }
 

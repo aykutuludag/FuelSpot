@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,6 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -129,6 +131,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     RadioButton bMale, bFemale, bOther;
     int calendarYear, calendarMonth, calendarDay;
     private GoogleMap googleMap;
+    VideoView background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +146,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         AdminMainActivity.getSuperVariables(prefs);
         requestQueue = Volley.newRequestQueue(AdminRegister.this);
 
+        background = findViewById(R.id.videoViewBackground);
         promoLayout = findViewById(R.id.layout_promo);
         registerLayout = findViewById(R.id.registerLayout);
         welcome1 = findViewById(R.id.welcome1);
@@ -339,6 +343,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             public void run() {
                                 registerLayout.setVisibility(View.GONE);
                                 welcome1.setVisibility(View.VISIBLE);
+                                background.stopPlayback();
+                                background.setVisibility(View.INVISIBLE);
                                 fetchSuperUserInfo();
                             }
                         }, 1500);
@@ -533,7 +539,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         JSON json = new JSON(response);
                         if (json.key("results").count() > 0) {
                             // Yes! He is in station. Probably there is only one station in 75m  so get the first value
-                            String placeID = json.key("results").index(0).key("place_id").stringValue();
+                            AdminMainActivity.superGoogleID = json.key("results").index(0).key("place_id").stringValue();
 
                             AdminMainActivity.superStationName = json.key("results").index(0).key("name").stringValue();
                             textViewStationName.setText(AdminMainActivity.superStationName);
@@ -550,8 +556,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                             stationHint.setTextColor(Color.parseColor("#00801e"));
 
-                            registerOwnedStation(AdminMainActivity.superStationName, AdminMainActivity.superStationAddress, AdminMainActivity.superStationLocation, placeID, MainActivity.stationPhotoChooser(AdminMainActivity.superStationName));
-                            fetchOwnedStation(placeID);
+                            registerOwnedStation(AdminMainActivity.superStationName, AdminMainActivity.superStationAddress, AdminMainActivity.superStationLocation, AdminMainActivity.superGoogleID, MainActivity.stationPhotoChooser(AdminMainActivity.superStationName));
                         } else {
                             AdminMainActivity.superStationName = "";
                             AdminMainActivity.superStationAddress = "";
@@ -580,7 +585,25 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        // Do nothing
+                        if (s != null && s.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(s);
+                                JSONObject obj = res.getJSONObject(0);
+                                AdminMainActivity.superStationID = obj.getInt("id");
+                                AdminMainActivity.superGoogleID = obj.getString("googleID");
+                                AdminMainActivity.superStationName = obj.getString("name");
+                                AdminMainActivity.superStationLocation = obj.getString("location");
+                                AdminMainActivity.superStationLogo = obj.getString("photoURL");
+
+                                prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
+                                prefs.edit().putString("SuperGoogleID", AdminMainActivity.superGoogleID).apply();
+                                prefs.edit().putString("SuperStationName", AdminMainActivity.superStationName).apply();
+                                prefs.edit().putString("SuperStationLocation", AdminMainActivity.superStationLocation).apply();
+                                prefs.edit().putString("SuperStationLogo", AdminMainActivity.superStationLogo).apply();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -600,54 +623,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 params.put("location", location);
                 params.put("googleID", placeID);
                 params.put("photoURL", photoURL);
-                params.put("timeStamp", String.valueOf(System.currentTimeMillis()));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    public void fetchOwnedStation(final String placeID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-                            AdminMainActivity.superStationID = obj.getInt("id");
-                            AdminMainActivity.superGoogleID = obj.getString("googleID");
-                            AdminMainActivity.superStationName = obj.getString("name");
-                            AdminMainActivity.superStationLocation = obj.getString("location");
-                            AdminMainActivity.superStationLogo = obj.getString("photoURL");
-
-                            prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
-                            prefs.edit().putString("SuperGoogleID", AdminMainActivity.superGoogleID).apply();
-                            prefs.edit().putString("SuperStationName", AdminMainActivity.superStationName).apply();
-                            prefs.edit().putString("SuperStationLocation", AdminMainActivity.superStationLocation).apply();
-                            prefs.edit().putString("SuperStationLogo", AdminMainActivity.superStationLogo).apply();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("placeID", placeID);
 
                 //returning parameters
                 return params;
@@ -708,7 +683,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 } else {
                     if (AdminMainActivity.contractPhoto != null) {
                         try {
-                            bitmap = MediaStore.Images.Media.getBitmap(AdminRegister.this.getContentResolver(), Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/License.jpg"));
+                            bitmap = MediaStore.Images.Media.getBitmap(AdminRegister.this.getContentResolver(), Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/Licenses/License.jpg"));
                             params.put("contractPhoto", getStringImage(bitmap));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -738,7 +713,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         loadMap();
 
         userPhoto = findViewById(R.id.userPhoto);
-        Glide.with(this).load(MainActivity.photo).into(userPhoto);
+        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.profile).error(R.drawable.profile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+        Glide.with(this).load(MainActivity.photo).apply(options).into(userPhoto);
 
         textViewFullName = findViewById(R.id.editFullName);
         textViewFullName.setText(MainActivity.name);
@@ -864,17 +841,11 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         termsAndConditions = findViewById(R.id.checkBoxTerms);
         termsAndConditions.setText("");
         termsAndConditions.setText(Html.fromHtml(
-                "<a href='http://fuel-spot.com/terms-and-conditions'>Şartlar ve koşullar</a>" + "ı okudum, kabul ediyorum."));
+                "Şartlar ve koşulları okudum, <a href='http://fuel-spot.com/terms-and-conditions'>kabul ediyorum.</a>"));
         termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
         applicationForm = findViewById(R.id.imageViewLicense);
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
         Glide.with(AdminRegister.this).load(AdminMainActivity.contractPhoto).apply(options).into(applicationForm);
         applicationForm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -929,7 +900,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case MainActivity.GOOGLE_LOGIN:
                 googleSignIn(data);
@@ -937,15 +907,12 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    MainActivity.carPhoto = aq.get(0);
+                    AdminMainActivity.contractPhoto = aq.get(0);
 
-                    System.out.println("file://" + MainActivity.carPhoto);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot");
+                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/Licenses");
                     folder.mkdirs();
 
-                    AdminMainActivity.contractPhoto = "http://fuel-spot.com/FUELSPOTAPP/uploads/licenses/" + MainActivity.username + "-License.jpg";
-                    UCrop.of(Uri.parse("file://" + MainActivity.carPhoto), Uri.fromFile(new File(folder, "License.jpg")))
+                    UCrop.of(Uri.parse("file://" + AdminMainActivity.contractPhoto), Uri.fromFile(new File(folder, "License.jpg")))
                             .withAspectRatio(9, 16)
                             .withMaxResultSize(1080, 1920)
                             .start(AdminRegister.this);
@@ -956,7 +923,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     final Uri resultUri = UCrop.getOutput(data);
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        Glide.with(this).load(bitmap).into(applicationForm);
+                        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                        Glide.with(this).load(bitmap).apply(options).into(applicationForm);
                         prefs.edit().putString("License", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/License.jpg").apply();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -1024,6 +993,16 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+        }
+        if (background != null) {
+            background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
+            background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    background.start();
+                }
+            });
+            background.start();
         }
     }
 

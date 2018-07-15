@@ -7,6 +7,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -96,28 +98,51 @@ public class StationDetails extends AppCompatActivity {
     TextView campaingDetails;
 
     String[] currentCampaings = new String[3];
+    ImageView errorPhoto;
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details);
 
-        // Initializing Toolbar and setting it as the actionbar
+        //StatusBar
+        window = this.getWindow();
+
+        //Collapsing Toolbar
+        collapsingToolbarLayout = findViewById(R.id.collapsing_header);
+        collapsingToolbarLayout.setTitle("İstasyon detayı");
+        collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+
+        //Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
-        //Window
-        window = this.getWindow();
-        coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+        //Dynamic bar colors
+        final AppBarLayout appBarLayout = findViewById(R.id.Appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    coloredBars(ContextCompat.getColor(StationDetails.this, R.color.colorPrimaryDark), ContextCompat.getColor(StationDetails.this, R.color.colorPrimary));
+                } else if (verticalOffset == 0) {
+                    coloredBars(Color.TRANSPARENT, Color.TRANSPARENT);
+                } else {
+                    coloredBars(Color.argb(255 - verticalOffset / 2, 230, 74, 25), Color.argb(255 - verticalOffset / 2, 255, 87, 34));
+                }
+            }
+        });
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
         t.setScreenName("İstasyon detay");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        errorPhoto = findViewById(R.id.errorPic);
 
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
@@ -185,12 +210,16 @@ public class StationDetails extends AppCompatActivity {
         floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
 
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                materialDesignFAM.close(true);
-                addUpdateCommentPopup(v);
-            }
-        });
+        if (MainActivity.isSuperUser) {
+            floatingActionButton1.setVisibility(View.GONE);
+        } else {
+            floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    materialDesignFAM.close(true);
+                    addUpdateCommentPopup(v);
+                }
+            });
+        }
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 materialDesignFAM.close(true);
@@ -445,11 +474,13 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                             } catch (JSONException e) {
+                                errorPhoto.setVisibility(View.VISIBLE);
                                 hasAlreadyCommented = false;
                                 floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
                                 e.printStackTrace();
                             }
                         } else {
+                            errorPhoto.setVisibility(View.VISIBLE);
                             hasAlreadyCommented = false;
                             floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
                         }

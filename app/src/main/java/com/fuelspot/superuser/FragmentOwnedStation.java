@@ -169,7 +169,7 @@ public class FragmentOwnedStation extends Fragment {
     }
 
     void loadStationDetails() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_BY_ID),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -239,7 +239,7 @@ public class FragmentOwnedStation extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("placeID", String.valueOf(AdminMainActivity.superGoogleID));
+                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
 
                 //returning parameters
                 return params;

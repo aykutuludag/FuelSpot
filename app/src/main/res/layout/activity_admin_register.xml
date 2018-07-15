@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.fuelspot.fuelify.AdminRegister"
+        tools:context="superuser.AdminRegister"
         tools:showIn="@layout/activity_admin_register">
 
         <RelativeLayout
@@ -57,6 +57,17 @@
             android:layout_height="match_parent"
             android:visibility="gone">
 
+            <VideoView
+                android:id="@+id/videoViewBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
+
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="200dp"
@@ -83,8 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
-            android:visibility="gone"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView1"
@@ -187,17 +197,26 @@
                     android:layout_below="@id/stationHint"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="16dp"
+                    android:src="@drawable/profile"
                     app:civ_border_color="#EA6C34"
-                    app:civ_border_width="1dp"
-                    app:srcCompat="@drawable/image_placeholder" />
+                    app:civ_border_width="1dp" />
+
+                <TextView
+                    android:id="@+id/dummyText0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/userPhoto"
+                    android:layout_centerHorizontal="true"
+                    android:text="Profil fotoğrafınızı daha sonra değiştirebilirsiniz." />
 
                 <ImageView
                     android:id="@+id/dummyImage1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_below="@id/userPhoto"
+                    android:layout_below="@id/dummyText0"
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     app:srcCompat="@drawable/event_edit_title" />
 
                 <TextView
@@ -231,26 +250,13 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
-
-                <TextView
-                    android:id="@+id/dummyText2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/editFullName"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Profil fotosu ve isminizi başka hesapla girerek değiştirebilirsiniz."
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
                 <ImageView
                     android:id="@+id/dummyImage2"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignLeft="@+id/editFullName"
                     android:layout_alignStart="@+id/editFullName"
-                    android:layout_below="@+id/dummyText2"
+                    android:layout_below="@+id/editFullName"
                     android:layout_marginTop="8dp"
                     app:srcCompat="@drawable/profile_edit_email" />
 
@@ -434,16 +440,15 @@
                         android:text="Diğer" />
                 </RadioGroup>
 
-
                 <ImageView
                     android:id="@+id/imageViewLicense"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_below="@id/radioGroupGender"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="16dp"
                     android:scaleType="fitXY"
-                    app:srcCompat="@drawable/photo_placeholder" />
+                    android:src="@drawable/photo_placeholder" />
 
                 <TextView
                     android:id="@+id/textView8"

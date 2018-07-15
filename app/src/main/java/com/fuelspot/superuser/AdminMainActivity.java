@@ -1,14 +1,19 @@
 package com.fuelspot.superuser;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -23,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,6 +37,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentProfile;
+import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
 import com.fuelspot.R;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -39,15 +46,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.PURCHASE_ADMIN_PREMIUM;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.openCount;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.username;
 
 public class AdminMainActivity extends AppCompatActivity {
@@ -66,6 +77,8 @@ public class AdminMainActivity extends AppCompatActivity {
     Window window;
     Toolbar toolbar;
     SharedPreferences prefs;
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
 
     public static void getSuperVariables(SharedPreferences prefs) {
         superStationID = prefs.getInt("SuperStationID", 0);
@@ -120,8 +133,11 @@ public class AdminMainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "OwnedStation").commit();
         }
 
-        createLocalDatabase();
         fetchSuperUser();
+
+        //In-App Services
+        buyPremiumPopup();
+        InAppBilling();
     }
 
     void fetchSuperUser() {
@@ -231,12 +247,86 @@ public class AdminMainActivity extends AppCompatActivity {
         }
     }
 
-    public void createLocalDatabase() {
-        //Create databese
-        SQLiteDatabase mobiledatabase = openOrCreateDatabase("fuelspot_local", MODE_PRIVATE, null);
-        mobiledatabase.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local(Title TEXT,Thumbnail VARCHAR, Link VARCHAR, Date TEXT);");
-        SQLiteDatabase mobiledatabase2 = openOrCreateDatabase("fuelspot_local2", MODE_PRIVATE, null);
-        mobiledatabase2.execSQL("CREATE TABLE IF NOT EXISTS fuelspot_local2(Title TEXT,Thumbnail VARCHAR, Link VARCHAR, Date TEXT);");
+    private void buyPremiumPopup() {
+        openCount = prefs.getInt("howMany", 0);
+        openCount++;
+        prefs.edit().putInt("howMany", openCount).apply();
+
+        if (openCount >= 15 && !premium) {
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setTitle(R.string.buy_premium_ads_title)
+                    .setMessage(R.string.buy_premium_ads_content)
+                    .setPositiveButton(R.string.buy_premium_ads_okay, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                buyAdminPremium();
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            } catch (IntentSender.SendIntentException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.buy_premium_ads_later, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openCount = 0;
+                            prefs.edit().putInt("howMany", openCount).apply();
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void InAppBilling() {
+        mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mService = null;
+            }
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mService = IInAppBillingService.Stub.asInterface(service);
+                try {
+                    checkPremium();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+    }
+
+    public void checkPremium() throws RemoteException {
+        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+        if (ownedItems.getInt("RESPONSE_CODE") == 0) {
+            ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
+            assert ownedSkus != null;
+            if (ownedSkus.contains("premium_admin")) {
+                premium = true;
+                prefs.edit().putBoolean("hasPremium", premium).apply();
+            } else {
+                premium = false;
+                prefs.edit().putBoolean("hasPremium", premium).apply();
+            }
+        }
+    }
+
+    public void buyAdminPremium() throws RemoteException, IntentSender.SendIntentException {
+        Toast.makeText(AdminMainActivity.this,
+                "Premium sürüme geçerek uygulama içerisindeki tüm reklamları kaldırabilirsiniz. Ayrıca 50 km'ye kadar çevrenizdeki bütün istasyon fiyatlarını görebilirsiniz.", Toast.LENGTH_LONG)
+                .show();
+        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium_admin", "subs",
+                "/tYMgwhg1DVikb4R4iLNAO5pNj/QWh19+vwajyUFbAyw93xVnDkeTZFdhdSdJ8M");
+        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+        assert pendingIntent != null;
+        startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_ADMIN_PREMIUM, new Intent(), 0,
+                0, 0);
     }
 
     public void coloredBars(int color1, int color2) {
@@ -296,21 +386,30 @@ public class AdminMainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1001) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(AdminMainActivity.this, "Premium üyeliğiniz başlamıştır. Aktif ediliyor...", Toast.LENGTH_LONG).show();
-                prefs.edit().putBoolean("hasPremium", true).apply();
-                Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                if (i != null) {
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    this.finish();
+        switch (requestCode) {
+            case PURCHASE_ADMIN_PREMIUM:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(AdminMainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
+                    prefs.edit().putBoolean("hasPremium", true).apply();
+                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+                    if (i != null) {
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(AdminMainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
+                            Toast.LENGTH_LONG).show();
+                    prefs.edit().putBoolean("hasPremium", false).apply();
                 }
-            } else {
-                Toast.makeText(AdminMainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
-                        Toast.LENGTH_LONG).show();
-                prefs.edit().putBoolean("hasPremium", false).apply();
-            }
+                break;
+
+        }
+
+        //Irrelevant
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Stations");
+        if (fragment != null && fragment.isVisible()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -339,6 +438,8 @@ public class AdminMainActivity extends AppCompatActivity {
                 case 3:
                     fragment = new FragmentProfile();
                     break;
+                case 4:
+                    fragment = new FragmentSettings();
                 default:
                     break;
             }
@@ -347,7 +448,7 @@ public class AdminMainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         @Override
@@ -361,6 +462,8 @@ public class AdminMainActivity extends AppCompatActivity {
                     return mContext.getString(R.string.title_news);
                 case 3:
                     return mContext.getString(R.string.title_profile);
+                case 4:
+                    return mContext.getString(R.string.title_settings);
             }
             return null;
         }
