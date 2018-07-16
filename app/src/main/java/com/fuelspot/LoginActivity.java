@@ -229,8 +229,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                if (tmpusername.length() > 16) {
-                    MainActivity.username = tmpusername.substring(0, 15);
+                if (tmpusername.length() > 21) {
+                    MainActivity.username = tmpusername.substring(0, 20);
                 } else {
                     MainActivity.username = tmpusername;
                 }
@@ -241,7 +241,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 prefs.edit().putString("Email", MainActivity.email).apply();
 
                 //PHOTO
-                if (acct.getPhotoUrl() != null) {
+                if (acct.getPhotoUrl() != null && acct.getPhotoUrl().toString().length() > 0) {
                     MainActivity.photo = acct.getPhotoUrl().toString();
                     prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
                 }
@@ -319,8 +319,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                     //USERNAME
                                     String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                                    if (tmpusername.length() > 16) {
-                                        MainActivity.username = tmpusername.substring(0, 15);
+                                    if (tmpusername.length() > 21) {
+                                        MainActivity.username = tmpusername.substring(0, 20);
                                     } else {
                                         MainActivity.username = tmpusername;
                                     }

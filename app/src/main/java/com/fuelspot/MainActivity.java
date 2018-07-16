@@ -46,6 +46,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Static values START
     public static final int REQUEST_EXTERNAL_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
     public static final int UNIFIED_REQUEST = 99;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
     public static final int PURCHASE_NORMAL_PREMIUM = 1000;
     public static final int PURCHASE_ADMIN_PREMIUM = 1001;
-    // Static values
+
     public static float TAX_GASOLINE;
     public static float TAX_DIESEL;
     public static float TAX_LPG;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
     public static int fuelPri, fuelSec, kilometer;
-    public static float mapDefaultZoom = 11.5f;
+    public static float mapDefaultZoom = 12.25f;
     public static int mapDefaultRange = 5000;
     public static int openCount;
 
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
     public static String[] toyota_models = {"Auris", "Avensis", "Camry", "Carina", "Celica", "Corolla", "Corona", "Cressida", "Grown", "GT 86", "MR2", "Prius", "Starlet", "Supra", "Tercel", "Urban Cruiser", "Verso", "Yaris"};
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
+    // Static values START
 
     public static ArrayList<String> purchaseTimes = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
@@ -168,14 +170,14 @@ public class MainActivity extends AppCompatActivity {
     public static void getVariables(SharedPreferences prefs) {
         name = prefs.getString("Name", "");
         email = prefs.getString("Email", "");
-        photo = prefs.getString("ProfilePhoto", "");
-        carPhoto = prefs.getString("CarPhoto", "");
+        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/profile.png");
+        carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/vehicle.png");
         gender = prefs.getString("Gender", "");
-        birthday = prefs.getString("Birthday", "");
+        birthday = prefs.getString("Birthday", "01/01/2000");
         location = prefs.getString("Location", "");
         username = prefs.getString("UserName", "");
-        carBrand = prefs.getString("CarBrand", "");
-        carModel = prefs.getString("CarModel", "");
+        carBrand = prefs.getString("carBrand", "");
+        carModel = prefs.getString("carModel", "");
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);

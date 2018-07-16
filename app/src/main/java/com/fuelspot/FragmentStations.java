@@ -312,7 +312,7 @@ public class FragmentStations extends Fragment {
         //Draw a circle with radius of 5000m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
-                .radius(5000)
+                .radius(mapDefaultRange)
                 .strokeColor(Color.RED));
 
         //Search stations in a radius of 5000m

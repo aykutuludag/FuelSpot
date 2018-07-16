@@ -265,7 +265,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 } else {
-                    params.put("photo", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + MainActivity.username + "-USERPHOTO.jpg");
+                    params.put("photo", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
                 }
 
                 //returning parameters
@@ -365,7 +365,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
                         Glide.with(this).load(bitmap).apply(options).into(userPic);
-                        editor.putString("ProfilePhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName);
+                        editor.putString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -290,6 +290,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void fetchStationByID(final int stationID) {
+        System.out.println("AQQ: " + stationID);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_BY_ID),
                 new Response.Listener<String>() {
                     @Override
@@ -519,6 +520,7 @@ public class StationDetails extends AppCompatActivity {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
                         mPopupWindow.dismiss();
+                        errorPhoto.setVisibility(View.GONE);
                         fetchComments();
                     }
                 },
@@ -559,6 +561,7 @@ public class StationDetails extends AppCompatActivity {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
                         mPopupWindow.dismiss();
+                        errorPhoto.setVisibility(View.GONE);
                         fetchComments();
                     }
                 },

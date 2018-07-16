@@ -142,6 +142,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         viewHolder.rating.setRating(feedItem.getRating());
 
+        if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
+            viewHolder.answerView.setVisibility(View.VISIBLE);
+
+            viewHolder.answerHolder.setText(feedItem.getAnswer());
+            try {
+                Date date2 = format.parse(feedItem.getReplyTime());
+                viewHolder.replyTime.setReferenceTime(date2.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //Station Icon
+            Glide.with(mContext).load(feedItem.getLogo()).into(viewHolder.logo);
+        }
+
+
         // Handle click event on image click
         viewHolder.card.setOnClickListener(clickListener);
         viewHolder.card.setTag(viewHolder);
@@ -154,11 +170,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout card;
-        TextView commentHolder;
+        RelativeLayout card, answerView;
+        TextView commentHolder, answerHolder;
         TextView username;
-        RelativeTimeTextView time;
-        ImageView profilePic;
+        RelativeTimeTextView time, replyTime;
+        ImageView profilePic, logo;
         RatingBar rating;
 
         ViewHolder(View itemView) {
@@ -169,6 +185,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             time = itemView.findViewById(R.id.time);
             profilePic = itemView.findViewById(R.id.other_profile_pic);
             rating = itemView.findViewById(R.id.ratingBar);
+            answerView = itemView.findViewById(R.id.answerView);
+            answerHolder = itemView.findViewById(R.id.answer);
+            replyTime = itemView.findViewById(R.id.textViewReplyTime);
+            logo = itemView.findViewById(R.id.imageViewLogo);
         }
     }
 }

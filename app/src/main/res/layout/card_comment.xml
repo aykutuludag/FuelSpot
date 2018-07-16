@@ -76,7 +76,7 @@
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_below="@+id/comment"
                 android:layout_centerHorizontal="true"
                 android:clickable="false"
@@ -89,7 +89,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ratingBar"
-                android:layout_margin="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="2dp"
                 android:background="#000"
                 android:visibility="gone">
 
@@ -100,9 +102,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/textViewReplyTime"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/shell"
                     card_view:civ_border_color="#EA6C34"
                     card_view:civ_border_width="1dp" />
@@ -138,7 +140,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/imageViewLogo"
-                    android:layout_margin="16dp"
+                    android:layout_margin="8dp"
                     android:text="adfsdiiskşfdksdfklsdfklsdlflsdifgdfgdflgdflglşfdşligdflflsdlfksdflsdfsdadfsdiiskşfdksdfklsdfklsdlflsdifgdfgdflgdflglşfdşligdflflsdlfksdflsdfsd"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#fff" />

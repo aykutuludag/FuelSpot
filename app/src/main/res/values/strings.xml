@@ -42,7 +42,8 @@
 
     <!-- Campaings APIs -->
     <string name="API_ADD_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-campaign.php</string>
-    <string name="API_FETCH_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-campaign.php</string>
+    <string name="API_UPDATE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-campaign.php</string>
+    <string name="API_FETCH_CAMPAINGS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-campaigns.php</string>
     <string name="API_DELETE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-campaign.php</string>
 
     <!-- Common APIs -->
@@ -78,7 +79,7 @@
     <string name="title_activity_station_details">StationDetails</string>
     <string name="nav_text_vehicle">Vehicles</string>
     <string name="buy_premium_ads_title">Reklamsız sürüme geçin</string>
-    <string name="buy_premium_ads_content">Uygulama içerisindeki reklamlardan sıkıldınız mı? Günlük Burçlar Premium\'a geçerek uygulamadaki tüm reklamlardan kurtulabilirsiniz.</string>
+    <string name="buy_premium_ads_content">Uygulama içerisindeki reklamlardan sıkıldınız mı? FuelSpot Premium\'a geçerek uygulamadaki tüm reklamları kaldırabilir ve menzilinizi 50 km ye kadar yükseltebilirsiniz.</string>
     <string name="buy_premium_ads_okay">SATIN AL!</string>
     <string name="buy_premium_ads_later">Başka zaman</string>
     <string name="title_activity_settings">SettingsActivity</string>

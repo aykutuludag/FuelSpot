@@ -1,22 +1,25 @@
 package com.fuelspot;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +28,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,7 +39,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fuelspot.model.StationItem;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
@@ -47,9 +54,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -59,40 +64,45 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.MainActivity.verifyStoragePermissions;
 
 public class AddFuel extends AppCompatActivity {
 
     Window window;
     Toolbar toolbar;
-    RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
-    Button expandableButton1, expandableButton2;
     SharedPreferences prefs;
     RequestQueue requestQueue;
+    ProgressDialog pDialog;
 
     String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
-    SimpleDateFormat mFormatter = new SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault());
-    long purchaseTime;
+    int chosenStationID;
+    double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
+    double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
+    double totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
+    RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
+    Button expandableButton1, expandableButton2;
     String fuelType, fuelType2 = "";
-    RadioGroup chooseFuel, chooseFuel2;
-    double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
-    double totalPrice;
-    double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
+    TextView fuelType1Text, fuelType2Text;
+    ImageView fuelType1Icon, fuelType2Icon;
     EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
-
-    /* LAYOUT 2 ÖĞELER */
     Bitmap bitmap;
     String billPhoto;
     ImageView photoHolder;
+    ScrollView scrollView;
+    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,33 +131,166 @@ public class AddFuel extends AppCompatActivity {
 
         //Creating a Request Queue
         requestQueue = Volley.newRequestQueue(AddFuel.this);
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
 
+        pDialog = new ProgressDialog(AddFuel.this); //Your Activity.this
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        scrollView = findViewById(R.id.addfuel_layout1);
+
+        expandableLayoutYakit = findViewById(R.id.division1);
+        expandableLayoutYakit2 = findViewById(R.id.division2);
+        expandableButton1 = findViewById(R.id.expandableButtonYakit1);
+        expandableButton2 = findViewById(R.id.expandableButtonYakit2);
+
+        enterKilometer = findViewById(R.id.editTextKilometer);
+
+        fuelType1Icon = findViewById(R.id.fuelType1);
+        fuelType1Text = findViewById(R.id.fuelType1Text);
+        textViewLitreFiyati = findViewById(R.id.editTextPricePerLiter);
+        textViewTotalFiyat = findViewById(R.id.editTextPrice);
+        textViewLitre = findViewById(R.id.editTextLiter);
+
+        fuelType2Icon = findViewById(R.id.fuelType2);
+        fuelType2Text = findViewById(R.id.fuelType2Text);
+        textViewLitreFiyati2 = findViewById(R.id.editTextPricePerLiter2);
+        textViewLitre2 = findViewById(R.id.editTextLiter2);
+        textViewTotalFiyat2 = findViewById(R.id.editTextPrice2);
 
         // Check whether user is at station or not
         checkIsAtStation();
+    }
 
-       /* //İSTASYON SEÇİMİ
-        chooseStation = findViewById(R.id.editTextStation);
-        chooseStation.setText(chosenStationName);
+    public void checkIsAtStation() {
+        //Search stations in a radius of 100m
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=1000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
-        //SAAT SEÇİMİ
-        getTime();
-        chooseTime = findViewById(R.id.editTextTime);
-        chooseTime.setText(mFormatter.format(new Date(purchaseTime)));
-        /*chooseTime.setOnClickListener(new View.OnClickListener() {
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSON json = new JSON(response);
+                        if (json.key("results").count() > 0) {
+                            // Yes! He is in station. Probably there is only one station in 75m so get the first value
+                            chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
+                            scrollView.setAlpha(1.0f);
+                            fetchStation(chosenGoogleID);
+                        } else {
+                            pDialog.dismiss();
+                            chosenStationID = 0;
+                            chosenStationName = "";
+                            chosenStationLoc = "";
+                            chosenGoogleID = "";
+                            chosenStationAddress = "";
+
+                            Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
+                                    .setAction("CLOSE", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            finish();
+                                        }
+                                    })
+                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                    .show();
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            }, 2000);
+                        }
+                    }
+                }, new Response.ErrorListener() {
             @Override
-            public void onClick(View v) {
-                new SlideDateTimePicker.Builder(getSupportFragmentManager())
-                        .setListener(listener)
-                        .setInitialDate(new Date(purchaseTime))
-                        .setMaxDate(new Date(purchaseTime))
-                        .setIs24HourTime(true)
-                        .build()
+            public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
+                chosenStationID = 0;
+                chosenStationName = "";
+                chosenStationLoc = "";
+                chosenGoogleID = "";
+                chosenStationAddress = "";
+
+                Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
+                        .setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        })
+                        .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                         .show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 2000);
             }
         });
 
-        enterKilometer = findViewById(R.id.editTextKM);
+        // Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+    }
+
+    private void fetchStation(final String googleID) {
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            chosenStationID = obj.getInt("id");
+                            chosenStationName = obj.getString("name");
+                            chosenStationAddress = obj.getString("vicinity");
+                            chosenStationLoc = obj.getString("location");
+                            gasolinePrice = obj.getDouble("gasolinePrice");
+                            dieselPrice = obj.getDouble("dieselPrice");
+                            LPGPrice = obj.getDouble("lpgPrice");
+                            electricityPrice = obj.getDouble("electricityPrice");
+
+                            updatePrices();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("googleID", googleID);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void loadLayout() {
+        pDialog.dismiss();
+
         enterKilometer.setText(String.valueOf(kilometer));
         enterKilometer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -167,21 +310,6 @@ public class AddFuel extends AppCompatActivity {
                 }
             }
         });
-
-        expandableLayoutYakit = findViewById(R.id.expandableLayoutYakit1);
-        expandableLayoutYakit2 = findViewById(R.id.expandableLayoutYakit2);
-
-        chooseFuel = findViewById(R.id.radioGroup_fuel);
-        expandableButton1 = findViewById(R.id.expandableButton1);
-        textViewLitreFiyati = findViewById(R.id.editTextPricePerLiter);
-        textViewTotalFiyat = findViewById(R.id.editTextPrice);
-        textViewLitre = findViewById(R.id.editTextLiter);
-
-        chooseFuel2 = findViewById(R.id.radioGroup_fuel2);
-        expandableButton2 = findViewById(R.id.expandableButtonYakit2);
-        textViewLitreFiyati2 = findViewById(R.id.editTextPricePerLiter2);
-        textViewTotalFiyat2 = findViewById(R.id.editTextPrice2);
-        textViewLitre2 = findViewById(R.id.editTextLiter2);
 
         textViewLitreFiyati.addTextChangedListener(new TextWatcher() {
             @Override
@@ -277,7 +405,7 @@ public class AddFuel extends AppCompatActivity {
         photoHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyStoragePermissions()) {
+                if (verifyStoragePermissions(AddFuel.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(AddFuel.this);
@@ -287,199 +415,153 @@ public class AddFuel extends AppCompatActivity {
             }
         });
 
-        sendVariables = findViewById(R.id.sendToServer);
+        ImageView sendVariables = findViewById(R.id.sendButton);
         sendVariables.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chosenStationName != null && chosenStationName.length() >= 3) {
-                    if (isNetworkConnected(AddFuel.this)) {
-                        if (totalPrice > 0) {
-                            //Showing the progress dialog
-                            final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String s) {
-                                            //Disimissing the progress dialog
-                                            loading.dismiss();
-                                            Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                                            updateStationPrices();
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError volleyError) {
-                                            //Dismissing the progress dialog
-                                            loading.dismiss();
-                                            //Showing toast
-                                            Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-                                    //Creating parameters
-                                    Map<String, String> params = new Hashtable<>();
-
-                                    //Adding parameters
-                                    params.put("purchaseTime", String.valueOf(purchaseTime));
-                                    params.put("username", username);
-                                    params.put("googleID", chosenGoogleID);
-                                    params.put("stationNAME", chosenStationName);
-                                    params.put("stationICON", stationPhotoChooser(chosenStationName));
-                                    params.put("stationLOC", chosenStationLoc);
-                                    params.put("fuelType", fuelType);
-                                    params.put("fuelPrice", String.valueOf(selectedUnitPrice));
-                                    params.put("fuelLiter", String.valueOf(buyedLiter));
-                                    params.put("fuelType2", fuelType2);
-                                    params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
-                                    params.put("fuelLiter2", String.valueOf(buyedLiter2));
-                                    params.put("totalPrice", String.valueOf(totalPrice));
-                                    params.put("kilometer", String.valueOf(kilometer));
-                                    if (bitmap != null) {
-                                        params.put("billPhoto", getStringImage(bitmap));
-                                    }
-
-                                    //returning parameters
-                                    return params;
-                                }
-                            };
-
-                            //Creating a Request Queue
-                            RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
-
-                            //Adding request to the queue
-                            requestQueue.add(stringRequest);
-                        } else {
-                            Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda değilsiniz. Yakıt aldığınız istasyonu seçiniz.", Toast.LENGTH_LONG).show();
-                }
+                addPurchase();
             }
-        });*/
+        });
+    }
 
-        if (savedInstanceState == null) {
-            updatePrices();
+    public void updatePrices() {
+        //1. YAKIT TİPİ
+        switch (fuelPri) {
+            case 0:
+                selectedUnitPrice = gasolinePrice;
+                fuelType = "gasoline";
+                Glide.with(this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
+                break;
+            case 1:
+                selectedUnitPrice = dieselPrice;
+                fuelType = "diesel";
+                Glide.with(this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
+                break;
+            case 2:
+                selectedUnitPrice = LPGPrice;
+                fuelType = "lpg";
+                Glide.with(this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
+                break;
+            case 3:
+                selectedUnitPrice = electricityPrice;
+                fuelType = "electric";
+                Glide.with(this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
+                break;
+            default:
+                expandableLayoutYakit.setVisibility(View.GONE);
+                expandableButton1.setVisibility(View.GONE);
+                break;
+        }
+
+        fuelType1Text.setText(fuelType);
+        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
+
+        //2. YAKIT TİPİ
+        switch (fuelSec) {
+            case 0:
+                selectedUnitPrice2 = gasolinePrice;
+                fuelType2 = "gasoline";
+                Glide.with(this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
+                break;
+            case 1:
+                selectedUnitPrice2 = dieselPrice;
+                fuelType2 = "diesel";
+                Glide.with(this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
+                break;
+            case 2:
+                selectedUnitPrice2 = LPGPrice;
+                fuelType2 = "lpg";
+                Glide.with(this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
+                break;
+            case 3:
+                selectedUnitPrice2 = electricityPrice;
+                fuelType2 = "electric";
+                Glide.with(this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
+                break;
+            default:
+                expandableLayoutYakit2.setVisibility(View.GONE);
+                expandableButton2.setVisibility(View.GONE);
+                break;
+        }
+
+        fuelType2Text.setText(fuelType2);
+        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
+
+        loadLayout();
+    }
+
+    public double howManyLiter(double priceForUnit, double totalPrice) {
+        if (priceForUnit == 0) {
+            return 0.00;
+        } else {
+            return totalPrice / priceForUnit;
         }
     }
 
-    public void checkIsAtStation() {
-        //Search stations in a radius of 100m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=10000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+    private void addPurchase() {
+        if (chosenStationName != null && chosenStationName.length() > 0) {
+            if (isNetworkConnected(AddFuel.this)) {
+                if (totalPrice > 0) {
+                    //Showing the progress dialog
+                    final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String s) {
+                                    //Disimissing the progress dialog
+                                    loading.dismiss();
+                                    Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                                    updateStationPrices();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError volleyError) {
+                                    //Dismissing the progress dialog
+                                    loading.dismiss();
+                                    //Showing toast
+                                    Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            //Creating parameters
+                            Map<String, String> params = new Hashtable<>();
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSON json = new JSON(response);
-                        if (json.key("results").count() > 0) {
-                            // Yes! He is in station. Probably there is only one station in 100m  so get the first value
-                            chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
+                            //Adding parameters
+                            params.put("username", username);
+                            params.put("stationID", String.valueOf(chosenStationID));
+                            params.put("stationNAME", chosenStationName);
+                            params.put("stationICON", stationPhotoChooser(chosenStationName));
+                            params.put("stationLOC", chosenStationLoc);
+                            params.put("fuelType", fuelType);
+                            params.put("fuelPrice", String.valueOf(selectedUnitPrice));
+                            params.put("fuelLiter", String.valueOf(buyedLiter));
+                            params.put("fuelType2", fuelType2);
+                            params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
+                            params.put("fuelLiter2", String.valueOf(buyedLiter2));
+                            params.put("totalPrice", String.valueOf(totalPrice));
+                            params.put("kilometer", String.valueOf(kilometer));
+                            if (bitmap != null) {
+                                params.put("billPhoto", getStringImage(bitmap));
+                            }
 
-                            chosenStationName = json.key("results").index(0).key("name").stringValue();
-                            //chooseStation.setText(chosenStationName);
-
-                            chosenStationAddress = json.key("results").index(0).key("vicinity").stringValue();
-
-                            double lat = json.key("results").index(0).key("geometry").key("location").key("lat").doubleValue();
-                            double lon = json.key("results").index(0).key("geometry").key("location").key("lng").doubleValue();
-                            chosenStationLoc = lat + ";" + lon;
-
-                            fetchStation(chosenGoogleID);
-                        } else {
-                            chosenStationName = "";
-                            chosenStationLoc = "";
-                            chosenGoogleID = "";
-                            chosenStationAddress = "";
-
-                            Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
-                                    .setAction("CLOSE", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            finish();
-                                        }
-                                    })
-                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                                    .show();
+                            //returning parameters
+                            return params;
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
+                    };
+
+                    //Adding request to the queue
+                    requestQueue.add(stringRequest);
+                } else {
+                    Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
             }
-        });
-
-        // Add the request to the RequestQueue.
-        requestQueue.add(stringRequest);
-    }
-
-    private void fetchStation(final String googleID) {
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-
-                            StationItem item = new StationItem();
-                            item.setID(obj.getInt("id"));
-                            item.setStationName(obj.getString("name"));
-                            item.setVicinity(obj.getString("vicinity"));
-                            item.setLocation(obj.getString("location"));
-                            item.setGasolinePrice(obj.getDouble("gasolinePrice"));
-                            item.setDieselPrice(obj.getDouble("dieselPrice"));
-                            item.setLpgPrice(obj.getDouble("lpgPrice"));
-                            item.setElectricityPrice(obj.getDouble("electricityPrice"));
-                            item.setGoogleMapID(obj.getString("googleID"));
-                            item.setPhotoURL(obj.getString("photoURL"));
-
-                            //DISTANCE START
-                            Location loc1 = new Location("");
-                            loc1.setLatitude(MainActivity.userlat);
-                            loc1.setLongitude(MainActivity.userlon);
-                            Location loc2 = new Location("");
-                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
-                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                            float distanceInMeters = loc1.distanceTo(loc2);
-                            item.setDistance(distanceInMeters);
-
-                            //DISTANCE END
-
-                            //Lastupdated
-                            item.setLastUpdated(obj.getString("lastUpdated"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("googleID", googleID);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
+        } else {
+            Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda değilsiniz. Yakıt aldığınız istasyonu seçiniz.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateStationPrices() {
@@ -526,7 +608,6 @@ public class AddFuel extends AppCompatActivity {
                         params.put("electricityPrice", String.valueOf(selectedUnitPrice2));
                     }
                 }
-                params.put("lastUpdated", String.valueOf(purchaseTime));
 
                 //returning parameters
                 return params;
@@ -580,7 +661,7 @@ public class AddFuel extends AppCompatActivity {
                 if (carPhoto != null) {
                     params.put("carPhoto", carPhoto);
                 } else {
-                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + username + "-CARPHOTO.jpeg");
+                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos" + username + "-CARPHOTO.jpeg");
                 }
 
                 //returning parameters
@@ -593,102 +674,6 @@ public class AddFuel extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    public void updatePrices() {
-        //1. YAKIT TİPİ
-        switch (fuelPri) {
-            case 0:
-                chooseFuel.check(R.id.gasoline);
-                selectedUnitPrice = gasolinePrice;
-                fuelType = "gasoline";
-                break;
-            case 1:
-                chooseFuel.check(R.id.diesel);
-                selectedUnitPrice = dieselPrice;
-                fuelType = "diesel";
-                break;
-            case 2:
-                chooseFuel.check(R.id.lpg);
-                selectedUnitPrice = LPGPrice;
-                fuelType = "lpg";
-                break;
-            case 3:
-                chooseFuel.check(R.id.electricity);
-                selectedUnitPrice = electricityPrice;
-                fuelType = "electric";
-                break;
-            default:
-                expandableLayoutYakit.setVisibility(View.GONE);
-                expandableButton1.setVisibility(View.GONE);
-                break;
-        }
-
-        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
-        buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
-        String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
-        textViewLitre.setText(literText);
-        textViewTotalFiyat.setText(String.valueOf(entryPrice));
-
-
-        //2. YAKIT TİPİ
-        switch (fuelSec) {
-            case 0:
-                chooseFuel2.check(R.id.gasoline2);
-                selectedUnitPrice2 = gasolinePrice;
-                fuelType2 = "gasoline";
-                break;
-            case 1:
-                chooseFuel2.check(R.id.diesel2);
-                selectedUnitPrice2 = dieselPrice;
-                fuelType2 = "diesel";
-                break;
-            case 2:
-                chooseFuel2.check(R.id.lpg2);
-                selectedUnitPrice2 = LPGPrice;
-                fuelType2 = "lpg";
-                break;
-            case 3:
-                chooseFuel2.check(R.id.electricity2);
-                selectedUnitPrice2 = electricityPrice;
-                fuelType2 = "electric";
-                break;
-            default:
-                expandableLayoutYakit2.setVisibility(View.GONE);
-                expandableButton2.setVisibility(View.GONE);
-                break;
-        }
-
-        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
-        buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-        String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
-        textViewLitre2.setText(literText2);
-        textViewTotalFiyat2.setText(String.valueOf(entryPrice2));
-    }
-
-    public double howManyLiter(double priceForUnit, double totalPrice) {
-        if (priceForUnit == 0) {
-            return 0.00;
-        } else {
-            return totalPrice / priceForUnit;
-        }
-    }
-
-    public void getTime() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-        purchaseTime = calendar.getTimeInMillis();
-    }
-
-    public boolean verifyStoragePermissions() {
-        boolean hasStorage;
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            int permission = ActivityCompat.checkSelfPermission(AddFuel.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            hasStorage = permission == PackageManager.PERMISSION_GRANTED;
-        } else {
-            hasStorage = true;
-        }
-        return hasStorage;
     }
 
     public String getStringImage(Bitmap bmp) {
@@ -786,15 +771,6 @@ public class AddFuel extends AppCompatActivity {
                     }
                 }
                 break;
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (chosenGoogleID != null && chosenStationName != null) {
-            //chooseStation.setText(chosenStationName);
-            updatePrices();
         }
     }
 

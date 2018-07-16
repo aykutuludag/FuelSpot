@@ -316,7 +316,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 } else {
-                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/" + MainActivity.username + "-CARPHOTO.jpg");
+                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos" + MainActivity.username + "-CARPHOTO.jpg");
                 }
 
                 //returning parameters
@@ -882,7 +882,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        editor.putString("CarPhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + fileName);
+                        editor.putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos" + MainActivity.username + "-CARPHOTO.jpg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -23,11 +23,14 @@
     <ScrollView
         android:id="@+id/addfuel_layout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0.5"
+        android:background="@drawable/background_main"
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -35,359 +38,450 @@
                 android:id="@+id/expandableButtonKM"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#212121"
+                android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="KİLOMETRE"
                 android:textColor="#fff" />
 
-            <TextView
-                android:id="@+id/kilometerTEXT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/expandableButtonKM"
-                android:gravity="center"
-                android:text="Aracın kilometresi"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <EditText
-                android:id="@+id/editTextKilometer"
+            <RelativeLayout
+                android:id="@+id/division1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/kilometerTEXT"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:hint="30000"
-                android:inputType="number"
-                android:textStyle="bold" />
+                android:layout_below="@id/expandableButtonKM"
+                android:background="#EDEDED">
+
+                <TextView
+                    android:id="@+id/kilometerTEXT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="Aracın kilometresi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editTextKilometer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/kilometerTEXT"
+                    android:layout_margin="8dp"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:hint="30000"
+                    android:inputType="number"
+                    android:padding="4dp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/expandableButtonYakit1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#212121"
-                android:layout_below="@id/editTextKilometer"
+                android:layout_below="@id/division1"
+                android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="1. yakıt"
                 android:textColor="#fff" />
 
-            <ImageView
-                android:id="@+id/fuelType1"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+            <RelativeLayout
+                android:id="@+id/division2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/expandableButtonYakit1"
-                android:layout_marginTop="4dp"
-                android:padding="2dp"
-                android:src="@drawable/gasoline"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:background="#EDEDED">
 
-            <TextView
-                android:id="@+id/fuelType1Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/fuelType1"
-                android:layout_alignTop="@+id/fuelType1"
-                android:layout_toEndOf="@+id/fuelType1"
-                android:layout_toRightOf="@+id/fuelType1"
-                android:gravity="center"
-                android:text="Gasoline"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                <ImageView
+                    android:id="@+id/fuelType1"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <TextView
-                android:id="@+id/textViewPrice1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/fuelType1Text"
-                android:layout_marginTop="8dp"
-                android:text="FİYAT VE TUTAR"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                <TextView
+                    android:id="@+id/fuelType1Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/fuelType1"
+                    android:layout_alignTop="@+id/fuelType1"
+                    android:layout_toEndOf="@+id/fuelType1"
+                    android:layout_toRightOf="@+id/fuelType1"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/editTextPricePerLiter"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textViewPrice1"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:hint="6.02"
-                android:inputType="numberDecimal"
-                android:textStyle="bold" />
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/priceSec1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/fuelType1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp">
 
-            <TextView
-                android:id="@+id/textViewUnit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/editTextPricePerLiter"
-                android:layout_alignTop="@+id/editTextPricePerLiter"
-                android:layout_toEndOf="@+id/editTextPricePerLiter"
-                android:layout_toRightOf="@+id/editTextPricePerLiter"
-                android:gravity="center"
-                android:text="TL / litre"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/editTextPricePerLiter"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:background="#fff"
+                        android:gravity="center"
+                        android:hint="0.00"
+                        android:inputType="numberDecimal"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="70%" />
 
-            <EditText
-                android:id="@+id/editTextPrice"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextPricePerLiter"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:hint="50"
-                android:inputType="numberDecimal"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewUnit"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextPricePerLiter"
+                        android:layout_alignTop="@+id/editTextPricePerLiter"
+                        android:layout_toEndOf="@+id/editTextPricePerLiter"
+                        android:layout_toRightOf="@+id/editTextPricePerLiter"
+                        android:gravity="center"
+                        android:text="TL / litre"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="30%" />
 
-            <TextView
-                android:id="@+id/textViewCurrency"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/editTextPrice"
-                android:layout_alignTop="@+id/editTextPrice"
-                android:layout_toEndOf="@+id/editTextPrice"
-                android:layout_toRightOf="@+id/editTextPrice"
-                android:gravity="center"
-                android:text="TL"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/editTextPrice"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/editTextPricePerLiter"
+                        android:layout_marginTop="8dp"
+                        android:background="#fff"
+                        android:gravity="center"
+                        android:hint="0"
+                        android:inputType="numberDecimal"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="70%" />
 
-            <EditText
-                android:id="@+id/editTextLiter"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextPrice"
-                android:layout_marginTop="4dp"
-                android:focusable="false"
-                android:gravity="center"
-                android:hint="8.31"
-                android:inputType="none"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textViewCurrency"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextPrice"
+                        android:layout_alignTop="@+id/editTextPrice"
+                        android:layout_toEndOf="@+id/editTextPrice"
+                        android:layout_toRightOf="@+id/editTextPrice"
+                        android:gravity="center"
+                        android:text="TL"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="30%" />
 
-            <TextView
-                android:id="@+id/textViewLiter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/editTextLiter"
-                android:layout_alignTop="@+id/editTextLiter"
-                android:layout_toEndOf="@+id/editTextLiter"
-                android:layout_toRightOf="@+id/editTextLiter"
-                android:gravity="center"
-                android:text="Litre"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/editTextLiter"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/editTextPrice"
+                        android:layout_marginTop="8dp"
+                        android:background="#fff"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:hint="0.00"
+                        android:inputType="none"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="70%" />
 
-            <TextView
-                android:id="@+id/depoDurumu1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewLiter"
-                android:layout_marginTop="8dp"
-                android:text="DEPO DURUMU"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    <TextView
+                        android:id="@+id/textViewLiter"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextLiter"
+                        android:layout_alignTop="@+id/editTextLiter"
+                        android:layout_toEndOf="@+id/editTextLiter"
+                        android:layout_toRightOf="@+id/editTextLiter"
+                        android:gravity="center"
+                        android:text="Litre"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="30%" />
+                </android.support.percent.PercentRelativeLayout>
 
-            <SeekBar
-                android:id="@+id/seekBar1"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/depoDurumu1"
-                android:max="10"
-                android:progress="3" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignLeft="@+id/fuelType1"
+                    android:layout_alignStart="@+id/fuelType1"
+                    android:layout_below="@id/priceSec1"
+                    android:layout_marginTop="8dp"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/icon_gastank" />
+
+                <TextView
+                    android:id="@+id/depoDurumu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imageView"
+                    android:layout_alignTop="@+id/imageView"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toEndOf="@+id/imageView"
+                    android:layout_toRightOf="@+id/imageView"
+                    android:gravity="center"
+                    android:text="DEPO DURUMU"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+
+                <SeekBar
+                    android:id="@+id/seekBar1"
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/depoDurumu1"
+                    android:layout_margin="8dp"
+                    android:max="10"
+                    android:progress="3" />
+
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/expandableButtonYakit2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/seekBar1"
-                android:layout_marginTop="8dp"
-                android:background="#212121"
+                android:layout_below="@+id/division2"
+                android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="2. yakıt"
                 android:textColor="#fff" />
 
-            <ImageView
-                android:id="@+id/fuelType2"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+            <RelativeLayout
+                android:id="@+id/division3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/expandableButtonYakit2"
-                android:layout_marginTop="4dp"
-                android:padding="2dp"
-                android:src="@drawable/lpg"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:background="#EDEDED">
 
-            <TextView
-                android:id="@+id/fuelType1Text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/fuelType2"
-                android:layout_alignTop="@+id/fuelType2"
-                android:layout_toEndOf="@+id/fuelType2"
-                android:layout_toRightOf="@+id/fuelType2"
-                android:gravity="center"
-                android:text="LPG"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+                <ImageView
+                    android:id="@+id/fuelType2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <TextView
-                android:id="@+id/textViewPrice2"
+                <TextView
+                    android:id="@+id/fuelType2Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/fuelType2"
+                    android:layout_alignTop="@+id/fuelType2"
+                    android:layout_toEndOf="@+id/fuelType2"
+                    android:layout_toRightOf="@+id/fuelType2"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/priceSec2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/fuelType2"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp">
+
+                    <EditText
+                        android:id="@+id/editTextPricePerLiter2"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:background="#fff"
+                        android:gravity="center"
+                        android:hint="0.00"
+                        android:inputType="numberDecimal"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="70%" />
+
+                    <TextView
+                        android:id="@+id/textViewUnit2"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextPricePerLiter2"
+                        android:layout_alignTop="@+id/editTextPricePerLiter2"
+                        android:layout_toEndOf="@+id/editTextPricePerLiter2"
+                        android:layout_toRightOf="@+id/editTextPricePerLiter2"
+                        android:gravity="center"
+                        android:text="TL / litre"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="30%" />
+
+                    <EditText
+                        android:id="@+id/editTextPrice2"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/editTextPricePerLiter2"
+                        android:layout_marginTop="8dp"
+                        android:background="#fff"
+                        android:gravity="center"
+                        android:hint="0"
+                        android:inputType="numberDecimal"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="70%" />
+
+                    <TextView
+                        android:id="@+id/textViewCurrency2"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextPrice2"
+                        android:layout_alignTop="@+id/editTextPrice2"
+                        android:layout_toEndOf="@+id/editTextPrice2"
+                        android:layout_toRightOf="@+id/editTextPrice2"
+                        android:gravity="center"
+                        android:text="TL"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="30%" />
+
+                    <EditText
+                        android:id="@+id/editTextLiter2"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/editTextPrice2"
+                        android:layout_marginTop="8dp"
+                        android:background="#fff"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:hint="0.00"
+                        android:inputType="none"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="70%" />
+
+                    <TextView
+                        android:id="@+id/textViewLiter2"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editTextLiter2"
+                        android:layout_alignTop="@+id/editTextLiter2"
+                        android:layout_toEndOf="@+id/editTextLiter2"
+                        android:layout_toRightOf="@+id/editTextLiter2"
+                        android:gravity="center"
+                        android:text="Litre"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_widthPercent="30%" />
+                </android.support.percent.PercentRelativeLayout>
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignLeft="@+id/fuelType2"
+                    android:layout_alignStart="@+id/fuelType2"
+                    android:layout_below="@id/priceSec2"
+                    android:layout_marginTop="8dp"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/icon_gastank" />
+
+                <TextView
+                    android:id="@+id/depoDurumu2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imageView2"
+                    android:layout_alignTop="@+id/imageView2"
+                    android:layout_marginLeft="4dp"
+                    android:layout_toEndOf="@+id/imageView2"
+                    android:layout_toRightOf="@+id/imageView2"
+                    android:gravity="center"
+                    android:text="DEPO DURUMU"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+
+                <SeekBar
+                    android:id="@+id/seekBar2"
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/depoDurumu2"
+                    android:layout_margin="8dp"
+                    android:max="10"
+                    android:progress="3" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/totalLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/fuelType1Text2"
-                android:layout_marginTop="8dp"
-                android:text="FİYAT VE TUTAR"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:layout_below="@id/division3"
+                android:background="#EDEDED">
 
-            <EditText
-                android:id="@+id/editTextPricePerLiter2"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textViewPrice2"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:hint="6.02"
-                android:inputType="numberDecimal"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textViewVergi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="VERGİ: 200 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textViewUnit2"
+                <TextView
+                    android:id="@+id/textViewTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewVergi"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="TOPLAM: 282.15 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/totalOptionel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/editTextPricePerLiter2"
-                android:layout_alignTop="@+id/editTextPricePerLiter2"
-                android:layout_toEndOf="@+id/editTextPricePerLiter2"
-                android:layout_toRightOf="@+id/editTextPricePerLiter2"
-                android:gravity="center"
-                android:text="TL / litre"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_below="@id/totalLayout"
+                android:background="#EDEDED">
 
-            <EditText
-                android:id="@+id/editTextPrice2"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextPricePerLiter2"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:hint="50"
-                android:inputType="numberDecimal"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textViewFatura"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="İsterseniz daha sonra kolay hatırlamak için fiş/fatura ekleyebilirsiniz."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <TextView
-                android:id="@+id/textViewCurrency2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/editTextPrice2"
-                android:layout_alignTop="@+id/editTextPrice2"
-                android:layout_toEndOf="@+id/editTextPrice2"
-                android:layout_toRightOf="@+id/editTextPrice2"
-                android:gravity="center"
-                android:text="TL"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/photoHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewFatura"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/image_placeholder" />
 
-            <EditText
-                android:id="@+id/editTextLiter2"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextPrice2"
-                android:layout_marginTop="4dp"
-                android:focusable="false"
-                android:gravity="center"
-                android:hint="8.31"
-                android:inputType="none"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewLiter2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/editTextLiter2"
-                android:layout_alignTop="@+id/editTextLiter2"
-                android:layout_toEndOf="@+id/editTextLiter2"
-                android:layout_toRightOf="@+id/editTextLiter2"
-                android:gravity="center"
-                android:text="Litre"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/depoDurumu2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewLiter2"
-                android:layout_marginTop="8dp"
-                android:text="DEPO DURUMU"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <SeekBar
-                android:id="@+id/seekBar2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/depoDurumu2"
-                android:max="10"
-                android:progress="5" />
-
-            <TextView
-                android:id="@+id/textViewTotal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/seekBar2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="VERGİ: 200 TL\nTOPLAM: 282.15 TL"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-    <ScrollView
-        android:id="@+id/addfuel_layout2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textViewFatura"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:gravity="center"
-                android:text="İsterseniz daha sonra kolay hatırlamak için fiş/fatura ekleyebilirsiniz."
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            </RelativeLayout>
 
             <ImageView
-                android:id="@+id/photoHolder"
+                android:id="@+id/sendButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewFatura"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/photo_placeholder" />
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="8dp"
+                app:srcCompat="@drawable/add_fuel_button" />
 
         </RelativeLayout>
 
     </ScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/go_icon" />
 
 </android.support.design.widget.CoordinatorLayout>

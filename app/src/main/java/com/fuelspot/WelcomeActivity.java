@@ -223,27 +223,29 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                            MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
-                            prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
+                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
 
-                            MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
-                            prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
+                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
 
-                            MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
-                            prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
+                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
+                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
 
-                            MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
-                            prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
+                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
+                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
 
-                            MainActivity.getVariables(prefs);
-                            continueButton.setAlpha(1.0f);
-                            continueButton.setClickable(true);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                MainActivity.getVariables(prefs);
+                                continueButton.setAlpha(1.0f);
+                                continueButton.setClickable(true);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },

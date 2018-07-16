@@ -228,8 +228,9 @@ public class FragmentProfile extends Fragment {
                                     item.setID(obj.getInt("id"));
                                     item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
-                                    item.setProfile_pic(obj.getString("user_photo"));
+                                    item.setStationID(obj.getInt("station_id"));
                                     item.setUsername(obj.getString("username"));
+                                    item.setProfile_pic(obj.getString("user_photo"));
                                     item.setRating(obj.getInt("stars"));
                                     item.setAnswer(obj.getString("answer"));
                                     item.setReplyTime(obj.getString("replyTime"));
