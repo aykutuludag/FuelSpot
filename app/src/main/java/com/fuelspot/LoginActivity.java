@@ -48,6 +48,7 @@ import com.google.android.gms.plus.model.people.Person;
 import org.json.JSONObject;
 
 import java.text.Normalizer;
+import java.util.Currency;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -121,6 +122,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             prefs.edit().putBoolean("isSigned", false).apply();
             MainActivity.userCountry = Locale.getDefault().getCountry();
             prefs.edit().putString("userCountry", MainActivity.userCountry).apply();
+            MainActivity.currencyCode = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
+            prefs.edit().putString("userCurrency", MainActivity.currencyCode).apply();
+            if (MainActivity.userCountry.equals("US") || MainActivity.userCountry.equals("LR") || MainActivity.userCountry.equals("MM")) {
+                MainActivity.userUnit = "gal";
+            } else {
+                MainActivity.userUnit = "ℓ";
+            }
+            prefs.edit().putString("userUnit", MainActivity.userUnit).apply();
         }
 
         //Check whether is logged or not

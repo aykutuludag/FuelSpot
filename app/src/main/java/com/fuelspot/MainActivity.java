@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean premium, isSigned, isSuperUser;
     public static float userlat, userlon, averageCons, averagePrice;
-    public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, username, carBrand, carModel;
+    public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom = 12.25f;
     public static int mapDefaultRange = 5000;
@@ -187,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);
         userCountry = prefs.getString("userCountry", "");
+        userUnit = prefs.getString("userUnit", "ℓ");
+        currencyCode = prefs.getString("userCurrency", "");
         averageCons = prefs.getFloat("averageConsumption", 0);
         averagePrice = prefs.getFloat("averagePrice", 0);
         TAX_GASOLINE = prefs.getFloat("taxGasoline", 0);

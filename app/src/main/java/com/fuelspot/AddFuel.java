@@ -69,11 +69,14 @@ import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
+import static com.fuelspot.MainActivity.taxCalculator;
+import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.verifyStoragePermissions;
 
@@ -95,7 +98,7 @@ public class AddFuel extends AppCompatActivity {
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
     String fuelType, fuelType2 = "";
-    TextView fuelType1Text, fuelType2Text;
+    TextView fuelType1Text, fuelType2Text, fuelVergi, fuelGrandTotal;
     ImageView fuelType1Icon, fuelType2Icon;
     EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
     Bitmap bitmap;
@@ -160,6 +163,9 @@ public class AddFuel extends AppCompatActivity {
         textViewLitreFiyati2 = findViewById(R.id.editTextPricePerLiter2);
         textViewLitre2 = findViewById(R.id.editTextLiter2);
         textViewTotalFiyat2 = findViewById(R.id.editTextPrice2);
+
+        fuelVergi = findViewById(R.id.textViewVergi);
+        fuelGrandTotal = findViewById(R.id.textViewGrandTotal);
 
         // Check whether user is at station or not
         checkIsAtStation();
@@ -397,6 +403,8 @@ public class AddFuel extends AppCompatActivity {
                     String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
                     textViewLitre.setText(literText);
                     totalPrice = entryPrice + entryPrice2;
+
+                    updateTaxandGrandTotal();
                 }
             }
         });
@@ -442,6 +450,7 @@ public class AddFuel extends AppCompatActivity {
                     String literText2 = String.format("%.2f", buyedLiter2);
                     textViewLitre2.setText(literText2);
                     totalPrice = entryPrice + entryPrice2;
+                    updateTaxandGrandTotal();
                 }
             }
         });
@@ -467,6 +476,17 @@ public class AddFuel extends AppCompatActivity {
                 addPurchase();
             }
         });
+    }
+
+    private void updateTaxandGrandTotal() {
+        float tax1 = taxCalculator(fuelPri, (float) entryPrice);
+        float tax2 = taxCalculator(fuelSec, (float) entryPrice2);
+
+        float taxTotal = tax1 + tax2;
+        float grandTotalPrice = (float) (entryPrice + entryPrice2);
+
+        fuelVergi.setText("VERGİ: " + taxTotal);
+        fuelGrandTotal.setText("TOPLAM: " + grandTotalPrice);
     }
 
     public double howManyLiter(double priceForUnit, double totalPrice) {
@@ -520,10 +540,12 @@ public class AddFuel extends AppCompatActivity {
                             params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
                             params.put("fuelLiter2", String.valueOf(buyedLiter2));
                             params.put("totalPrice", String.valueOf(totalPrice));
-                            params.put("kilometer", String.valueOf(kilometer));
                             if (bitmap != null) {
                                 params.put("billPhoto", getStringImage(bitmap));
                             }
+                            params.put("kilometer", String.valueOf(kilometer));
+                            params.put("unit", String.valueOf(userUnit));
+                            params.put("currency", String.valueOf(currencyCode));
 
                             //returning parameters
                             return params;
@@ -564,7 +586,7 @@ public class AddFuel extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("googleID", chosenGoogleID);
+                params.put("stationID", String.valueOf(chosenStationID));
                 if (fuelType != null && fuelType.length() > 0 && selectedUnitPrice > 0) {
                     if (fuelType.contains("gasoline")) {
                         params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
@@ -592,9 +614,6 @@ public class AddFuel extends AppCompatActivity {
                 return params;
             }
         };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);

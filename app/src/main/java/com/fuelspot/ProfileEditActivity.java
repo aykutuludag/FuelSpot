@@ -181,7 +181,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         //  Setting birthday and retrieving changes
         editBirthday.setText(MainActivity.birthday);
         if (MainActivity.birthday.length() > 0) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             try {
                 Date birthDateasDate = sdf.parse(MainActivity.birthday);
                 calendarYear = birthDateasDate.getYear() + 1900;
