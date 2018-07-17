@@ -247,22 +247,24 @@ public class AddFuel extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                            chosenStationID = obj.getInt("id");
-                            chosenStationName = obj.getString("name");
-                            chosenStationAddress = obj.getString("vicinity");
-                            chosenStationLoc = obj.getString("location");
-                            gasolinePrice = obj.getDouble("gasolinePrice");
-                            dieselPrice = obj.getDouble("dieselPrice");
-                            LPGPrice = obj.getDouble("lpgPrice");
-                            electricityPrice = obj.getDouble("electricityPrice");
+                                chosenStationID = obj.getInt("id");
+                                chosenStationName = obj.getString("name");
+                                chosenStationAddress = obj.getString("vicinity");
+                                chosenStationLoc = obj.getString("location");
+                                gasolinePrice = obj.getDouble("gasolinePrice");
+                                dieselPrice = obj.getDouble("dieselPrice");
+                                LPGPrice = obj.getDouble("lpgPrice");
+                                electricityPrice = obj.getDouble("electricityPrice");
 
-                            updatePrices();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                loadLayout();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },
@@ -422,9 +424,7 @@ public class AddFuel extends AppCompatActivity {
                 addPurchase();
             }
         });
-    }
 
-    public void updatePrices() {
         //1. YAKIT TİPİ
         switch (fuelPri) {
             case 0:
@@ -486,8 +486,6 @@ public class AddFuel extends AppCompatActivity {
 
         fuelType2Text.setText(fuelType2);
         textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
-
-        loadLayout();
     }
 
     public double howManyLiter(double priceForUnit, double totalPrice) {

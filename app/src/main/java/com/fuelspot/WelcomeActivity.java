@@ -495,7 +495,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("fuelPri", String.valueOf(MainActivity.fuelPri));
                 params.put("fuelSec", String.valueOf(MainActivity.fuelSec));
                 params.put("km", String.valueOf(MainActivity.kilometer));
-                params.put("carPhoto", getStringImage(bitmap));
+                if (bitmap != null) {
+                    params.put("carPhoto", getStringImage(bitmap));
+                }
 
                 //returning parameters
                 return params;

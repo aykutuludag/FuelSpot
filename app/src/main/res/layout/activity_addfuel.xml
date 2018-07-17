@@ -71,7 +71,6 @@
                     android:layout_margin="8dp"
                     android:background="#fff"
                     android:gravity="center"
-                    android:hint="30000"
                     android:inputType="number"
                     android:padding="4dp"
                     android:textStyle="bold" />
@@ -133,7 +132,6 @@
                         android:layout_alignParentTop="true"
                         android:background="#fff"
                         android:gravity="center"
-                        android:hint="0.00"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textStyle="bold"
@@ -159,7 +157,6 @@
                         android:layout_marginTop="8dp"
                         android:background="#fff"
                         android:gravity="center"
-                        android:hint="0"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textStyle="bold"
@@ -186,7 +183,6 @@
                         android:background="#fff"
                         android:focusable="false"
                         android:gravity="center"
-                        android:hint="0.00"
                         android:inputType="none"
                         android:padding="4dp"
                         android:textStyle="bold"
@@ -224,6 +220,7 @@
                     android:layout_alignBottom="@id/imageView"
                     android:layout_alignTop="@+id/imageView"
                     android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     android:layout_toEndOf="@+id/imageView"
                     android:layout_toRightOf="@+id/imageView"
                     android:gravity="center"
@@ -298,7 +295,6 @@
                         android:layout_alignParentTop="true"
                         android:background="#fff"
                         android:gravity="center"
-                        android:hint="0.00"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textStyle="bold"
@@ -324,7 +320,6 @@
                         android:layout_marginTop="8dp"
                         android:background="#fff"
                         android:gravity="center"
-                        android:hint="0"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textStyle="bold"
@@ -351,7 +346,6 @@
                         android:background="#fff"
                         android:focusable="false"
                         android:gravity="center"
-                        android:hint="0.00"
                         android:inputType="none"
                         android:padding="4dp"
                         android:textStyle="bold"
@@ -394,6 +388,7 @@
                     android:gravity="center"
                     android:text="DEPO DURUMU"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:layout_marginStart="4dp"
                     android:textStyle="bold" />
 
                 <SeekBar
@@ -444,7 +439,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/totalLayout"
-                android:background="#EDEDED">
+                android:background="@android:color/transparent">
 
                 <TextView
                     android:id="@+id/textViewFatura"
@@ -456,7 +451,7 @@
                     android:layout_margin="8dp"
                     android:gravity="center"
                     android:text="İsterseniz daha sonra kolay hatırlamak için fiş/fatura ekleyebilirsiniz."
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
                 <ImageView
                     android:id="@+id/photoHolder"
