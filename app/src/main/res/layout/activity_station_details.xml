@@ -257,81 +257,86 @@
                     android:textColor="#6D6D6D" />
             </android.support.percent.PercentRelativeLayout>
 
-            <TextView
-                android:id="@+id/title_campaigns"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/single_station"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:text="Kampanyalar"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/campaignBar"
+            <RelativeLayout
+                android:id="@+id/campaignSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="false"
-                android:layout_below="@+id/title_campaigns"
-                android:background="#fff">
+                android:layout_below="@+id/single_station">
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemGasoline"
+                <TextView
+                    android:id="@+id/title_campaigns"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:icon="@drawable/gasoline"
-                    android:text="KAMPANYA 1" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:text="Kampanyalar"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemDiesel"
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/campaignBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_campaigns">
+
+                    <ImageView
+                        android:id="@+id/campaign1"
+                        android:layout_height="wrap_content"
+                        app:layout_marginPercent="4%"
+                        app:layout_widthPercent="25%"
+                        fab:srcCompat="@drawable/image_placeholder" />
+
+                    <ImageView
+                        android:id="@+id/campaign2"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/campaign1"
+                        android:layout_toRightOf="@+id/campaign1"
+                        app:layout_marginPercent="4%"
+                        app:layout_widthPercent="25%"
+                        fab:srcCompat="@drawable/image_placeholder" />
+
+                    <ImageView
+                        android:id="@+id/campaign3"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/campaign2"
+                        android:layout_toRightOf="@+id/campaign2"
+                        app:layout_marginPercent="4%"
+                        app:layout_widthPercent="25%"
+                        fab:srcCompat="@drawable/image_placeholder" />
+                </android.support.percent.PercentRelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/commentSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/campaignSection">
+
+                <TextView
+                    android:id="@+id/title_comments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:icon="@drawable/diesel"
-                    android:text="KAMPANYA 2" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:text="Son yorumlar"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/itemLPG"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/errorPic"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:icon="@drawable/lpg"
-                    android:text="KAMPANYA 3" />
-            </android.support.design.widget.TabLayout>
+                    android:layout_below="@id/title_comments"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/error_nocomment" />
 
-            <TextView
-                android:id="@+id/campaingDetails"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/campaignBar"
-                android:layout_margin="8dp"
-                android:background="#fff"
-                android:gravity="center"
-                android:text="KAMPANYA 1 AÇIKLAMASI"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/title_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/campaingDetails"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:text="Son yorumlar"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
-
-            <ImageView
-                android:id="@+id/errorPic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_comments"
-                android:layout_marginTop="16dp"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/error_nocomment" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/commentView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/title_comments" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/commentView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_comments" />
+            </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 

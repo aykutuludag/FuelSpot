@@ -508,7 +508,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);

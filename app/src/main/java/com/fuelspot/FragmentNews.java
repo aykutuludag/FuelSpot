@@ -2,6 +2,7 @@ package com.fuelspot;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.username;
 
 public class FragmentNews extends Fragment {
 
@@ -42,6 +44,7 @@ public class FragmentNews extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<NewsItem> feedsList;
     String feedURL;
+    ImageView errorPhoto;
 
     public static FragmentNews newInstance() {
 
@@ -81,6 +84,8 @@ public class FragmentNews extends Fragment {
         feedsList = new ArrayList<>();
         mRecyclerView = rootView.findViewById(R.id.feedView);
 
+        errorPhoto = rootView.findViewById(R.id.errorPhoto);
+
         contentChooserByCountry(userCountry);
 
         return rootView;
@@ -115,42 +120,49 @@ public class FragmentNews extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObj = new JSONObject(response);
-                            JSONArray res = jsonObj.getJSONArray("items");
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONObject jsonObj = new JSONObject(response);
+                                JSONArray res = jsonObj.getJSONArray("items");
+                                if (res.length() > 0) {
+                                    for (int i = 0; i < res.length(); i++) {
+                                        JSONObject obj = res.getJSONObject(i);
 
-                                NewsItem item = new NewsItem();
-                                item.setLink(obj.getString("url"));
-                                String title = new String(obj.getString("title").getBytes("ISO-8859-1"), "UTF-8");
-                                item.setTitle(title);
-                                String[] thumbNailHolder = obj.getString("content_html").split("\"");
-                                item.setThumbnail(thumbNailHolder[5]);
-                                item.setPublishDate(obj.getString("date_published"));
-                                feedsList.add(item);
+                                        NewsItem item = new NewsItem();
+                                        item.setLink(obj.getString("url"));
+                                        String title = new String(obj.getString("title").getBytes("ISO-8859-1"), "UTF-8");
+                                        item.setTitle(title);
+                                        String[] thumbNailHolder = obj.getString("content_html").split("\"");
+                                        item.setThumbnail(thumbNailHolder[5]);
+                                        item.setPublishDate(obj.getString("date_published"));
+                                        feedsList.add(item);
 
-                                mAdapter = new NewsAdapter(getActivity(), feedsList);
-                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                                        mAdapter = new NewsAdapter(getActivity(), feedsList);
+                                        mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
-                                mAdapter.notifyDataSetChanged();
-                                mRecyclerView.setAdapter(mAdapter);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-                                swipeContainer.setRefreshing(false);
+                                        mAdapter.notifyDataSetChanged();
+                                        mRecyclerView.setAdapter(mAdapter);
+                                        mRecyclerView.setLayoutManager(mLayoutManager);
+                                        swipeContainer.setRefreshing(false);
+                                        errorPhoto.setVisibility(View.GONE);
+                                    }
+                                } else {
+                                    errorLayout();
+                                }
+                            } catch (JSONException e) {
+                                errorLayout();
+                            } catch (UnsupportedEncodingException e) {
+                                errorLayout();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                        } else {
+                            errorLayout();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                        swipeContainer.setRefreshing(false);
+                        errorLayout();
                     }
                 }) {
             @Override
@@ -159,7 +171,7 @@ public class FragmentNews extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
+                params.put("username", username);
 
                 //returning parameters
                 return params;
@@ -171,5 +183,19 @@ public class FragmentNews extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    void errorLayout() {
+        swipeContainer.setRefreshing(false);
+        errorPhoto.setVisibility(View.VISIBLE);
+        Snackbar.make(getActivity().findViewById(android.R.id.content), "Ülkenizle alakalı bir haber bulunamadı. Tüm haberleri göster?", Snackbar.LENGTH_LONG)
+                .setAction("Tamam", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        fetchNews(getString(R.string.API_FETCH_NEWS));
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                .show();
     }
 }

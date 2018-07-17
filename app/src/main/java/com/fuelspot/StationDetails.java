@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,12 +94,14 @@ public class StationDetails extends AppCompatActivity {
     FloatingActionButton floatingActionButton1, floatingActionButton2;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
-    TabLayout tabLayout;
-    TextView campaingDetails;
 
-    String[] currentCampaings = new String[3];
     ImageView errorPhoto;
     CollapsingToolbarLayout collapsingToolbarLayout;
+
+    ImageView campaign1, campaign2, campaign3;
+    RelativeLayout campaignSection;
+
+    String[] campaignName, campaignDesc, campaignPhoto, campaignStart, campaignEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,28 +181,34 @@ public class StationDetails extends AppCompatActivity {
         }
 
         //Campaigns
-        campaingDetails = findViewById(R.id.campaingDetails);
-        tabLayout = findViewById(R.id.campaignBar);
-        tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        campaignSection = findViewById(R.id.campaignSection);
+        campaign1 = findViewById(R.id.campaign1);
+        campaign1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                campaingDetails.setText(currentCampaings[position]);
-            }
-
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // DO NOTHING
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                // DO NOTHING
+            public void onClick(View v) {
+                if (campaignName != null && campaignName.length > 0) {
+                    campaignPopup(0);
+                }
             }
         });
-        loadCampaigns();
+        campaign2 = findViewById(R.id.campaign2);
+        campaign2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (campaignName != null && campaignName.length > 1) {
+                    campaignPopup(1);
+                }
+            }
+        });
+        campaign3 = findViewById(R.id.campaign3);
+        campaign3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (campaignName != null && campaignName.length > 2) {
+                    campaignPopup(2);
+                }
+            }
+        });
 
         //Comments
         feedsList = new ArrayList<>();
@@ -317,7 +325,6 @@ public class StationDetails extends AppCompatActivity {
                             electricityPrice = obj.getDouble("electricityPrice");
                             lastUpdated = obj.getString("lastUpdated");
                             iconURL = obj.getString("photoURL");
-
                             loadStationDetails();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -346,13 +353,68 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void loadCampaigns() {
-        currentCampaings[0] = "KAMPANYA 1 AÇIKLAMASI";
-        currentCampaings[1] = "KAMPANYA 2 AÇIKLAMASI";
-        currentCampaings[2] = "KAMPANYA 3 AÇIKLAMASI";
+    void fetchCampaigns() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("AMK:" + response);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-        //DEFAULT
-        campaingDetails.setText(currentCampaings[0]);
+                                    campaignName[i] = obj.getString("campaignName");
+                                    campaignDesc[i] = obj.getString("campaignDesc");
+                                    campaignPhoto[i] = obj.getString("campaignPhoto");
+                                    campaignStart[i] = obj.getString("campaignStart");
+                                    campaignEnd[i] = obj.getString("campaignEnd");
+
+                                    System.out.println("AMK:" + campaignName[i]);
+
+                                    if (i == 0) {
+                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto[0])).into(campaign1);
+                                    } else if (i == 1) {
+                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto[1])).into(campaign2);
+                                    } else {
+                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto[2])).into(campaign3);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                campaignSection.setVisibility(View.GONE);
+                                e.printStackTrace();
+                            }
+                        } else {
+                            campaignSection.setVisibility(View.GONE);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        campaignSection.setVisibility(View.GONE);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(stationID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    void campaignPopup(int campaignID) {
+
     }
 
     void addUpdateCommentPopup(View view) {
@@ -633,6 +695,7 @@ public class StationDetails extends AppCompatActivity {
         super.onResume();
         mStreetViewPanoramaView.onResume();
         fetchComments();
+        fetchCampaigns();
     }
 
     @Override
