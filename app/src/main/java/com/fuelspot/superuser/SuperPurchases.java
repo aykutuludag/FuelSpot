@@ -82,10 +82,10 @@ public class SuperPurchases extends AppCompatActivity {
                                 item.setStationName(obj.getString("stationName"));
                                 item.setStationIcon(obj.getString("stationIcon"));
                                 item.setStationLocation(obj.getString("stationLocation"));
-                                item.setFuelType(obj.getString("fuelType"));
+                                item.setFuelType(obj.getInt("fuelType"));
                                 item.setFuelPrice(obj.getDouble("fuelPrice"));
                                 item.setFuelLiter(obj.getDouble("fuelLiter"));
-                                item.setFuelType2(obj.getString("fuelType2"));
+                                item.setFuelType2(obj.getInt("fuelType2"));
                                 item.setFuelPrice2(obj.getDouble("fuelPrice2"));
                                 item.setFuelLiter2(obj.getDouble("fuelLiter2"));
                                 item.setTotalPrice(obj.getDouble("totalPrice"));

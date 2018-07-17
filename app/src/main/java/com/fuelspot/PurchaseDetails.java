@@ -44,8 +44,8 @@ public class PurchaseDetails extends AppCompatActivity {
     MapView mMapView;
     GoogleMap googleMap;
     FloatingActionButton fab;
-    int purchaseID;
-    String stationName, iconURL, stationLocation, fuelType1, fuelType2, billPhoto;
+    int purchaseID, fuelType1, fuelType2;
+    String stationName, iconURL, stationLocation, billPhoto;
     long purchaseTime;
     double fuelPrice1, fuelLiter1, fuelPrice2, fuelLiter2, totalPrice;
 
@@ -77,8 +77,8 @@ public class PurchaseDetails extends AppCompatActivity {
         iconURL = getIntent().getStringExtra("STATION_ICON");
         stationLocation = getIntent().getStringExtra("STATION_LOC");
         purchaseTime = getIntent().getLongExtra("PURCHASE_TIME", 0);
-        fuelType1 = getIntent().getStringExtra("FUEL_TYPE_1");
-        fuelType2 = getIntent().getStringExtra("FUEL_TYPE_2");
+        fuelType1 = getIntent().getIntExtra("FUEL_TYPE_1", -1);
+        fuelType2 = getIntent().getIntExtra("FUEL_TYPE_2", -1);
         billPhoto = getIntent().getStringExtra("BILL_PHOTO");
         fuelPrice1 = getIntent().getDoubleExtra("FUEL_PRICE_1", 0);
         fuelPrice2 = getIntent().getDoubleExtra("FUEL_PRICE_2", 0);
@@ -103,16 +103,16 @@ public class PurchaseDetails extends AppCompatActivity {
         Glide.with(this).load(iconURL).into(istasyonLogo);
         Glide.with(this).load(billPhoto).into(fatura);
         switch (fuelType1) {
-            case "gasoline":
+            case 0:
                 Glide.with(this).load(R.drawable.gasoline).into(tur1);
                 break;
-            case "diesel":
+            case 1:
                 Glide.with(this).load(R.drawable.diesel).into(tur1);
                 break;
-            case "lpg":
+            case 2:
                 Glide.with(this).load(R.drawable.lpg).into(tur1);
                 break;
-            case "electric":
+            case 3:
                 Glide.with(this).load(R.drawable.electricity).into(tur1);
                 break;
         }
@@ -122,18 +122,18 @@ public class PurchaseDetails extends AppCompatActivity {
         String priceHolder = priceOne + " TL";
         fiyat1.setText(priceHolder);
 
-        if (fuelType2 != null && fuelType2.length() > 0) {
+        if (fuelType2 != -1) {
             switch (fuelType2) {
-                case "gasoline":
+                case 0:
                     Glide.with(this).load(R.drawable.gasoline).into(tur2);
                     break;
-                case "diesel":
+                case 1:
                     Glide.with(this).load(R.drawable.diesel).into(tur2);
                     break;
-                case "lpg":
+                case 2:
                     Glide.with(this).load(R.drawable.lpg).into(tur2);
                     break;
-                case "electric":
+                case 3:
                     Glide.with(this).load(R.drawable.electricity).into(tur2);
                     break;
             }

@@ -142,8 +142,8 @@ public class AddFuel extends AppCompatActivity {
 
         scrollView = findViewById(R.id.addfuel_layout1);
 
-        expandableLayoutYakit = findViewById(R.id.division1);
-        expandableLayoutYakit2 = findViewById(R.id.division2);
+        expandableLayoutYakit = findViewById(R.id.division2);
+        expandableLayoutYakit2 = findViewById(R.id.division3);
         expandableButton1 = findViewById(R.id.expandableButtonYakit1);
         expandableButton2 = findViewById(R.id.expandableButtonYakit2);
 
@@ -167,7 +167,7 @@ public class AddFuel extends AppCompatActivity {
 
     public void checkIsAtStation() {
         //Search stations in a radius of 100m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=1000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=1200&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -178,67 +178,47 @@ public class AddFuel extends AppCompatActivity {
                         if (json.key("results").count() > 0) {
                             // Yes! He is in station. Probably there is only one station in 75m so get the first value
                             chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
-                            scrollView.setAlpha(1.0f);
                             fetchStation(chosenGoogleID);
                         } else {
-                            pDialog.dismiss();
-                            chosenStationID = 0;
-                            chosenStationName = "";
-                            chosenStationLoc = "";
-                            chosenGoogleID = "";
-                            chosenStationAddress = "";
-
-                            Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
-                                    .setAction("CLOSE", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            finish();
-                                        }
-                                    })
-                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                                    .show();
-
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    finish();
-                                }
-                            }, 2000);
+                            closeIt();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
-                chosenStationID = 0;
-                chosenStationName = "";
-                chosenStationLoc = "";
-                chosenGoogleID = "";
-                chosenStationAddress = "";
-
-                Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
-                        .setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                finish();
-                            }
-                        })
-                        .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                        .show();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 2000);
+                closeIt();
             }
         });
 
         // Add the request to the RequestQueue.
         requestQueue.add(stringRequest);
+    }
+
+    void closeIt() {
+        pDialog.dismiss();
+        chosenStationID = 0;
+        chosenStationName = "";
+        chosenStationLoc = "";
+        chosenGoogleID = "";
+        chosenStationAddress = "";
+
+        Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                .show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 2000);
     }
 
     private void fetchStation(final String googleID) {
@@ -248,6 +228,7 @@ public class AddFuel extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
+
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
@@ -261,6 +242,8 @@ public class AddFuel extends AppCompatActivity {
                                 LPGPrice = obj.getDouble("lpgPrice");
                                 electricityPrice = obj.getDouble("electricityPrice");
 
+                                scrollView.setAlpha(1.0f);
+                                pDialog.dismiss();
                                 loadLayout();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -291,8 +274,6 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void loadLayout() {
-        pDialog.dismiss();
-
         enterKilometer.setText(String.valueOf(kilometer));
         enterKilometer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -307,11 +288,73 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 1) {
+                if (s != null && s.length() > 0) {
                     kilometer = Integer.parseInt(s.toString());
                 }
             }
         });
+
+        //1. YAKIT TİPİ
+        switch (fuelPri) {
+            case 0:
+                selectedUnitPrice = gasolinePrice;
+                fuelType = "gasoline";
+                Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
+                break;
+            case 1:
+                selectedUnitPrice = dieselPrice;
+                fuelType = "diesel";
+                Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
+                break;
+            case 2:
+                selectedUnitPrice = LPGPrice;
+                fuelType = "lpg";
+                Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
+                break;
+            case 3:
+                selectedUnitPrice = electricityPrice;
+                fuelType = "electric";
+                Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
+                break;
+            default:
+                expandableLayoutYakit.setVisibility(View.GONE);
+                expandableButton1.setVisibility(View.GONE);
+                break;
+        }
+
+        fuelType1Text.setText(fuelType);
+        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
+
+        //2. YAKIT TİPİ
+        switch (fuelSec) {
+            case 0:
+                selectedUnitPrice2 = gasolinePrice;
+                fuelType2 = "gasoline";
+                Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
+                break;
+            case 1:
+                selectedUnitPrice2 = dieselPrice;
+                fuelType2 = "diesel";
+                Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
+                break;
+            case 2:
+                selectedUnitPrice2 = LPGPrice;
+                fuelType2 = "lpg";
+                Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
+                break;
+            case 3:
+                selectedUnitPrice2 = electricityPrice;
+                fuelType2 = "electric";
+                Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
+                break;
+            default:
+                expandableLayoutYakit2.setVisibility(View.GONE);
+                expandableButton2.setVisibility(View.GONE);
+                break;
+        }
+
+        fuelType2Text.setText(fuelType2);
+        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
 
         textViewLitreFiyati.addTextChangedListener(new TextWatcher() {
             @Override
@@ -326,7 +369,7 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 3) {
+                if (s != null && s.length() > 0) {
                     selectedUnitPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
                     String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
@@ -348,7 +391,7 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
+                if (s != null && s.length() > 0) {
                     entryPrice = Double.parseDouble(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
                     String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
@@ -371,7 +414,7 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 3) {
+                if (s != null && s.length() > 0) {
                     selectedUnitPrice2 = Double.parseDouble(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
                     String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
@@ -393,7 +436,7 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
+                if (s != null && s.length() > 0) {
                     entryPrice2 = Double.parseDouble(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
                     String literText2 = String.format("%.2f", buyedLiter2);
@@ -424,68 +467,6 @@ public class AddFuel extends AppCompatActivity {
                 addPurchase();
             }
         });
-
-        //1. YAKIT TİPİ
-        switch (fuelPri) {
-            case 0:
-                selectedUnitPrice = gasolinePrice;
-                fuelType = "gasoline";
-                Glide.with(this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
-                break;
-            case 1:
-                selectedUnitPrice = dieselPrice;
-                fuelType = "diesel";
-                Glide.with(this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
-                break;
-            case 2:
-                selectedUnitPrice = LPGPrice;
-                fuelType = "lpg";
-                Glide.with(this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
-                break;
-            case 3:
-                selectedUnitPrice = electricityPrice;
-                fuelType = "electric";
-                Glide.with(this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
-                break;
-            default:
-                expandableLayoutYakit.setVisibility(View.GONE);
-                expandableButton1.setVisibility(View.GONE);
-                break;
-        }
-
-        fuelType1Text.setText(fuelType);
-        textViewLitreFiyati.setText(String.valueOf(selectedUnitPrice));
-
-        //2. YAKIT TİPİ
-        switch (fuelSec) {
-            case 0:
-                selectedUnitPrice2 = gasolinePrice;
-                fuelType2 = "gasoline";
-                Glide.with(this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
-                break;
-            case 1:
-                selectedUnitPrice2 = dieselPrice;
-                fuelType2 = "diesel";
-                Glide.with(this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
-                break;
-            case 2:
-                selectedUnitPrice2 = LPGPrice;
-                fuelType2 = "lpg";
-                Glide.with(this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
-                break;
-            case 3:
-                selectedUnitPrice2 = electricityPrice;
-                fuelType2 = "electric";
-                Glide.with(this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
-                break;
-            default:
-                expandableLayoutYakit2.setVisibility(View.GONE);
-                expandableButton2.setVisibility(View.GONE);
-                break;
-        }
-
-        fuelType2Text.setText(fuelType2);
-        textViewLitreFiyati2.setText(String.valueOf(selectedUnitPrice2));
     }
 
     public double howManyLiter(double priceForUnit, double totalPrice) {
@@ -532,10 +513,10 @@ public class AddFuel extends AppCompatActivity {
                             params.put("stationNAME", chosenStationName);
                             params.put("stationICON", stationPhotoChooser(chosenStationName));
                             params.put("stationLOC", chosenStationLoc);
-                            params.put("fuelType", fuelType);
+                            params.put("fuelType", String.valueOf(fuelPri));
                             params.put("fuelPrice", String.valueOf(selectedUnitPrice));
                             params.put("fuelLiter", String.valueOf(buyedLiter));
-                            params.put("fuelType2", fuelType2);
+                            params.put("fuelType2", String.valueOf(fuelSec));
                             params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
                             params.put("fuelLiter2", String.valueOf(buyedLiter2));
                             params.put("totalPrice", String.valueOf(totalPrice));

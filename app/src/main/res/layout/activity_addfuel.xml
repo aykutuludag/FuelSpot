@@ -202,42 +202,6 @@
                         app:layout_widthPercent="30%" />
                 </android.support.percent.PercentRelativeLayout>
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignLeft="@+id/fuelType1"
-                    android:layout_alignStart="@+id/fuelType1"
-                    android:layout_below="@id/priceSec1"
-                    android:layout_marginTop="8dp"
-                    android:padding="4dp"
-                    app:srcCompat="@drawable/icon_gastank" />
-
-                <TextView
-                    android:id="@+id/depoDurumu1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/imageView"
-                    android:layout_alignTop="@+id/imageView"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_toEndOf="@+id/imageView"
-                    android:layout_toRightOf="@+id/imageView"
-                    android:gravity="center"
-                    android:text="DEPO DURUMU"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textStyle="bold" />
-
-                <SeekBar
-                    android:id="@+id/seekBar1"
-                    style="@style/Widget.AppCompat.SeekBar.Discrete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/depoDurumu1"
-                    android:layout_margin="8dp"
-                    android:max="10"
-                    android:progress="3" />
-
             </RelativeLayout>
 
             <Button
@@ -365,41 +329,6 @@
                         app:layout_widthPercent="30%" />
                 </android.support.percent.PercentRelativeLayout>
 
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignLeft="@+id/fuelType2"
-                    android:layout_alignStart="@+id/fuelType2"
-                    android:layout_below="@id/priceSec2"
-                    android:layout_marginTop="8dp"
-                    android:padding="4dp"
-                    app:srcCompat="@drawable/icon_gastank" />
-
-                <TextView
-                    android:id="@+id/depoDurumu2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/imageView2"
-                    android:layout_alignTop="@+id/imageView2"
-                    android:layout_marginLeft="4dp"
-                    android:layout_toEndOf="@+id/imageView2"
-                    android:layout_toRightOf="@+id/imageView2"
-                    android:gravity="center"
-                    android:text="DEPO DURUMU"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginStart="4dp"
-                    android:textStyle="bold" />
-
-                <SeekBar
-                    android:id="@+id/seekBar2"
-                    style="@style/Widget.AppCompat.SeekBar.Discrete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/depoDurumu2"
-                    android:layout_margin="8dp"
-                    android:max="10"
-                    android:progress="3" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -417,7 +346,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
                     android:gravity="center"
-                    android:text="VERGİ: 200 TL"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
@@ -428,7 +356,6 @@
                     android:layout_below="@id/textViewVergi"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="TOPLAM: 282.15 TL"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
             </RelativeLayout>

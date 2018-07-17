@@ -7,10 +7,10 @@ public class PurchaseItem {
     private String stationIcon;
     private String stationLocation;
     private String purchaseTime;
-    private String fuelType1;
+    private int fuelType1;
     private double fuelPrice1;
     private double fuelLiter1;
-    private String fuelType2;
+    private int fuelType2;
     private double fuelPrice2;
     private double fuelLiter2;
     private double totalPrice;
@@ -56,11 +56,11 @@ public class PurchaseItem {
         this.purchaseTime = purchaseTime;
     }
 
-    public String getFuelType() {
+    public int getFuelType() {
         return fuelType1;
     }
 
-    public void setFuelType(String fuelType1) {
+    public void setFuelType(int fuelType1) {
         this.fuelType1 = fuelType1;
     }
 
@@ -80,11 +80,11 @@ public class PurchaseItem {
         this.fuelLiter1 = fuelLiter1;
     }
 
-    public String getFuelType2() {
+    public int getFuelType2() {
         return fuelType2;
     }
 
-    public void setFuelType2(String fuelType2) {
+    public void setFuelType2(int fuelType2) {
         this.fuelType2 = fuelType2;
     }
 

@@ -115,19 +115,19 @@ public class FragmentVehicle extends Fragment {
 
         switch (MainActivity.fuelPri) {
             case 0:
-                fuelText = "Gasoline";
+                fuelText = "gasoline";
                 fuelTypeIndicator.setImageResource(R.drawable.gasoline);
                 break;
             case 1:
-                fuelText = "Diesel";
+                fuelText = "diesel";
                 fuelTypeIndicator.setImageResource(R.drawable.diesel);
                 break;
             case 2:
-                fuelText = "LPG";
+                fuelText = "lpg";
                 fuelTypeIndicator.setImageResource(R.drawable.lpg);
                 break;
             case 3:
-                fuelText = "Electric";
+                fuelText = "electric";
                 fuelTypeIndicator.setImageResource(R.drawable.electricity);
                 break;
             default:
@@ -142,19 +142,19 @@ public class FragmentVehicle extends Fragment {
         String fuelText2;
         switch (MainActivity.fuelSec) {
             case 0:
-                fuelText2 = "Gasoline";
+                fuelText2 = "gasoline";
                 fuelTypeIndicator2.setImageResource(R.drawable.gasoline);
                 break;
             case 1:
-                fuelText2 = "Diesel";
+                fuelText2 = "diesel";
                 fuelTypeIndicator2.setImageResource(R.drawable.diesel);
                 break;
             case 2:
-                fuelText2 = "LPG";
+                fuelText2 = "lpg";
                 fuelTypeIndicator2.setImageResource(R.drawable.lpg);
                 break;
             case 3:
-                fuelText2 = "Electric";
+                fuelText2 = "electric";
                 fuelTypeIndicator2.setImageResource(R.drawable.electricity);
                 break;
             default:
@@ -242,10 +242,10 @@ public class FragmentVehicle extends Fragment {
                                     item.setStationName(obj.getString("stationName"));
                                     item.setStationIcon(obj.getString("stationIcon"));
                                     item.setStationLocation(obj.getString("stationLocation"));
-                                    item.setFuelType(obj.getString("fuelType"));
+                                    item.setFuelType(obj.getInt("fuelType"));
                                     item.setFuelPrice(obj.getDouble("fuelPrice"));
                                     item.setFuelLiter(obj.getDouble("fuelLiter"));
-                                    item.setFuelType2(obj.getString("fuelType2"));
+                                    item.setFuelType2(obj.getInt("fuelType2"));
                                     item.setFuelPrice2(obj.getDouble("fuelPrice2"));
                                     item.setFuelLiter2(obj.getDouble("fuelLiter2"));
                                     item.setTotalPrice(obj.getDouble("totalPrice"));

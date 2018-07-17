@@ -300,16 +300,16 @@ public class MainActivity extends AppCompatActivity {
         admobInterstitial.loadAd(adRequest);
     }
 
-    public static float taxCalculator(String fuelType, float price) {
+    public static float taxCalculator(int fuelType, float price) {
         float tax;
         switch (fuelType) {
-            case "gasoline":
+            case 0:
                 tax = price * TAX_GASOLINE;
                 break;
-            case "diesel":
+            case 1:
                 tax = price * TAX_DIESEL;
                 break;
-            case "lpg":
+            case 2:
                 tax = price * TAX_LPG;
                 break;
             default:

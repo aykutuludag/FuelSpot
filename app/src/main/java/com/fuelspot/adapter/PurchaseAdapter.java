@@ -70,16 +70,16 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         // FUEL TYPE 1
         switch (feedItem.getFuelType()) {
-            case "gasoline":
+            case 0:
                 Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type1);
                 break;
-            case "diesel":
+            case 1:
                 Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type1);
                 break;
-            case "lpg":
+            case 2:
                 Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type1);
                 break;
-            case "electric":
+            case 3:
                 Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type1);
                 break;
         }
@@ -97,19 +97,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         viewHolder.price1.setText(priceHolder);
 
         // If user didn't purchased second type of fuel just hide these textViews
-        if (feedItem.getFuelType2() != null && feedItem.getFuelType2().length() > 0) {
+        if (feedItem.getFuelType2() != -1) {
             // FUEL TYPE 2
             switch (feedItem.getFuelType2()) {
-                case "gasoline":
+                case 0:
                     Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type2);
                     break;
-                case "diesel":
+                case 1:
                     Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type2);
                     break;
-                case "lpg":
+                case 2:
                     Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type2);
                     break;
-                case "electric":
+                case 3:
                     Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type2);
                     break;
             }
