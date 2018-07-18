@@ -54,7 +54,7 @@
                 android:id="@+id/single_station"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#90EDEDED">
+                android:background="#EDEDED">
 
                 <ImageView
                     android:id="@+id/station_photo"

@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mapView"
-                    android:background="#90EDEDED">
+                    android:background="#EDEDED">
 
                     <ImageView
                         android:id="@+id/stationLogo"
@@ -264,7 +264,7 @@
                 <ImageView
                     android:id="@+id/billPhoto"
                     android:layout_width="match_parent"
-                    android:layout_height="225dp"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/billTitle"
                     android:scaleType="fitXY"
                     app:srcCompat="@drawable/photo_placeholder" />

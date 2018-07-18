@@ -101,7 +101,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_margin="8dp"
                     android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    app:srcCompat="@drawable/gasoline" />
 
                 <TextView
                     android:id="@+id/fuelType1Text"
@@ -112,6 +113,7 @@
                     android:layout_toEndOf="@+id/fuelType1"
                     android:layout_toRightOf="@+id/fuelType1"
                     android:gravity="center"
+                    android:text="Gasoline"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -228,7 +230,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_margin="8dp"
                     android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    app:srcCompat="@drawable/lpg" />
 
                 <TextView
                     android:id="@+id/fuelType2Text"
@@ -239,6 +242,7 @@
                     android:layout_toEndOf="@+id/fuelType2"
                     android:layout_toRightOf="@+id/fuelType2"
                     android:gravity="center"
+                    android:text="LPG"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -382,13 +386,12 @@
 
                 <ImageView
                     android:id="@+id/photoHolder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_below="@id/textViewFatura"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/image_placeholder" />
+                    android:background="@drawable/photo_placeholder" />
 
             </RelativeLayout>
 
@@ -399,6 +402,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_below="@id/totalOptionel"
                 android:layout_margin="8dp"
                 app:srcCompat="@drawable/add_fuel_button" />
 

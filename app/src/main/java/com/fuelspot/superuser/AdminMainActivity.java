@@ -227,7 +227,6 @@ public class AdminMainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(AdminMainActivity.this);
             builder.setMessage("Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir. Teşekkürler...");
             builder.setCancelable(false);
-            builder.setIcon(R.drawable.onaybekleniyor);
             builder.setNeutralButton("Tamam", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

@@ -83,6 +83,7 @@ public class StationDetails extends AppCompatActivity {
     RelativeTimeTextView textLastUpdated;
 
     StreetViewPanoramaView mStreetViewPanoramaView;
+    AppBarLayout appBarLayout;
     StreetViewPanorama mPanorama;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -128,7 +129,7 @@ public class StationDetails extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Dynamic bar colors
-        final AppBarLayout appBarLayout = findViewById(R.id.Appbar);
+        appBarLayout = findViewById(R.id.Appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -258,58 +259,59 @@ public class StationDetails extends AppCompatActivity {
         //Panorama
         mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
             @Override
-            public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
+            public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
+                panorama.setStreetNamesEnabled(true);
                 panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
-                mPanorama = panorama;
-                mPanorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+                panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
                     @Override
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
-                        if (streetViewPanoramaLocation == null) {
+                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
+                            mPanorama = panorama;
+                        } else {
                             Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
 
+                //SingleStation
+                textName.setText(stationName);
+                textVicinity.setText(stationVicinity);
+                textDistance.setText((int) stationDistance + " m");
+
+                if (gasolinePrice == 0) {
+                    textGasoline.setText("-");
+                } else {
+                    textGasoline.setText(String.valueOf(gasolinePrice));
+                }
+
+                if (dieselPrice == 0) {
+                    textDiesel.setText("-");
+                } else {
+                    textDiesel.setText(String.valueOf(dieselPrice));
+                }
+
+                if (lpgPrice == 0) {
+                    textLPG.setText("-");
+                } else {
+                    textLPG.setText(String.valueOf(lpgPrice));
+                }
+
+                if (electricityPrice == 0) {
+                    textElectricity.setText("-");
+                } else {
+                    textElectricity.setText(String.valueOf(electricityPrice));
+                }
+
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    Date date = format.parse(lastUpdated);
+                    textLastUpdated.setReferenceTime(date.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
             }
         });
-
-        //SingleStation
-        textName.setText(stationName);
-        textVicinity.setText(stationVicinity);
-        textDistance.setText((int) stationDistance + " m");
-
-        if (gasolinePrice == 0) {
-            textGasoline.setText("-");
-        } else {
-            textGasoline.setText(String.valueOf(gasolinePrice));
-        }
-
-        if (dieselPrice == 0) {
-            textDiesel.setText("-");
-        } else {
-            textDiesel.setText(String.valueOf(dieselPrice));
-        }
-
-        if (lpgPrice == 0) {
-            textLPG.setText("-");
-        } else {
-            textLPG.setText(String.valueOf(lpgPrice));
-        }
-
-        if (electricityPrice == 0) {
-            textElectricity.setText("-");
-        } else {
-            textElectricity.setText(String.valueOf(electricityPrice));
-        }
-
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            Date date = format.parse(lastUpdated);
-            textLastUpdated.setReferenceTime(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Glide.with(this).load(Uri.parse(iconURL)).into(stationIcon);
     }
 
     void fetchStationByID(final int stationID) {
