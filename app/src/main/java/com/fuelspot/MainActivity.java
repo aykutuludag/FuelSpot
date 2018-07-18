@@ -55,14 +55,17 @@ public class MainActivity extends AppCompatActivity {
     public static final int PURCHASE_NORMAL_PREMIUM = 1000;
     public static final int PURCHASE_ADMIN_PREMIUM = 1001;
 
+    public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+
+    public static int adCount;
+
     public static float TAX_GASOLINE;
     public static float TAX_DIESEL;
     public static float TAX_LPG;
     public static float TAX_ELECTRICITY;
-    public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
-    public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    public static boolean premium, isSigned, isSuperUser;
+    public static boolean premium, isSigned, isSuperUser, isGlobalNews;
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     public static String[] toyota_models = {"Auris", "Avensis", "Camry", "Carina", "Celica", "Corolla", "Corona", "Cressida", "Grown", "GT 86", "MR2", "Prius", "Starlet", "Supra", "Tercel", "Urban Cruiser", "Verso", "Yaris"};
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
-    // Static values START
+    // Static values END
 
     public static ArrayList<String> purchaseTimes = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
@@ -150,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
     public static ArrayList<Double> purchaseLiters = new ArrayList<>();
-    public static int adCount;
+
     static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;
     IInAppBillingService mService;
@@ -195,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         TAX_DIESEL = prefs.getFloat("taxDiesel", 0);
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
+        isGlobalNews = prefs.getBoolean("isGlobalNews", false);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -401,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
         openCount++;
         prefs.edit().putInt("howMany", openCount).apply();
 
-        if (openCount >= 15 && !premium) {
+        if (openCount >= 20 && !premium) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.buy_premium_ads_title)
                     .setMessage(R.string.buy_premium_ads_content)

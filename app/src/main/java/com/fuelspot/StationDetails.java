@@ -101,7 +101,11 @@ public class StationDetails extends AppCompatActivity {
     ImageView campaign1, campaign2, campaign3;
     RelativeLayout campaignSection;
 
-    String[] campaignName, campaignDesc, campaignPhoto, campaignStart, campaignEnd;
+    ArrayList<String> campaignName = new ArrayList<>();
+    ArrayList<String> campaignDesc = new ArrayList<>();
+    ArrayList<String> campaignPhoto = new ArrayList<>();
+    ArrayList<String> campaignStart = new ArrayList<>();
+    ArrayList<String> campaignEnd = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,8 +190,12 @@ public class StationDetails extends AppCompatActivity {
         campaign1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (campaignName != null && campaignName.length > 0) {
-                    campaignPopup(0);
+                if (campaignName != null && campaignName.size() > 0) {
+                    try {
+                        campaignPopup(0, v);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -195,8 +203,12 @@ public class StationDetails extends AppCompatActivity {
         campaign2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (campaignName != null && campaignName.length > 1) {
-                    campaignPopup(1);
+                if (campaignName != null && campaignName.size() > 1) {
+                    try {
+                        campaignPopup(1, v);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -204,8 +216,12 @@ public class StationDetails extends AppCompatActivity {
         campaign3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (campaignName != null && campaignName.length > 2) {
-                    campaignPopup(2);
+                if (campaignName != null && campaignName.size() > 2) {
+                    try {
+                        campaignPopup(2, v);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -253,14 +269,13 @@ public class StationDetails extends AppCompatActivity {
                         }
                     }
                 });
+
             }
         });
 
         //SingleStation
         textName.setText(stationName);
-
         textVicinity.setText(stationVicinity);
-
         textDistance.setText((int) stationDistance + " m");
 
         if (gasolinePrice == 0) {
@@ -365,20 +380,20 @@ public class StationDetails extends AppCompatActivity {
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
 
-                                    campaignName[i] = obj.getString("campaignName");
-                                    campaignDesc[i] = obj.getString("campaignDesc");
-                                    campaignPhoto[i] = obj.getString("campaignPhoto");
-                                    campaignStart[i] = obj.getString("campaignStart");
-                                    campaignEnd[i] = obj.getString("campaignEnd");
+                                    campaignName.add(i, obj.getString("campaignName"));
+                                    campaignDesc.add(i, obj.getString("campaignDesc"));
+                                    campaignPhoto.add(i, obj.getString("campaignPhoto"));
+                                    campaignStart.add(i, obj.getString("campaignStart"));
+                                    campaignEnd.add(i, obj.getString("campaignEnd"));
 
-                                    System.out.println("AMK:" + campaignName[i]);
+                                    System.out.println("AMK:" + campaignName.get(i));
 
                                     if (i == 0) {
-                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto[0])).into(campaign1);
+                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(0))).into(campaign1);
                                     } else if (i == 1) {
-                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto[1])).into(campaign2);
+                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(1))).into(campaign2);
                                     } else {
-                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto[2])).into(campaign3);
+                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(2))).into(campaign3);
                                     }
                                 }
                             } catch (JSONException e) {
@@ -413,8 +428,45 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void campaignPopup(int campaignID) {
+    void campaignPopup(int campaignID, View view) throws ParseException {
+        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_campaign, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
 
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+
+        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
+        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(campaignID))).into(imgPopup);
+
+        TextView titlePopup = customView.findViewById(R.id.campaignTitle);
+        titlePopup.setText(campaignName.get(campaignID));
+
+        TextView descPopup = customView.findViewById(R.id.campaignDesc);
+        descPopup.setText(campaignDesc.get(campaignID));
+
+        RelativeTimeTextView startTime = customView.findViewById(R.id.startTime);
+        Date date = format.parse(campaignStart.get(campaignID));
+        startTime.setReferenceTime(date.getTime());
+
+        RelativeTimeTextView endTime = customView.findViewById(R.id.endTime);
+        Date date2 = format.parse(campaignEnd.get(campaignID));
+        endTime.setReferenceTime(date2.getTime());
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     void addUpdateCommentPopup(View view) {

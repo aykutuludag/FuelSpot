@@ -280,7 +280,7 @@ public class FragmentStations extends Fragment {
                                 } else {
                                     LocationRequest mLocationRequest = new LocationRequest();
                                     mLocationRequest.setInterval(60000);
-                                    mLocationRequest.setFastestInterval(15000);
+                                    mLocationRequest.setFastestInterval(5000);
                                     mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                 }
                             }

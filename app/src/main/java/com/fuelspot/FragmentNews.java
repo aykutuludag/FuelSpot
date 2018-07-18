@@ -1,5 +1,7 @@
 package com.fuelspot;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.isGlobalNews;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.username;
 
@@ -45,6 +48,7 @@ public class FragmentNews extends Fragment {
     List<NewsItem> feedsList;
     String feedURL;
     ImageView errorPhoto;
+    SharedPreferences prefs;
 
     public static FragmentNews newInstance() {
 
@@ -64,6 +68,8 @@ public class FragmentNews extends Fragment {
         t.setScreenName("Haberler");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         swipeContainer = rootView.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -92,24 +98,27 @@ public class FragmentNews extends Fragment {
     }
 
     private void contentChooserByCountry(String country) {
-        feedURL = "";
-        switch (country) {
-            case "AZ":
-                feedURL = "http://fuel-spot.com/category/countries/azerbaijan/feed/json";
-                break;
-            case "DE":
-                feedURL = "http://fuel-spot.com/category/countries/germany/feed/json";
-                break;
-            case "TR":
-                feedURL = "http://fuel-spot.com/category/countries/turkey/feed/json";
-                break;
-            case "US":
-                feedURL = "http://fuel-spot.com/category/countries/united-states/feed/json";
-                break;
-            default:
-                feedURL = "http://fuel-spot.com/category/countries/united-states/feed/json";
-                break;
+        if (isGlobalNews) {
+            feedURL = getString(R.string.API_FETCH_NEWS);
+        } else {
+            switch (country) {
+                case "AZ":
+                    feedURL = "http://fuel-spot.com/category/countries/azerbaijan/feed/json";
+                    break;
+                case "DE":
+                    feedURL = "http://fuel-spot.com/category/countries/germany/feed/json";
+                    break;
+                case "TR":
+                    feedURL = "http://fuel-spot.com/category/countries/turkey/feed/json";
+                    break;
+                case "US":
+                    feedURL = "http://fuel-spot.com/category/countries/united-states/feed/json";
+                    break;
+                default:
+                    feedURL = getString(R.string.API_FETCH_NEWS);
+                    break;
 
+            }
         }
         fetchNews(feedURL);
     }
@@ -193,6 +202,12 @@ public class FragmentNews extends Fragment {
                     @Override
                     public void onClick(View view) {
                         fetchNews(getString(R.string.API_FETCH_NEWS));
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Tüm haberler gösteriliyor. Ayarlardan açıp/kapatabilirsiniz.", Snackbar.LENGTH_LONG)
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                .show();
+                        isGlobalNews = true;
+                        prefs.edit().putBoolean("isGlobalNews", isGlobalNews).apply();
+
                     }
                 })
                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))

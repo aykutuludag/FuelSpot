@@ -12,7 +12,4 @@
     <external-path
         name="UserPhotos"
         path="FuelSpot/Licenses/" />
-    <external-files-path
-        name="my_images"
-        path="my_images" />
 </paths>
