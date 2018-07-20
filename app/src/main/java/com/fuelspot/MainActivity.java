@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean premium, isSigned, isSuperUser, isGlobalNews;
     public static float userlat, userlon, averageCons, averagePrice;
-    public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, currencyCode, username, carBrand, carModel, userUnit;
+    public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom = 12.25f;
     public static int mapDefaultRange = 5000;
@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     SharedPreferences prefs;
+    FragNavController mFragNavController;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -190,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);
         userCountry = prefs.getString("userCountry", "");
+        userCountryName = prefs.getString("userCountryName", "");
+        userDisplayLanguage = prefs.getString("userLanguage", "");
         userUnit = prefs.getString("userUnit", "ℓ");
         currencyCode = prefs.getString("userCurrency", "");
         averageCons = prefs.getFloat("averageConsumption", 0);
@@ -374,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(FragmentSettings.newInstance());
 
         builder.rootFragments(fragments);
-        final FragNavController mFragNavController = builder.build();
+        mFragNavController = builder.build();
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
@@ -503,19 +506,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addFuel:
-
                 Intent intent = new Intent(MainActivity.this, AddFuel.class);
                 startActivity(intent);
-
-                /*final Snackbar snackBar = Snackbar.make(findViewById(R.id.mainContainer), "Şu anda bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz.", Snackbar.LENGTH_LONG);
-                    snackBar.setAction("Tamam", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            snackBar.dismiss();
-                        }
-                    });
-                 snackBar.show();*/
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -549,8 +541,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        //Irrelevant
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Stations");
+        //Thanks to this brief code, we can call onActivityResult in a fragment
+        Fragment fragment = mFragNavController.getCurrentFrag();
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }

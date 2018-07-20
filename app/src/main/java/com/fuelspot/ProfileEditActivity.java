@@ -154,6 +154,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 if (MainActivity.verifyStoragePermissions(ProfileEditActivity.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
                             .pickPhoto(ProfileEditActivity.this);
                 } else {
                     ActivityCompat.requestPermissions(ProfileEditActivity.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);

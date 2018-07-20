@@ -91,6 +91,7 @@ public class FragmentStations extends Fragment {
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
+        args.putString("FRAGMENT", "Stations");
 
         FragmentStations fragment = new FragmentStations();
         fragment.setArguments(args);
@@ -212,7 +213,7 @@ public class FragmentStations extends Fragment {
 
     public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MainActivity.REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{MainActivity.PERMISSIONS_LOCATION}, MainActivity.REQUEST_LOCATION);
         } else {
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {

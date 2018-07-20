@@ -10,6 +10,9 @@
         name="CarPhotos"
         path="FuelSpot/CarPhotos/" />
     <external-path
-        name="UserPhotos"
+        name="Licenses"
         path="FuelSpot/Licenses/" />
+    <external-path
+        name="Feedback"
+        path="FuelSpot/Feedback/" />
 </paths>

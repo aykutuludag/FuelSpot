@@ -8,7 +8,7 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/campaignPhoto"
+        android:id="@+id/screenShot"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
@@ -16,10 +16,10 @@
         app:srcCompat="@drawable/ic_camera" />
 
     <TextView
-        android:id="@+id/campaignTitle"
+        android:id="@+id/feedBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/campaignPhoto"
+        android:layout_below="@+id/screenShot"
         android:layout_centerHorizontal="true"
         android:layout_margin="8dp"
         android:text="Kampanya başlığı"
@@ -29,7 +29,7 @@
         android:id="@+id/campaignDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/campaignTitle"
+        android:layout_below="@+id/feedBack"
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
         android:text="Kampanya açıklaması"

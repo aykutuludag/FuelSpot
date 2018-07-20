@@ -109,6 +109,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 if (MainActivity.verifyStoragePermissions(VehicleEditActivity.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
                             .pickPhoto(VehicleEditActivity.this);
                 } else {
                     ActivityCompat.requestPermissions(VehicleEditActivity.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
@@ -330,7 +331,6 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
-
 
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

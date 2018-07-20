@@ -46,7 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle(messageTitle)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =

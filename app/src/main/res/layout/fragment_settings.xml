@@ -1,19 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@android:color/transparent">
 
-        <Switch
-            android:id="@+id/switch1"
+        <TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Global news" />
-    </RelativeLayout>
+            android:layout_centerHorizontal="true"
+            android:text="AYARLAR"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#fff"
+            android:textStyle="bold" />
 
+        <RelativeLayout
+            android:id="@+id/settings_general"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView1">
+
+            <TextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="GENEL"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/textView01"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/country_icon" />
+
+            <TextView
+                android:id="@+id/textViewCountryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/imageView"
+                android:layout_alignTop="@id/imageView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/imageView"
+                android:layout_toRightOf="@+id/imageView"
+                android:gravity="center"
+                android:text="TÜRKİYE"
+                android:textColor="#fff" />
+
+            <ImageView
+                android:id="@+id/imageView11"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageView"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/language_icon" />
+
+            <TextView
+                android:id="@+id/textViewLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/imageView11"
+                android:layout_alignLeft="@+id/textViewCountryName"
+                android:layout_alignStart="@+id/textViewCountryName"
+                android:layout_alignTop="@id/imageView11"
+                android:gravity="center"
+                android:text="TÜRKÇE"
+                android:textColor="#fff" />
+
+            <ImageView
+                android:id="@+id/imageView122"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageView11"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/currency_icon" />
+
+            <TextView
+                android:id="@+id/textViewCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/imageView122"
+                android:layout_alignLeft="@+id/textViewCountryName"
+                android:layout_alignStart="@+id/textViewCountryName"
+                android:layout_alignTop="@+id/imageView122"
+                android:gravity="center"
+                android:text="Türk Lirası"
+                android:textColor="#fff" />
+
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textViewCurrency"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/units_icon" />
+
+            <TextView
+                android:id="@+id/textViewUnitSystem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/imageView12"
+                android:layout_alignLeft="@+id/textViewCountryName"
+                android:layout_alignStart="@+id/textViewCountryName"
+                android:layout_alignTop="@+id/imageView12"
+                android:gravity="center"
+                android:text="Litre, Kilometre (SI System)"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView12"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="BU AYARLAR BULUNDUĞUNUZ ÜLKEYE GÖRE OTOMATİK AYARLANMAKTADIR VE DEĞİŞTİRİLEMEMEKTEDİR."
+                android:textColor="#fff" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settings_news"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_general">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"
+                android:text="HABERLER"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView4"
+                android:layout_marginTop="8dp"
+                android:text="Global news"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/switch1"
+                android:layout_marginTop="4dp"
+                android:text="Global news i açarak tüm dünyadan haberleri okuyabilirsiniz."
+                android:textColor="#fff" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settings_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_news">
+
+            <TextView
+                android:id="@+id/textView04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"
+                android:text="DİĞER"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_beta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView04"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="BETA TESTİNE KATIL" />
+
+            <Button
+                android:id="@+id/button_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button_beta"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="32dp"
+                android:layout_marginTop="8dp"
+                android:text="FEEDBACK" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="© Copyright 2018 FuelSpot"
+            android:textColor="#fff" />
+
+    </RelativeLayout>
 </ScrollView>

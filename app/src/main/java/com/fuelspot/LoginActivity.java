@@ -120,14 +120,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             //Language will be automatically changed
             MainActivity.isSigned = false;
             prefs.edit().putBoolean("isSigned", false).apply();
+
             MainActivity.userCountry = Locale.getDefault().getCountry();
             prefs.edit().putString("userCountry", MainActivity.userCountry).apply();
+
+            MainActivity.userCountryName = Locale.getDefault().getDisplayCountry();
+            prefs.edit().putString("userCountryName", MainActivity.userCountryName).apply();
+
+            MainActivity.userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+            prefs.edit().putString("userLanguage", MainActivity.userDisplayLanguage).apply();
+
             MainActivity.currencyCode = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
             prefs.edit().putString("userCurrency", MainActivity.currencyCode).apply();
+
             if (MainActivity.userCountry.equals("US") || MainActivity.userCountry.equals("LR") || MainActivity.userCountry.equals("MM")) {
                 MainActivity.userUnit = "gal";
             } else {
-                MainActivity.userUnit = "ℓ";
+                MainActivity.userUnit = "lt";
             }
             prefs.edit().putString("userUnit", MainActivity.userUnit).apply();
         }

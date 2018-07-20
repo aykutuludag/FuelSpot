@@ -462,6 +462,7 @@ public class AddFuel extends AppCompatActivity {
                 if (verifyStoragePermissions(AddFuel.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
                             .pickPhoto(AddFuel.this);
                 } else {
                     ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
@@ -721,6 +722,7 @@ public class AddFuel extends AppCompatActivity {
                     Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
                             .pickPhoto(AddFuel.this);
                 }
                 break;

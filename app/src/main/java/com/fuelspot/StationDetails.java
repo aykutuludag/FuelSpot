@@ -399,11 +399,8 @@ public class StationDetails extends AppCompatActivity {
                                     }
                                 }
                             } catch (JSONException e) {
-                                campaignSection.setVisibility(View.GONE);
                                 e.printStackTrace();
                             }
-                        } else {
-                            campaignSection.setVisibility(View.GONE);
                         }
                     }
                 },
@@ -440,10 +437,10 @@ public class StationDetails extends AppCompatActivity {
 
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
 
-        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
+        ImageView imgPopup = customView.findViewById(R.id.screenShot);
         Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(campaignID))).into(imgPopup);
 
-        TextView titlePopup = customView.findViewById(R.id.campaignTitle);
+        TextView titlePopup = customView.findViewById(R.id.feedBack);
         titlePopup.setText(campaignName.get(campaignID));
 
         TextView descPopup = customView.findViewById(R.id.campaignDesc);
