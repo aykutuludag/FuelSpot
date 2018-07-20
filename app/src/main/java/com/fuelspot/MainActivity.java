@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
-    public static float mapDefaultZoom = 12.25f;
-    public static int mapDefaultRange = 5000;
+    public static float mapDefaultZoom;
+    public static int mapDefaultRange;
     public static int openCount;
 
     public static String[] acura_models = {"RSX"};
@@ -202,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         isGlobalNews = prefs.getBoolean("isGlobalNews", false);
+        mapDefaultRange = prefs.getInt("RANGE", 5000);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 12.25f);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -350,11 +352,11 @@ public class MainActivity extends AppCompatActivity {
         //Bottom navigation
         AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.tab_map, R.color.tabColor1);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.tab_news, R.color.tabColor2);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.tab_vehicle, R.color.tabColor3);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.tab_profile, R.color.tabColor3);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_5, R.drawable.tab_settings, R.color.tabColor3);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.tab_map, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.tab_news, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.tab_vehicle, R.color.colorAccent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.tab_profile, R.color.colorAccent);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_5, R.drawable.tab_settings, R.color.colorAccent);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
@@ -466,6 +468,8 @@ public class MainActivity extends AppCompatActivity {
             if (ownedSkus.contains("premium")) {
                 premium = true;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
+                prefs.edit().putInt("RANGE", 50000).apply();
+                prefs.edit().putFloat("ZOOM", 10f).apply();
             } else {
                 premium = false;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
@@ -527,6 +531,8 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasPremium", true).apply();
+                    prefs.edit().putInt("RANGE", 50000).apply();
+                    prefs.edit().putFloat("ZOOM", 10f).apply();
                     Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
                     if (i != null) {
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

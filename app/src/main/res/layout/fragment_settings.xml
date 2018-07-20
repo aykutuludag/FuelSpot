@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:background="@android:color/transparent">
 
         <TextView
@@ -25,7 +26,8 @@
             android:id="@+id/settings_general"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textView1">
+            android:layout_below="@id/textView1"
+            android:layout_margin="8dp">
 
             <TextView
                 android:id="@+id/textView01"
@@ -144,10 +146,65 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/settings_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_general"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:id="@+id/textViewMapTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="HARİTA"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textViewMapTitle"
+                android:layout_marginTop="4dp"
+                android:text="MENZİL:"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/textViewMenzil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/textViewRange"
+                android:layout_alignTop="@id/textViewRange"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/textViewRange"
+                android:layout_toRightOf="@+id/textViewRange"
+                android:text="5 kilometre"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/textViewPremium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewRange"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Premium sürüme geçerek menzilinizi 50 kilometreye çıkarabilir ve reklamları kaldırabilirsiniz.\n\n Premium sürüme geçmek için tıklayınız."
+                android:textColor="#fff" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/settings_news"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_general">
+            android:layout_below="@+id/settings_map"
+            android:layout_margin="8dp">
 
             <TextView
                 android:id="@+id/textView4"
@@ -155,7 +212,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="16dp"
                 android:text="HABERLER"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#fff"
@@ -189,7 +245,8 @@
             android:id="@+id/settings_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_news">
+            android:layout_below="@+id/settings_news"
+            android:layout_margin="8dp">
 
             <TextView
                 android:id="@+id/textView04"
@@ -197,7 +254,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="16dp"
                 android:text="DİĞER"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#fff"
@@ -218,9 +274,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/button_beta"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="32dp"
                 android:layout_marginTop="8dp"
                 android:text="FEEDBACK" />
+
+            <Button
+                android:id="@+id/button_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button_feedback"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="RATE THE APP" />
 
         </RelativeLayout>
 
@@ -228,10 +292,11 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/settings_other"
             android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
             android:text="© Copyright 2018 FuelSpot"
             android:textColor="#fff" />
 
     </RelativeLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

@@ -134,9 +134,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             prefs.edit().putString("userCurrency", MainActivity.currencyCode).apply();
 
             if (MainActivity.userCountry.equals("US") || MainActivity.userCountry.equals("LR") || MainActivity.userCountry.equals("MM")) {
-                MainActivity.userUnit = "gal";
+                MainActivity.userUnit = "US Customary";
             } else {
-                MainActivity.userUnit = "lt";
+                MainActivity.userUnit = "Metric system";
             }
             prefs.edit().putString("userUnit", MainActivity.userUnit).apply();
         }

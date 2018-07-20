@@ -96,7 +96,7 @@ public class StationDetails extends AppCompatActivity {
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
 
-    ImageView errorPhoto;
+    ImageView errorPhoto, errorStreetView;
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     ImageView campaign1, campaign2, campaign3;
@@ -150,6 +150,7 @@ public class StationDetails extends AppCompatActivity {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         errorPhoto = findViewById(R.id.errorPic);
+        errorStreetView = findViewById(R.id.imageViewErrStreetView);
 
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
@@ -268,6 +269,7 @@ public class StationDetails extends AppCompatActivity {
                         if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
                             mPanorama = panorama;
                         } else {
+                            errorStreetView.setVisibility(View.VISIBLE);
                             Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
                         }
                     }

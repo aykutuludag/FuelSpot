@@ -30,6 +30,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
 
+            <ImageView
+                android:id="@+id/imageViewErrStreetView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:src="@drawable/error_general"
+                android:visibility="gone" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

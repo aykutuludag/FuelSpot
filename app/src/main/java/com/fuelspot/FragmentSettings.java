@@ -4,6 +4,7 @@ package com.fuelspot;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
@@ -40,6 +42,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fuelspot.superuser.AdminMainActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
@@ -61,6 +64,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.isGlobalNews;
+import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
@@ -69,13 +73,14 @@ import static com.fuelspot.MainActivity.verifyStoragePermissions;
 public class FragmentSettings extends Fragment {
 
     TextView countryText, languageText, currencyText, unitSystemText;
-    Button buttonBeta, buttonFeedback;
+    Button buttonBeta, buttonFeedback, buttonRate;
     Switch globalNewsSwitch;
     SharedPreferences prefs;
     String feedbackMessage;
     Bitmap bitmap;
     ImageView getScreenshot;
     PopupWindow mPopupWindow;
+    TextView userRange, userPremium;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -138,6 +143,42 @@ public class FragmentSettings extends Fragment {
             @Override
             public void onClick(View v) {
                 openFeedBackPopup(v);
+            }
+        });
+
+        buttonRate = rootView.findViewById(R.id.button_rate);
+        buttonRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fuelspot"));
+                startActivity(intent);
+            }
+        });
+
+        userRange = rootView.findViewById(R.id.textViewMenzil);
+        userRange.setText(mapDefaultRange + " meters");
+
+        userPremium = rootView.findViewById(R.id.textViewPremium);
+        userPremium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.isSuperUser) {
+                    try {
+                        ((AdminMainActivity) getActivity()).buyAdminPremium();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        ((MainActivity) getActivity()).buyPremium();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
