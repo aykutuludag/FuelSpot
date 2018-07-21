@@ -71,37 +71,41 @@ public class SuperPurchases extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-                                PurchaseItem item = new PurchaseItem();
-                                item.setID(obj.getInt("id"));
-                                item.setPurchaseTime(obj.getString("time"));
-                                item.setStationName(obj.getString("stationName"));
-                                item.setStationIcon(obj.getString("stationIcon"));
-                                item.setStationLocation(obj.getString("stationLocation"));
-                                item.setFuelType(obj.getInt("fuelType"));
-                                item.setFuelPrice(obj.getDouble("fuelPrice"));
-                                item.setFuelLiter(obj.getDouble("fuelLiter"));
-                                item.setFuelType2(obj.getInt("fuelType2"));
-                                item.setFuelPrice2(obj.getDouble("fuelPrice2"));
-                                item.setFuelLiter2(obj.getDouble("fuelLiter2"));
-                                item.setTotalPrice(obj.getDouble("totalPrice"));
-                                item.setBillPhoto(obj.getString("billPhoto"));
-                                feedsList.add(item);
+                                    PurchaseItem item = new PurchaseItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setPurchaseTime(obj.getString("time"));
+                                    item.setStationName(obj.getString("stationName"));
+                                    item.setStationIcon(obj.getString("stationIcon"));
+                                    item.setStationLocation(obj.getString("stationLocation"));
+                                    item.setFuelType(obj.getInt("fuelType"));
+                                    item.setFuelPrice((float) obj.getDouble("fuelPrice"));
+                                    item.setFuelLiter((float) obj.getDouble("fuelLiter"));
+                                    item.setFuelType2(obj.getInt("fuelType2"));
+                                    item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
+                                    item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
+                                    item.setTotalPrice((float) obj.getDouble("totalPrice"));
+                                    item.setBillPhoto(obj.getString("billPhoto"));
+                                    feedsList.add(item);
 
-                                mAdapter = new PurchaseAdapter(SuperPurchases.this, feedsList);
-                                mLayoutManager = new GridLayoutManager(SuperPurchases.this, 1);
+                                    mAdapter = new PurchaseAdapter(SuperPurchases.this, feedsList);
+                                    mLayoutManager = new GridLayoutManager(SuperPurchases.this, 1);
 
-                                mAdapter.notifyDataSetChanged();
-                                mRecyclerView.setAdapter(mAdapter);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-                                swipeContainer.setRefreshing(false);
+                                    mAdapter.notifyDataSetChanged();
+                                    mRecyclerView.setAdapter(mAdapter);
+                                    mRecyclerView.setLayoutManager(mLayoutManager);
+                                    swipeContainer.setRefreshing(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } else {
+
                         }
                     }
                 },

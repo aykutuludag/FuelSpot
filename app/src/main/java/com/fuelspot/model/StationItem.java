@@ -6,10 +6,10 @@ public class StationItem {
     private String stationName;
     private String vicinity;
     private String locStation;
-    private double gasolinePrice;
-    private double dieselPrice;
-    private double lpgPrice;
-    private double electricityPrice;
+    private float gasolinePrice;
+    private float dieselPrice;
+    private float lpgPrice;
+    private float electricityPrice;
     private String googleMapID;
     private String photoURL;
     private String lastUpdated;
@@ -51,23 +51,23 @@ public class StationItem {
         return gasolinePrice;
     }
 
-    public void setGasolinePrice(double gasolinePrice) {
+    public void setGasolinePrice(float gasolinePrice) {
         this.gasolinePrice = gasolinePrice;
     }
 
-    public double getDieselPrice() {
+    public float getDieselPrice() {
         return dieselPrice;
     }
 
-    public void setDieselPrice(double dieselPrice) {
+    public void setDieselPrice(float dieselPrice) {
         this.dieselPrice = dieselPrice;
     }
 
-    public double getLpgPrice() {
+    public float getLpgPrice() {
         return lpgPrice;
     }
 
-    public void setLpgPrice(double lpgPrice) {
+    public void setLpgPrice(float lpgPrice) {
         this.lpgPrice = lpgPrice;
     }
 
@@ -75,7 +75,7 @@ public class StationItem {
         return electricityPrice;
     }
 
-    public void setElectricityPrice(double electricityPrice) {
+    public void setElectricityPrice(float electricityPrice) {
         this.electricityPrice = electricityPrice;
     }
 

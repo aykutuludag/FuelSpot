@@ -270,7 +270,7 @@ public class FragmentStations extends Fragment {
 
                                     float distanceInMeters = loc1.distanceTo(loc2);
 
-                                    if (distanceInMeters >= 100f) {
+                                    if (distanceInMeters >= 500f) {
                                         MainActivity.userlat = (float) location.getLatitude();
                                         MainActivity.userlon = (float) location.getLongitude();
                                         prefs.edit().putFloat("lat", MainActivity.userlat).apply();
@@ -344,14 +344,14 @@ public class FragmentStations extends Fragment {
                             }
                         } else {
                             noStationError.setVisibility(View.VISIBLE);
-                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 noStationError.setVisibility(View.VISIBLE);
-                Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -380,10 +380,10 @@ public class FragmentStations extends Fragment {
                                     item.setStationName(obj.getString("name"));
                                     item.setVicinity(obj.getString("vicinity"));
                                     item.setLocation(obj.getString("location"));
-                                    item.setGasolinePrice(obj.getDouble("gasolinePrice"));
-                                    item.setDieselPrice(obj.getDouble("dieselPrice"));
-                                    item.setLpgPrice(obj.getDouble("lpgPrice"));
-                                    item.setElectricityPrice(obj.getDouble("electricityPrice"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                                     item.setGoogleMapID(obj.getString("googleID"));
                                     item.setPhotoURL(obj.getString("photoURL"));
 

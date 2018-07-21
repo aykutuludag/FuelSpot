@@ -72,6 +72,7 @@ import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.isGlobalNews;
+import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -245,8 +246,13 @@ public class FragmentSettings extends Fragment {
 
                                 MainActivity.getVariables(prefs);
 
-                                Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Vergi oranları güncellendi.", Snackbar.LENGTH_LONG);
-                                snackBar.show();
+                                if (isSuperUser) {
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), "Vergi oranları güncellendi.", Snackbar.LENGTH_LONG);
+                                    snackBar.show();
+                                } else {
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Vergi oranları güncellendi.", Snackbar.LENGTH_LONG);
+                                    snackBar.show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -349,8 +355,13 @@ public class FragmentSettings extends Fragment {
                     @Override
                     public void onResponse(String s) {
                         loading.dismiss();
-                        Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
-                        snackBar.show();
+                        if (isSuperUser) {
+                            Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
+                            snackBar.show();
+                        } else {
+                            Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
+                            snackBar.show();
+                        }
                         mPopupWindow.dismiss();
                     }
                 },

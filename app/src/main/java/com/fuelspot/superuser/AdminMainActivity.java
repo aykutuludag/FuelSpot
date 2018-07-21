@@ -1,6 +1,5 @@
 package com.fuelspot.superuser;
 
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,14 +13,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -35,12 +32,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentProfile;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
 import com.fuelspot.R;
 import com.kobakei.ratethisapp.RateThisApp;
+import com.ncapdevi.fragnav.FragNavController;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.PURCHASE_ADMIN_PREMIUM;
@@ -71,14 +72,12 @@ public class AdminMainActivity extends AppCompatActivity {
 
     boolean doubleBackToExitPressedOnce;
     RequestQueue queue;
-    MyPagerAdapter mSectionsPagerAdapter;
-    PagerTitleStrip pagertabstrip;
-    ViewPager mViewPager;
     Window window;
     Toolbar toolbar;
     SharedPreferences prefs;
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
+    FragNavController mFragNavController;
 
     public static void getSuperVariables(SharedPreferences prefs) {
         superStationID = prefs.getInt("SuperStationID", 0);
@@ -112,12 +111,46 @@ public class AdminMainActivity extends AppCompatActivity {
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
-        mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), AdminMainActivity.this);
-        mViewPager = findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        pagertabstrip = findViewById(R.id.pager_title_strip);
-        pagertabstrip.setBackgroundColor(Color.TRANSPARENT);
+        //Bottom navigation
+        AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
+        //Add tabs
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_map, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.tab_news, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.tab_stations, R.color.colorAccent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.tab_profile, R.color.colorAccent);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_5, R.drawable.tab_settings, R.color.colorAccent);
+
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
+        bottomNavigation.addItem(item5);
+
+        // Bottombar Settings
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+
+        // BottomNavigationListener
+        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
+
+        List<Fragment> fragments = new ArrayList<>(5);
+        fragments.add(FragmentOwnedStation.newInstance());
+        fragments.add(FragmentNews.newInstance());
+        fragments.add(FragmentStations.newInstance());
+        fragments.add(FragmentProfile.newInstance());
+        fragments.add(FragmentSettings.newInstance());
+
+        builder.rootFragments(fragments);
+        mFragNavController = builder.build();
+
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                mFragNavController.switchTab(position);
+                return true;
+            }
+        });
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         queue = Volley.newRequestQueue(this);
@@ -129,8 +162,7 @@ public class AdminMainActivity extends AppCompatActivity {
         RateThisApp.showRateDialogIfNeeded(this);
 
         if (savedInstanceState == null) {
-            Fragment fragment = new FragmentOwnedStation();
-            getSupportFragmentManager().beginTransaction().replace(R.id.pager, fragment, "OwnedStation").commit();
+            mFragNavController.switchTab(0);
         }
 
         fetchSuperUser();
@@ -145,58 +177,62 @@ public class AdminMainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                            name = obj.getString("name");
-                            prefs.edit().putString("Name", name).apply();
+                                name = obj.getString("name");
+                                prefs.edit().putString("Name", name).apply();
 
-                            email = obj.getString("email");
-                            prefs.edit().putString("Email", email).apply();
+                                email = obj.getString("email");
+                                prefs.edit().putString("Email", email).apply();
 
-                            photo = obj.getString("photo");
-                            prefs.edit().putString("ProfilePhoto", photo).apply();
+                                photo = obj.getString("photo");
+                                prefs.edit().putString("ProfilePhoto", photo).apply();
 
-                            gender = obj.getString("gender");
-                            prefs.edit().putString("Gender", gender).apply();
+                                gender = obj.getString("gender");
+                                prefs.edit().putString("Gender", gender).apply();
 
-                            birthday = obj.getString("birthday");
-                            prefs.edit().putString("Birthday", birthday).apply();
+                                birthday = obj.getString("birthday");
+                                prefs.edit().putString("Birthday", birthday).apply();
 
-                            userPhoneNumber = obj.getString("userPhone");
-                            prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
+                                userPhoneNumber = obj.getString("userPhone");
+                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
 
-                            superStationID = obj.getInt("stationID");
-                            prefs.edit().putInt("SuperStationID", superStationID).apply();
+                                superStationID = obj.getInt("stationID");
+                                prefs.edit().putInt("SuperStationID", superStationID).apply();
 
-                            superGoogleID = obj.getString("googleID");
-                            prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+                                superGoogleID = obj.getString("googleID");
+                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
-                            superStationName = obj.getString("stationName");
-                            prefs.edit().putString("SuperStationName", superStationName).apply();
+                                superStationName = obj.getString("stationName");
+                                prefs.edit().putString("SuperStationName", superStationName).apply();
 
-                            superStationLocation = obj.getString("stationLocation");
-                            prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+                                superStationLocation = obj.getString("stationLocation");
+                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
 
-                            superStationAddress = obj.getString("stationAddress");
-                            prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+                                superStationAddress = obj.getString("stationAddress");
+                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
 
-                            superStationLogo = obj.getString("stationLogo");
-                            prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+                                superStationLogo = obj.getString("stationLogo");
+                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
-                            contractPhoto = obj.getString("contractPhoto");
-                            prefs.edit().putString("contractPhoto", contractPhoto).apply();
+                                contractPhoto = obj.getString("contractPhoto");
+                                prefs.edit().putString("contractPhoto", contractPhoto).apply();
 
-                            isSuperVerified = obj.getInt("isVerified");
-                            prefs.edit().putInt("isSuperVerified", isSuperVerified).apply();
+                                isSuperVerified = obj.getInt("isVerified");
+                                prefs.edit().putInt("isSuperVerified", isSuperVerified).apply();
 
-                            getVariables(prefs);
-                            getSuperVariables(prefs);
+                                getVariables(prefs);
+                                getSuperVariables(prefs);
 
-                            checkVerifyStatus();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                if (isSuperVerified == 0) {
+                                    Snackbar.make(findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },
@@ -220,30 +256,6 @@ public class AdminMainActivity extends AppCompatActivity {
 
         //Adding request to the queue
         queue.add(stringRequest);
-    }
-
-    private void checkVerifyStatus() {
-        if (isSuperVerified == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AdminMainActivity.this);
-            builder.setMessage("Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir. Teşekkürler...");
-            builder.setCancelable(false);
-            builder.setNeutralButton("Tamam", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    AdminMainActivity.this.finish();
-                }
-            });
-            builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
-                @Override
-                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
-                        AdminMainActivity.this.finish();
-                    return false;
-                }
-            });
-            builder.create();
-            builder.show();
-        }
     }
 
     private void buyPremiumPopup() {
@@ -352,16 +364,13 @@ public class AdminMainActivity extends AppCompatActivity {
                 if (isSuperVerified == 1) {
                     Intent intent = new Intent(AdminMainActivity.this, SuperEditPrices.class);
                     startActivity(intent);
+                } else {
+                    Snackbar.make(findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

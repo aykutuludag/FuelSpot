@@ -243,12 +243,12 @@ public class FragmentVehicle extends Fragment {
                                     item.setStationIcon(obj.getString("stationIcon"));
                                     item.setStationLocation(obj.getString("stationLocation"));
                                     item.setFuelType(obj.getInt("fuelType"));
-                                    item.setFuelPrice(obj.getDouble("fuelPrice"));
-                                    item.setFuelLiter(obj.getDouble("fuelLiter"));
+                                    item.setFuelPrice((float) obj.getDouble("fuelPrice"));
+                                    item.setFuelLiter((float) obj.getDouble("fuelLiter"));
                                     item.setFuelType2(obj.getInt("fuelType2"));
-                                    item.setFuelPrice2(obj.getDouble("fuelPrice2"));
-                                    item.setFuelLiter2(obj.getDouble("fuelLiter2"));
-                                    item.setTotalPrice(obj.getDouble("totalPrice"));
+                                    item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
+                                    item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
+                                    item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
                                     feedsList.add(item);
 

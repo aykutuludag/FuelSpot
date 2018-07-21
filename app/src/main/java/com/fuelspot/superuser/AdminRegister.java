@@ -11,9 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -73,6 +70,9 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -85,6 +85,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
@@ -114,8 +115,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     RequestQueue requestQueue;
 
     ScrollView welcome2;
-    RelativeLayout promoLayout, registerLayout, welcome1;
-    Button register, continueButton, finishRegistration;
+    RelativeLayout promoLayout, registerLayout, welcome1, welcome3;
+    Button register, continueButton, finishRegistration, finishHowTo;
     MapView mMapView;
     Circle circle;
     GoogleApiClient mGoogleApiClient;
@@ -132,15 +133,12 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     int calendarYear, calendarMonth, calendarDay;
     private GoogleMap googleMap;
     VideoView background;
+    FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_register);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         AdminMainActivity.getSuperVariables(prefs);
@@ -151,6 +149,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         registerLayout = findViewById(R.id.registerLayout);
         welcome1 = findViewById(R.id.welcome1);
         welcome2 = findViewById(R.id.welcome2);
+        welcome3 = findViewById(R.id.welcome3);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         /* LAYOUT 01 */
         register = findViewById(R.id.buttonRegister);
@@ -219,8 +220,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                if (tmpusername.length() > 16) {
-                    MainActivity.username = tmpusername.substring(0, 15);
+                if (tmpusername.length() > 21) {
+                    MainActivity.username = tmpusername.substring(0, 20);
                 } else {
                     MainActivity.username = tmpusername;
                 }
@@ -305,8 +306,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                                     //USERNAME
                                     String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                                    if (tmpusername.length() > 16) {
-                                        MainActivity.username = tmpusername.substring(0, 15);
+                                    if (tmpusername.length() > 21) {
+                                        MainActivity.username = tmpusername.substring(0, 20);
                                     } else {
                                         MainActivity.username = tmpusername;
                                     }
@@ -384,65 +385,74 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void fetchSuperUserInfo() {
+        System.out.println("AQQ: " + MainActivity.username);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH_PROFILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                        System.out.println("AQQ: " + response);
 
-                            MainActivity.name = obj.getString("name");
-                            prefs.edit().putString("Name", MainActivity.name).apply();
+                        continueButton.setAlpha(1.0f);
+                        continueButton.setClickable(true);
 
-                            MainActivity.email = obj.getString("email");
-                            prefs.edit().putString("Email", MainActivity.email).apply();
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                            MainActivity.photo = obj.getString("photo");
-                            prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
+                                MainActivity.name = obj.getString("name");
+                                prefs.edit().putString("Name", MainActivity.name).apply();
 
-                            MainActivity.gender = obj.getString("gender");
-                            prefs.edit().putString("Gender", MainActivity.gender).apply();
+                                MainActivity.email = obj.getString("email");
+                                prefs.edit().putString("Email", MainActivity.email).apply();
 
-                            MainActivity.birthday = obj.getString("birthday");
-                            prefs.edit().putString("Birthday", MainActivity.birthday).apply();
+                                MainActivity.photo = obj.getString("photo");
+                                prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
 
-                            AdminMainActivity.userPhoneNumber = obj.getString("userPhone");
-                            prefs.edit().putString("userPhoneNumber", AdminMainActivity.userPhoneNumber).apply();
+                                MainActivity.gender = obj.getString("gender");
+                                prefs.edit().putString("Gender", MainActivity.gender).apply();
 
-                            AdminMainActivity.superStationID = obj.getInt("stationID");
-                            prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
+                                MainActivity.birthday = obj.getString("birthday");
+                                prefs.edit().putString("Birthday", MainActivity.birthday).apply();
 
-                            AdminMainActivity.superStationName = obj.getString("stationName");
-                            prefs.edit().putString("SuperStationName", AdminMainActivity.superStationName).apply();
+                                AdminMainActivity.userPhoneNumber = obj.getString("userPhone");
+                                prefs.edit().putString("userPhoneNumber", AdminMainActivity.userPhoneNumber).apply();
 
-                            AdminMainActivity.superStationLocation = obj.getString("stationLocation");
-                            prefs.edit().putString("SuperStationLocation", AdminMainActivity.superStationLocation).apply();
+                                AdminMainActivity.superStationID = obj.getInt("stationID");
+                                prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
 
-                            AdminMainActivity.superStationAddress = obj.getString("stationAddress");
-                            prefs.edit().putString("SuperStationAddress", AdminMainActivity.superStationAddress).apply();
+                                AdminMainActivity.superStationName = obj.getString("stationName");
+                                prefs.edit().putString("SuperStationName", AdminMainActivity.superStationName).apply();
 
-                            AdminMainActivity.superStationLogo = obj.getString("stationLogo");
-                            prefs.edit().putString("SuperStationLogo", AdminMainActivity.superStationLogo).apply();
+                                AdminMainActivity.superStationLocation = obj.getString("stationLocation");
+                                prefs.edit().putString("SuperStationLocation", AdminMainActivity.superStationLocation).apply();
 
-                            AdminMainActivity.contractPhoto = obj.getString("contractPhoto");
-                            prefs.edit().putString("contractPhoto", AdminMainActivity.contractPhoto).apply();
+                                AdminMainActivity.superStationAddress = obj.getString("stationAddress");
+                                prefs.edit().putString("SuperStationAddress", AdminMainActivity.superStationAddress).apply();
 
-                            AdminMainActivity.isSuperVerified = obj.getInt("isVerified");
-                            prefs.edit().putInt("isSuperVerified", AdminMainActivity.isSuperVerified).apply();
+                                AdminMainActivity.superStationLogo = obj.getString("stationLogo");
+                                prefs.edit().putString("SuperStationLogo", AdminMainActivity.superStationLogo).apply();
 
-                            MainActivity.getVariables(prefs);
-                            AdminMainActivity.getSuperVariables(prefs);
-                            continueButton.setAlpha(1.0f);
-                            continueButton.setClickable(true);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                AdminMainActivity.contractPhoto = obj.getString("contractPhoto");
+                                prefs.edit().putString("contractPhoto", AdminMainActivity.contractPhoto).apply();
+
+                                AdminMainActivity.isSuperVerified = obj.getInt("isVerified");
+                                prefs.edit().putInt("isSuperVerified", AdminMainActivity.isSuperVerified).apply();
+
+                                MainActivity.getVariables(prefs);
+                                AdminMainActivity.getSuperVariables(prefs);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        System.out.println("AQQQ: " + volleyError);
+                        continueButton.setAlpha(1.0f);
+                        continueButton.setClickable(true);
                     }
                 }) {
             @Override
@@ -519,17 +529,17 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         //Draw a circle with radius of 150m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
-                .radius(1500)
+                .radius(25)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(MainActivity.userlat, MainActivity.userlon);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(12f).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 75m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=5000&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=25&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -644,15 +654,10 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
                         MainActivity.isSuperUser = true;
                         prefs.edit().putBoolean("isSuperUser", MainActivity.isSuperUser).apply();
-                        Toast.makeText(AdminRegister.this, "Tüm bilgileriniz kaydedildi. Bayi paneline yönlendiriliyorsunuz.", Toast.LENGTH_SHORT).show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(AdminRegister.this, AdminMainActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }, 1500);
+                        Toast.makeText(AdminRegister.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
+                        welcome2.setVisibility(View.GONE);
+                        welcome3.setVisibility(View.VISIBLE);
+                        layout5();
                     }
                 },
                 new Response.ErrorListener() {
@@ -890,6 +895,23 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         /* LAYOUT 04 END */
     }
 
+    void layout5() {
+        finishHowTo = findViewById(R.id.continueToMainMenu);
+        finishHowTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(AdminRegister.this, AdminMainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                }, 1500);
+            }
+        });
+    }
+
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
@@ -946,27 +968,34 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             case MainActivity.UNIFIED_REQUEST: {
                 if (ContextCompat.checkSelfPermission(AdminRegister.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //Request location updates:
-                    LocationManager locationManager = (LocationManager)
-                            this.getSystemService(Context.LOCATION_SERVICE);
-                    Criteria criteria = new Criteria();
-
-                    Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-                    if (location != null) {
-                        MainActivity.userlat = (float) location.getLatitude();
-                        MainActivity.userlon = (float) location.getLongitude();
-                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                        MainActivity.getVariables(prefs);
-                    }
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(AdminRegister.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                MainActivity.userlat = (float) location.getLatitude();
+                                MainActivity.userlon = (float) location.getLongitude();
+                                prefs.edit().putFloat("lat", MainActivity.userlat).apply();
+                                prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                MainActivity.getVariables(prefs);
+                            } else {
+                                LocationRequest mLocationRequest = new LocationRequest();
+                                mLocationRequest.setInterval(60000);
+                                mLocationRequest.setFastestInterval(5000);
+                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                            }
+                        }
+                    });
 
                     if (AdminMainActivity.isSuperVerified == 1) {
+                        // S/he already verified by us. Redirect to AdminMainActivity
                         Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_SHORT).show();
-                        updateSuperUser();
+                        Intent intent = new Intent(AdminRegister.this, AdminMainActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
                         welcome1.setVisibility(View.GONE);
                         welcome2.setVisibility(View.VISIBLE);
-
                         layout4();
                     }
                 }

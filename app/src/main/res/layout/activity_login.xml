@@ -47,10 +47,11 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="16dp"
             android:background="#30000000"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="İstasyon sahibi misiniz?"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#fff" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#f1f1f1"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

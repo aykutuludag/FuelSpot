@@ -6,12 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +35,9 @@ import com.fuelspot.R;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -44,6 +46,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +59,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.superuser.AdminMainActivity.isSuperVerified;
+
 public class FragmentOwnedStation extends Fragment {
 
     SharedPreferences prefs;
@@ -66,6 +71,16 @@ public class FragmentOwnedStation extends Fragment {
     ImageView stationIcon;
     Button openPurchases, openComments, openCampaings, openPosts;
     private GoogleMap googleMap;
+    FusedLocationProviderClient mFusedLocationClient;
+
+    public static FragmentOwnedStation newInstance() {
+        Bundle args = new Bundle();
+        args.putString("FRAGMENT", "OwnedStation");
+
+        FragmentOwnedStation fragment = new FragmentOwnedStation();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -81,6 +96,7 @@ public class FragmentOwnedStation extends Fragment {
         //Variables
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         queue = Volley.newRequestQueue(getActivity());
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         //Map
         mMapView = rootView.findViewById(R.id.mapView);
@@ -104,8 +120,12 @@ public class FragmentOwnedStation extends Fragment {
         openPurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), SuperPurchases.class);
-                startActivity(i);
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperPurchases.class);
+                    startActivity(i);
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -113,8 +133,12 @@ public class FragmentOwnedStation extends Fragment {
         openComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), SuperComments.class);
-                startActivity(i);
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperPurchases.class);
+                    startActivity(i);
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -122,8 +146,12 @@ public class FragmentOwnedStation extends Fragment {
         openCampaings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), SuperCampaings.class);
-                startActivity(i);
+                if (isSuperVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperCampaings.class);
+                    startActivity(i);
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -131,7 +159,11 @@ public class FragmentOwnedStation extends Fragment {
         openPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Coming soon...", Toast.LENGTH_LONG).show();
+                if (isSuperVerified == 1) {
+                    Toast.makeText(getActivity(), "Coming soon...", Toast.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -220,7 +252,7 @@ public class FragmentOwnedStation extends Fragment {
                             googleMap.addMarker(new MarkerOptions().position(sydney).title(AdminMainActivity.superStationName).snippet(AdminMainActivity.superStationAddress));
 
                             //Zoom-in camera
-                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16.5f).build();
                             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                                     (cameraPosition));
                         } catch (JSONException e) {
@@ -258,21 +290,26 @@ public class FragmentOwnedStation extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         //Request location updates:
-                        LocationManager locationManager = (LocationManager)
-                                getActivity().getSystemService(Context.LOCATION_SERVICE);
-                        Criteria criteria = new Criteria();
-
-                        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-                        if (location != null) {
-                            MainActivity.userlat = (float) location.getLatitude();
-                            MainActivity.userlon = (float) location.getLongitude();
-                            prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                            prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                            MainActivity.getVariables(prefs);
-                        }
-
-                        loadMap();
+                        mFusedLocationClient.getLastLocation()
+                                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                                    @Override
+                                    public void onSuccess(Location location) {
+                                        // Got last known location. In some rare situations this can be null.
+                                        if (location != null) {
+                                            MainActivity.userlat = (float) location.getLatitude();
+                                            MainActivity.userlon = (float) location.getLongitude();
+                                            prefs.edit().putFloat("lat", MainActivity.userlat).apply();
+                                            prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                            MainActivity.getVariables(prefs);
+                                            loadMap();
+                                        } else {
+                                            LocationRequest mLocationRequest = new LocationRequest();
+                                            mLocationRequest.setInterval(60000);
+                                            mLocationRequest.setFastestInterval(15000);
+                                            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                        }
+                                    }
+                                });
                     }
                 } else {
                     Toast.makeText(getActivity(), "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
@@ -312,4 +349,5 @@ public class FragmentOwnedStation extends Fragment {
             mMapView.onLowMemory();
         }
     }
+
 }

@@ -60,9 +60,8 @@
         <!-- SuperUser Class -->
         <activity
             android:name=".superuser.AdminRegister"
-            android:label="@string/title_activity_admin_register"
-            android:parentActivityName=".LoginActivity"
-            android:theme="@style/AppTheme" />
+            android:label=""
+            android:theme="@style/Login" />
         <activity
             android:name=".superuser.AdminMainActivity"
             android:label="@string/title_activity_admin_main" />

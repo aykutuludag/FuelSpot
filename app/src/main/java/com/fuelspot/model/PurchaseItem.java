@@ -8,12 +8,12 @@ public class PurchaseItem {
     private String stationLocation;
     private String purchaseTime;
     private int fuelType1;
-    private double fuelPrice1;
-    private double fuelLiter1;
+    private float fuelPrice1;
+    private float fuelLiter1;
     private int fuelType2;
-    private double fuelPrice2;
-    private double fuelLiter2;
-    private double totalPrice;
+    private float fuelPrice2;
+    private float fuelLiter2;
+    private float totalPrice;
     private String billPhoto;
 
     public int getID() {
@@ -64,19 +64,19 @@ public class PurchaseItem {
         this.fuelType1 = fuelType1;
     }
 
-    public double getFuelPrice() {
+    public float getFuelPrice() {
         return fuelPrice1;
     }
 
-    public void setFuelPrice(double fuelPrice1) {
+    public void setFuelPrice(float fuelPrice1) {
         this.fuelPrice1 = fuelPrice1;
     }
 
-    public double getFuelLiter() {
+    public float getFuelLiter() {
         return fuelLiter1;
     }
 
-    public void setFuelLiter(double fuelLiter1) {
+    public void setFuelLiter(float fuelLiter1) {
         this.fuelLiter1 = fuelLiter1;
     }
 
@@ -92,15 +92,15 @@ public class PurchaseItem {
         return fuelPrice2;
     }
 
-    public void setFuelPrice2(double fuelPrice2) {
+    public void setFuelPrice2(float fuelPrice2) {
         this.fuelPrice2 = fuelPrice2;
     }
 
-    public double getFuelLiter2() {
+    public float getFuelLiter2() {
         return fuelLiter2;
     }
 
-    public void setFuelLiter2(Double fuelLiter2) {
+    public void setFuelLiter2(float fuelLiter2) {
         this.fuelLiter2 = fuelLiter2;
     }
 
@@ -108,7 +108,7 @@ public class PurchaseItem {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
     }
 
