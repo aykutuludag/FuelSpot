@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -19,13 +18,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -66,6 +62,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static com.fuelspot.MainActivity.UNIFIED_REQUEST;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     RequestQueue requestQueue;
@@ -77,8 +77,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     CircleImageView carPic;
     Spinner spinner, spinner2;
     RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
-    Window window;
-    Toolbar toolbar;
     ArrayAdapter<CharSequence> adapter;
     ArrayAdapter<String> adapter2;
 
@@ -86,15 +84,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
-        // Initializing Toolbar and setting it as the actionbar
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
-
-        //Window
-        window = this.getWindow();
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
@@ -114,7 +103,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]
-                        {MainActivity.PERMISSIONS_STORAGE[0], MainActivity.PERMISSIONS_STORAGE[1], MainActivity.PERMISSIONS_LOCATION}, 99);
+                        {MainActivity.PERMISSIONS_STORAGE[0], MainActivity.PERMISSIONS_STORAGE[1], MainActivity.PERMISSIONS_LOCATION}, UNIFIED_REQUEST);
             }
         });
 
@@ -144,10 +133,13 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     }
 
     public void fetchUserInfo() {
+        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PROFILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
+                        System.out.println("AQQQ: " + carBrand + carModel);
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
@@ -170,11 +162,11 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             MainActivity.location = obj.getString("location");
                             prefs.edit().putString("Location", MainActivity.location).apply();
 
-                            MainActivity.carBrand = obj.getString("car_brand");
-                            prefs.edit().putString("CarBrand", MainActivity.carBrand).apply();
+                            carBrand = obj.getString("car_brand");
+                            prefs.edit().putString("carBrand", carBrand).apply();
 
                             MainActivity.carModel = obj.getString("car_model");
-                            prefs.edit().putString("CarModel", MainActivity.carModel).apply();
+                            prefs.edit().putString("carModel", MainActivity.carModel).apply();
 
                             MainActivity.fuelPri = obj.getInt("fuelPri");
                             prefs.edit().putInt("FuelPrimary", MainActivity.fuelPri).apply();
@@ -188,6 +180,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             MainActivity.carPhoto = obj.getString("carPhoto");
                             prefs.edit().putString("CarPhoto", MainActivity.carPhoto).apply();
 
+                            loading.dismiss();
                             MainActivity.getVariables(prefs);
                             fetchTaxRates();
                         } catch (JSONException e) {
@@ -198,7 +191,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
+                        loading.dismiss();
                     }
                 }) {
             @Override
@@ -219,6 +212,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     }
 
     public void fetchTaxRates() {
+        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
                 new Response.Listener<String>() {
                     @Override
@@ -246,12 +240,14 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            loading.dismiss();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        loading.dismiss();
                     }
                 }) {
             @Override
@@ -300,13 +296,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
-        String[] foo_array = this.getResources().getStringArray(R.array.CAR_PRODUCER);
-        for (int i = 0; i < foo_array.length; i++) {
-            if (MainActivity.carBrand.equals(foo_array[i])) {
-                spinner.setSelection(i, true);
-                break;
-            }
-        }
+        String[] foo_array = getResources().getStringArray(R.array.CAR_PRODUCER);
+        spinner.setSelection(MainActivity.getIndexOf(foo_array, MainActivity.carBrand), true);
 
         //MODEL SEÇİMİ
         spinner2 = findViewById(R.id.spinner_models);
@@ -490,7 +481,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                 //Adding parameters
                 params.put("username", MainActivity.username);
-                params.put("carBrand", MainActivity.carBrand);
+                params.put("carBrand", carBrand);
                 params.put("carModel", MainActivity.carModel);
                 params.put("fuelPri", String.valueOf(MainActivity.fuelPri));
                 params.put("fuelSec", String.valueOf(MainActivity.fuelSec));
@@ -513,17 +504,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
-    public void coloredBars(int color1, int color2) {
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(color1);
-            toolbar.setBackgroundColor(color2);
-        } else {
-            toolbar.setBackgroundColor(color2);
-        }
     }
 
     @Override
@@ -969,8 +949,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 }
                 spinner2.setOnItemSelectedListener(this);
 
-                MainActivity.carBrand = spinner.getSelectedItem().toString();
-                prefs.edit().putString("carBrand", MainActivity.carBrand).apply();
+                carBrand = spinner.getSelectedItem().toString();
+                prefs.edit().putString("carBrand", carBrand).apply();
 
                 MainActivity.carModel = spinner2.getSelectedItem().toString();
                 prefs.edit().putString("carModel", MainActivity.carModel).apply();

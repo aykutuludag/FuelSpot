@@ -8,8 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textView1"
@@ -140,7 +139,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="BU AYARLAR BULUNDUĞUNUZ ÜLKEYE GÖRE OTOMATİK AYARLANMAKTADIR VE DEĞİŞTİRİLEMEMEKTEDİR."
+                android:text="Ülke değiştirdiğiniz FuelSpot bu ayarları otomatik güncelleyecektir."
                 android:textColor="#fff" />
 
         </RelativeLayout>
@@ -170,7 +169,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textViewMapTitle"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:text="MENZİL:"
                 android:textColor="#fff" />
 
@@ -194,7 +193,6 @@
                 android:layout_below="@+id/textViewRange"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:gravity="center"
                 android:text="Premium sürüme geçerek menzilinizi 50 kilometreye çıkarabilir ve reklamları kaldırabilirsiniz.\n\n Premium sürüme geçmek için tıklayınız."
                 android:textColor="#fff" />
         </RelativeLayout>
@@ -242,10 +240,163 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/settings_other"
+            android:id="@+id/settings_tax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/settings_news"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:id="@+id/textView114"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="VERGİ"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+            <android.support.percent.PercentRelativeLayout
+                android:id="@+id/single_tax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView114"
+                android:layout_margin="8dp"
+                android:background="#EDEDED">
+
+                <ImageView
+                    android:id="@+id/gasoline"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:padding="5dp"
+                    android:src="@drawable/gasoline"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/taxGasoline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/gasoline"
+                    android:layout_alignLeft="@+id/gasoline"
+                    android:layout_alignRight="@+id/gasoline"
+                    android:layout_alignStart="@+id/gasoline"
+                    android:layout_below="@+id/gasoline"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="53 %"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#6D6D6D"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/diesel"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/gasoline"
+                    android:layout_toRightOf="@+id/gasoline"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:src="@drawable/diesel"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/taxDiesel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_photo"
+                    android:layout_alignEnd="@+id/diesel"
+                    android:layout_alignRight="@+id/diesel"
+                    android:layout_below="@+id/diesel"
+                    android:layout_toEndOf="@+id/taxGasoline"
+                    android:layout_toRightOf="@+id/taxGasoline"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="51 %"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#6D6D6D"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/lpg"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/diesel"
+                    android:layout_toRightOf="@+id/diesel"
+                    android:padding="5dp"
+                    android:src="@drawable/lpg"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/TaxLPG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_photo"
+                    android:layout_alignEnd="@+id/lpg"
+                    android:layout_alignRight="@+id/lpg"
+                    android:layout_below="@+id/lpg"
+                    android:layout_toEndOf="@+id/taxDiesel"
+                    android:layout_toRightOf="@+id/taxDiesel"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="45 %"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#6D6D6D"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/electricity"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/lpg"
+                    android:layout_toRightOf="@+id/lpg"
+                    android:padding="5dp"
+                    android:src="@drawable/electricity"
+                    app:layout_widthPercent="25%" />
+
+                <TextView
+                    android:id="@+id/TaxElectricity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/station_photo"
+                    android:layout_alignEnd="@+id/electricity"
+                    android:layout_alignRight="@+id/electricity"
+                    android:layout_below="@+id/electricity"
+                    android:layout_toEndOf="@+id/TaxLPG"
+                    android:layout_toRightOf="@+id/TaxLPG"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="30 %"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#6D6D6D"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </android.support.percent.PercentRelativeLayout>
+
+            <Button
+                android:id="@+id/button_tax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/single_tax"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="VERGİ ORANLARINI GÜNCELLE" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settings_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_tax"
             android:layout_margin="8dp">
 
             <TextView
@@ -260,31 +411,32 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button_beta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView04"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="BETA TESTİNE KATIL" />
-
-            <Button
                 android:id="@+id/button_feedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/button_beta"
+                android:layout_below="@id/textView04"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
                 android:text="FEEDBACK" />
 
             <Button
-                android:id="@+id/button_rate"
+                android:id="@+id/button_beta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/button_feedback"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
+                android:text="BETA TESTİNE KATIL" />
+
+            <Button
+                android:id="@+id/button_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button_beta"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
                 android:text="RATE THE APP" />
+
 
         </RelativeLayout>
 

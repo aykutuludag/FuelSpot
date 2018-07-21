@@ -66,6 +66,10 @@ import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
+import static com.fuelspot.MainActivity.TAX_DIESEL;
+import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
+import static com.fuelspot.MainActivity.TAX_GASOLINE;
+import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
@@ -87,12 +91,15 @@ public class AddFuel extends AppCompatActivity {
     SharedPreferences prefs;
     RequestQueue requestQueue;
     ProgressDialog pDialog;
+    RequestOptions options;
 
-    String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
     int chosenStationID;
-    double gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
-    double selectedUnitPrice, buyedLiter, entryPrice, selectedUnitPrice2, buyedLiter2, entryPrice2;
-    double totalPrice;
+    String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
+    float gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
+    float selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2;
+    float tax1, tax2, taxTotal;
+    float totalPrice;
+
 
     /* LAYOUT 1 ÖĞELER */
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
@@ -105,7 +112,6 @@ public class AddFuel extends AppCompatActivity {
     String billPhoto;
     ImageView photoHolder;
     ScrollView scrollView;
-    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,10 +249,10 @@ public class AddFuel extends AppCompatActivity {
                                 chosenStationName = obj.getString("name");
                                 chosenStationAddress = obj.getString("vicinity");
                                 chosenStationLoc = obj.getString("location");
-                                gasolinePrice = obj.getDouble("gasolinePrice");
-                                dieselPrice = obj.getDouble("dieselPrice");
-                                LPGPrice = obj.getDouble("lpgPrice");
-                                electricityPrice = obj.getDouble("electricityPrice");
+                                gasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                dieselPrice = (float) obj.getDouble("dieselPrice");
+                                LPGPrice = (float) obj.getDouble("lpgPrice");
+                                electricityPrice = (float) obj.getDouble("electricityPrice");
 
                                 scrollView.setAlpha(1.0f);
                                 pDialog.dismiss();
@@ -304,21 +310,25 @@ public class AddFuel extends AppCompatActivity {
         switch (fuelPri) {
             case 0:
                 selectedUnitPrice = gasolinePrice;
+                selectedTaxRate = TAX_GASOLINE;
                 fuelType = "gasoline";
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
                 break;
             case 1:
                 selectedUnitPrice = dieselPrice;
+                selectedTaxRate = TAX_DIESEL;
                 fuelType = "diesel";
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
                 break;
             case 2:
                 selectedUnitPrice = LPGPrice;
+                selectedTaxRate = TAX_LPG;
                 fuelType = "lpg";
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
                 break;
             case 3:
                 selectedUnitPrice = electricityPrice;
+                selectedTaxRate = TAX_ELECTRICITY;
                 fuelType = "electric";
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
                 break;
@@ -335,21 +345,25 @@ public class AddFuel extends AppCompatActivity {
         switch (fuelSec) {
             case 0:
                 selectedUnitPrice2 = gasolinePrice;
+                selectedTaxRate2 = TAX_GASOLINE;
                 fuelType2 = "gasoline";
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
                 break;
             case 1:
                 selectedUnitPrice2 = dieselPrice;
+                selectedTaxRate2 = TAX_DIESEL;
                 fuelType2 = "diesel";
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
                 break;
             case 2:
                 selectedUnitPrice2 = LPGPrice;
+                selectedTaxRate2 = TAX_LPG;
                 fuelType2 = "lpg";
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
                 break;
             case 3:
                 selectedUnitPrice2 = electricityPrice;
+                selectedTaxRate2 = TAX_ELECTRICITY;
                 fuelType2 = "electric";
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
                 break;
@@ -376,7 +390,7 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    selectedUnitPrice = Double.parseDouble(s.toString());
+                    selectedUnitPrice = Float.parseFloat(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
                     String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
                     textViewLitre.setText(literText);
@@ -398,7 +412,7 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    entryPrice = Double.parseDouble(s.toString());
+                    entryPrice = Float.parseFloat(s.toString());
                     buyedLiter = howManyLiter(selectedUnitPrice, entryPrice);
                     String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
                     textViewLitre.setText(literText);
@@ -423,7 +437,7 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    selectedUnitPrice2 = Double.parseDouble(s.toString());
+                    selectedUnitPrice2 = Float.parseFloat(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
                     String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
                     textViewLitre.setText(literText2);
@@ -445,7 +459,7 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    entryPrice2 = Double.parseDouble(s.toString());
+                    entryPrice2 = Float.parseFloat(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
                     String literText2 = String.format("%.2f", buyedLiter2);
                     textViewLitre2.setText(literText2);
@@ -480,19 +494,19 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateTaxandGrandTotal() {
-        float tax1 = taxCalculator(fuelPri, (float) entryPrice);
-        float tax2 = taxCalculator(fuelSec, (float) entryPrice2);
+        tax1 = taxCalculator(fuelPri, entryPrice);
+        tax2 = taxCalculator(fuelSec, entryPrice2);
 
-        float taxTotal = tax1 + tax2;
-        float grandTotalPrice = (float) (entryPrice + entryPrice2);
+        taxTotal = tax1 + tax2;
+        totalPrice = entryPrice + entryPrice2;
 
         fuelVergi.setText("VERGİ: " + taxTotal);
-        fuelGrandTotal.setText("TOPLAM: " + grandTotalPrice);
+        fuelGrandTotal.setText("TOPLAM: " + totalPrice);
     }
 
-    public double howManyLiter(double priceForUnit, double totalPrice) {
+    public float howManyLiter(float priceForUnit, float totalPrice) {
         if (priceForUnit == 0) {
-            return 0.00;
+            return 0f;
         } else {
             return totalPrice / priceForUnit;
         }
@@ -537,9 +551,11 @@ public class AddFuel extends AppCompatActivity {
                             params.put("fuelType", String.valueOf(fuelPri));
                             params.put("fuelPrice", String.valueOf(selectedUnitPrice));
                             params.put("fuelLiter", String.valueOf(buyedLiter));
+                            params.put("fuelTax", String.valueOf(selectedTaxRate));
                             params.put("fuelType2", String.valueOf(fuelSec));
                             params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
                             params.put("fuelLiter2", String.valueOf(buyedLiter2));
+                            params.put("fuelTax2", String.valueOf(selectedTaxRate2));
                             params.put("totalPrice", String.valueOf(totalPrice));
                             if (bitmap != null) {
                                 params.put("billPhoto", getStringImage(bitmap));

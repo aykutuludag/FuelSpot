@@ -71,7 +71,7 @@
                 card_view:layout_widthPercent="15.5%" />
 
             <TextView
-                android:id="@+id/gasoline_price"
+                android:id="@+id/taxGasoline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
@@ -102,15 +102,15 @@
                 card_view:layout_widthPercent="15.5%" />
 
             <TextView
-                android:id="@+id/diesel_price"
+                android:id="@+id/taxDiesel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/diesel"
                 android:layout_alignRight="@+id/diesel"
                 android:layout_below="@+id/diesel"
-                android:layout_toEndOf="@+id/gasoline_price"
-                android:layout_toRightOf="@+id/gasoline_price"
+                android:layout_toEndOf="@+id/taxGasoline"
+                android:layout_toRightOf="@+id/taxGasoline"
                 android:gravity="center"
                 android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -132,15 +132,15 @@
                 card_view:layout_widthPercent="15.5%" />
 
             <TextView
-                android:id="@+id/lpg_price"
+                android:id="@+id/TaxLPG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/lpg"
                 android:layout_alignRight="@+id/lpg"
                 android:layout_below="@+id/lpg"
-                android:layout_toEndOf="@+id/diesel_price"
-                android:layout_toRightOf="@+id/diesel_price"
+                android:layout_toEndOf="@+id/taxDiesel"
+                android:layout_toRightOf="@+id/taxDiesel"
                 android:gravity="center"
                 android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -161,15 +161,15 @@
                 card_view:layout_widthPercent="15.5%" />
 
             <TextView
-                android:id="@+id/electricity_price"
+                android:id="@+id/TaxElectricity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/electricity"
                 android:layout_alignRight="@+id/electricity"
                 android:layout_below="@+id/electricity"
-                android:layout_toEndOf="@+id/lpg_price"
-                android:layout_toRightOf="@+id/lpg_price"
+                android:layout_toEndOf="@+id/TaxLPG"
+                android:layout_toRightOf="@+id/TaxLPG"
                 android:gravity="center"
                 android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -196,8 +196,8 @@
                 android:layout_alignEnd="@+id/distance"
                 android:layout_alignRight="@+id/distance"
                 android:layout_below="@+id/distance"
-                android:layout_toEndOf="@+id/electricity_price"
-                android:layout_toRightOf="@+id/electricity_price"
+                android:layout_toEndOf="@+id/TaxElectricity"
+                android:layout_toRightOf="@+id/TaxElectricity"
                 android:gravity="center"
                 android:text="0.00 km"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"

@@ -47,6 +47,10 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.yalantis.ucrop.UCrop;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +66,10 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
+import static com.fuelspot.MainActivity.TAX_DIESEL;
+import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
+import static com.fuelspot.MainActivity.TAX_GASOLINE;
+import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.isGlobalNews;
 import static com.fuelspot.MainActivity.mapDefaultRange;
@@ -72,8 +80,8 @@ import static com.fuelspot.MainActivity.verifyStoragePermissions;
 
 public class FragmentSettings extends Fragment {
 
-    TextView countryText, languageText, currencyText, unitSystemText;
-    Button buttonBeta, buttonFeedback, buttonRate;
+    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
+    Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
     Switch globalNewsSwitch;
     SharedPreferences prefs;
     String feedbackMessage;
@@ -81,6 +89,8 @@ public class FragmentSettings extends Fragment {
     ImageView getScreenshot;
     PopupWindow mPopupWindow;
     TextView userRange, userPremium;
+    //Creating a Request Queue
+    RequestQueue requestQueue;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -103,6 +113,8 @@ public class FragmentSettings extends Fragment {
 
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
+        requestQueue = Volley.newRequestQueue(getActivity());
+
         countryText = rootView.findViewById(R.id.textViewCountryName);
         countryText.setText(userCountryName);
 
@@ -122,6 +134,26 @@ public class FragmentSettings extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isGlobalNews = isChecked;
                 prefs.edit().putBoolean("isGlobalNews", isGlobalNews).apply();
+            }
+        });
+
+        textViewGasolineTax = rootView.findViewById(R.id.taxGasoline);
+        textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
+
+        textViewDieselTax = rootView.findViewById(R.id.taxDiesel);
+        textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
+
+        textViewLPGTax = rootView.findViewById(R.id.TaxLPG);
+        textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
+
+        textViewElectricityTax = rootView.findViewById(R.id.TaxElectricity);
+        textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
+
+        buttonTax = rootView.findViewById(R.id.button_tax);
+        buttonTax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateTaxRates();
             }
         });
 
@@ -156,7 +188,7 @@ public class FragmentSettings extends Fragment {
         });
 
         userRange = rootView.findViewById(R.id.textViewMenzil);
-        userRange.setText(mapDefaultRange + " meters");
+        userRange.setText((mapDefaultRange / 1000) + " km");
 
         userPremium = rootView.findViewById(R.id.textViewPremium);
         userPremium.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +215,64 @@ public class FragmentSettings extends Fragment {
         });
 
         return rootView;
+    }
+
+    void updateTaxRates() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                                prefs.edit().putFloat("taxGasoline", TAX_GASOLINE).apply();
+                                textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
+
+                                TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                                prefs.edit().putFloat("taxDiesel", TAX_DIESEL).apply();
+                                textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
+
+                                TAX_LPG = (float) obj.getDouble("LPGTax");
+                                prefs.edit().putFloat("taxLPG", TAX_LPG).apply();
+                                textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
+
+                                TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
+                                prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
+                                textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
+
+                                MainActivity.getVariables(prefs);
+
+                                Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Vergi oranları güncellendi.", Snackbar.LENGTH_LONG);
+                                snackBar.show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("country", MainActivity.userCountry);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     void openFeedBackPopup(View view) {
@@ -288,9 +378,6 @@ public class FragmentSettings extends Fragment {
                 return params;
             }
         };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
