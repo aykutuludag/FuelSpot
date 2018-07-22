@@ -373,6 +373,12 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void fetchCampaigns() {
+        campaignName.clear();
+        campaignDesc.clear();
+        campaignPhoto.clear();
+        campaignStart.clear();
+        campaignEnd.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
                 new Response.Listener<String>() {
                     @Override
@@ -439,10 +445,10 @@ public class StationDetails extends AppCompatActivity {
 
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
 
-        ImageView imgPopup = customView.findViewById(R.id.screenShot);
+        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
         Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(campaignID))).into(imgPopup);
 
-        TextView titlePopup = customView.findViewById(R.id.feedBack);
+        TextView titlePopup = customView.findViewById(R.id.campaignTitle);
         titlePopup.setText(campaignName.get(campaignID));
 
         TextView descPopup = customView.findViewById(R.id.campaignDesc);

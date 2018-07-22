@@ -88,7 +88,11 @@ public class FragmentProfile extends Fragment {
         if (MainActivity.isSuperUser) {
             snackBarText = "Henüz hiç cevap yazmamışsınız.";
         }
-        snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), snackBarText, Snackbar.LENGTH_LONG);
+        if (MainActivity.isSuperUser) {
+            snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), snackBarText, Snackbar.LENGTH_LONG);
+        } else {
+            snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), snackBarText, Snackbar.LENGTH_LONG);
+        }
         snackBar.setAction("Tamam", new View.OnClickListener() {
             @Override
             public void onClick(View v) {

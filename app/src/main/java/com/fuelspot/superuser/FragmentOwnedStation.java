@@ -134,7 +134,7 @@ public class FragmentOwnedStation extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isSuperVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperPurchases.class);
+                    Intent i = new Intent(getActivity(), SuperComments.class);
                     startActivity(i);
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
@@ -166,8 +166,6 @@ public class FragmentOwnedStation extends Fragment {
                 }
             }
         });
-
-        checkLocationPermission();
 
         return rootView;
     }
@@ -252,8 +250,8 @@ public class FragmentOwnedStation extends Fragment {
                             googleMap.addMarker(new MarkerOptions().position(sydney).title(AdminMainActivity.superStationName).snippet(AdminMainActivity.superStationAddress));
 
                             //Zoom-in camera
-                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16.5f).build();
-                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16.75f).build();
+                            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                                     (cameraPosition));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -323,6 +321,7 @@ public class FragmentOwnedStation extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+            checkLocationPermission();
         }
     }
 

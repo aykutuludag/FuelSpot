@@ -178,7 +178,7 @@ public class AddFuel extends AppCompatActivity {
     }
 
     public void checkIsAtStation() {
-        //Search stations in a radius of 100m
+        //Search stations in a radius of 25m
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=25&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.

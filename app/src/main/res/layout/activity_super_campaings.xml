@@ -20,23 +20,217 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.fuelspot.fuelify.SuperCampaings"
+        tools:context=".superuser.SuperCampaings"
         tools:showIn="@layout/activity_super_campaings">
 
-    </android.support.constraint.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+            <RelativeLayout
+                android:id="@+id/campaignOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:background="#EDEDED">
 
+
+                <ImageView
+                    android:id="@+id/deleteCampaignOne"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/delete" />
+
+                <ImageView
+                    android:id="@+id/campaignPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/ic_camera" />
+
+                <EditText
+                    android:id="@+id/campaignTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/campaignPhoto"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="KAMPANYA 1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <EditText
+                    android:id="@+id/campaignDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/campaignTitle"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:text="Kampanya açıklaması"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/startTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/campaignDesc"
+                    android:layout_margin="8dp"
+                    android:padding="4dp" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/campaignDesc"
+                    android:layout_margin="8dp"
+                    android:padding="4dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/campaignTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/campaignOne"
+                android:layout_marginBottom="16dp"
+                android:background="#EDEDED">
+
+
+                <ImageView
+                    android:id="@+id/deleteCampaignTwo"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/delete" />
+
+                <ImageView
+                    android:id="@+id/campaignPhoto2"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/ic_camera" />
+
+                <EditText
+                    android:id="@+id/campaignTitle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/campaignPhoto2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="KAMPANYA 2"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <EditText
+                    android:id="@+id/campaignDesc2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/campaignTitle2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:text="Kampanya açıklaması"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/startTime2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/campaignDesc2"
+                    android:layout_margin="8dp"
+                    android:padding="4dp" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/endTime2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/campaignDesc2"
+                    android:layout_margin="8dp"
+                    android:padding="4dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/campaignThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/campaignTwo"
+                android:layout_marginBottom="16dp"
+                android:background="#EDEDED">
+
+
+                <ImageView
+                    android:id="@+id/deleteCampaignThree"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/delete" />
+
+                <ImageView
+                    android:id="@+id/campaignPhoto3"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/ic_camera" />
+
+                <EditText
+                    android:id="@+id/campaignTitle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/campaignPhoto3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="KAMPANYA 3"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <EditText
+                    android:id="@+id/campaignDesc3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/campaignTitle3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:text="Kampanya açıklaması"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/startTime3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/campaignDesc3"
+                    android:layout_margin="8dp"
+                    android:padding="4dp" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/endTime3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/campaignDesc3"
+                    android:layout_margin="8dp"
+                    android:padding="4dp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>
