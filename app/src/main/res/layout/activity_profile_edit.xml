@@ -39,7 +39,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/profile"
+                android:src="@drawable/photo_placeholder"
                 app:civ_border_color="#EA6C34"
                 app:civ_border_width="1dp" />
 
@@ -94,7 +94,7 @@
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_below="@+id/editFullName"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/profile_edit_email" />
+                app:srcCompat="@drawable/email" />
 
             <TextView
                 android:id="@+id/mail_title"
@@ -218,7 +218,7 @@
                 android:layout_below="@+id/editTextBirthday"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/icon_gender_dark" />
+                app:srcCompat="@drawable/gender" />
 
             <TextView
                 android:id="@+id/gender_title"

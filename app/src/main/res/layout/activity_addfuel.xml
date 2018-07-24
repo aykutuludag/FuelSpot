@@ -404,7 +404,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/totalOptionel"
                 android:layout_margin="8dp"
-                app:srcCompat="@drawable/add_fuel_button" />
+                app:srcCompat="@drawable/green_box" />
 
         </RelativeLayout>
 

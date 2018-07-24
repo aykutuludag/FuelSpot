@@ -103,8 +103,8 @@ public class FragmentProfile extends Fragment {
         CircleImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.profile)
-                .error(R.drawable.profile)
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
         Glide.with(getActivity()).load(Uri.parse(MainActivity.photo)).apply(options).into(userProfileHolder);
@@ -230,7 +230,7 @@ public class FragmentProfile extends Fragment {
 
                                     CommentItem item = new CommentItem();
                                     item.setID(obj.getInt("id"));
-                                    item.setComment(obj.getString("comment"));
+                                    item.setComment(obj.getString("fab_comment"));
                                     item.setTime(obj.getString("time"));
                                     item.setStationID(obj.getInt("station_id"));
                                     item.setUsername(obj.getString("username"));

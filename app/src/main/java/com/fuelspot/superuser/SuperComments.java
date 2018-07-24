@@ -113,7 +113,7 @@ public class SuperComments extends AppCompatActivity {
 
                                 CommentItem item = new CommentItem();
                                 item.setID(obj.getInt("id"));
-                                item.setComment(obj.getString("comment"));
+                                item.setComment(obj.getString("fab_comment"));
                                 item.setTime(obj.getString("time"));
                                 item.setProfile_pic(obj.getString("user_photo"));
                                 item.setUsername(obj.getString("username"));

@@ -73,7 +73,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/imageView"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/language_icon" />
+                app:srcCompat="@drawable/language" />
 
             <TextView
                 android:id="@+id/textViewLanguage"
@@ -117,7 +117,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textViewCurrency"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/units_icon" />
+                app:srcCompat="@drawable/units" />
 
             <TextView
                 android:id="@+id/textViewUnitSystem"
@@ -436,6 +436,18 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
                 android:text="RATE THE APP" />
+
+            <TextView
+                android:id="@+id/textViewSuperUserCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/button_rate"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="Anlık veri alınan istasyon sayısı: "
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
 
 
         </RelativeLayout>

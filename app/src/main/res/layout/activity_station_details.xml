@@ -360,16 +360,16 @@
             android:id="@+id/material_design_floating_action_menu_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/comment"
-            fab:fab_label="Yorum yaz"
+            android:src="@drawable/fab_comment"
+            fab:fab_label="@string/writeComment"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/go_icon"
-            fab:fab_label="İstasyona git"
+            android:src="@drawable/fab_go"
+            fab:fab_label="@string/goStation"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 </android.support.design.widget.CoordinatorLayout>

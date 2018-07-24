@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_editPrices"
-        android:icon="@drawable/edit_icon"
+        android:icon="@drawable/edit"
         android:title="@string/edit_prices"
         app:showAsAction="always" />
 

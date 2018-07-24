@@ -59,6 +59,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.fuelspot.LoginActivity;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.google.android.gms.auth.api.Auth;
@@ -390,11 +391,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("AQQ: " + response);
-
-                        continueButton.setAlpha(1.0f);
-                        continueButton.setClickable(true);
-
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -445,14 +441,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 e.printStackTrace();
                             }
                         }
+                        fetchTaxRates();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        System.out.println("AQQQ: " + volleyError);
-                        continueButton.setAlpha(1.0f);
-                        continueButton.setClickable(true);
+                        fetchTaxRates();
                     }
                 }) {
             @Override
@@ -462,6 +457,64 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                 //Adding parameters
                 params.put("username", MainActivity.username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void fetchTaxRates() {
+        final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
+
+                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
+
+                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
+                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
+
+                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
+                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
+
+                                MainActivity.getVariables(prefs);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        continueButton.setAlpha(1.0f);
+                        continueButton.setClickable(true);
+                        loading.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        continueButton.setAlpha(1.0f);
+                        continueButton.setClickable(true);
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("country", MainActivity.userCountry);
 
                 //returning parameters
                 return params;
@@ -529,7 +582,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         //Draw a circle with radius of 150m
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
-                .radius(25)
+                .radius(50)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
@@ -538,8 +591,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
-        //Search stations in a radius of 75m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=25&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        //Search stations in a radius of 50m
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=50&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -718,7 +771,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         loadMap();
 
         userPhoto = findViewById(R.id.userPhoto);
-        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.profile).error(R.drawable.profile)
+        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
         Glide.with(this).load(MainActivity.photo).apply(options).into(userPhoto);
 
@@ -989,13 +1042,19 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                     if (AdminMainActivity.isSuperVerified == 1) {
                         // S/he already verified by us. Redirect to AdminMainActivity
-                        Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_SHORT).show();
+                        MainActivity.isSigned = true;
+                        prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
+                        MainActivity.isSuperUser = true;
+                        prefs.edit().putBoolean("isSuperUser", MainActivity.isSuperUser).apply();
+
+                        Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+
                         Intent intent = new Intent(AdminRegister.this, AdminMainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        welcome1.setVisibility(View.GONE);
                         welcome2.setVisibility(View.VISIBLE);
+                        welcome1.setVisibility(View.GONE);
                         layout4();
                     }
                 }
@@ -1014,6 +1073,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent i = new Intent(AdminRegister.this, LoginActivity.class);
+        startActivity(i);
         finish();
     }
 

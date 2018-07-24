@@ -115,11 +115,11 @@ public class AdminMainActivity extends AppCompatActivity {
         //Bottom navigation
         AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_map, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.tab_news, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.tab_stations, R.color.colorAccent);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.tab_profile, R.color.colorAccent);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_5, R.drawable.tab_settings, R.color.colorAccent);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorAccent);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
@@ -463,15 +463,15 @@ public class AdminMainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return mContext.getString(R.string.title_station);
+                    return mContext.getString(R.string.tab_mystation);
                 case 1:
-                    return mContext.getString(R.string.title_nearStations);
+                    return mContext.getString(R.string.tab_news);
                 case 2:
-                    return mContext.getString(R.string.title_news);
+                    return mContext.getString(R.string.tab_stations);
                 case 3:
-                    return mContext.getString(R.string.title_profile);
+                    return mContext.getString(R.string.tab_profile);
                 case 4:
-                    return mContext.getString(R.string.title_settings);
+                    return mContext.getString(R.string.tab_settings);
             }
             return null;
         }

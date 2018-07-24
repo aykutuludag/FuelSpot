@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     public static void getVariables(SharedPreferences prefs) {
         name = prefs.getString("Name", "");
         email = prefs.getString("Email", "");
-        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/profile.png");
+        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/default_profile.pngfile.png");
         carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/vehicle.png");
         gender = prefs.getString("Gender", "");
         birthday = prefs.getString("Birthday", "01/01/2000");
@@ -352,11 +352,11 @@ public class MainActivity extends AppCompatActivity {
         //Bottom navigation
         AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_1, R.drawable.tab_map, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_2, R.drawable.tab_news, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_3, R.drawable.tab_vehicle, R.color.colorAccent);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_4, R.drawable.tab_profile, R.color.colorAccent);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_5, R.drawable.tab_settings, R.color.colorAccent);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorAccent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorAccent);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);

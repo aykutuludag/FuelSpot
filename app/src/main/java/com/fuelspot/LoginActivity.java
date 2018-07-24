@@ -77,22 +77,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-      /*  // Add code to print out the key hash
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.fuelspot",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException ignored) {
-
-        } catch (NoSuchAlgorithmException ignored) {
-
-        }*/
-
         //Load background and login layout
         background = findViewById(R.id.videoViewBackground);
         notLogged = findViewById(R.id.notLoggedLayout);
@@ -179,6 +163,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, AdminRegister.class);
                 startActivity(i);
+                finish();
             }
         });
     }
@@ -377,7 +362,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 Intent i = new Intent(LoginActivity.this, WelcomeActivity.class);
                                 startActivity(i);
                             }
-                        }, 1500);
+                        }, 2000);
                     }
                 },
                 new Response.ErrorListener() {

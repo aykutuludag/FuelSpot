@@ -81,7 +81,7 @@ import static com.fuelspot.MainActivity.verifyStoragePermissions;
 
 public class FragmentSettings extends Fragment {
 
-    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
+    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax, superUserCount;
     Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
     Switch globalNewsSwitch;
     SharedPreferences prefs;
@@ -215,7 +215,49 @@ public class FragmentSettings extends Fragment {
             }
         });
 
+        superUserCount = rootView.findViewById(R.id.textViewSuperUserCount);
+
+        fetchStats();
+
         return rootView;
+    }
+
+    void fetchStats() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_STATS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+                                superUserCount.setText("Anlık veri alınan istasyon sayısı: " + obj.getInt("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("country", MainActivity.userCountry);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     void updateTaxRates() {

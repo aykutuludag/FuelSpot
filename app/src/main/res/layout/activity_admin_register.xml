@@ -4,6 +4,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -50,7 +51,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
-            android:background="@drawable/button_continue"
+            android:background="@drawable/green_box"
             android:text="Devam" />
     </RelativeLayout>
 
@@ -96,6 +97,7 @@
         android:id="@+id/welcome1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_welcome"
         android:visibility="gone">
 
         <TextView
@@ -105,8 +107,10 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_margin="16dp"
-            android:text="FuelSpot BUSINESS'a hoşgeldiniz"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:text="FuelSpot Business'a Hoşgeldiniz"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView2"
@@ -116,16 +120,22 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView1"
             android:gravity="center"
-            android:text="FuelSpot kullanıcılarına en uygun fiyatlı benzinliği gösteren, araçlarının yakıt takibini yapan, akaryakıt fiyat indirim-zamlarını anında haber veren ve bunun gibi sayısız özelliği bir araya getiren bir platformdur." />
+            android:text="FuelSpot Business, istasyon sahiplerine hitap eden, daha geniş kitlelere ulaşmalarını sağlayıp karlılık ve verimliliği artırmayı yönelik bir platformdur."
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#E9E9DF" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_above="@+id/button2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="Üyeliğiniz oluşturuldu. Devam edebilmemiz için depolama ve konum iznine ihtiyaç duyuyoruz."
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#E9E9DF" />
 
         <Button
             android:id="@+id/button2"
@@ -136,9 +146,10 @@
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:alpha="0.5"
-            android:background="@drawable/button_continue"
+            android:background="@drawable/green_box"
             android:clickable="false"
             android:text="DEVAM" />
+
     </RelativeLayout>
 
     <ScrollView
@@ -200,7 +211,7 @@
                 android:layout_below="@id/stationHint"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/profile"
+                android:src="@drawable/photo_placeholder"
                 app:civ_border_color="#EA6C34"
                 app:civ_border_width="1dp" />
 
@@ -261,7 +272,7 @@
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_below="@+id/editFullName"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/profile_edit_email" />
+                app:srcCompat="@drawable/email" />
 
             <TextView
                 android:id="@+id/dummyText3"
@@ -306,7 +317,7 @@
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_below="@+id/editTextMail"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/profile_edit_email" />
+                app:srcCompat="@drawable/email" />
 
             <TextView
                 android:id="@+id/dummyText4"
@@ -390,7 +401,7 @@
                 android:layout_below="@+id/editTextBirthday"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/icon_gender_dark" />
+                app:srcCompat="@drawable/gender" />
 
             <TextView
                 android:id="@+id/dummyText6"
@@ -484,7 +495,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/checkBoxTerms"
                 android:layout_margin="16dp"
-                android:background="@drawable/button_continue"
+                android:background="@drawable/green_box"
                 android:text="DEVAM" />
 
         </RelativeLayout>
@@ -506,7 +517,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
-            android:background="@drawable/button_continue"
+            android:background="@drawable/green_box"
             android:text="DEVAM" />
 
     </RelativeLayout>

@@ -47,7 +47,7 @@ public class StationItem {
         this.locStation = locStation;
     }
 
-    public double getGasolinePrice() {
+    public float getGasolinePrice() {
         return gasolinePrice;
     }
 
@@ -71,7 +71,7 @@ public class StationItem {
         this.lpgPrice = lpgPrice;
     }
 
-    public double getElectricityPrice() {
+    public float getElectricityPrice() {
         return electricityPrice;
     }
 

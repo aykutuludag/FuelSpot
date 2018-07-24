@@ -22,6 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible"
-        app:srcCompat="@drawable/no_haber" />
+        app:srcCompat="@drawable/error_nonews" />
 
 </RelativeLayout>

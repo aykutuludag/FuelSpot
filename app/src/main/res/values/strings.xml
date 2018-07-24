@@ -1,5 +1,43 @@
 <resources>
-    <!-- GENERAL -->
+
+    <!-- General strings -->
+    <string name="save">Save</string>
+    <string name="exit">Touch again to exit the application.</string>
+    <string name="rateApp">Rate the app!</string>
+    <string name="shareApp">Share the app</string>
+    <string name="betaApp">Register for Beta</string>
+    <string name="versionApp"><small>FuelSpot v1.0</small></string>
+    <string name="privacy">Privacy</string>
+    <string name="help">Help</string>
+    <string name="buy_premium_ads_title">Upgrade</string>
+    <string name="buy_premium_ads_content">Are you tired of the ads in the application? By switching to FuelSpot Premium, you can remove all ads in the application and increase your range up to 50 km.</string>
+    <string name="buy_premium_ads_okay">BUY!</string>
+    <string name="buy_premium_ads_later">Later</string>
+
+    <!-- LoginActivity -->
+    <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
+    <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
+    <string name="error_login_cancel">Login was canceled by user&#8230;</string>
+
+    <!-- BottomNavigation -->
+    <string name="tab_mystation">MyStation</string>
+    <string name="tab_stations">Stations</string>
+    <string name="tab_news">News</string>
+    <string name="tab_vehicle">Vehicle</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- AddFuel -->
+    <string name="add_fuel">Yakıt ekle</string>
+
+    <!-- AdminMainActivity -->
+    <string name="edit_prices">Edit prices</string>
+
+    <!-- StationDetails -->
+    <string name="writeComment">Write comment</string>
+    <string name="goStation">Go</string>
+
+    <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>
     <string name="facebook_app_id" translatable="false">380327342377274</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
@@ -7,24 +45,20 @@
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
     <string name="interstitial_facebook" translatable="false">380327342377274_384927721917236</string>
     <string name="inline_facebook" translatable="false">380327342377274_421669164909758</string>
-
     <!-- Station APIs -->
     <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
     <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station.php</string>
     <string name="API_FETCH_STATION_BY_ID" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-by-id.php</string>
-
     <!-- USER APIs -->
     <string name="API_REGISTER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/register.php</string>
     <string name="API_UPDATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-user.php</string>
     <string name="API_UPDATE_AUTOMOBILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-automobile.php</string>
     <string name="API_FETCH_USER_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user.php</string>
-
     <!-- Purchase APIs -->
     <string name="API_ADD_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-purchase.php</string>
     <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-purchase.php</string>
     <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-user-purchases.php</string>
-
     <!-- Comment-Answer APIs -->
     <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-comment.php</string>
     <string name="API_UPDATE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-comment.php</string>
@@ -33,62 +67,24 @@
     <string name="API_FETCH_STATION_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-comments.php</string>
     <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-answer.php</string>
     <string name="API_DELETE_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-answer.php</string>
-
     <!-- SUPERUSER APIs -->
     <string name="API_SUPERUSER_REGISTER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-register.php</string>
     <string name="API_SUPERUSER_UPDATE_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-update.php</string>
     <string name="API_SUPERUSER_FETCH_PROFILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-fetch.php</string>
     <string name="API_SUPERUSER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-purchases.php</string>
-
     <!-- Campaings APIs -->
     <string name="API_ADD_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-campaign.php</string>
     <string name="API_UPDATE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-campaign.php</string>
     <string name="API_FETCH_CAMPAINGS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-campaigns.php</string>
     <string name="API_DELETE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/delete-campaign.php</string>
-
     <!-- Common APIs -->
     <string name="API_FETCH_TAX_RATES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-taxes.php</string>
     <string name="API_FEEDBACK" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/feedback.php</string>
+    <string name="API_STATS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/stats.php</string>
     <string name="API_FETCH_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>
 
-    <string name="title_activity_login">Giriş yap</string>
-    <string name="login_successful">Giriş başarılı. Uygulamaya yönlendiriliyorsunuz&#8230;</string>
-    <string name="error_login_fail">Giriş yaparken hata oluştu. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="error_login_cancel">Giriş işlemi kullanıcı tarafından iptal edildi</string>
-    <string name="add_fuel">Yakıt ekle</string>
-    <string name="saveprofile">Log out</string>
-    <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
-    <string name="title_activity_main">MainActivity</string>
-
-    <!-- Nav Drawer Menu Items -->
-    <string name="nav_text_premium">Reklamsız sürüme geçin</string>
-    <string name="nav_text_puanla">Uygulamayı puanla</string>
-    <string name="nav_text_support">Uygulamayı paylaş</string>
-    <string name="nav_text_beta">Beta sürüme geçin</string>
-    <string name="nav_text_version"><small>FuelSpot v1.0</small></string>
-
-    <string name="favorites_added">Added to your favorites</string>
-    <string name="unfavorited">Removed from your favorites</string>
-
-    <string name="title_activity_car_information">CarInformation</string>
-    <string name="title_activity_vehicle_selection">Vehicle selection</string>
-
-    <string name="action_favorite">Add to favorites</string>
-    <string name="action_search">Search</string>
-    <string name="action_share">Share</string>
-    <string name="title_activity_permission">PermissionActivity</string>
-    <string name="title_activity_station_details">StationDetails</string>
-    <string name="nav_text_vehicle">Vehicles</string>
-    <string name="buy_premium_ads_title">Reklamsız sürüme geçin</string>
-    <string name="buy_premium_ads_content">Uygulama içerisindeki reklamlardan sıkıldınız mı? FuelSpot Premium\'a geçerek uygulamadaki tüm reklamları kaldırabilir ve menzilinizi 50 km ye kadar yükseltebilirsiniz.</string>
-    <string name="buy_premium_ads_okay">SATIN AL!</string>
-    <string name="buy_premium_ads_later">Başka zaman</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-    <string name="title_activity_help">ActivityHelp</string>
-    <string name="title_activity_profile_edit">ProfileEditActivity</string>
-    <string name="nav_text_settings">Ayarlar</string>
-
-    <string-array name="CAR_PRODUCER">
+    <!-- CAR MAKERS -->
+    <string-array name="CAR_PRODUCER" translatable="false">
         <item>Acura</item>
         <item>Alfa Romeo</item>
         <item>Anadol</item>
@@ -162,29 +158,4 @@
         <item>Volkswagen</item>
         <item>Volvo</item>
     </string-array>
-    <string name="title_activity_admin">FuelSpot Business</string>
-    <string name="title_activity_admin_register">FuelSpot Business</string>
-    <string name="title_activity_admin_main">FuelSpotBusiness</string>
-    <string name="action_settings">Settings</string>
-    <string name="go_station">İstasyona git</string>
-    <string name="no_internet">İnternet bağlantısında bir sorun var</string>
-    <string name="title_station">İstasyon</string>
-    <string name="title_nearStations">Yakın istasyonlar</string>
-    <string name="title_news">Haberler</string>
-    <string name="title_profile">Profil</string>
-    <string name="title_settings">Ayarlar</string>
-    <string name="edit_prices">Fiyatları düzenle</string>
-    <string name="title_activity_edit_prices">EditPrices</string>
-    <string name="title_activity_super_purchases">Satınalmalar</string>
-    <string name="title_activity_super_comments">SuperComments</string>
-    <string name="title_activity_super_campaings">SuperCampaings</string>
-    <string name="title_activity_super_posts">SuperPosts</string>
-    <string name="title_activity_super_settings">SuperSettingsActivity</string>
-
-    <string name="tab_mystation">My station</string>
-    <string name="tab_1">Stations</string>
-    <string name="tab_2">News</string>
-    <string name="tab_3">Vehicle</string>
-    <string name="tab_4">Profile</string>
-    <string name="tab_5">Settings</string>
 </resources>

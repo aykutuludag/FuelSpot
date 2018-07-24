@@ -58,7 +58,7 @@
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:alpha="0.5"
-            android:background="@drawable/button_continue"
+            android:background="@drawable/green_box"
             android:clickable="false"
             android:text="DEVAM" />
 
@@ -299,7 +299,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/fuelTypeLayout"
                 android:layout_margin="16dp"
-                android:background="@drawable/button_continue"
+                android:background="@drawable/green_box"
                 android:text="DEVAM" />
         </RelativeLayout>
     </ScrollView>

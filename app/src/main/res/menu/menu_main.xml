@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_addFuel"
-        android:icon="@drawable/add"
+        android:icon="@drawable/add_fuel"
         android:title="@string/add_fuel"
         app:showAsAction="always" />
 

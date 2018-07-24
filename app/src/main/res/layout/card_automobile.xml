@@ -136,7 +136,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="4dp"
         android:padding="4dp"
-        android:src="@drawable/edit_icon" />
+        android:src="@drawable/edit" />
 
     <ImageView
         android:id="@+id/imageView6"

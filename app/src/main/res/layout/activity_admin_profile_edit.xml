@@ -37,7 +37,7 @@
                 android:layout_height="150dp"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/profile"
+                android:src="@drawable/photo_placeholder"
                 app:civ_border_color="#EA6C34"
                 app:civ_border_width="1dp" />
 
@@ -90,7 +90,7 @@
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_below="@+id/editFullName"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/profile_edit_email" />
+                app:srcCompat="@drawable/email" />
 
             <TextView
                 android:id="@+id/dummyText3"
@@ -135,7 +135,7 @@
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_below="@+id/editTextMail"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/profile_edit_email" />
+                app:srcCompat="@drawable/email" />
 
             <TextView
                 android:id="@+id/dummyText4"
@@ -219,7 +219,7 @@
                 android:layout_below="@+id/editTextBirthday"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/icon_gender_dark" />
+                app:srcCompat="@drawable/gender" />
 
             <TextView
                 android:id="@+id/dummyText6"

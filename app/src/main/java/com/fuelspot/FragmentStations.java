@@ -270,7 +270,7 @@ public class FragmentStations extends Fragment {
 
                                     float distanceInMeters = loc1.distanceTo(loc2);
 
-                                    if (distanceInMeters >= 500f) {
+                                    if (distanceInMeters >= 250f) {
                                         MainActivity.userlat = (float) location.getLatitude();
                                         MainActivity.userlon = (float) location.getLongitude();
                                         prefs.edit().putFloat("lat", MainActivity.userlat).apply();
@@ -359,7 +359,7 @@ public class FragmentStations extends Fragment {
         queue.add(stringRequest);
     }
 
-    /* This method add stations. If station exists in db, then update it (except prices). Returns stationInfos.
+    /* This method add_fuel stations. If station exists in db, then update it (except prices). Returns stationInfos.
      * To update stationPrices, use API_UPDATE_STATION */
     private void addStation(final int index) {
         feedsList.clear();

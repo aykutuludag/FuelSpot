@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +45,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -72,6 +75,7 @@ public class FragmentOwnedStation extends Fragment {
     Button openPurchases, openComments, openCampaings, openPosts;
     private GoogleMap googleMap;
     FusedLocationProviderClient mFusedLocationClient;
+    Circle circle;
 
     public static FragmentOwnedStation newInstance() {
         Bundle args = new Bundle();
@@ -89,7 +93,7 @@ public class FragmentOwnedStation extends Fragment {
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("İstasyonlar");
+        t.setScreenName("MyStation");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -193,6 +197,39 @@ public class FragmentOwnedStation extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(true);
 
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+
+                                    Location loc1 = new Location("");
+                                    loc1.setLatitude(MainActivity.userlat);
+                                    loc1.setLongitude(MainActivity.userlon);
+
+                                    Location loc2 = new Location("");
+                                    loc2.setLatitude(location.getLatitude());
+                                    loc2.setLongitude(location.getLongitude());
+
+                                    float distanceInMeters = loc1.distanceTo(loc2);
+
+                                    if (distanceInMeters >= 250f) {
+                                        MainActivity.userlat = (float) location.getLatitude();
+                                        MainActivity.userlon = (float) location.getLongitude();
+                                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
+                                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                        MainActivity.getVariables(prefs);
+                                    }
+                                } else {
+                                    LocationRequest mLocationRequest = new LocationRequest();
+                                    mLocationRequest.setInterval(60000);
+                                    mLocationRequest.setFastestInterval(5000);
+                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                }
+                            }
+                        });
+
                 loadStationDetails();
             }
         });
@@ -253,6 +290,11 @@ public class FragmentOwnedStation extends Fragment {
                             CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16.75f).build();
                             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                                     (cameraPosition));
+
+                            circle = googleMap.addCircle(new CircleOptions()
+                                    .center(sydney)
+                                    .radius(50)
+                                    .strokeColor(Color.RED));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

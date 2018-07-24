@@ -68,8 +68,7 @@ import java.util.Map;
 
 public class StationDetails extends AppCompatActivity {
 
-    float stationDistance;
-    double gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
+    float stationDistance, gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
     String lastUpdated;
 
     int stationID, userCommentID;
@@ -168,22 +167,22 @@ public class StationDetails extends AppCompatActivity {
         // Nerden gelirse gelsin stationID boş olamaz.
         stationID = getIntent().getIntExtra("STATION_ID", 0);
         stationName = getIntent().getStringExtra("STATION_NAME");
-        if (stationName == null || stationName.length() == 0) {
-            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor
-            // olmalı. İnternetten çek verileri
-            fetchStationByID(stationID);
-        } else {
+        if (stationName == null && stationName.length() > 0) {
             //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
             stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
             stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-            stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0.0f);
-            gasolinePrice = getIntent().getDoubleExtra("STATION_GASOLINE", 0.0);
-            dieselPrice = getIntent().getDoubleExtra("STATION_DIESEL", 0.0);
-            lpgPrice = getIntent().getDoubleExtra("STATION_LPG", 0.0);
-            electricityPrice = getIntent().getDoubleExtra("STATION_ELECTRIC", 0.0);
+            stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0f);
+            gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
+            dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
+            lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
+            electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
             lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
             iconURL = getIntent().getStringExtra("STATION_ICON");
             loadStationDetails();
+        } else {
+            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor
+            // olmalı. İnternetten çek verileri
+            fetchStationByID(stationID);
         }
 
         //Campaigns
@@ -338,10 +337,10 @@ public class StationDetails extends AppCompatActivity {
                             loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
                             stationDistance = loc1.distanceTo(loc2);
                             //DISTANCE END
-                            gasolinePrice = obj.getDouble("gasolinePrice");
-                            dieselPrice = obj.getDouble("dieselPrice");
-                            lpgPrice = obj.getDouble("lpgPrice");
-                            electricityPrice = obj.getDouble("electricityPrice");
+                            gasolinePrice = (float) obj.getDouble("gasolinePrice");
+                            dieselPrice = (float) obj.getDouble("dieselPrice");
+                            lpgPrice = (float) obj.getDouble("lpgPrice");
+                            electricityPrice = (float) obj.getDouble("electricityPrice");
                             lastUpdated = obj.getString("lastUpdated");
                             iconURL = obj.getString("photoURL");
                             loadStationDetails();
@@ -568,7 +567,7 @@ public class StationDetails extends AppCompatActivity {
 
                                     CommentItem item = new CommentItem();
                                     item.setID(obj.getInt("id"));
-                                    item.setComment(obj.getString("comment"));
+                                    item.setComment(obj.getString("fab_comment"));
                                     item.setTime(obj.getString("time"));
                                     item.setStationID(obj.getInt("station_id"));
                                     item.setProfile_pic(obj.getString("user_photo"));
@@ -582,10 +581,10 @@ public class StationDetails extends AppCompatActivity {
                                     if (obj.getString("username").equals(MainActivity.username)) {
                                         hasAlreadyCommented = true;
                                         userCommentID = obj.getInt("id");
-                                        userComment = obj.getString("comment");
+                                        userComment = obj.getString("fab_comment");
                                         stars = obj.getInt("stars");
-                                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit_icon));
-                                        floatingActionButton1.setLabelText("Edit comment");
+                                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit));
+                                        floatingActionButton1.setLabelText("Edit fab_comment");
                                     }
                                 }
 
@@ -598,13 +597,13 @@ public class StationDetails extends AppCompatActivity {
                             } catch (JSONException e) {
                                 errorPhoto.setVisibility(View.VISIBLE);
                                 hasAlreadyCommented = false;
-                                floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                                floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                                 e.printStackTrace();
                             }
                         } else {
                             errorPhoto.setVisibility(View.VISIBLE);
                             hasAlreadyCommented = false;
-                            floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                            floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                         }
                     }
                 },
@@ -612,7 +611,7 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
-                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.comment));
+                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                     }
                 }) {
             @Override
@@ -633,7 +632,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void sendComment() {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding comment...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding fab_comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
                 new Response.Listener<String>() {
                     @Override
@@ -658,7 +657,7 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("comment", userComment);
+                params.put("fab_comment", userComment);
                 params.put("station_id", String.valueOf(stationID));
                 params.put("username", MainActivity.username);
                 params.put("user_photo", MainActivity.photo);
@@ -674,7 +673,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void updateComment() {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating fab_comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
                 new Response.Listener<String>() {
                     @Override
@@ -700,7 +699,7 @@ public class StationDetails extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("commentID", String.valueOf(userCommentID));
-                params.put("comment", userComment);
+                params.put("fab_comment", userComment);
                 params.put("station_id", String.valueOf(stationID));
                 params.put("username", MainActivity.username);
                 params.put("user_photo", MainActivity.photo);

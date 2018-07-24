@@ -121,8 +121,9 @@ public class AddFuel extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         //Window
         window = this.getWindow();
@@ -178,8 +179,8 @@ public class AddFuel extends AppCompatActivity {
     }
 
     public void checkIsAtStation() {
-        //Search stations in a radius of 25m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=25&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        //Search stations in a radius of 50m
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=50&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -188,7 +189,7 @@ public class AddFuel extends AppCompatActivity {
                     public void onResponse(String response) {
                         JSON json = new JSON(response);
                         if (json.key("results").count() > 0) {
-                            // Yes! He is in station. Probably there is only one station in 75m so get the first value
+                            // Yes! He is in station. Probably there is only one station in 100m so get the first value
                             chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
                             fetchStation(chosenGoogleID);
                         } else {
