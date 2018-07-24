@@ -361,7 +361,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_comment"
-            fab:fab_label="@string/writeComment"
+            fab:fab_label="@string/fab_comment"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -369,7 +369,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_go"
-            fab:fab_label="@string/goStation"
+            fab:fab_label="@string/fab_go"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 </android.support.design.widget.CoordinatorLayout>

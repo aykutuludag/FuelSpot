@@ -3,9 +3,6 @@
     <!-- General strings -->
     <string name="save">Save</string>
     <string name="exit">Touch again to exit the application.</string>
-    <string name="rateApp">Rate the app!</string>
-    <string name="shareApp">Share the app</string>
-    <string name="betaApp">Register for Beta</string>
     <string name="versionApp"><small>FuelSpot v1.0</small></string>
     <string name="privacy">Privacy</string>
     <string name="help">Help</string>
@@ -34,8 +31,8 @@
     <string name="edit_prices">Edit prices</string>
 
     <!-- StationDetails -->
-    <string name="writeComment">Write comment</string>
-    <string name="goStation">Go</string>
+    <string name="fab_comment">Write comment</string>
+    <string name="fab_go">Go</string>
 
     <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>

@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -133,7 +134,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        ImageView getPremium = rootView.findViewById(R.id.button_premium);
+        Button getPremium = rootView.findViewById(R.id.button_premium);
         getPremium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +158,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        ImageView openHelp = rootView.findViewById(R.id.button_help);
+        Button openHelp = rootView.findViewById(R.id.button_help);
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,7 +180,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        ImageView openPrivacy = rootView.findViewById(R.id.button_privacy);
+        Button openPrivacy = rootView.findViewById(R.id.button_privacy);
         openPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -145,7 +145,7 @@ public class AddFuel extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
-        pDialog = new ProgressDialog(AddFuel.this); //Your Activity.this
+        pDialog = new ProgressDialog(AddFuel.this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(false);
         pDialog.show();
