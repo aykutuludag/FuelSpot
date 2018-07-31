@@ -133,7 +133,10 @@ public class SuperCampaings extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         requestQueue = Volley.newRequestQueue(this);
         sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());

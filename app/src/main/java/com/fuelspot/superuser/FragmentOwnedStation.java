@@ -73,9 +73,9 @@ public class FragmentOwnedStation extends Fragment {
     RelativeTimeTextView textLastUpdated;
     ImageView stationIcon;
     Button openPurchases, openComments, openCampaings, openPosts;
-    private GoogleMap googleMap;
     FusedLocationProviderClient mFusedLocationClient;
     Circle circle;
+    private GoogleMap googleMap;
 
     public static FragmentOwnedStation newInstance() {
         Bundle args = new Bundle();

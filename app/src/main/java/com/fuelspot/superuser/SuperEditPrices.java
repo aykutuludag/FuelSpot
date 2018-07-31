@@ -34,6 +34,7 @@ public class SuperEditPrices extends AppCompatActivity {
     Long updateTime;
     EditText editTextGasoline, editTextDiesel, editTextLPG, editTextElectricity;
     Button sendPricesButton;
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,12 @@ public class SuperEditPrices extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
+
+        requestQueue = Volley.newRequestQueue(SuperEditPrices.this);
 
         editTextGasoline = findViewById(R.id.editTextGasoline);
         editTextGasoline.setText(String.valueOf(ownedGasolinePrice));
@@ -171,9 +177,6 @@ public class SuperEditPrices extends AppCompatActivity {
                 return params;
             }
         };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(SuperEditPrices.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);

@@ -290,10 +290,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     public void onResponse(String s) {
                         loading.dismiss();
                         Toast.makeText(VehicleEditActivity.this, s, Toast.LENGTH_LONG).show();
-                        Intent i = getBaseContext().getPackageManager()
-                                .getLaunchIntentForPackage(getBaseContext().getPackageName());
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {

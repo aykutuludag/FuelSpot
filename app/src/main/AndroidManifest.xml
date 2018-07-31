@@ -55,7 +55,6 @@
         <!-- SuperUser Class -->
         <activity
             android:name=".superuser.AdminRegister"
-            android:label=""
             android:theme="@style/Login" />
         <activity android:name=".superuser.AdminMainActivity" />
         <activity

@@ -288,6 +288,14 @@ public class FragmentProfile extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRecyclerView != null) {
+            fetchComments();
+        }
+    }
+
     public class CommentAdapterforProfile extends RecyclerView.Adapter<CommentAdapterforProfile.ViewHolder2> {
 
         private List<CommentItem> feedItemList;
@@ -398,14 +406,6 @@ public class FragmentProfile extends Fragment {
                 replyTime = itemView.findViewById(R.id.textViewReplyTime);
                 logo = itemView.findViewById(R.id.imageViewLogo);
             }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mRecyclerView != null) {
-            fetchComments();
         }
     }
 }

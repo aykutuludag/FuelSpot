@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -86,9 +85,9 @@ public class FragmentStations extends Fragment {
     SharedPreferences prefs;
     Circle circle;
     TabLayout tabLayout;
+    ImageView noStationError;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    ImageView noStationError;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -468,7 +467,7 @@ public class FragmentStations extends Fragment {
                                 });
                     }
                 } else {
-                    Toast.makeText(getActivity(), "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
             }
         }
@@ -499,7 +498,7 @@ public class FragmentStations extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
     }

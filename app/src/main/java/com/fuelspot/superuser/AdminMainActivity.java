@@ -15,8 +15,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -314,7 +312,7 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     public void checkPremium() throws RemoteException {
-        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
         if (ownedItems.getInt("RESPONSE_CODE") == 0) {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;
@@ -418,62 +416,6 @@ public class AdminMainActivity extends AppCompatActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("Stations");
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private class MyPagerAdapter extends FragmentPagerAdapter {
-
-        private Fragment fragment = null;
-        private Context mContext;
-
-        MyPagerAdapter(FragmentManager fm, Context c) {
-            super(fm);
-            mContext = c;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    fragment = new FragmentOwnedStation();
-                    break;
-                case 1:
-                    fragment = new FragmentStations();
-                    break;
-                case 2:
-                    fragment = new FragmentNews();
-                    break;
-                case 3:
-                    fragment = new FragmentProfile();
-                    break;
-                case 4:
-                    fragment = new FragmentSettings();
-                default:
-                    break;
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 5;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return mContext.getString(R.string.tab_mystation);
-                case 1:
-                    return mContext.getString(R.string.tab_news);
-                case 2:
-                    return mContext.getString(R.string.tab_stations);
-                case 3:
-                    return mContext.getString(R.string.tab_profile);
-                case 4:
-                    return mContext.getString(R.string.tab_settings);
-            }
-            return null;
         }
     }
 }

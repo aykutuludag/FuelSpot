@@ -134,9 +134,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     RadioGroup editGender;
     RadioButton bMale, bFemale, bOther;
     int calendarYear, calendarMonth, calendarDay;
-    private GoogleMap googleMap;
     VideoView background;
     FusedLocationProviderClient mFusedLocationClient;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

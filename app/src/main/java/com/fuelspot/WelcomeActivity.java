@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -45,6 +43,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
@@ -64,7 +66,6 @@ import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.carBrand;
-import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -139,8 +140,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
-                        System.out.println("AQQQ: " + carBrand + carModel);
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
@@ -975,20 +974,26 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         switch (requestCode) {
             case REQUEST_FILEPICKER: {
                 if (ContextCompat.checkSelfPermission(WelcomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    //Request location updates:
-                    LocationManager locationManager = (LocationManager)
-                            this.getSystemService(Context.LOCATION_SERVICE);
-                    Criteria criteria = new Criteria();
-
-                    Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-                    if (location != null) {
-                        MainActivity.userlat = (float) location.getLatitude();
-                        MainActivity.userlon = (float) location.getLongitude();
-                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                        MainActivity.getVariables(prefs);
-                    }
+                    FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                    mFusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        MainActivity.userlat = (float) location.getLatitude();
+                                        MainActivity.userlon = (float) location.getLongitude();
+                                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
+                                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                        MainActivity.getVariables(prefs);
+                                    } else {
+                                        LocationRequest mLocationRequest = new LocationRequest();
+                                        mLocationRequest.setInterval(60000);
+                                        mLocationRequest.setFastestInterval(5000);
+                                        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    }
+                                }
+                            });
 
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.VISIBLE);

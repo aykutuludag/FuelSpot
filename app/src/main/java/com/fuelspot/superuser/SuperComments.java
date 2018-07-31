@@ -64,6 +64,7 @@ public class SuperComments extends AppCompatActivity {
     RequestQueue requestQueue;
     PopupWindow mPopupWindow;
     Calendar calendar;
+    Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,10 @@ public class SuperComments extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         // Get timestamp
         calendar = Calendar.getInstance();
@@ -96,6 +100,7 @@ public class SuperComments extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        snackbar = Snackbar.make(findViewById(R.id.swipeContainer), "Henüz hiç yorum yazılmamış.", Snackbar.LENGTH_LONG);
 
         fetchSuperComments();
     }
@@ -106,41 +111,50 @@ public class SuperComments extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            for (int i = 0; i < res.length(); i++) {
-                                JSONObject obj = res.getJSONObject(i);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
-                                CommentItem item = new CommentItem();
-                                item.setID(obj.getInt("id"));
-                                item.setComment(obj.getString("fab_comment"));
-                                item.setTime(obj.getString("time"));
-                                item.setProfile_pic(obj.getString("user_photo"));
-                                item.setUsername(obj.getString("username"));
-                                item.setRating(obj.getInt("stars"));
-                                item.setAnswer(obj.getString("answer"));
-                                item.setReplyTime(obj.getString("replyTime"));
-                                item.setLogo(obj.getString("logo"));
-                                feedsList.add(item);
+                                    CommentItem item = new CommentItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setComment(obj.getString("comment"));
+                                    item.setTime(obj.getString("time"));
+                                    item.setProfile_pic(obj.getString("user_photo"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setRating(obj.getInt("stars"));
+                                    item.setAnswer(obj.getString("answer"));
+                                    item.setReplyTime(obj.getString("replyTime"));
+                                    item.setLogo(obj.getString("logo"));
+                                    feedsList.add(item);
+                                }
+
+                                mAdapter = new SuperCommentsAdapter(SuperComments.this, feedsList);
+                                mLayoutManager = new GridLayoutManager(SuperComments.this, 1);
+
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setVisibility(View.VISIBLE);
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                                swipeContainer.setRefreshing(false);
+                            } catch (JSONException e) {
+                                swipeContainer.setRefreshing(false);
+                                snackbar.show();
                             }
-
-                            mAdapter = new SuperCommentsAdapter(SuperComments.this, feedsList);
-                            mLayoutManager = new GridLayoutManager(SuperComments.this, 1);
-
-                            mAdapter.notifyDataSetChanged();
-                            mRecyclerView.setAdapter(mAdapter);
-                            mRecyclerView.setLayoutManager(mLayoutManager);
+                        } else {
+                            mRecyclerView.setVisibility(View.GONE);
                             swipeContainer.setRefreshing(false);
-                        } catch (JSONException e) {
-                            swipeContainer.setRefreshing(false);
-                            e.printStackTrace();
+                            snackbar.show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mRecyclerView.setVisibility(View.GONE);
                         swipeContainer.setRefreshing(false);
+                        snackbar.show();
                     }
                 }) {
             @Override
@@ -184,7 +198,6 @@ public class SuperComments extends AppCompatActivity {
                 //Adding parameters
                 params.put("commentID", String.valueOf(commentID));
                 params.put("answer", userAnswer);
-                params.put("time", String.valueOf(calendar.getTimeInMillis()));
                 params.put("logo", AdminMainActivity.superStationLogo);
 
                 //returning parameters
@@ -201,6 +214,7 @@ public class SuperComments extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        fetchSuperComments();
                     }
                 },
                 new Response.ErrorListener() {
@@ -255,8 +269,15 @@ public class SuperComments extends AppCompatActivity {
                 SuperCommentsAdapter.ViewHolder3 holder3 = (SuperCommentsAdapter.ViewHolder3) view.getTag();
                 int position = holder3.getAdapterPosition();
                 final int commentID = feedItemList.get(position).getID();
+                String text;
+                if (feedItemList.get(position).getAnswer() != null && feedItemList.get(position).getAnswer().length() > 0) {
+                    text = "Cevabı güncelle?";
+                    userAnswer = feedItemList.get(position).getAnswer();
+                } else {
+                    text = "Cevapla";
+                }
 
-                Snackbar.make(view, "Cevapla?", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, text, Snackbar.LENGTH_LONG)
                         .setAction("Evet", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -279,6 +300,9 @@ public class SuperComments extends AppCompatActivity {
                                 });
 
                                 EditText getComment = customView.findViewById(R.id.editTextAnswer);
+                                if (userAnswer != null & userAnswer.length() > 0) {
+                                    getComment.setText(userAnswer);
+                                }
                                 getComment.addTextChangedListener(new TextWatcher() {
                                     @Override
                                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {

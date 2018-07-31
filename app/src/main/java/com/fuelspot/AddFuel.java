@@ -100,7 +100,6 @@ public class AddFuel extends AppCompatActivity {
     float tax1, tax2, taxTotal;
     float totalPrice;
 
-
     /* LAYOUT 1 ÖĞELER */
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;

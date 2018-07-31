@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/userFullName"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/white_box"
         android:layout_marginTop="4dp"
+        android:background="@drawable/white_box"
         android:text="@string/privacy" />
 
     <Button
@@ -65,8 +65,8 @@
         android:layout_below="@+id/userFullName"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/user_picture"
-        android:background="@drawable/white_box"
         android:layout_toRightOf="@+id/user_picture"
+        android:background="@drawable/white_box"
         android:text="@string/help" />
 
     <TextView

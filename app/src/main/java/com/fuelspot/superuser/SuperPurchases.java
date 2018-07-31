@@ -1,12 +1,12 @@
 package com.fuelspot.superuser;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,6 +34,7 @@ public class SuperPurchases extends AppCompatActivity {
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     List<PurchaseItem> feedsList;
+    Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,10 @@ public class SuperPurchases extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         swipeContainer = findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -60,6 +64,7 @@ public class SuperPurchases extends AppCompatActivity {
 
         feedsList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.feedView);
+        snackbar = Snackbar.make(findViewById(R.id.swipeContainer), "Henüz hiç satın alma yapılmamış.", Snackbar.LENGTH_LONG);
 
         fetchSuperPurchases();
     }
@@ -102,18 +107,19 @@ public class SuperPurchases extends AppCompatActivity {
                                     swipeContainer.setRefreshing(false);
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                swipeContainer.setRefreshing(false);
+                                snackbar.show();
                             }
                         } else {
-
+                            swipeContainer.setRefreshing(false);
+                            snackbar.show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(SuperPurchases.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        snackbar.show();
                         swipeContainer.setRefreshing(false);
                     }
                 }) {

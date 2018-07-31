@@ -80,16 +80,6 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Double> purchaseLiters = new ArrayList<>();
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
-    static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
-    static SharedPreferences prefs;
-    //In-App Billings
-    IInAppBillingService mService;
-    ServiceConnection mServiceConn;
-    Window window;
-    Toolbar toolbar;
-    boolean doubleBackToExitPressedOnce;
-    FragNavController mFragNavController;
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
     public static String[] anadol_models = {"A"};
     public static String[] astonMartin_models = {"DB7", "DB9", "DB11", "DBS", "Rapide", "Vanquish", "Vantage", "Virage"};
@@ -161,6 +151,16 @@ public class MainActivity extends AppCompatActivity {
     public static String[] toyota_models = {"Auris", "Avensis", "Camry", "Carina", "Celica", "Corolla", "Corona", "Cressida", "Grown", "GT 86", "MR2", "Prius", "Starlet", "Supra", "Tercel", "Urban Cruiser", "Verso", "Yaris"};
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
+    static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
+    static SharedPreferences prefs;
+    //In-App Billings
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
+    Window window;
+    Toolbar toolbar;
+    boolean doubleBackToExitPressedOnce;
+    FragNavController mFragNavController;
     // Static values END
 
     public static int getIndexOf(String[] strings, String item) {
