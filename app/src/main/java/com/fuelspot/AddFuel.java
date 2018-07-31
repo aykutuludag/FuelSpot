@@ -64,8 +64,8 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
-import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
-import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
+import static com.fuelspot.MainActivity.PERMISSIONS_FILEPICKER;
+import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
@@ -82,7 +82,7 @@ import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.taxCalculator;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.MainActivity.verifyStoragePermissions;
+import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AddFuel extends AppCompatActivity {
 
@@ -474,13 +474,13 @@ public class AddFuel extends AppCompatActivity {
         photoHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyStoragePermissions(AddFuel.this)) {
+                if (verifyFilePickerPermission(AddFuel.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(AddFuel.this);
                 } else {
-                    ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_FILEPICKER, REQUEST_FILEPICKER);
                 }
             }
         });
@@ -584,7 +584,7 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateStationPrices() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -734,7 +734,7 @@ public class AddFuel extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
+            case REQUEST_FILEPICKER: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)

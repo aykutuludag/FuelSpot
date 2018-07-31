@@ -261,6 +261,7 @@
                     android:alpha="@+id/gasoline"
                     android:gravity="center"
                     android:padding="8dp"
+                    android:text="5 min ago"
                     android:textColor="#6D6D6D" />
             </android.support.percent.PercentRelativeLayout>
 

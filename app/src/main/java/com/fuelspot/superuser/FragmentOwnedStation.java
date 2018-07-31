@@ -214,7 +214,7 @@ public class FragmentOwnedStation extends Fragment {
 
                                     float distanceInMeters = loc1.distanceTo(loc2);
 
-                                    if (distanceInMeters >= 250f) {
+                                    if (distanceInMeters >= 50f) {
                                         MainActivity.userlat = (float) location.getLatitude();
                                         MainActivity.userlon = (float) location.getLongitude();
                                         prefs.edit().putFloat("lat", MainActivity.userlat).apply();

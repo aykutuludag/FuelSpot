@@ -62,9 +62,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static com.fuelspot.MainActivity.UNIFIED_REQUEST;
+import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -103,7 +104,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]
-                        {MainActivity.PERMISSIONS_STORAGE[0], MainActivity.PERMISSIONS_STORAGE[1], MainActivity.PERMISSIONS_LOCATION}, UNIFIED_REQUEST);
+                        {MainActivity.PERMISSIONS_FILEPICKER[0], MainActivity.PERMISSIONS_FILEPICKER[1], MainActivity.PERMISSIONS_FILEPICKER[2], MainActivity.PERMISSIONS_LOCATION}, REQUEST_FILEPICKER);
             }
         });
 
@@ -280,12 +281,12 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyStoragePermissions(WelcomeActivity.this)) {
+                if (verifyFilePickerPermission(WelcomeActivity.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(WelcomeActivity.this);
                 } else {
-                    ActivityCompat.requestPermissions(WelcomeActivity.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(WelcomeActivity.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
                 }
             }
         });
@@ -972,7 +973,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 99: {
+            case REQUEST_FILEPICKER: {
                 if (ContextCompat.checkSelfPermission(WelcomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //Request location updates:
                     LocationManager locationManager = (LocationManager)

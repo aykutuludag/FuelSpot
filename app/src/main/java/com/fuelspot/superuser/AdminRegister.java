@@ -110,6 +110,8 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.verifyFilePickerPermission;
+
 public class AdminRegister extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     SharedPreferences prefs;
@@ -198,7 +200,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(AdminRegister.this, new String[]
-                        {MainActivity.PERMISSIONS_STORAGE[0], MainActivity.PERMISSIONS_STORAGE[1], MainActivity.PERMISSIONS_LOCATION}, MainActivity.UNIFIED_REQUEST);
+                        {MainActivity.PERMISSIONS_FILEPICKER[0], MainActivity.PERMISSIONS_FILEPICKER[1], MainActivity.PERMISSIONS_FILEPICKER[2], MainActivity.PERMISSIONS_LOCATION}, MainActivity.REQUEST_FILEPICKER);
             }
         });
         /* LAYOUT 03 END */
@@ -386,7 +388,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void fetchSuperUserInfo() {
-        System.out.println("AQQ: " + MainActivity.username);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH_PROFILE),
                 new Response.Listener<String>() {
                     @Override
@@ -908,12 +909,12 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         applicationForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyStoragePermissions(AdminRegister.this)) {
+                if (verifyFilePickerPermission(AdminRegister.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(AdminRegister.this);
                 } else {
-                    ActivityCompat.requestPermissions(AdminRegister.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(AdminRegister.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
                 }
             }
         });
@@ -1018,7 +1019,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MainActivity.UNIFIED_REQUEST: {
+            case MainActivity.REQUEST_FILEPICKER: {
                 if (ContextCompat.checkSelfPermission(AdminRegister.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //Request location updates:
                     mFusedLocationClient.getLastLocation().addOnSuccessListener(AdminRegister.this, new OnSuccessListener<Location>() {

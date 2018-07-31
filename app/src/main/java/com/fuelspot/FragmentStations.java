@@ -60,6 +60,7 @@ import java.util.Map;
 
 import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
@@ -219,7 +220,6 @@ public class FragmentStations extends Fragment {
                     .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 MainActivity.userlat = (float) location.getLatitude();
                                 MainActivity.userlon = (float) location.getLongitude();
@@ -270,7 +270,7 @@ public class FragmentStations extends Fragment {
 
                                     float distanceInMeters = loc1.distanceTo(loc2);
 
-                                    if (distanceInMeters >= 250f) {
+                                    if (distanceInMeters >= 50f) {
                                         MainActivity.userlat = (float) location.getLatitude();
                                         MainActivity.userlon = (float) location.getLongitude();
                                         prefs.edit().putFloat("lat", MainActivity.userlat).apply();
@@ -442,7 +442,7 @@ public class FragmentStations extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 1: {
+            case REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are car_placeholder.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

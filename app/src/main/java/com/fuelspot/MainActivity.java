@@ -2,6 +2,8 @@ package com.fuelspot;
 
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -35,6 +37,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
+import com.fuelspot.service.GeofenceService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.maps.MapsInitializer;
@@ -42,38 +45,51 @@ import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Static values START
-    public static final int REQUEST_EXTERNAL_STORAGE = 0;
+
+    public static final int REQUEST_FILEPICKER = 0;
     public static final int REQUEST_LOCATION = 1;
-    public static final int UNIFIED_REQUEST = 99;
+
     public static final int GOOGLE_LOGIN = 100;
     public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
     public static final int PURCHASE_NORMAL_PREMIUM = 1000;
     public static final int PURCHASE_ADMIN_PREMIUM = 1001;
 
-    public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static String[] PERMISSIONS_FILEPICKER = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-
+    // Ads
     public static int adCount;
-
-    public static float TAX_GASOLINE;
-    public static float TAX_DIESEL;
-    public static float TAX_LPG;
-    public static float TAX_ELECTRICITY;
-
-    public static boolean premium, isSigned, isSuperUser, isGlobalNews;
+    // TAXES
+    public static float TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
+    public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
+    public static ArrayList<String> purchaseTimes = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
+    public static ArrayList<Double> purchasePrices = new ArrayList<>();
     public static float userlat, userlon, averageCons, averagePrice;
     public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom;
     public static int mapDefaultRange;
     public static int openCount;
-
+    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
+    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
+    // CAR MODELS START
     public static String[] acura_models = {"RSX"};
+    static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
+    static SharedPreferences prefs;
+    //In-App Billings
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
+    Window window;
+    Toolbar toolbar;
+    boolean doubleBackToExitPressedOnce;
+    FragNavController mFragNavController;
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
     public static String[] anadol_models = {"A"};
     public static String[] astonMartin_models = {"DB7", "DB9", "DB11", "DBS", "Rapide", "Vanquish", "Vantage", "Virage"};
@@ -147,23 +163,6 @@ public class MainActivity extends AppCompatActivity {
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
     // Static values END
 
-    public static ArrayList<String> purchaseTimes = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
-    public static ArrayList<Double> purchasePrices = new ArrayList<>();
-    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
-    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
-
-    static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
-    IInAppBillingService mService;
-    ServiceConnection mServiceConn;
-    Window window;
-    Toolbar toolbar;
-    boolean doubleBackToExitPressedOnce;
-    SharedPreferences prefs;
-    FragNavController mFragNavController;
-
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
             if (item.equals(strings[i])) return i;
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     public static void getVariables(SharedPreferences prefs) {
         name = prefs.getString("Name", "");
         email = prefs.getString("Email", "");
-        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/default_profile.pngfile.png");
+        photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/profile.png");
         carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/vehicle.png");
         gender = prefs.getString("Gender", "");
         birthday = prefs.getString("Birthday", "01/01/2000");
@@ -211,10 +210,10 @@ public class MainActivity extends AppCompatActivity {
         return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
     }
 
-    public static boolean verifyStoragePermissions(Context context) {
+    public static boolean verifyFilePickerPermission(Context context) {
         boolean hasStorage = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && (context.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) {
                 hasStorage = true;
             }
         } else {
@@ -330,21 +329,66 @@ public class MainActivity extends AppCompatActivity {
         return tax;
     }
 
+    public static void AlarmBuilder(Context mContext) {
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
+
+        Intent myIntent = new Intent(mContext, GeofenceService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (alarmManager != null) {
+            if (isGeofenceOpen) {
+                Calendar currentTime = Calendar.getInstance();
+                alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis() + 1000 * 60 * 60,
+                        AlarmManager.INTERVAL_HOUR, pendingIntent);
+                //GEOFENCE İ 1 SAAT SONRA BAŞLAT BURAYI KURCALA ***
+            } else {
+                //Cancel the 1st alarm
+                alarmManager.cancel(pendingIntent);
+            }
+        }
+    }
+
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if ("com.fuelspot.service.GeofenceService".equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Window
+        window = this.getWindow();
+
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setIcon(R.drawable.brand_logo);
 
-        //Window
-        window = this.getWindow();
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+
+        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        getVariables(prefs);
+
+        //In-App Services
+        AlarmBuilder(this);
+        buyPremiumPopup();
+        InAppBilling();
+
+        /*  if (isGeofenceOpen && !isServiceRunning()){
+            startService(new Intent(this, GeofenceService.class));
+        }
+
+        System.out.println("GEOFENCE SERVİS DURUMU: " + isServiceRunning());*/
 
         // Activate map
         MapsInitializer.initialize(this.getApplicationContext());
@@ -389,20 +433,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        getVariables(prefs);
+        // AppRater
+        RateThisApp.onCreate(this);
+        RateThisApp.showRateDialogIfNeeded(this);
 
         if (savedInstanceState == null) {
             mFragNavController.switchTab(0);
         }
-
-        //In-App Services
-        buyPremiumPopup();
-        InAppBilling();
-
-        // AppRater
-        RateThisApp.onCreate(this);
-        RateThisApp.showRateDialogIfNeeded(this);
     }
 
     private void buyPremiumPopup() {
@@ -461,7 +498,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkPremium() throws RemoteException {
-        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
+        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
         if (ownedItems.getInt("RESPONSE_CODE") == 0) {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;

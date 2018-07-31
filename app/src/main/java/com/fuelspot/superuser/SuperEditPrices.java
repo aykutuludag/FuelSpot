@@ -141,7 +141,7 @@ public class SuperEditPrices extends AppCompatActivity {
     }
 
     public void sendPrices() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -166,7 +166,6 @@ public class SuperEditPrices extends AppCompatActivity {
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
-                params.put("lastUpdated", String.valueOf(updateTime));
 
                 //returning parameters
                 return params;

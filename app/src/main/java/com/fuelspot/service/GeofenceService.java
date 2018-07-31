@@ -1,120 +1,205 @@
 package com.fuelspot.service;
 
 
-import android.Manifest;
-import android.app.Service;
+import android.app.Activity;
+import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import static com.fuelspot.MainActivity.userlat;
-import static com.fuelspot.MainActivity.userlon;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.fuelspot.LoginActivity;
+import com.fuelspot.MainActivity;
+import com.fuelspot.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingEvent;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-/**
- * Created by roberto on 9/29/16.
- */
+import java.util.ArrayList;
+import java.util.List;
 
-public class GeofenceService extends Service {
-    private static final String TAG = "GeofenceService";
-    private static final int LOCATION_INTERVAL = 10000;
-    private static final float LOCATION_DISTANCE = 100f;
-    LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.PASSIVE_PROVIDER)
-    };
-    private LocationManager mLocationManager = null;
+import eu.amirs.JSON;
 
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
-    }
+import static com.fuelspot.MainActivity.mapDefaultRange;
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG, "onStartCommand");
-        super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
+
+public class GeofenceService extends IntentService {
+
+    PendingIntent mGeofencePendingIntent;
+    SharedPreferences prefs;
+    RequestQueue queue;
+    Context mContext;
+    private GeofencingClient mGeofencingClient;
+    private ArrayList<Geofence> mGeofenceList = new ArrayList<>();
+
+    public GeofenceService() {
+        super("GeofenceService");
     }
 
     @Override
     public void onCreate() {
-        Log.e(TAG, "onCreate");
-        initializeLocationManager();
-        try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.PASSIVE_PROVIDER,
-                    LOCATION_INTERVAL,
-                    LOCATION_DISTANCE,
-                    mLocationListeners[0]
-            );
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+        super.onCreate();
+        mContext = this;
+        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        mGeofencingClient = LocationServices.getGeofencingClient(this);
+        queue = Volley.newRequestQueue(this);
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener((Activity) mContext, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                MainActivity.userlat = (float) location.getLatitude();
+                                MainActivity.userlon = (float) location.getLongitude();
+                                prefs.edit().putFloat("lat", MainActivity.userlat).apply();
+                                prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                MainActivity.getVariables(prefs);
+                                mGeofenceList.add(new Geofence.Builder().setRequestId("ev")
+                                        .setCircularRegion(MainActivity.userlat, MainActivity.userlon, 75)
+                                        .setExpirationDuration(45 * 60 * 1000)
+                                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
+                                        .build());
+                                addGeofence();
+                                fetchStation();
+                            } else {
+                                LocationRequest mLocationRequest = new LocationRequest();
+                                mLocationRequest.setInterval(60000);
+                                mLocationRequest.setFastestInterval(5000);
+                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                            }
+                        }
+                    });
+        }
+
+    }
+
+    void fetchStation() {
+        //Search stations in a radius of 5000m
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultRange + "&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSON json = new JSON(response);
+                        if (response != null && response.length() > 0) {
+                            for (int i = 0; i < json.key("results").count(); i++) {
+                                double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                                double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+
+                                //Add them to the geofence list
+                                mGeofenceList.add(new Geofence.Builder().setRequestId(json.key("results").index(i).key("place_id").stringValue())
+                                        .setCircularRegion(lat, lon, 75)
+                                        .setExpirationDuration(45 * 60 * 1000)
+                                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
+                                        .build());
+                                addGeofence();
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Do nothing
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        mGeofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return mGeofencePendingIntent;
+    }
+
+    void addGeofence() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent());
+            System.out.println("GEOFENCE EKLENDİ:");
         }
     }
 
     @Override
-    public void onDestroy() {
-        Log.e(TAG, "onDestroy");
-        super.onDestroy();
-        if (mLocationManager != null) {
-            for (LocationListener mLocationListener : mLocationListeners) {
-                try {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    mLocationManager.removeUpdates(mLocationListener);
-                } catch (Exception ex) {
-                    Log.i(TAG, "fail to remove location listener, ignore", ex);
-                }
+    protected void onHandleIntent(@Nullable Intent intent) {
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        if (geofencingEvent != null && !geofencingEvent.hasError()) {
+            // Get the transition type.
+            int geofenceTransition = geofencingEvent.getGeofenceTransition();
+
+            // Test that the reported transition was of interest.
+            if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
+                // Get the geofences that were triggered. A single event can trigger
+                // multiple geofences.
+                List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+
+                // Get the transition details as a String.
+                String geofenceTransitionDetails = "Yakıt mı alıyorsunuz? Eklemek için tıklayın!";
+
+                // Send notification and log the transition details.
+                sendNotification("FuelSpot", geofenceTransitionDetails);
+                Log.i("Error", geofenceTransitionDetails);
             }
         }
     }
 
-    private void initializeLocationManager() {
-        Log.e(TAG, "initializeLocationManager - LOCATION_INTERVAL: " + LOCATION_INTERVAL + " LOCATION_DISTANCE: " + LOCATION_DISTANCE);
-        if (mLocationManager == null) {
-            mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        }
-    }
+    private void sendNotification(String messageTitle, String messageBody) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);
 
-    private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(bm)
+                .setContentTitle(messageTitle)
+                .setContentText(messageBody)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent);
 
-        LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.e(TAG, "onLocationChanged: " + location);
-            userlat = (float) location.getLatitude();
-            userlon = (float) location.getLongitude();
-            Toast.makeText(GeofenceService.this, "LATİTUDE: " + userlat + " LONGTITUDE: " + userlon, Toast.LENGTH_SHORT).show();
-            mLastLocation.set(location);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
-        }
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notificationBuilder.build());
     }
 }

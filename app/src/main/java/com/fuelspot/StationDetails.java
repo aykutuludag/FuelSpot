@@ -564,10 +564,9 @@ public class StationDetails extends AppCompatActivity {
 
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
-
                                     CommentItem item = new CommentItem();
                                     item.setID(obj.getInt("id"));
-                                    item.setComment(obj.getString("fab_comment"));
+                                    item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
                                     item.setStationID(obj.getInt("station_id"));
                                     item.setProfile_pic(obj.getString("user_photo"));
@@ -581,13 +580,15 @@ public class StationDetails extends AppCompatActivity {
                                     if (obj.getString("username").equals(MainActivity.username)) {
                                         hasAlreadyCommented = true;
                                         userCommentID = obj.getInt("id");
-                                        userComment = obj.getString("fab_comment");
+                                        userComment = obj.getString("comment");
                                         stars = obj.getInt("stars");
                                         floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit));
-                                        floatingActionButton1.setLabelText("Edit fab_comment");
+                                        floatingActionButton1.setLabelText("Edit comment");
                                     }
                                 }
 
+                                mRecyclerView.setVisibility(View.VISIBLE);
+                                errorPhoto.setVisibility(View.GONE);
                                 mAdapter = new CommentAdapter(StationDetails.this, feedsList);
                                 mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
 
@@ -595,12 +596,13 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                             } catch (JSONException e) {
+                                mRecyclerView.setVisibility(View.GONE);
                                 errorPhoto.setVisibility(View.VISIBLE);
                                 hasAlreadyCommented = false;
                                 floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
-                                e.printStackTrace();
                             }
                         } else {
+                            mRecyclerView.setVisibility(View.GONE);
                             errorPhoto.setVisibility(View.VISIBLE);
                             hasAlreadyCommented = false;
                             floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
@@ -610,6 +612,8 @@ public class StationDetails extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mRecyclerView.setVisibility(View.GONE);
+                        errorPhoto.setVisibility(View.VISIBLE);
                         hasAlreadyCommented = false;
                         floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                     }
@@ -632,7 +636,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void sendComment() {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding fab_comment...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
                 new Response.Listener<String>() {
                     @Override
@@ -640,7 +644,6 @@ public class StationDetails extends AppCompatActivity {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
                         mPopupWindow.dismiss();
-                        errorPhoto.setVisibility(View.GONE);
                         fetchComments();
                     }
                 },
@@ -657,7 +660,7 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("fab_comment", userComment);
+                params.put("comment", userComment);
                 params.put("station_id", String.valueOf(stationID));
                 params.put("username", MainActivity.username);
                 params.put("user_photo", MainActivity.photo);
@@ -673,7 +676,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void updateComment() {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating fab_comment...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
                 new Response.Listener<String>() {
                     @Override
@@ -681,7 +684,6 @@ public class StationDetails extends AppCompatActivity {
                         loading.dismiss();
                         Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
                         mPopupWindow.dismiss();
-                        errorPhoto.setVisibility(View.GONE);
                         fetchComments();
                     }
                 },
@@ -699,7 +701,7 @@ public class StationDetails extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("commentID", String.valueOf(userCommentID));
-                params.put("fab_comment", userComment);
+                params.put("comment", userComment);
                 params.put("station_id", String.valueOf(stationID));
                 params.put("username", MainActivity.username);
                 params.put("user_photo", MainActivity.photo);

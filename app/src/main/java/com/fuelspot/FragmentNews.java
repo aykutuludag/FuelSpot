@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -139,8 +139,7 @@ public class FragmentNews extends Fragment {
 
                                         NewsItem item = new NewsItem();
                                         item.setLink(obj.getString("url"));
-                                        String title = new String(obj.getString("title").getBytes("ISO-8859-1"), "UTF-8");
-                                        item.setTitle(title);
+                                        item.setTitle(String.valueOf(Html.fromHtml(obj.getString("title"))));
                                         String[] thumbNailHolder = obj.getString("content_html").split("\"");
                                         item.setThumbnail(thumbNailHolder[5]);
                                         item.setPublishDate(obj.getString("date_published"));
@@ -159,8 +158,6 @@ public class FragmentNews extends Fragment {
                                     errorLayout();
                                 }
                             } catch (JSONException e) {
-                                errorLayout();
-                            } catch (UnsupportedEncodingException e) {
                                 errorLayout();
                             }
                         } else {

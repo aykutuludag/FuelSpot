@@ -118,8 +118,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.distance.setText(distance);
 
         //Last updated
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             Date date = format.parse(feedItem.getLastUpdated());
             viewHolder.lastUpdated.setReferenceTime(date.getTime());
         } catch (ParseException e) {

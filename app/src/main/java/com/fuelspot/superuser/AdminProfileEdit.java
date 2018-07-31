@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -65,7 +67,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AdminProfileEdit extends AppCompatActivity {
 
@@ -116,12 +120,12 @@ public class AdminProfileEdit extends AppCompatActivity {
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyStoragePermissions(AdminProfileEdit.this)) {
+                if (verifyFilePickerPermission(AdminProfileEdit.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(AdminProfileEdit.this);
                 } else {
-                    ActivityCompat.requestPermissions(AdminProfileEdit.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(AdminProfileEdit.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
                 }
             }
         });
@@ -348,6 +352,25 @@ public class AdminProfileEdit extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_FILEPICKER: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(AdminProfileEdit.this, "Settings saved...", Toast.LENGTH_SHORT).show();
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
+                            .pickPhoto(AdminProfileEdit.this);
+                }
+                break;
+            }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

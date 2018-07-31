@@ -64,8 +64,8 @@ import droidninja.filepicker.FilePickerConst;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
-import static com.fuelspot.MainActivity.REQUEST_EXTERNAL_STORAGE;
+import static com.fuelspot.MainActivity.PERMISSIONS_FILEPICKER;
+import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
@@ -77,7 +77,7 @@ import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
-import static com.fuelspot.MainActivity.verifyStoragePermissions;
+import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
@@ -363,13 +363,13 @@ public class FragmentSettings extends Fragment {
         getScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyStoragePermissions(getActivity())) {
+                if (verifyFilePickerPermission(getActivity())) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(getActivity());
                 } else {
-                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_FILEPICKER, REQUEST_FILEPICKER);
                 }
             }
         });
@@ -446,7 +446,7 @@ public class FragmentSettings extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
+            case REQUEST_FILEPICKER: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getActivity(), "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)

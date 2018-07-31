@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,6 +70,7 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
+import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.photo;
 
 public class ProfileEditActivity extends AppCompatActivity {
@@ -151,13 +155,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyStoragePermissions(ProfileEditActivity.this)) {
+                if (MainActivity.verifyFilePickerPermission(ProfileEditActivity.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(ProfileEditActivity.this);
                 } else {
-                    ActivityCompat.requestPermissions(ProfileEditActivity.this, MainActivity.PERMISSIONS_STORAGE, MainActivity.REQUEST_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(ProfileEditActivity.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
                 }
             }
         });
@@ -323,6 +327,23 @@ public class ProfileEditActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_FILEPICKER: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
+                            .pickPhoto(ProfileEditActivity.this);
+                } else {
+                    Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                }
+            }
         }
     }
 

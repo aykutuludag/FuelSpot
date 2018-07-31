@@ -15,6 +15,7 @@
     <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
     <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
     <string name="error_login_cancel">Login was canceled by user&#8230;</string>
+    <string name="error_permission_cancel">Permission didn\'t granted&#8230;</string>
 
     <!-- BottomNavigation -->
     <string name="tab_mystation">MyStation</string>
@@ -29,6 +30,7 @@
 
     <!-- AdminMainActivity -->
     <string name="edit_prices">Edit prices</string>
+    <string name="pending_approval">Your account is in the approval process. We will contact you as soon as possible.</string>
 
     <!-- StationDetails -->
     <string name="fab_comment">Write comment</string>
@@ -45,6 +47,7 @@
     <!-- Station APIs -->
     <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/add-station.php</string>
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station.php</string>
+    <string name="API_UPDATE_STATION_PRICES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/update-station-prices.php</string>
     <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station.php</string>
     <string name="API_FETCH_STATION_BY_ID" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/fetch-station-by-id.php</string>
     <!-- USER APIs -->

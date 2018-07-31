@@ -365,7 +365,7 @@ public class AdminMainActivity extends AppCompatActivity {
                     Intent intent = new Intent(AdminMainActivity.this, SuperEditPrices.class);
                     startActivity(intent);
                 } else {
-                    Snackbar.make(findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.pager), getString(R.string.pending_approval), Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             default:
