@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,39 +21,116 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="135dp"
-            android:text="@string/common_signin_button_text_long" />
-
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
+        <ImageView
+            android:id="@+id/imageViewGoogle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/facebookButton"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="82dp" />
+            android:layout_marginBottom="16dp"
+            android:clickable="false"
+            app:srcCompat="@drawable/button_google" />
 
         <TextView
-            android:id="@+id/textViewisHaveStation"
+            android:id="@+id/textViewGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageViewGoogle"
+            android:layout_alignEnd="@id/imageViewGoogle"
+            android:layout_alignLeft="@id/imageViewGoogle"
+            android:layout_alignRight="@id/imageViewGoogle"
+            android:layout_alignStart="@id/imageViewGoogle"
+            android:layout_alignTop="@id/imageViewGoogle"
+            android:layout_marginLeft="42dp"
+            android:clickable="false"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithGoogle" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/buttonGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/imageViewGoogle"
+            android:layout_alignEnd="@id/imageViewGoogle"
+            android:layout_alignLeft="@id/imageViewGoogle"
+            android:layout_alignRight="@id/imageViewGoogle"
+            android:layout_alignStart="@id/imageViewGoogle"
+            android:layout_alignTop="@id/imageViewGoogle"
+            android:layout_centerHorizontal="true"
+            android:alpha="0"
+            android:background="@drawable/button_google"
+            android:clickable="true"
+            android:text="@string/common_signin_button_text_long" />
+
+        <ImageView
+            android:id="@+id/imageViewFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageViewSuperUser"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_facebook"
+            android:clickable="false"
+            android:visibility="visible"
+            app:srcCompat="@drawable/button_facebook" />
+
+        <TextView
+            android:id="@+id/textViewFacebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageViewFacebook"
+            android:layout_alignEnd="@id/imageViewFacebook"
+            android:layout_alignLeft="@id/imageViewFacebook"
+            android:layout_alignRight="@id/imageViewFacebook"
+            android:layout_alignStart="@id/imageViewFacebook"
+            android:layout_alignTop="@id/imageViewFacebook"
+            android:layout_marginLeft="42dp"
+            android:clickable="false"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithFacebook" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebookButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/imageViewFacebook"
+            android:layout_alignEnd="@id/imageViewFacebook"
+            android:layout_alignLeft="@id/imageViewFacebook"
+            android:layout_alignRight="@id/imageViewFacebook"
+            android:layout_alignStart="@id/imageViewFacebook"
+            android:layout_alignTop="@id/imageViewFacebook"
+            android:alpha="0"
+            android:clickable="true" />
+
+
+        <ImageView
+            android:id="@+id/imageViewSuperUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16dp"
-            android:background="#30000000"
-            android:padding="4dp"
-            android:text="İstasyon sahibi misiniz?"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#f1f1f1"
-            android:textStyle="bold" />
+            android:layout_marginBottom="48dp"
+            android:background="@drawable/button_facebook"
+            android:clickable="false"
+            android:visibility="visible"
+            app:srcCompat="@drawable/button_superuser" />
 
+        <TextView
+            android:id="@+id/textViewSuperUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageViewSuperUser"
+            android:layout_alignEnd="@id/imageViewSuperUser"
+            android:layout_alignLeft="@id/imageViewSuperUser"
+            android:layout_alignRight="@id/imageViewSuperUser"
+            android:layout_alignStart="@id/imageViewSuperUser"
+            android:layout_alignTop="@id/imageViewSuperUser"
+            android:layout_marginLeft="42dp"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithSuperUser" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -68,7 +68,8 @@ import java.util.Map;
 
 public class StationDetails extends AppCompatActivity {
 
-    float stationDistance, gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
+    int stationDistance;
+    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
     String lastUpdated;
 
     int stationID, userCommentID;
@@ -167,11 +168,11 @@ public class StationDetails extends AppCompatActivity {
         // Nerden gelirse gelsin stationID boş olamaz.
         stationID = getIntent().getIntExtra("STATION_ID", 0);
         stationName = getIntent().getStringExtra("STATION_NAME");
-        if (stationName == null && stationName.length() > 0) {
+        if (stationName != null && stationName.length() > 0) {
             //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
             stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
             stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-            stationDistance = getIntent().getFloatExtra("STATION_DISTANCE", 0f);
+            stationDistance = getIntent().getIntExtra("STATION_DISTANCE", 0);
             gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
             dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
             lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
@@ -180,8 +181,7 @@ public class StationDetails extends AppCompatActivity {
             iconURL = getIntent().getStringExtra("STATION_ICON");
             loadStationDetails();
         } else {
-            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor
-            // olmalı. İnternetten çek verileri
+            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
             fetchStationByID(stationID);
         }
 
@@ -277,7 +277,7 @@ public class StationDetails extends AppCompatActivity {
                 //SingleStation
                 textName.setText(stationName);
                 textVicinity.setText(stationVicinity);
-                textDistance.setText((int) stationDistance + " m");
+                textDistance.setText(stationDistance + " m");
 
                 if (gasolinePrice == 0) {
                     textGasoline.setText("-");
@@ -330,12 +330,12 @@ public class StationDetails extends AppCompatActivity {
                             stationLocation = obj.getString("location");
                             //DISTANCE START
                             Location loc1 = new Location("");
-                            loc1.setLatitude(MainActivity.userlat);
-                            loc1.setLongitude(MainActivity.userlon);
+                            loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                            loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
                             Location loc2 = new Location("");
                             loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
                             loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                            stationDistance = loc1.distanceTo(loc2);
+                            stationDistance = (int) loc1.distanceTo(loc2);
                             //DISTANCE END
                             gasolinePrice = (float) obj.getDouble("gasolinePrice");
                             dieselPrice = (float) obj.getDouble("dieselPrice");

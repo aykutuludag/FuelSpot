@@ -66,6 +66,8 @@ import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -73,7 +75,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     RequestQueue requestQueue;
     SharedPreferences prefs;
     Button continueButton, saveCarButton, finishButton;
-    RelativeLayout layout1, layout3;
+    RelativeLayout layout1, layout3, layoutHow1, layoutHow2, layoutHow3;
     ScrollView layout2;
     Bitmap bitmap;
     CircleImageView carPic;
@@ -81,6 +83,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
     ArrayAdapter<CharSequence> adapter;
     ArrayAdapter<String> adapter2;
+    boolean howto1, howto2, howto3;
+    RadioGroup radioGroup1, radioGroup2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         layout1 = findViewById(R.id.layout1);
         layout2 = findViewById(R.id.layout2);
         layout3 = findViewById(R.id.layout3);
+
+        layoutHow1 = findViewById(R.id.howto1);
+        layoutHow2 = findViewById(R.id.howto2);
+        layoutHow3 = findViewById(R.id.howto3);
 
         continueButton = findViewById(R.id.button2);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -121,13 +129,23 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Registration finished
-                MainActivity.isSigned = true;
-                prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
-
-                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
+                if (!howto1) {
+                    howto1 = true;
+                    layoutHow2.setVisibility(View.VISIBLE);
+                    layoutHow1.setVisibility(View.INVISIBLE);
+                } else if (!howto2) {
+                    howto2 = true;
+                    layoutHow3.setVisibility(View.VISIBLE);
+                    layoutHow2.setVisibility(View.INVISIBLE);
+                } else {
+                    //Registration finished
+                    howto3 = true;
+                    MainActivity.isSigned = true;
+                    prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
+                    Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
             }
         });
 
@@ -303,53 +321,35 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         spinner2 = findViewById(R.id.spinner_models);
 
         //Yakıt seçenekleri
+        radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         gasoline = findViewById(R.id.gasoline);
         diesel = findViewById(R.id.diesel);
         lpg = findViewById(R.id.lpg);
         elec = findViewById(R.id.electricity);
+        radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
         gasoline2 = findViewById(R.id.gasoline2);
         diesel2 = findViewById(R.id.diesel2);
         lpg2 = findViewById(R.id.lpg2);
         elec2 = findViewById(R.id.electricity2);
 
-        switch (MainActivity.fuelPri) {
+        switch (fuelPri) {
             case 0:
                 gasoline.setChecked(true);
-
-                gasoline2.setEnabled(false);
-                diesel2.setEnabled(false);
-                lpg2.setEnabled(true);
-                elec2.setEnabled(true);
                 break;
             case 1:
                 diesel.setChecked(true);
-
-                gasoline2.setEnabled(false);
-                diesel2.setEnabled(false);
-                lpg2.setEnabled(false);
-                elec2.setEnabled(true);
                 break;
             case 2:
                 lpg.setChecked(true);
-
-                gasoline2.setEnabled(true);
-                lpg2.setEnabled(false);
-                diesel2.setEnabled(false);
-                elec2.setEnabled(false);
                 break;
             case 3:
                 elec.setChecked(true);
-
-                lpg2.setEnabled(false);
-                elec2.setEnabled(false);
-                gasoline2.setEnabled(true);
-                diesel2.setEnabled(true);
                 break;
             default:
                 break;
         }
 
-        switch (MainActivity.fuelSec) {
+        switch (fuelSec) {
             case 0:
                 gasoline2.setChecked(true);
                 break;
@@ -367,50 +367,29 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         }
 
         //1. yakıt
-        RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.gasoline) {
-                    MainActivity.fuelPri = 0;
-                    gasoline2.setEnabled(false);
-                    diesel2.setEnabled(false);
-                    lpg2.setEnabled(true);
-                    elec2.setEnabled(true);
+                    fuelPri = 0;
                 } else if (checkedId == R.id.diesel) {
-                    MainActivity.fuelPri = 1;
-                    gasoline2.setEnabled(false);
-                    diesel2.setEnabled(false);
-                    lpg2.setEnabled(false);
-                    elec2.setEnabled(true);
+                    fuelPri = 1;
                 } else if (checkedId == R.id.lpg) {
-                    MainActivity.fuelPri = 2;
-                    gasoline2.setEnabled(true);
-                    lpg2.setEnabled(false);
-                    diesel2.setEnabled(false);
-                    elec2.setEnabled(false);
+                    fuelPri = 2;
                 } else {
-                    MainActivity.fuelPri = 3;
-                    lpg2.setEnabled(false);
-                    elec2.setEnabled(false);
-                    gasoline2.setEnabled(true);
-                    diesel2.setEnabled(true);
+                    fuelPri = 3;
                 }
 
-                gasoline.setSelected(false);
-                diesel2.setSelected(false);
-                lpg2.setSelected(false);
-                elec2.setSelected(false);
-                MainActivity.fuelSec = -1;
+                fuelSec = -1;
+                radioGroup2.clearCheck();
 
-                prefs.edit().putInt("FuelPrimary", MainActivity.fuelPri).apply();
-                prefs.edit().putInt("FuelSecondary", MainActivity.fuelSec).apply();
+                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
             }
         });
 
         //2. yakıt
-        RadioGroup radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
         radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -424,6 +403,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 } else if (checkedId == R.id.electricity2) {
                     MainActivity.fuelSec = 3;
                 }
+
                 prefs.edit().putInt("FuelSecondary", MainActivity.fuelSec).apply();
             }
         });
@@ -981,10 +961,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 public void onSuccess(Location location) {
                                     // Got last known location. In some rare situations this can be null.
                                     if (location != null) {
-                                        MainActivity.userlat = (float) location.getLatitude();
-                                        MainActivity.userlon = (float) location.getLongitude();
-                                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                        MainActivity.userlat = String.valueOf(location.getLatitude());
+                                        MainActivity.userlon = String.valueOf(location.getLongitude());
+                                        prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                        prefs.edit().putString("lon", MainActivity.userlon).apply();
                                         MainActivity.getVariables(prefs);
                                     } else {
                                         LocationRequest mLocationRequest = new LocationRequest();

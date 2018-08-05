@@ -10,7 +10,8 @@
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_welcome">
+        android:background="@drawable/background_welcome"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/textView1"
@@ -18,8 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16dp"
-            android:text="FuelSpot'a hoşgeldiniz"
+            android:layout_marginTop="54dp"
+            android:fontFamily="@font/gotham_black"
+            android:text="FuelSpot'a Hoşgeldiniz !"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#ffffff"
             android:textStyle="bold" />
@@ -31,10 +33,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView1"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/gotham_medium"
             android:gravity="center"
             android:text="FuelSpot kullanıcılarına en uygun fiyatlı benzinliği gösteren, araçlarının yakıt takibini yapan, akaryakıt fiyat indirim-zamlarını anında haber veren ve bunun gibi sayısız özelliği bir araya getiren bir platformdur."
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#E9E9DF" />
+            android:textColor="#fff" />
 
         <TextView
             android:id="@+id/textView3"
@@ -43,11 +47,12 @@
             android:layout_above="@+id/button2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/gotham_medium"
             android:gravity="center"
             android:text="Üyeliğiniz oluşturuldu. Devam edebilmemiz için depolama ve konum iznine ihtiyaç duyuyoruz."
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#E9E9DF" />
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/button2"
@@ -60,7 +65,9 @@
             android:alpha="0.5"
             android:background="@drawable/green_box"
             android:clickable="false"
-            android:text="DEVAM" />
+            android:fontFamily="@font/gotham_black"
+            android:text="DEVAM"
+            android:textColor="#212121" />
 
     </RelativeLayout>
 
@@ -78,8 +85,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewCar"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
@@ -99,17 +106,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="Marka"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="bold" />
+                    android:textColor="#555555" />
 
                 <Spinner
                     android:id="@+id/spinner_brands"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_brand"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
 
                 <TextView
                     android:id="@+id/textView_model"
@@ -119,17 +130,21 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="false"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="Model"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="bold" />
+                    android:textColor="#555555" />
 
                 <Spinner
                     android:id="@+id/spinner_models"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_model"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -145,12 +160,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="Birincil yakıt tipi"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#3A3A3A"
-                    android:textStyle="bold" />
+                    android:textColor="#555555" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelPrimary"
@@ -158,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelPrimary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:orientation='horizontal'>
 
                     <RadioButton
@@ -167,6 +182,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Benzin"
                         android:textColor="#757575" />
@@ -177,6 +193,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Dizel"
                         android:textColor="#757575" />
@@ -187,6 +204,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="LPG"
                         android:textColor="#757575" />
@@ -197,6 +215,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Elektrik"
                         android:textColor="#757575" />
@@ -209,12 +228,12 @@
                     android:layout_alignLeft="@+id/textView_fuelPrimary"
                     android:layout_alignStart="@+id/textView_fuelPrimary"
                     android:layout_below="@+id/radioGroup_fuelPrimary"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="İkincil yakıt tipi"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#3A3A3A"
-                    android:textStyle="bold" />
+                    android:textColor="#555555" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelSecondary"
@@ -222,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:orientation='horizontal'>
 
                     <RadioButton
@@ -231,6 +250,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Benzin"
                         android:textColor="#757575" />
@@ -241,6 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Dizel"
                         android:textColor="#757575" />
@@ -251,6 +272,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="LPG"
                         android:textColor="#757575" />
@@ -261,6 +283,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Elektrik"
                         android:textColor="#757575" />
@@ -272,19 +295,23 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroup_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="Kilometre"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#3A3A3A"
-                    android:textStyle="bold" />
+                    android:textColor="#555555" />
 
                 <EditText
                     android:id="@+id/editText_km"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_km"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:inputType="numberSigned|numberDecimal"
                     android:shadowColor="#3A3A3A"
@@ -300,7 +327,10 @@
                 android:layout_below="@+id/fuelTypeLayout"
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
-                android:text="DEVAM" />
+                android:fontFamily="@font/gotham_black"
+                android:text="Devam"
+                android:textAllCaps="false"
+                android:textColor="#212121" />
         </RelativeLayout>
     </ScrollView>
 
@@ -308,17 +338,340 @@
         android:id="@+id/layout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/howto"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:background="@drawable/background_main"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/howto1"
+            android:layout_width="match_parent"
+            android:layout_height="325dp"
+            android:layout_centerVertical="true"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/whiteBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="#ffffff" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:fontFamily="@font/gotham_black"
+                android:text="Yakıt Tipi Sembolleri"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@+id/imageView15"
+                android:layout_toStartOf="@+id/imageView15"
+                android:padding="8dp"
+                app:srcCompat="@drawable/gasoline" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/imageView14"
+                android:layout_alignLeft="@+id/imageView14"
+                android:layout_alignRight="@+id/imageView14"
+                android:layout_alignStart="@+id/imageView14"
+                android:layout_below="@+id/imageView14"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="Gasoline" />
+
+            <ImageView
+                android:id="@+id/imageView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/imageViewIndicator2"
+                android:layout_toStartOf="@+id/imageViewIndicator2"
+                android:padding="8dp"
+                app:srcCompat="@drawable/diesel" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/imageView15"
+                android:layout_alignLeft="@+id/imageView15"
+                android:layout_alignRight="@+id/imageView15"
+                android:layout_alignStart="@+id/imageView15"
+                android:layout_below="@+id/imageView14"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="Diesel" />
+
+            <ImageView
+                android:id="@+id/imageView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/imageViewIndicator2"
+                android:layout_toRightOf="@+id/imageViewIndicator2"
+                android:padding="8dp"
+                app:srcCompat="@drawable/lpg" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/imageView16"
+                android:layout_alignLeft="@+id/imageView16"
+                android:layout_alignRight="@id/imageView16"
+                android:layout_alignStart="@+id/imageView16"
+                android:layout_below="@+id/imageView14"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="LPG" />
+
+            <ImageView
+                android:id="@+id/imageView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@+id/imageView16"
+                android:layout_toRightOf="@+id/imageView16"
+                android:padding="8dp"
+                app:srcCompat="@drawable/electricity" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/imageView17"
+                android:layout_alignLeft="@+id/imageView17"
+                android:layout_alignRight="@+id/imageView17"
+                android:layout_alignStart="@+id/imageView17"
+                android:layout_below="@+id/imageView14"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="Electricity" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator2"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_toLeftOf="@+id/imageViewIndicator2"
+                android:layout_toStartOf="@+id/imageViewIndicator2"
+                android:src="@drawable/radio_active" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/imageViewIndicator2"
+                android:layout_toRightOf="@+id/imageViewIndicator2"
+                android:src="@drawable/radio_passive" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/howto2"
+            android:layout_width="match_parent"
+            android:layout_height="325dp"
+            android:layout_centerVertical="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/whiteBack2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="#ffffff" />
+
+            <TextView
+                android:id="@+id/textView159"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/gotham_black"
+                android:text="Yakıt nasıl eklenir?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <ImageView
+                android:id="@+id/imageView18"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_below="@+id/textView159"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@drawable/howtoyakit" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView18"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="Daire içerisindeki sembole bastıktan sonra, gerekli bilgileri doldurarak yakıt ekleyebilirsiniz." />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator5"
+                android:layout_marginRight="8dp"
+                android:layout_toLeftOf="@+id/imageViewIndicator5"
+                android:layout_toStartOf="@+id/imageViewIndicator5"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/radio_active" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator4"
+                android:layout_marginLeft="8dp"
+                android:layout_toEndOf="@+id/imageViewIndicator5"
+                android:layout_toRightOf="@+id/imageViewIndicator5"
+                android:src="@drawable/radio_passive" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/howto3"
+            android:layout_width="match_parent"
+            android:layout_height="325dp"
+            android:layout_centerVertical="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/whiteBack3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="#ffffff" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="48dp"
+                android:fontFamily="@font/gotham_black"
+                android:text="Ucuz yakıt nasıl bulunur?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <ImageView
+                android:id="@+id/imageView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView22"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="32dp"
+                app:srcCompat="@drawable/howtosirala" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView19"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="Sıralama barını kullanarak istasyonları yakıt türleri ve mesafeye göre ucuzdan pahalıya, yakından uzağa sıralayabilirsiniz." />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator8"
+                android:layout_marginRight="8dp"
+                android:layout_toLeftOf="@+id/imageViewIndicator8"
+                android:layout_toStartOf="@+id/imageViewIndicator8"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator7"
+                android:layout_marginLeft="8dp"
+                android:layout_toEndOf="@+id/imageViewIndicator8"
+                android:layout_toRightOf="@+id/imageViewIndicator8"
+                android:src="@drawable/radio_active" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="DEVAM" />
+            android:layout_below="@+id/howto1"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="-24dp"
+            android:background="@drawable/green_box"
+            android:fontFamily="@font/gotham_black"
+            android:text="Anladım"
+            android:textAllCaps="false"
+            android:textColor="#212121" />
     </RelativeLayout>
 </RelativeLayout>

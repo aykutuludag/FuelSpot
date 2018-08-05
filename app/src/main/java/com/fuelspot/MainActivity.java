@@ -70,11 +70,13 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
-    public static float userlat, userlon, averageCons, averagePrice;
-    public static String name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
+    public static float averageCons, averagePrice;
+    public static String userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom;
     public static int mapDefaultRange;
+    public static int mapDefaultZoneUpdateRange = 500;
+    public static int mapDefaultStationRange = 50;
     public static int openCount;
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
     public static ArrayList<Double> purchaseLiters = new ArrayList<>();
@@ -184,8 +186,8 @@ public class MainActivity extends AppCompatActivity {
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
-        userlat = prefs.getFloat("lat", 39.925054f);
-        userlon = prefs.getFloat("lon", 32.8347552f);
+        userlat = prefs.getString("lat", "39.925054");
+        userlon = prefs.getString("lon", "32.8347552");
         premium = prefs.getBoolean("hasPremium", false);
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);

@@ -12,6 +12,9 @@
     <string name="buy_premium_ads_later">Later</string>
 
     <!-- LoginActivity -->
+    <string name="loginWithGoogle">Login with Google</string>
+    <string name="loginWithFacebook">Login with Facebook</string>
+    <string name="loginWithSuperUser">Are you station owner?</string>
     <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
     <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
     <string name="error_login_cancel">Login was canceled by user&#8230;</string>
@@ -82,6 +85,7 @@
     <string name="API_FEEDBACK" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/feedback.php</string>
     <string name="API_STATS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/stats.php</string>
     <string name="API_FETCH_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>
+    <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
 
     <!-- CAR MAKERS -->
     <string-array name="CAR_PRODUCER" translatable="false">

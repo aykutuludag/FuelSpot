@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/baseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="superuser.AdminRegister">
 
     <RelativeLayout
@@ -52,7 +48,10 @@
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
-            android:text="Devam" />
+            android:fontFamily="@font/gotham_black"
+            android:text="Devam"
+            android:textAllCaps="false"
+            android:textColor="#212121" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -72,25 +71,88 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true" />
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
+        <ImageView
+            android:id="@+id/imageViewGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/facebookButton"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="135dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="false"
+            app:srcCompat="@drawable/button_google" />
+
+        <TextView
+            android:id="@+id/textViewGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageViewGoogle"
+            android:layout_alignEnd="@id/imageViewGoogle"
+            android:layout_alignLeft="@id/imageViewGoogle"
+            android:layout_alignRight="@id/imageViewGoogle"
+            android:layout_alignStart="@id/imageViewGoogle"
+            android:layout_alignTop="@id/imageViewGoogle"
+            android:layout_marginLeft="42dp"
+            android:clickable="false"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithGoogle" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/imageViewGoogle"
+            android:layout_alignEnd="@id/imageViewGoogle"
+            android:layout_alignLeft="@id/imageViewGoogle"
+            android:layout_alignRight="@id/imageViewGoogle"
+            android:layout_alignStart="@id/imageViewGoogle"
+            android:layout_alignTop="@id/imageViewGoogle"
+            android:layout_centerHorizontal="true"
+            android:alpha="0"
+            android:background="@drawable/button_google"
+            android:clickable="true"
             android:text="@string/common_signin_button_text_long" />
 
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
+        <ImageView
+            android:id="@+id/imageViewFacebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="82dp" />
+            android:layout_marginBottom="48dp"
+            android:background="@drawable/button_facebook"
+            android:clickable="false"
+            android:visibility="visible"
+            app:srcCompat="@drawable/button_facebook" />
 
+        <TextView
+            android:id="@+id/textViewFacebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageViewFacebook"
+            android:layout_alignEnd="@id/imageViewFacebook"
+            android:layout_alignLeft="@id/imageViewFacebook"
+            android:layout_alignRight="@id/imageViewFacebook"
+            android:layout_alignStart="@id/imageViewFacebook"
+            android:layout_alignTop="@id/imageViewFacebook"
+            android:layout_marginLeft="42dp"
+            android:clickable="false"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithFacebook" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebookButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/imageViewFacebook"
+            android:layout_alignEnd="@id/imageViewFacebook"
+            android:layout_alignLeft="@id/imageViewFacebook"
+            android:layout_alignRight="@id/imageViewFacebook"
+            android:layout_alignStart="@id/imageViewFacebook"
+            android:layout_alignTop="@id/imageViewFacebook"
+            android:alpha="0"
+            android:clickable="true" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -106,11 +168,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16dp"
-            android:text="FuelSpot Business'a Hoşgeldiniz"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
+            android:layout_marginTop="54dp"
+            android:fontFamily="@font/gotham_black"
+            android:text="FuelSpot Business'a Hoşgeldiniz !"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse" />
 
         <TextView
             android:id="@+id/textView2"
@@ -119,10 +180,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView1"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/gotham_medium"
             android:gravity="center"
             android:text="FuelSpot Business, istasyon sahiplerine hitap eden, daha geniş kitlelere ulaşmalarını sağlayıp karlılık ve verimliliği artırmayı yönelik bir platformdur."
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#E9E9DF" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+            android:textColor="#fff" />
 
         <TextView
             android:id="@+id/textView3"
@@ -131,11 +194,12 @@
             android:layout_above="@+id/button2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/gotham_medium"
             android:gravity="center"
             android:text="Üyeliğiniz oluşturuldu. Devam edebilmemiz için depolama ve konum iznine ihtiyaç duyuyoruz."
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#E9E9DF" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/button2"
@@ -148,7 +212,10 @@
             android:alpha="0.5"
             android:background="@drawable/green_box"
             android:clickable="false"
-            android:text="DEVAM" />
+            android:fontFamily="@font/gotham_black"
+            android:text="Devam"
+            android:textAllCaps="false"
+            android:textColor="#212121" />
 
     </RelativeLayout>
 
@@ -496,7 +563,10 @@
                 android:layout_below="@+id/checkBoxTerms"
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
-                android:text="DEVAM" />
+                android:fontFamily="@font/gotham_black"
+                android:text="Devam"
+                android:textAllCaps="false"
+                android:textColor="#212121" />
 
         </RelativeLayout>
     </ScrollView>
@@ -505,7 +575,7 @@
         android:id="@+id/welcome3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/howto"
+        android:background="@drawable/howtoyakit"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -518,7 +588,10 @@
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
-            android:text="DEVAM" />
+            android:fontFamily="@font/gotham_black"
+            android:text="Devam"
+            android:textAllCaps="false"
+            android:textColor="#212121" />
 
     </RelativeLayout>
 

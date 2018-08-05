@@ -45,8 +45,6 @@ public class SuperPurchases extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
 
         swipeContainer = findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -64,7 +62,7 @@ public class SuperPurchases extends AppCompatActivity {
 
         feedsList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.feedView);
-        snackbar = Snackbar.make(findViewById(R.id.swipeContainer), "Henüz hiç satın alma yapılmamış.", Snackbar.LENGTH_LONG);
+        snackbar = Snackbar.make(swipeContainer, "Henüz hiç satın alma yapılmamış.", Snackbar.LENGTH_LONG);
 
         fetchSuperPurchases();
     }

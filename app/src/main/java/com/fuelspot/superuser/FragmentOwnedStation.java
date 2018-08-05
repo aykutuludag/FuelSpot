@@ -205,8 +205,8 @@ public class FragmentOwnedStation extends Fragment {
                                 if (location != null) {
 
                                     Location loc1 = new Location("");
-                                    loc1.setLatitude(MainActivity.userlat);
-                                    loc1.setLongitude(MainActivity.userlon);
+                                    loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                                    loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
 
                                     Location loc2 = new Location("");
                                     loc2.setLatitude(location.getLatitude());
@@ -215,10 +215,10 @@ public class FragmentOwnedStation extends Fragment {
                                     float distanceInMeters = loc1.distanceTo(loc2);
 
                                     if (distanceInMeters >= 50f) {
-                                        MainActivity.userlat = (float) location.getLatitude();
-                                        MainActivity.userlon = (float) location.getLongitude();
-                                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                        MainActivity.userlat = String.valueOf(location.getLatitude());
+                                        MainActivity.userlon = String.valueOf(location.getLongitude());
+                                        prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                        prefs.edit().putString("lon", MainActivity.userlon).apply();
                                         MainActivity.getVariables(prefs);
                                     }
                                 } else {
@@ -246,8 +246,8 @@ public class FragmentOwnedStation extends Fragment {
                             textName.setText(obj.getString("name"));
                             textVicinity.setText(obj.getString("vicinity"));
                             Location loc1 = new Location("");
-                            loc1.setLatitude(MainActivity.userlat);
-                            loc1.setLongitude(MainActivity.userlon);
+                            loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                            loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
                             Location loc2 = new Location("");
                             loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
                             loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
@@ -336,10 +336,10 @@ public class FragmentOwnedStation extends Fragment {
                                     public void onSuccess(Location location) {
                                         // Got last known location. In some rare situations this can be null.
                                         if (location != null) {
-                                            MainActivity.userlat = (float) location.getLatitude();
-                                            MainActivity.userlon = (float) location.getLongitude();
-                                            prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                            prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                            MainActivity.userlat = String.valueOf(location.getLatitude());
+                                            MainActivity.userlon = String.valueOf(location.getLongitude());
+                                            prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                            prefs.edit().putString("lon", MainActivity.userlon).apply();
                                             MainActivity.getVariables(prefs);
                                             loadMap();
                                         } else {

@@ -110,6 +110,7 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AdminRegister extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -181,8 +182,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Plus.API)
                 .build();
 
-        signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton = findViewById(R.id.googleButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -280,7 +280,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     private void facebookLogin() {
         callbackManager = CallbackManager.Factory.create();
-        loginButton = findViewById(R.id.login_button);
+        loginButton = findViewById(R.id.facebookButton);
         loginButton.setReadPermissions("email");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -546,8 +546,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onMyLocationChange(Location arg0) {
                         Location loc1 = new Location("");
-                        loc1.setLatitude(MainActivity.userlat);
-                        loc1.setLongitude(MainActivity.userlon);
+                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
 
                         Location loc2 = new Location("");
                         loc2.setLatitude(arg0.getLatitude());
@@ -555,11 +555,11 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= 10) {
-                            MainActivity.userlat = (float) arg0.getLatitude();
-                            MainActivity.userlon = (float) arg0.getLongitude();
-                            prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                            prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                        if (distanceInMeters >= mapDefaultStationRange / 2) {
+                            MainActivity.userlat = String.valueOf(arg0.getLatitude());
+                            MainActivity.userlon = String.valueOf(arg0.getLongitude());
+                            prefs.edit().putString("lat", MainActivity.userlat).apply();
+                            prefs.edit().putString("lon", MainActivity.userlon).apply();
                             MainActivity.getVariables(prefs);
 
                             updateMapObject();
@@ -582,18 +582,18 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
         //Draw a circle with radius of 150m
         circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
-                .radius(50)
+                .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
+                .radius(mapDefaultStationRange)
                 .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
-        LatLng mCurrentLocation = new LatLng(MainActivity.userlat, MainActivity.userlon);
+        LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 50m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=50&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -602,7 +602,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     public void onResponse(String response) {
                         JSON json = new JSON(response);
                         if (json.key("results").count() > 0) {
-                            // Yes! He is in station. Probably there is only one station in 75m  so get the first value
+                            // Yes! He is in station. Probably there is only one station in 50m  so get the first value
                             AdminMainActivity.superGoogleID = json.key("results").index(0).key("place_id").stringValue();
 
                             AdminMainActivity.superStationName = json.key("results").index(0).key("name").stringValue();
@@ -1027,10 +1027,10 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                MainActivity.userlat = (float) location.getLatitude();
-                                MainActivity.userlon = (float) location.getLongitude();
-                                prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                MainActivity.userlat = String.valueOf(location.getLatitude());
+                                MainActivity.userlon = String.valueOf(location.getLongitude());
+                                prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                prefs.edit().putString("lon", MainActivity.userlon).apply();
                                 MainActivity.getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();

@@ -231,7 +231,7 @@ public class FragmentProfile extends Fragment {
 
                                     CommentItem item = new CommentItem();
                                     item.setID(obj.getInt("id"));
-                                    item.setComment(obj.getString("fab_comment"));
+                                    item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
                                     item.setStationID(obj.getInt("station_id"));
                                     item.setUsername(obj.getString("username"));

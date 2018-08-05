@@ -36,6 +36,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             int position = holder.getAdapterPosition();
 
             Intent intent = new Intent(mContext, StationDetails.class);
+            intent.putExtra("STATION_ID", feedItemList.get(position).getID());
             intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
             intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
             intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
@@ -46,7 +47,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
             intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
             intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
-            intent.putExtra("STATION_ID", feedItemList.get(position).getID());
             mContext.startActivity(intent);
         }
     };
@@ -114,7 +114,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.electricityPrice.setText(elecHolder);
 
         //Distance
-        String distance = (int) feedItem.getDistance() + " m";
+        String distance = feedItem.getDistance() + " m";
         viewHolder.distance.setText(distance);
 
         //Last updated

@@ -42,6 +42,7 @@ import java.util.List;
 import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.mapDefaultRange;
+import static com.fuelspot.MainActivity.mapDefaultStationRange;
 
 
 public class GeofenceService extends IntentService {
@@ -72,13 +73,13 @@ public class GeofenceService extends IntentService {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                MainActivity.userlat = (float) location.getLatitude();
-                                MainActivity.userlon = (float) location.getLongitude();
-                                prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                prefs.edit().putFloat("lon", MainActivity.userlon).apply();
+                                MainActivity.userlat = String.valueOf(location.getLatitude());
+                                MainActivity.userlon = String.valueOf(location.getLongitude());
+                                prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                prefs.edit().putString("lon", MainActivity.userlon).apply();
                                 MainActivity.getVariables(prefs);
                                 mGeofenceList.add(new Geofence.Builder().setRequestId("ev")
-                                        .setCircularRegion(MainActivity.userlat, MainActivity.userlon, 75)
+                                        .setCircularRegion(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon), mapDefaultStationRange)
                                         .setExpirationDuration(45 * 60 * 1000)
                                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
                                         .build());
@@ -113,8 +114,8 @@ public class GeofenceService extends IntentService {
 
                                 //Add them to the geofence list
                                 mGeofenceList.add(new Geofence.Builder().setRequestId(json.key("results").index(i).key("place_id").stringValue())
-                                        .setCircularRegion(lat, lon, 75)
-                                        .setExpirationDuration(45 * 60 * 1000)
+                                        .setCircularRegion(lat, lon, mapDefaultStationRange)
+                                        .setExpirationDuration(60 * 60 * 1000)
                                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
                                         .build());
                                 addGeofence();

@@ -13,7 +13,7 @@ public class StationItem {
     private String googleMapID;
     private String photoURL;
     private String lastUpdated;
-    private float distance;
+    private int distance;
 
     public int getID() {
         return ID;
@@ -95,11 +95,11 @@ public class StationItem {
         this.photoURL = photoURL;
     }
 
-    public float getDistance() {
+    public int getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 

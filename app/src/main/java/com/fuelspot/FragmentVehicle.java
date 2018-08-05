@@ -88,7 +88,7 @@ public class FragmentVehicle extends Fragment {
 
         errorImage = view.findViewById(R.id.errorImage);
 
-        snackBar = Snackbar.make(getActivity().findViewById(android.R.id.content), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG);
+        snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG);
         snackBar.setAction("Tamam", new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,8 +11,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     Handler handler;
     Intent intent;
 
-    TextView doUHaveStation;
+    ImageView doUHaveStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +95,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         intent = new Intent(LoginActivity.this, MainActivity.class);
 
         //Layout objects
-        signInButton = findViewById(R.id.sign_in_button);
-        loginButton = findViewById(R.id.login_button);
+        signInButton = findViewById(R.id.buttonGoogle);
+        loginButton = findViewById(R.id.facebookButton);
 
         //Check the user trip another country and re-logged him
         if (!MainActivity.userCountry.equals(Locale.getDefault().getCountry())) {
@@ -141,8 +141,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(Plus.API)
                 .build();
-
-        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //END
 
         /*StationOwnerRegister */
-        doUHaveStation = findViewById(R.id.textViewisHaveStation);
+        doUHaveStation = findViewById(R.id.imageViewSuperUser);
         doUHaveStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

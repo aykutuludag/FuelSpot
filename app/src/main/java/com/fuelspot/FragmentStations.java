@@ -1,6 +1,7 @@
 package com.fuelspot;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,7 +34,9 @@ import com.fuelspot.model.StationItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,7 +48,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +64,8 @@ import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.mapDefaultRange;
+import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.mapDefaultZoneUpdateRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 
@@ -75,7 +80,8 @@ public class FragmentStations extends Fragment {
     List<String> googleID = new ArrayList<>();
     List<String> vicinity = new ArrayList<>();
     List<String> location = new ArrayList<>();
-    List<String> stationIcons = new ArrayList<>();
+    List<String> stationIcon = new ArrayList<>();
+    List<Integer> distanceInMeters = new ArrayList<>();
 
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -88,6 +94,9 @@ public class FragmentStations extends Fragment {
     ImageView noStationError;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    LocationRequest mLocationRequest;
+    LocationCallback mLocationCallback;
+    Location locLastKnown;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -147,6 +156,64 @@ public class FragmentStations extends Fragment {
 
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
+
+        locLastKnown = new Location("");
+        locLastKnown.setLatitude(Double.parseDouble(MainActivity.userlat));
+        locLastKnown.setLongitude(Double.parseDouble(MainActivity.userlon));
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(60000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                synchronized (getActivity()) {
+                    super.onLocationResult(locationResult);
+                    Location locCurrent = locationResult.getLastLocation();
+                    if (locCurrent != null) {
+                        if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                            MainActivity.userlat = String.valueOf(locCurrent.getLatitude());
+                            MainActivity.userlon = String.valueOf(locCurrent.getLongitude());
+                            prefs.edit().putString("lat", MainActivity.userlat).apply();
+                            prefs.edit().putString("lon", MainActivity.userlon).apply();
+                            MainActivity.getVariables(prefs);
+                        }
+
+                        float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+
+                        if (distanceInMeter >= mapDefaultZoneUpdateRange) {
+                            //Here we have a user moving around outside 500m radius
+                            updateMapObject();
+                        } else {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                                //Accuracy is balanced. She or he is in the same spot. Just update the distances
+                                if (feedsList != null && feedsList.size() > 0) {
+                                    for (int i = 0; i < feedsList.size(); i++) {
+                                        double stationLat = Double.parseDouble(location.get(i).split(";")[0]);
+                                        double stationLon = Double.parseDouble(location.get(i).split(";")[1]);
+
+                                        Location locStation = new Location("");
+                                        locStation.setLatitude(stationLat);
+                                        locStation.setLongitude(stationLon);
+
+                                        float newDistance = locCurrent.distanceTo(locStation);
+                                        distanceInMeters.add(i, (int) newDistance);
+                                        feedsList.get(i).setDistance(distanceInMeters.get(i));
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+
+                        Toast.makeText(getActivity(), "HASSASİYET: " + (int) locCurrent.getAccuracy() + " metre", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        };
 
         checkLocationPermission();
 
@@ -212,28 +279,11 @@ public class FragmentStations extends Fragment {
     }
 
     public void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{MainActivity.PERMISSIONS_LOCATION}, MainActivity.REQUEST_LOCATION);
         } else {
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                MainActivity.userlat = (float) location.getLatitude();
-                                MainActivity.userlon = (float) location.getLongitude();
-                                prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                                MainActivity.getVariables(prefs);
-                                loadMap();
-                            } else {
-                                LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(60000);
-                                mLocationRequest.setFastestInterval(5000);
-                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                            }
-                        }
-                    });
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+            loadMap();
         }
     }
 
@@ -251,40 +301,6 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 updateMapObject();
-
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-
-                                    Location loc1 = new Location("");
-                                    loc1.setLatitude(MainActivity.userlat);
-                                    loc1.setLongitude(MainActivity.userlon);
-
-                                    Location loc2 = new Location("");
-                                    loc2.setLatitude(location.getLatitude());
-                                    loc2.setLongitude(location.getLongitude());
-
-                                    float distanceInMeters = loc1.distanceTo(loc2);
-
-                                    if (distanceInMeters >= 50f) {
-                                        MainActivity.userlat = (float) location.getLatitude();
-                                        MainActivity.userlon = (float) location.getLongitude();
-                                        prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                        prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                                        MainActivity.getVariables(prefs);
-                                        updateMapObject();
-                                    }
-                                } else {
-                                    LocationRequest mLocationRequest = new LocationRequest();
-                                    mLocationRequest.setInterval(60000);
-                                    mLocationRequest.setFastestInterval(5000);
-                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                }
-                            }
-                        });
             }
         });
     }
@@ -294,7 +310,9 @@ public class FragmentStations extends Fragment {
         vicinity.clear();
         googleID.clear();
         location.clear();
-        stationIcons.clear();
+        stationIcon.clear();
+        distanceInMeters.clear();
+        feedsList.clear();
 
         if (circle != null) {
             circle.remove();
@@ -305,17 +323,17 @@ public class FragmentStations extends Fragment {
         }
 
         // For zooming automatically to the location of the marker
-        LatLng mCurrentLocation = new LatLng(MainActivity.userlat, MainActivity.userlon);
+        LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        //Draw a circle with radius of 5000m
+        //Draw a circle with radius of mapDefaultRange
         circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(MainActivity.userlat, MainActivity.userlon))
+                .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
                 .radius(mapDefaultRange)
                 .strokeColor(Color.RED));
 
-        //Search stations in a radius of 5000m
+        //Search stations in a radius of mapDefaultRange
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultRange + "&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
@@ -334,7 +352,7 @@ public class FragmentStations extends Fragment {
                                 double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
                                 location.add(lat + ";" + lon);
 
-                                stationIcons.add(stationPhotoChooser(stationName.get(i)));
+                                stationIcon.add(stationPhotoChooser(stationName.get(i)));
 
                                 LatLng sydney = new LatLng(lat, lon);
                                 markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName.get(i)).snippet(vicinity.get(i))));
@@ -361,7 +379,6 @@ public class FragmentStations extends Fragment {
     /* This method add_fuel stations. If station exists in db, then update it (except prices). Returns stationInfos.
      * To update stationPrices, use API_UPDATE_STATION */
     private void addStation(final int index) {
-        feedsList.clear();
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
                 new Response.Listener<String>() {
@@ -387,14 +404,11 @@ public class FragmentStations extends Fragment {
                                     item.setPhotoURL(obj.getString("photoURL"));
 
                                     //DISTANCE START
-                                    Location loc1 = new Location("");
-                                    loc1.setLatitude(MainActivity.userlat);
-                                    loc1.setLongitude(MainActivity.userlon);
                                     Location loc2 = new Location("");
                                     loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
                                     loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                                    float distanceInMeters = loc1.distanceTo(loc2);
-                                    item.setDistance(distanceInMeters);
+                                    distanceInMeters.add(i, (int) locLastKnown.distanceTo(loc2));
+                                    item.setDistance(distanceInMeters.get(i));
                                     //DISTANCE END
 
                                     //Lastupdated
@@ -427,7 +441,7 @@ public class FragmentStations extends Fragment {
                 params.put("vicinity", vicinity.get(index));
                 params.put("location", location.get(index));
                 params.put("googleID", googleID.get(index));
-                params.put("photoURL", stationIcons.get(index));
+                params.put("photoURL", stationIcon.get(index));
 
                 //returning parameters
                 return params;
@@ -445,26 +459,8 @@ public class FragmentStations extends Fragment {
                 // If request is cancelled, the result arrays are car_placeholder.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mFusedLocationClient.getLastLocation()
-                                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        // Got last known location. In some rare situations this can be null.
-                                        if (location != null) {
-                                            MainActivity.userlat = (float) location.getLatitude();
-                                            MainActivity.userlon = (float) location.getLongitude();
-                                            prefs.edit().putFloat("lat", MainActivity.userlat).apply();
-                                            prefs.edit().putFloat("lon", MainActivity.userlon).apply();
-                                            MainActivity.getVariables(prefs);
-                                            loadMap();
-                                        } else {
-                                            LocationRequest mLocationRequest = new LocationRequest();
-                                            mLocationRequest.setInterval(60000);
-                                            mLocationRequest.setFastestInterval(5000);
-                                            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                        }
-                                    }
-                                });
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+                        loadMap();
                     }
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();

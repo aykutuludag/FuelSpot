@@ -23,7 +23,9 @@
         tools:replace="android:icon">
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/Login">
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +34,7 @@
         </activity>
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@style/Login" />
+            android:theme="@style/FullScreen" />
         <activity android:name=".MainActivity" />
         <activity
             android:name="VehicleEditActivity"
@@ -55,7 +57,7 @@
         <!-- SuperUser Class -->
         <activity
             android:name=".superuser.AdminRegister"
-            android:theme="@style/Login" />
+            android:theme="@style/FullScreen" />
         <activity android:name=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperEditPrices"
@@ -66,6 +68,7 @@
             android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperPurchases"
+            android:label="Satın almalar"
             android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
         <activity

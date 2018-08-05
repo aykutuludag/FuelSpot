@@ -42,7 +42,7 @@ public class SuperCampaings extends AppCompatActivity {
     ArrayList<String> campaignStart = new ArrayList<>();
     ArrayList<String> campaignEnd = new ArrayList<>();
 
-    ImageView imageViewCampaign, imageViewCampaign2, imageViewCampaign3, imageViewDelete1, imageViewDelete2, imageViewDelete3;
+    ImageView imageViewCampaign, imageViewCampaign2, imageViewCampaign3, imageViewDelete, imageViewDelete2, imageViewDelete3;
     EditText editTextCampaignName, editTextCampaignDetail, editTextCampaignName2, editTextCampaignDetail2, editTextCampaignName3, editTextCampaignDetail3;
     TextView startTimeText, endTimeText, startTimeText2, endTimeText2, startTimeText3, endTimeText3;
 
@@ -207,8 +207,8 @@ public class SuperCampaings extends AppCompatActivity {
                         .show();
             }
         });
-        imageViewDelete1 = findViewById(R.id.deleteCampaignOne);
-        imageViewDelete1.setOnClickListener(new View.OnClickListener() {
+        imageViewDelete = findViewById(R.id.deleteCampaignOne);
+        imageViewDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteCampaign(0);
