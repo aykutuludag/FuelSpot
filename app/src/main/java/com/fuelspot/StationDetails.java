@@ -316,7 +316,6 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void fetchStationByID(final int stationID) {
-        System.out.println("AQQ: " + stationID);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_BY_ID),
                 new Response.Listener<String>() {
                     @Override
@@ -333,10 +332,12 @@ public class StationDetails extends AppCompatActivity {
                             loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
                             loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
                             Location loc2 = new Location("");
-                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
-                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                            String[] stationPoint = stationLocation.split(";");
+                            loc2.setLatitude(Double.parseDouble(stationPoint[0]));
+                            loc2.setLongitude(Double.parseDouble(stationPoint[1]));
                             stationDistance = (int) loc1.distanceTo(loc2);
                             //DISTANCE END
+
                             gasolinePrice = (float) obj.getDouble("gasolinePrice");
                             dieselPrice = (float) obj.getDouble("dieselPrice");
                             lpgPrice = (float) obj.getDouble("lpgPrice");

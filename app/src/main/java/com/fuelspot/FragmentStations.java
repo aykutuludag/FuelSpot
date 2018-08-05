@@ -173,6 +173,31 @@ public class FragmentStations extends Fragment {
                     super.onLocationResult(locationResult);
                     Location locCurrent = locationResult.getLastLocation();
                     if (locCurrent != null) {
+                        float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+
+                        if (distanceInMeter >= mapDefaultZoneUpdateRange) {
+                            updateMapObject();
+                        } else {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                                if (feedsList != null && feedsList.size() > 0) {
+                                    for (int i = 0; i < feedsList.size(); i++) {
+                                        String[] stationLocation = feedsList.get(i).getLocation().split(";");
+                                        double stationLat = Double.parseDouble(stationLocation[0]);
+                                        double stationLon = Double.parseDouble(stationLocation[1]);
+
+                                        Location locStation = new Location("");
+                                        locStation.setLatitude(stationLat);
+                                        locStation.setLongitude(stationLon);
+
+                                        float newDistance = locCurrent.distanceTo(locStation);
+                                        distanceInMeters.set(i, (int) newDistance);
+                                        feedsList.get(i).setDistance((int) newDistance);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+
                         if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
                             MainActivity.userlat = String.valueOf(locCurrent.getLatitude());
                             MainActivity.userlon = String.valueOf(locCurrent.getLongitude());
@@ -180,33 +205,6 @@ public class FragmentStations extends Fragment {
                             prefs.edit().putString("lon", MainActivity.userlon).apply();
                             MainActivity.getVariables(prefs);
                         }
-
-                        float distanceInMeter = locLastKnown.distanceTo(locCurrent);
-
-                        if (distanceInMeter >= mapDefaultZoneUpdateRange) {
-                            //Here we have a user moving around outside 500m radius
-                            updateMapObject();
-                        } else {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
-                                //Accuracy is balanced. She or he is in the same spot. Just update the distances
-                                if (feedsList != null && feedsList.size() > 0) {
-                                    for (int i = 0; i < feedsList.size(); i++) {
-                                        double stationLat = Double.parseDouble(location.get(i).split(";")[0]);
-                                        double stationLon = Double.parseDouble(location.get(i).split(";")[1]);
-
-                                        Location locStation = new Location("");
-                                        locStation.setLatitude(stationLat);
-                                        locStation.setLongitude(stationLon);
-
-                                        float newDistance = locCurrent.distanceTo(locStation);
-                                        distanceInMeters.add(i, (int) newDistance);
-                                        feedsList.get(i).setDistance(distanceInMeters.get(i));
-                                    }
-                                    mAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-
                         Toast.makeText(getActivity(), "HASSASİYET: " + (int) locCurrent.getAccuracy() + " metre", Toast.LENGTH_SHORT).show();
                     } else {
                         Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
@@ -387,35 +385,34 @@ public class FragmentStations extends Fragment {
                         try {
                             if (response != null && response.length() > 0) {
                                 JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
+                                StationItem item = new StationItem();
+                                item.setID(obj.getInt("id"));
+                                item.setStationName(obj.getString("name"));
+                                item.setVicinity(obj.getString("vicinity"));
+                                item.setLocation(obj.getString("location"));
+                                item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                item.setGoogleMapID(obj.getString("googleID"));
+                                item.setPhotoURL(obj.getString("photoURL"));
 
-                                    StationItem item = new StationItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setStationName(obj.getString("name"));
-                                    item.setVicinity(obj.getString("vicinity"));
-                                    item.setLocation(obj.getString("location"));
-                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
-                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
-                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
-                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
-                                    item.setPhotoURL(obj.getString("photoURL"));
+                                //DISTANCE START
+                                Location loc = new Location("");
+                                String[] stationKonum = item.getLocation().split(";");
+                                loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                float uzaklik = locLastKnown.distanceTo(loc);
+                                distanceInMeters.add((int) uzaklik);
+                                item.setDistance((int) uzaklik);
+                                //DISTANCE END
 
-                                    //DISTANCE START
-                                    Location loc2 = new Location("");
-                                    loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
-                                    loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                                    distanceInMeters.add(i, (int) locLastKnown.distanceTo(loc2));
-                                    item.setDistance(distanceInMeters.get(i));
-                                    //DISTANCE END
+                                //Lastupdated
+                                item.setLastUpdated(obj.getString("lastUpdated"));
 
-                                    //Lastupdated
-                                    item.setLastUpdated(obj.getString("lastUpdated"));
-
-                                    feedsList.add(item);
-                                }
+                                feedsList.add(item);
 
                                 // Default - Sort by Distance
                                 tabLayout.getTabAt(4).select();

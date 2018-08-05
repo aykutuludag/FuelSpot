@@ -8,7 +8,6 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         card_view:cardUseCompatPadding="true">
@@ -23,7 +22,6 @@
                 android:id="@+id/stationLogo"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="4dp"
@@ -49,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="4dp"
                 android:gravity="center"
@@ -79,7 +76,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/title_type"
-                    android:layout_toRightOf="@+id/title_type"
                     android:gravity="center"
                     android:text="Miktar"
                     android:textSize="20sp"
@@ -91,7 +87,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/title_amount"
-                    android:layout_toRightOf="@+id/title_amount"
                     android:gravity="center"
                     android:text="Birim fiyat"
                     android:textSize="20sp"
@@ -102,7 +97,6 @@
                     android:id="@+id/title_price"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:gravity="center"
                     android:text="Tutar"
@@ -114,7 +108,6 @@
                     android:id="@+id/type1"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/amount1"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/title_type"
                     app:layout_widthPercent="25%" />
@@ -125,7 +118,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/title_type"
                     android:layout_toEndOf="@+id/title_type"
-                    android:layout_toRightOf="@+id/title_type"
                     android:gravity="center"
                     card_view:layout_widthPercent="25%" />
 
@@ -135,7 +127,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/type1"
                     android:layout_toEndOf="@+id/amount1"
-                    android:layout_toRightOf="@+id/amount1"
                     android:gravity="center"
                     card_view:layout_widthPercent="25%" />
 
@@ -144,7 +135,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/title_type"
                     android:gravity="center"
                     card_view:layout_widthPercent="25%" />
@@ -154,7 +144,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="16dp"
                     android:layout_alignBottom="@+id/amount2"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/type1"
                     android:layout_marginTop="4dp"
@@ -167,7 +156,6 @@
                     android:layout_below="@+id/type1"
                     android:layout_marginTop="4dp"
                     android:layout_toEndOf="@+id/title_type"
-                    android:layout_toRightOf="@+id/title_type"
                     android:gravity="center"
                     card_view:layout_widthPercent="25%" />
 
@@ -179,7 +167,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="4dp"
                     android:layout_toEndOf="@id/amount2"
-                    android:layout_toRightOf="@id/amount2"
                     android:gravity="center"
                     card_view:layout_widthPercent="25%" />
 
@@ -188,7 +175,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/type1"
                     android:layout_marginTop="4dp"
                     android:gravity="center"

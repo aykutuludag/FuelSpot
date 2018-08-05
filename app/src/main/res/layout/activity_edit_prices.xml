@@ -29,10 +29,8 @@
             android:id="@+id/imageView2"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             app:srcCompat="@drawable/gasoline" />
 
@@ -52,7 +50,6 @@
             android:layout_alignBottom="@+id/editTextGasoline"
             android:layout_alignTop="@+id/imageView2"
             android:layout_toEndOf="@+id/editTextGasoline"
-            android:layout_toRightOf="@+id/editTextGasoline"
             android:gravity="center"
             android:text="TL" />
 
@@ -60,7 +57,6 @@
             android:id="@+id/imageView3"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_alignLeft="@+id/imageView2"
             android:layout_alignStart="@+id/imageView2"
             android:layout_below="@+id/imageView2"
             android:layout_marginTop="16dp"
@@ -82,7 +78,6 @@
             android:layout_alignBottom="@+id/editTextDiesel"
             android:layout_alignTop="@+id/imageView3"
             android:layout_toEndOf="@+id/editTextGasoline"
-            android:layout_toRightOf="@+id/editTextGasoline"
             android:gravity="center"
             android:text="TL" />
 
@@ -90,7 +85,6 @@
             android:id="@+id/imageView4"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_alignLeft="@+id/imageView2"
             android:layout_alignStart="@+id/imageView2"
             android:layout_below="@+id/imageView3"
             android:layout_marginTop="16dp"
@@ -112,7 +106,6 @@
             android:layout_alignBottom="@+id/editTextLPG"
             android:layout_alignTop="@+id/imageView4"
             android:layout_toEndOf="@+id/editTextGasoline"
-            android:layout_toRightOf="@+id/editTextGasoline"
             android:gravity="center"
             android:text="TL" />
 
@@ -120,7 +113,6 @@
             android:id="@+id/imageView5"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_alignLeft="@+id/imageView2"
             android:layout_alignStart="@+id/imageView2"
             android:layout_below="@+id/imageView4"
             android:layout_marginTop="16dp"
@@ -142,7 +134,6 @@
             android:layout_alignBottom="@+id/editTextElectricity"
             android:layout_alignTop="@+id/imageView5"
             android:layout_toEndOf="@+id/editTextGasoline"
-            android:layout_toRightOf="@+id/editTextGasoline"
             android:gravity="center"
             android:text="TL" />
 

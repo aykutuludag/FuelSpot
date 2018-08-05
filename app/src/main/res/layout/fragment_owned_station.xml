@@ -29,9 +29,7 @@
 
             <ImageView
                 android:id="@+id/stationLogo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
+                android:layout_height="60dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/gasoline"
                 android:padding="4dp"
@@ -45,19 +43,16 @@
                 android:layout_alignTop="@+id/stationLogo"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/stationLogo"
-                android:layout_toRightOf="@+id/stationLogo"
                 android:gravity="center"
-                android:text="StationName"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:layout_widthPercent="15%" />
+                app:layout_widthPercent="17.5%" />
 
             <TextView
                 android:id="@+id/ownedStationAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/stationLogo"
                 android:gravity="center"
@@ -72,12 +67,10 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/ownedStationName"
-                android:layout_toRightOf="@+id/ownedStationName"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
-                app:layout_widthPercent="15.5%" />
+                app:layout_widthPercent="14%" />
 
             <TextView
                 android:id="@+id/priceGasoline"
@@ -85,12 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
                 android:layout_alignEnd="@+id/gasoline"
-                android:layout_alignRight="@+id/gasoline"
                 android:layout_below="@+id/gasoline"
                 android:layout_toEndOf="@+id/ownedStationName"
-                android:layout_toRightOf="@+id/ownedStationName"
                 android:gravity="center"
-                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp"
@@ -101,13 +91,11 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/gasoline"
-                android:layout_toRightOf="@+id/gasoline"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
-                app:layout_widthPercent="15.5%" />
+                app:layout_widthPercent="14%" />
 
             <TextView
                 android:id="@+id/priceDiesel"
@@ -115,12 +103,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
                 android:layout_alignEnd="@+id/diesel"
-                android:layout_alignRight="@+id/diesel"
                 android:layout_below="@+id/diesel"
                 android:layout_toEndOf="@+id/priceGasoline"
-                android:layout_toRightOf="@+id/priceGasoline"
                 android:gravity="center"
-                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp"
@@ -131,12 +116,10 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/diesel"
-                android:layout_toRightOf="@+id/diesel"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
-                app:layout_widthPercent="15.5%" />
+                app:layout_widthPercent="14%" />
 
             <TextView
                 android:id="@+id/priceLPG"
@@ -144,12 +127,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
                 android:layout_alignEnd="@+id/lpg"
-                android:layout_alignRight="@+id/lpg"
                 android:layout_below="@+id/lpg"
                 android:layout_toEndOf="@+id/priceDiesel"
-                android:layout_toRightOf="@+id/priceDiesel"
                 android:gravity="center"
-                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp"
@@ -160,10 +140,9 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/lpg"
-                android:layout_toRightOf="@+id/lpg"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:src="@drawable/electricity"
-                app:layout_widthPercent="15.5%" />
+                app:layout_widthPercent="14%" />
 
             <TextView
                 android:id="@+id/priceElectricity"
@@ -171,12 +150,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
                 android:layout_alignEnd="@+id/electricity"
-                android:layout_alignRight="@+id/electricity"
                 android:layout_below="@+id/electricity"
                 android:layout_toEndOf="@+id/priceLPG"
-                android:layout_toRightOf="@+id/priceLPG"
                 android:gravity="center"
-                android:text="0.00 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp"
@@ -187,10 +163,9 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/electricity"
-                android:layout_toRightOf="@+id/electricity"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:src="@drawable/distance"
-                app:layout_widthPercent="15.5%" />
+                app:layout_widthPercent="14%" />
 
             <TextView
                 android:id="@+id/distanceBetweenOwner"
@@ -198,12 +173,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/stationLogo"
                 android:layout_alignEnd="@+id/distance"
-                android:layout_alignRight="@+id/distance"
                 android:layout_below="@+id/distance"
                 android:layout_toEndOf="@+id/priceElectricity"
-                android:layout_toRightOf="@+id/priceElectricity"
                 android:gravity="center"
-                android:text="0.00 km"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp"
@@ -213,10 +185,9 @@
                 android:id="@+id/lastUpdateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignEnd="@+id/ownedStationName"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/gasoline"
                 android:alpha="@+id/gasoline"
                 android:gravity="center"
                 android:padding="8dp"
@@ -228,7 +199,6 @@
             android:id="@+id/buttonPurchases"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/single_station"
             android:layout_margin="16dp"
@@ -240,7 +210,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/single_station"
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
@@ -259,9 +228,8 @@
             android:id="@+id/buttonPosts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/buttonComments"
-            android:layout_margin="16dp"
+            android:layout_alignStart="@+id/buttonComments"
+            android:layout_alignTop="@+id/buttonCampaings"
             android:background="@drawable/green_box"
             android:text="GÖNDERİLER" />
 

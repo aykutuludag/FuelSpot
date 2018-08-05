@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#CECECE"
-    android:orientation="vertical"
-    app:ignore="NamespaceTypo">
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -24,7 +23,7 @@
                 android:id="@+id/other_profile_pic"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/photo_placeholder"
                 app:civ_border_color="#EA6C34"
@@ -36,12 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/other_profile_pic"
                 android:layout_alignTop="@+id/other_profile_pic"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/other_profile_pic"
-                android:layout_toRightOf="@+id/other_profile_pic"
                 android:gravity="center"
-                android:text="cioakbas"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#000" />
 
@@ -51,12 +47,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/username"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/username"
-                android:layout_marginEnd="14dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:text="2 saat önce"
                 android:textColor="#000"
                 app:relative_time_prefix="Completed " />
 
@@ -64,14 +57,11 @@
                 android:id="@+id/comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/other_profile_pic"
                 android:layout_margin="8dp"
-                android:text="cioakbas"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000"
-                app:text="adfsdiiskşfdksdfklsdfklsdlflsdifgdfgdflgdflglşfdşligdflflsdlfksdflsdfsdadfsdiiskşfdksdfklsdfklsdlflsdifgdfgdflgdflglşfdşligdflflsdlfksdflsdfsd" />
+                android:textColor="#000" />
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -99,10 +89,8 @@
                     android:id="@+id/imageViewLogo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/textViewReplyTime"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:src="@drawable/shell"
@@ -115,10 +103,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/imageViewLogo"
                     android:layout_alignTop="@+id/imageViewLogo"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@+id/imageViewLogo"
-                    android:layout_toRightOf="@+id/imageViewLogo"
                     android:gravity="center"
                     android:text="İstasyon sorumlusu"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -137,11 +123,9 @@
                     android:id="@+id/answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/imageViewLogo"
                     android:layout_margin="8dp"
-                    android:text="adfsdiiskşfdksdfklsdfklsdlflsdifgdfgdflgdflglşfdşligdflflsdlfksdflsdfsdadfsdiiskşfdksdfklsdfklsdlflsdifgdfgdflgdflglşfdşligdflflsdlfksdflsdfsd"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#fff" />
             </RelativeLayout>

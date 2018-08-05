@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fuelspot.VehicleEditActivity">
+    tools:context=".VehicleEditActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,8 +22,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -32,215 +32,238 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewCar"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
+                android:layout_margin="16dp"
                 android:src="@drawable/photo_placeholder"
                 app:civ_border_color="#EA6C34"
                 app:civ_border_width="1dp" />
 
-
-            <TextView
-                android:id="@+id/textView_brand"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/carNameLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageViewCar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="Marka"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:background="#EDEDED">
 
-            <Spinner
-                android:id="@+id/spinner_brands"
+                <TextView
+                    android:id="@+id/textView_brand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="Marka"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#555555" />
+
+                <Spinner
+                    android:id="@+id/spinner_brands"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_brand"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+
+                <TextView
+                    android:id="@+id/textView_model"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/spinner_brands"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="false"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="Model"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#555555" />
+
+                <Spinner
+                    android:id="@+id/spinner_models"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_model"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fuelTypeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_brand"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:id="@+id/textView_model"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/spinner_brands"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="false"
+                android:layout_below="@+id/carNameLayout"
                 android:layout_marginTop="16dp"
-                android:text="Model"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:background="#EDEDED">
 
-            <Spinner
-                android:id="@+id/spinner_models"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_model"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:id="@+id/textView_fuelPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/spinner_models"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="Birincil yakıt tipi"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <TextView
-                android:id="@+id/textView_exp1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_fuelPrimary"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:text="Aracınızın fabrika çıkışı yakıt tipini seçiniz."
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <RadioGroup
-                android:id="@+id/radioGroup_fuelPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_exp1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:orientation='horizontal'>
-
-                <RadioButton
-                    android:id="@+id/gasoline"
+                <TextView
+                    android:id="@+id/textView_fuelPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="Benzin" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="Birincil yakıt tipi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#555555" />
 
-                <RadioButton
-                    android:id="@+id/diesel"
+                <RadioGroup
+                    android:id="@+id/radioGroup_fuelPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="Dizel" />
+                    android:layout_below="@+id/textView_fuelPrimary"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:orientation='horizontal'>
 
-                <RadioButton
-                    android:id="@+id/lpg"
+                    <RadioButton
+                        android:id="@+id/gasoline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="Benzin"
+                        android:textColor="#757575" />
+
+                    <RadioButton
+                        android:id="@+id/diesel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="Dizel"
+                        android:textColor="#757575" />
+
+                    <RadioButton
+                        android:id="@+id/lpg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="LPG"
+                        android:textColor="#757575" />
+
+                    <RadioButton
+                        android:id="@+id/electricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="Elektrik"
+                        android:textColor="#757575" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/textView_fuelSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="LPG" />
+                    android:layout_alignStart="@+id/textView_fuelPrimary"
+                    android:layout_below="@+id/radioGroup_fuelPrimary"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="İkincil yakıt tipi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#555555" />
 
-                <RadioButton
-                    android:id="@+id/electricity"
+                <RadioGroup
+                    android:id="@+id/radioGroup_fuelSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="Elektrik" />
-            </RadioGroup>
+                    android:layout_below="@+id/textView_fuelSecondary"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:orientation='horizontal'>
 
-            <TextView
-                android:id="@+id/textView_fuelSecondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textView_fuelPrimary"
-                android:layout_alignStart="@+id/textView_fuelPrimary"
-                android:layout_below="@+id/radioGroup_fuelPrimary"
-                android:layout_marginTop="16dp"
-                android:text="İkincil yakıt tipi"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    <RadioButton
+                        android:id="@+id/gasoline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="Benzin"
+                        android:textColor="#757575" />
 
-            <TextView
-                android:id="@+id/textView_exp2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_fuelSecondary"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:text="Eğer varsa, aracınızın ikincil yakıt tipini seçiniz."
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    <RadioButton
+                        android:id="@+id/diesel2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="Dizel"
+                        android:textColor="#757575" />
 
-            <RadioGroup
-                android:id="@+id/radioGroup_fuelSecondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_exp2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:orientation='horizontal'>
+                    <RadioButton
+                        android:id="@+id/lpg2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="LPG"
+                        android:textColor="#757575" />
 
-                <RadioButton
-                    android:id="@+id/gasoline2"
+                    <RadioButton
+                        android:id="@+id/electricity2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="Elektrik"
+                        android:textColor="#757575" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/textView_km"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="Benzin" />
+                    android:layout_below="@+id/radioGroup_fuelSecondary"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="Kilometre"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#555555" />
 
-                <RadioButton
-                    android:id="@+id/diesel2"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editText_km"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="Dizel" />
+                    android:layout_below="@+id/textView_km"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_medium"
+                    android:gravity="center"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:shadowColor="#3A3A3A"
+                    android:textColor="#3A3A3A" />
+            </RelativeLayout>
 
-                <RadioButton
-                    android:id="@+id/lpg2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="LPG" />
-
-                <RadioButton
-                    android:id="@+id/electricity2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@drawable/radiobutton"
-                    android:padding="8dp"
-                    android:text="Elektrik" />
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/textView_km"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/radioGroup_fuelSecondary"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="Kilometre"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <TextView
-                android:id="@+id/textView_exp3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_km"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:text="Aracınızın şu anki kilometresini giriniz."
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <EditText
-                android:id="@+id/editText_km"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_exp3"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:inputType="numberSigned|numberDecimal" />
         </RelativeLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

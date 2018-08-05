@@ -20,7 +20,6 @@
             <ImageView
                 android:id="@+id/station_photo"
                 android:layout_height="60dp"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/gasoline"
                 android:padding="4dp"
@@ -35,10 +34,8 @@
                 android:layout_alignTop="@+id/station_photo"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/station_photo"
-                android:layout_toRightOf="@+id/station_photo"
                 android:fontFamily="@font/gotham_black"
                 android:gravity="center"
-                android:text="Shell"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_widthPercent="17.5%" />
 
@@ -46,13 +43,11 @@
                 android:id="@+id/station_vicinity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/station_photo"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="ANAN caddesi No: 5 Yenidoğan/Ankara"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -62,11 +57,9 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/station_name"
-                android:layout_toRightOf="@+id/station_name"
                 android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -75,13 +68,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/gasoline"
-                android:layout_alignRight="@+id/gasoline"
                 android:layout_below="@+id/gasoline"
                 android:layout_toEndOf="@+id/station_name"
-                android:layout_toRightOf="@+id/station_name"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:text="6.29 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -91,12 +81,10 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/gasoline"
-                android:layout_toRightOf="@+id/gasoline"
                 android:gravity="center"
                 android:padding="4dp"
                 android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -105,13 +93,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/diesel"
-                android:layout_alignRight="@+id/diesel"
                 android:layout_below="@+id/diesel"
                 android:layout_toEndOf="@+id/taxGasoline"
-                android:layout_toRightOf="@+id/taxGasoline"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:text="5.75 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -121,11 +106,9 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/diesel"
-                android:layout_toRightOf="@+id/diesel"
                 android:padding="4dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -140,7 +123,6 @@
                 android:layout_toRightOf="@+id/taxDiesel"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:text="2.89 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="13sp"
@@ -151,7 +133,6 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/lpg"
-                android:layout_toRightOf="@+id/lpg"
                 android:padding="4dp"
                 android:src="@drawable/electricity"
                 card_view:layout_widthPercent="14%" />
@@ -162,13 +143,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/electricity"
-                android:layout_alignRight="@+id/electricity"
                 android:layout_below="@+id/electricity"
                 android:layout_toEndOf="@+id/TaxLPG"
-                android:layout_toRightOf="@+id/TaxLPG"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:text="0.46 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -178,7 +156,6 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/electricity"
-                android:layout_toRightOf="@+id/electricity"
                 android:padding="4dp"
                 android:src="@drawable/distance"
                 card_view:layout_widthPercent="14%" />
@@ -189,13 +166,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/station_photo"
                 android:layout_alignEnd="@+id/distance"
-                android:layout_alignRight="@+id/distance"
                 android:layout_below="@+id/distance"
                 android:layout_toEndOf="@+id/TaxElectricity"
-                android:layout_toRightOf="@+id/TaxElectricity"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:text="500 m"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -205,15 +179,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/gasoline"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/gasoline"
                 android:layout_toStartOf="@+id/gasoline"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="2 saat önce"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textSize="12sp" />
         </android.support.percent.PercentRelativeLayout>

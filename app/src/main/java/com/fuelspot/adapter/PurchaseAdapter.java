@@ -133,7 +133,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         //TOTALTAX
-        float tax1 = MainActivity.taxCalculator(feedItem.getFuelType(), (float) (feedItem.getFuelPrice() * feedItem.getFuelLiter()));
+        float tax1 = MainActivity.taxCalculator(feedItem.getFuelType(), feedItem.getFuelPrice() * feedItem.getFuelLiter());
         float tax2 = MainActivity.taxCalculator(feedItem.getFuelType2(), (float) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2()));
         String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " TL";
         viewHolder.totalTax.setText(taxHolder);

@@ -30,7 +30,6 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView1"
             android:layout_margin="16dp"
@@ -45,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/button2"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_margin="16dp"
             android:fontFamily="@font/gotham_medium"
@@ -60,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:alpha="0.5"
             android:background="@drawable/green_box"
@@ -225,7 +222,6 @@
                     android:id="@+id/textView_fuelSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/textView_fuelPrimary"
                     android:layout_alignStart="@+id/textView_fuelPrimary"
                     android:layout_below="@+id/radioGroup_fuelPrimary"
                     android:layout_marginTop="32dp"
@@ -323,7 +319,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_below="@+id/fuelTypeLayout"
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
@@ -352,7 +347,6 @@
                 android:id="@+id/whiteBack"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="#ffffff" />
@@ -374,8 +368,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/imageView15"
                 android:layout_toStartOf="@+id/imageView15"
                 android:padding="8dp"
                 app:srcCompat="@drawable/gasoline" />
@@ -385,8 +377,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/imageView14"
-                android:layout_alignLeft="@+id/imageView14"
-                android:layout_alignRight="@+id/imageView14"
                 android:layout_alignStart="@+id/imageView14"
                 android:layout_below="@+id/imageView14"
                 android:layout_marginTop="8dp"
@@ -399,7 +389,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/imageViewIndicator2"
                 android:layout_toStartOf="@+id/imageViewIndicator2"
                 android:padding="8dp"
                 app:srcCompat="@drawable/diesel" />
@@ -409,8 +398,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/imageView15"
-                android:layout_alignLeft="@+id/imageView15"
-                android:layout_alignRight="@+id/imageView15"
                 android:layout_alignStart="@+id/imageView15"
                 android:layout_below="@+id/imageView14"
                 android:layout_marginTop="8dp"
@@ -424,7 +411,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/imageViewIndicator2"
-                android:layout_toRightOf="@+id/imageViewIndicator2"
                 android:padding="8dp"
                 app:srcCompat="@drawable/lpg" />
 
@@ -433,8 +419,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@id/imageView16"
-                android:layout_alignLeft="@+id/imageView16"
-                android:layout_alignRight="@id/imageView16"
                 android:layout_alignStart="@+id/imageView16"
                 android:layout_below="@+id/imageView14"
                 android:layout_marginTop="8dp"
@@ -447,10 +431,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_toEndOf="@+id/imageView16"
-                android:layout_toRightOf="@+id/imageView16"
                 android:padding="8dp"
                 app:srcCompat="@drawable/electricity" />
 
@@ -459,8 +441,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/imageView17"
-                android:layout_alignLeft="@+id/imageView17"
-                android:layout_alignRight="@+id/imageView17"
                 android:layout_alignStart="@+id/imageView17"
                 android:layout_below="@+id/imageView14"
                 android:layout_marginTop="8dp"
@@ -474,8 +454,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageViewIndicator2"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@+id/imageViewIndicator2"
                 android:layout_toStartOf="@+id/imageViewIndicator2"
                 android:src="@drawable/radio_active" />
 
@@ -493,10 +471,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageViewIndicator"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/imageViewIndicator2"
-                android:layout_toRightOf="@+id/imageViewIndicator2"
                 android:src="@drawable/radio_passive" />
         </RelativeLayout>
 
@@ -511,7 +487,6 @@
                 android:id="@+id/whiteBack2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="#ffffff" />
@@ -552,8 +527,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageViewIndicator5"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@+id/imageViewIndicator5"
+                android:layout_marginEnd="8dp"
                 android:layout_toStartOf="@+id/imageViewIndicator5"
                 android:src="@drawable/radio_passive" />
 
@@ -571,9 +545,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageViewIndicator4"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/imageViewIndicator5"
-                android:layout_toRightOf="@+id/imageViewIndicator5"
                 android:src="@drawable/radio_passive" />
 
         </RelativeLayout>
@@ -589,7 +562,6 @@
                 android:id="@+id/whiteBack3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="#ffffff" />
@@ -602,7 +574,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="48dp"
                 android:fontFamily="@font/gotham_black"
-                android:text="Ucuz yakıt nasıl bulunur?"
+                android:text="En ucuz yakıt nasıl bulunur?"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <ImageView
@@ -632,8 +604,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageViewIndicator8"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@+id/imageViewIndicator8"
+                android:layout_marginEnd="8dp"
                 android:layout_toStartOf="@+id/imageViewIndicator8"
                 android:src="@drawable/radio_passive" />
 
@@ -651,9 +622,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageViewIndicator7"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/imageViewIndicator8"
-                android:layout_toRightOf="@+id/imageViewIndicator8"
                 android:src="@drawable/radio_active" />
 
         </RelativeLayout>
@@ -663,10 +633,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/howto1"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="-24dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_black"
