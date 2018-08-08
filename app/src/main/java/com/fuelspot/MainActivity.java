@@ -153,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
     public static String[] toyota_models = {"Auris", "Avensis", "Camry", "Carina", "Celica", "Corolla", "Corona", "Cressida", "Grown", "GT 86", "MR2", "Prius", "Starlet", "Supra", "Tercel", "Urban Cruiser", "Verso", "Yaris"};
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
+    // Static values END
+
     static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;
     static SharedPreferences prefs;
@@ -163,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
-    // Static values END
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         name = prefs.getString("Name", "");
         email = prefs.getString("Email", "");
         photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/profile.png");
-        carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/vehicle.png");
+        carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/automobile.png");
         gender = prefs.getString("Gender", "");
         birthday = prefs.getString("Birthday", "01/01/2000");
         location = prefs.getString("Location", "");
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         userCountry = prefs.getString("userCountry", "");
         userCountryName = prefs.getString("userCountryName", "");
         userDisplayLanguage = prefs.getString("userLanguage", "");
-        userUnit = prefs.getString("userUnit", "ℓ");
+        userUnit = prefs.getString("userUnit", "");
         currencyCode = prefs.getString("userCurrency", "");
         averageCons = prefs.getFloat("averageConsumption", 0);
         averagePrice = prefs.getFloat("averagePrice", 0);
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         isGlobalNews = prefs.getBoolean("isGlobalNews", false);
         mapDefaultRange = prefs.getInt("RANGE", 5000);
         mapDefaultZoom = prefs.getFloat("ZOOM", 12.25f);
+        isGeofenceOpen = prefs.getBoolean("Geofence", true);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -331,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         return tax;
     }
 
-    public static void AlarmBuilder(Context mContext) {
+    public static void GeofenceScheduler(Context mContext) {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
         Intent myIntent = new Intent(mContext, GeofenceService.class);
@@ -339,12 +341,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (alarmManager != null) {
             if (isGeofenceOpen) {
+                // Start the service
+                mContext.startService(new Intent(mContext, GeofenceService.class));
+
+                // and set alarm for every hour
                 Calendar currentTime = Calendar.getInstance();
-                alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis() + 1000 * 60 * 60,
-                        AlarmManager.INTERVAL_HOUR, pendingIntent);
-                //GEOFENCE İ 1 SAAT SONRA BAŞLAT BURAYI KURCALA ***
+                alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
             } else {
-                //Cancel the 1st alarm
                 alarmManager.cancel(pendingIntent);
             }
         }
@@ -381,23 +384,22 @@ public class MainActivity extends AppCompatActivity {
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
 
-        //In-App Services
-        AlarmBuilder(this);
-        buyPremiumPopup();
-        InAppBilling();
-
-        /*  if (isGeofenceOpen && !isServiceRunning()){
-            startService(new Intent(this, GeofenceService.class));
-        }
-
-        System.out.println("GEOFENCE SERVİS DURUMU: " + isServiceRunning());*/
-
         // Activate map
         MapsInitializer.initialize(this.getApplicationContext());
 
         //Bottom navigation
+        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
+        List<Fragment> fragments = new ArrayList<>(5);
+        fragments.add(FragmentStations.newInstance());
+        fragments.add(FragmentNews.newInstance());
+        fragments.add(FragmentVehicle.newInstance());
+        fragments.add(FragmentProfile.newInstance());
+        fragments.add(FragmentSettings.newInstance());
+        builder.rootFragments(fragments);
+        mFragNavController = builder.build();
+
         AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
-        //Add tabs
+
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorAccent);
@@ -409,23 +411,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.addItem(item3);
         bottomNavigation.addItem(item4);
         bottomNavigation.addItem(item5);
-
-        // Bottombar Settings
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-
-        // BottomNavigationListener
-        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
-
-        List<Fragment> fragments = new ArrayList<>(5);
-        fragments.add(FragmentStations.newInstance());
-        fragments.add(FragmentNews.newInstance());
-        fragments.add(FragmentVehicle.newInstance());
-        fragments.add(FragmentProfile.newInstance());
-        fragments.add(FragmentSettings.newInstance());
-
-        builder.rootFragments(fragments);
-        mFragNavController = builder.build();
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
@@ -435,13 +422,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //In-App Services
+        GeofenceScheduler(this);
+        buyPremiumPopup();
+        InAppBilling();
+
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
 
-        if (savedInstanceState == null) {
-            mFragNavController.switchTab(0);
-        }
+        System.out.println("SERVİS ÇALIŞIYOR?" + isServiceRunning());
     }
 
     private void buyPremiumPopup() {
@@ -449,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
         openCount++;
         prefs.edit().putInt("howMany", openCount).apply();
 
-        if (openCount >= 20 && !premium) {
+        if (openCount >= 25 && !premium) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.buy_premium_ads_title)
                     .setMessage(R.string.buy_premium_ads_content)
@@ -586,29 +576,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        //Thanks to this brief code, we can call onActivityResult in a fragment
+        // Thanks to this brief code, we can call onActivityResult in a fragment
+        // Currently used in FragmentStations if user revoke location permission
         Fragment fragment = mFragNavController.getCurrentFrag();
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
     }
 
     @Override
@@ -620,5 +593,26 @@ public class MainActivity extends AppCompatActivity {
         if (facebookInterstitial != null) {
             facebookInterstitial.destroy();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            adCount = 0;
+            super.onBackPressed();
+            mFragNavController.clearStack();
+            finish();
+            return;
+        }
+
+        doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }

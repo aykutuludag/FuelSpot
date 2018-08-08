@@ -4,11 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,8 +53,27 @@ import org.json.JSONObject;
 import java.text.Normalizer;
 import java.util.Currency;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
+import static com.fuelspot.MainActivity.birthday;
+import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.facebookInterstitial;
+import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.isNetworkConnected;
+import static com.fuelspot.MainActivity.isSigned;
+import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userCountryName;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -68,7 +90,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SharedPreferences prefs;
 
     Handler handler;
-    Intent intent;
 
     ImageView doUHaveStation;
 
@@ -92,41 +113,52 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         MainActivity.getVariables(prefs);
 
         handler = new Handler();
-        intent = new Intent(LoginActivity.this, MainActivity.class);
 
         //Layout objects
         signInButton = findViewById(R.id.buttonGoogle);
         loginButton = findViewById(R.id.facebookButton);
 
-        //Check the user trip another country and re-logged him
-        if (!MainActivity.userCountry.equals(Locale.getDefault().getCountry())) {
-            //User has changes his/her country. Fetch the tax rates/unit/currency.
-            //Language will be automatically changed
-            MainActivity.isSigned = false;
-            prefs.edit().putBoolean("isSigned", false).apply();
+        if (isSigned) {
+            if (userlat != null && userlon != null) {
+                if (userlat.length() > 0 && userlon.length() > 0) {
+                    Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+                    try {
+                        List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
+                        if (addresses.size() > 0) {
+                            //Check the user if s/he trip another country and if s/he is, re-logged him
+                            if (!userCountry.equals(addresses.get(0).getCountryCode())) {
+                                //User has changes his/her country. Fetch the tax rates/unit/currency.
+                                //Language will be automatically changed
+                                isSigned = false;
+                                prefs.edit().putBoolean("isSigned", false).apply();
 
-            MainActivity.userCountry = Locale.getDefault().getCountry();
-            prefs.edit().putString("userCountry", MainActivity.userCountry).apply();
+                                userCountry = addresses.get(0).getCountryCode();
+                                prefs.edit().putString("userCountry", userCountry).apply();
 
-            MainActivity.userCountryName = Locale.getDefault().getDisplayCountry();
-            prefs.edit().putString("userCountryName", MainActivity.userCountryName).apply();
+                                userCountryName = addresses.get(0).getCountryName();
+                                prefs.edit().putString("userCountryName", userCountryName).apply();
 
-            MainActivity.userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
-            prefs.edit().putString("userLanguage", MainActivity.userDisplayLanguage).apply();
+                                userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-            MainActivity.currencyCode = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
-            prefs.edit().putString("userCurrency", MainActivity.currencyCode).apply();
+                                Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
+                                currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
+                                prefs.edit().putString("userCurrency", currencyCode).apply();
 
-            if (MainActivity.userCountry.equals("US") || MainActivity.userCountry.equals("LR") || MainActivity.userCountry.equals("MM")) {
-                MainActivity.userUnit = "US Customary";
-            } else {
-                MainActivity.userUnit = "Metric system";
+                                if (userCountry.equals("US") || userCountry.equals("LR") || userCountry.equals("MM")) {
+                                    userUnit = getString(R.string.unitSystem2);
+                                } else {
+                                    userUnit = getString(R.string.unitSystem1);
+                                }
+                                prefs.edit().putString("userUnit", userUnit).apply();
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Do nothing
+                    }
+                }
             }
-            prefs.edit().putString("userUnit", MainActivity.userUnit).apply();
         }
-
-        //Check whether is logged or not
-        arrangeLayouts();
 
         /* Google Sign-In */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -167,10 +199,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     void arrangeLayouts() {
-        if (MainActivity.isSigned) {
+        if (isSigned) {
             notLogged.setVisibility(View.GONE);
             //Check user is regular or superUser
-            if (MainActivity.isSuperUser) {
+            if (isSuperUser) {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -180,24 +212,25 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 }, 3000);
             } else {
+                final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 // Check user has premium and connected to internet
-                if (MainActivity.isNetworkConnected(LoginActivity.this) && !MainActivity.premium) {
+                if (isNetworkConnected(LoginActivity.this) && !premium) {
                     // AudienceNetwork(LoginActivity.this);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (MainActivity.facebookInterstitial != null && MainActivity.facebookInterstitial.isAdLoaded()) {
+                            if (facebookInterstitial != null && facebookInterstitial.isAdLoaded()) {
                                 //Facebook ads loaded he will see Facebook
                                 startActivity(intent);
-                                MainActivity.facebookInterstitial.show();
-                                MainActivity.adCount++;
-                                MainActivity.facebookInterstitial = null;
-                            } else if (MainActivity.admobInterstitial != null && MainActivity.admobInterstitial.isLoaded()) {
+                                facebookInterstitial.show();
+                                adCount++;
+                                facebookInterstitial = null;
+                            } else if (admobInterstitial != null && admobInterstitial.isLoaded()) {
                                 //Facebook ads doesnt loaded he will see AdMob
                                 startActivity(intent);
-                                MainActivity.admobInterstitial.show();
-                                MainActivity.adCount++;
-                                MainActivity.admobInterstitial = null;
+                                admobInterstitial.show();
+                                adCount++;
+                                admobInterstitial = null;
                             } else {
                                 //Both ads doesn't loaded.
                                 startActivity(intent);
@@ -209,8 +242,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(i);
+                            startActivity(intent);
                             finish();
                         }
                     }, 3000);
@@ -254,38 +286,38 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         //GENDER
                         if (person.hasGender()) {
                             if (person.getGender() == 0) {
-                                MainActivity.gender = "male";
+                                gender = "male";
                             } else if (person.getGender() == 1) {
-                                MainActivity.gender = "female";
+                                gender = "female";
                             } else {
-                                MainActivity.gender = "transsexual";
+                                gender = "transsexual";
                             }
-                            prefs.edit().putString("Gender", MainActivity.gender).apply();
+                            prefs.edit().putString("Gender", gender).apply();
                         }
 
                         //BIRTHDAY
                         if (person.hasGender()) {
-                            MainActivity.birthday = person.getBirthday();
-                            prefs.edit().putString("Birthday", MainActivity.birthday).apply();
+                            birthday = person.getBirthday();
+                            prefs.edit().putString("Birthday", birthday).apply();
                         }
 
                         //LOCATION
                         if (person.hasCurrentLocation()) {
-                            MainActivity.location = person.getCurrentLocation();
-                            prefs.edit().putString("Location", MainActivity.location).apply();
+                            location = person.getCurrentLocation();
+                            prefs.edit().putString("Location", location).apply();
                         }
                     }
                     saveUserInfo();
                 } else {
-                    Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                     prefs.edit().putBoolean("isSigned", false).apply();
                 }
             } else {
-                Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                 prefs.edit().putBoolean("isSigned", false).apply();
             }
         } else {
-            Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
             prefs.edit().putBoolean("isSigned", false).apply();
         }
     }
@@ -301,7 +333,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             @Override
                             public void onCompleted(JSONObject me, GraphResponse response) {
                                 if (response.getError() != null) {
-                                    Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                                 } else {
                                     MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
                                     prefs.edit().putString("Name", MainActivity.name).apply();
@@ -312,8 +344,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     MainActivity.photo = me.optString("profile_pic");
                                     prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
 
-                                    MainActivity.gender = me.optString("gender");
-                                    prefs.edit().putString("Gender", MainActivity.gender).apply();
+                                    gender = me.optString("gender");
+                                    prefs.edit().putString("Gender", gender).apply();
 
                                     MainActivity.location = me.optString("location");
                                     prefs.edit().putString("Location", MainActivity.location).apply();
@@ -334,12 +366,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, getString(R.string.error_login_cancel), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_cancel), Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -359,6 +391,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             public void run() {
                                 Intent i = new Intent(LoginActivity.this, WelcomeActivity.class);
                                 startActivity(i);
+                                finish();
                             }
                         }, 2000);
                     }
@@ -368,7 +401,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(LoginActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {
@@ -382,10 +415,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("name", MainActivity.name);
                 params.put("email", MainActivity.email);
                 params.put("photo", MainActivity.photo);
-                params.put("gender", MainActivity.gender);
-                params.put("birthday", MainActivity.birthday);
+                params.put("gender", gender);
+                params.put("birthday", birthday);
                 params.put("location", MainActivity.location);
-                params.put("country", MainActivity.userCountry);
+                params.put("country", userCountry);
 
                 //returning parameters
                 return params;
@@ -425,7 +458,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
     }
 }
 

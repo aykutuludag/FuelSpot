@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,7 +59,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -66,8 +71,15 @@ import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userCountryName;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -200,7 +212,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                             loading.dismiss();
                             MainActivity.getVariables(prefs);
-                            fetchTaxRates();
+                            continueButton.setAlpha(1.0f);
+                            continueButton.setClickable(true);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -229,69 +242,13 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-    public void fetchTaxRates() {
-        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
-                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
-
-                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
-                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
-
-                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
-                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
-
-                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
-                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
-
-                                MainActivity.getVariables(prefs);
-                                continueButton.setAlpha(1.0f);
-                                continueButton.setClickable(true);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            loading.dismiss();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("country", MainActivity.userCountry);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
     public void loadCarSelection() {
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
+                .placeholder(R.drawable.default_automobile)
+                .error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
         Glide.with(this).load(MainActivity.carPhoto).apply(options).into(carPic);
@@ -431,6 +388,93 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         });
     }
+
+    private void Localization() {
+        if (userlat != null && userlon != null) {
+            if (userlat.length() > 0 && userlon.length() > 0) {
+                Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
+                    if (addresses.size() > 0) {
+                        userCountry = addresses.get(0).getCountryCode();
+                        prefs.edit().putString("userCountry", userCountry).apply();
+
+                        userCountryName = addresses.get(0).getCountryName();
+                        prefs.edit().putString("userCountryName", userCountryName).apply();
+
+                        userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+                        prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                        Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
+                        currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
+                        prefs.edit().putString("userCurrency", currencyCode).apply();
+
+                        if (userCountry.equals("US") || userCountry.equals("LR") || userCountry.equals("MM")) {
+                            userUnit = getString(R.string.unitSystem2);
+                        } else {
+                            userUnit = getString(R.string.unitSystem1);
+                        }
+                        prefs.edit().putString("userUnit", userUnit).apply();
+                        fetchTaxRates();
+                    }
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            }
+        }
+    }
+
+    public void fetchTaxRates() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
+
+                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
+
+                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
+                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
+
+                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
+                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
+
+                                MainActivity.getVariables(prefs);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("country", MainActivity.userCountry);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
 
     private void saveUserInfo() {
         //Showing the progress dialog
@@ -955,25 +999,25 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             case REQUEST_FILEPICKER: {
                 if (ContextCompat.checkSelfPermission(WelcomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                    mFusedLocationClient.getLastLocation()
-                            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    // Got last known location. In some rare situations this can be null.
-                                    if (location != null) {
-                                        MainActivity.userlat = String.valueOf(location.getLatitude());
-                                        MainActivity.userlon = String.valueOf(location.getLongitude());
-                                        prefs.edit().putString("lat", MainActivity.userlat).apply();
-                                        prefs.edit().putString("lon", MainActivity.userlon).apply();
-                                        MainActivity.getVariables(prefs);
-                                    } else {
-                                        LocationRequest mLocationRequest = new LocationRequest();
-                                        mLocationRequest.setInterval(60000);
-                                        mLocationRequest.setFastestInterval(5000);
-                                        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                    }
-                                }
-                            });
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                userlat = String.valueOf(location.getLatitude());
+                                userlon = String.valueOf(location.getLongitude());
+                                prefs.edit().putString("lat", userlat).apply();
+                                prefs.edit().putString("lon", userlon).apply();
+                                Localization();
+                                MainActivity.getVariables(prefs);
+                            } else {
+                                LocationRequest mLocationRequest = new LocationRequest();
+                                mLocationRequest.setInterval(60000);
+                                mLocationRequest.setFastestInterval(5000);
+                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                            }
+                        }
+                    });
 
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.VISIBLE);

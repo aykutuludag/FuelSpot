@@ -104,8 +104,8 @@ public class FragmentProfile extends Fragment {
         CircleImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
+                .placeholder(R.drawable.default_profile)
+                .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
         Glide.with(getActivity()).load(Uri.parse(MainActivity.photo)).apply(options).into(userProfileHolder);

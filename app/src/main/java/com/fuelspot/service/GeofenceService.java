@@ -1,7 +1,6 @@
 package com.fuelspot.service;
 
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,11 +11,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,14 +24,11 @@ import com.android.volley.toolbox.Volley;
 import com.fuelspot.LoginActivity;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,24 +61,19 @@ public class GeofenceService extends IntentService {
         queue = Volley.newRequestQueue(this);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+           /* MainActivity.userlat = String.valueOf(location.getLatitude());
+            MainActivity.userlon = String.valueOf(location.getLongitude());
+            prefs.edit().putString("lat", MainActivity.userlat).apply();
+            prefs.edit().putString("lon", MainActivity.userlon).apply();*/
+            fetchStation();
+
+          /*  FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener((Activity) mContext, new OnSuccessListener<Location>() {
+                    .addOnSuccessListener((Executor) mContext, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                MainActivity.userlat = String.valueOf(location.getLatitude());
-                                MainActivity.userlon = String.valueOf(location.getLongitude());
-                                prefs.edit().putString("lat", MainActivity.userlat).apply();
-                                prefs.edit().putString("lon", MainActivity.userlon).apply();
-                                MainActivity.getVariables(prefs);
-                                mGeofenceList.add(new Geofence.Builder().setRequestId("ev")
-                                        .setCircularRegion(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon), mapDefaultStationRange)
-                                        .setExpirationDuration(45 * 60 * 1000)
-                                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
-                                        .build());
-                                addGeofence();
-                                fetchStation();
+
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(60000);
@@ -92,9 +81,8 @@ public class GeofenceService extends IntentService {
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                             }
                         }
-                    });
+                    });*/
         }
-
     }
 
     void fetchStation() {
@@ -117,6 +105,7 @@ public class GeofenceService extends IntentService {
                                         .setCircularRegion(lat, lon, mapDefaultStationRange)
                                         .setExpirationDuration(60 * 60 * 1000)
                                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
+                                        .setLoiteringDelay(60000)
                                         .build());
                                 addGeofence();
                             }
@@ -131,6 +120,12 @@ public class GeofenceService extends IntentService {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    void addGeofence() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent());
+        }
     }
 
     private GeofencingRequest getGeofencingRequest() {
@@ -153,13 +148,6 @@ public class GeofenceService extends IntentService {
         return mGeofencePendingIntent;
     }
 
-    void addGeofence() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent());
-            System.out.println("GEOFENCE EKLENDİ:");
-        }
-    }
-
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
@@ -173,17 +161,13 @@ public class GeofenceService extends IntentService {
                 // multiple geofences.
                 List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
-                // Get the transition details as a String.
-                String geofenceTransitionDetails = "Yakıt mı alıyorsunuz? Eklemek için tıklayın!";
-
                 // Send notification and log the transition details.
-                sendNotification("FuelSpot", geofenceTransitionDetails);
-                Log.i("Error", geofenceTransitionDetails);
+                sendNotification();
             }
         }
     }
 
-    private void sendNotification(String messageTitle, String messageBody) {
+    private void sendNotification() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
@@ -193,8 +177,8 @@ public class GeofenceService extends IntentService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(bm)
-                .setContentTitle(messageTitle)
-                .setContentText(messageBody)
+                .setContentTitle("FuelSpot")
+                .setContentText("Yakıt mı alıyorsunuz? Eklemek için tıklayın!")
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent);

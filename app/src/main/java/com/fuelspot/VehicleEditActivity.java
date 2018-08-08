@@ -101,7 +101,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
         Glide.with(this).load(MainActivity.carPhoto).apply(options).into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {

@@ -87,9 +87,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/photo_placeholder"
-                app:civ_border_color="#EA6C34"
-                app:civ_border_width="1dp" />
+                android:src="@drawable/default_automobile" />
 
             <RelativeLayout
                 android:id="@+id/carNameLayout"
@@ -231,11 +229,22 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
+                <TextView
+                    android:id="@+id/textView_fuelSecondaryExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_fuelSecondary"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:text="Aracınızda ikincil bir yakıt sistemi yoksa burayı boş bırakınız"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView_fuelSecondary"
+                    android:layout_below="@+id/textView_fuelSecondaryExp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:orientation='horizontal'>

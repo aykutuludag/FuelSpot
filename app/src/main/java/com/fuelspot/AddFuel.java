@@ -121,8 +121,7 @@ public class AddFuel extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Window
         window = this.getWindow();

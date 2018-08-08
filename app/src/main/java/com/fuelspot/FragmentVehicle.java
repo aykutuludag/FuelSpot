@@ -26,6 +26,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.adapter.PurchaseAdapter;
 import com.fuelspot.model.PurchaseItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -101,7 +104,13 @@ public class FragmentVehicle extends Fragment {
 
         //ProfilePhoto
         carPhotoHolder = headerView.findViewById(R.id.car_picture);
-        Glide.with(getActivity()).load(Uri.parse(MainActivity.carPhoto)).into(carPhotoHolder);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.default_automobile)
+                .error(R.drawable.default_automobile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(getActivity()).load(Uri.parse(MainActivity.carPhoto)).apply(options).into(carPhotoHolder);
 
         //Marka-model
         fullname = headerView.findViewById(R.id.carFullname);
