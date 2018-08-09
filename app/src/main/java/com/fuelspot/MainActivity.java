@@ -333,27 +333,27 @@ public class MainActivity extends AppCompatActivity {
         return tax;
     }
 
-    public static void GeofenceScheduler(Context mContext) {
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
+    public void GeofenceScheduler() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Intent myIntent = new Intent(mContext, GeofenceService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent myIntent = new Intent(MainActivity.this, GeofenceService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (alarmManager != null) {
-            if (isGeofenceOpen) {
+            if (isGeofenceOpen && !isGeoServiceRunning()) {
                 // Start the service
-                mContext.startService(new Intent(mContext, GeofenceService.class));
+                startService(new Intent(MainActivity.this, GeofenceService.class));
 
                 // and set alarm for every hour
                 Calendar currentTime = Calendar.getInstance();
-                alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+                alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis() + 60 * 60 * 1000, AlarmManager.INTERVAL_HOUR, pendingIntent);
             } else {
                 alarmManager.cancel(pendingIntent);
             }
         }
     }
 
-    private boolean isServiceRunning() {
+    private boolean isGeoServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         if (manager != null) {
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -423,15 +423,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //In-App Services
-        GeofenceScheduler(this);
+        GeofenceScheduler();
         buyPremiumPopup();
         InAppBilling();
 
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
-
-        System.out.println("SERVİS ÇALIŞIYOR?" + isServiceRunning());
     }
 
     private void buyPremiumPopup() {

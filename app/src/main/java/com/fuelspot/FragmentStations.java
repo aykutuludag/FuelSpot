@@ -389,37 +389,38 @@ public class FragmentStations extends Fragment {
                             if (response != null && response.length() > 0) {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
+                                if (obj.getInt("isActive") == 1) {
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setPhotoURL(obj.getString("photoURL"));
 
-                                StationItem item = new StationItem();
-                                item.setID(obj.getInt("id"));
-                                item.setStationName(obj.getString("name"));
-                                item.setVicinity(obj.getString("vicinity"));
-                                item.setLocation(obj.getString("location"));
-                                item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
-                                item.setDieselPrice((float) obj.getDouble("dieselPrice"));
-                                item.setLpgPrice((float) obj.getDouble("lpgPrice"));
-                                item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                item.setGoogleMapID(obj.getString("googleID"));
-                                item.setPhotoURL(obj.getString("photoURL"));
+                                    //DISTANCE START
+                                    Location loc = new Location("");
+                                    String[] stationKonum = item.getLocation().split(";");
+                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                    float uzaklik = locLastKnown.distanceTo(loc);
+                                    distanceInMeters.add((int) uzaklik);
+                                    item.setDistance((int) uzaklik);
+                                    //DISTANCE END
 
-                                //DISTANCE START
-                                Location loc = new Location("");
-                                String[] stationKonum = item.getLocation().split(";");
-                                loc.setLatitude(Double.parseDouble(stationKonum[0]));
-                                loc.setLongitude(Double.parseDouble(stationKonum[1]));
-                                float uzaklik = locLastKnown.distanceTo(loc);
-                                distanceInMeters.add((int) uzaklik);
-                                item.setDistance((int) uzaklik);
-                                //DISTANCE END
+                                    //Lastupdated
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
 
-                                //Lastupdated
-                                item.setLastUpdated(obj.getString("lastUpdated"));
+                                    feedsList.add(item);
 
-                                feedsList.add(item);
-
-                                // Default - Sort by Distance
-                                tabLayout.getTabAt(4).select();
-                                sortBy(4);
+                                    // Default - Sort by Distance
+                                    tabLayout.getTabAt(4).select();
+                                    sortBy(4);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

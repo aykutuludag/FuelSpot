@@ -49,7 +49,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.yalantis.ucrop.UCrop;
@@ -86,6 +85,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     int calendarYear, calendarMonth, calendarDay;
     Bitmap bitmap;
     RequestQueue requestQueue;
+    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +149,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //UserPhoto
         userPic = findViewById(R.id.userPhoto);
-        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
         Glide.with(this).load(MainActivity.photo).apply(options).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
@@ -172,8 +172,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    AutocompleteFilter filter = new AutocompleteFilter.Builder().setCountry(MainActivity.userCountry).setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS).build();
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(filter).build(ProfileEditActivity.this);
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(ProfileEditActivity.this);
                     startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -381,8 +380,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                     final Uri resultUri = UCrop.getOutput(data);
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
                         Glide.with(this).load(bitmap).apply(options).into(userPic);
                         editor.putString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
                     } catch (IOException e) {

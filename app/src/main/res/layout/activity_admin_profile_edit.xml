@@ -36,9 +36,7 @@
                 android:layout_height="150dp"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
-                android:src="@drawable/photo_placeholder"
-                app:civ_border_color="#EA6C34"
-                app:civ_border_width="1dp" />
+                android:src="@drawable/default_profile" />
 
             <ImageView
                 android:id="@+id/dummyImage1"

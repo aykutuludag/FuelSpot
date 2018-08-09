@@ -92,7 +92,7 @@ public class StationDetails extends AppCompatActivity {
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2;
+    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
 
@@ -234,6 +234,7 @@ public class StationDetails extends AppCompatActivity {
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
+        floatingActionButton3 = findViewById(R.id.material_design_floating_action_menu_item3);
 
         if (MainActivity.isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
@@ -251,6 +252,13 @@ public class StationDetails extends AppCompatActivity {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
                 startActivity(intent);
+            }
+        });
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDesignFAM.close(true);
+                reportStation(v);
             }
         });
     }
@@ -715,6 +723,10 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    void reportStation(View view) {
+
     }
 
     public void coloredBars(int color1, int color2) {

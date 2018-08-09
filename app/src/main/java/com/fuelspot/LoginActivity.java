@@ -436,7 +436,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onResume() {
         super.onResume();
         if (background != null) {
-            background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
+            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background;
+            Uri uri = Uri.parse(uriPath);
+            background.setVideoURI(uri);
             background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {

@@ -388,8 +388,8 @@ public class SuperComments extends AppCompatActivity {
 
             RequestOptions options = new RequestOptions()
                     .centerCrop()
-                    .placeholder(R.drawable.photo_placeholder)
-                    .error(R.drawable.photo_placeholder)
+                    .placeholder(R.drawable.default_profile)
+                    .error(R.drawable.default_profile)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .priority(Priority.HIGH);
             Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
