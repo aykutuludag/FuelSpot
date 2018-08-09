@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -57,10 +59,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import eu.amirs.JSON;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
@@ -83,6 +87,7 @@ public class FragmentStations extends Fragment {
     List<String> location = new ArrayList<>();
     List<String> stationIcon = new ArrayList<>();
     List<Integer> distanceInMeters = new ArrayList<>();
+    List<String> stationCountry = new ArrayList<>();
 
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
@@ -358,14 +363,30 @@ public class FragmentStations extends Fragment {
                                 LatLng sydney = new LatLng(lat, lon);
                                 markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName.get(i)).snippet(vicinity.get(i))));
 
+                                Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                try {
+                                    List<Address> addresses = geo.getFromLocation(lat, lon, 1);
+                                    if (addresses.size() > 0) {
+                                        stationCountry.add(i, addresses.get(0).getCountryCode());
+                                    } else {
+                                        stationCountry.add(i, "");
+                                    }
+                                } catch (Exception e) {
+                                    stationCountry.add(i, "");
+                                }
+
                                 addStation(i);
                             }
-                        } else {
+                        } else
+
+                        {
                             noStationError.setVisibility(View.VISIBLE);
                             Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                         }
                     }
-                }, new Response.ErrorListener() {
+                }, new Response.ErrorListener()
+
+        {
             @Override
             public void onErrorResponse(VolleyError error) {
                 noStationError.setVisibility(View.VISIBLE);
@@ -440,6 +461,7 @@ public class FragmentStations extends Fragment {
                 //Adding parameters
                 params.put("name", stationName.get(index));
                 params.put("vicinity", vicinity.get(index));
+                params.put("country", stationCountry.get(index));
                 params.put("location", location.get(index));
                 params.put("googleID", googleID.get(index));
                 params.put("photoURL", stationIcon.get(index));
