@@ -416,10 +416,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("email", MainActivity.email);
                 params.put("photo", MainActivity.photo);
                 params.put("gender", gender);
-                params.put("birthday", birthday);
-                params.put("location", MainActivity.location);
-                params.put("country", userCountry);
-                params.put("language", userDisplayLanguage);
 
                 //returning parameters
                 return params;

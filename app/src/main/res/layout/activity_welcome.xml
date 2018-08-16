@@ -170,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelPrimary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
                     android:orientation='horizontal'>
 
                     <RadioButton
@@ -224,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignStart="@+id/textView_fuelPrimary"
                     android:layout_below="@+id/radioGroup_fuelPrimary"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="İkincil yakıt tipi"
@@ -238,6 +238,8 @@
                     android:layout_below="@+id/textView_fuelSecondary"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
                     android:gravity="center"
                     android:text="Aracınızda ikincil bir yakıt sistemi yoksa burayı boş bırakınız"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
@@ -302,7 +304,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroup_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="Kilometre"
@@ -314,13 +316,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_km"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:inputType="numberSigned|numberDecimal"
+                    android:shadowColor="#3A3A3A"
+                    android:textColor="#3A3A3A" />
+
+                <TextView
+                    android:id="@+id/textView_plate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_km"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="Plaka"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#555555" />
+
+                <EditText
+                    android:id="@+id/editText_plate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_plate"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_medium"
+                    android:gravity="center"
+                    android:inputType="text"
                     android:shadowColor="#3A3A3A"
                     android:textColor="#3A3A3A" />
             </RelativeLayout>

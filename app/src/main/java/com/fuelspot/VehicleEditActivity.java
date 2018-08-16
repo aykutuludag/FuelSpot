@@ -58,6 +58,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 
@@ -278,9 +287,40 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 }
             }
         });
+
+        //PlakaNO
+        final EditText plateText = findViewById(R.id.editText_plate);
+        plateText.setText(plateNo);
+        plateText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    if (s.toString().contains(" ")) {
+                        plateNo = s.toString().replaceAll(" ", "");
+                    } else {
+                        plateNo = s.toString();
+                    }
+
+                    //All uppercase
+                    plateNo = plateNo.toUpperCase();
+
+                    prefs.edit().putString("plateNo", plateNo).apply();
+                }
+            }
+        });
     }
 
-    private void saveUserInfo() {
+    private void updateVehicle() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(VehicleEditActivity.this, "Loading...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
@@ -306,17 +346,18 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
-                params.put("carBrand", MainActivity.carBrand);
-                params.put("carModel", MainActivity.carModel);
-                params.put("fuelPri", String.valueOf(MainActivity.fuelPri));
-                params.put("fuelSec", String.valueOf(MainActivity.fuelSec));
-                params.put("km", String.valueOf(MainActivity.kilometer));
+                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("country", userCountry);
+                params.put("carBrand", carBrand);
+                params.put("carModel", carModel);
+                params.put("fuelPri", String.valueOf(fuelPri));
+                params.put("fuelSec", String.valueOf(fuelSec));
+                params.put("km", String.valueOf(kilometer));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
-                } else {
-                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos" + MainActivity.username + "-CARPHOTO.jpg");
                 }
+                params.put("plate", plateNo);
+                params.put("avgCons", String.valueOf(averageCons));
 
                 //returning parameters
                 return params;
@@ -826,7 +867,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
             case R.id.navigation_save:
                 editor.apply();
                 if (MainActivity.isNetworkConnected(VehicleEditActivity.this)) {
-                    saveUserInfo();
+                    updateVehicle();
                 } else {
                     Toast.makeText(VehicleEditActivity.this, "Internet bağlantısında bir sorun var", Toast.LENGTH_LONG).show();
                 }

@@ -49,6 +49,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.yalantis.ucrop.UCrop;
@@ -71,6 +72,9 @@ import droidninja.filepicker.FilePickerConst;
 import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userVehicles;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
@@ -172,7 +176,8 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(ProfileEditActivity.this);
+                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry(userCountry).build();
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(ProfileEditActivity.this);
                     startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -185,8 +190,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         //  Setting birthday and retrieving changes
         editBirthday.setText(MainActivity.birthday);
         if (MainActivity.birthday.length() > 0) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 Date birthDateasDate = sdf.parse(MainActivity.birthday);
                 calendarYear = birthDateasDate.getYear() + 1900;
                 calendarMonth = birthDateasDate.getMonth() + 1;
@@ -194,6 +199,11 @@ public class ProfileEditActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        } else {
+            Date birthDateasDate = new Date();
+            calendarYear = birthDateasDate.getYear() + 1900;
+            calendarMonth = birthDateasDate.getMonth() + 1;
+            calendarDay = birthDateasDate.getDate();
         }
         editBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,9 +275,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                 params.put("country", MainActivity.userCountry);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
-                } else {
-                    params.put("photo", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
                 }
+                params.put("language", userDisplayLanguage);
+                params.put("vehicles", userVehicles);
 
                 //returning parameters
                 return params;

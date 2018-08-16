@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         photo = prefs.getString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/profile.png");
         carPhoto = prefs.getString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/default_icons/automobile.png");
         gender = prefs.getString("Gender", "");
-        birthday = prefs.getString("Birthday", "01/01/2000");
+        birthday = prefs.getString("Birthday", "");
         location = prefs.getString("Location", "");
         username = prefs.getString("UserName", "");
         carBrand = prefs.getString("carBrand", "");

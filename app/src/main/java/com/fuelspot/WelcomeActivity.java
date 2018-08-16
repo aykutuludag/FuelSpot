@@ -535,9 +535,40 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() >= 1) {
+                if (s != null && s.length() >= 1) {
                     kilometer = Integer.parseInt(s.toString());
                     prefs.edit().putInt("Kilometer", kilometer).apply();
+                }
+            }
+        });
+
+        //PlakaNO
+        final EditText plateText = findViewById(R.id.editText_plate);
+        plateText.setText(plateNo);
+        plateText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    if (s.toString().contains(" ")) {
+                        plateNo = s.toString().replaceAll(" ", "");
+                    } else {
+                        plateNo = s.toString();
+                    }
+
+                    //All uppercase
+                    plateNo = plateNo.toUpperCase();
+
+                    prefs.edit().putString("plateNo", plateNo).apply();
                 }
             }
         });
@@ -550,7 +581,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println(response);
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
@@ -563,14 +593,14 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 plateNo = obj.getString("plateNo");
                                 prefs.edit().putString("plateNo", plateNo).apply();
 
-                                userVehicles += vehicleID + " - " + plateNo + ";";
+                                userVehicles += vehicleID + "-" + plateNo + ";";
                                 prefs.edit().putString("userVehicles", userVehicles).apply();
-
-                                MainActivity.getVariables(prefs);
-                                updateUserInfo();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+
+                            MainActivity.getVariables(prefs);
+                            updateUserInfo();
                         }
                     }
                 },
@@ -579,9 +609,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        layout2.setVisibility(View.GONE);
-                        layout3.setVisibility(View.VISIBLE);
-                        System.out.println(volleyError);
                     }
                 }) {
             @Override
@@ -600,6 +627,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 }
+                params.put("plate", plateNo);
 
                 //returning parameters
                 return params;
@@ -643,8 +671,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("country", MainActivity.userCountry);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
-                } else {
-                    params.put("photo", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
                 }
                 params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
