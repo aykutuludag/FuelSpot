@@ -336,7 +336,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_REGISTER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_CREATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -388,7 +388,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void fetchSuperUserInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH_PROFILE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -470,7 +470,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     public void fetchTaxRates() {
         final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -699,7 +699,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     public void updateSuperUser() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE_PROFILE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

@@ -99,7 +99,7 @@ public class FragmentNews extends Fragment {
 
     private void contentChooserByCountry(String country) {
         if (isGlobalNews) {
-            feedURL = getString(R.string.API_FETCH_NEWS);
+            feedURL = getString(R.string.API_NEWS);
         } else {
             switch (country) {
                 case "AZ":
@@ -115,7 +115,7 @@ public class FragmentNews extends Fragment {
                     feedURL = "http://fuel-spot.com/category/countries/united-states/feed/json";
                     break;
                 default:
-                    feedURL = getString(R.string.API_FETCH_NEWS);
+                    feedURL = getString(R.string.API_NEWS);
                     break;
 
             }
@@ -198,7 +198,7 @@ public class FragmentNews extends Fragment {
                 .setAction("Tamam", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        fetchNews(getString(R.string.API_FETCH_NEWS));
+                        fetchNews(getString(R.string.API_NEWS));
                         Snackbar.make(getActivity().findViewById(android.R.id.content), "Tüm haberler gösteriliyor. Ayarlardan açıp/kapatabilirsiniz.", Snackbar.LENGTH_LONG)
                                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                                 .show();

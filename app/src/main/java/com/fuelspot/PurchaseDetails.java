@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +24,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -35,19 +39,26 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.currencyCode;
+
 public class PurchaseDetails extends AppCompatActivity {
 
+    RequestOptions options;
     MapView mMapView;
     GoogleMap googleMap;
     FloatingActionButton fab;
     int purchaseID, fuelType1, fuelType2;
     String stationName, iconURL, stationLocation, billPhoto;
-    long purchaseTime;
-    double fuelPrice1, fuelLiter1, fuelPrice2, fuelLiter2, totalPrice;
+    String purchaseTime;
+    float fuelPrice1, fuelLiter1, fuelTax1, fuelPrice2, fuelLiter2, fuelTax2, totalPrice;
 
     ImageView istasyonLogo, fatura, tur1, tur2;
     TextView fiyat1, litre1, fiyat2, litre2, birimFiyat1, birimFiyat2, vergi, toplamfiyat;
@@ -66,6 +77,7 @@ public class PurchaseDetails extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMapView = findViewById(R.id.mapView);
@@ -76,15 +88,17 @@ public class PurchaseDetails extends AppCompatActivity {
         stationName = getIntent().getStringExtra("STATION_NAME");
         iconURL = getIntent().getStringExtra("STATION_ICON");
         stationLocation = getIntent().getStringExtra("STATION_LOC");
-        purchaseTime = getIntent().getLongExtra("PURCHASE_TIME", 0);
+        purchaseTime = getIntent().getStringExtra("PURCHASE_TIME");
         fuelType1 = getIntent().getIntExtra("FUEL_TYPE_1", -1);
         fuelType2 = getIntent().getIntExtra("FUEL_TYPE_2", -1);
         billPhoto = getIntent().getStringExtra("BILL_PHOTO");
-        fuelPrice1 = getIntent().getDoubleExtra("FUEL_PRICE_1", 0);
-        fuelPrice2 = getIntent().getDoubleExtra("FUEL_PRICE_2", 0);
-        fuelLiter1 = getIntent().getDoubleExtra("FUEL_LITER_1", 0);
-        fuelLiter2 = getIntent().getDoubleExtra("FUEL_LITER_2", 0);
-        totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE", 0);
+        fuelPrice1 = getIntent().getFloatExtra("FUEL_PRICE_1", 0);
+        fuelPrice2 = getIntent().getFloatExtra("FUEL_PRICE_2", 0);
+        fuelLiter1 = getIntent().getFloatExtra("FUEL_LITER_1", 0);
+        fuelLiter2 = getIntent().getFloatExtra("FUEL_LITER_2", 0);
+        fuelTax1 = getIntent().getFloatExtra("FUEL_TAX_1", 0);
+        fuelTax2 = getIntent().getFloatExtra("FUEL_TAX_2", 0);
+        totalPrice = getIntent().getFloatExtra("TOTAL_PRICE", 0);
 
         istasyonLogo = findViewById(R.id.stationLogo);
         fatura = findViewById(R.id.billPhoto);
@@ -100,8 +114,13 @@ public class PurchaseDetails extends AppCompatActivity {
         toplamfiyat = findViewById(R.id.totalPrice);
         tarih = findViewById(R.id.purchaseTime);
 
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(this).load(billPhoto).apply(options).into(fatura);
+
+
         Glide.with(this).load(iconURL).into(istasyonLogo);
-        Glide.with(this).load(billPhoto).into(fatura);
         switch (fuelType1) {
             case 0:
                 Glide.with(this).load(R.drawable.gasoline).into(tur1);
@@ -148,13 +167,23 @@ public class PurchaseDetails extends AppCompatActivity {
             litre2.setVisibility(View.GONE);
         }
 
-
-        float tax1 = MainActivity.taxCalculator(fuelType1, (float) (fuelPrice1 * fuelLiter1));
-        float tax2 = MainActivity.taxCalculator(fuelType2, (float) (fuelPrice2 * fuelLiter2));
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " TL";
+        float tax1 = fuelPrice1 * fuelLiter1 * fuelTax1;
+        float tax2 = fuelPrice2 * fuelLiter2 * fuelTax2;
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " " + currencyCode;
         vergi.setText(taxHolder);
-        toplamfiyat.setText(totalPrice + "TL");
-        tarih.setReferenceTime(purchaseTime);
+
+        String totalHolder = "TOPLAM : " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
+        toplamfiyat.setText(totalHolder);
+
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        try {
+            Date date = format.parse(purchaseTime);
+            tarih.setReferenceTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +239,7 @@ public class PurchaseDetails extends AppCompatActivity {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 LatLng mStationLoc = new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1]));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mStationLoc).zoom(13f).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mStationLoc).zoom(16f).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                         (cameraPosition));
                 googleMap.addMarker(new MarkerOptions().position(mStationLoc).title(stationName).snippet(tarih.getText().toString()));
@@ -249,6 +278,22 @@ public class PurchaseDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are car_placeholder.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        loadMap();
+                    }
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     @Override

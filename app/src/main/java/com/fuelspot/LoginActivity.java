@@ -347,8 +347,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     gender = me.optString("gender");
                                     prefs.edit().putString("Gender", gender).apply();
 
-                                    MainActivity.location = me.optString("location");
-                                    prefs.edit().putString("Location", MainActivity.location).apply();
+                                    location = me.optString("location");
+                                    prefs.edit().putString("Location", location).apply();
 
                                     //USERNAME
                                     String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
@@ -379,7 +379,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void saveUserInfo() {
         //Showing the progress dialog
         final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REGISTER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_USER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -419,6 +419,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("birthday", birthday);
                 params.put("location", MainActivity.location);
                 params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
 
                 //returning parameters
                 return params;

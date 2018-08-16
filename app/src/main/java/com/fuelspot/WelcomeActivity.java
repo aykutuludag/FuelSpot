@@ -13,6 +13,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -70,19 +71,28 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -136,7 +146,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         saveCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveUserInfo();
+                addVehicle();
             }
         });
 
@@ -169,31 +179,168 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     public void fetchUserInfo() {
         final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PROFILE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            loading.dismiss();
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            name = obj.getString("name");
+                            prefs.edit().putString("Name", name).apply();
+
+                            email = obj.getString("email");
+                            prefs.edit().putString("Email", email).apply();
+
+                            photo = obj.getString("photo");
+                            prefs.edit().putString("ProfilePhoto", photo).apply();
+
+                            gender = obj.getString("gender");
+                            prefs.edit().putString("Gender", gender).apply();
+
+                            birthday = obj.getString("birthday");
+                            prefs.edit().putString("Birthday", birthday).apply();
+
+                            location = obj.getString("location");
+                            prefs.edit().putString("Location", location).apply();
+
+                            userCountry = obj.getString("country");
+                            prefs.edit().putString("userCountry", userCountry).apply();
+
+                            userDisplayLanguage = obj.getString("language");
+                            prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                            userVehicles = obj.getString("vehicles");
+                            prefs.edit().putString("userVehicles", userVehicles).apply();
+
+                            MainActivity.getVariables(prefs);
+                            continueButton.setAlpha(1.0f);
+                            continueButton.setClickable(true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void Localization() {
+        if (userlat != null && userlon != null) {
+            if (userlat.length() > 0 && userlon.length() > 0) {
+                Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
+                    if (addresses.size() > 0) {
+                        userCountry = addresses.get(0).getCountryCode();
+                        prefs.edit().putString("userCountry", userCountry).apply();
+
+                        userCountryName = addresses.get(0).getCountryName();
+                        prefs.edit().putString("userCountryName", userCountryName).apply();
+
+                        userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+                        prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                        Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
+                        currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
+                        prefs.edit().putString("userCurrency", currencyCode).apply();
+
+                        if (userCountry.equals("US") || userCountry.equals("LR") || userCountry.equals("MM")) {
+                            userUnit = getString(R.string.unitSystem2);
+                        } else {
+                            userUnit = getString(R.string.unitSystem1);
+                        }
+                        prefs.edit().putString("userUnit", userUnit).apply();
+                        fetchTaxRates();
+                    }
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            }
+        }
+    }
+
+    public void fetchTaxRates() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
+
+                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
+
+                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
+                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
+
+                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
+                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
+
+                                MainActivity.getVariables(prefs);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("country", MainActivity.userCountry);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+   /* public void fetchVehicle() {
+        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
-
-                            MainActivity.name = obj.getString("name");
-                            prefs.edit().putString("Name", MainActivity.name).apply();
-
-                            MainActivity.email = obj.getString("email");
-                            prefs.edit().putString("Email", MainActivity.email).apply();
-
-                            MainActivity.photo = obj.getString("photo");
-                            prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
-
-                            MainActivity.gender = obj.getString("gender");
-                            prefs.edit().putString("Gender", MainActivity.gender).apply();
-
-                            MainActivity.birthday = obj.getString("birthday");
-                            prefs.edit().putString("Birthday", MainActivity.birthday).apply();
-
-                            MainActivity.location = obj.getString("location");
-                            prefs.edit().putString("Location", MainActivity.location).apply();
 
                             carBrand = obj.getString("car_brand");
                             prefs.edit().putString("carBrand", carBrand).apply();
@@ -243,7 +390,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
+    }*/
 
     public void loadCarSelection() {
         //CarPic
@@ -396,64 +543,31 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         });
     }
 
-    private void Localization() {
-        if (userlat != null && userlon != null) {
-            if (userlat.length() > 0 && userlon.length() > 0) {
-                Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
-                try {
-                    List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
-                    if (addresses.size() > 0) {
-                        userCountry = addresses.get(0).getCountryCode();
-                        prefs.edit().putString("userCountry", userCountry).apply();
-
-                        userCountryName = addresses.get(0).getCountryName();
-                        prefs.edit().putString("userCountryName", userCountryName).apply();
-
-                        userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
-                        prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
-
-                        Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
-                        currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
-                        prefs.edit().putString("userCurrency", currencyCode).apply();
-
-                        if (userCountry.equals("US") || userCountry.equals("LR") || userCountry.equals("MM")) {
-                            userUnit = getString(R.string.unitSystem2);
-                        } else {
-                            userUnit = getString(R.string.unitSystem1);
-                        }
-                        prefs.edit().putString("userUnit", userUnit).apply();
-                        fetchTaxRates();
-                    }
-                } catch (Exception e) {
-                    // Do nothing
-                }
-            }
-        }
-    }
-
-    public void fetchTaxRates() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+    private void addVehicle() {
+        //Showing the progress dialog
+        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_VEHICLE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println(response);
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
-                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
-                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
+                                vehicleID = obj.getInt("id");
+                                prefs.edit().putInt("vehicleID", vehicleID).apply();
 
-                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
-                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
+                                plateNo = obj.getString("plateNo");
+                                prefs.edit().putString("plateNo", plateNo).apply();
 
-                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
-                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
-
-                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
-                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
+                                userVehicles += vehicleID + " - " + plateNo + ";";
+                                prefs.edit().putString("userVehicles", userVehicles).apply();
 
                                 MainActivity.getVariables(prefs);
+                                updateUserInfo();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -463,46 +577,11 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("country", MainActivity.userCountry);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-
-    private void saveUserInfo() {
-        //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        loading.dismiss();
-                        Toast.makeText(WelcomeActivity.this, s, Toast.LENGTH_LONG).show();
-                        layout2.setVisibility(View.GONE);
-                        layout3.setVisibility(View.VISIBLE);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
                         layout2.setVisibility(View.GONE);
                         layout3.setVisibility(View.VISIBLE);
+                        System.out.println(volleyError);
                     }
                 }) {
             @Override
@@ -521,6 +600,54 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 }
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateUserInfo() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
+                        layout3.setVisibility(View.VISIBLE);
+                        layout2.setVisibility(View.GONE);
+                        System.out.println(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        System.out.println(volleyError);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", MainActivity.username);
+                params.put("email", MainActivity.email);
+                params.put("gender", MainActivity.gender);
+                params.put("birthday", MainActivity.birthday);
+                params.put("location", MainActivity.location);
+                params.put("country", MainActivity.userCountry);
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
+                }
+                params.put("language", userDisplayLanguage);
+                params.put("vehicles", userVehicles);
 
                 //returning parameters
                 return params;
@@ -1027,9 +1154,25 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         }
                     });
 
-                    layout1.setVisibility(View.GONE);
-                    layout2.setVisibility(View.VISIBLE);
-                    loadCarSelection();
+                    if (userVehicles != null && userVehicles.length() > 0) {
+                        //User re-looged in
+                        Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                        howto3 = true;
+                        MainActivity.isSigned = true;
+                        prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }, 2000);
+                    } else {
+                        loadCarSelection();
+                        layout2.setVisibility(View.VISIBLE);
+                        layout1.setVisibility(View.GONE);
+                    }
                 }
                 break;
             }

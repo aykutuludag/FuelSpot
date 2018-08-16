@@ -100,7 +100,7 @@ public class SuperComments extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        snackbar = Snackbar.make(findViewById(R.id.swipeContainer), "Henüz hiç yorum yazılmamış.", Snackbar.LENGTH_LONG);
+        snackbar = Snackbar.make(swipeContainer, "Henüz hiç yorum yazılmamış.", Snackbar.LENGTH_LONG);
 
         fetchSuperComments();
     }

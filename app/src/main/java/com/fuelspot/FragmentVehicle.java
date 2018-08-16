@@ -235,7 +235,7 @@ public class FragmentVehicle extends Fragment {
         MainActivity.purchaseUnitPrice.clear();
         MainActivity.purchaseUnitPrice2.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_PURCHASES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -254,9 +254,11 @@ public class FragmentVehicle extends Fragment {
                                     item.setFuelType(obj.getInt("fuelType"));
                                     item.setFuelPrice((float) obj.getDouble("fuelPrice"));
                                     item.setFuelLiter((float) obj.getDouble("fuelLiter"));
+                                    item.setFuelTax((float) obj.getDouble("fuelTax"));
                                     item.setFuelType2(obj.getInt("fuelType2"));
                                     item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
                                     item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
+                                    item.setFuelTax2((float) obj.getDouble("fuelTax2"));
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
                                     feedsList.add(item);

@@ -10,9 +10,11 @@ public class PurchaseItem {
     private int fuelType1;
     private float fuelPrice1;
     private float fuelLiter1;
+    private float fuelTax1;
     private int fuelType2;
     private float fuelPrice2;
     private float fuelLiter2;
+    private float fuelTax2;
     private float totalPrice;
     private String billPhoto;
 
@@ -80,6 +82,14 @@ public class PurchaseItem {
         this.fuelLiter1 = fuelLiter1;
     }
 
+    public float getFuelTax() {
+        return fuelTax1;
+    }
+
+    public void setFuelTax(float fuelTax1) {
+        this.fuelTax1 = fuelTax1;
+    }
+
     public int getFuelType2() {
         return fuelType2;
     }
@@ -88,7 +98,7 @@ public class PurchaseItem {
         this.fuelType2 = fuelType2;
     }
 
-    public double getFuelPrice2() {
+    public float getFuelPrice2() {
         return fuelPrice2;
     }
 
@@ -104,7 +114,15 @@ public class PurchaseItem {
         this.fuelLiter2 = fuelLiter2;
     }
 
-    public double getTotalPrice() {
+    public float getFuelTax2() {
+        return fuelTax2;
+    }
+
+    public void setFuelTax2(float fuelTax2) {
+        this.fuelTax2 = fuelTax2;
+    }
+
+    public float getTotalPrice() {
         return totalPrice;
     }
 

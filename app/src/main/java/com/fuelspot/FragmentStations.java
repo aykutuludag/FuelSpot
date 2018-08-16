@@ -119,10 +119,12 @@ public class FragmentStations extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("İstasyonlar");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        if (getActivity() != null) {
+            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            t.setScreenName("İstasyonlar");
+            t.enableAdvertisingIdCollection(true);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
+        }
 
         //Variables
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);

@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
     public static float averageCons, averagePrice;
+    public static int vehicleID;
+    public static String userVehicles, plateNo;
     public static String userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom;
@@ -207,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
         mapDefaultRange = prefs.getInt("RANGE", 5000);
         mapDefaultZoom = prefs.getFloat("ZOOM", 12.25f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
+        userVehicles = prefs.getString("userVehicles", "");
+        plateNo = prefs.getString("plateNo", "");
+        vehicleID = prefs.getInt("vehicleID", 0);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -312,25 +317,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         admobInterstitial.loadAd(adRequest);
-    }
-
-    public static float taxCalculator(int fuelType, float price) {
-        float tax;
-        switch (fuelType) {
-            case 0:
-                tax = price * TAX_GASOLINE;
-                break;
-            case 1:
-                tax = price * TAX_DIESEL;
-                break;
-            case 2:
-                tax = price * TAX_LPG;
-                break;
-            default:
-                tax = price * TAX_ELECTRICITY;
-                break;
-        }
-        return tax;
     }
 
     public void GeofenceScheduler() {

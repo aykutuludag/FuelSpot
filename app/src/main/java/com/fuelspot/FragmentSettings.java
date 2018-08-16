@@ -261,7 +261,7 @@ public class FragmentSettings extends Fragment {
     }
 
     void updateTaxRates() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_TAX_RATES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -38,6 +38,7 @@
         <activity
             android:name=".StationDetails"
             android:label="İstasyon detayı"
+            android:theme="@style/TranscluentTheme"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddFuel"

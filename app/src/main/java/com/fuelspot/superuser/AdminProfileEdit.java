@@ -252,7 +252,7 @@ public class AdminProfileEdit extends AppCompatActivity {
 
     public void updateSuperUser() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE_PROFILE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

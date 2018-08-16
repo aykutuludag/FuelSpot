@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.fuelspot.MainActivity;
 import com.fuelspot.PurchaseDetails;
 import com.fuelspot.R;
 import com.fuelspot.model.PurchaseItem;
@@ -23,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.fuelspot.MainActivity.currencyCode;
 
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHolder> {
     private List<PurchaseItem> feedItemList;
@@ -42,9 +43,11 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             intent.putExtra("FUEL_TYPE_1", feedItemList.get(position).getFuelType());
             intent.putExtra("FUEL_PRICE_1", feedItemList.get(position).getFuelPrice());
             intent.putExtra("FUEL_LITER_1", feedItemList.get(position).getFuelLiter());
+            intent.putExtra("FUEL_TAX_1", feedItemList.get(position).getFuelTax());
             intent.putExtra("FUEL_TYPE_2", feedItemList.get(position).getFuelType2());
             intent.putExtra("FUEL_PRICE_2", feedItemList.get(position).getFuelPrice2());
             intent.putExtra("FUEL_LITER_2", feedItemList.get(position).getFuelLiter2());
+            intent.putExtra("FUEL_TAX_2", feedItemList.get(position).getFuelTax2());
             intent.putExtra("TOTAL_PRICE", feedItemList.get(position).getTotalPrice());
             intent.putExtra("BILL_PHOTO", feedItemList.get(position).getBillPhoto());
             mContext.startActivity(intent);
@@ -133,9 +136,9 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         //TOTALTAX
-        float tax1 = MainActivity.taxCalculator(feedItem.getFuelType(), feedItem.getFuelPrice() * feedItem.getFuelLiter());
-        float tax2 = MainActivity.taxCalculator(feedItem.getFuelType2(), (float) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2()));
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " TL";
+        float tax1 = feedItem.getFuelPrice() * feedItem.getFuelLiter() * feedItem.getFuelTax();
+        float tax2 = feedItem.getFuelPrice2() * feedItem.getFuelLiter2() * feedItem.getFuelTax2();
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " " + currencyCode;
         viewHolder.totalTax.setText(taxHolder);
 
         //TotalPrice

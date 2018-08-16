@@ -11,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -95,7 +96,7 @@ public class StationDetails extends AppCompatActivity {
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
-
+    NestedScrollView scrollView;
     ImageView errorPhoto, errorStreetView;
     CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -107,6 +108,7 @@ public class StationDetails extends AppCompatActivity {
     ArrayList<String> campaignPhoto = new ArrayList<>();
     ArrayList<String> campaignStart = new ArrayList<>();
     ArrayList<String> campaignEnd = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +130,8 @@ public class StationDetails extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //coloredBars(Color.argb(50, 0, 0, 0), Color.TRANSPARENT);
+
         //Dynamic bar colors
         appBarLayout = findViewById(R.id.Appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -138,7 +142,7 @@ public class StationDetails extends AppCompatActivity {
                 } else if (verticalOffset == 0) {
                     coloredBars(Color.TRANSPARENT, Color.TRANSPARENT);
                 } else {
-                    coloredBars(Color.argb(255 - verticalOffset / 2, 230, 74, 25), Color.argb(255 - verticalOffset / 2, 255, 87, 34));
+                    coloredBars(Color.TRANSPARENT, Color.TRANSPARENT);
                 }
             }
         });
@@ -151,7 +155,7 @@ public class StationDetails extends AppCompatActivity {
 
         errorPhoto = findViewById(R.id.errorPic);
         errorStreetView = findViewById(R.id.imageViewErrStreetView);
-
+        scrollView = findViewById(R.id.scrollView);
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);
@@ -164,6 +168,21 @@ public class StationDetails extends AppCompatActivity {
         textElectricity = findViewById(R.id.TaxElectricity);
         textLastUpdated = findViewById(R.id.lastUpdated);
         stationIcon = findViewById(R.id.station_photo);
+
+        /*appBarLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Toast.makeText(StationDetails.this, "BASILIYOR", Toast.LENGTH_SHORT).show();
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
+                    params.setScrollFlags(0);  // clear all scroll flags
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // Allow ScrollView to intercept touch events.
+                    Toast.makeText(StationDetails.this, "Bıraktı", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });*/
 
         // Nerden gelirse gelsin stationID boş olamaz.
         stationID = getIntent().getIntExtra("STATION_ID", 0);
@@ -249,7 +268,7 @@ public class StationDetails extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 materialDesignFAM.close(true);
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Intent intent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
                 startActivity(intent);
             }

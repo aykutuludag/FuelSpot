@@ -14,15 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_collapseMode="parallax">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_header"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/colorAccent"
+            app:contentScrim="@color/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="32dp"
+            app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.google.android.gms.maps.StreetViewPanoramaView
@@ -42,14 +43,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -312,7 +313,8 @@
                     android:id="@+id/commentView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_comments" />
+                    android:layout_below="@+id/title_comments"
+                    android:background="@android:color/transparent" />
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

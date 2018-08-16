@@ -80,7 +80,6 @@ import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
-import static com.fuelspot.MainActivity.taxCalculator;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -495,15 +494,23 @@ public class AddFuel extends AppCompatActivity {
         });
     }
 
-    private void updateTaxandGrandTotal() {
-        tax1 = taxCalculator(fuelPri, entryPrice);
-        tax2 = taxCalculator(fuelSec, entryPrice2);
-
-        taxTotal = tax1 + tax2;
-        totalPrice = entryPrice + entryPrice2;
-
-        fuelVergi.setText("VERGİ: " + taxTotal);
-        fuelGrandTotal.setText("TOPLAM: " + totalPrice);
+    public static float taxCalculator(int fuelType, float price) {
+        float tax;
+        switch (fuelType) {
+            case 0:
+                tax = price * TAX_GASOLINE;
+                break;
+            case 1:
+                tax = price * TAX_DIESEL;
+                break;
+            case 2:
+                tax = price * TAX_LPG;
+                break;
+            default:
+                tax = price * TAX_ELECTRICITY;
+                break;
+        }
+        return tax;
     }
 
     public float howManyLiter(float priceForUnit, float totalPrice) {
@@ -638,8 +645,20 @@ public class AddFuel extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void updateTaxandGrandTotal() {
+        tax1 = taxCalculator(fuelPri, entryPrice);
+        tax2 = taxCalculator(fuelSec, entryPrice2);
+
+        taxTotal = tax1 + tax2;
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", taxTotal) + " " + currencyCode;
+        fuelVergi.setText(taxHolder);
+        totalPrice = entryPrice + entryPrice2;
+        String totalHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", taxTotal) + " " + currencyCode;
+        fuelGrandTotal.setText(totalHolder);
+    }
+
     private void updateCarInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
