@@ -57,6 +57,7 @@
                 android:layout_alignTop="@+id/dummyImage1"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/dummyImage1"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:text="Ad - Soyad"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -73,7 +74,7 @@
                 android:gravity="bottom"
                 android:inputType="none"
                 android:padding="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 
             <ImageView
@@ -93,6 +94,7 @@
                 android:layout_alignTop="@+id/dummyImage2"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/dummyImage2"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:text="E-posta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -112,11 +114,51 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView
+                android:id="@+id/dummyImage3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignStart="@+id/userPhoto"
+                android:layout_below="@+id/userPhoto"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@drawable/email" />
+
+            <TextView
+                android:id="@+id/dummyText4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/dummyImage3"
+                android:layout_alignTop="@+id/dummyImage3"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/dummyImage3"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center"
+                android:text="Telefon"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <EditText
+                android:id="@+id/editTextPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/userPhoto"
+                android:layout_below="@+id/dummyImage3"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="bottom"
+                android:inputType="phone"
+                android:paddingBottom="8dp"
+                android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <ImageView
                 android:id="@+id/indicator_loc"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignStart="@+id/userPhoto"
-                android:layout_below="@+id/editTextMail"
+                android:layout_below="@+id/editTextPhone"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_location" />
@@ -129,9 +171,10 @@
                 android:layout_alignTop="@+id/indicator_loc"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/indicator_loc"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:text="Konum"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
                 android:id="@+id/editTextLocation"
@@ -144,7 +187,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="none"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <ImageView
                 android:id="@+id/dummyImage4"
@@ -163,9 +206,10 @@
                 android:layout_alignBottom="@+id/dummyImage4"
                 android:layout_alignStart="@+id/desc_title"
                 android:layout_alignTop="@+id/dummyImage4"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:text="Doğum günü"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
                 android:id="@+id/editTextBirthday"
@@ -178,7 +222,7 @@
                 android:enabled="true"
                 android:focusableInTouchMode="false"
                 android:inputType="none"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <ImageView
                 android:id="@+id/dummyImage5"
@@ -197,9 +241,10 @@
                 android:layout_alignBottom="@+id/dummyImage5"
                 android:layout_alignStart="@+id/dummyText5"
                 android:layout_alignTop="@+id/dummyImage5"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:text="Cinsiyet"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <RadioGroup
                 android:id="@+id/radioGroupGender"

@@ -134,18 +134,7 @@ public class StationDetails extends AppCompatActivity {
 
         //Dynamic bar colors
         appBarLayout = findViewById(R.id.Appbar);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
-                    coloredBars(ContextCompat.getColor(StationDetails.this, R.color.colorPrimaryDark), ContextCompat.getColor(StationDetails.this, R.color.colorPrimary));
-                } else if (verticalOffset == 0) {
-                    coloredBars(Color.TRANSPARENT, Color.TRANSPARENT);
-                } else {
-                    coloredBars(Color.TRANSPARENT, Color.TRANSPARENT);
-                }
-            }
-        });
+        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();

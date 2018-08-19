@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_vehicle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#EDEDED">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -26,8 +26,7 @@
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/imageView6"
         android:gravity="center"
-        android:text="Renault Symbol"
-        android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <ImageView
         android:id="@+id/car_fuelType"
@@ -36,7 +35,6 @@
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView7"
         android:padding="2dp"
-        android:src="@drawable/gasoline"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <ImageView
@@ -46,7 +44,6 @@
         android:layout_alignTop="@+id/car_fuelType"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/car_fuelTypeText"
-        android:src="@drawable/lpg"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <TextView
@@ -57,7 +54,6 @@
         android:layout_alignTop="@+id/car_fuelType"
         android:layout_toEndOf="@+id/car_fuelType"
         android:gravity="center"
-        android:text="Gasoline"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -70,7 +66,6 @@
         android:layout_alignTop="@+id/car_fuelType"
         android:layout_toEndOf="@+id/car_fuelType2"
         android:gravity="center"
-        android:text="LPG"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -83,7 +78,6 @@
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView8"
         android:gravity="center"
-        android:text="0.0 lt / 100 km"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -96,7 +90,6 @@
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView9"
         android:gravity="center"
-        android:text="0 TL / 100 km"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -109,7 +102,6 @@
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView10"
         android:gravity="center"
-        android:text="0 TL / ay"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -174,6 +166,7 @@
         android:layout_height="20dp"
         android:layout_alignStart="@id/imageView6"
         android:layout_below="@+id/imageView9"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
         app:srcCompat="@drawable/icon_montlyprice" />
 

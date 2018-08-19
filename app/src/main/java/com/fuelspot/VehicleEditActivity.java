@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,9 +65,11 @@ import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
@@ -82,6 +86,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     Toolbar toolbar;
     ArrayAdapter<CharSequence> adapter;
     ArrayAdapter<String> adapter2;
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +110,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        requestQueue = Volley.newRequestQueue(this);
         editor = prefs.edit();
         MainActivity.getVariables(prefs);
 
@@ -241,8 +247,8 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 elec2.setSelected(false);
                 MainActivity.fuelSec = -1;
 
-                prefs.edit().putInt("FuelPrimary", MainActivity.fuelPri).apply();
-                prefs.edit().putInt("FuelSecondary", MainActivity.fuelSec).apply();
+                editor.putInt("FuelPrimary", MainActivity.fuelPri);
+                editor.putInt("FuelSecondary", MainActivity.fuelSec);
             }
         });
 
@@ -261,7 +267,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 } else if (checkedId == R.id.electricity2) {
                     MainActivity.fuelSec = 3;
                 }
-                prefs.edit().putInt("FuelSecondary", MainActivity.fuelSec).apply();
+                editor.putInt("FuelSecondary", MainActivity.fuelSec);
             }
         });
 
@@ -314,8 +320,29 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     //All uppercase
                     plateNo = plateNo.toUpperCase();
 
-                    prefs.edit().putString("plateNo", plateNo).apply();
+                    editor.putString("plateNo", plateNo);
                 }
+            }
+        });
+
+        final int vehicleNumber = userVehicles.split(";").length;
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                if (vehicleNumber > 1) {
+                    Snackbar.make(view, "Araç silinecek?", Snackbar.LENGTH_LONG)
+                            .setAction("SİL", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    deleteVehicle();
+                                }
+                            }).show();
+                } else {
+                    Snackbar.make(view, "Araç silebilmek için en az 2 aracınız olmalıdır.", Snackbar.LENGTH_LONG).show();
+                }
+
+
             }
         });
     }
@@ -364,8 +391,37 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
             }
         };
 
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(VehicleEditActivity.this);
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void deleteVehicle() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_DELETE_VEHICLE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(VehicleEditActivity.this, response, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("vehicleID", String.valueOf(vehicleID));
+
+                //returning parameters
+                return params;
+            }
+        };
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -833,14 +889,14 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 spinner2.setOnItemSelectedListener(this);
 
                 MainActivity.carBrand = spinner.getSelectedItem().toString();
-                prefs.edit().putString("carBrand", MainActivity.carBrand).apply();
+                editor.putString("carBrand", MainActivity.carBrand);
 
                 MainActivity.carModel = spinner2.getSelectedItem().toString();
-                prefs.edit().putString("carModel", MainActivity.carModel).apply();
+                editor.putString("carModel", MainActivity.carModel);
                 break;
             case R.id.spinner_models:
                 MainActivity.carModel = spinner2.getSelectedItem().toString();
-                prefs.edit().putString("carModel", MainActivity.carModel).apply();
+                editor.putString("carModel", MainActivity.carModel);
                 break;
             default:
                 break;
@@ -866,10 +922,10 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 return true;
             case R.id.navigation_save:
                 editor.apply();
-                if (MainActivity.isNetworkConnected(VehicleEditActivity.this)) {
+                if (isNetworkConnected(VehicleEditActivity.this)) {
                     updateVehicle();
                 } else {
-                    Toast.makeText(VehicleEditActivity.this, "Internet bağlantısında bir sorun var", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Internet bağlantısında bir sorun var", Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             default:

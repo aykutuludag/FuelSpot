@@ -26,11 +26,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.facebook.ads.Ad;
@@ -44,9 +52,15 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
     public static int fuelPri, fuelSec, kilometer;
     public static float mapDefaultZoom;
     public static int mapDefaultRange;
-    public static int mapDefaultZoneUpdateRange = 500;
     public static int mapDefaultStationRange = 50;
     public static int openCount;
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
@@ -167,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
+    RequestQueue requestQueue;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -362,11 +376,14 @@ public class MainActivity extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setLogo(R.drawable.brand_logo);
+        }
 
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
 
@@ -375,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
-        List<Fragment> fragments = new ArrayList<>(5);
+        final List<Fragment> fragments = new ArrayList<>(5);
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentVehicle.newInstance());
@@ -384,26 +401,35 @@ public class MainActivity extends AppCompatActivity {
         builder.rootFragments(fragments);
         mFragNavController = builder.build();
 
-        AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
+        final AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
 
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorAccent);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorAccent);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorPrimary);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorPrimary);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorPrimary);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
         bottomNavigation.addItem(item4);
         bottomNavigation.addItem(item5);
+
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-
+        bottomNavigation.setNotification(userVehicles.split(";").length, 2);
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-                mFragNavController.switchTab(position);
+                if (position == 2) {
+                    if (fragments.get(2) != null && fragments.get(2).isVisible()) {
+                        openVehicleChoosePopup(bottomNavigation);
+                    } else {
+                        mFragNavController.switchTab(position);
+                    }
+                } else {
+                    mFragNavController.switchTab(position);
+                }
                 return true;
             }
         });
@@ -500,6 +526,115 @@ public class MainActivity extends AppCompatActivity {
         assert pendingIntent != null;
         startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_NORMAL_PREMIUM, new Intent(), 0,
                 0, 0);
+    }
+
+    void openVehicleChoosePopup(View view) {
+        if (userVehicles != null && userVehicles.length() > 0) {
+            String[] vehicles = userVehicles.split(";");
+
+            final ArrayList<Integer> vehicleIDs = new ArrayList<>();
+            final ArrayList<String> vehicleNames = new ArrayList<>();
+            final ArrayList<String> vehiclePlates = new ArrayList<>();
+            final ArrayList<String> spinnerText = new ArrayList<>();
+
+            final PopupMenu popup = new PopupMenu(MainActivity.this, view);
+
+            for (int i = 0; i < vehicles.length; i++) {
+                vehicleIDs.add(Integer.valueOf(vehicles[i].split("-")[0]));
+                vehicleNames.add(vehicles[i].split("-")[1]);
+                vehiclePlates.add(vehicles[i].split("-")[2]);
+
+                spinnerText.add(vehicleNames.get(i) + " - " + vehiclePlates);
+                popup.getMenu().add(vehicleNames.get(i) + " - " + vehiclePlates).setIcon(R.drawable.default_automobile);
+            }
+
+            spinnerText.add("YENİ ARAÇ EKLE");
+            popup.getMenu().add("YENİ ARAÇ EKLE");
+
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == spinnerText.size() - 1) {
+                        //YENİ ARAÇ EKLE
+                        Intent intent = new Intent(MainActivity.this, AddNewVehicle.class);
+                        startActivity(intent);
+                        popup.dismiss();
+                    } else {
+                        if (vehicleID != vehicleIDs.get(item.getItemId())) {
+                            fetchVehicle(vehicleIDs.get(item.getItemId()));
+                            popup.dismiss();
+                        } else {
+                            popup.dismiss();
+                        }
+                    }
+                    return true;
+                }
+            });
+            popup.show();
+        }
+
+    }
+
+    public void fetchVehicle(final int aracID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            vehicleID = obj.getInt("id");
+                            prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+                            carBrand = obj.getString("car_brand");
+                            prefs.edit().putString("carBrand", carBrand).apply();
+
+                            carModel = obj.getString("car_model");
+                            prefs.edit().putString("carModel", carModel).apply();
+
+                            fuelPri = obj.getInt("fuelPri");
+                            prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+                            fuelSec = obj.getInt("fuelSec");
+                            prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+                            kilometer = obj.getInt("kilometer");
+                            prefs.edit().putInt("Kilometer", kilometer).apply();
+
+                            carPhoto = obj.getString("carPhoto");
+                            prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+                            plateNo = obj.getString("plateNo");
+                            prefs.edit().putString("plateNo", plateNo).apply();
+
+                            averageCons = (float) obj.getDouble("avgConsumption");
+                            prefs.edit().putFloat("averageConsumption", averageCons).apply();
+                            getVariables(prefs);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("vehicleID", String.valueOf(aracID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     public void coloredBars(int color1, int color2) {

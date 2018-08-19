@@ -71,6 +71,10 @@ import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.birthday;
+import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -131,7 +135,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         editName.setText(MainActivity.name);
 
         // Setting email
-        editMail.setText(MainActivity.email);
+        editMail.setText(email);
         editMail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -146,7 +150,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0 && s.toString().contains("@")) {
-                    MainActivity.email = s.toString();
+                    email = s.toString();
                 }
             }
         });
@@ -171,7 +175,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         //  Setting location and retrieving changes
-        editLocation.setText(MainActivity.location);
+        editLocation.setText(location);
         editLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,11 +192,11 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         //  Setting birthday and retrieving changes
-        editBirthday.setText(MainActivity.birthday);
-        if (MainActivity.birthday.length() > 0) {
+        editBirthday.setText(birthday);
+        if (birthday.length() > 0) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                Date birthDateasDate = sdf.parse(MainActivity.birthday);
+                Date birthDateasDate = sdf.parse(birthday);
                 calendarYear = birthDateasDate.getYear() + 1900;
                 calendarMonth = birthDateasDate.getMonth() + 1;
                 calendarDay = birthDateasDate.getDate();
@@ -211,8 +215,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                 DatePickerDialog datePicker = new DatePickerDialog(ProfileEditActivity.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        MainActivity.birthday = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                        editBirthday.setText(MainActivity.birthday);
+                        birthday = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        editBirthday.setText(birthday);
                     }
                 }, calendarYear, calendarMonth, calendarDay);
 
@@ -224,22 +228,26 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         //  Set gender and retrieve changes
-        if (MainActivity.gender.equals("male")) {
-            bMale.setChecked(true);
-        } else if (MainActivity.gender.equals("female")) {
-            bFemale.setChecked(true);
-        } else {
-            bOther.setChecked(true);
+        switch (gender) {
+            case "male":
+                bMale.setChecked(true);
+                break;
+            case "female":
+                bFemale.setChecked(true);
+                break;
+            default:
+                bOther.setChecked(true);
+                break;
         }
         editGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int checkedId) {
                 if (checkedId == R.id.genderMale) {
-                    MainActivity.gender = "male";
+                    gender = "male";
                 } else if (checkedId == R.id.genderFemale) {
-                    MainActivity.gender = "female";
+                    gender = "female";
                 } else {
-                    MainActivity.gender = "transsexual";
+                    gender = "transsexual";
                 }
             }
         });
@@ -268,10 +276,10 @@ public class ProfileEditActivity extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("username", MainActivity.username);
-                params.put("email", MainActivity.email);
-                params.put("gender", MainActivity.gender);
-                params.put("birthday", MainActivity.birthday);
-                params.put("location", MainActivity.location);
+                params.put("email", email);
+                params.put("gender", gender);
+                params.put("birthday", birthday);
+                params.put("location", location);
                 params.put("country", MainActivity.userCountry);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
@@ -321,10 +329,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                 return true;
             case R.id.navigation_save:
                 if (MainActivity.isNetworkConnected(this)) {
-                    editor.putString("Email", MainActivity.email);
-                    editor.putString("Gender", MainActivity.gender);
-                    editor.putString("Location", MainActivity.location);
-                    editor.putString("Birthday", MainActivity.birthday);
+                    editor.putString("Email", email);
+                    editor.putString("Gender", gender);
+                    editor.putString("Location", location);
+                    editor.putString("Birthday", birthday);
                     editor.apply();
                     updateUserInfo();
                 } else {
@@ -364,8 +372,8 @@ public class ProfileEditActivity extends AppCompatActivity {
             case GOOGLE_PLACE_AUTOCOMPLETE:
                 if (resultCode == RESULT_OK) {
                     Place place = PlaceAutocomplete.getPlace(this, data);
-                    MainActivity.location = place.getAddress().toString();
-                    editLocation.setText(MainActivity.location);
+                    location = place.getAddress().toString();
+                    editLocation.setText(location);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
                     Log.i("Error", status.getStatusMessage());

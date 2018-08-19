@@ -22,8 +22,8 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#ffffff" />
 
     <ImageView
         android:id="@+id/updateUserInfo"
@@ -71,9 +71,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
         android:text="Son yorumlarınız"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
 
     <ImageView
         android:id="@+id/errorPhoto"

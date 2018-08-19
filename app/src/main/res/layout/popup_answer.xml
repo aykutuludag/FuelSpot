@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#f0f0f0"
-    android:padding="32dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/title"
@@ -13,21 +13,22 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
+        android:fontFamily="@font/gotham_bold"
         android:text="CEVAPLA"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+        android:textColor="#626262" />
 
     <EditText
         android:id="@+id/editTextAnswer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
         android:layout_margin="8dp"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:padding="16dp" />
+        android:padding="16dp"
+        android:text="sanane laaan" />
 
     <Button
         android:id="@+id/buttonAddAnswer"

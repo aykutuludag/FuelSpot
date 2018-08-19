@@ -332,66 +332,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-   /* public void fetchVehicle() {
-        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-
-                            carBrand = obj.getString("car_brand");
-                            prefs.edit().putString("carBrand", carBrand).apply();
-
-                            carModel = obj.getString("car_model");
-                            prefs.edit().putString("carModel", carModel).apply();
-
-                            MainActivity.fuelPri = obj.getInt("fuelPri");
-                            prefs.edit().putInt("FuelPrimary", MainActivity.fuelPri).apply();
-
-                            MainActivity.fuelSec = obj.getInt("fuelSec");
-                            prefs.edit().putInt("FuelSecondary", MainActivity.fuelSec).apply();
-
-                            kilometer = obj.getInt("kilometer");
-                            prefs.edit().putInt("Kilometer", kilometer).apply();
-
-                            MainActivity.carPhoto = obj.getString("carPhoto");
-                            prefs.edit().putString("CarPhoto", MainActivity.carPhoto).apply();
-
-                            loading.dismiss();
-                            MainActivity.getVariables(prefs);
-                            continueButton.setAlpha(1.0f);
-                            continueButton.setClickable(true);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }*/
-
     public void loadCarSelection() {
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
@@ -583,6 +523,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
+
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
@@ -590,10 +531,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 vehicleID = obj.getInt("id");
                                 prefs.edit().putInt("vehicleID", vehicleID).apply();
 
-                                plateNo = obj.getString("plateNo");
-                                prefs.edit().putString("plateNo", plateNo).apply();
-
-                                userVehicles += vehicleID + "-" + plateNo + ";";
+                                userVehicles += vehicleID + "-" + carBrand + " " + carModel + "-" + plateNo + ";";
                                 prefs.edit().putString("userVehicles", userVehicles).apply();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -646,7 +584,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
                         layout3.setVisibility(View.VISIBLE);
                         layout2.setVisibility(View.GONE);
-                        System.out.println(response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -654,7 +591,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
                         Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                        System.out.println(volleyError);
                     }
                 }) {
             @Override

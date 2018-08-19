@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/sortBar"
             android:layout_marginTop="16dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:srcCompat="@drawable/error_general" />
 
         <android.support.v7.widget.RecyclerView

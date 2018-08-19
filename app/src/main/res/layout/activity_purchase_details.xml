@@ -45,6 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mapView"
+                    android:layout_marginTop="16dp"
                     android:background="#EDEDED">
 
                     <ImageView
@@ -64,11 +65,11 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:layout_margin="4dp"
+                        android:fontFamily="@font/gotham_black"
                         android:gravity="center"
                         android:text="Alınan yakıt"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="18sp" />
 
                     <com.github.curioustechizen.ago.RelativeTimeTextView
                         android:id="@+id/purchaseTime"
@@ -79,7 +80,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_margin="4dp"
                         android:gravity="center"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -95,8 +96,7 @@
                             android:layout_alignParentTop="true"
                             android:gravity="center"
                             android:text="Tür"
-                            android:textSize="20sp"
-                            android:textStyle="italic"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -107,8 +107,7 @@
                             android:layout_toEndOf="@+id/title_type"
                             android:gravity="center"
                             android:text="Miktar"
-                            android:textSize="20sp"
-                            android:textStyle="italic"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -118,8 +117,7 @@
                             android:layout_toEndOf="@+id/title_amount"
                             android:gravity="center"
                             android:text="Birim fiyat"
-                            android:textSize="20sp"
-                            android:textStyle="italic"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -129,8 +127,7 @@
                             android:layout_alignParentTop="true"
                             android:gravity="center"
                             android:text="Tutar"
-                            android:textSize="20sp"
-                            android:textStyle="italic"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_widthPercent="25%" />
 
                         <ImageView
@@ -148,6 +145,8 @@
                             android:layout_below="@+id/title_type"
                             android:layout_toEndOf="@+id/title_type"
                             android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#626262"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -157,6 +156,8 @@
                             android:layout_alignTop="@+id/type1"
                             android:layout_toEndOf="@+id/amount1"
                             android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#626262"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -166,6 +167,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_below="@+id/title_type"
                             android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#626262"
                             app:layout_widthPercent="25%" />
 
                         <ImageView
@@ -186,6 +189,8 @@
                             android:layout_marginTop="4dp"
                             android:layout_toEndOf="@+id/title_type"
                             android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#626262"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -197,6 +202,8 @@
                             android:layout_marginTop="4dp"
                             android:layout_toEndOf="@id/amount2"
                             android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#626262"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -207,6 +214,8 @@
                             android:layout_below="@+id/type1"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#626262"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -215,11 +224,11 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/type2"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="32dp"
+                            android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
-                            android:text="VERGİ:"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold"
+                            android:text="VERGİ : "
+                            android:textSize="18sp"
                             app:layout_widthPercent="75%" />
 
                         <TextView
@@ -228,10 +237,11 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/totalTax"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="16dp"
+                            android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
-                            android:text="TOPLAM:"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textStyle="bold"
+                            android:text="TOPLAM : "
+                            android:textSize="18sp"
                             app:layout_widthPercent="75%" />
 
                     </android.support.percent.PercentRelativeLayout>
@@ -244,16 +254,19 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/single_purchase"
                     android:layout_centerHorizontal="true"
+                    android:layout_margin="16dp"
                     android:text="FATURA"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored" />
 
                 <ImageView
                     android:id="@+id/billPhoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="180dp"
+                    android:layout_height="320dp"
                     android:layout_below="@id/billTitle"
-                    app:srcCompat="@drawable/photo_placeholder" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/photo_placeholder" />
 
             </RelativeLayout>
         </ScrollView>

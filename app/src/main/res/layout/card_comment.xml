@@ -37,7 +37,7 @@
                 android:layout_toEndOf="@+id/other_profile_pic"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000" />
+                android:textColor="#212121" />
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/time"
@@ -48,7 +48,7 @@
                 android:layout_alignTop="@+id/username"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:textColor="#000"
+                android:textColor="#626262"
                 app:relative_time_prefix="Completed " />
 
             <TextView
@@ -57,16 +57,19 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/other_profile_pic"
-                android:layout_margin="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000" />
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="#626262" />
 
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/comment"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="-8dp"
                 android:clickable="false"
                 android:focusable="false"
                 android:isIndicator="true"
@@ -78,10 +81,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ratingBar"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="2dp"
-                android:background="#000"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:background="#ffffffff"
                 android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -89,7 +91,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/textViewReplyTime"
+                    android:layout_alignParentTop="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:src="@drawable/shell"
@@ -105,18 +107,21 @@
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@+id/imageViewLogo"
                     android:gravity="center"
-                    android:text="İstasyon sorumlusu"
+                    android:text="İstasyon Sorumlusu"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#fff" />
+                    android:textColor="#212121" />
 
                 <com.github.curioustechizen.ago.RelativeTimeTextView
                     android:id="@+id/textViewReplyTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/textViewStation"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="#fff"
-                    android:textStyle="bold" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
                     android:id="@+id/answer"
@@ -124,9 +129,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/imageViewLogo"
-                    android:layout_margin="8dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#fff" />
+                    android:layout_margin="16dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#626262" />
             </RelativeLayout>
 
         </RelativeLayout>

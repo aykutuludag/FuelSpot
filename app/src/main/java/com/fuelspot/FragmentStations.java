@@ -68,7 +68,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
-import static com.fuelspot.MainActivity.mapDefaultZoneUpdateRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userlat;
@@ -192,7 +191,7 @@ public class FragmentStations extends Fragment {
 
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                if (distanceInMeter >= mapDefaultZoneUpdateRange) {
+                                if (distanceInMeter >= (mapDefaultRange / 2)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
                                     updateMapObject();

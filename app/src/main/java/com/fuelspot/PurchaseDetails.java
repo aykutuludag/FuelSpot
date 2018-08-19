@@ -175,7 +175,6 @@ public class PurchaseDetails extends AppCompatActivity {
         String totalHolder = "TOPLAM : " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         toplamfiyat.setText(totalHolder);
 
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         try {
             Date date = format.parse(purchaseTime);
@@ -183,7 +182,6 @@ public class PurchaseDetails extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

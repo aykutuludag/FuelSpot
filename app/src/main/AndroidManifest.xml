@@ -32,13 +32,12 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity
-            android:name="VehicleEditActivity"
+            android:name=".VehicleEditActivity"
             android:label="Otomobil"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StationDetails"
             android:label="İstasyon detayı"
-            android:theme="@style/TranscluentTheme"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddFuel"
@@ -56,6 +55,10 @@
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/FullScreen" />
+        <activity
+            android:name=".AddNewVehicle"
+            android:label="@string/title_activity_add_new_vehicle"
+            android:parentActivityName=".MainActivity" />
 
         <!-- SuperUser Class -->
         <activity
@@ -83,18 +86,19 @@
             android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
 
-        <!--BootUpReceiver-->
+        <!-- BootUpReceiver -->
         <receiver
             android:name=".service.BootUpReceiver"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
-        <!-- BackgroundLocation - Geofence-->
+        <!-- BackgroundLocation - Geofence -->
         <service
             android:name=".service.GeofenceService"
             android:enabled="true" />

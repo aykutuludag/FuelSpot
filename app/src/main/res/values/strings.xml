@@ -178,4 +178,5 @@
         <item>Volkswagen</item>
         <item>Volvo</item>
     </string-array>
+    <string name="title_activity_add_new_vehicle">AddNewVehicle</string>
 </resources>
