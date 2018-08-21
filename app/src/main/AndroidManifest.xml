@@ -70,9 +70,6 @@
             android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".superuser.AdminProfileEdit"
-            android:parentActivityName=".superuser.AdminMainActivity" />
-        <activity
             android:name=".superuser.SuperPurchases"
             android:label="Satın almalar"
             android:parentActivityName=".superuser.AdminMainActivity"

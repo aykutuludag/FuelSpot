@@ -20,6 +20,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,7 @@ public class StationDetails extends AppCompatActivity {
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+    FloatingActionButton floatingActionButton1, floatingActionButton2;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
     NestedScrollView scrollView;
@@ -120,21 +121,20 @@ public class StationDetails extends AppCompatActivity {
 
         //Collapsing Toolbar
         collapsingToolbarLayout = findViewById(R.id.collapsing_header);
-        collapsingToolbarLayout.setTitle("İstasyon detayı");
-        collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
-        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
 
         //Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //coloredBars(Color.argb(50, 0, 0, 0), Color.TRANSPARENT);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         //Dynamic bar colors
         appBarLayout = findViewById(R.id.Appbar);
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+        coloredBars(ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.colorPrimary));
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
@@ -177,6 +177,7 @@ public class StationDetails extends AppCompatActivity {
         stationID = getIntent().getIntExtra("STATION_ID", 0);
         stationName = getIntent().getStringExtra("STATION_NAME");
         if (stationName != null && stationName.length() > 0) {
+            collapsingToolbarLayout.setTitle(stationName);
             //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
             stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
             stationLocation = getIntent().getStringExtra("STATION_LOCATION");
@@ -242,7 +243,6 @@ public class StationDetails extends AppCompatActivity {
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
-        floatingActionButton3 = findViewById(R.id.material_design_floating_action_menu_item3);
 
         if (MainActivity.isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
@@ -255,14 +255,6 @@ public class StationDetails extends AppCompatActivity {
             });
         }
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                materialDesignFAM.close(true);
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
-                startActivity(intent);
-            }
-        });
-        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 materialDesignFAM.close(true);
@@ -341,6 +333,7 @@ public class StationDetails extends AppCompatActivity {
                             JSONObject obj = res.getJSONObject(0);
 
                             stationName = obj.getString("name");
+                            collapsingToolbarLayout.setTitle(stationName);
                             stationVicinity = obj.getString("vicinity");
                             stationLocation = obj.getString("location");
                             //DISTANCE START
@@ -749,15 +742,27 @@ public class StationDetails extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_station, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.navigation_go:
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     @Override
     public void onBackPressed() {

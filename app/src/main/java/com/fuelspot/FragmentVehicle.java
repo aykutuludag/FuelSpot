@@ -51,6 +51,14 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.averagePrice;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.vehicleID;
+
 public class FragmentVehicle extends Fragment {
 
     CircleImageView carPhotoHolder;
@@ -66,6 +74,13 @@ public class FragmentVehicle extends Fragment {
     RelativeTimeTextView lastUpdated;
     Snackbar snackBar;
     CircleImageView errorImage;
+
+    public static ArrayList<String> purchaseTimes = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
+    public static ArrayList<Double> purchasePrices = new ArrayList<>();
+    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
+    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
 
     public static FragmentVehicle newInstance() {
 
@@ -110,11 +125,11 @@ public class FragmentVehicle extends Fragment {
                 .error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
-        Glide.with(getActivity()).load(Uri.parse(MainActivity.carPhoto)).apply(options).into(carPhotoHolder);
+        Glide.with(getActivity()).load(Uri.parse(carPhoto)).apply(options).into(carPhotoHolder);
 
         //Marka-model
         fullname = headerView.findViewById(R.id.carFullname);
-        String fullad = MainActivity.carBrand + " " + MainActivity.carModel;
+        String fullad = carBrand + " " + carModel;
         fullname.setText(fullad);
 
         //Yakıt tipi başlangıç
@@ -122,7 +137,7 @@ public class FragmentVehicle extends Fragment {
         fuelTypeIndicator = headerView.findViewById(R.id.car_fuelType);
         String fuelText;
 
-        switch (MainActivity.fuelPri) {
+        switch (fuelPri) {
             case 0:
                 fuelText = "gasoline";
                 fuelTypeIndicator.setImageResource(R.drawable.gasoline);
@@ -175,22 +190,23 @@ public class FragmentVehicle extends Fragment {
 
         //Ortalama tüketim
         avgText = headerView.findViewById(R.id.car_avgCons);
-        String avgDummy = String.format(Locale.getDefault(), "%.2f", MainActivity.averageCons) + " lt/100km";
+        String avgDummy = String.format(Locale.getDefault(), "%.2f", averageCons) + " lt/100km";
         avgText.setText(avgDummy);
 
         //Ortalama maliyet
         avgPrice = headerView.findViewById(R.id.car_avgPrice);
-        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", MainActivity.averagePrice) + " TL/100km";
+        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
         //Aylık maliyet
+        /* BURASINI YAP */
 
         //Last updated
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
-        if (MainActivity.purchaseTimes.size() > 0) {
+        if (purchaseTimes.size() > 0) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                Date date = format.parse(MainActivity.purchaseTimes.get(MainActivity.purchaseTimes.size() - 1));
+                Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
                 lastUpdated.setReferenceTime(date.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -212,7 +228,7 @@ public class FragmentVehicle extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchUserPurchases();
+                fetchVehiclePurchases();
             }
         });
         // Configure the refreshing colors
@@ -227,19 +243,20 @@ public class FragmentVehicle extends Fragment {
         return view;
     }
 
-    private void fetchUserPurchases() {
+    private void fetchVehiclePurchases() {
         feedsList.clear();
-        MainActivity.purchaseTimes.clear();
-        MainActivity.purchaseKilometers.clear();
-        MainActivity.purchasePrices.clear();
-        MainActivity.purchaseUnitPrice.clear();
-        MainActivity.purchaseUnitPrice2.clear();
+        purchaseTimes.clear();
+        purchaseKilometers.clear();
+        purchasePrices.clear();
+        purchaseUnitPrice.clear();
+        purchaseUnitPrice2.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
+                            errorImage.setVisibility(View.GONE);
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -263,12 +280,12 @@ public class FragmentVehicle extends Fragment {
                                     item.setBillPhoto(obj.getString("billPhoto"));
                                     feedsList.add(item);
 
-                                    MainActivity.purchaseTimes.add(i, obj.getString("time"));
-                                    MainActivity.purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
-                                    MainActivity.purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
-                                    MainActivity.purchasePrices.add(i, obj.getDouble("totalPrice"));
-                                    MainActivity.purchaseKilometers.add(i, obj.getInt("kilometer"));
-                                    MainActivity.purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
+                                    purchaseTimes.add(i, obj.getString("time"));
+                                    purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
+                                    purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
+                                    purchasePrices.add(i, obj.getDouble("totalPrice"));
+                                    purchaseKilometers.add(i, obj.getInt("kilometer"));
+                                    purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
 
                                     mAdapter = new PurchaseAdapter(getActivity(), feedsList);
                                     mLayoutManager = new GridLayoutManager(getActivity(), 1);
@@ -279,9 +296,9 @@ public class FragmentVehicle extends Fragment {
                                     swipeContainer.setRefreshing(false);
                                 }
                                 //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
-                                Collections.reverse(MainActivity.purchaseTimes);
-                                Collections.reverse(MainActivity.purchasePrices);
-                                Collections.reverse(MainActivity.purchaseKilometers);
+                                Collections.reverse(purchaseTimes);
+                                Collections.reverse(purchasePrices);
+                                Collections.reverse(purchaseKilometers);
 
                                 //Calculate avg fuel consumption and update
                                 if (avgText != null) {
@@ -301,16 +318,15 @@ public class FragmentVehicle extends Fragment {
                                     avgPrice.setText(avgPriceDummy);
                                 }
 
-                                if (MainActivity.purchaseTimes.size() > 0) {
+                                if (purchaseTimes.size() > 0) {
                                     try {
                                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                                        Date date = format.parse(MainActivity.purchaseTimes.get(MainActivity.purchaseTimes.size() - 1));
+                                        Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
                                         lastUpdated.setReferenceTime(date.getTime());
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -335,7 +351,7 @@ public class FragmentVehicle extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
+                params.put("vehicleID", String.valueOf(vehicleID));
 
                 //returning parameters
                 return params;
@@ -352,40 +368,40 @@ public class FragmentVehicle extends Fragment {
     public float calculateAverageCons() {
         float totalLiter = 0;
         float kilometerDifference = 0;
-        if (MainActivity.purchaseTimes.size() > 1) {
-            for (int i = 0; i < MainActivity.purchaseTimes.size(); i++) {
-                totalLiter += MainActivity.purchaseLiters.get(i);
-                kilometerDifference = MainActivity.purchaseKilometers.get(MainActivity.purchaseKilometers.size() - 1) - MainActivity.purchaseKilometers.get(0);
+        if (purchaseTimes.size() > 1) {
+            for (int i = 0; i < purchaseTimes.size(); i++) {
+                totalLiter += purchaseLiters.get(i);
+                kilometerDifference = purchaseKilometers.get(purchaseKilometers.size() - 1) - purchaseKilometers.get(0);
             }
-            MainActivity.averageCons = (totalLiter / kilometerDifference) * 100f;
-            prefs.edit().putFloat("averageConsumption", MainActivity.averageCons).apply();
+            averageCons = (totalLiter / kilometerDifference) * 100f;
+            prefs.edit().putFloat("averageConsumption", averageCons).apply();
         } else {
-            MainActivity.averageCons = 0;
+            averageCons = 0;
         }
-        return MainActivity.averageCons;
+        return averageCons;
     }
 
     public float calculateAvgPrice() {
         float totalPrice = 0;
         float kilometerDifference = 0;
-        if (MainActivity.purchaseTimes.size() > 1) {
-            for (int i = 0; i < MainActivity.purchaseTimes.size(); i++) {
-                totalPrice += MainActivity.purchasePrices.get(i);
-                kilometerDifference = MainActivity.purchaseKilometers.get(MainActivity.purchaseKilometers.size() - 1) - MainActivity.purchaseKilometers.get(0);
+        if (purchaseTimes.size() > 1) {
+            for (int i = 0; i < purchaseTimes.size(); i++) {
+                totalPrice += purchasePrices.get(i);
+                kilometerDifference = purchaseKilometers.get(purchaseKilometers.size() - 1) - purchaseKilometers.get(0);
             }
-            MainActivity.averagePrice = (totalPrice / kilometerDifference) * 100f;
-            prefs.edit().putFloat("averagePrice", MainActivity.averagePrice).apply();
+            averagePrice = (totalPrice / kilometerDifference) * 100f;
+            prefs.edit().putFloat("averagePrice", averagePrice).apply();
         } else {
-            MainActivity.averagePrice = 0;
+            averagePrice = 0;
         }
-        return MainActivity.averagePrice;
+        return averagePrice;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (mRecyclerView != null) {
-            fetchUserPurchases();
+            fetchVehiclePurchases();
         }
     }
 }

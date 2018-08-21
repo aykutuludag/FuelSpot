@@ -66,6 +66,7 @@ import eu.amirs.JSON;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -439,9 +440,12 @@ public class FragmentStations extends Fragment {
 
                                     feedsList.add(item);
 
-                                    // Default - Sort by Distance
-                                    tabLayout.getTabAt(4).select();
-                                    sortBy(4);
+                                    // Default - Sort by primary fuel
+                                    if (fuelPri != -1) {
+                                        tabLayout.getTabAt(fuelPri).select();
+                                        sortBy(fuelPri);
+                                    }
+
                                 }
                             }
                         } catch (JSONException e) {

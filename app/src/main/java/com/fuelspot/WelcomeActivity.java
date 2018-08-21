@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -71,14 +72,17 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
@@ -215,7 +219,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             userVehicles = obj.getString("vehicles");
                             prefs.edit().putString("userVehicles", userVehicles).apply();
 
-                            MainActivity.getVariables(prefs);
+                            getVariables(prefs);
                             continueButton.setAlpha(1.0f);
                             continueButton.setClickable(true);
                         } catch (JSONException e) {
@@ -303,7 +307,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
                                 prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
 
-                                MainActivity.getVariables(prefs);
+                                getVariables(prefs);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -341,7 +345,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 .error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
-        Glide.with(this).load(MainActivity.carPhoto).apply(options).into(carPic);
+        Glide.with(this).load(carPhoto).apply(options).into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -537,7 +541,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 e.printStackTrace();
                             }
 
-                            MainActivity.getVariables(prefs);
+                            getVariables(prefs);
                             updateUserInfo();
                         }
                     }
@@ -1106,7 +1110,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 prefs.edit().putString("lat", userlat).apply();
                                 prefs.edit().putString("lon", userlon).apply();
                                 Localization();
-                                MainActivity.getVariables(prefs);
+                                getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(60000);
@@ -1117,19 +1121,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     });
 
                     if (userVehicles != null && userVehicles.length() > 0) {
-                        //User re-looged in
-                        Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
-                        howto3 = true;
-                        MainActivity.isSigned = true;
-                        prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }, 2000);
+                        fetchVehicle(Integer.parseInt(userVehicles.split(";")[0].split("-")[0]));
                     } else {
                         loadCarSelection();
                         layout2.setVisibility(View.VISIBLE);
@@ -1143,6 +1135,87 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
+    public void fetchVehicle(final int aracID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                vehicleID = obj.getInt("id");
+                                prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+                                carBrand = obj.getString("car_brand");
+                                prefs.edit().putString("carBrand", carBrand).apply();
+
+                                carModel = obj.getString("car_model");
+                                prefs.edit().putString("carModel", carModel).apply();
+
+                                fuelPri = obj.getInt("fuelPri");
+                                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+                                fuelSec = obj.getInt("fuelSec");
+                                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+                                kilometer = obj.getInt("kilometer");
+                                prefs.edit().putInt("Kilometer", kilometer).apply();
+
+                                carPhoto = obj.getString("carPhoto");
+                                prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+                                plateNo = obj.getString("plateNo");
+                                prefs.edit().putString("plateNo", plateNo).apply();
+
+                                averageCons = (float) obj.getDouble("avgConsumption");
+                                prefs.edit().putFloat("averageConsumption", averageCons).apply();
+                                getVariables(prefs);
+
+                                Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                howto3 = true;
+                                MainActivity.isSigned = true;
+                                prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                }, 2000);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("vehicleID", String.valueOf(aracID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1153,14 +1226,14 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    MainActivity.carPhoto = aq.get(0);
+                    carPhoto = aq.get(0);
 
-                    System.out.println("file://" + MainActivity.carPhoto);
+                    System.out.println("file://" + carPhoto);
 
                     File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
                     folder.mkdirs();
 
-                    UCrop.of(Uri.parse("file://" + MainActivity.carPhoto), Uri.fromFile(new File(folder, fileName)))
+                    UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
                             .withAspectRatio(1, 1)
                             .withMaxResultSize(1080, 1080)
                             .start(WelcomeActivity.this);

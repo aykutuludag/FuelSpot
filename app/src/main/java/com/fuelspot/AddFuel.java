@@ -70,20 +70,22 @@ import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
+import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
-import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AddFuel extends AppCompatActivity {
@@ -97,20 +99,16 @@ public class AddFuel extends AppCompatActivity {
 
     int chosenStationID;
     String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
-    float gasolinePrice, dieselPrice, LPGPrice, electricityPrice;
-    float selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2;
-    float tax1, tax2, taxTotal;
-    float totalPrice;
+    float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, tax1, tax2, taxTotal, totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
-    String fuelType, fuelType2 = "";
+    String fuelType, fuelType2, billPhoto;
     TextView fuelType1Text, fuelType2Text, fuelVergi, fuelGrandTotal;
     ImageView fuelType1Icon, fuelType2Icon;
     EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
     Bitmap bitmap;
-    String billPhoto;
     ImageView photoHolder;
     ScrollView scrollView;
 
@@ -485,7 +483,7 @@ public class AddFuel extends AppCompatActivity {
             }
         });
 
-        ImageView sendVariables = findViewById(R.id.sendButton);
+        Button sendVariables = findViewById(R.id.sendButton);
         sendVariables.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -553,6 +551,8 @@ public class AddFuel extends AppCompatActivity {
 
                             //Adding parameters
                             params.put("username", username);
+                            params.put("vehicleID", String.valueOf(vehicleID));
+                            params.put("plateNO", plateNo);
                             params.put("stationID", String.valueOf(chosenStationID));
                             params.put("stationNAME", chosenStationName);
                             params.put("stationICON", stationPhotoChooser(chosenStationName));
@@ -653,7 +653,7 @@ public class AddFuel extends AppCompatActivity {
         String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", taxTotal) + " " + currencyCode;
         fuelVergi.setText(taxHolder);
         totalPrice = entryPrice + entryPrice2;
-        String totalHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", taxTotal) + " " + currencyCode;
+        String totalHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
     }
 
@@ -688,17 +688,17 @@ public class AddFuel extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", username);
+                params.put("vehicleID", String.valueOf(vehicleID));
                 params.put("carBrand", carBrand);
                 params.put("carModel", carModel);
                 params.put("fuelPri", String.valueOf(fuelPri));
                 params.put("fuelSec", String.valueOf(fuelSec));
                 params.put("km", String.valueOf(kilometer));
-                if (carPhoto != null) {
-                    params.put("carPhoto", carPhoto);
-                } else {
-                    params.put("carPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos" + username + "-CARPHOTO.jpeg");
+                if (bitmap != null) {
+                    params.put("carPhoto", getStringImage(bitmap));
                 }
+                params.put("plate", plateNo);
+                params.put("avgCons", String.valueOf(averageCons));
 
                 //returning parameters
                 return params;

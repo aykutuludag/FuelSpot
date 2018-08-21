@@ -399,7 +399,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         Glide.with(this).load(bitmap).apply(options).into(userPic);
-                        editor.putString("ProfilePhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + MainActivity.username + "-USERPHOTO.jpg");
+                        editor.putString("ProfilePhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + now + ".jpg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

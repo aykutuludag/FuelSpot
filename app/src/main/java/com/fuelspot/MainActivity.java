@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -73,28 +74,28 @@ public class MainActivity extends AppCompatActivity {
     public static final int PURCHASE_NORMAL_PREMIUM = 1000;
     public static final int PURCHASE_ADMIN_PREMIUM = 1001;
 
+    public static int mapDefaultStationRange = 50;
+
     public static String[] PERMISSIONS_FILEPICKER = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    // Ads
-    public static int adCount;
-    // TAXES
-    public static float TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
+
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
-    public static ArrayList<String> purchaseTimes = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
-    public static ArrayList<Double> purchasePrices = new ArrayList<>();
-    public static float averageCons, averagePrice;
-    public static int vehicleID;
-    public static String userVehicles, plateNo;
-    public static String userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
-    public static int fuelPri, fuelSec, kilometer;
-    public static float mapDefaultZoom;
-    public static int mapDefaultRange;
-    public static int mapDefaultStationRange = 50;
-    public static int openCount;
-    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
-    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
+    public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
+    public static int vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
+    public static String userVehicles, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
+
+    static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
+    static SharedPreferences prefs;
+    //In-App Billings
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
+    Window window;
+    Toolbar toolbar;
+    boolean doubleBackToExitPressedOnce;
+    FragNavController mFragNavController;
+    RequestQueue requestQueue;
+
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
@@ -170,18 +171,6 @@ public class MainActivity extends AppCompatActivity {
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
     // Static values END
 
-    static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
-    static SharedPreferences prefs;
-    //In-App Billings
-    IInAppBillingService mService;
-    ServiceConnection mServiceConn;
-    Window window;
-    Toolbar toolbar;
-    boolean doubleBackToExitPressedOnce;
-    FragNavController mFragNavController;
-    RequestQueue requestQueue;
-
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
             if (item.equals(strings[i])) return i;
@@ -198,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
         birthday = prefs.getString("Birthday", "");
         location = prefs.getString("Location", "");
         username = prefs.getString("UserName", "");
-        carBrand = prefs.getString("carBrand", "");
-        carModel = prefs.getString("carModel", "");
+        carBrand = prefs.getString("carBrand", "Acura");
+        carModel = prefs.getString("carModel", "RSX");
         fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
@@ -579,45 +568,50 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                            vehicleID = obj.getInt("id");
-                            prefs.edit().putInt("vehicleID", vehicleID).apply();
+                                vehicleID = obj.getInt("id");
+                                prefs.edit().putInt("vehicleID", vehicleID).apply();
 
-                            carBrand = obj.getString("car_brand");
-                            prefs.edit().putString("carBrand", carBrand).apply();
+                                carBrand = obj.getString("car_brand");
+                                prefs.edit().putString("carBrand", carBrand).apply();
 
-                            carModel = obj.getString("car_model");
-                            prefs.edit().putString("carModel", carModel).apply();
+                                carModel = obj.getString("car_model");
+                                prefs.edit().putString("carModel", carModel).apply();
 
-                            fuelPri = obj.getInt("fuelPri");
-                            prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+                                fuelPri = obj.getInt("fuelPri");
+                                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
 
-                            fuelSec = obj.getInt("fuelSec");
-                            prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+                                fuelSec = obj.getInt("fuelSec");
+                                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
 
-                            kilometer = obj.getInt("kilometer");
-                            prefs.edit().putInt("Kilometer", kilometer).apply();
+                                kilometer = obj.getInt("kilometer");
+                                prefs.edit().putInt("Kilometer", kilometer).apply();
 
-                            carPhoto = obj.getString("carPhoto");
-                            prefs.edit().putString("CarPhoto", carPhoto).apply();
+                                carPhoto = obj.getString("carPhoto");
+                                prefs.edit().putString("CarPhoto", carPhoto).apply();
 
-                            plateNo = obj.getString("plateNo");
-                            prefs.edit().putString("plateNo", plateNo).apply();
+                                plateNo = obj.getString("plateNo");
+                                prefs.edit().putString("plateNo", plateNo).apply();
 
-                            averageCons = (float) obj.getDouble("avgConsumption");
-                            prefs.edit().putFloat("averageConsumption", averageCons).apply();
-                            getVariables(prefs);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                averageCons = (float) obj.getDouble("avgConsumption");
+                                prefs.edit().putFloat("averageConsumption", averageCons).apply();
+                                getVariables(prefs);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
             @Override

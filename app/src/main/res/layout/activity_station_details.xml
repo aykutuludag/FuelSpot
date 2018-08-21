@@ -12,14 +12,14 @@
         android:id="@+id/Appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_collapseMode="parallax">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:contentScrim="#ffffff"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -28,12 +28,15 @@
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="300dp"
+                android:paddingTop="?attr/actionBarSize" />
 
             <ImageView
                 android:id="@+id/imageViewErrStreetView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:layout_below="@id/toolbar"
+                android:paddingTop="?attr/actionBarSize"
                 android:src="@drawable/error_general"
                 android:visibility="gone" />
 
@@ -42,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -54,9 +57,9 @@
 
         <RelativeLayout
             android:id="@+id/content"
-            android:background="@drawable/background_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_main">
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/single_station"
@@ -338,14 +341,6 @@
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fab_go"
-            fab:fab_label="@string/fab_go"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/material_design_floating_action_menu_item3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_report_image"

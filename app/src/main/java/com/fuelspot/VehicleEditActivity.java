@@ -68,7 +68,6 @@ import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
@@ -374,7 +373,6 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(vehicleID));
-                params.put("country", userCountry);
                 params.put("carBrand", carBrand);
                 params.put("carModel", carModel);
                 params.put("fuelPri", String.valueOf(fuelPri));
@@ -977,7 +975,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         carPic.setImageBitmap(bitmap);
-                        editor.putString("CarPhoto", "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos" + MainActivity.username + "-CARPHOTO.jpg");
+                        editor.putString("CarPhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + now + ".jpg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

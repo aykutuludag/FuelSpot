@@ -35,7 +35,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.model.CommentItem;
 import com.fuelspot.superuser.AdminMainActivity;
-import com.fuelspot.superuser.AdminProfileEdit;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -124,13 +123,8 @@ public class FragmentProfile extends Fragment {
         updateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.isSuperUser) {
-                    Intent intent = new Intent(getActivity(), AdminProfileEdit.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -215,7 +209,7 @@ public class FragmentProfile extends Fragment {
 
     public void fetchComments() {
         feedsList.clear();
-        String whichApi = getString(R.string.API_FETCH_USER_COMMENTS);
+        String whichApi = getString(R.string.API_FETCH_COMMENTS);
         if (MainActivity.isSuperUser) {
             whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
         }
