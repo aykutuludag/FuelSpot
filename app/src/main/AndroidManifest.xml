@@ -34,7 +34,8 @@
         <activity
             android:name=".VehicleEditActivity"
             android:label="Otomobil"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".StationDetails"
             android:label="İstasyon detayı"
@@ -51,22 +52,27 @@
         <activity
             android:name=".ProfileEditActivity"
             android:label="Profil"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@style/FullScreen" />
+            android:theme="@style/FullScreen"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".AddNewVehicle"
             android:label="@string/title_activity_add_new_vehicle"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden" />
 
         <!-- SuperUser Class -->
         <activity
             android:name=".superuser.AdminRegister"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/FullScreen" />
         <activity android:name=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperEditPrices"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".superuser.AdminMainActivity"
             android:theme="@style/AppTheme" />
         <activity

@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
     public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
-    public static int vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
-    public static String userVehicles, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
+    public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
+    public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
 
     static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;
@@ -215,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
         userVehicles = prefs.getString("userVehicles", "");
         plateNo = prefs.getString("plateNo", "");
         vehicleID = prefs.getInt("vehicleID", 0);
+        carbonEmission = prefs.getInt("carbonEmission", 0);
+        userPhoneNumber = prefs.getString("userPhoneNumber", "");
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -600,7 +602,10 @@ public class MainActivity extends AppCompatActivity {
                                 averageCons = (float) obj.getDouble("avgConsumption");
                                 prefs.edit().putFloat("averageConsumption", averageCons).apply();
                                 getVariables(prefs);
+
+                                Snackbar.make(findViewById(R.id.mainContainer), "Araç bilgileri çekildi: " + plateNo, Snackbar.LENGTH_LONG).show();
                             } catch (JSONException e) {
+                                Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         } else {

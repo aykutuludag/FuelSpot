@@ -111,6 +111,7 @@ import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AdminRegister extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -412,8 +413,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 MainActivity.birthday = obj.getString("birthday");
                                 prefs.edit().putString("Birthday", MainActivity.birthday).apply();
 
-                                AdminMainActivity.userPhoneNumber = obj.getString("userPhone");
-                                prefs.edit().putString("userPhoneNumber", AdminMainActivity.userPhoneNumber).apply();
+                                userPhoneNumber = obj.getString("userPhone");
+                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
 
                                 AdminMainActivity.superStationID = obj.getInt("stationID");
                                 prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
@@ -730,7 +731,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 params.put("email", MainActivity.email);
                 params.put("gender", MainActivity.gender);
                 params.put("birthday", MainActivity.birthday);
-                params.put("phoneNumber", AdminMainActivity.userPhoneNumber);
+                params.put("phoneNumber", userPhoneNumber);
                 params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
                 params.put("googleID", AdminMainActivity.superGoogleID);
                 params.put("stationName", AdminMainActivity.superStationName);
@@ -824,7 +825,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         });
 
         editTextPhone = findViewById(R.id.editTextPhone);
-        editTextPhone.setText(AdminMainActivity.userPhoneNumber);
+        editTextPhone.setText(userPhoneNumber);
         editTextPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -839,8 +840,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    AdminMainActivity.userPhoneNumber = s.toString();
-                    prefs.edit().putString("userPhoneNumber", AdminMainActivity.userPhoneNumber).apply();
+                    userPhoneNumber = s.toString();
+                    prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
                 }
             }
         });
@@ -924,7 +925,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 if (AdminMainActivity.superStationName != null && AdminMainActivity.superStationName.length() > 0) {
-                    if (AdminMainActivity.userPhoneNumber != null && AdminMainActivity.userPhoneNumber.length() > 0) {
+                    if (userPhoneNumber != null && userPhoneNumber.length() > 0) {
                         if (MainActivity.email != null && MainActivity.email.length() > 0) {
                             if (AdminMainActivity.contractPhoto != null && AdminMainActivity.contractPhoto.length() > 0) {
                                 if (termsAndConditions.isChecked()) {

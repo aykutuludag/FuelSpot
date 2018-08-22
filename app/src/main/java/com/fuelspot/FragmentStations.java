@@ -43,6 +43,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -103,6 +105,7 @@ public class FragmentStations extends Fragment {
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
     Location locLastKnown;
+    BitmapDescriptor verifiedIcon;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -130,6 +133,7 @@ public class FragmentStations extends Fragment {
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         noStationError = rootView.findViewById(R.id.errorPicture);
+        verifiedIcon = BitmapDescriptorFactory.fromResource(R.drawable.verified_station);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         queue = Volley.newRequestQueue(getActivity());
@@ -362,9 +366,6 @@ public class FragmentStations extends Fragment {
 
                                 stationIcon.add(stationPhotoChooser(stationName.get(i)));
 
-                                LatLng sydney = new LatLng(lat, lon);
-                                markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName.get(i)).snippet(vicinity.get(i))));
-
                                 Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
                                 try {
                                     List<Address> addresses = geo.getFromLocation(lat, lon, 1);
@@ -379,9 +380,7 @@ public class FragmentStations extends Fragment {
 
                                 addStation(i);
                             }
-                        } else
-
-                        {
+                        } else {
                             noStationError.setVisibility(View.VISIBLE);
                             Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                         }
@@ -412,7 +411,9 @@ public class FragmentStations extends Fragment {
                             if (response != null && response.length() > 0) {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
+
                                 if (obj.getInt("isActive") == 1) {
+
                                     StationItem item = new StationItem();
                                     item.setID(obj.getInt("id"));
                                     item.setStationName(obj.getString("name"));
@@ -440,12 +441,19 @@ public class FragmentStations extends Fragment {
 
                                     feedsList.add(item);
 
+                                    //Add marker
+                                    LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
+                                    if (obj.getInt("isVerified") == 1) {
+                                        markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity")).icon(verifiedIcon)));
+                                    } else {
+                                        markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity"))));
+                                    }
+
                                     // Default - Sort by primary fuel
                                     if (fuelPri != -1) {
                                         tabLayout.getTabAt(fuelPri).select();
                                         sortBy(fuelPri);
                                     }
-
                                 }
                             }
                         } catch (JSONException e) {

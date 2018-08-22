@@ -70,9 +70,6 @@ import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
-import static com.fuelspot.MainActivity.averageCons;
-import static com.fuelspot.MainActivity.carBrand;
-import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
@@ -597,7 +594,18 @@ public class AddFuel extends AppCompatActivity {
                     @Override
                     public void onResponse(String s) {
                         Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                        updateCarInfo();
+                        Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                        prefs.edit().putInt("Kilometer", kilometer).apply();
+                        bitmap = null;
+                        chosenStationName = null;
+                        chosenGoogleID = null;
+                        chosenStationLoc = null;
+                        gasolinePrice = 0;
+                        dieselPrice = 0;
+                        electricityPrice = 0;
+                        LPGPrice = 0;
+                        billPhoto = null;
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {
@@ -655,61 +663,6 @@ public class AddFuel extends AppCompatActivity {
         totalPrice = entryPrice + entryPrice2;
         String totalHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
-    }
-
-    private void updateCarInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                        prefs.edit().putInt("Kilometer", kilometer).apply();
-                        bitmap = null;
-                        chosenStationName = null;
-                        chosenGoogleID = null;
-                        chosenStationLoc = null;
-                        gasolinePrice = 0;
-                        dieselPrice = 0;
-                        electricityPrice = 0;
-                        LPGPrice = 0;
-                        billPhoto = null;
-                        finish();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("vehicleID", String.valueOf(vehicleID));
-                params.put("carBrand", carBrand);
-                params.put("carModel", carModel);
-                params.put("fuelPri", String.valueOf(fuelPri));
-                params.put("fuelSec", String.valueOf(fuelSec));
-                params.put("km", String.valueOf(kilometer));
-                if (bitmap != null) {
-                    params.put("carPhoto", getStringImage(bitmap));
-                }
-                params.put("plate", plateNo);
-                params.put("avgCons", String.valueOf(averageCons));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(AddFuel.this);
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
     }
 
     public String getStringImage(Bitmap bmp) {

@@ -58,6 +58,7 @@ import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.openCount;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.username;
 
 public class AdminMainActivity extends AppCompatActivity {
@@ -66,7 +67,7 @@ public class AdminMainActivity extends AppCompatActivity {
     public static int isSuperVerified, superStationID;
     public static boolean superPremium;
     public static double ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
-    public static String superStationName, superStationLocation, superStationLogo, superStationAddress, userPhoneNumber, contractPhoto, superGoogleID;
+    public static String superStationName, superStationLocation, superStationLogo, superStationAddress, contractPhoto, superGoogleID;
 
     boolean doubleBackToExitPressedOnce;
     RequestQueue queue;
@@ -85,7 +86,7 @@ public class AdminMainActivity extends AppCompatActivity {
         superStationAddress = prefs.getString("SuperStationAddress", "");
         superStationLogo = prefs.getString("SuperStationLogo", "");
         contractPhoto = prefs.getString("contractPhoto", "");
-        userPhoneNumber = prefs.getString("userPhoneNumber", "");
+
         isSuperVerified = prefs.getInt("isSuperVerified", 0);
         superPremium = prefs.getBoolean("hasSuperPremium", false);
         ownedGasolinePrice = prefs.getFloat("superGasolinePrice", 0);

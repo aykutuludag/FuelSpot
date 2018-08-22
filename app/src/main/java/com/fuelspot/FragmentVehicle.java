@@ -56,7 +56,11 @@ import static com.fuelspot.MainActivity.averagePrice;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentVehicle extends Fragment {
@@ -70,7 +74,7 @@ public class FragmentVehicle extends Fragment {
     SharedPreferences prefs;
 
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
-    TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice;
+    TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice, emission;
     RelativeTimeTextView lastUpdated;
     Snackbar snackBar;
     CircleImageView errorImage;
@@ -81,6 +85,7 @@ public class FragmentVehicle extends Fragment {
     public static ArrayList<Double> purchasePrices = new ArrayList<>();
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
     public static ArrayList<Double> purchaseLiters = new ArrayList<>();
+    RequestQueue requestQueue;
 
     public static FragmentVehicle newInstance() {
 
@@ -98,13 +103,14 @@ public class FragmentVehicle extends Fragment {
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("Araç");
+        t.setScreenName("Araç bilgileri");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         errorImage = view.findViewById(R.id.errorImage);
+        requestQueue = Volley.newRequestQueue(getActivity());
 
         snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG);
         snackBar.setAction("Tamam", new View.OnClickListener() {
@@ -198,8 +204,10 @@ public class FragmentVehicle extends Fragment {
         String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
-        //Aylık maliyet
-        /* BURASINI YAP */
+        // Carbon emission
+        emission = headerView.findViewById(R.id.car_carbonEmission);
+        calculateCarbonEmission();
+        emission.setText(carbonEmission + " g/100km");
 
         //Last updated
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
@@ -327,6 +335,8 @@ public class FragmentVehicle extends Fragment {
                                         e.printStackTrace();
                                     }
                                 }
+
+                                updateCarInfo();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -358,8 +368,44 @@ public class FragmentVehicle extends Fragment {
             }
         };
 
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateCarInfo() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("carBrand", carBrand);
+                params.put("carModel", carModel);
+                params.put("fuelPri", String.valueOf(fuelPri));
+                params.put("fuelSec", String.valueOf(fuelSec));
+                params.put("km", String.valueOf(kilometer));
+                params.put("plate", plateNo);
+                params.put("avgCons", String.valueOf(averageCons));
+                params.put("carbonEmission", String.valueOf(carbonEmission));
+
+                //returning parameters
+                return params;
+            }
+        };
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -395,6 +441,71 @@ public class FragmentVehicle extends Fragment {
             averagePrice = 0;
         }
         return averagePrice;
+    }
+
+    void calculateCarbonEmission() {
+        int emissionGasoline = 2392;
+        int emissionDiesel = 2640;
+        int emissionlpg = 1665;
+
+        if (fuelSec == -1) {
+            switch (fuelPri) {
+                case 0:
+                    carbonEmission = (int) (emissionGasoline * averageCons);
+                    break;
+                case 1:
+                    carbonEmission = (int) (emissionDiesel * averageCons);
+                    break;
+                case 2:
+                    carbonEmission = (int) (emissionlpg * averageCons);
+                    break;
+                case 3:
+                    carbonEmission = 0;
+                    break;
+                default:
+                    carbonEmission = 0;
+                    break;
+            }
+            prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+        } else {
+            switch (fuelPri) {
+                case 0:
+                    carbonEmission = (int) (emissionGasoline * averageCons);
+                    break;
+                case 1:
+                    carbonEmission = (int) (emissionDiesel * averageCons);
+                    break;
+                case 2:
+                    carbonEmission = (int) (emissionlpg * averageCons);
+                    break;
+                case 3:
+                    carbonEmission = 0;
+                    break;
+                default:
+                    carbonEmission = 0;
+                    break;
+            }
+            switch (fuelSec) {
+                case 0:
+                    carbonEmission += (int) (emissionGasoline * averageCons);
+                    break;
+                case 1:
+                    carbonEmission += (int) (emissionDiesel * averageCons);
+                    break;
+                case 2:
+                    carbonEmission += (int) (emissionlpg * averageCons);
+                    break;
+                case 3:
+                    carbonEmission = 0;
+                    break;
+                default:
+                    carbonEmission = 0;
+                    break;
+            }
+
+            carbonEmission = carbonEmission / 2;
+            prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+        }
     }
 
     @Override

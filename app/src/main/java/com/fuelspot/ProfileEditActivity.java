@@ -78,14 +78,16 @@ import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
+import static com.fuelspot.MainActivity.username;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     Window window;
     CircleImageView userPic;
-    EditText editName, editMail, editLocation, editBirthday;
+    EditText editName, editMail, editTextPhone, editLocation, editBirthday;
     RadioGroup editGender;
     RadioButton bMale, bFemale, bOther;
     SharedPreferences prefs;
@@ -191,6 +193,27 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
+        editTextPhone = findViewById(R.id.editTextPhone);
+        editTextPhone.setText(userPhoneNumber);
+        editTextPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    userPhoneNumber = s.toString();
+                }
+            }
+        });
+
         //  Setting birthday and retrieving changes
         editBirthday.setText(birthday);
         if (birthday.length() > 0) {
@@ -275,17 +298,18 @@ public class ProfileEditActivity extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
+                params.put("username", username);
                 params.put("email", email);
                 params.put("gender", gender);
                 params.put("birthday", birthday);
                 params.put("location", location);
-                params.put("country", MainActivity.userCountry);
+                params.put("country", userCountry);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 }
                 params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
+                params.put("phoneNumber", userPhoneNumber);
 
                 //returning parameters
                 return params;
@@ -333,6 +357,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     editor.putString("Gender", gender);
                     editor.putString("Location", location);
                     editor.putString("Birthday", birthday);
+                    editor.putString("userPhoneNumber", userPhoneNumber);
                     editor.apply();
                     updateUserInfo();
                 } else {
