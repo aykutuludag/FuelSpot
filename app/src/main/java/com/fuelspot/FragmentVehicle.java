@@ -61,6 +61,7 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentVehicle extends Fragment {
@@ -76,7 +77,6 @@ public class FragmentVehicle extends Fragment {
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
     TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice, emission;
     RelativeTimeTextView lastUpdated;
-    Snackbar snackBar;
     CircleImageView errorImage;
 
     public static ArrayList<String> purchaseTimes = new ArrayList<>();
@@ -86,6 +86,7 @@ public class FragmentVehicle extends Fragment {
     public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
     public static ArrayList<Double> purchaseLiters = new ArrayList<>();
     RequestQueue requestQueue;
+    View headerView;
 
     public static FragmentVehicle newInstance() {
 
@@ -112,17 +113,30 @@ public class FragmentVehicle extends Fragment {
         errorImage = view.findViewById(R.id.errorImage);
         requestQueue = Volley.newRequestQueue(getActivity());
 
-        snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG);
-        snackBar.setAction("Tamam", new View.OnClickListener() {
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                snackBar.dismiss();
+            public void onRefresh() {
+                fetchVehiclePurchases();
             }
         });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
-        //SETTING HEADER VEHICLE VARIABLES
-        View headerView = view.findViewById(R.id.header_vehicle);
+        feedsList = new ArrayList<>();
+        mRecyclerView = view.findViewById(R.id.feedView);
 
+        headerView = view.findViewById(R.id.header_vehicle);
+        loadVehicleProfile();
+
+        return view;
+    }
+
+    public void loadVehicleProfile() {
         //ProfilePhoto
         carPhotoHolder = headerView.findViewById(R.id.car_picture);
         RequestOptions options = new RequestOptions()
@@ -132,6 +146,10 @@ public class FragmentVehicle extends Fragment {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
         Glide.with(getActivity()).load(Uri.parse(carPhoto)).apply(options).into(carPhotoHolder);
+
+        kilometerText = headerView.findViewById(R.id.car_kilometer);
+        String kmHolder = kilometer + userUnit;
+        kilometerText.setText(kmHolder);
 
         //Marka-model
         fullname = headerView.findViewById(R.id.carFullname);
@@ -196,18 +214,19 @@ public class FragmentVehicle extends Fragment {
 
         //Ortalama tüketim
         avgText = headerView.findViewById(R.id.car_avgCons);
-        String avgDummy = String.format(Locale.getDefault(), "%.2f", averageCons) + " lt/100km";
+        String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
         avgText.setText(avgDummy);
 
         //Ortalama maliyet
         avgPrice = headerView.findViewById(R.id.car_avgPrice);
-        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", averagePrice) + " TL/100km";
+        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
-        // Carbon emission
+        //Ortalama emisyon
         emission = headerView.findViewById(R.id.car_carbonEmission);
         calculateCarbonEmission();
-        emission.setText(carbonEmission + " g/100km");
+        String emissionHolder = carbonEmission + "g/100km";
+        emission.setText(emissionHolder);
 
         //Last updated
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
@@ -230,28 +249,9 @@ public class FragmentVehicle extends Fragment {
                 startActivity(intent);
             }
         });
-
-        swipeContainer = view.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchVehiclePurchases();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        feedsList = new ArrayList<>();
-        mRecyclerView = view.findViewById(R.id.feedView);
-
-        return view;
     }
 
-    private void fetchVehiclePurchases() {
+    public void fetchVehiclePurchases() {
         feedsList.clear();
         purchaseTimes.clear();
         purchaseKilometers.clear();
@@ -342,7 +342,7 @@ public class FragmentVehicle extends Fragment {
                             }
                         } else {
                             errorImage.setVisibility(View.VISIBLE);
-                            snackBar.show();
+                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG).show();
                             swipeContainer.setRefreshing(false);
                         }
                     }

@@ -59,7 +59,7 @@
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".AddNewVehicle"
+            android:name=".AddVehicle"
             android:label="@string/title_activity_add_new_vehicle"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />

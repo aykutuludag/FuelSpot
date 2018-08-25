@@ -180,4 +180,5 @@
         <item>Volvo</item>
     </string-array>
     <string name="title_activity_add_new_vehicle">AddNewVehicle</string>
+    <string name="add_new_car">YENİ ARAÇ EKLE</string>
 </resources>

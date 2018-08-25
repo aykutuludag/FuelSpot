@@ -63,7 +63,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
 
     public static final int REQUEST_FILEPICKER = 0;
@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
     RequestQueue requestQueue;
+    List<Fragment> fragments = new ArrayList<>(5);
+    AHBottomNavigation bottomNavigation;
 
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
@@ -372,7 +374,6 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setLogo(R.drawable.brand_logo);
         }
 
-
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
@@ -383,7 +384,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
-        final List<Fragment> fragments = new ArrayList<>(5);
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentVehicle.newInstance());
@@ -392,8 +392,7 @@ public class MainActivity extends AppCompatActivity {
         builder.rootFragments(fragments);
         mFragNavController = builder.build();
 
-        final AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
-
+        bottomNavigation = findViewById(R.id.bottom_navigation);
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimary);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorPrimary);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorPrimary);
@@ -409,21 +408,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setNotification(userVehicles.split(";").length, 2);
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                if (position == 2) {
-                    if (fragments.get(2) != null && fragments.get(2).isVisible()) {
-                        openVehicleChoosePopup(bottomNavigation);
-                    } else {
-                        mFragNavController.switchTab(position);
-                    }
-                } else {
-                    mFragNavController.switchTab(position);
-                }
-                return true;
-            }
-        });
+        bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
         GeofenceScheduler();
@@ -523,6 +508,8 @@ public class MainActivity extends AppCompatActivity {
         if (userVehicles != null && userVehicles.length() > 0) {
             String[] vehicles = userVehicles.split(";");
 
+            bottomNavigation.setNotification(vehicles.length, 2);
+
             final ArrayList<Integer> vehicleIDs = new ArrayList<>();
             final ArrayList<String> vehicleNames = new ArrayList<>();
             final ArrayList<String> vehiclePlates = new ArrayList<>();
@@ -535,34 +522,39 @@ public class MainActivity extends AppCompatActivity {
                 vehicleNames.add(vehicles[i].split("-")[1]);
                 vehiclePlates.add(vehicles[i].split("-")[2]);
 
-                spinnerText.add(vehicleNames.get(i) + " - " + vehiclePlates);
-                popup.getMenu().add(vehicleNames.get(i) + " - " + vehiclePlates).setIcon(R.drawable.default_automobile);
+                spinnerText.add(vehicleNames.get(i) + " - " + vehiclePlates.get(i));
+                popup.getMenu().add(spinnerText.get(i));
             }
 
-            spinnerText.add("YENİ ARAÇ EKLE");
-            popup.getMenu().add("YENİ ARAÇ EKLE");
-
+            spinnerText.add(getString(R.string.add_new_car));
+            popup.getMenu().add(getString(R.string.add_new_car));
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == spinnerText.size() - 1) {
-                        //YENİ ARAÇ EKLE
-                        Intent intent = new Intent(MainActivity.this, AddNewVehicle.class);
-                        startActivity(intent);
+                    if (item.getTitle().equals(getString(R.string.add_new_car))) {
+                        // Add a new car
                         popup.dismiss();
+                        Intent intent = new Intent(MainActivity.this, AddVehicle.class);
+                        startActivity(intent);
                     } else {
-                        if (vehicleID != vehicleIDs.get(item.getItemId())) {
-                            fetchVehicle(vehicleIDs.get(item.getItemId()));
-                            popup.dismiss();
+                        // Fetch selected car info
+                        popup.dismiss();
+                        String[] mStringArray = new String[spinnerText.size()];
+                        mStringArray = spinnerText.toArray(mStringArray);
+                        int index = getIndexOf(mStringArray, item.getTitle().toString());
+
+                        if (!plateNo.equals(vehiclePlates.get(index))) {
+                            fetchVehicle(vehicleIDs.get(index));
                         } else {
-                            popup.dismiss();
+                            Snackbar.make(findViewById(R.id.mainContainer), "SEÇİLİ ARAÇ: " + plateNo, Snackbar.LENGTH_LONG).show();
                         }
                     }
                     return true;
                 }
             });
             popup.show();
+        } else {
+            Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
         }
-
     }
 
     public void fetchVehicle(final int aracID) {
@@ -601,9 +593,14 @@ public class MainActivity extends AppCompatActivity {
 
                                 averageCons = (float) obj.getDouble("avgConsumption");
                                 prefs.edit().putFloat("averageConsumption", averageCons).apply();
-                                getVariables(prefs);
 
-                                Snackbar.make(findViewById(R.id.mainContainer), "Araç bilgileri çekildi: " + plateNo, Snackbar.LENGTH_LONG).show();
+                                carbonEmission = obj.getInt("carbonEmission");
+                                prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+                                getVariables(prefs);
+                                Snackbar.make(findViewById(R.id.mainContainer), "SEÇİLİ ARAÇ: " + plateNo, Snackbar.LENGTH_LONG).show();
+
+                                mFragNavController.switchTab(2);
                             } catch (JSONException e) {
                                 Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                                 e.printStackTrace();
@@ -732,5 +729,19 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    @Override
+    public boolean onTabSelected(int position, boolean wasSelected) {
+        if (position == 2) {
+            if (fragments.get(2) != null && fragments.get(2).isVisible()) {
+                openVehicleChoosePopup(bottomNavigation);
+            } else {
+                mFragNavController.switchTab(position);
+            }
+        } else {
+            mFragNavController.switchTab(position);
+        }
+        return true;
     }
 }
