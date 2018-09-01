@@ -176,7 +176,7 @@ public class FragmentStations extends Fragment {
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(60000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         mLocationCallback = new LocationCallback() {
@@ -196,7 +196,7 @@ public class FragmentStations extends Fragment {
 
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                if (distanceInMeter >= (mapDefaultRange / 2)) {
+                                if (distanceInMeter >= (mapDefaultRange / 4)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
                                     updateMapObject();

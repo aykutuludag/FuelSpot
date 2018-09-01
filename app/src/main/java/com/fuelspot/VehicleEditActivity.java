@@ -63,6 +63,7 @@ import droidninja.filepicker.FilePickerConst;
 import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -383,6 +384,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 }
                 params.put("plate", plateNo);
                 params.put("avgCons", String.valueOf(averageCons));
+                params.put("carbonEmission", String.valueOf(carbonEmission));
 
                 //returning parameters
                 return params;
@@ -398,6 +400,8 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        userVehicles = userVehicles.replaceAll(vehicleID + ";", "");
+                        prefs.edit().putString("userVehicles", userVehicles).apply();
                         Toast.makeText(VehicleEditActivity.this, response, Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -886,15 +890,15 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 }
                 spinner2.setOnItemSelectedListener(this);
 
-                MainActivity.carBrand = spinner.getSelectedItem().toString();
-                editor.putString("carBrand", MainActivity.carBrand);
+                carBrand = spinner.getSelectedItem().toString();
+                editor.putString("carBrand", carBrand);
 
-                MainActivity.carModel = spinner2.getSelectedItem().toString();
-                editor.putString("carModel", MainActivity.carModel);
+                carModel = spinner2.getSelectedItem().toString();
+                editor.putString("carModel", carModel);
                 break;
             case R.id.spinner_models:
-                MainActivity.carModel = spinner2.getSelectedItem().toString();
-                editor.putString("carModel", MainActivity.carModel);
+                carModel = spinner2.getSelectedItem().toString();
+                editor.putString("carModel", carModel);
                 break;
             default:
                 break;
@@ -903,7 +907,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //Do nothing
+        // Do nothing
     }
 
     @Override

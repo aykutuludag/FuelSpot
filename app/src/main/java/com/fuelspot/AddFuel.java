@@ -3,6 +3,7 @@ package com.fuelspot;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,11 +12,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -188,13 +188,13 @@ public class AddFuel extends AppCompatActivity {
                             chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
                             fetchStation(chosenGoogleID);
                         } else {
-                            closeIt();
+                            informUser();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                closeIt();
+                informUser();
             }
         });
 
@@ -202,7 +202,7 @@ public class AddFuel extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void closeIt() {
+    void informUser() {
         pDialog.dismiss();
         chosenStationID = 0;
         chosenStationName = "";
@@ -210,23 +210,17 @@ public class AddFuel extends AppCompatActivity {
         chosenGoogleID = "";
         chosenStationAddress = "";
 
-        Snackbar.make(findViewById(android.R.id.content), "Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz", Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", new View.OnClickListener() {
+        new AlertDialog.Builder(this)
+                .setTitle("Hata")
+                .setMessage("Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz.")
+                .setNeutralButton("TAMAM", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
                 })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                .setCancelable(false)
                 .show();
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 2000);
     }
 
     private void fetchStation(final String googleID) {

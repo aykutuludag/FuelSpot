@@ -11,8 +11,9 @@
     <string name="buy_premium_ads_okay">BUY!</string>
     <string name="buy_premium_ads_later">Later</string>
     <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
-    <string name="unitSystem1">Metric System</string>
-    <string name="unitSystem2">US Customary</string>
+    <string name="unitSystem1">Litre</string>
+    <string name="unitSystem2">Galon</string>
+    <string name="unitSystem3">Imperial galon</string>
 
     <!-- LoginActivity -->
     <string name="loginWithGoogle">Login with Google</string>

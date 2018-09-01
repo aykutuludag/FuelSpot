@@ -30,7 +30,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.PopupMenu;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -46,6 +48,8 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
+import com.fuelspot.adapter.VehicleAdapter;
+import com.fuelspot.model.VehicleItem;
 import com.fuelspot.service.GeofenceService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static final int PURCHASE_NORMAL_PREMIUM = 1000;
     public static final int PURCHASE_ADMIN_PREMIUM = 1001;
 
+    // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
     public static String[] PERMISSIONS_FILEPICKER = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -97,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     RequestQueue requestQueue;
     List<Fragment> fragments = new ArrayList<>(5);
     AHBottomNavigation bottomNavigation;
+    List<VehicleItem> listOfVehicle = new ArrayList<>();
 
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
@@ -407,7 +413,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-        bottomNavigation.setNotification(userVehicles.split(";").length, 2);
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
@@ -504,60 +509,18 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 0, 0);
     }
 
-    void openVehicleChoosePopup(View view) {
+    void fetchUserVehicles() {
+        listOfVehicle.clear();
         if (userVehicles != null && userVehicles.length() > 0) {
-            String[] vehicles = userVehicles.split(";");
-
-            bottomNavigation.setNotification(vehicles.length, 2);
-
-            final ArrayList<Integer> vehicleIDs = new ArrayList<>();
-            final ArrayList<String> vehicleNames = new ArrayList<>();
-            final ArrayList<String> vehiclePlates = new ArrayList<>();
-            final ArrayList<String> spinnerText = new ArrayList<>();
-
-            final PopupMenu popup = new PopupMenu(MainActivity.this, view);
-
-            for (int i = 0; i < vehicles.length; i++) {
-                vehicleIDs.add(Integer.valueOf(vehicles[i].split("-")[0]));
-                vehicleNames.add(vehicles[i].split("-")[1]);
-                vehiclePlates.add(vehicles[i].split("-")[2]);
-
-                spinnerText.add(vehicleNames.get(i) + " - " + vehiclePlates.get(i));
-                popup.getMenu().add(spinnerText.get(i));
+            String[] vehicleIDs = userVehicles.split(";");
+            for (String vehicleID1 : vehicleIDs) {
+                fetchSingleVehicle(Integer.parseInt(vehicleID1));
             }
-
-            spinnerText.add(getString(R.string.add_new_car));
-            popup.getMenu().add(getString(R.string.add_new_car));
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getTitle().equals(getString(R.string.add_new_car))) {
-                        // Add a new car
-                        popup.dismiss();
-                        Intent intent = new Intent(MainActivity.this, AddVehicle.class);
-                        startActivity(intent);
-                    } else {
-                        // Fetch selected car info
-                        popup.dismiss();
-                        String[] mStringArray = new String[spinnerText.size()];
-                        mStringArray = spinnerText.toArray(mStringArray);
-                        int index = getIndexOf(mStringArray, item.getTitle().toString());
-
-                        if (!plateNo.equals(vehiclePlates.get(index))) {
-                            fetchVehicle(vehicleIDs.get(index));
-                        } else {
-                            Snackbar.make(findViewById(R.id.mainContainer), "SEÇİLİ ARAÇ: " + plateNo, Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                    return true;
-                }
-            });
-            popup.show();
-        } else {
-            Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
+            bottomNavigation.setNotification(vehicleIDs.length, 2);
         }
     }
 
-    public void fetchVehicle(final int aracID) {
+    void fetchSingleVehicle(final int aracID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
                 new Response.Listener<String>() {
                     @Override
@@ -567,46 +530,21 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
-                                vehicleID = obj.getInt("id");
-                                prefs.edit().putInt("vehicleID", vehicleID).apply();
-
-                                carBrand = obj.getString("car_brand");
-                                prefs.edit().putString("carBrand", carBrand).apply();
-
-                                carModel = obj.getString("car_model");
-                                prefs.edit().putString("carModel", carModel).apply();
-
-                                fuelPri = obj.getInt("fuelPri");
-                                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
-
-                                fuelSec = obj.getInt("fuelSec");
-                                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
-
-                                kilometer = obj.getInt("kilometer");
-                                prefs.edit().putInt("Kilometer", kilometer).apply();
-
-                                carPhoto = obj.getString("carPhoto");
-                                prefs.edit().putString("CarPhoto", carPhoto).apply();
-
-                                plateNo = obj.getString("plateNo");
-                                prefs.edit().putString("plateNo", plateNo).apply();
-
-                                averageCons = (float) obj.getDouble("avgConsumption");
-                                prefs.edit().putFloat("averageConsumption", averageCons).apply();
-
-                                carbonEmission = obj.getInt("carbonEmission");
-                                prefs.edit().putInt("carbonEmission", carbonEmission).apply();
-
-                                getVariables(prefs);
-                                Snackbar.make(findViewById(R.id.mainContainer), "SEÇİLİ ARAÇ: " + plateNo, Snackbar.LENGTH_LONG).show();
-
-                                mFragNavController.switchTab(2);
+                                VehicleItem item = new VehicleItem();
+                                item.setID(obj.getInt("id"));
+                                item.setVehicleBrand(obj.getString("car_brand"));
+                                item.setVehicleModel(obj.getString("car_model"));
+                                item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                item.setVehicleKilometer(obj.getInt("kilometer"));
+                                item.setVehiclePhoto(obj.getString("carPhoto"));
+                                item.setVehiclePlateNo(obj.getString("plateNo"));
+                                item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                listOfVehicle.add(item);
                             } catch (JSONException e) {
-                                Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
-                        } else {
-                            Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -631,6 +569,39 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    void openVehicleChoosePopup(View anchor) {
+        if (listOfVehicle != null && listOfVehicle.size() > 0) {
+            if (listOfVehicle.get(listOfVehicle.size() - 1).getID() != -999) {
+                VehicleItem item = new VehicleItem();
+                item.setID(-999);
+                item.setVehicleBrand("YENİ ARAÇ EKLE");
+                listOfVehicle.add(item);
+            }
+
+            final ListPopupWindow popupWindow = new ListPopupWindow(MainActivity.this);
+            ListAdapter adapter = new VehicleAdapter(MainActivity.this, listOfVehicle);
+            popupWindow.setAnchorView(anchor);
+            popupWindow.setAdapter(adapter);
+            popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (i == listOfVehicle.size() - 1) {
+                        Intent intent = new Intent(MainActivity.this, AddVehicle.class);
+                        startActivity(intent);
+                    } else {
+                        changeVehicle();
+                    }
+                    popupWindow.dismiss();
+                }
+            });
+            popupWindow.show();
+        }
+    }
+
+    void changeVehicle() {
+
     }
 
     public void coloredBars(int color1, int color2) {
@@ -696,6 +667,14 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         Fragment fragment = mFragNavController.getCurrentFrag();
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bottomNavigation != null) {
+            fetchUserVehicles();
         }
     }
 

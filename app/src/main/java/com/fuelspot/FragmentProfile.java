@@ -84,21 +84,14 @@ public class FragmentProfile extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        String snackBarText = "Henüz hiç yorum yazmamışsınız.";
+
         if (MainActivity.isSuperUser) {
-            snackBarText = "Henüz hiç cevap yazmamışsınız.";
-        }
-        if (MainActivity.isSuperUser) {
+            String snackBarText = "Henüz hiç cevap yazmamışsınız.";
             snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), snackBarText, Snackbar.LENGTH_LONG);
         } else {
+            String snackBarText = "Henüz hiç yorum yazmamışsınız.";
             snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), snackBarText, Snackbar.LENGTH_LONG);
         }
-        snackBar.setAction("Tamam", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackBar.dismiss();
-            }
-        });
 
         CircleImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
         RequestOptions options = new RequestOptions()

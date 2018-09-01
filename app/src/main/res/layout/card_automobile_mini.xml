@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_vehicle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#EDEDED">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/carPicture"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/default_automobile" />
+
+    <TextView
+        android:id="@+id/carPlateNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/carPicture"
+        android:layout_alignStart="@+id/carFullname"
+        android:gravity="center"
+        android:text="06GC6515"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/carFullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/carPicture"
+        android:layout_toEndOf="@+id/carPicture"
+        android:gravity="center"
+        android:text="Renault Symbol"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/carIsSelected"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/save"
+        android:visibility="gone" />
+
+</RelativeLayout>

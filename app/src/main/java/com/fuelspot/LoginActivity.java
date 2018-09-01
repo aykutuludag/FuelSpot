@@ -145,10 +145,41 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
                                 prefs.edit().putString("userCurrency", currencyCode).apply();
 
-                                if (userCountry.equals("US") || userCountry.equals("LR") || userCountry.equals("MM")) {
-                                    userUnit = getString(R.string.unitSystem2);
-                                } else {
-                                    userUnit = getString(R.string.unitSystem1);
+                                switch (userCountry) {
+                                    // US GALLON COUNTRIES
+                                    case "BZ":
+                                    case "CO":
+                                    case "DO":
+                                    case "EC":
+                                    case "GT":
+                                    case "HN":
+                                    case "HT":
+                                    case "LR":
+                                    case "MM":
+                                    case "NI":
+                                    case "PE":
+                                    case "US":
+                                    case "SV":
+                                        userUnit = getString(R.string.unitSystem2);
+                                        break;
+                                    // IMPERIAL GALLON COUNTRIES
+                                    case "AI":
+                                    case "AG":
+                                    case "BS":
+                                    case "DM":
+                                    case "GD":
+                                    case "KN":
+                                    case "KY":
+                                    case "LC":
+                                    case "MS":
+                                    case "VC":
+                                    case "VG":
+                                        userUnit = getString(R.string.unitSystem3);
+                                        break;
+                                    default:
+                                        // LITRE COUNTRIES. REST OF THE WORLD.
+                                        userUnit = getString(R.string.unitSystem1);
+                                        break;
                                 }
                                 prefs.edit().putString("userUnit", userUnit).apply();
                             }

@@ -61,7 +61,6 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentVehicle extends Fragment {
@@ -71,7 +70,7 @@ public class FragmentVehicle extends Fragment {
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
-    List<PurchaseItem> feedsList;
+    List<PurchaseItem> feedsList = new ArrayList<>();
     SharedPreferences prefs;
 
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
@@ -110,35 +109,31 @@ public class FragmentVehicle extends Fragment {
 
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
-        errorImage = view.findViewById(R.id.errorImage);
-        requestQueue = Volley.newRequestQueue(getActivity());
+        headerView = view.findViewById(R.id.header_vehicle);
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 fetchVehiclePurchases();
             }
         });
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        feedsList = new ArrayList<>();
-        mRecyclerView = view.findViewById(R.id.feedView);
+        errorImage = view.findViewById(R.id.errorImage);
+        requestQueue = Volley.newRequestQueue(getActivity());
 
-        headerView = view.findViewById(R.id.header_vehicle);
-        loadVehicleProfile();
+        mRecyclerView = view.findViewById(R.id.feedView);
 
         return view;
     }
 
     public void loadVehicleProfile() {
         //ProfilePhoto
-        carPhotoHolder = headerView.findViewById(R.id.car_picture);
+        carPhotoHolder = headerView.findViewById(R.id.carPicture);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.default_automobile)
@@ -148,7 +143,7 @@ public class FragmentVehicle extends Fragment {
         Glide.with(getActivity()).load(Uri.parse(carPhoto)).apply(options).into(carPhotoHolder);
 
         kilometerText = headerView.findViewById(R.id.car_kilometer);
-        String kmHolder = kilometer + userUnit;
+        String kmHolder = kilometer + " km";
         kilometerText.setText(kmHolder);
 
         //Marka-model
@@ -224,8 +219,7 @@ public class FragmentVehicle extends Fragment {
 
         //Ortalama emisyon
         emission = headerView.findViewById(R.id.car_carbonEmission);
-        calculateCarbonEmission();
-        String emissionHolder = carbonEmission + "g/100km";
+        String emissionHolder = calculateCarbonEmission() + " g/100km";
         emission.setText(emissionHolder);
 
         //Last updated
@@ -303,16 +297,6 @@ public class FragmentVehicle extends Fragment {
                                     mRecyclerView.setLayoutManager(mLayoutManager);
                                     swipeContainer.setRefreshing(false);
                                 }
-                                //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
-                                Collections.reverse(purchaseTimes);
-                                Collections.reverse(purchasePrices);
-                                Collections.reverse(purchaseKilometers);
-
-                                //Calculate avg fuel consumption and update
-                                if (avgText != null) {
-                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
-                                    avgText.setText(avgDummy);
-                                }
 
                                 //update kilometer
                                 if (kilometerText != null) {
@@ -320,13 +304,30 @@ public class FragmentVehicle extends Fragment {
                                     kilometerText.setText(kmHolder);
                                 }
 
-                                //update avg price
-                                if (avgPrice != null) {
-                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
-                                    avgPrice.setText(avgPriceDummy);
-                                }
-
                                 if (purchaseTimes.size() > 0) {
+                                    //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
+                                    Collections.reverse(purchaseTimes);
+                                    Collections.reverse(purchasePrices);
+                                    Collections.reverse(purchaseKilometers);
+
+                                    //Ortalama maliyet
+                                    if (avgPrice != null) {
+                                        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
+                                        avgPrice.setText(avgPriceDummy);
+                                    }
+
+                                    //Ortalama tüketim
+                                    if (avgText != null) {
+                                        String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
+                                        avgText.setText(avgDummy);
+                                    }
+
+                                    //Ortalama emisyon
+                                    if (emission != null) {
+                                        String emissionHolder = calculateCarbonEmission() + " g/100km";
+                                        emission.setText(emissionHolder);
+                                    }
+
                                     try {
                                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                                         Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
@@ -334,9 +335,10 @@ public class FragmentVehicle extends Fragment {
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-                                }
 
-                                updateCarInfo();
+                                    //BURAYA BİR KONTROL MEKANİZMASI KOY BİLGİLER DEĞİŞTİĞİNDE UPDATE ETSİN SADECE
+                                    updateCarInfo();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -362,45 +364,6 @@ public class FragmentVehicle extends Fragment {
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(vehicleID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    private void updateCarInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("vehicleID", String.valueOf(vehicleID));
-                params.put("carBrand", carBrand);
-                params.put("carModel", carModel);
-                params.put("fuelPri", String.valueOf(fuelPri));
-                params.put("fuelSec", String.valueOf(fuelSec));
-                params.put("km", String.valueOf(kilometer));
-                params.put("plate", plateNo);
-                params.put("avgCons", String.valueOf(averageCons));
-                params.put("carbonEmission", String.valueOf(carbonEmission));
 
                 //returning parameters
                 return params;
@@ -443,7 +406,7 @@ public class FragmentVehicle extends Fragment {
         return averagePrice;
     }
 
-    void calculateCarbonEmission() {
+    public int calculateCarbonEmission() {
         int emissionGasoline = 2392;
         int emissionDiesel = 2640;
         int emissionlpg = 1665;
@@ -506,11 +469,53 @@ public class FragmentVehicle extends Fragment {
             carbonEmission = carbonEmission / 2;
             prefs.edit().putInt("carbonEmission", carbonEmission).apply();
         }
+        return carbonEmission;
+    }
+
+    private void updateCarInfo() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("carBrand", carBrand);
+                params.put("carModel", carModel);
+                params.put("fuelPri", String.valueOf(fuelPri));
+                params.put("fuelSec", String.valueOf(fuelSec));
+                params.put("km", String.valueOf(kilometer));
+                params.put("plate", plateNo);
+                params.put("avgCons", String.valueOf(averageCons));
+                params.put("carbonEmission", String.valueOf(carbonEmission));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (headerView != null) {
+            loadVehicleProfile();
+        }
         if (mRecyclerView != null) {
             fetchVehiclePurchases();
         }

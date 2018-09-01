@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -57,15 +58,23 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static com.fuelspot.MainActivity.averagePrice;
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
+import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
@@ -86,6 +95,7 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
     ArrayAdapter<String> adapter2;
     RequestQueue requestQueue;
     Button addCarButton;
+    EditText plateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,7 +247,7 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
         });
 
         //PlakaNO
-        final EditText plateText = findViewById(R.id.editText_plate);
+        plateText = findViewById(R.id.editText_plate);
         plateText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -271,7 +281,11 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
         addCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addVehicle();
+                if (plateText.getText().length() > 0) {
+                    addVehicle();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), "Lütfen plakanızı giriniz", Snackbar.LENGTH_SHORT);
+                }
             }
         });
 
@@ -291,18 +305,39 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
                                 JSONObject obj = res.getJSONObject(0);
 
                                 vehicleID = obj.getInt("id");
-                                prefs.edit().putInt("vehicleID", vehicleID).apply();
+                                editor.putInt("vehicleID", vehicleID);
 
-                                userVehicles += vehicleID + "-" + carBrand + " " + carModel + "-" + plateNo + ";";
+                                carBrand = obj.getString("car_brand");
+                                editor.putString("carBrand", carBrand).apply();
+
+                                carModel = obj.getString("car_model");
+                                editor.putString("carModel", carModel).apply();
+
+                                fuelPri = obj.getInt("fuelPri");
+                                editor.putInt("FuelPrimary", fuelPri).apply();
+
+                                fuelSec = obj.getInt("fuelSec");
+                                editor.putInt("FuelSecondary", fuelSec).apply();
+
+                                kilometer = obj.getInt("kilometer");
+                                editor.putInt("Kilometer", kilometer).apply();
+
+                                carPhoto = obj.getString("carPhoto");
+                                editor.putString("CarPhoto", carPhoto).apply();
+
+                                plateNo = obj.getString("plateNo");
+                                editor.putString("plateNo", plateNo).apply();
+
+                                averageCons = (float) obj.getDouble("avgConsumption");
+                                editor.putFloat("averageConsumption", averageCons).apply();
+
+                                carbonEmission = obj.getInt("carbonEmission");
+                                editor.putInt("carbonEmission", carbonEmission).apply();
+
+                                userVehicles += vehicleID + ";";
                                 prefs.edit().putString("userVehicles", userVehicles).apply();
 
-                                averagePrice = 0;
-
-                                getVariables(prefs);
-
-                                Toast.makeText(AddVehicle.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
-
-                                finish();
+                                updateUser();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -332,6 +367,53 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
                     params.put("carPhoto", getStringImage(bitmap));
                 }
                 params.put("plate", plateNo);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateUser() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        editor.apply();
+                        getVariables(prefs);
+                        Toast.makeText(AddVehicle.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        getVariables(prefs);
+                        Toast.makeText(AddVehicle.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("email", email);
+                params.put("gender", gender);
+                params.put("birthday", birthday);
+                params.put("location", location);
+                params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                }
+                params.put("vehicles", userVehicles);
+                params.put("phoneNumber", userPhoneNumber);
 
                 //returning parameters
                 return params;
@@ -803,15 +885,15 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
                 }
                 spinner2.setOnItemSelectedListener(this);
 
-                MainActivity.carBrand = spinner.getSelectedItem().toString();
+                carBrand = spinner.getSelectedItem().toString();
                 editor.putString("carBrand", MainActivity.carBrand);
 
-                MainActivity.carModel = spinner2.getSelectedItem().toString();
-                editor.putString("carModel", MainActivity.carModel);
+                carModel = spinner2.getSelectedItem().toString();
+                editor.putString("carModel", carModel);
                 break;
             case R.id.spinner_models:
-                MainActivity.carModel = spinner2.getSelectedItem().toString();
-                editor.putString("carModel", MainActivity.carModel);
+                carModel = spinner2.getSelectedItem().toString();
+                editor.putString("carModel", carModel);
                 break;
             default:
                 break;
@@ -820,7 +902,11 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //Do nothing
+        carBrand = "Acura";
+        editor.putString("carBrand", carBrand);
+
+        carModel = "RSX";
+        editor.putString("carModel", carModel);
     }
 
     @Override

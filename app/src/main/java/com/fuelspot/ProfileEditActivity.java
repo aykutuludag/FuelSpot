@@ -304,10 +304,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                 params.put("birthday", birthday);
                 params.put("location", location);
                 params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 }
-                params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
                 params.put("phoneNumber", userPhoneNumber);
 

@@ -13,7 +13,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -77,12 +76,14 @@ import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
@@ -91,6 +92,7 @@ import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.userlat;
@@ -150,7 +152,11 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         saveCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addVehicle();
+                if (plateNo != null && plateNo.length() > 0) {
+                    addVehicle();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), "Lütfen plakanızı giriniz", Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -169,8 +175,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 } else {
                     //Registration finished
                     howto3 = true;
-                    MainActivity.isSigned = true;
-                    prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
+                    isSigned = true;
+                    prefs.edit().putBoolean("isSigned", isSigned).apply();
                     Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
@@ -270,10 +276,41 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
                         prefs.edit().putString("userCurrency", currencyCode).apply();
 
-                        if (userCountry.equals("US") || userCountry.equals("LR") || userCountry.equals("MM")) {
-                            userUnit = getString(R.string.unitSystem2);
-                        } else {
-                            userUnit = getString(R.string.unitSystem1);
+                        switch (userCountry) {
+                            // US GALLON COUNTRIES
+                            case "BZ":
+                            case "CO":
+                            case "DO":
+                            case "EC":
+                            case "GT":
+                            case "HN":
+                            case "HT":
+                            case "LR":
+                            case "MM":
+                            case "NI":
+                            case "PE":
+                            case "US":
+                            case "SV":
+                                userUnit = getString(R.string.unitSystem2);
+                                break;
+                            // IMPERIAL GALLON COUNTRIES
+                            case "AI":
+                            case "AG":
+                            case "BS":
+                            case "DM":
+                            case "GD":
+                            case "KN":
+                            case "KY":
+                            case "LC":
+                            case "MS":
+                            case "VC":
+                            case "VG":
+                                userUnit = getString(R.string.unitSystem3);
+                                break;
+                            default:
+                                // LITRE COUNTRIES. REST OF THE WORLD.
+                                userUnit = getString(R.string.unitSystem1);
+                                break;
                         }
                         prefs.edit().putString("userUnit", userUnit).apply();
                         fetchTaxRates();
@@ -366,7 +403,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
         String[] foo_array = getResources().getStringArray(R.array.CAR_PRODUCER);
-        spinner.setSelection(MainActivity.getIndexOf(foo_array, MainActivity.carBrand), true);
+        spinner.setSelection(MainActivity.getIndexOf(foo_array, carBrand), true);
 
         //MODEL SEÇİMİ
         spinner2 = findViewById(R.id.spinner_models);
@@ -527,7 +564,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
-
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
@@ -535,10 +571,36 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 vehicleID = obj.getInt("id");
                                 prefs.edit().putInt("vehicleID", vehicleID).apply();
 
-                                userVehicles += vehicleID + "-" + carBrand + " " + carModel + "-" + plateNo + ";";
+                                carBrand = obj.getString("car_brand");
+                                prefs.edit().putString("carBrand", carBrand).apply();
+
+                                carModel = obj.getString("car_model");
+                                prefs.edit().putString("carModel", carModel).apply();
+
+                                fuelPri = obj.getInt("fuelPri");
+                                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+                                fuelSec = obj.getInt("fuelSec");
+                                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+                                kilometer = obj.getInt("kilometer");
+                                prefs.edit().putInt("Kilometer", kilometer).apply();
+
+                                carPhoto = obj.getString("carPhoto");
+                                prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+                                plateNo = obj.getString("plateNo");
+                                prefs.edit().putString("plateNo", plateNo).apply();
+
+                                averageCons = (float) obj.getDouble("avgConsumption");
+                                prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+                                carbonEmission = obj.getInt("carbonEmission");
+                                prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+                                userVehicles += vehicleID + ";";
                                 prefs.edit().putString("userVehicles", userVehicles).apply();
 
-                                getVariables(prefs);
                                 updateUserInfo();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -584,6 +646,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        getVariables(prefs);
                         Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
                         layout3.setVisibility(View.VISIBLE);
                         layout2.setVisibility(View.GONE);
@@ -592,6 +655,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        getVariables(prefs);
                         //Showing toast
                         Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -602,17 +666,18 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
-                params.put("email", MainActivity.email);
-                params.put("gender", MainActivity.gender);
-                params.put("birthday", MainActivity.birthday);
-                params.put("location", MainActivity.location);
-                params.put("country", MainActivity.userCountry);
+                params.put("username", username);
+                params.put("email", email);
+                params.put("gender", gender);
+                params.put("birthday", birthday);
+                params.put("location", location);
+                params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 }
-                params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
+                params.put("phoneNumber", userPhoneNumber);
 
                 //returning parameters
                 return params;
@@ -623,11 +688,74 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-    public String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    public void fetchVehicle(final int aracID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                vehicleID = obj.getInt("id");
+                                prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+                                carBrand = obj.getString("car_brand");
+                                prefs.edit().putString("carBrand", carBrand).apply();
+
+                                carModel = obj.getString("car_model");
+                                prefs.edit().putString("carModel", carModel).apply();
+
+                                fuelPri = obj.getInt("fuelPri");
+                                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+                                fuelSec = obj.getInt("fuelSec");
+                                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+                                kilometer = obj.getInt("kilometer");
+                                prefs.edit().putInt("Kilometer", kilometer).apply();
+
+                                carPhoto = obj.getString("carPhoto");
+                                prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+                                plateNo = obj.getString("plateNo");
+                                prefs.edit().putString("plateNo", plateNo).apply();
+
+                                averageCons = (float) obj.getDouble("avgConsumption");
+                                prefs.edit().putFloat("averageConsumption", averageCons).apply();
+                                getVariables(prefs);
+
+                                Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                layout3.setVisibility(View.VISIBLE);
+                                layout1.setVisibility(View.GONE);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("vehicleID", String.valueOf(aracID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     @Override
@@ -1090,7 +1218,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //DoNothing
+        // Do Nothing
     }
 
     @Override
@@ -1120,7 +1248,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     });
 
                     if (userVehicles != null && userVehicles.length() > 0) {
-                        fetchVehicle(Integer.parseInt(userVehicles.split(";")[0].split("-")[0]));
+                        fetchVehicle(Integer.parseInt(userVehicles.split(";")[0]));
                     } else {
                         loadCarSelection();
                         layout2.setVisibility(View.VISIBLE);
@@ -1132,87 +1260,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-    public void fetchVehicle(final int aracID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                vehicleID = obj.getInt("id");
-                                prefs.edit().putInt("vehicleID", vehicleID).apply();
-
-                                carBrand = obj.getString("car_brand");
-                                prefs.edit().putString("carBrand", carBrand).apply();
-
-                                carModel = obj.getString("car_model");
-                                prefs.edit().putString("carModel", carModel).apply();
-
-                                fuelPri = obj.getInt("fuelPri");
-                                prefs.edit().putInt("FuelPrimary", fuelPri).apply();
-
-                                fuelSec = obj.getInt("fuelSec");
-                                prefs.edit().putInt("FuelSecondary", fuelSec).apply();
-
-                                kilometer = obj.getInt("kilometer");
-                                prefs.edit().putInt("Kilometer", kilometer).apply();
-
-                                carPhoto = obj.getString("carPhoto");
-                                prefs.edit().putString("CarPhoto", carPhoto).apply();
-
-                                plateNo = obj.getString("plateNo");
-                                prefs.edit().putString("plateNo", plateNo).apply();
-
-                                averageCons = (float) obj.getDouble("avgConsumption");
-                                prefs.edit().putFloat("averageConsumption", averageCons).apply();
-                                getVariables(prefs);
-
-                                Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
-                                howto3 = true;
-                                MainActivity.isSigned = true;
-                                prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    }
-                                }, 2000);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("vehicleID", String.valueOf(aracID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
     }
 
     @Override
@@ -1256,6 +1303,13 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 }
                 break;
         }
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     @Override
