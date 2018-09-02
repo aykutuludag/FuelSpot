@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".StationDetails">
 
     <android.support.design.widget.AppBarLayout
@@ -28,15 +27,13 @@
             <com.google.android.gms.maps.StreetViewPanoramaView
                 android:id="@+id/street_view_panorama"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:paddingTop="?attr/actionBarSize" />
+                android:layout_height="300dp" />
 
             <ImageView
                 android:id="@+id/imageViewErrStreetView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_below="@id/toolbar"
-                android:paddingTop="?attr/actionBarSize"
                 android:src="@drawable/error_general"
                 android:visibility="gone" />
 

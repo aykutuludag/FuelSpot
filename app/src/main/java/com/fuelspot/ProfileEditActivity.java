@@ -281,7 +281,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(ProfileEditActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
                         finish();
                     }
                 },

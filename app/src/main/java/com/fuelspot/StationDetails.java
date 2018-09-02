@@ -121,7 +121,7 @@ public class StationDetails extends AppCompatActivity {
 
         //Collapsing Toolbar
         collapsingToolbarLayout = findViewById(R.id.collapsing_header);
-        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+        collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
         collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
 
         //Toolbar
@@ -134,7 +134,7 @@ public class StationDetails extends AppCompatActivity {
 
         //Dynamic bar colors
         appBarLayout = findViewById(R.id.Appbar);
-        coloredBars(ContextCompat.getColor(this, R.color.colorPrimaryDark), ContextCompat.getColor(this, R.color.colorPrimary));
+        coloredBars(Color.RED, Color.TRANSPARENT);
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();

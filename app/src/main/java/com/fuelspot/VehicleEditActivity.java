@@ -61,15 +61,23 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carbonEmission;
+import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
+import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
@@ -403,7 +411,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                         userVehicles = userVehicles.replaceAll(vehicleID + ";", "");
                         prefs.edit().putString("userVehicles", userVehicles).apply();
                         Toast.makeText(VehicleEditActivity.this, response, Toast.LENGTH_LONG).show();
-                        finish();
+                        updateUser();
                     }
                 },
                 new Response.ErrorListener() {
@@ -419,6 +427,47 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(vehicleID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateUser() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(VehicleEditActivity.this, response, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        Toast.makeText(VehicleEditActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("email", email);
+                params.put("gender", gender);
+                params.put("birthday", birthday);
+                params.put("location", location);
+                params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
+                params.put("vehicles", userVehicles);
+                params.put("phoneNumber", userPhoneNumber);
 
                 //returning parameters
                 return params;

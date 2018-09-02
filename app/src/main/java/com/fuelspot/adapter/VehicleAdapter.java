@@ -77,6 +77,8 @@ public class VehicleAdapter extends BaseAdapter {
 
         if (getItem(position).getID() == vehicleID) {
             holder.isCarSelected.setVisibility(View.VISIBLE);
+        } else {
+            holder.isCarSelected.setVisibility(View.INVISIBLE);
         }
 
         return convertView;

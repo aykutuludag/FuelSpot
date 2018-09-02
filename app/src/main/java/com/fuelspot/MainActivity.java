@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     public static String[] PERMISSIONS_FILEPICKER = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-
+    public static List<VehicleItem> listOfVehicle = new ArrayList<>();
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
     public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
@@ -102,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     RequestQueue requestQueue;
     List<Fragment> fragments = new ArrayList<>(5);
     AHBottomNavigation bottomNavigation;
-    List<VehicleItem> listOfVehicle = new ArrayList<>();
+
+    ListPopupWindow popupWindow;
 
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
@@ -415,6 +416,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setOnTabSelectedListener(this);
 
+        popupWindow = new ListPopupWindow(MainActivity.this);
+
         //In-App Services
         GeofenceScheduler();
         buyPremiumPopup();
@@ -580,18 +583,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 listOfVehicle.add(item);
             }
 
-            final ListPopupWindow popupWindow = new ListPopupWindow(MainActivity.this);
             ListAdapter adapter = new VehicleAdapter(MainActivity.this, listOfVehicle);
             popupWindow.setAnchorView(anchor);
             popupWindow.setAdapter(adapter);
             popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (i == listOfVehicle.size() - 1) {
+                    if (listOfVehicle.get(i).getID() == -999) {
                         Intent intent = new Intent(MainActivity.this, AddVehicle.class);
                         startActivity(intent);
                     } else {
-                        changeVehicle();
+                        changeVehicle(i);
                     }
                     popupWindow.dismiss();
                 }
@@ -600,8 +602,52 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
-    void changeVehicle() {
+    void changeVehicle(int position) {
+        VehicleItem item = listOfVehicle.get(position);
 
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+        getVariables(prefs);
+
+        FragmentVehicle frag = (FragmentVehicle) fragments.get(2);
+        if (frag != null) {
+            if (frag.headerView != null) {
+                frag.loadVehicleProfile();
+            }
+            if (frag.mRecyclerView != null) {
+                frag.fetchVehiclePurchases();
+            }
+        }
+
+        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ SEÇİLDİ: " + plateNo, Snackbar.LENGTH_SHORT).show();
     }
 
     public void coloredBars(int color1, int color2) {
@@ -634,11 +680,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -667,6 +708,27 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         Fragment fragment = mFragNavController.getCurrentFrag();
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+    @Override
+    public boolean onTabSelected(int position, boolean wasSelected) {
+        if (position == 2) {
+            if (fragments.get(2) != null && fragments.get(2).isVisible()) {
+                if (popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                } else {
+                    openVehicleChoosePopup(bottomNavigation);
+                }
+                return false;
+            } else {
+                mFragNavController.switchTab(position);
+                return true;
+            }
+        } else {
+            mFragNavController.switchTab(position);
+            return true;
         }
     }
 
@@ -708,19 +770,5 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
-    }
-
-    @Override
-    public boolean onTabSelected(int position, boolean wasSelected) {
-        if (position == 2) {
-            if (fragments.get(2) != null && fragments.get(2).isVisible()) {
-                openVehicleChoosePopup(bottomNavigation);
-            } else {
-                mFragNavController.switchTab(position);
-            }
-        } else {
-            mFragNavController.switchTab(position);
-        }
-        return true;
     }
 }

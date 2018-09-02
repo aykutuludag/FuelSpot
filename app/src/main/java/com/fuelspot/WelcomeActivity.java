@@ -724,6 +724,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                                 averageCons = (float) obj.getDouble("avgConsumption");
                                 prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+                                carbonEmission = obj.getInt("carbonEmission");
+                                prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
                                 getVariables(prefs);
 
                                 Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();

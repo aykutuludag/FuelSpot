@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -88,8 +87,8 @@ public class FragmentVehicle extends Fragment {
     View headerView;
 
     public static FragmentVehicle newInstance() {
-
         Bundle args = new Bundle();
+        args.putString("FRAGMENT", "Vehicle");
 
         FragmentVehicle fragment = new FragmentVehicle();
         fragment.setArguments(args);
@@ -344,7 +343,7 @@ public class FragmentVehicle extends Fragment {
                             }
                         } else {
                             errorImage.setVisibility(View.VISIBLE);
-                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG).show();
+                            //   Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG).show();
                             swipeContainer.setRefreshing(false);
                         }
                     }

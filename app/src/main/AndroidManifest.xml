@@ -39,7 +39,8 @@
         <activity
             android:name=".StationDetails"
             android:label="İstasyon detayı"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ContentTheme" />
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
@@ -67,14 +68,14 @@
         <!-- SuperUser Class -->
         <activity
             android:name=".superuser.AdminRegister"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/FullScreen" />
+            android:theme="@style/FullScreen"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperEditPrices"
-            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".superuser.AdminMainActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".superuser.SuperPurchases"
             android:label="Satın almalar"

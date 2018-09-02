@@ -238,13 +238,13 @@ public class FragmentProfile extends Fragment {
                                 swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
                                 errorPhoto.setVisibility(View.VISIBLE);
-                                snackBar.show();
+                                //  snackBar.show();
                                 swipeContainer.setRefreshing(false);
                                 e.printStackTrace();
                             }
                         } else {
                             errorPhoto.setVisibility(View.VISIBLE);
-                            snackBar.show();
+                            // snackBar.show();
                             swipeContainer.setRefreshing(false);
                         }
                     }
@@ -253,7 +253,7 @@ public class FragmentProfile extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         errorPhoto.setVisibility(View.VISIBLE);
-                        snackBar.show();
+                        // snackBar.show();
                         swipeContainer.setRefreshing(false);
                     }
                 }) {
