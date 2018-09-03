@@ -110,7 +110,6 @@ public class StationDetails extends AppCompatActivity {
     ArrayList<String> campaignStart = new ArrayList<>();
     ArrayList<String> campaignEnd = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -54,6 +53,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.photo;
+
 public class FragmentProfile extends Fragment {
 
     RecyclerView mRecyclerView;
@@ -61,9 +64,11 @@ public class FragmentProfile extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<CommentItem> feedsList = new ArrayList<>();
     SwipeRefreshLayout swipeContainer;
-    Snackbar snackBar;
     ImageView errorPhoto;
     TextView title;
+    RequestOptions options;
+    TextView userFullname;
+    CircleImageView userProfileHolder;
 
     public static FragmentProfile newInstance() {
 
@@ -84,29 +89,16 @@ public class FragmentProfile extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-
-        if (MainActivity.isSuperUser) {
-            String snackBarText = "Henüz hiç cevap yazmamışsınız.";
-            snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), snackBarText, Snackbar.LENGTH_LONG);
-        } else {
-            String snackBarText = "Henüz hiç yorum yazmamışsınız.";
-            snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), snackBarText, Snackbar.LENGTH_LONG);
-        }
-
-        CircleImageView userProfileHolder = rootView.findViewById(R.id.user_picture);
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.default_profile)
+        userProfileHolder = rootView.findViewById(R.id.user_picture);
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
-        Glide.with(getActivity()).load(Uri.parse(MainActivity.photo)).apply(options).into(userProfileHolder);
 
-        TextView userFullname = rootView.findViewById(R.id.userFullName);
-        userFullname.setText(MainActivity.name);
+        userFullname = rootView.findViewById(R.id.userFullName);
 
         title = rootView.findViewById(R.id.viewTitle);
-        if (MainActivity.isSuperUser) {
+        if (isSuperUser) {
             title.setText("Son cevaplarınız");
         }
 
@@ -125,7 +117,7 @@ public class FragmentProfile extends Fragment {
         getPremium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.isSuperUser) {
+                if (isSuperUser) {
                     try {
                         ((AdminMainActivity) getActivity()).buyAdminPremium();
                     } catch (RemoteException e) {
@@ -149,7 +141,7 @@ public class FragmentProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!MainActivity.isSuperUser) {
+                if (!isSuperUser) {
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                     CustomTabsIntent customTabsIntent = builder.build();
                     builder.enableUrlBarHiding();
@@ -200,10 +192,20 @@ public class FragmentProfile extends Fragment {
         return rootView;
     }
 
+    void loadProfile() {
+        if (getActivity() != null && userProfileHolder != null) {
+            Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
+        }
+
+        if (userFullname != null) {
+            userFullname.setText(name);
+        }
+    }
+
     public void fetchComments() {
         feedsList.clear();
         String whichApi = getString(R.string.API_FETCH_COMMENTS);
-        if (MainActivity.isSuperUser) {
+        if (isSuperUser) {
             whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
         }
         StringRequest stringRequest = new StringRequest(Request.Method.POST, whichApi,
@@ -278,6 +280,9 @@ public class FragmentProfile extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        loadProfile();
+
         if (mRecyclerView != null) {
             fetchComments();
         }

@@ -59,25 +59,16 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.birthday;
-import static com.fuelspot.MainActivity.carBrand;
-import static com.fuelspot.MainActivity.carModel;
-import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.email;
-import static com.fuelspot.MainActivity.fuelPri;
-import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
-import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
-import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
-
 
 public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -93,6 +84,12 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
     Button addCarButton;
     EditText plateText;
     SharedPreferences prefs;
+
+    // Temp variables to add a vehicle
+    int vehicleID, fuelPri, kilometer;
+    String plateNo, carBrand, carModel, carPhoto;
+
+    int fuelSec = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +155,7 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
         elec2 = findViewById(R.id.electricity2);
 
         //1. yakıt
+        gasoline.setChecked(true);
         RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

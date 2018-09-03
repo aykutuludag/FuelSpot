@@ -64,6 +64,7 @@ import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
@@ -126,7 +127,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         carPic = findViewById(R.id.imageViewCar);
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
-        Glide.with(this).load(MainActivity.carPhoto).apply(options).into(carPic);
+        Glide.with(this).load(carPhoto).apply(options).into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,45 +163,29 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         diesel2 = findViewById(R.id.diesel2);
         lpg2 = findViewById(R.id.lpg2);
         elec2 = findViewById(R.id.electricity2);
+        RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
+        final RadioGroup radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
 
-        switch (MainActivity.fuelPri) {
+        switch (fuelPri) {
             case 0:
                 gasoline.setChecked(true);
-
-                gasoline2.setEnabled(false);
-                diesel2.setEnabled(false);
-                lpg2.setEnabled(true);
-                elec2.setEnabled(true);
                 break;
             case 1:
                 diesel.setChecked(true);
-
-                gasoline2.setEnabled(false);
-                diesel2.setEnabled(false);
-                lpg2.setEnabled(false);
-                elec2.setEnabled(true);
                 break;
             case 2:
                 lpg.setChecked(true);
-
-                gasoline2.setEnabled(true);
-                lpg2.setEnabled(false);
-                diesel2.setEnabled(false);
-                elec2.setEnabled(false);
                 break;
             case 3:
                 elec.setChecked(true);
-
-                lpg2.setEnabled(false);
-                elec2.setEnabled(false);
-                gasoline2.setEnabled(true);
-                diesel2.setEnabled(true);
                 break;
             default:
+                fuelPri = -1;
+                radioGroup1.clearCheck();
                 break;
         }
 
-        switch (MainActivity.fuelSec) {
+        switch (fuelSec) {
             case 0:
                 gasoline2.setChecked(true);
                 break;
@@ -214,68 +199,50 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                 elec2.setChecked(true);
                 break;
             default:
+                fuelSec = -1;
+                radioGroup2.clearCheck();
                 break;
         }
 
         //1. yakıt
-        RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         radioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.gasoline) {
-                    MainActivity.fuelPri = 0;
-                    gasoline2.setEnabled(false);
-                    diesel2.setEnabled(false);
-                    lpg2.setEnabled(true);
-                    elec2.setEnabled(true);
+                    fuelPri = 0;
                 } else if (checkedId == R.id.diesel) {
-                    MainActivity.fuelPri = 1;
-                    gasoline2.setEnabled(false);
-                    diesel2.setEnabled(false);
-                    lpg2.setEnabled(false);
-                    elec2.setEnabled(true);
+                    fuelPri = 1;
                 } else if (checkedId == R.id.lpg) {
-                    MainActivity.fuelPri = 2;
-                    gasoline2.setEnabled(true);
-                    lpg2.setEnabled(false);
-                    diesel2.setEnabled(false);
-                    elec2.setEnabled(false);
+                    fuelPri = 2;
                 } else {
-                    MainActivity.fuelPri = 3;
-                    lpg2.setEnabled(false);
-                    elec2.setEnabled(false);
-                    gasoline2.setEnabled(true);
-                    diesel2.setEnabled(true);
+                    fuelPri = 3;
                 }
 
-                gasoline.setSelected(false);
-                diesel2.setSelected(false);
-                lpg2.setSelected(false);
-                elec2.setSelected(false);
-                MainActivity.fuelSec = -1;
+                fuelSec = -1;
+                radioGroup2.clearCheck();
 
-                editor.putInt("FuelPrimary", MainActivity.fuelPri);
-                editor.putInt("FuelSecondary", MainActivity.fuelSec);
+                editor.putInt("FuelPrimary", fuelPri);
+                editor.putInt("FuelSecondary", fuelSec);
             }
         });
 
         //2. yakıt
-        RadioGroup radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
         radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.gasoline2) {
-                    MainActivity.fuelSec = 0;
+                    fuelSec = 0;
                 } else if (checkedId == R.id.diesel2) {
-                    MainActivity.fuelSec = 1;
+                    fuelSec = 1;
                 } else if (checkedId == R.id.lpg2) {
-                    MainActivity.fuelSec = 2;
+                    fuelSec = 2;
                 } else if (checkedId == R.id.electricity2) {
-                    MainActivity.fuelSec = 3;
+                    fuelSec = 3;
                 }
-                editor.putInt("FuelSecondary", MainActivity.fuelSec);
+
+                editor.putInt("FuelSecondary", fuelSec);
             }
         });
 

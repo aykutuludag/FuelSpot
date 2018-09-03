@@ -4,7 +4,6 @@ package com.fuelspot;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -139,7 +138,7 @@ public class FragmentVehicle extends Fragment {
                 .error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
-        Glide.with(getActivity()).load(Uri.parse(carPhoto)).apply(options).into(carPhotoHolder);
+        Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
         kilometerText = headerView.findViewById(R.id.car_kilometer);
         String kmHolder = kilometer + " km";

@@ -69,7 +69,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
-
     public static final int REQUEST_FILEPICKER = 0;
     public static final int REQUEST_LOCATION = 1;
 

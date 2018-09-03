@@ -42,7 +42,7 @@ public class VehicleItem {
     }
 
     public void setVehicleFuelPri(int vehicleFuelPri) {
-        this.ID = vehicleFuelPri;
+        this.vehicleFuelPri = vehicleFuelPri;
     }
 
     public int getVehicleFuelSec() {
@@ -50,7 +50,7 @@ public class VehicleItem {
     }
 
     public void setVehicleFuelSec(int vehicleFuelSec) {
-        this.ID = vehicleFuelSec;
+        this.vehicleFuelSec = vehicleFuelSec;
     }
 
     public int getVehicleKilometer() {
@@ -58,7 +58,7 @@ public class VehicleItem {
     }
 
     public void setVehicleKilometer(int vehicleKilometer) {
-        this.ID = vehicleKilometer;
+        this.vehicleKilometer = vehicleKilometer;
     }
 
     public String getVehiclePhoto() {
@@ -90,6 +90,6 @@ public class VehicleItem {
     }
 
     public void setVehicleEmission(int vehicleEmission) {
-        this.ID = vehicleEmission;
+        this.vehicleEmission = vehicleEmission;
     }
 }

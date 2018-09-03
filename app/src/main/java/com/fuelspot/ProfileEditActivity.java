@@ -161,7 +161,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         userPic = findViewById(R.id.userPhoto);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
-        Glide.with(this).load(MainActivity.photo).apply(options).into(userPic);
+        Glide.with(this).load(photo).apply(options).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -424,7 +424,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                         Glide.with(this).load(bitmap).apply(options).into(userPic);
-                        editor.putString("ProfilePhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + now + ".jpg");
+                        editor.putString("ProfilePhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
