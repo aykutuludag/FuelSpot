@@ -96,6 +96,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
     ArrayAdapter<CharSequence> adapter;
     ArrayAdapter<String> adapter2;
     RequestQueue requestQueue;
+    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
-        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
         Glide.with(this).load(carPhoto).apply(options).into(carPic);
         carPic.setOnClickListener(new View.OnClickListener() {
@@ -994,7 +995,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     final Uri resultUri = UCrop.getOutput(data);
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        carPic.setImageBitmap(bitmap);
+                        Glide.with(this).load(bitmap).apply(options).into(carPic);
                         editor.putString("CarPhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + now + ".jpg");
                     } catch (IOException e) {
                         e.printStackTrace();

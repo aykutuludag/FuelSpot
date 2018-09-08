@@ -19,7 +19,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.model.CampaignItem;
-import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +45,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
             }
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
 
             ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
             Glide.with(mContext).load(mItemList.get(position).getCampaignPhoto()).into(imgPopup);
@@ -56,19 +56,19 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
             TextView descPopup = customView.findViewById(R.id.campaignDesc);
             descPopup.setText(mItemList.get(position).getCampaignDesc());
 
-            RelativeTimeTextView startTime = customView.findViewById(R.id.startTime);
+            TextView startTime = customView.findViewById(R.id.startTime);
             try {
                 Date date = format.parse(mItemList.get(position).getCampaignStart());
-                startTime.setReferenceTime(date.getTime());
+                startTime.setText(format2.format(date));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
 
-            RelativeTimeTextView endTime = customView.findViewById(R.id.endTime);
+            TextView endTime = customView.findViewById(R.id.endTime);
             try {
                 Date date = format.parse(mItemList.get(position).getCampaignEnd());
-                endTime.setReferenceTime(date.getTime());
+                endTime.setText(format2.format(date));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

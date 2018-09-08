@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.currencyCode;
+
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
     private List<StationItem> feedItemList;
     private Context mContext;
@@ -85,7 +87,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getGasolinePrice() == 0) {
             gasolineHolder = "-";
         } else {
-            gasolineHolder = feedItem.getGasolinePrice() + " TL";
+            gasolineHolder = feedItem.getGasolinePrice() + " " + currencyCode;
         }
         viewHolder.gasolinePrice.setText(gasolineHolder);
 
@@ -93,7 +95,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getDieselPrice() == 0) {
             dieselHolder = "-";
         } else {
-            dieselHolder = feedItem.getDieselPrice() + " TL";
+            dieselHolder = feedItem.getDieselPrice() + " " + currencyCode;
         }
         viewHolder.dieselPrice.setText(dieselHolder);
 
@@ -101,7 +103,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getLpgPrice() == 0) {
             lpgHolder = "-";
         } else {
-            lpgHolder = feedItem.getLpgPrice() + " TL";
+            lpgHolder = feedItem.getLpgPrice() + " " + currencyCode;
         }
         viewHolder.lpgPrice.setText(lpgHolder);
 
@@ -109,7 +111,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getElectricityPrice() == 0) {
             elecHolder = "-";
         } else {
-            elecHolder = feedItem.getElectricityPrice() + " TL";
+            elecHolder = feedItem.getElectricityPrice() + " " + currencyCode;
         }
         viewHolder.electricityPrice.setText(elecHolder);
 

@@ -91,7 +91,6 @@ public class StationDetails extends AppCompatActivity {
     AppBarLayout appBarLayout;
     StreetViewPanorama mPanorama;
     RecyclerView mRecyclerView, mRecyclerView2;
-    GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter, mAdapter2;
     List<CommentItem> feedsList = new ArrayList<>();
     List<CampaignItem> feedsList2 = new ArrayList<>();
@@ -417,7 +416,7 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView.setVisibility(View.VISIBLE);
                                 errorPhoto.setVisibility(View.GONE);
                                 mAdapter = new CommentAdapter(StationDetails.this, feedsList);
-                                mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
+                                GridLayoutManager mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
 
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);

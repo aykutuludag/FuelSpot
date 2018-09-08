@@ -130,6 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
+                        android:checked="true"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="Benzin"
@@ -272,7 +273,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:hint="0"
+                    android:hint="7500"
                     android:inputType="numberSigned|numberDecimal"
                     android:shadowColor="#3A3A3A"
                     android:textColor="#3A3A3A" />
@@ -304,6 +305,7 @@
                     android:gravity="center"
                     android:inputType="text"
                     android:shadowColor="#3A3A3A"
+                    android:textAllCaps="true"
                     android:textColor="#3A3A3A" />
             </RelativeLayout>
 
