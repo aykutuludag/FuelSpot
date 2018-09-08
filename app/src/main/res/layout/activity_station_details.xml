@@ -252,37 +252,12 @@
                     android:text="Kampanyalar"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
 
-                <android.support.percent.PercentRelativeLayout
-                    android:id="@+id/campaignBar"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/campaignView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_campaigns">
-
-                    <ImageView
-                        android:id="@+id/campaign1"
-                        android:layout_height="wrap_content"
-                        app:layout_marginPercent="4%"
-                        app:layout_widthPercent="25%"
-                        fab:srcCompat="@drawable/image_placeholder" />
-
-                    <ImageView
-                        android:id="@+id/campaign2"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/campaign1"
-                        app:layout_marginPercent="4%"
-                        app:layout_widthPercent="25%"
-                        fab:srcCompat="@drawable/image_placeholder" />
-
-                    <ImageView
-                        android:id="@+id/campaign3"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/campaign2"
-                        app:layout_marginPercent="4%"
-                        app:layout_widthPercent="25%"
-                        fab:srcCompat="@drawable/image_placeholder" />
-                </android.support.percent.PercentRelativeLayout>
+                    android:layout_below="@+id/title_campaigns"
+                    android:background="@android:color/transparent" />
 
             </RelativeLayout>
 

@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -31,7 +32,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +42,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.CommentAdapter;
+import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -68,13 +70,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.isSuperUser;
+
 public class StationDetails extends AppCompatActivity {
 
-    int stationDistance;
+    int stationDistance, choosenStationID, userCommentID;
     float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
     String lastUpdated;
 
-    int stationID, userCommentID;
     String stationName, stationVicinity, stationLocation, iconURL, userComment;
 
     int stars = 5;
@@ -87,10 +90,11 @@ public class StationDetails extends AppCompatActivity {
     StreetViewPanoramaView mStreetViewPanoramaView;
     AppBarLayout appBarLayout;
     StreetViewPanorama mPanorama;
-    RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView, mRecyclerView2;
     GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    List<CommentItem> feedsList;
+    RecyclerView.Adapter mAdapter, mAdapter2;
+    List<CommentItem> feedsList = new ArrayList<>();
+    List<CampaignItem> feedsList2 = new ArrayList<>();
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
@@ -100,15 +104,6 @@ public class StationDetails extends AppCompatActivity {
     NestedScrollView scrollView;
     ImageView errorPhoto, errorStreetView;
     CollapsingToolbarLayout collapsingToolbarLayout;
-
-    ImageView campaign1, campaign2, campaign3;
-    RelativeLayout campaignSection;
-
-    ArrayList<String> campaignName = new ArrayList<>();
-    ArrayList<String> campaignDesc = new ArrayList<>();
-    ArrayList<String> campaignPhoto = new ArrayList<>();
-    ArrayList<String> campaignStart = new ArrayList<>();
-    ArrayList<String> campaignEnd = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,23 +152,8 @@ public class StationDetails extends AppCompatActivity {
         textLastUpdated = findViewById(R.id.lastUpdated);
         stationIcon = findViewById(R.id.station_photo);
 
-        /*appBarLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Toast.makeText(StationDetails.this, "BASILIYOR", Toast.LENGTH_SHORT).show();
-                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
-                    params.setScrollFlags(0);  // clear all scroll flags
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    // Allow ScrollView to intercept touch events.
-                    Toast.makeText(StationDetails.this, "Bıraktı", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
-        });*/
-
         // Nerden gelirse gelsin stationID boş olamaz.
-        stationID = getIntent().getIntExtra("STATION_ID", 0);
+        choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
         stationName = getIntent().getStringExtra("STATION_NAME");
         if (stationName != null && stationName.length() > 0) {
             collapsingToolbarLayout.setTitle(stationName);
@@ -190,60 +170,20 @@ public class StationDetails extends AppCompatActivity {
             loadStationDetails();
         } else {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
-            fetchStationByID(stationID);
+            fetchStationByID(choosenStationID);
         }
 
         //Campaigns
-        campaignSection = findViewById(R.id.campaignSection);
-        campaign1 = findViewById(R.id.campaign1);
-        campaign1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (campaignName != null && campaignName.size() > 0) {
-                    try {
-                        campaignPopup(0, v);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        campaign2 = findViewById(R.id.campaign2);
-        campaign2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (campaignName != null && campaignName.size() > 1) {
-                    try {
-                        campaignPopup(1, v);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        campaign3 = findViewById(R.id.campaign3);
-        campaign3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (campaignName != null && campaignName.size() > 2) {
-                    try {
-                        campaignPopup(2, v);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        mRecyclerView2 = findViewById(R.id.campaignView);
 
         //Comments
-        feedsList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.commentView);
 
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
 
-        if (MainActivity.isSuperUser) {
+        if (isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
         } else {
             floatingActionButton1.setOnClickListener(new View.OnClickListener() {
@@ -258,66 +198,6 @@ public class StationDetails extends AppCompatActivity {
             public void onClick(View v) {
                 materialDesignFAM.close(true);
                 reportStation(v);
-            }
-        });
-    }
-
-    void loadStationDetails() {
-        //Panorama
-        mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
-            @Override
-            public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
-                panorama.setStreetNamesEnabled(true);
-                panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
-                panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
-                    @Override
-                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
-                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
-                            mPanorama = panorama;
-                        } else {
-                            errorStreetView.setVisibility(View.VISIBLE);
-                            Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                //SingleStation
-                textName.setText(stationName);
-                textVicinity.setText(stationVicinity);
-                textDistance.setText(stationDistance + " m");
-
-                if (gasolinePrice == 0) {
-                    textGasoline.setText("-");
-                } else {
-                    textGasoline.setText(String.valueOf(gasolinePrice));
-                }
-
-                if (dieselPrice == 0) {
-                    textDiesel.setText("-");
-                } else {
-                    textDiesel.setText(String.valueOf(dieselPrice));
-                }
-
-                if (lpgPrice == 0) {
-                    textLPG.setText("-");
-                } else {
-                    textLPG.setText(String.valueOf(lpgPrice));
-                }
-
-                if (electricityPrice == 0) {
-                    textElectricity.setText("-");
-                } else {
-                    textElectricity.setText(String.valueOf(electricityPrice));
-                }
-
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    Date date = format.parse(lastUpdated);
-                    textLastUpdated.setReferenceTime(date.getTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
             }
         });
     }
@@ -380,40 +260,97 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void fetchCampaigns() {
-        campaignName.clear();
-        campaignDesc.clear();
-        campaignPhoto.clear();
-        campaignStart.clear();
-        campaignEnd.clear();
+    void loadStationDetails() {
+        //Panorama
+        mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
+            @Override
+            public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
+                panorama.setStreetNamesEnabled(true);
+                panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
+                panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+                    @Override
+                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
+                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
+                            mPanorama = panorama;
+                        } else {
+                            errorStreetView.setVisibility(View.VISIBLE);
+                            Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
+                //SingleStation
+                textName.setText(stationName);
+                textVicinity.setText(stationVicinity);
+                textDistance.setText(stationDistance + " m");
+
+                if (gasolinePrice == 0) {
+                    textGasoline.setText("-");
+                } else {
+                    textGasoline.setText(String.valueOf(gasolinePrice));
+                }
+
+                if (dieselPrice == 0) {
+                    textDiesel.setText("-");
+                } else {
+                    textDiesel.setText(String.valueOf(dieselPrice));
+                }
+
+                if (lpgPrice == 0) {
+                    textLPG.setText("-");
+                } else {
+                    textLPG.setText(String.valueOf(lpgPrice));
+                }
+
+                if (electricityPrice == 0) {
+                    textElectricity.setText("-");
+                } else {
+                    textElectricity.setText(String.valueOf(electricityPrice));
+                }
+
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    Date date = format.parse(lastUpdated);
+                    textLastUpdated.setReferenceTime(date.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
+
+                fetchComments();
+                fetchCampaigns();
+            }
+        });
+    }
+
+    void fetchCampaigns() {
+        feedsList2.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("AMK:" + response);
+                        System.out.println("AQQ: " + response);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
+
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
 
-                                    campaignName.add(i, obj.getString("campaignName"));
-                                    campaignDesc.add(i, obj.getString("campaignDesc"));
-                                    campaignPhoto.add(i, obj.getString("campaignPhoto"));
-                                    campaignStart.add(i, obj.getString("campaignStart"));
-                                    campaignEnd.add(i, obj.getString("campaignEnd"));
-
-                                    System.out.println("AMK:" + campaignName.get(i));
-
-                                    if (i == 0) {
-                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(0))).into(campaign1);
-                                    } else if (i == 1) {
-                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(1))).into(campaign2);
-                                    } else {
-                                        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(2))).into(campaign3);
-                                    }
+                                    CampaignItem item = new CampaignItem();
+                                    item.setCampaignName(obj.getString("campaignName"));
+                                    item.setCampaignDesc(obj.getString("campaignDesc"));
+                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                    item.setCampaignStart(obj.getString("campaignStart"));
+                                    item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    feedsList2.add(item);
                                 }
+
+                                mAdapter2 = new CampaignAdapter(StationDetails.this, feedsList2);
+
+                                mAdapter2.notifyDataSetChanged();
+                                mRecyclerView2.setAdapter(mAdapter2);
+                                mRecyclerView2.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -423,16 +360,15 @@ public class StationDetails extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        campaignSection.setVisibility(View.GONE);
+
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
-
                 //Adding parameters
-                params.put("stationID", String.valueOf(stationID));
+                params.put("id", String.valueOf(choosenStationID));
 
                 //returning parameters
                 return params;
@@ -443,45 +379,87 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void campaignPopup(int campaignID, View view) throws ParseException {
-        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup_campaign, null);
-        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.setElevation(5.0f);
-        }
+    public void fetchComments() {
+        feedsList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
 
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    CommentItem item = new CommentItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setComment(obj.getString("comment"));
+                                    item.setTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("station_id"));
+                                    item.setProfile_pic(obj.getString("user_photo"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setRating(obj.getInt("stars"));
+                                    item.setAnswer(obj.getString("answer"));
+                                    item.setReplyTime(obj.getString("replyTime"));
+                                    item.setLogo(obj.getString("logo"));
+                                    feedsList.add(item);
 
-        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
-        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(campaignID))).into(imgPopup);
+                                    if (obj.getString("username").equals(MainActivity.username)) {
+                                        hasAlreadyCommented = true;
+                                        userCommentID = obj.getInt("id");
+                                        userComment = obj.getString("comment");
+                                        stars = obj.getInt("stars");
+                                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit));
+                                        floatingActionButton1.setLabelText("Edit comment");
+                                    }
+                                }
 
-        TextView titlePopup = customView.findViewById(R.id.campaignTitle);
-        titlePopup.setText(campaignName.get(campaignID));
+                                mRecyclerView.setVisibility(View.VISIBLE);
+                                errorPhoto.setVisibility(View.GONE);
+                                mAdapter = new CommentAdapter(StationDetails.this, feedsList);
+                                mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
 
-        TextView descPopup = customView.findViewById(R.id.campaignDesc);
-        descPopup.setText(campaignDesc.get(campaignID));
-
-        RelativeTimeTextView startTime = customView.findViewById(R.id.startTime);
-        Date date = format.parse(campaignStart.get(campaignID));
-        startTime.setReferenceTime(date.getTime());
-
-        RelativeTimeTextView endTime = customView.findViewById(R.id.endTime);
-        Date date2 = format.parse(campaignEnd.get(campaignID));
-        endTime.setReferenceTime(date2.getTime());
-
-        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
-        // Set a click listener for the popup window close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                            } catch (JSONException e) {
+                                mRecyclerView.setVisibility(View.GONE);
+                                errorPhoto.setVisibility(View.VISIBLE);
+                                hasAlreadyCommented = false;
+                                floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
+                            }
+                        } else {
+                            mRecyclerView.setVisibility(View.GONE);
+                            errorPhoto.setVisibility(View.VISIBLE);
+                            hasAlreadyCommented = false;
+                            floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mRecyclerView.setVisibility(View.GONE);
+                        errorPhoto.setVisibility(View.VISIBLE);
+                        hasAlreadyCommented = false;
+                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
+                    }
+                }) {
             @Override
-            public void onClick(View view) {
-                // Dismiss the popup window
-                mPopupWindow.dismiss();
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("id", String.valueOf(choosenStationID));
+
+                //returning parameters
+                return params;
             }
-        });
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.update();
-        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     void addUpdateCommentPopup(View view) {
@@ -561,89 +539,6 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    public void fetchComments() {
-        feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-                                    CommentItem item = new CommentItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setComment(obj.getString("comment"));
-                                    item.setTime(obj.getString("time"));
-                                    item.setStationID(obj.getInt("station_id"));
-                                    item.setProfile_pic(obj.getString("user_photo"));
-                                    item.setUsername(obj.getString("username"));
-                                    item.setRating(obj.getInt("stars"));
-                                    item.setAnswer(obj.getString("answer"));
-                                    item.setReplyTime(obj.getString("replyTime"));
-                                    item.setLogo(obj.getString("logo"));
-                                    feedsList.add(item);
-
-                                    if (obj.getString("username").equals(MainActivity.username)) {
-                                        hasAlreadyCommented = true;
-                                        userCommentID = obj.getInt("id");
-                                        userComment = obj.getString("comment");
-                                        stars = obj.getInt("stars");
-                                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit));
-                                        floatingActionButton1.setLabelText("Edit comment");
-                                    }
-                                }
-
-                                mRecyclerView.setVisibility(View.VISIBLE);
-                                errorPhoto.setVisibility(View.GONE);
-                                mAdapter = new CommentAdapter(StationDetails.this, feedsList);
-                                mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
-
-                                mAdapter.notifyDataSetChanged();
-                                mRecyclerView.setAdapter(mAdapter);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-                            } catch (JSONException e) {
-                                mRecyclerView.setVisibility(View.GONE);
-                                errorPhoto.setVisibility(View.VISIBLE);
-                                hasAlreadyCommented = false;
-                                floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
-                            }
-                        } else {
-                            mRecyclerView.setVisibility(View.GONE);
-                            errorPhoto.setVisibility(View.VISIBLE);
-                            hasAlreadyCommented = false;
-                            floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mRecyclerView.setVisibility(View.GONE);
-                        errorPhoto.setVisibility(View.VISIBLE);
-                        hasAlreadyCommented = false;
-                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("id", String.valueOf(stationID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
     private void sendComment() {
         final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding comment...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
@@ -670,7 +565,7 @@ public class StationDetails extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("comment", userComment);
-                params.put("station_id", String.valueOf(stationID));
+                params.put("station_id", String.valueOf(choosenStationID));
                 params.put("username", MainActivity.username);
                 params.put("user_photo", MainActivity.photo);
                 params.put("stars", String.valueOf(stars));
@@ -711,7 +606,7 @@ public class StationDetails extends AppCompatActivity {
                 //Adding parameters
                 params.put("commentID", String.valueOf(userCommentID));
                 params.put("comment", userComment);
-                params.put("station_id", String.valueOf(stationID));
+                params.put("station_id", String.valueOf(choosenStationID));
                 params.put("username", MainActivity.username);
                 params.put("user_photo", MainActivity.photo);
                 params.put("stars", String.valueOf(stars));
@@ -726,7 +621,44 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void reportStation(View view) {
+       /* LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_campaign, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
 
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+
+        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
+        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(campaignID))).into(imgPopup);
+
+        TextView titlePopup = customView.findViewById(R.id.campaignTitle);
+        titlePopup.setText(campaignName.get(campaignID));
+
+        TextView descPopup = customView.findViewById(R.id.campaignDesc);
+        descPopup.setText(campaignDesc.get(campaignID));
+
+        RelativeTimeTextView startTime = customView.findViewById(R.id.startTime);
+        Date date = format.parse(campaignStart.get(campaignID));
+        startTime.setReferenceTime(date.getTime());
+
+        RelativeTimeTextView endTime = customView.findViewById(R.id.endTime);
+        Date date2 = format.parse(campaignEnd.get(campaignID));
+        endTime.setReferenceTime(date2.getTime());
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);*/
     }
 
     public void coloredBars(int color1, int color2) {
@@ -779,8 +711,6 @@ public class StationDetails extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mStreetViewPanoramaView.onResume();
-        fetchComments();
-        fetchCampaigns();
     }
 
     @Override
