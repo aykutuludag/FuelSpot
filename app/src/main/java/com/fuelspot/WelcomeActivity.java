@@ -542,12 +542,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 if (s != null && s.length() > 0) {
                     if (s.toString().contains(" ")) {
                         plateNo = s.toString().replaceAll(" ", "");
-                    } else {
-                        plateNo = s.toString();
                     }
 
                     //All uppercase
-                    plateNo = plateNo.toUpperCase();
+                    plateNo = s.toString().toUpperCase();
 
                     prefs.edit().putString("plateNo", plateNo).apply();
                 }
@@ -612,6 +610,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
+                        Toast.makeText(WelcomeActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                         loading.dismiss();
                     }
                 }) {
@@ -1294,7 +1293,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     final Uri resultUri = UCrop.getOutput(data);
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        Glide.with(this).load(bitmap).into(carPic);
+                        Glide.with(WelcomeActivity.this).load(bitmap).into(carPic);
                         prefs.edit().putString("CarPhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + fileName).apply();
                     } catch (IOException e) {
                         e.printStackTrace();

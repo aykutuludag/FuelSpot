@@ -7,34 +7,40 @@
     android:background="#EDEDED"
     android:padding="8dp">
 
-    <ImageView
+    <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/ic_camera" />
+        android:gravity="center"
+        android:text="İSTASYONU RAPOR ET"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-    <EditText
-        android:id="@+id/editTextFeedback"
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:background="#FFF"
+        android:entries="@array/report_reasons" />
+
+    <EditText
+        android:id="@+id/editTextReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner"
+        android:layout_margin="8dp"
         android:ems="10"
-        android:gravity="center"
-        android:hint="Please describe your problems"
-        android:inputType="textMultiLine"
-        android:textSize="14sp" />
+        android:inputType="textMultiLine" />
 
 
     <Button
-        android:id="@+id/sendFeedback"
+        android:id="@+id/sendReport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextFeedback"
+        android:layout_below="@+id/editTextReport"
         android:layout_marginTop="16dp"
         android:background="#FF6838"
         android:text="SEND"

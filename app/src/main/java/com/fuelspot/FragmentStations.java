@@ -32,6 +32,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -70,7 +71,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.mapDefaultRange;
-import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userlat;
@@ -79,6 +79,7 @@ import static com.fuelspot.MainActivity.userlon;
 public class FragmentStations extends Fragment {
 
     MapView mMapView;
+    SpinKitView proggressBar;
 
     List<StationItem> feedsList = new ArrayList<>();
 
@@ -159,6 +160,9 @@ public class FragmentStations extends Fragment {
             }
         });
 
+        proggressBar = rootView.findViewById(R.id.spin_kit);
+        proggressBar.setColor(Color.WHITE);
+
         mRecyclerView = rootView.findViewById(R.id.feedView);
         mAdapter = new StationAdapter(getActivity(), feedsList);
         mLayoutManager = new GridLayoutManager(getActivity(), 1);
@@ -187,7 +191,7 @@ public class FragmentStations extends Fragment {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                            if (locCurrent.getAccuracy() <= mapDefaultRange / 10) {
                                 userlat = String.valueOf(locCurrent.getLatitude());
                                 userlon = String.valueOf(locCurrent.getLongitude());
                                 prefs.edit().putString("lat", userlat).apply();
@@ -196,7 +200,7 @@ public class FragmentStations extends Fragment {
 
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                if (distanceInMeter >= (mapDefaultRange / 4)) {
+                                if (distanceInMeter >= (mapDefaultRange / 5)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
                                     updateMapObject();
@@ -228,6 +232,8 @@ public class FragmentStations extends Fragment {
                 }
             }
         };
+
+        checkLocationPermission();
 
         return rootView;
     }
@@ -380,6 +386,8 @@ public class FragmentStations extends Fragment {
 
                                 addStation(i);
                             }
+                            proggressBar.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
                         } else {
                             noStationError.setVisibility(View.VISIBLE);
                             Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
@@ -451,8 +459,8 @@ public class FragmentStations extends Fragment {
 
                                     // Default - Sort by primary fuel
                                     if (fuelPri != -1) {
-                                        tabLayout.getTabAt(fuelPri).select();
-                                        sortBy(fuelPri);
+                                        tabLayout.getTabAt(4).select();
+                                        sortBy(4);
                                     }
                                 }
                             }
@@ -511,8 +519,6 @@ public class FragmentStations extends Fragment {
         if (mMapView != null) {
             mMapView.onResume();
         }
-
-        checkLocationPermission();
     }
 
     @Override

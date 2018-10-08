@@ -27,11 +27,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +73,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
 
@@ -403,7 +406,7 @@ public class StationDetails extends AppCompatActivity {
                                     item.setLogo(obj.getString("logo"));
                                     feedsList.add(item);
 
-                                    if (obj.getString("username").equals(MainActivity.username)) {
+                                    if (obj.getString("username").equals(username)) {
                                         hasAlreadyCommented = true;
                                         userCommentID = obj.getInt("id");
                                         userComment = obj.getString("comment");
@@ -490,6 +493,87 @@ public class StationDetails extends AppCompatActivity {
                     Toast.makeText(StationDetails.this, "Lütfen yorum ekleyiniz", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            private void sendComment() {
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding comment...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                loading.dismiss();
+                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                                fetchComments();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("comment", userComment);
+                        params.put("station_id", String.valueOf(choosenStationID));
+                        params.put("username", username);
+                        params.put("user_photo", MainActivity.photo);
+                        params.put("stars", String.valueOf(stars));
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
+
+            private void updateComment() {
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                loading.dismiss();
+                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                                fetchComments();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("commentID", String.valueOf(userCommentID));
+                        params.put("comment", userComment);
+                        params.put("station_id", String.valueOf(choosenStationID));
+                        params.put("username", username);
+                        params.put("user_photo", MainActivity.photo);
+                        params.put("stars", String.valueOf(stars));
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
         });
 
         EditText getComment = customView.findViewById(R.id.editTextComment);
@@ -538,113 +622,95 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    private void sendComment() {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding comment...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        loading.dismiss();
-                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                        mPopupWindow.dismiss();
-                        fetchComments();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("comment", userComment);
-                params.put("station_id", String.valueOf(choosenStationID));
-                params.put("username", MainActivity.username);
-                params.put("user_photo", MainActivity.photo);
-                params.put("stars", String.valueOf(stars));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    private void updateComment() {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        loading.dismiss();
-                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                        mPopupWindow.dismiss();
-                        fetchComments();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("commentID", String.valueOf(userCommentID));
-                params.put("comment", userComment);
-                params.put("station_id", String.valueOf(choosenStationID));
-                params.put("username", MainActivity.username);
-                params.put("user_photo", MainActivity.photo);
-                params.put("stars", String.valueOf(stars));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
     void reportStation(View view) {
-       /* LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup_campaign, null);
+        final String[] reportReason = new String[1];
+        final String[] reportDetails = new String[1];
+
+        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_report, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (Build.VERSION.SDK_INT >= 21) {
             mPopupWindow.setElevation(5.0f);
         }
 
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+        final Spinner spinner = customView.findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                reportReason[0] = position + " - " + spinner.getItemAtPosition(position);
+            }
 
-        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
-        Glide.with(StationDetails.this).load(Uri.parse(campaignPhoto.get(campaignID))).into(imgPopup);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                reportReason[0] = 0 + " - " + spinner.getItemAtPosition(0);
+            }
+        });
 
-        TextView titlePopup = customView.findViewById(R.id.campaignTitle);
-        titlePopup.setText(campaignName.get(campaignID));
+        EditText editText = customView.findViewById(R.id.editTextReport);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        TextView descPopup = customView.findViewById(R.id.campaignDesc);
-        descPopup.setText(campaignDesc.get(campaignID));
+            }
 
-        RelativeTimeTextView startTime = customView.findViewById(R.id.startTime);
-        Date date = format.parse(campaignStart.get(campaignID));
-        startTime.setReferenceTime(date.getTime());
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        RelativeTimeTextView endTime = customView.findViewById(R.id.endTime);
-        Date date2 = format.parse(campaignEnd.get(campaignID));
-        endTime.setReferenceTime(date2.getTime());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    reportDetails[0] = s.toString();
+                }
+            }
+        });
+
+        Button sendReport = customView.findViewById(R.id.sendReport);
+        sendReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendReporttoServer();
+            }
+
+            private void sendReporttoServer() {
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                loading.dismiss();
+                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("username", username);
+                        params.put("stationID", String.valueOf(choosenStationID));
+                        params.put("report", reportReason[0]);
+                        params.put("details", reportDetails[0]);
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
+        });
 
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
         // Set a click listener for the popup window close button
@@ -657,7 +723,7 @@ public class StationDetails extends AppCompatActivity {
         });
         mPopupWindow.setFocusable(true);
         mPopupWindow.update();
-        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);*/
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     public void coloredBars(int color1, int color2) {

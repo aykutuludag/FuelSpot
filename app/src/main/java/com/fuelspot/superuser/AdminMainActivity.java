@@ -115,8 +115,8 @@ public class AdminMainActivity extends AppCompatActivity {
         AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
         AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorAccent);
 
@@ -135,8 +135,8 @@ public class AdminMainActivity extends AppCompatActivity {
 
         List<Fragment> fragments = new ArrayList<>(5);
         fragments.add(FragmentOwnedStation.newInstance());
-        fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentStations.newInstance());
+        fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentProfile.newInstance());
         fragments.add(FragmentSettings.newInstance());
 
@@ -161,7 +161,7 @@ public class AdminMainActivity extends AppCompatActivity {
         RateThisApp.showRateDialogIfNeeded(this);
 
         if (savedInstanceState == null) {
-            mFragNavController.switchTab(0);
+            mFragNavController.switchTab(FragNavController.TAB1);
         }
 
         fetchSuperUser();
@@ -227,7 +227,7 @@ public class AdminMainActivity extends AppCompatActivity {
                                 getSuperVariables(prefs);
 
                                 if (isSuperVerified == 0) {
-                                    Snackbar.make(findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda sizinle iletişime geçeceğiz.", Snackbar.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

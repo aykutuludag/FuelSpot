@@ -349,7 +349,6 @@
                     android:layout_marginRight="16dp"
                     android:textAllCaps="true"
                     android:layout_marginTop="8dp"
-                    android:digits="aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY zZ0123456789"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:inputType="text"

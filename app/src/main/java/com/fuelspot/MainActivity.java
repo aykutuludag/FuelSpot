@@ -669,9 +669,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_addFuel:
-                Intent intent = new Intent(MainActivity.this, AddFuel.class);
-                startActivity(intent);
+            case R.id.action_showVehicles:
+                openVehicleChoosePopup(bottomNavigation);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -713,22 +712,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
-        if (position == 2) {
-            if (fragments.get(2) != null && fragments.get(2).isVisible()) {
-                if (popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                } else {
-                    openVehicleChoosePopup(bottomNavigation);
-                }
-                return false;
-            } else {
-                mFragNavController.switchTab(position);
-                return true;
-            }
-        } else {
-            mFragNavController.switchTab(position);
-            return true;
-        }
+        mFragNavController.switchTab(position);
+        return true;
     }
 
     @Override

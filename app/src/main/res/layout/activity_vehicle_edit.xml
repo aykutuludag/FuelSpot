@@ -294,7 +294,6 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:digits="aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY zZ0123456789"
                     android:layout_marginTop="8dp"
                     android:textAllCaps="true"
                     android:fontFamily="@font/gotham_medium"

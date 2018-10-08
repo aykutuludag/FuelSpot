@@ -142,7 +142,7 @@ public class SuperCampaings extends AppCompatActivity {
         sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
 
         // CAMPAIGN 1
-        imageViewCampaign = findViewById(R.id.campaignPhoto);
+        imageViewCampaign = findViewById(R.id.title);
         editTextCampaignName = findViewById(R.id.campaignTitle);
         editTextCampaignName.addTextChangedListener(new TextWatcher() {
             @Override

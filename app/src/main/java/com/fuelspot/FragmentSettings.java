@@ -359,7 +359,7 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-        getScreenshot = customView.findViewById(R.id.campaignPhoto);
+        getScreenshot = customView.findViewById(R.id.title);
         getScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

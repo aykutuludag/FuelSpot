@@ -15,6 +15,15 @@
     <string name="unitSystem2">Galon</string>
     <string name="unitSystem3">Imperial galon</string>
 
+    <string-array name="report_reasons">
+        <item>İstasyon mevcut değil</item>
+        <item>Yanlış konum</item>
+        <item>Yanlış fiyat</item>
+        <item>Tesislerde sorun</item>
+        <item>Kalitesiz hizmet</item>
+        <item>Akaryakıt sorunları</item>
+    </string-array>
+
     <!-- LoginActivity -->
     <string name="loginWithGoogle">Login with Google</string>
     <string name="loginWithFacebook">Login with Facebook</string>
@@ -182,4 +191,5 @@
     </string-array>
     <string name="title_activity_add_new_vehicle">AddNewVehicle</string>
     <string name="add_new_car">YENİ ARAÇ EKLE</string>
+    <string name="show_vehicles">Show vehicles</string>
 </resources>

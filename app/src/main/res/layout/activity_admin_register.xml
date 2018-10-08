@@ -59,7 +59,7 @@
         android:visibility="gone">
 
         <VideoView
-            android:id="@+id/videoViewBackground"
+            android:id="@+id/animatedAdminBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"

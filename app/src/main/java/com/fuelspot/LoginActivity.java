@@ -77,8 +77,8 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    RelativeLayout notLogged;
     VideoView background;
+    RelativeLayout notLogged;
 
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
@@ -99,12 +99,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         //Load background and login layout
-        background = findViewById(R.id.videoViewBackground);
+        background = findViewById(R.id.animatedBackground);
         notLogged = findViewById(R.id.notLoggedLayout);
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
-        t.setScreenName("Giriş");
+        t.setScreenName("LoginActivity");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -340,15 +340,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                     saveUserInfo();
                 } else {
-                    Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                     prefs.edit().putBoolean("isSigned", false).apply();
                 }
             } else {
-                Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                 prefs.edit().putBoolean("isSigned", false).apply();
             }
         } else {
-            Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
             prefs.edit().putBoolean("isSigned", false).apply();
         }
     }
@@ -364,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             @Override
                             public void onCompleted(JSONObject me, GraphResponse response) {
                                 if (response.getError() != null) {
-                                    Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                                    Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                                 } else {
                                     MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
                                     prefs.edit().putString("Name", MainActivity.name).apply();
@@ -397,12 +397,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onCancel() {
-                Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_cancel), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(background, getString(R.string.error_login_cancel), Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -432,7 +432,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {
@@ -464,7 +464,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onResume() {
         super.onResume();
         if (background != null) {
-            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background;
+            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background_login;
             Uri uri = Uri.parse(uriPath);
             background.setVideoURI(uri);
             background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -488,7 +488,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Snackbar.make(findViewById(R.id.videoViewBackground), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
     }
 }
 

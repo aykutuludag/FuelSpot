@@ -2,6 +2,7 @@ package com.fuelspot;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.NewsAdapter;
 import com.fuelspot.model.NewsItem;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -49,6 +51,7 @@ public class FragmentNews extends Fragment {
     String feedURL;
     ImageView errorPhoto;
     SharedPreferences prefs;
+    SpinKitView proggressBar;
 
     public static FragmentNews newInstance() {
 
@@ -70,6 +73,9 @@ public class FragmentNews extends Fragment {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        proggressBar = rootView.findViewById(R.id.spin_kit);
+        proggressBar.setColor(Color.WHITE);
 
         swipeContainer = rootView.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -153,6 +159,7 @@ public class FragmentNews extends Fragment {
                                         mRecyclerView.setLayoutManager(mLayoutManager);
                                         swipeContainer.setRefreshing(false);
                                         errorPhoto.setVisibility(View.GONE);
+                                        proggressBar.setVisibility(View.GONE);
                                     }
                                 } else {
                                     errorLayout();

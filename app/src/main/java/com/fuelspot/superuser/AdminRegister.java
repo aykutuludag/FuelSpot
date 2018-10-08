@@ -149,7 +149,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         AdminMainActivity.getSuperVariables(prefs);
         requestQueue = Volley.newRequestQueue(AdminRegister.this);
 
-        background = findViewById(R.id.videoViewBackground);
+        background = findViewById(R.id.animatedAdminBackground);
         promoLayout = findViewById(R.id.layout_promo);
         registerLayout = findViewById(R.id.registerLayout);
         welcome1 = findViewById(R.id.welcome1);
@@ -348,7 +348,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             public void run() {
                                 registerLayout.setVisibility(View.GONE);
                                 welcome1.setVisibility(View.VISIBLE);
-                                background.stopPlayback();
                                 background.setVisibility(View.INVISIBLE);
                                 fetchSuperUserInfo();
                             }
@@ -1087,7 +1086,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             mMapView.onResume();
         }
         if (background != null) {
-            background.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background));
+            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background_login;
+            Uri uri = Uri.parse(uriPath);
+            background.setVideoURI(uri);
             background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {

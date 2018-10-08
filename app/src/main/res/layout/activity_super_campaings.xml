@@ -48,7 +48,7 @@
                     app:srcCompat="@drawable/delete" />
 
                 <ImageView
-                    android:id="@+id/campaignPhoto"
+                    android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:layout_alignParentTop="true"
@@ -60,7 +60,7 @@
                     android:id="@+id/campaignTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/campaignPhoto"
+                    android:layout_below="@+id/title"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
                     android:gravity="center"
