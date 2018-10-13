@@ -27,7 +27,9 @@ import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
 import static com.fuelspot.superuser.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.AdminMainActivity.superStationName;
 
 public class SuperEditPrices extends AppCompatActivity {
 
@@ -147,7 +149,7 @@ public class SuperEditPrices extends AppCompatActivity {
     }
 
     public void sendPrices() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION_PRICES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
@@ -168,6 +170,8 @@ public class SuperEditPrices extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("stationID", String.valueOf(superStationID));
+                params.put("stationName", superStationName);
+                params.put("stationVicinity", superStationAddress);
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));

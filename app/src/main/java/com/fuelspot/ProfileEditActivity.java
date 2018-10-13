@@ -70,7 +70,8 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
-import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
@@ -171,7 +172,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                             .enableCameraSupport(true)
                             .pickPhoto(ProfileEditActivity.this);
                 } else {
-                    ActivityCompat.requestPermissions(ProfileEditActivity.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
+                    ActivityCompat.requestPermissions(ProfileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -372,15 +373,15 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_FILEPICKER: {
+            case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(ProfileEditActivity.this);
                 } else {
-                    Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
             }
         }

@@ -69,8 +69,12 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
-    public static final int REQUEST_FILEPICKER = 0;
+    public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
+    public static final int REQUEST_ALL = 2;
+
+    public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     public static final int GOOGLE_LOGIN = 100;
     public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
@@ -80,30 +84,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
-    public static String[] PERMISSIONS_FILEPICKER = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-    public static String PERMISSIONS_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+
     public static List<VehicleItem> listOfVehicle = new ArrayList<>();
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
     public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, username, carBrand, carModel, userUnit;
-
-    static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
-    static SharedPreferences prefs;
-    //In-App Billings
-    IInAppBillingService mService;
-    ServiceConnection mServiceConn;
-    Window window;
-    Toolbar toolbar;
-    boolean doubleBackToExitPressedOnce;
-    FragNavController mFragNavController;
-    RequestQueue requestQueue;
-    List<Fragment> fragments = new ArrayList<>(5);
-    AHBottomNavigation bottomNavigation;
-
-    ListPopupWindow popupWindow;
-
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
@@ -177,6 +163,20 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static String[] toyota_models = {"Auris", "Avensis", "Camry", "Carina", "Celica", "Corolla", "Corona", "Cressida", "Grown", "GT 86", "MR2", "Prius", "Starlet", "Supra", "Tercel", "Urban Cruiser", "Verso", "Yaris"};
     public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
     public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
+    static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
+    static SharedPreferences prefs;
+    //In-App Billings
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
+    Window window;
+    Toolbar toolbar;
+    boolean doubleBackToExitPressedOnce;
+    FragNavController mFragNavController;
+    RequestQueue requestQueue;
+    List<Fragment> fragments = new ArrayList<>(5);
+    AHBottomNavigation bottomNavigation;
+    ListPopupWindow popupWindow;
     // Static values END
 
     public static int getIndexOf(String[] strings, String item) {

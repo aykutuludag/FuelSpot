@@ -12,18 +12,18 @@
         android:layout_height="140dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/default_automobile" />
 
     <TextView
         android:id="@+id/car_kilometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/carPicture"
-        android:layout_alignStart="@id/carPicture"
         android:layout_below="@id/carPicture"
+        android:layout_alignStart="@id/carPicture"
+        android:layout_alignEnd="@id/carPicture"
         android:layout_margin="8dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -32,8 +32,8 @@
         android:id="@+id/carFullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView6"
         android:layout_alignTop="@+id/imageView6"
+        android:layout_alignBottom="@+id/imageView6"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/imageView6"
         android:gravity="center"
@@ -61,8 +61,8 @@
         android:id="@+id/car_fuelTypeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/car_fuelType"
         android:layout_alignTop="@+id/car_fuelType"
+        android:layout_alignBottom="@+id/car_fuelType"
         android:layout_toEndOf="@+id/car_fuelType"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -73,8 +73,8 @@
         android:id="@+id/car_fuelTypeText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/car_fuelType2"
         android:layout_alignTop="@+id/car_fuelType"
+        android:layout_alignBottom="@+id/car_fuelType2"
         android:layout_toEndOf="@+id/car_fuelType2"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -85,9 +85,9 @@
         android:id="@+id/car_avgCons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView8"
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView8"
+        android:layout_alignBottom="@+id/imageView8"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
@@ -97,9 +97,9 @@
         android:id="@+id/car_avgPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView9"
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView9"
+        android:layout_alignBottom="@+id/imageView9"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
@@ -109,9 +109,9 @@
         android:id="@+id/car_carbonEmission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView10"
         android:layout_alignStart="@+id/carFullname"
         android:layout_alignTop="@+id/imageView10"
+        android:layout_alignBottom="@+id/imageView10"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
@@ -130,8 +130,8 @@
         android:id="@+id/updateCarInfo"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:padding="4dp"
         android:src="@drawable/edit" />
 
@@ -148,8 +148,8 @@
         android:id="@+id/imageView7"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignStart="@id/imageView6"
         android:layout_below="@+id/imageView6"
+        android:layout_alignStart="@id/imageView6"
         android:layout_marginTop="8dp"
         app:srcCompat="@drawable/icon_yakitturu" />
 
@@ -157,8 +157,8 @@
         android:id="@+id/imageView8"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignStart="@id/imageView6"
         android:layout_below="@+id/imageView7"
+        android:layout_alignStart="@id/imageView6"
         android:layout_marginTop="8dp"
         app:srcCompat="@drawable/icon_avgcons" />
 
@@ -166,8 +166,8 @@
         android:id="@+id/imageView9"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignStart="@id/imageView6"
         android:layout_below="@+id/imageView8"
+        android:layout_alignStart="@id/imageView6"
         android:layout_marginTop="8dp"
         app:srcCompat="@drawable/icon_montlyliter" />
 
@@ -175,10 +175,10 @@
         android:id="@+id/imageView10"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignStart="@id/imageView6"
         android:layout_below="@+id/imageView9"
-        android:layout_marginBottom="16dp"
+        android:layout_alignStart="@id/imageView6"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         app:srcCompat="@drawable/co2icon" />
 
 </RelativeLayout>

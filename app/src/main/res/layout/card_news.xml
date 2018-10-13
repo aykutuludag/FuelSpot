@@ -29,18 +29,18 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="#ffffff"
-                android:paddingBottom="15dp"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:paddingTop="15dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="15dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/news_published"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:background="#ffffff"
                 android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />

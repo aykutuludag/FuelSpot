@@ -31,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="#ffffff"
-                android:paddingBottom="8dp"
                 android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         </RelativeLayout>

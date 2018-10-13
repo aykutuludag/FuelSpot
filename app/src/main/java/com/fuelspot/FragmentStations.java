@@ -16,7 +16,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -68,6 +67,7 @@ import java.util.Map;
 import eu.amirs.JSON;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.mapDefaultRange;
@@ -101,12 +101,12 @@ public class FragmentStations extends Fragment {
     Circle circle;
     TabLayout tabLayout;
     ImageView noStationError;
-    private GoogleMap googleMap;
-    private FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
     Location locLastKnown;
     BitmapDescriptor verifiedIcon;
+    private GoogleMap googleMap;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -179,7 +179,7 @@ public class FragmentStations extends Fragment {
         locLastKnown.setLongitude(Double.parseDouble(userlon));
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(60000);
+        mLocationRequest.setInterval(15000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -298,7 +298,7 @@ public class FragmentStations extends Fragment {
 
     public void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{MainActivity.PERMISSIONS_LOCATION}, MainActivity.REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
             loadMap();
@@ -352,7 +352,7 @@ public class FragmentStations extends Fragment {
                 .strokeColor(Color.RED));
 
         //Search stations in a radius of mapDefaultRange
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&opennow=true&key=" + getString(R.string.g_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&key=" + getString(R.string.g_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -500,12 +500,9 @@ public class FragmentStations extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are car_placeholder.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-                        loadMap();
-                    }
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+                    loadMap();
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }

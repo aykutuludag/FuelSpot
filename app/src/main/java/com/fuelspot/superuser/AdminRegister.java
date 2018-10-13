@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -100,6 +101,7 @@ import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -110,6 +112,10 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_ALL;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
@@ -201,7 +207,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(AdminRegister.this, new String[]
-                        {MainActivity.PERMISSIONS_FILEPICKER[0], MainActivity.PERMISSIONS_FILEPICKER[1], MainActivity.PERMISSIONS_FILEPICKER[2], MainActivity.PERMISSIONS_LOCATION}, MainActivity.REQUEST_FILEPICKER);
+                        {PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[0]}, REQUEST_ALL);
             }
         });
         /* LAYOUT 03 END */
@@ -593,7 +599,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 (cameraPosition));
 
         //Search stations in a radius of 50m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&opennow=true&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -914,7 +920,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(AdminRegister.this);
                 } else {
-                    ActivityCompat.requestPermissions(AdminRegister.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
+                    ActivityCompat.requestPermissions(AdminRegister.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -1019,8 +1025,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MainActivity.REQUEST_FILEPICKER: {
-                if (ContextCompat.checkSelfPermission(AdminRegister.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            case REQUEST_ALL: {
+                if (ContextCompat.checkSelfPermission(AdminRegister.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AdminRegister.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     //Request location updates:
                     mFusedLocationClient.getLastLocation().addOnSuccessListener(AdminRegister.this, new OnSuccessListener<Location>() {
                         @Override
@@ -1034,8 +1040,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 MainActivity.getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(60000);
-                                mLocationRequest.setFastestInterval(5000);
+                                mLocationRequest.setInterval(15000);
+                                mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                             }
                         }
@@ -1058,6 +1064,17 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         welcome1.setVisibility(View.GONE);
                         layout4();
                     }
+                }
+                break;
+            }
+            case REQUEST_STORAGE: {
+                if (ActivityCompat.checkSelfPermission(AdminRegister.this, Arrays.toString(PERMISSIONS_STORAGE)) == PackageManager.PERMISSION_GRANTED) {
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
+                            .pickPhoto(AdminRegister.this);
+                } else {
+                    Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }

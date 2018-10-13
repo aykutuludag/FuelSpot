@@ -36,8 +36,8 @@
                 android:id="@+id/campaignOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="#EDEDED">
 
 
@@ -81,8 +81,8 @@
                     android:id="@+id/startTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/campaignDesc"
+                    android:layout_alignParentStart="true"
                     android:layout_margin="8dp"
                     android:padding="4dp" />
 
@@ -90,8 +90,8 @@
                     android:id="@+id/endTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@+id/campaignDesc"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="8dp"
                     android:padding="4dp" />
 
@@ -146,8 +146,8 @@
                     android:id="@+id/startTime2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/campaignDesc2"
+                    android:layout_alignParentStart="true"
                     android:layout_margin="8dp"
                     android:padding="4dp" />
 
@@ -155,8 +155,8 @@
                     android:id="@+id/endTime2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@+id/campaignDesc2"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="8dp"
                     android:padding="4dp" />
 
@@ -211,8 +211,8 @@
                     android:id="@+id/startTime3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/campaignDesc3"
+                    android:layout_alignParentStart="true"
                     android:layout_margin="8dp"
                     android:padding="4dp" />
 
@@ -220,8 +220,8 @@
                     android:id="@+id/endTime3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_below="@+id/campaignDesc3"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="8dp"
                     android:padding="4dp" />
             </RelativeLayout>

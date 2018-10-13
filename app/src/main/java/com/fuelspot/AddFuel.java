@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,8 +65,8 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
-import static com.fuelspot.MainActivity.PERMISSIONS_FILEPICKER;
-import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
@@ -108,6 +109,25 @@ public class AddFuel extends AppCompatActivity {
     Bitmap bitmap;
     ImageView photoHolder;
     ScrollView scrollView;
+
+    public static float taxCalculator(int fuelType, float price) {
+        float tax;
+        switch (fuelType) {
+            case 0:
+                tax = price * TAX_GASOLINE;
+                break;
+            case 1:
+                tax = price * TAX_DIESEL;
+                break;
+            case 2:
+                tax = price * TAX_LPG;
+                break;
+            default:
+                tax = price * TAX_ELECTRICITY;
+                break;
+        }
+        return tax;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +195,7 @@ public class AddFuel extends AppCompatActivity {
 
     public void checkIsAtStation() {
         //Search stations in a radius of 50m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&opennow=true&key=" + getString(R.string.g_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&key=" + getString(R.string.g_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -469,7 +489,7 @@ public class AddFuel extends AppCompatActivity {
                             .enableCameraSupport(true)
                             .pickPhoto(AddFuel.this);
                 } else {
-                    ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_FILEPICKER, REQUEST_FILEPICKER);
+                    ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -481,25 +501,6 @@ public class AddFuel extends AppCompatActivity {
                 addPurchase();
             }
         });
-    }
-
-    public static float taxCalculator(int fuelType, float price) {
-        float tax;
-        switch (fuelType) {
-            case 0:
-                tax = price * TAX_GASOLINE;
-                break;
-            case 1:
-                tax = price * TAX_DIESEL;
-                break;
-            case 2:
-                tax = price * TAX_LPG;
-                break;
-            default:
-                tax = price * TAX_ELECTRICITY;
-                break;
-        }
-        return tax;
     }
 
     public float howManyLiter(float priceForUnit, float totalPrice) {
@@ -523,7 +524,7 @@ public class AddFuel extends AppCompatActivity {
                                     //Disimissing the progress dialog
                                     loading.dismiss();
                                     Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                                    updateStationPrices();
+                                    updateStation();
                                 }
                             },
                             new Response.ErrorListener() {
@@ -582,13 +583,11 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
-    private void updateStationPrices() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION_PRICES),
+    private void updateStation() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                        Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
                         prefs.edit().putInt("Kilometer", kilometer).apply();
                         bitmap = null;
                         chosenStationName = null;
@@ -615,6 +614,8 @@ public class AddFuel extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("stationID", String.valueOf(chosenStationID));
+                params.put("stationName", chosenStationName);
+                params.put("stationVicinity", chosenStationAddress);
                 if (fuelType != null && fuelType.length() > 0 && selectedUnitPrice > 0) {
                     if (fuelType.contains("gasoline")) {
                         params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
@@ -701,13 +702,15 @@ public class AddFuel extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_FILEPICKER: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case REQUEST_STORAGE: {
+                if (ActivityCompat.checkSelfPermission(AddFuel.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(AddFuel.this);
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }

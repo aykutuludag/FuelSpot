@@ -58,6 +58,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
@@ -130,7 +132,7 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
                             .enableCameraSupport(true)
                             .pickPhoto(AddVehicle.this);
                 } else {
-                    ActivityCompat.requestPermissions(AddVehicle.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
+                    ActivityCompat.requestPermissions(AddVehicle.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -836,8 +838,8 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MainActivity.REQUEST_FILEPICKER: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case REQUEST_STORAGE: {
+                if (ActivityCompat.checkSelfPermission(AddVehicle.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(AddVehicle.this);

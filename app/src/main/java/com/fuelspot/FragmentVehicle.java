@@ -63,6 +63,12 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentVehicle extends Fragment {
 
+    public static ArrayList<String> purchaseTimes = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
+    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
+    public static ArrayList<Double> purchasePrices = new ArrayList<>();
+    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
+    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
     CircleImageView carPhotoHolder;
     SwipeRefreshLayout swipeContainer;
     RecyclerView mRecyclerView;
@@ -70,18 +76,10 @@ public class FragmentVehicle extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<PurchaseItem> feedsList = new ArrayList<>();
     SharedPreferences prefs;
-
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
     TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice, emission;
     RelativeTimeTextView lastUpdated;
     CircleImageView errorImage;
-
-    public static ArrayList<String> purchaseTimes = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
-    public static ArrayList<Double> purchasePrices = new ArrayList<>();
-    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
-    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
     RequestQueue requestQueue;
     View headerView;
 

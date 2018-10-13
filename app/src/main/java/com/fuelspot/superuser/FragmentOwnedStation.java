@@ -62,6 +62,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
+import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.superuser.AdminMainActivity.isSuperVerified;
@@ -178,7 +180,7 @@ public class FragmentOwnedStation extends Fragment {
 
     void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{MainActivity.PERMISSIONS_LOCATION}, MainActivity.REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_LOCATION, REQUEST_LOCATION);
         } else {
             loadMap();
         }
@@ -238,7 +240,7 @@ public class FragmentOwnedStation extends Fragment {
     }
 
     void loadStationDetails() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_BY_ID),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -327,32 +329,30 @@ public class FragmentOwnedStation extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 1: {
+            case REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are car_placeholder.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        //Request location updates:
-                        mFusedLocationClient.getLastLocation()
-                                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        // Got last known location. In some rare situations this can be null.
-                                        if (location != null) {
-                                            userlat = String.valueOf(location.getLatitude());
-                                            userlon = String.valueOf(location.getLongitude());
-                                            prefs.edit().putString("lat", userlat).apply();
-                                            prefs.edit().putString("lon", userlon).apply();
-                                            MainActivity.getVariables(prefs);
-                                            loadMap();
-                                        } else {
-                                            LocationRequest mLocationRequest = new LocationRequest();
-                                            mLocationRequest.setInterval(60000);
-                                            mLocationRequest.setFastestInterval(15000);
-                                            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                        }
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    //Request location updates:
+                    mFusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        userlat = String.valueOf(location.getLatitude());
+                                        userlon = String.valueOf(location.getLongitude());
+                                        prefs.edit().putString("lat", userlat).apply();
+                                        prefs.edit().putString("lon", userlon).apply();
+                                        MainActivity.getVariables(prefs);
+                                        loadMap();
+                                    } else {
+                                        LocationRequest mLocationRequest = new LocationRequest();
+                                        mLocationRequest.setInterval(15000);
+                                        mLocationRequest.setFastestInterval(1000);
+                                        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                     }
-                                });
-                    }
+                                }
+                            });
                 } else {
                     Toast.makeText(getActivity(), "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
                 }

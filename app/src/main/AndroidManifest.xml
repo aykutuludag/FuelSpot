@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
@@ -39,8 +38,7 @@
         <activity
             android:name=".StationDetails"
             android:label="İstasyon detayı"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/ContentTheme" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
@@ -106,6 +104,11 @@
         <service
             android:name=".service.GeofenceService"
             android:enabled="true" />
+
+        <!-- AdMob -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admobAppId" />
 
         <!-- ImageCrop -->
         <activity

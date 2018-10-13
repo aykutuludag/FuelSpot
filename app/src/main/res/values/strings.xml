@@ -58,6 +58,7 @@
     <string name="facebook_app_id" translatable="false">380327342377274</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="g_api_key" translatable="false">AIzaSyCWJQ1LJYb3P5J0-hng71OcmG_Wr9mDfi8</string>
+    <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
     <string name="interstitial_facebook" translatable="false">380327342377274_384927721917236</string>
     <string name="inline_facebook" translatable="false">380327342377274_421669164909758</string>
@@ -73,11 +74,9 @@
     <string name="API_SUPERUSER_FETCH" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-fetch.php</string>
 
     <!-- STATION APIs -->
-    <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-add.php</string> <!-- Create and return -->
-    <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-update.php</string> <!-- Updates station info -->
-    <string name="API_UPDATE_STATION_PRICES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-update-prices.php</string> <!-- Updates station prices -->
-    <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch.php</string> <!-- GoogleID -->
-    <string name="API_FETCH_STATION_BY_ID" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch-by-id.php</string> <!-- stationID -->
+    <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-add.php</string> <!-- Create, return Station object -->
+    <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-update.php</string> <!-- Updates station info, return SUCCESS or FAIL -->
+    <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch.php</string> <!-- stationID, return Station object -->
 
     <!-- VEHICLE APIs -->
     <string name="API_ADD_VEHICLE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/vehicle-add.php</string>

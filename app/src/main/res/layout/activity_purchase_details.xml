@@ -76,8 +76,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/stationLogo"
-                        android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_margin="4dp"
                         android:gravity="center"
                         android:textSize="14sp" />
@@ -123,8 +123,8 @@
                         <TextView
                             android:id="@+id/title_price"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
                             android:gravity="center"
                             android:text="Tutar"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -133,9 +133,9 @@
                         <ImageView
                             android:id="@+id/type1"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/title_type"
                             android:layout_alignBottom="@+id/amount1"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/title_type"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -164,8 +164,8 @@
                             android:id="@+id/price1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_below="@+id/title_type"
+                            android:layout_alignParentEnd="true"
                             android:gravity="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="#626262"
@@ -175,9 +175,9 @@
                             android:id="@+id/type2"
                             android:layout_width="wrap_content"
                             android:layout_height="16dp"
+                            android:layout_below="@+id/type1"
                             android:layout_alignBottom="@+id/amount2"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/type1"
                             android:layout_marginTop="4dp"
                             app:layout_widthPercent="25%" />
 
@@ -210,8 +210,8 @@
                             android:id="@+id/price2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_below="@+id/type1"
+                            android:layout_alignParentEnd="true"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"

@@ -70,7 +70,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
-import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_ALL;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
@@ -143,8 +146,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]
-                        {MainActivity.PERMISSIONS_FILEPICKER[0], MainActivity.PERMISSIONS_FILEPICKER[1], MainActivity.PERMISSIONS_FILEPICKER[2], MainActivity.PERMISSIONS_LOCATION}, REQUEST_FILEPICKER);
+                ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_ALL);
             }
         });
 
@@ -212,6 +214,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                             birthday = obj.getString("birthday");
                             prefs.edit().putString("Birthday", birthday).apply();
+
+                            userPhoneNumber = obj.getString("phoneNumber");
+                            prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
 
                             location = obj.getString("location");
                             prefs.edit().putString("Location", location).apply();
@@ -391,7 +396,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(WelcomeActivity.this);
                 } else {
-                    ActivityCompat.requestPermissions(WelcomeActivity.this, MainActivity.PERMISSIONS_FILEPICKER, MainActivity.REQUEST_FILEPICKER);
+                    ActivityCompat.requestPermissions(WelcomeActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -1227,8 +1232,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_FILEPICKER: {
-                if (ContextCompat.checkSelfPermission(WelcomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            case REQUEST_ALL: {
+                if (ContextCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
                     mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
@@ -1243,8 +1248,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(60000);
-                                mLocationRequest.setFastestInterval(5000);
+                                mLocationRequest.setInterval(15000);
+                                mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                             }
                         }
@@ -1257,6 +1262,19 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         layout2.setVisibility(View.VISIBLE);
                         layout1.setVisibility(View.GONE);
                     }
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                }
+                break;
+            }
+            case REQUEST_STORAGE: {
+                if (ActivityCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
+                            .pickPhoto(WelcomeActivity.this);
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }

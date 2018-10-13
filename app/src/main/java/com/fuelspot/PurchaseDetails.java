@@ -1,7 +1,7 @@
 package com.fuelspot;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -46,6 +45,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.currencyCode;
 
@@ -202,27 +202,8 @@ public class PurchaseDetails extends AppCompatActivity {
     }
 
     public void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Konum izni gerekiyor")
-                        .setMessage("Size en yakın benzinlikleri ve fiyatlarını gösterebilmemiz için konum iznine ihtiyaç duyuyoruz")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(PurchaseDetails.this, new String[]
-                                        {android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
+        if (ActivityCompat.checkSelfPermission(PurchaseDetails.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PurchaseDetails.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(PurchaseDetails.this, new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
             loadMap();
         }
@@ -282,8 +263,7 @@ public class PurchaseDetails extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are car_placeholder.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(PurchaseDetails.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         loadMap();
                     }

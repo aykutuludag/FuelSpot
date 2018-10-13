@@ -64,8 +64,8 @@ import droidninja.filepicker.FilePickerConst;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static com.fuelspot.MainActivity.PERMISSIONS_FILEPICKER;
-import static com.fuelspot.MainActivity.REQUEST_FILEPICKER;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
@@ -369,7 +369,7 @@ public class FragmentSettings extends Fragment {
                             .enableCameraSupport(true)
                             .pickPhoto(getActivity());
                 } else {
-                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_FILEPICKER, REQUEST_FILEPICKER);
+                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -446,13 +446,15 @@ public class FragmentSettings extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_FILEPICKER: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case REQUEST_STORAGE: {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getActivity(), "Settings saved...", Toast.LENGTH_SHORT).show();
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(getActivity());
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
