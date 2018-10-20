@@ -61,7 +61,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_stations, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_station, viewGroup, false);
         return new ViewHolder(v);
     }
 

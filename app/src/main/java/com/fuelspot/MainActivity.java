@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
-
     public static List<VehicleItem> listOfVehicle = new ArrayList<>();
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
     public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
@@ -381,14 +380,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
 
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
-        requestQueue = Volley.newRequestQueue(MainActivity.this);
+
+        // Some variables
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
+        requestQueue = Volley.newRequestQueue(this);
+        popupWindow = new ListPopupWindow(MainActivity.this);
 
         // Activate map
         MapsInitializer.initialize(this.getApplicationContext());
 
-        //Bottom navigation
+        // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentNews.newInstance());
@@ -414,8 +416,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setOnTabSelectedListener(this);
-
-        popupWindow = new ListPopupWindow(MainActivity.this);
 
         //In-App Services
         GeofenceScheduler();
@@ -573,17 +573,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         requestQueue.add(stringRequest);
     }
 
-    void openVehicleChoosePopup(View anchor) {
+    void openVehicleChoosePopup(View parent) {
         if (listOfVehicle != null && listOfVehicle.size() > 0) {
             if (listOfVehicle.get(listOfVehicle.size() - 1).getID() != -999) {
                 VehicleItem item = new VehicleItem();
                 item.setID(-999);
-                item.setVehicleBrand("YENİ ARAÇ EKLE");
+                item.setVehicleBrand(getString(R.string.add_new_car));
                 listOfVehicle.add(item);
             }
 
             ListAdapter adapter = new VehicleAdapter(MainActivity.this, listOfVehicle);
-            popupWindow.setAnchorView(anchor);
+            popupWindow.setAnchorView(parent);
             popupWindow.setAdapter(adapter);
             popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

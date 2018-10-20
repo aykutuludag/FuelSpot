@@ -72,7 +72,7 @@
                     android:layout_alignParentStart="true"
                     android:padding="4dp"
                     app:layout_widthPercent="12.5%"
-                    app:srcCompat="@drawable/shell" />
+                    app:srcCompat="@drawable/default_station" />
 
                 <TextView
                     android:id="@+id/station_name"

@@ -176,6 +176,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <activity
+            android:name=".superuser.AddStation"
+            android:label="@string/title_activity_add_station"
+            android:parentActivityName=".superuser.AdminMainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fuelspot.superuser.AdminMainActivity" />
+        </activity>
     </application>
 
 </manifest>

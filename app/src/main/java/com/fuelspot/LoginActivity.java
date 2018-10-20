@@ -45,8 +45,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
 import org.json.JSONObject;
 
@@ -59,7 +57,6 @@ import java.util.Map;
 
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
-import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.facebookInterstitial;
 import static com.fuelspot.MainActivity.gender;
@@ -202,7 +199,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addApi(Plus.API)
                 .build();
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,39 +306,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
                 }
 
-                // G+
-                if (mGoogleApiClient.isConnected()) {
-                    Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                    if (person != null) {
-                        //GENDER
-                        if (person.hasGender()) {
-                            if (person.getGender() == 0) {
-                                gender = "male";
-                            } else if (person.getGender() == 1) {
-                                gender = "female";
-                            } else {
-                                gender = "transsexual";
-                            }
-                            prefs.edit().putString("Gender", gender).apply();
-                        }
-
-                        //BIRTHDAY
-                        if (person.hasGender()) {
-                            birthday = person.getBirthday();
-                            prefs.edit().putString("Birthday", birthday).apply();
-                        }
-
-                        //LOCATION
-                        if (person.hasCurrentLocation()) {
-                            location = person.getCurrentLocation();
-                            prefs.edit().putString("Location", location).apply();
-                        }
-                    }
-                    saveUserInfo();
-                } else {
-                    Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
-                    prefs.edit().putBoolean("isSigned", false).apply();
-                }
+                saveUserInfo();
             } else {
                 Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                 prefs.edit().putBoolean("isSigned", false).apply();

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_editPrices"
-        android:icon="@drawable/edit"
-        android:title="@string/edit_prices"
+        android:id="@+id/action_showStations"
+        android:icon="@drawable/show_stations"
+        android:title="@string/show_stations"
         app:showAsAction="always" />
 
 </menu>

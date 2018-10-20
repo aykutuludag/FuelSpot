@@ -95,7 +95,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/shell"
+                    android:src="@drawable/default_station"
                     card_view:civ_border_color="#EA6C34"
                     card_view:civ_border_width="1dp" />
 

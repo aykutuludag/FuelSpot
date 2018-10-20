@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,6 +72,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.mapDefaultRange;
+import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userlat;
@@ -103,10 +105,11 @@ public class FragmentStations extends Fragment {
     ImageView noStationError;
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
-    Location locLastKnown;
+    Location locLastKnown = new Location("");
     BitmapDescriptor verifiedIcon;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    NestedScrollView nScrollView;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -133,6 +136,7 @@ public class FragmentStations extends Fragment {
         //Variables
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
+        nScrollView = rootView.findViewById(R.id.nestedScrollView);
         noStationError = rootView.findViewById(R.id.errorPicture);
         verifiedIcon = BitmapDescriptorFactory.fromResource(R.drawable.verified_station);
 
@@ -174,7 +178,6 @@ public class FragmentStations extends Fragment {
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
-        locLastKnown = new Location("");
         locLastKnown.setLatitude(Double.parseDouble(userlat));
         locLastKnown.setLongitude(Double.parseDouble(userlon));
 
@@ -191,7 +194,7 @@ public class FragmentStations extends Fragment {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultRange / 10) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
                                 userlat = String.valueOf(locCurrent.getLatitude());
                                 userlon = String.valueOf(locCurrent.getLongitude());
                                 prefs.edit().putString("lat", userlat).apply();
@@ -238,64 +241,6 @@ public class FragmentStations extends Fragment {
         return rootView;
     }
 
-    private void sortBy(int position) {
-        switch (position) {
-            case 0:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getGasolinePrice() == 0 || obj2.getGasolinePrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else {
-                            return Double.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
-                        }
-                    }
-                });
-                break;
-            case 1:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getDieselPrice() == 0 || obj2.getDieselPrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else {
-                            return Double.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
-                        }
-                    }
-                });
-                break;
-            case 2:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getLpgPrice() == 0 || obj2.getLpgPrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else {
-                            return Double.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
-                        }
-                    }
-                });
-                break;
-            case 3:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getElectricityPrice() == 0 || obj2.getElectricityPrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else {
-                            return Double.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
-                        }
-                    }
-                });
-                break;
-            case 4:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getDistance(), obj2.getDistance());
-                    }
-                });
-                break;
-        }
-        // Updating layout
-        mAdapter.notifyDataSetChanged();
-    }
-
     public void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
@@ -317,7 +262,18 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
-                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        //Scroll iptal
+                    }
+                });
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        //Scroll enable
+                    }
+                });
                 updateMapObject();
             }
         });
@@ -349,7 +305,8 @@ public class FragmentStations extends Fragment {
         circle = googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon)))
                 .radius(mapDefaultRange)
-                .strokeColor(Color.RED));
+                .fillColor(0x220000FF)
+                .strokeColor(Color.parseColor("#FF5635")));
 
         //Search stations in a radius of mapDefaultRange
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&key=" + getString(R.string.g_api_key);
@@ -415,24 +372,29 @@ public class FragmentStations extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            if (response != null && response.length() > 0) {
+                        if (response != null && response.length() > 0) {
+                            try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
-
                                 if (obj.getInt("isActive") == 1) {
-
                                     StationItem item = new StationItem();
                                     item.setID(obj.getInt("id"));
                                     item.setStationName(obj.getString("name"));
                                     item.setVicinity(obj.getString("vicinity"));
+                                    item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setLicenseNo(obj.getString("licenseNo"));
+                                    item.setOwner(obj.getString("owner"));
+                                    item.setPhotoURL(obj.getString("photoURL"));
                                     item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
                                     item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
-                                    item.setPhotoURL(obj.getString("photoURL"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
+                                    item.setIsActive(obj.getInt("isActive"));
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
 
                                     //DISTANCE START
                                     Location loc = new Location("");
@@ -444,14 +406,11 @@ public class FragmentStations extends Fragment {
                                     item.setDistance((int) uzaklik);
                                     //DISTANCE END
 
-                                    //Lastupdated
-                                    item.setLastUpdated(obj.getString("lastUpdated"));
-
                                     feedsList.add(item);
 
                                     //Add marker
                                     LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
-                                    if (obj.getInt("isVerified") == 1) {
+                                    if (item.getIsVerified() == 1) {
                                         markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity")).icon(verifiedIcon)));
                                     } else {
                                         markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity"))));
@@ -463,9 +422,9 @@ public class FragmentStations extends Fragment {
                                         sortBy(4);
                                     }
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
                     }
                 },
@@ -494,6 +453,72 @@ public class FragmentStations extends Fragment {
 
         //Adding request to the queue
         queue.add(stringRequest);
+    }
+
+    private void sortBy(int position) {
+        switch (position) {
+            case 0:
+                Collections.sort(feedsList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getGasolinePrice() == 0 || obj2.getGasolinePrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else if (obj1.getGasolinePrice() == obj2.getGasolinePrice()) {
+                            return Double.compare(obj1.getDistance(), obj2.getDistance());
+                        } else {
+                            return Double.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
+                        }
+                    }
+                });
+                break;
+            case 1:
+                Collections.sort(feedsList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getDieselPrice() == 0 || obj2.getDieselPrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else if (obj1.getDieselPrice() == obj2.getDieselPrice()) {
+                            return Double.compare(obj1.getDistance(), obj2.getDistance());
+                        } else {
+                            return Double.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
+                        }
+                    }
+                });
+                break;
+            case 2:
+                Collections.sort(feedsList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getLpgPrice() == 0 || obj2.getLpgPrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else if (obj1.getLpgPrice() == obj2.getLpgPrice()) {
+                            return Double.compare(obj1.getDistance(), obj2.getDistance());
+                        } else {
+                            return Double.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
+                        }
+                    }
+                });
+                break;
+            case 3:
+                Collections.sort(feedsList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getElectricityPrice() == 0 || obj2.getElectricityPrice() == 0) {
+                            return Integer.MAX_VALUE;
+                        } else if (obj1.getElectricityPrice() == obj2.getElectricityPrice()) {
+                            return Double.compare(obj1.getDistance(), obj2.getDistance());
+                        } else {
+                            return Double.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
+                        }
+                    }
+                });
+                break;
+            case 4:
+                Collections.sort(feedsList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        return Double.compare(obj1.getDistance(), obj2.getDistance());
+                    }
+                });
+                break;
+        }
+        // Updating layout
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

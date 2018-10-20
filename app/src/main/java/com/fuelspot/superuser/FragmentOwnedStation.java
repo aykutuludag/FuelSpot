@@ -1,6 +1,7 @@
 package com.fuelspot.superuser;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,19 +37,19 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,9 +64,14 @@ import java.util.Map;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
-import static com.fuelspot.superuser.AdminMainActivity.isSuperVerified;
+import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
+import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
+import static com.fuelspot.superuser.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.AdminMainActivity.superStationLocation;
+import static com.fuelspot.superuser.AdminMainActivity.superStationName;
 
 public class FragmentOwnedStation extends Fragment {
 
@@ -80,6 +85,9 @@ public class FragmentOwnedStation extends Fragment {
     FusedLocationProviderClient mFusedLocationClient;
     Circle circle;
     private GoogleMap googleMap;
+    Location locLastKnown = new Location("");
+    LocationRequest mLocationRequest;
+    LocationCallback mLocationCallback;
 
     public static FragmentOwnedStation newInstance() {
         Bundle args = new Bundle();
@@ -91,8 +99,7 @@ public class FragmentOwnedStation extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_owned_station, container, false);
 
         // Analytics
@@ -107,10 +114,46 @@ public class FragmentOwnedStation extends Fragment {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         //Map
+        locLastKnown.setLatitude(Double.parseDouble(userlat));
+        locLastKnown.setLongitude(Double.parseDouble(userlon));
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(15000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                synchronized (this) {
+                    super.onLocationResult(locationResult);
+                    Location locCurrent = locationResult.getLastLocation();
+                    if (locCurrent != null) {
+                        if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                            userlat = String.valueOf(locCurrent.getLatitude());
+                            userlon = String.valueOf(locCurrent.getLongitude());
+                            prefs.edit().putString("lat", userlat).apply();
+                            prefs.edit().putString("lon", userlon).apply();
+                            MainActivity.getVariables(prefs);
+
+                            float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+
+                            if (distanceInMeter >= mapDefaultStationRange) {
+                                locLastKnown.setLatitude(Double.parseDouble(userlat));
+                                locLastKnown.setLongitude(Double.parseDouble(userlon));
+                            }
+                        }
+                    } else {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        };
+
+
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
-        MapsInitializer.initialize(getActivity().getApplicationContext());
 
         //Card
         textName = rootView.findViewById(R.id.ownedStationName);
@@ -128,7 +171,7 @@ public class FragmentOwnedStation extends Fragment {
         openPurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
+                if (isStationVerified == 1) {
                     Intent i = new Intent(getActivity(), SuperPurchases.class);
                     startActivity(i);
                 } else {
@@ -141,7 +184,7 @@ public class FragmentOwnedStation extends Fragment {
         openComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
+                if (isStationVerified == 1) {
                     Intent i = new Intent(getActivity(), SuperComments.class);
                     startActivity(i);
                 } else {
@@ -154,7 +197,7 @@ public class FragmentOwnedStation extends Fragment {
         openCampaings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
+                if (isStationVerified == 1) {
                     Intent i = new Intent(getActivity(), SuperCampaings.class);
                     startActivity(i);
                 } else {
@@ -163,11 +206,11 @@ public class FragmentOwnedStation extends Fragment {
             }
         });
 
-        openPosts = rootView.findViewById(R.id.buttonPosts);
+        openPosts = rootView.findViewById(R.id.buttonPromo);
         openPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperVerified == 1) {
+                if (isStationVerified == 1) {
                     Toast.makeText(getActivity(), "Coming soon...", Toast.LENGTH_LONG).show();
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
@@ -175,13 +218,16 @@ public class FragmentOwnedStation extends Fragment {
             }
         });
 
+        checkLocationPermission();
+
         return rootView;
     }
 
     void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_LOCATION, REQUEST_LOCATION);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
             loadMap();
         }
     }
@@ -194,46 +240,22 @@ public class FragmentOwnedStation extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(true);
-                googleMap.getUiSettings().setScrollGesturesEnabled(false);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                googleMap.getUiSettings().setMapToolbarEnabled(true);
-
-                mFusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-
-                                    Location loc1 = new Location("");
-                                    loc1.setLatitude(Double.parseDouble(userlat));
-                                    loc1.setLongitude(Double.parseDouble(userlon));
-
-                                    Location loc2 = new Location("");
-                                    loc2.setLatitude(location.getLatitude());
-                                    loc2.setLongitude(location.getLongitude());
-
-                                    float distanceInMeters = loc1.distanceTo(loc2);
-
-                                    if (distanceInMeters >= 50f) {
-                                        userlat = String.valueOf(location.getLatitude());
-                                        userlon = String.valueOf(location.getLongitude());
-                                        prefs.edit().putString("lat", userlat).apply();
-                                        prefs.edit().putString("lon", userlon).apply();
-                                        MainActivity.getVariables(prefs);
-                                    }
-                                } else {
-                                    LocationRequest mLocationRequest = new LocationRequest();
-                                    mLocationRequest.setInterval(60000);
-                                    mLocationRequest.setFastestInterval(5000);
-                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                }
-                            }
-                        });
-
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        //Scroll iptal
+                    }
+                });
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        //Scroll enable
+                    }
+                });
                 loadStationDetails();
             }
         });
@@ -244,6 +266,7 @@ public class FragmentOwnedStation extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println("AQ:" + response);
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
@@ -286,18 +309,18 @@ public class FragmentOwnedStation extends Fragment {
                             Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
 
                             //Add marker to stationLoc
-                            String[] locationHolder = AdminMainActivity.superStationLocation.split(";");
+                            String[] locationHolder = superStationLocation.split(";");
                             LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(AdminMainActivity.superStationName).snippet(AdminMainActivity.superStationAddress));
+                            googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
 
                             //Zoom-in camera
-                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16.75f).build();
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17f).build();
                             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                                     (cameraPosition));
 
                             circle = googleMap.addCircle(new CircleOptions()
                                     .center(sydney)
-                                    .radius(50)
+                                    .radius(mapDefaultStationRange)
                                     .strokeColor(Color.RED));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -315,7 +338,7 @@ public class FragmentOwnedStation extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
+                params.put("stationID", String.valueOf(superStationID));
 
                 //returning parameters
                 return params;
@@ -330,31 +353,11 @@ public class FragmentOwnedStation extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are car_placeholder.
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
-                    //Request location updates:
-                    mFusedLocationClient.getLastLocation()
-                            .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    // Got last known location. In some rare situations this can be null.
-                                    if (location != null) {
-                                        userlat = String.valueOf(location.getLatitude());
-                                        userlon = String.valueOf(location.getLongitude());
-                                        prefs.edit().putString("lat", userlat).apply();
-                                        prefs.edit().putString("lon", userlon).apply();
-                                        MainActivity.getVariables(prefs);
-                                        loadMap();
-                                    } else {
-                                        LocationRequest mLocationRequest = new LocationRequest();
-                                        mLocationRequest.setInterval(15000);
-                                        mLocationRequest.setFastestInterval(1000);
-                                        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                    }
-                                }
-                            });
+                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+                    loadMap();
                 } else {
-                    Toast.makeText(getActivity(), "İZİN VERİLMEDİ", Toast.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
             }
         }
@@ -392,5 +395,4 @@ public class FragmentOwnedStation extends Fragment {
             mMapView.onLowMemory();
         }
     }
-
 }

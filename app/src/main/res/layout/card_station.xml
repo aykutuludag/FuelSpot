@@ -23,8 +23,8 @@
                 android:layout_below="@+id/gasoline"
                 android:layout_alignParentStart="true"
                 android:padding="4dp"
-                card_view:layout_widthPercent="12.5%"
-                card_view:srcCompat="@drawable/shell" />
+                card_view:layout_widthPercent="12%"
+                card_view:srcCompat="@drawable/default_station" />
 
             <TextView
                 android:id="@+id/station_name"

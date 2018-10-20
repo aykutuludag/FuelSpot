@@ -9,6 +9,7 @@ import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,10 +18,18 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListPopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -32,11 +41,17 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentProfile;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
 import com.fuelspot.R;
+import com.fuelspot.model.StationItem;
+import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
@@ -49,25 +64,27 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import static com.fuelspot.MainActivity.PURCHASE_ADMIN_PREMIUM;
-import static com.fuelspot.MainActivity.birthday;
-import static com.fuelspot.MainActivity.email;
-import static com.fuelspot.MainActivity.gender;
-import static com.fuelspot.MainActivity.getVariables;
-import static com.fuelspot.MainActivity.name;
-import static com.fuelspot.MainActivity.openCount;
-import static com.fuelspot.MainActivity.photo;
-import static com.fuelspot.MainActivity.premium;
-import static com.fuelspot.MainActivity.userPhoneNumber;
-import static com.fuelspot.MainActivity.username;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdminMainActivity extends AppCompatActivity {
+import static com.fuelspot.MainActivity.PURCHASE_ADMIN_PREMIUM;
+import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.openCount;
+import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
+
+public class AdminMainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     // General variables for SuperUser
-    public static int isSuperVerified, superStationID;
     public static boolean superPremium;
+
+    public static int isStationVerified, superStationID;
     public static double ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
-    public static String superStationName, superStationLocation, superStationLogo, superStationAddress, contractPhoto, superGoogleID;
+    public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID;
+
+    // Multiple station
+    public static List<StationItem> listOfStation = new ArrayList<>();
+    ListPopupWindow popupWindow;
 
     boolean doubleBackToExitPressedOnce;
     RequestQueue queue;
@@ -77,22 +94,29 @@ public class AdminMainActivity extends AppCompatActivity {
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     FragNavController mFragNavController;
+    AHBottomNavigation bottomNavigation;
+    List<Fragment> fragments = new ArrayList<>(5);
+    Location locLastKnown;
 
     public static void getSuperVariables(SharedPreferences prefs) {
+        // General information
+        userStations = prefs.getString("userStations", "");
+        superPremium = prefs.getBoolean("hasSuperPremium", false);
+
+        // Station-specific information
         superStationID = prefs.getInt("SuperStationID", 0);
-        superGoogleID = prefs.getString("SuperGoogleID", "");
         superStationName = prefs.getString("SuperStationName", "");
         superStationLocation = prefs.getString("SuperStationLocation", "");
         superStationAddress = prefs.getString("SuperStationAddress", "");
+        superStationCountry = prefs.getString("SuperStationCountry", "");
         superStationLogo = prefs.getString("SuperStationLogo", "");
-        contractPhoto = prefs.getString("contractPhoto", "");
-
-        isSuperVerified = prefs.getInt("isSuperVerified", 0);
-        superPremium = prefs.getBoolean("hasSuperPremium", false);
+        superGoogleID = prefs.getString("SuperGoogleID", "");
+        superLicenseNo = prefs.getString("SuperLicenseNo", "");
         ownedGasolinePrice = prefs.getFloat("superGasolinePrice", 0);
         ownedDieselPrice = prefs.getFloat("superDieselPrice", 0);
         ownedLPGPrice = prefs.getFloat("superLPGPrice", 0);
         ownedElectricityPrice = prefs.getFloat("superElectricityPrice", 0);
+        isStationVerified = prefs.getInt("isStationVerified", 0);
     }
 
     @Override
@@ -100,19 +124,45 @@ public class AdminMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
 
+        //Window
+        window = this.getWindow();
+
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setLogo(R.drawable.brand_logo);
+        }
 
-        //Window
-        window = this.getWindow();
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
-        //Bottom navigation
-        AHBottomNavigation bottomNavigation = findViewById(R.id.bottom_navigation);
+        //Some variables
+        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        getVariables(prefs);
+        getSuperVariables(prefs);
+        queue = Volley.newRequestQueue(this);
+        popupWindow = new ListPopupWindow(this);
+
+        // Last location
+        locLastKnown = new Location("");
+        locLastKnown.setLatitude(Double.parseDouble(userlat));
+        locLastKnown.setLongitude(Double.parseDouble(userlon));
+
+        // Activate map
+        MapsInitializer.initialize(this.getApplicationContext());
+
+        // Bottom navigation
+        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
+        fragments.add(FragmentOwnedStation.newInstance());
+        fragments.add(FragmentStations.newInstance());
+        fragments.add(FragmentProfile.newInstance());
+        fragments.add(FragmentNews.newInstance());
+        fragments.add(FragmentSettings.newInstance());
+        builder.rootFragments(fragments);
+        mFragNavController = builder.build();
+
+        bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
@@ -129,132 +179,15 @@ public class AdminMainActivity extends AppCompatActivity {
         // Bottombar Settings
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-
-        // BottomNavigationListener
-        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
-
-        List<Fragment> fragments = new ArrayList<>(5);
-        fragments.add(FragmentOwnedStation.newInstance());
-        fragments.add(FragmentStations.newInstance());
-        fragments.add(FragmentNews.newInstance());
-        fragments.add(FragmentProfile.newInstance());
-        fragments.add(FragmentSettings.newInstance());
-
-        builder.rootFragments(fragments);
-        mFragNavController = builder.build();
-
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                mFragNavController.switchTab(position);
-                return true;
-            }
-        });
-
-        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        queue = Volley.newRequestQueue(this);
-        getVariables(prefs);
-        getSuperVariables(prefs);
+        bottomNavigation.setOnTabSelectedListener(this);
 
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
 
-        if (savedInstanceState == null) {
-            mFragNavController.switchTab(FragNavController.TAB1);
-        }
-
-        fetchSuperUser();
-
         //In-App Services
         buyPremiumPopup();
         InAppBilling();
-    }
-
-    void fetchSuperUser() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                name = obj.getString("name");
-                                prefs.edit().putString("Name", name).apply();
-
-                                email = obj.getString("email");
-                                prefs.edit().putString("Email", email).apply();
-
-                                photo = obj.getString("photo");
-                                prefs.edit().putString("ProfilePhoto", photo).apply();
-
-                                gender = obj.getString("gender");
-                                prefs.edit().putString("Gender", gender).apply();
-
-                                birthday = obj.getString("birthday");
-                                prefs.edit().putString("Birthday", birthday).apply();
-
-                                userPhoneNumber = obj.getString("userPhone");
-                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
-
-                                superStationID = obj.getInt("stationID");
-                                prefs.edit().putInt("SuperStationID", superStationID).apply();
-
-                                superGoogleID = obj.getString("googleID");
-                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
-
-                                superStationName = obj.getString("stationName");
-                                prefs.edit().putString("SuperStationName", superStationName).apply();
-
-                                superStationLocation = obj.getString("stationLocation");
-                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-                                superStationAddress = obj.getString("stationAddress");
-                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
-
-                                superStationLogo = obj.getString("stationLogo");
-                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
-
-                                contractPhoto = obj.getString("contractPhoto");
-                                prefs.edit().putString("contractPhoto", contractPhoto).apply();
-
-                                isSuperVerified = obj.getInt("isVerified");
-                                prefs.edit().putInt("isSuperVerified", isSuperVerified).apply();
-
-                                getVariables(prefs);
-                                getSuperVariables(prefs);
-
-                                if (isSuperVerified == 0) {
-                                    Snackbar.make(findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda sizinle iletişime geçeceğiz.", Snackbar.LENGTH_LONG).show();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        queue.add(stringRequest);
     }
 
     private void buyPremiumPopup() {
@@ -350,6 +283,202 @@ public class AdminMainActivity extends AppCompatActivity {
         }
     }
 
+    void fetchUserStations() {
+        listOfStation.clear();
+        if (userStations != null && userStations.length() > 0) {
+            String[] stationIDs = userStations.split(";");
+            for (String stationID1 : stationIDs) {
+                fetchSingleStation(Integer.parseInt(stationID1));
+            }
+            bottomNavigation.setNotification(stationIDs.length, 2);
+        }
+    }
+
+    void fetchSingleStation(final int sID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                StationItem item = new StationItem();
+                                item.setID(obj.getInt("id"));
+                                item.setStationName(obj.getString("name"));
+                                item.setVicinity(obj.getString("vicinity"));
+                                item.setCountryCode(obj.getString("country"));
+                                item.setLocation(obj.getString("location"));
+                                item.setGoogleMapID(obj.getString("googleID"));
+                                item.setLicenseNo(obj.getString("licenseNo"));
+                                item.setOwner(obj.getString("owner"));
+                                item.setPhotoURL(obj.getString("photoURL"));
+                                item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                item.setIsVerified(obj.getInt("isVerified"));
+                                item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
+                                item.setIsActive(obj.getInt("isActive"));
+                                item.setLastUpdated(obj.getString("lastUpdated"));
+
+                                //DISTANCE START
+                                Location loc = new Location("");
+                                String[] stationKonum = item.getLocation().split(";");
+                                loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                float uzaklik = locLastKnown.distanceTo(loc);
+                                item.setDistance((int) uzaklik);
+                                //DISTANCE END
+
+                                listOfStation.add(item);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(sID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
+    }
+
+    void openStationChoosePopup(View parent) {
+        if (listOfStation != null && listOfStation.size() > 0) {
+            if (listOfStation.get(listOfStation.size() - 1).getID() != -999) {
+                StationItem item = new StationItem();
+                item.setID(-999);
+                item.setStationName(getString(R.string.add_new_station));
+                listOfStation.add(item);
+            }
+
+            ListAdapter adapter = new StationChangerAdapter(AdminMainActivity.this, listOfStation);
+            popupWindow.setAnchorView(parent);
+            popupWindow.setAdapter(adapter);
+            popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (listOfStation.get(i).getID() == -999) {
+                        Intent intent = new Intent(AdminMainActivity.this, AddStation.class);
+                        startActivity(intent);
+                    } else {
+                        changeStation(i);
+                    }
+                    popupWindow.dismiss();
+                }
+            });
+            popupWindow.show();
+        }
+    }
+
+    void changeStation(int position) {
+        StationItem item = listOfStation.get(position);
+
+        superStationID = item.getID();
+        prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+        superStationName = item.getStationName();
+        prefs.edit().putString("SuperStationName", superStationName).apply();
+
+        superStationCountry = item.getCountryCode();
+        prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+        superStationLocation = item.getLocation();
+        prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+        superGoogleID = item.getGoogleMapID();
+        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+        superStationLogo = item.getPhotoURL();
+        prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+        ownedGasolinePrice = item.getGasolinePrice();
+        prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+
+        ownedDieselPrice = item.getDieselPrice();
+        prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+
+        ownedLPGPrice = item.getLpgPrice();
+        prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+
+        ownedElectricityPrice = item.getElectricityPrice();
+        prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+
+        getSuperVariables(prefs);
+
+        FragmentOwnedStation frag = (FragmentOwnedStation) fragments.get(0);
+        if (frag != null) {
+            frag.checkLocationPermission();
+        }
+
+        Snackbar.make(findViewById(R.id.pager), "İSTASYON SEÇİLDİ: " + superStationName, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PURCHASE_ADMIN_PREMIUM:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(AdminMainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
+                    prefs.edit().putBoolean("hasPremium", true).apply();
+                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+                    if (i != null) {
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(AdminMainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
+                            Toast.LENGTH_LONG).show();
+                    prefs.edit().putBoolean("hasPremium", false).apply();
+                }
+                break;
+        }
+
+        // Thanks to this brief code, we can call onActivityResult in a fragment
+        // Currently used in FragmentOwnedStation if user revoke location permission
+        Fragment fragment = mFragNavController.getCurrentFrag();
+        if (fragment != null && fragment.isVisible()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public boolean onTabSelected(int position, boolean wasSelected) {
+        mFragNavController.switchTab(position);
+        return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bottomNavigation != null) {
+            fetchUserStations();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_admin_main, menu);
@@ -359,13 +488,8 @@ public class AdminMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_editPrices:
-                if (isSuperVerified == 1) {
-                    Intent intent = new Intent(AdminMainActivity.this, SuperEditPrices.class);
-                    startActivity(intent);
-                } else {
-                    Snackbar.make(findViewById(R.id.pager), getString(R.string.pending_approval), Snackbar.LENGTH_LONG).show();
-                }
+            case R.id.action_showStations:
+                openStationChoosePopup(bottomNavigation);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -390,33 +514,73 @@ public class AdminMainActivity extends AppCompatActivity {
         }, 2000);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PURCHASE_ADMIN_PREMIUM:
-                if (resultCode == RESULT_OK) {
-                    Toast.makeText(AdminMainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", true).apply();
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    if (i != null) {
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(AdminMainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
-                            Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", false).apply();
-                }
-                break;
+    public class StationChangerAdapter extends BaseAdapter {
+        private LayoutInflater mLayoutInflater;
+        private List<StationItem> mItemList;
+        private Context mContext;
 
+        StationChangerAdapter(Context context, List<StationItem> itemList) {
+            mLayoutInflater = LayoutInflater.from(context);
+            mContext = context;
+            mItemList = itemList;
         }
 
-        //Irrelevant
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Stations");
-        if (fragment != null && fragment.isVisible()) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+        @Override
+        public int getCount() {
+            return mItemList.size();
+        }
+
+        @Override
+        public StationItem getItem(int i) {
+            return mItemList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = mLayoutInflater.inflate(R.layout.card_station_mini, null);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            String sName = getItem(position).getStationName();
+            holder.textViewStationName.setText(sName);
+
+            String sAddress = getItem(position).getVicinity();
+            holder.textViewStationAddress.setText(sAddress);
+
+            RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_station).error(R.drawable.default_station)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .priority(Priority.HIGH);
+            Glide.with(mContext).load(getItem(position).getPhotoURL()).apply(options).into(holder.stationLogo);
+
+            if (getItem(position).getID() == superStationID) {
+                holder.stationIsSelected.setVisibility(View.VISIBLE);
+            } else {
+                holder.stationIsSelected.setVisibility(View.INVISIBLE);
+            }
+
+            return convertView;
+        }
+
+        class ViewHolder {
+            TextView textViewStationName, textViewStationAddress;
+            CircleImageView stationLogo, stationIsSelected;
+
+            ViewHolder(View view) {
+                textViewStationName = view.findViewById(R.id.station_name);
+                textViewStationAddress = view.findViewById(R.id.station_address);
+                stationLogo = view.findViewById(R.id.station_photo);
+                stationIsSelected = view.findViewById(R.id.stationIsSelected);
+            }
         }
     }
 }

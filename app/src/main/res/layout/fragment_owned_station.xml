@@ -15,8 +15,8 @@
             android:layout_height="300dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             map:cameraTargetLat="39.925054"
             map:cameraTargetLng="32.8347552" />
 
@@ -25,7 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/mapView"
-            android:background="#fff">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#ffffff">
 
             <ImageView
                 android:id="@+id/stationLogo"
@@ -34,7 +36,7 @@
                 android:layout_alignParentStart="true"
                 android:padding="4dp"
                 app:layout_widthPercent="12.5%"
-                app:srcCompat="@drawable/shell" />
+                app:srcCompat="@drawable/default_station" />
 
             <TextView
                 android:id="@+id/ownedStationName"
@@ -57,7 +59,7 @@
                 android:layout_alignParentStart="true"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Station Address"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -195,43 +197,147 @@
                 android:textStyle="bold" />
         </android.support.percent.PercentRelativeLayout>
 
-        <Button
-            android:id="@+id/buttonPurchases"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/edit_section"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/single_station"
-            android:layout_alignParentStart="true"
-            android:layout_margin="16dp"
-            android:background="@drawable/green_box"
-            android:text="SATIN ALMALAR" />
+            android:layout_below="@id/single_station"
+            android:background="#f0f0f0"
+            android:padding="8dp">
 
-        <Button
-            android:id="@+id/buttonComments"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="İstasyon bilgilerini/fiyatlarını buradan güncelleyebilirsiniz." />
+
+            <Button
+                android:id="@+id/buttonEditStation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView8"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/green_box"
+                android:text="İstasyonu düzenle" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/comment_section"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/single_station"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            android:background="@drawable/green_box"
-            android:text="YORUMLAR" />
+            android:layout_below="@id/edit_section">
 
-        <Button
-            android:id="@+id/buttonCampaings"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="İstasyonunuz için yazılan yorumlara buradan ulaşabilir ve cevap yazabilirsiniz." />
+
+            <Button
+                android:id="@+id/buttonComments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView9"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/green_box"
+                android:text="YORUMLAR" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/campaign_section"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonPurchases"
-            android:layout_margin="16dp"
-            android:background="@drawable/green_box"
-            android:text="KAMPANYALAR" />
+            android:layout_below="@id/comment_section"
+            android:background="#f0f0f0">
 
-        <Button
-            android:id="@+id/buttonPosts"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="İstasyonunuzdaki mevcut kampanyaları buradan düzenleyebilirsiniz." />
+
+            <Button
+                android:id="@+id/buttonCampaings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView10"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/green_box"
+                android:text="KAMPANYALAR" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/purchase_section"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/buttonComments"
-            android:layout_alignTop="@+id/buttonCampaings"
-            android:background="@drawable/green_box"
-            android:text="GÖNDERİLER" />
+            android:layout_below="@id/campaign_section"
+            android:padding="8dp">
 
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="Uygulama üzerinden yapılan satın almaları buradan görebilirsiniz." />
+
+            <Button
+                android:id="@+id/buttonPurchases"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView11"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/green_box"
+                android:text="SATIN ALMALAR" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/promo_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/purchase_section"
+            android:background="#f0f0f0"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="İstasyonunuzu tanıtarak işlerinizi daha da büyetebilirsiniz." />
+
+            <Button
+                android:id="@+id/buttonPromo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView12"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/green_box"
+                android:text="GÖNDERİLER" />
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

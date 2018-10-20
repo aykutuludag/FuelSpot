@@ -172,7 +172,7 @@ public class StationDetails extends AppCompatActivity {
             loadStationDetails();
         } else {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
-            fetchStationByID(choosenStationID);
+            fetchStation(choosenStationID);
         }
 
         //Campaigns
@@ -204,7 +204,7 @@ public class StationDetails extends AppCompatActivity {
         });
     }
 
-    void fetchStationByID(final int stationID) {
+    void fetchStation(final int stationID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
@@ -319,8 +319,8 @@ public class StationDetails extends AppCompatActivity {
                 }
                 Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
 
-                fetchComments();
                 fetchCampaigns();
+                fetchComments();
             }
         });
     }
@@ -331,7 +331,6 @@ public class StationDetails extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("AQQ: " + response);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);

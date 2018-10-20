@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -34,7 +36,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -85,8 +86,6 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.yalantis.ucrop.UCrop;
 
@@ -101,13 +100,14 @@ import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
@@ -116,13 +116,44 @@ import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_ALL;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
+import static com.fuelspot.MainActivity.birthday;
+import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.isSigned;
+import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.stationPhotoChooser;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userCountryName;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
-import static com.fuelspot.MainActivity.verifyFilePickerPermission;
+import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
+import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
+import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
+import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
+import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
+import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
+import static com.fuelspot.superuser.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.AdminMainActivity.superStationLocation;
+import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
+import static com.fuelspot.superuser.AdminMainActivity.superStationName;
+import static com.fuelspot.superuser.AdminMainActivity.userStations;
 
 public class AdminRegister extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     SharedPreferences prefs;
+    SharedPreferences.Editor editor;
     RequestQueue requestQueue;
 
     ScrollView welcome2;
@@ -134,17 +165,18 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     SignInButton signInButton;
     CallbackManager callbackManager;
     LoginButton loginButton;
-    TextView textViewStationName, textViewFullName, stationHint, textViewAddress;
-    EditText editTextEmail, editTextPhone, editTextBirthday;
-    ImageView userPhoto, applicationForm;
+    TextView stationHint;
+    EditText editTextStationName, editTextStationAddress, editTextStationLicense, editTextFullName, editTextEmail, editTextPhone, editTextBirthday;
+    CircleImageView userPhoto;
     CheckBox termsAndConditions;
-    Bitmap bitmap;
     RadioGroup editGender;
     RadioButton bMale, bFemale, bOther;
     int calendarYear, calendarMonth, calendarDay;
     VideoView background;
     FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap googleMap;
+    Bitmap bitmap;
+    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +184,11 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_admin_register);
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        AdminMainActivity.getSuperVariables(prefs);
+        editor = prefs.edit();
+        getSuperVariables(prefs);
         requestQueue = Volley.newRequestQueue(AdminRegister.this);
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
         background = findViewById(R.id.animatedAdminBackground);
         promoLayout = findViewById(R.id.layout_promo);
@@ -186,7 +221,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addApi(Plus.API)
                 .build();
 
         signInButton = findViewById(R.id.googleButton);
@@ -231,48 +265,20 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
                 if (tmpusername.length() > 21) {
-                    MainActivity.username = tmpusername.substring(0, 20);
+                    username = tmpusername.substring(0, 20);
                 } else {
-                    MainActivity.username = tmpusername;
+                    username = tmpusername;
                 }
-                prefs.edit().putString("UserName", MainActivity.username).apply();
+                prefs.edit().putString("UserName", username).apply();
 
                 //EMAİL
-                MainActivity.email = acct.getEmail();
-                prefs.edit().putString("Email", MainActivity.email).apply();
+                email = acct.getEmail();
+                prefs.edit().putString("Email", email).apply();
 
                 //PHOTO
                 if (acct.getPhotoUrl() != null) {
-                    MainActivity.photo = acct.getPhotoUrl().toString();
-                    prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
-                }
-
-                // G+
-                Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                if (person != null) {
-                    //GENDER
-                    if (person.hasGender()) {
-                        if (person.getGender() == 0) {
-                            MainActivity.gender = "male";
-                        } else if (person.getGender() == 1) {
-                            MainActivity.gender = "female";
-                        } else {
-                            MainActivity.gender = "transsexual";
-                        }
-                        prefs.edit().putString("Gender", MainActivity.gender).apply();
-                    }
-
-                    //BIRTHDAY
-                    if (person.hasGender()) {
-                        MainActivity.birthday = person.getBirthday();
-                        prefs.edit().putString("Birthday", MainActivity.birthday).apply();
-                    }
-
-                    //LOCATION
-                    if (person.hasCurrentLocation()) {
-                        MainActivity.location = person.getCurrentLocation();
-                        prefs.edit().putString("Location", MainActivity.location).apply();
-                    }
+                    photo = acct.getPhotoUrl().toString();
+                    prefs.edit().putString("ProfilePhoto", photo).apply();
                 }
                 saveUserInfo();
             } else {
@@ -302,26 +308,20 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                     MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
                                     prefs.edit().putString("Name", MainActivity.name).apply();
 
-                                    MainActivity.email = me.optString("email");
-                                    prefs.edit().putString("Email", MainActivity.email).apply();
+                                    email = me.optString("email");
+                                    prefs.edit().putString("Email", email).apply();
 
-                                    MainActivity.photo = me.optString("profile_pic");
-                                    prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
-
-                                    MainActivity.gender = me.optString("gender");
-                                    prefs.edit().putString("Gender", MainActivity.gender).apply();
-
-                                    MainActivity.location = me.optString("location");
-                                    prefs.edit().putString("Location", MainActivity.location).apply();
+                                    photo = me.optString("profile_pic");
+                                    prefs.edit().putString("ProfilePhoto", photo).apply();
 
                                     //USERNAME
                                     String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
                                     if (tmpusername.length() > 21) {
-                                        MainActivity.username = tmpusername.substring(0, 20);
+                                        username = tmpusername.substring(0, 20);
                                     } else {
-                                        MainActivity.username = tmpusername;
+                                        username = tmpusername;
                                     }
-                                    prefs.edit().putString("UserName", MainActivity.username).apply();
+                                    prefs.edit().putString("UserName", username).apply();
                                     saveUserInfo();
                                 }
                             }
@@ -347,6 +347,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
+                        fetchSuperUserInfo();
                         loading.dismiss();
                         Toast.makeText(AdminRegister.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                         new Handler().postDelayed(new Runnable() {
@@ -355,7 +356,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 registerLayout.setVisibility(View.GONE);
                                 welcome1.setVisibility(View.VISIBLE);
                                 background.setVisibility(View.INVISIBLE);
-                                fetchSuperUserInfo();
                             }
                         }, 1500);
                     }
@@ -375,14 +375,10 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
+                params.put("username", username);
                 params.put("name", MainActivity.name);
-                params.put("email", MainActivity.email);
-                params.put("photo", MainActivity.photo);
-                params.put("gender", MainActivity.gender);
-                params.put("birthday", MainActivity.birthday);
-                params.put("location", MainActivity.location);
-                params.put("country", MainActivity.userCountry);
+                params.put("email", email);
+                params.put("photo", photo);
 
                 //returning parameters
                 return params;
@@ -403,58 +399,45 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
-                                MainActivity.name = obj.getString("name");
-                                prefs.edit().putString("Name", MainActivity.name).apply();
+                                name = obj.getString("name");
+                                prefs.edit().putString("Name", name).apply();
 
-                                MainActivity.email = obj.getString("email");
-                                prefs.edit().putString("Email", MainActivity.email).apply();
+                                email = obj.getString("email");
+                                prefs.edit().putString("Email", email).apply();
 
-                                MainActivity.photo = obj.getString("photo");
-                                prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
+                                photo = obj.getString("photo");
+                                prefs.edit().putString("ProfilePhoto", photo).apply();
 
-                                MainActivity.gender = obj.getString("gender");
-                                prefs.edit().putString("Gender", MainActivity.gender).apply();
+                                gender = obj.getString("gender");
+                                prefs.edit().putString("Gender", gender).apply();
 
-                                MainActivity.birthday = obj.getString("birthday");
-                                prefs.edit().putString("Birthday", MainActivity.birthday).apply();
+                                birthday = obj.getString("birthday");
+                                prefs.edit().putString("Birthday", birthday).apply();
 
-                                userPhoneNumber = obj.getString("userPhone");
+                                userPhoneNumber = obj.getString("phoneNumber");
                                 prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
 
-                                AdminMainActivity.superStationID = obj.getInt("stationID");
-                                prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
+                                userCountry = obj.getString("country");
+                                prefs.edit().putString("userCountry", userCountry).apply();
 
-                                AdminMainActivity.superStationName = obj.getString("stationName");
-                                prefs.edit().putString("SuperStationName", AdminMainActivity.superStationName).apply();
+                                userDisplayLanguage = obj.getString("language");
+                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                                AdminMainActivity.superStationLocation = obj.getString("stationLocation");
-                                prefs.edit().putString("SuperStationLocation", AdminMainActivity.superStationLocation).apply();
+                                userStations = obj.getString("stations");
+                                prefs.edit().putString("userStations", userStations).apply();
 
-                                AdminMainActivity.superStationAddress = obj.getString("stationAddress");
-                                prefs.edit().putString("SuperStationAddress", AdminMainActivity.superStationAddress).apply();
-
-                                AdminMainActivity.superStationLogo = obj.getString("stationLogo");
-                                prefs.edit().putString("SuperStationLogo", AdminMainActivity.superStationLogo).apply();
-
-                                AdminMainActivity.contractPhoto = obj.getString("contractPhoto");
-                                prefs.edit().putString("contractPhoto", AdminMainActivity.contractPhoto).apply();
-
-                                AdminMainActivity.isSuperVerified = obj.getInt("isVerified");
-                                prefs.edit().putInt("isSuperVerified", AdminMainActivity.isSuperVerified).apply();
-
-                                MainActivity.getVariables(prefs);
-                                AdminMainActivity.getSuperVariables(prefs);
+                                getVariables(prefs);
+                                getSuperVariables(prefs);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        fetchTaxRates();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        fetchTaxRates();
+
                     }
                 }) {
             @Override
@@ -463,7 +446,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
+                params.put("username", username);
 
                 //returning parameters
                 return params;
@@ -497,7 +480,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
                                 prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
 
-                                MainActivity.getVariables(prefs);
+                                getVariables(prefs);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -566,8 +549,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             MainActivity.userlon = String.valueOf(arg0.getLongitude());
                             prefs.edit().putString("lat", MainActivity.userlat).apply();
                             prefs.edit().putString("lon", MainActivity.userlon).apply();
-                            MainActivity.getVariables(prefs);
-
+                            getVariables(prefs);
                             updateMapObject();
                         }
                     }
@@ -609,32 +591,47 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                         JSON json = new JSON(response);
                         if (json.key("results").count() > 0) {
                             // Yes! He is in station. Probably there is only one station in 50m  so get the first value
-                            AdminMainActivity.superGoogleID = json.key("results").index(0).key("place_id").stringValue();
+                            superGoogleID = json.key("results").index(0).key("place_id").stringValue();
 
-                            AdminMainActivity.superStationName = json.key("results").index(0).key("name").stringValue();
-                            textViewStationName.setText(AdminMainActivity.superStationName);
+                            superStationName = json.key("results").index(0).key("name").stringValue();
+                            editTextStationName.setText(superStationName);
 
-                            AdminMainActivity.superStationAddress = json.key("results").index(0).key("vicinity").stringValue();
-                            textViewAddress.setText(AdminMainActivity.superStationAddress);
+                            superStationAddress = json.key("results").index(0).key("vicinity").stringValue();
+                            editTextStationAddress.setText(superStationAddress);
 
                             double lat = json.key("results").index(0).key("geometry").key("location").key("lat").doubleValue();
                             double lon = json.key("results").index(0).key("geometry").key("location").key("lng").doubleValue();
-                            AdminMainActivity.superStationLocation = lat + ";" + lon;
+                            superStationLocation = lat + ";" + lon;
+
+                            Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                            try {
+                                List<Address> addresses = geo.getFromLocation(lat, lon, 1);
+                                if (addresses.size() > 0) {
+                                    superStationCountry = addresses.get(0).getCountryCode();
+                                } else {
+                                    superStationCountry = "";
+                                }
+                            } catch (Exception e) {
+                                superStationCountry = "";
+                            }
 
                             LatLng sydney = new LatLng(lat, lon);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(AdminMainActivity.superStationName).snippet(AdminMainActivity.superStationAddress));
+                            googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
 
                             stationHint.setTextColor(Color.parseColor("#00801e"));
 
-                            registerOwnedStation(AdminMainActivity.superStationName, AdminMainActivity.superStationAddress, AdminMainActivity.superStationLocation, AdminMainActivity.superGoogleID, MainActivity.stationPhotoChooser(AdminMainActivity.superStationName));
+                            registerOwnedStation();
                         } else {
-                            AdminMainActivity.superStationName = "";
-                            AdminMainActivity.superStationAddress = "";
-                            AdminMainActivity.superStationLocation = "";
-                            AdminMainActivity.superStationLogo = "";
+                            superStationName = "";
+                            superStationAddress = "";
+                            superStationLocation = "";
+                            superStationCountry = "";
+                            superLicenseNo = "";
+                            superStationLogo = "";
 
-                            textViewStationName.setText(AdminMainActivity.superStationName);
-                            textViewAddress.setText(AdminMainActivity.superStationAddress);
+                            editTextStationName.setText(superStationName);
+                            editTextStationAddress.setText(superStationAddress);
+                            editTextStationLicense.setText(superLicenseNo);
                             stationHint.setTextColor(Color.parseColor("#ff0000"));
                         }
                     }
@@ -649,7 +646,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         requestQueue.add(stringRequest);
     }
 
-    private void registerOwnedStation(final String name, final String vicinity, final String location, final String placeID, final String photoURL) {
+    private void registerOwnedStation() {
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
                 new Response.Listener<String>() {
@@ -659,17 +656,43 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             try {
                                 JSONArray res = new JSONArray(s);
                                 JSONObject obj = res.getJSONObject(0);
-                                AdminMainActivity.superStationID = obj.getInt("id");
-                                AdminMainActivity.superGoogleID = obj.getString("googleID");
-                                AdminMainActivity.superStationName = obj.getString("name");
-                                AdminMainActivity.superStationLocation = obj.getString("location");
-                                AdminMainActivity.superStationLogo = obj.getString("photoURL");
 
-                                prefs.edit().putInt("SuperStationID", AdminMainActivity.superStationID).apply();
-                                prefs.edit().putString("SuperGoogleID", AdminMainActivity.superGoogleID).apply();
-                                prefs.edit().putString("SuperStationName", AdminMainActivity.superStationName).apply();
-                                prefs.edit().putString("SuperStationLocation", AdminMainActivity.superStationLocation).apply();
-                                prefs.edit().putString("SuperStationLogo", AdminMainActivity.superStationLogo).apply();
+                                superStationID = obj.getInt("id");
+                                editor.putInt("SuperStationID", superStationID);
+
+                                userStations += superStationID + ";";
+                                editor.putString("userStations", userStations);
+
+                                superStationName = obj.getString("name");
+                                editor.putString("SuperStationName", superStationName);
+
+                                superStationCountry = obj.getString("country");
+                                editor.putString("SuperStationCountry", superStationCountry);
+
+                                superStationLocation = obj.getString("location");
+                                editor.putString("SuperStationLocation", superStationLocation);
+
+                                superGoogleID = obj.getString("googleID");
+                                editor.putString("SuperGoogleID", superGoogleID);
+
+                                superLicenseNo = obj.getString("licenseNo");
+                                editor.putString("SuperLicenseNo", superLicenseNo);
+                                editTextStationLicense.setText(superLicenseNo);
+
+                                superStationLogo = obj.getString("photoURL");
+                                editor.putString("SuperStationLogo", superStationLogo);
+
+                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
+                                editor.putFloat("superGasolinePrice", (float) ownedGasolinePrice);
+
+                                ownedDieselPrice = obj.getDouble("dieselPrice");
+                                editor.putFloat("superDieselPrice", (float) ownedDieselPrice);
+
+                                ownedLPGPrice = obj.getDouble("lpgPrice");
+                                editor.putFloat("superLPGPrice", (float) ownedLPGPrice);
+
+                                ownedElectricityPrice = obj.getDouble("electricityPrice");
+                                editor.putFloat("superElectricityPrice", (float) ownedElectricityPrice);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -688,11 +711,64 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("name", name);
-                params.put("vicinity", vicinity);
-                params.put("location", location);
-                params.put("googleID", placeID);
-                params.put("photoURL", photoURL);
+                params.put("name", superStationName);
+                params.put("vicinity", superStationAddress);
+                params.put("country", superStationCountry);
+                params.put("location", superStationLocation);
+                params.put("googleID", superGoogleID);
+                params.put("photoURL", stationPhotoChooser(superStationName));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateStation() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String res) {
+                        if (res != null && res.length() > 0) {
+                            switch (res) {
+                                case "Success":
+                                    // Register process ended redirect user to AdminMainActivity to wait verification process.
+                                    Toast.makeText(AdminRegister.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
+                                    welcome2.setVisibility(View.GONE);
+                                    welcome3.setVisibility(View.VISIBLE);
+                                    layout5();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(AdminRegister.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(superStationID));
+                params.put("stationName", superStationName);
+                params.put("stationVicinity", superStationAddress);
+                params.put("licenseNo", superLicenseNo);
+                params.put("owner", username);
+                params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
+                params.put("dieselPrice", String.valueOf(ownedDieselPrice));
+                params.put("lpgPrice", String.valueOf(ownedLPGPrice));
+                params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
 
                 //returning parameters
                 return params;
@@ -704,26 +780,29 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void updateSuperUser() {
+        final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Loading...", "Please wait...", false, false);
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String s) {
-                        // Register process ended redirect user to AdminMainActivity to wait verification process.
-                        MainActivity.isSigned = true;
-                        prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
-                        MainActivity.isSuperUser = true;
-                        prefs.edit().putBoolean("isSuperUser", MainActivity.isSuperUser).apply();
-                        Toast.makeText(AdminRegister.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
-                        welcome2.setVisibility(View.GONE);
-                        welcome3.setVisibility(View.VISIBLE);
-                        layout5();
+                    public void onResponse(String res) {
+                        if (res != null && res.length() > 0) {
+                            switch (res) {
+                                case "Success":
+                                    updateStation();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                            loading.dismiss();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
+                        loading.dismiss();
                     }
                 }) {
             @Override
@@ -732,29 +811,18 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
-                params.put("email", MainActivity.email);
-                params.put("gender", MainActivity.gender);
-                params.put("birthday", MainActivity.birthday);
-                params.put("phoneNumber", userPhoneNumber);
-                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
-                params.put("googleID", AdminMainActivity.superGoogleID);
-                params.put("stationName", AdminMainActivity.superStationName);
-                params.put("stationLocation", AdminMainActivity.superStationLocation);
-                params.put("stationAddress", AdminMainActivity.superStationAddress);
-                params.put("stationLogo", AdminMainActivity.superStationLogo);
+                params.put("username", username);
+                params.put("name", name);
+                params.put("email", email);
                 if (bitmap != null) {
-                    params.put("contractPhoto", getStringImage(bitmap));
-                } else {
-                    if (AdminMainActivity.contractPhoto != null) {
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/Licenses/License.jpg"));
-                            params.put("contractPhoto", getStringImage(bitmap));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    params.put("photo", getStringImage(bitmap));
                 }
+                params.put("gender", gender);
+                params.put("birthday", birthday);
+                params.put("phoneNumber", userPhoneNumber);
+                params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
+                params.put("stationIDs", userStations);
 
                 //returning parameters
                 return params;
@@ -767,38 +835,131 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
     private void layout4() {
         /* LAYOUT 04 */
-        stationHint = findViewById(R.id.stationHint);
-
-        textViewStationName = findViewById(R.id.superStationName);
-        textViewStationName.setText(AdminMainActivity.superStationName);
-
-        textViewAddress = findViewById(R.id.superStationAddress);
-        textViewAddress.setText(AdminMainActivity.superStationAddress);
-
         loadMap();
 
-        userPhoto = findViewById(R.id.userPhoto);
-        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
-        Glide.with(this).load(MainActivity.photo).apply(options).into(userPhoto);
+        stationHint = findViewById(R.id.stationHint);
 
-        textViewFullName = findViewById(R.id.editFullName);
-        textViewFullName.setText(MainActivity.name);
+        editTextStationName = findViewById(R.id.superStationName);
+        editTextStationName.setText(superStationName);
+        editTextStationName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    superStationName = s.toString();
+                    editor.putString("SuperStationName", superStationName);
+                }
+            }
+        });
+
+        editTextStationAddress = findViewById(R.id.superStationAddress);
+        editTextStationAddress.setText(superStationAddress);
+        editTextStationAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    superStationAddress = s.toString();
+                    editor.putString("SuperStationAddress", superStationAddress);
+                }
+            }
+        });
+
+        editTextStationLicense = findViewById(R.id.editTextLicense);
+        editTextStationLicense.setText(superLicenseNo);
+        editTextStationLicense.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    superLicenseNo = s.toString();
+                    editor.putString("licenseNumbers", superLicenseNo);
+                }
+            }
+        });
+
+        userPhoto = findViewById(R.id.userPhoto);
+        Glide.with(this).load(photo).apply(options).into(userPhoto);
+        userPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.verifyFilePickerPermission(AdminRegister.this)) {
+                    FilePickerBuilder.getInstance().setMaxCount(1)
+                            .setActivityTheme(R.style.AppTheme)
+                            .enableCameraSupport(true)
+                            .pickPhoto(AdminRegister.this);
+                } else {
+                    ActivityCompat.requestPermissions(AdminRegister.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
+
+        editTextFullName = findViewById(R.id.editFullName);
+        editTextFullName.setText(name);
+        editTextFullName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    name = s.toString();
+                    prefs.edit().putString("Name", name).apply();
+                }
+            }
+        });
 
         editTextBirthday = findViewById(R.id.editTextBirthday);
-        editTextBirthday.setText(MainActivity.birthday);
-        if (MainActivity.birthday.length() > 0) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
+        editTextBirthday.setText(birthday);
+        if (birthday.length() > 0) {
             try {
-                Date birthDateasDate = sdf.parse(MainActivity.birthday);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(birthDateasDate);
-                calendarYear = calendar.get(Calendar.YEAR);
-                calendarMonth = calendar.get(Calendar.MONTH) + 1;
-                calendarDay = calendar.get(Calendar.DATE);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date birthDateasDate = sdf.parse(birthday);
+                calendarYear = birthDateasDate.getYear() + 1900;
+                calendarMonth = birthDateasDate.getMonth() + 1;
+                calendarDay = birthDateasDate.getDate();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        } else {
+            Date birthDateasDate = new Date();
+            calendarYear = birthDateasDate.getYear() + 1900;
+            calendarMonth = birthDateasDate.getMonth() + 1;
+            calendarDay = birthDateasDate.getDate();
         }
         editTextBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -806,9 +967,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 DatePickerDialog datePicker = new DatePickerDialog(AdminRegister.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        MainActivity.birthday = pad(dayOfMonth) + "/" + pad(monthOfYear + 1) + "/" + year;
-                        editTextBirthday.setText(MainActivity.birthday);
-                        prefs.edit().putString("Birthday", MainActivity.birthday).apply();
+                        birthday = pad(dayOfMonth) + "/" + pad(monthOfYear + 1) + "/" + year;
+                        editTextBirthday.setText(birthday);
+                        prefs.edit().putString("Birthday", birthday).apply();
                     }
                 }, calendarYear, calendarMonth, calendarDay);
 
@@ -852,7 +1013,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         });
 
         editTextEmail = findViewById(R.id.editTextMail);
-        editTextEmail.setText(MainActivity.email);
+        editTextEmail.setText(email);
         editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -867,8 +1028,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    MainActivity.email = s.toString();
-                    prefs.edit().putString("Email", MainActivity.email).apply();
+                    email = s.toString();
+                    prefs.edit().putString("Email", email).apply();
                 }
             }
         });
@@ -878,7 +1039,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         bMale = findViewById(R.id.genderMale);
         bFemale = findViewById(R.id.genderFemale);
         bOther = findViewById(R.id.genderOther);
-        switch (MainActivity.gender) {
+        switch (gender) {
             case "male":
                 bMale.setChecked(true);
                 break;
@@ -893,13 +1054,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int checkedId) {
                 if (checkedId == R.id.genderMale) {
-                    MainActivity.gender = "male";
+                    gender = "male";
                 } else if (checkedId == R.id.genderFemale) {
-                    MainActivity.gender = "female";
+                    gender = "female";
                 } else {
-                    MainActivity.gender = "transsexual";
+                    gender = "transsexual";
                 }
-                prefs.edit().putString("gender", MainActivity.gender).apply();
+                prefs.edit().putString("gender", gender).apply();
             }
         });
 
@@ -910,36 +1071,22 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
-        applicationForm = findViewById(R.id.imageViewLicense);
-        Glide.with(AdminRegister.this).load(AdminMainActivity.contractPhoto).apply(options).into(applicationForm);
-        applicationForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (verifyFilePickerPermission(AdminRegister.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(AdminRegister.this);
-                } else {
-                    ActivityCompat.requestPermissions(AdminRegister.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
-                }
-            }
-        });
 
         finishRegistration = findViewById(R.id.finishRegistration);
         finishRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AdminMainActivity.superStationName != null && AdminMainActivity.superStationName.length() > 0) {
+                if (superStationName != null && superStationName.length() > 0) {
                     if (userPhoneNumber != null && userPhoneNumber.length() > 0) {
-                        if (MainActivity.email != null && MainActivity.email.length() > 0) {
-                            if (AdminMainActivity.contractPhoto != null && AdminMainActivity.contractPhoto.length() > 0) {
+                        if (email != null && email.length() > 0) {
+                            if (superLicenseNo != null && superLicenseNo.length() > 0) {
                                 if (termsAndConditions.isChecked()) {
                                     updateSuperUser();
                                 } else {
                                     Toast.makeText(AdminRegister.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(AdminRegister.this, "Lütfen doğrulamak için kullanabileceğimiz bir görsel yükleyiniz. (Örnek: İstayon lisansı, resmi evraklar...)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AdminRegister.this, "Lütfen istasyon lisans numarasını giriniz)", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(AdminRegister.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
@@ -955,7 +1102,79 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         /* LAYOUT 04 END */
     }
 
+    private void Localization() {
+        if (userlat != null && userlon != null) {
+            if (userlat.length() > 0 && userlon.length() > 0) {
+                Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
+                    if (addresses.size() > 0) {
+                        userCountry = addresses.get(0).getCountryCode();
+                        prefs.edit().putString("userCountry", userCountry).apply();
+
+                        userCountryName = addresses.get(0).getCountryName();
+                        prefs.edit().putString("userCountryName", userCountryName).apply();
+
+                        userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+                        prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                        Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
+                        currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
+                        prefs.edit().putString("userCurrency", currencyCode).apply();
+
+                        switch (userCountry) {
+                            // US GALLON COUNTRIES
+                            case "BZ":
+                            case "CO":
+                            case "DO":
+                            case "EC":
+                            case "GT":
+                            case "HN":
+                            case "HT":
+                            case "LR":
+                            case "MM":
+                            case "NI":
+                            case "PE":
+                            case "US":
+                            case "SV":
+                                userUnit = getString(R.string.unitSystem2);
+                                break;
+                            // IMPERIAL GALLON COUNTRIES
+                            case "AI":
+                            case "AG":
+                            case "BS":
+                            case "DM":
+                            case "GD":
+                            case "KN":
+                            case "KY":
+                            case "LC":
+                            case "MS":
+                            case "VC":
+                            case "VG":
+                                userUnit = getString(R.string.unitSystem3);
+                                break;
+                            default:
+                                // LITRE COUNTRIES. REST OF THE WORLD.
+                                userUnit = getString(R.string.unitSystem1);
+                                break;
+                        }
+                        prefs.edit().putString("userUnit", userUnit).apply();
+                        fetchTaxRates();
+                    }
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            }
+        }
+    }
+
     void layout5() {
+        isSigned = true;
+        prefs.edit().putBoolean("isSigned", isSigned).apply();
+
+        isSuperUser = true;
+        prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
+
         finishHowTo = findViewById(R.id.continueToMainMenu);
         finishHowTo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -972,16 +1191,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         });
     }
 
-    public String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
+        String fileName = now + ".jpg";
+
         switch (requestCode) {
             case MainActivity.GOOGLE_LOGIN:
                 googleSignIn(data);
@@ -989,14 +1205,14 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    AdminMainActivity.contractPhoto = aq.get(0);
+                    photo = aq.get(0);
 
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/Licenses");
+                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos");
                     folder.mkdirs();
 
-                    UCrop.of(Uri.parse("file://" + AdminMainActivity.contractPhoto), Uri.fromFile(new File(folder, "License.jpg")))
-                            .withAspectRatio(9, 16)
-                            .withMaxResultSize(1080, 1920)
+                    UCrop.of(Uri.parse("file://" + photo), Uri.fromFile(new File(folder, fileName)))
+                            .withAspectRatio(1, 1)
+                            .withMaxResultSize(1080, 1080)
                             .start(AdminRegister.this);
                 }
                 break;
@@ -1005,10 +1221,8 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     final Uri resultUri = UCrop.getOutput(data);
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
-                        Glide.with(this).load(bitmap).apply(options).into(applicationForm);
-                        prefs.edit().putString("License", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/License.jpg").apply();
+                        Glide.with(this).load(bitmap).apply(options).into(userPhoto);
+                        prefs.edit().putString("ProfilePhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName).apply();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -1037,22 +1251,23 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 MainActivity.userlon = String.valueOf(location.getLongitude());
                                 prefs.edit().putString("lat", MainActivity.userlat).apply();
                                 prefs.edit().putString("lon", MainActivity.userlon).apply();
-                                MainActivity.getVariables(prefs);
+                                Localization();
+                                getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(15000);
+                                mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                             }
                         }
                     });
 
-                    if (AdminMainActivity.isSuperVerified == 1) {
+                    if (userStations != null && userStations.length() > 0) {
                         // S/he already verified by us. Redirect to AdminMainActivity
-                        MainActivity.isSigned = true;
-                        prefs.edit().putBoolean("isSigned", MainActivity.isSigned).apply();
-                        MainActivity.isSuperUser = true;
-                        prefs.edit().putBoolean("isSuperUser", MainActivity.isSuperUser).apply();
+                        isSigned = true;
+                        prefs.edit().putBoolean("isSigned", isSigned).apply();
+                        isSuperUser = true;
+                        prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
                         Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
 
@@ -1068,13 +1283,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 break;
             }
             case REQUEST_STORAGE: {
-                if (ActivityCompat.checkSelfPermission(AdminRegister.this, Arrays.toString(PERMISSIONS_STORAGE)) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(AdminRegister.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(AdminRegister.this);
                 } else {
-                    Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -1088,12 +1303,11 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(AdminRegister.this, LoginActivity.class);
-        startActivity(i);
-        finish();
+    public String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     @Override
@@ -1138,5 +1352,14 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         if (mMapView != null) {
             mMapView.onLowMemory();
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(AdminRegister.this, LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 }

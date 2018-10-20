@@ -5,13 +5,19 @@ public class StationItem {
     private int ID;
     private String stationName;
     private String vicinity;
+    private String countryCode;
     private String locStation;
+    private String googleMapID;
+    private String licenseNo;
+    private String owner;
+    private String photoURL;
     private float gasolinePrice;
     private float dieselPrice;
     private float lpgPrice;
     private float electricityPrice;
-    private String googleMapID;
-    private String photoURL;
+    private int isVerified;
+    private int hasSupportMobilePayment;
+    private int isActive;
     private String lastUpdated;
     private int distance;
 
@@ -39,12 +45,60 @@ public class StationItem {
         this.vicinity = vicinity;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     public String getLocation() {
         return locStation;
     }
 
     public void setLocation(String locStation) {
         this.locStation = locStation;
+    }
+
+    public String getGoogleMapID() {
+        return googleMapID;
+    }
+
+    public void setGoogleMapID(String googleMapID) {
+        this.googleMapID = googleMapID;
+    }
+
+    public String getLicenseNo() {
+        return licenseNo;
+    }
+
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     public float getGasolinePrice() {
@@ -79,28 +133,28 @@ public class StationItem {
         this.electricityPrice = electricityPrice;
     }
 
-    public String getGoogleMapID() {
-        return googleMapID;
+    public int getIsVerified() {
+        return isVerified;
     }
 
-    public void setGoogleMapID(String googleMapID) {
-        this.googleMapID = googleMapID;
+    public void setIsVerified(int isVerified) {
+        this.isVerified = isVerified;
     }
 
-    public String getPhotoURL() {
-        return photoURL;
+    public int getHasSupportMobilePayment() {
+        return hasSupportMobilePayment;
     }
 
-    public void setPhotoURL(String photoURL) {
-        this.photoURL = photoURL;
+    public void setHasSupportMobilePayment(int hasSupportMobilePayment) {
+        this.hasSupportMobilePayment = hasSupportMobilePayment;
     }
 
-    public int getDistance() {
-        return distance;
+    public int getIsActive() {
+        return isActive;
     }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 
     public String getLastUpdated() {

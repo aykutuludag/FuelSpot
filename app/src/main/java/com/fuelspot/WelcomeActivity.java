@@ -1248,7 +1248,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(15000);
+                                mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                             }
