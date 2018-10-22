@@ -33,7 +33,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.fuelspot.superuser.AdminMainActivity;
-import com.fuelspot.superuser.AdminRegister;
+import com.fuelspot.superuser.AdminWelcome;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.Auth;
@@ -218,7 +218,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         doUHaveStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, AdminRegister.class);
+                Intent i = new Intent(LoginActivity.this, AdminWelcome.class);
                 startActivity(i);
                 finish();
             }

@@ -65,7 +65,7 @@
 
         <!-- SuperUser Class -->
         <activity
-            android:name=".superuser.AdminRegister"
+            android:name=".superuser.AdminWelcome"
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".superuser.AdminMainActivity" />

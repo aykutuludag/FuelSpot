@@ -67,13 +67,22 @@ import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
+import static com.fuelspot.superuser.AdminMainActivity.isMobilePaymentAvailable;
 import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
+import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
+import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
+import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
 import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 import static com.fuelspot.superuser.AdminMainActivity.superStationLocation;
+import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
 import static com.fuelspot.superuser.AdminMainActivity.superStationName;
 
-public class FragmentOwnedStation extends Fragment {
+public class FragmentMyStation extends Fragment {
 
     SharedPreferences prefs;
     MapView mMapView;
@@ -81,7 +90,7 @@ public class FragmentOwnedStation extends Fragment {
     TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
     RelativeTimeTextView textLastUpdated;
     ImageView stationIcon;
-    Button openPurchases, openComments, openCampaings, openPosts;
+    Button editStation, openPurchases, openComments, openCampaings, openPosts;
     FusedLocationProviderClient mFusedLocationClient;
     Circle circle;
     private GoogleMap googleMap;
@@ -89,18 +98,18 @@ public class FragmentOwnedStation extends Fragment {
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
 
-    public static FragmentOwnedStation newInstance() {
+    public static FragmentMyStation newInstance() {
         Bundle args = new Bundle();
         args.putString("FRAGMENT", "OwnedStation");
 
-        FragmentOwnedStation fragment = new FragmentOwnedStation();
+        FragmentMyStation fragment = new FragmentMyStation();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_owned_station, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_mystation, container, false);
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
@@ -167,6 +176,19 @@ public class FragmentOwnedStation extends Fragment {
         stationIcon = rootView.findViewById(R.id.stationLogo);
 
         //Buttons
+        editStation = rootView.findViewById(R.id.buttonEditStation);
+        editStation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isStationVerified == 1) {
+                    Intent i = new Intent(getActivity(), SuperEditPrices.class);
+                    startActivity(i);
+                } else {
+                    Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
         openPurchases = rootView.findViewById(R.id.buttonPurchases);
         openPurchases.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,6 +240,7 @@ public class FragmentOwnedStation extends Fragment {
             }
         });
 
+        loadStationDetails();
         checkLocationPermission();
 
         return rootView;
@@ -256,7 +279,6 @@ public class FragmentOwnedStation extends Fragment {
                         //Scroll enable
                     }
                 });
-                loadStationDetails();
             }
         });
     }
@@ -266,64 +288,106 @@ public class FragmentOwnedStation extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("AQ:" + response);
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-                            textName.setText(obj.getString("name"));
-                            textVicinity.setText(obj.getString("vicinity"));
-                            Location loc1 = new Location("");
-                            loc1.setLatitude(Double.parseDouble(userlat));
-                            loc1.setLongitude(Double.parseDouble(userlon));
-                            Location loc2 = new Location("");
-                            loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
-                            loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
-                            float distanceInMeters = loc1.distanceTo(loc2);
-                            textDistance.setText((int) distanceInMeters + " m");
-
-                            AdminMainActivity.ownedGasolinePrice = obj.getDouble("gasolinePrice");
-                            prefs.edit().putFloat("superGasolinePrice", (float) AdminMainActivity.ownedGasolinePrice).apply();
-                            textGasoline.setText(AdminMainActivity.ownedGasolinePrice + "TL");
-
-                            AdminMainActivity.ownedDieselPrice = obj.getDouble("dieselPrice");
-                            prefs.edit().putFloat("superDieselPrice", (float) AdminMainActivity.ownedDieselPrice).apply();
-                            textDiesel.setText(AdminMainActivity.ownedDieselPrice + "TL");
-
-                            AdminMainActivity.ownedLPGPrice = obj.getDouble("lpgPrice");
-                            prefs.edit().putFloat("superLPGPrice", (float) AdminMainActivity.ownedLPGPrice).apply();
-                            textLPG.setText(AdminMainActivity.ownedLPGPrice + "TL");
-
-                            AdminMainActivity.ownedElectricityPrice = obj.getDouble("electricityPrice");
-                            prefs.edit().putFloat("superElectricityPrice", (float) AdminMainActivity.ownedElectricityPrice).apply();
-                            textElectricity.setText(AdminMainActivity.ownedElectricityPrice + "TL");
-
-                            //Last updated
+                        System.out.println("İSTASYON DETAYI:" + response);
+                        if (response != null && response.length() > 0) {
                             try {
-                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                                Date date = format.parse(obj.getString("lastUpdated"));
-                                textLastUpdated.setReferenceTime(date.getTime());
-                            } catch (ParseException e) {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                superStationID = obj.getInt("id");
+                                prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+                                superStationName = obj.getString("name");
+                                prefs.edit().putString("SuperStationName", superStationName).apply();
+
+                                superStationCountry = obj.getString("country");
+                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+                                superStationLocation = obj.getString("location");
+                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+                                superGoogleID = obj.getString("googleID");
+                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+                                superLicenseNo = obj.getString("licenseNo");
+                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+                                superStationLogo = obj.getString("photoURL");
+                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+
+                                ownedDieselPrice = obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+
+                                ownedLPGPrice = obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+
+                                ownedElectricityPrice = obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+
+                                isStationVerified = obj.getInt("isVerified");
+                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+                                isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
+                                prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
+
+                                textName.setText(obj.getString("name"));
+                                textVicinity.setText(obj.getString("vicinity"));
+                                Location loc1 = new Location("");
+                                loc1.setLatitude(Double.parseDouble(userlat));
+                                loc1.setLongitude(Double.parseDouble(userlon));
+                                Location loc2 = new Location("");
+                                loc2.setLatitude(Double.parseDouble(obj.getString("location").split(";")[0]));
+                                loc2.setLongitude(Double.parseDouble(obj.getString("location").split(";")[1]));
+                                float distanceInMeters = loc1.distanceTo(loc2);
+                                textDistance.setText((int) distanceInMeters + " m");
+
+                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+                                textGasoline.setText(ownedGasolinePrice + "TL");
+
+                                ownedDieselPrice = obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+                                textDiesel.setText(ownedDieselPrice + "TL");
+
+                                ownedLPGPrice = obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+                                textLPG.setText(ownedLPGPrice + "TL");
+
+                                ownedElectricityPrice = obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+                                textElectricity.setText(ownedElectricityPrice + "TL");
+
+                                //Last updated
+                                try {
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                    Date date = format.parse(obj.getString("lastUpdated"));
+                                    textLastUpdated.setReferenceTime(date.getTime());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
+
+                                //Add marker to stationLoc
+                                String[] locationHolder = superStationLocation.split(";");
+                                LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
+                                googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
+
+                                //Zoom-in camera
+                                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17f).build();
+                                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
+                                        (cameraPosition));
+
+                                circle = googleMap.addCircle(new CircleOptions()
+                                        .center(sydney)
+                                        .radius(mapDefaultStationRange)
+                                        .strokeColor(Color.RED));
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-                            Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
-
-                            //Add marker to stationLoc
-                            String[] locationHolder = superStationLocation.split(";");
-                            LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
-
-                            //Zoom-in camera
-                            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17f).build();
-                            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
-                                    (cameraPosition));
-
-                            circle = googleMap.addCircle(new CircleOptions()
-                                    .center(sydney)
-                                    .radius(mapDefaultStationRange)
-                                    .strokeColor(Color.RED));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
                     }
                 },

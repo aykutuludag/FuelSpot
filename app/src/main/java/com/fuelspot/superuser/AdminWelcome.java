@@ -136,6 +136,8 @@ import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
+import static com.fuelspot.superuser.AdminMainActivity.isMobilePaymentAvailable;
+import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
 import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
@@ -150,10 +152,9 @@ import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
 import static com.fuelspot.superuser.AdminMainActivity.superStationName;
 import static com.fuelspot.superuser.AdminMainActivity.userStations;
 
-public class AdminRegister extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     SharedPreferences prefs;
-    SharedPreferences.Editor editor;
     RequestQueue requestQueue;
 
     ScrollView welcome2;
@@ -181,12 +182,11 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_register);
+        setContentView(R.layout.activity_admin_welcome);
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        editor = prefs.edit();
         getSuperVariables(prefs);
-        requestQueue = Volley.newRequestQueue(AdminRegister.this);
+        requestQueue = Volley.newRequestQueue(AdminWelcome.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
@@ -240,7 +240,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(AdminRegister.this, new String[]
+                ActivityCompat.requestPermissions(AdminWelcome.this, new String[]
                         {PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[0]}, REQUEST_ALL);
             }
         });
@@ -303,7 +303,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             @Override
                             public void onCompleted(JSONObject me, GraphResponse response) {
                                 if (response.getError() != null) {
-                                    Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                 } else {
                                     MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
                                     prefs.edit().putString("Name", MainActivity.name).apply();
@@ -330,26 +330,26 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onCancel() {
-                Toast.makeText(AdminRegister.this, getString(R.string.error_login_cancel), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminWelcome.this, getString(R.string.error_login_cancel), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void saveUserInfo() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Loading...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_CREATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         fetchSuperUserInfo();
                         loading.dismiss();
-                        Toast.makeText(AdminRegister.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminWelcome.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -365,7 +365,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {
@@ -458,7 +458,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void fetchTaxRates() {
-        final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
@@ -485,8 +485,6 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 e.printStackTrace();
                             }
                         }
-                        continueButton.setAlpha(1.0f);
-                        continueButton.setClickable(true);
                         loading.dismiss();
                     }
                 },
@@ -620,7 +618,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
 
                             stationHint.setTextColor(Color.parseColor("#00801e"));
 
-                            registerOwnedStation();
+                            addStation();
                         } else {
                             superStationName = "";
                             superStationAddress = "";
@@ -646,7 +644,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         requestQueue.add(stringRequest);
     }
 
-    private void registerOwnedStation() {
+    private void addStation() {
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
                 new Response.Listener<String>() {
@@ -658,41 +656,41 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 JSONObject obj = res.getJSONObject(0);
 
                                 superStationID = obj.getInt("id");
-                                editor.putInt("SuperStationID", superStationID);
+                                prefs.edit().putInt("SuperStationID", superStationID).apply();
 
                                 userStations += superStationID + ";";
-                                editor.putString("userStations", userStations);
+                                prefs.edit().putString("userStations", userStations).apply();
 
                                 superStationName = obj.getString("name");
-                                editor.putString("SuperStationName", superStationName);
+                                prefs.edit().putString("SuperStationName", superStationName).apply();
 
                                 superStationCountry = obj.getString("country");
-                                editor.putString("SuperStationCountry", superStationCountry);
+                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
 
                                 superStationLocation = obj.getString("location");
-                                editor.putString("SuperStationLocation", superStationLocation);
+                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
 
                                 superGoogleID = obj.getString("googleID");
-                                editor.putString("SuperGoogleID", superGoogleID);
+                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
                                 superLicenseNo = obj.getString("licenseNo");
-                                editor.putString("SuperLicenseNo", superLicenseNo);
+                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
                                 editTextStationLicense.setText(superLicenseNo);
 
                                 superStationLogo = obj.getString("photoURL");
-                                editor.putString("SuperStationLogo", superStationLogo);
+                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
                                 ownedGasolinePrice = obj.getDouble("gasolinePrice");
-                                editor.putFloat("superGasolinePrice", (float) ownedGasolinePrice);
+                                prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
 
                                 ownedDieselPrice = obj.getDouble("dieselPrice");
-                                editor.putFloat("superDieselPrice", (float) ownedDieselPrice);
+                                prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
 
                                 ownedLPGPrice = obj.getDouble("lpgPrice");
-                                editor.putFloat("superLPGPrice", (float) ownedLPGPrice);
+                                prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
 
                                 ownedElectricityPrice = obj.getDouble("electricityPrice");
-                                editor.putFloat("superElectricityPrice", (float) ownedElectricityPrice);
+                                prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -736,13 +734,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             switch (res) {
                                 case "Success":
                                     // Register process ended redirect user to AdminMainActivity to wait verification process.
-                                    Toast.makeText(AdminRegister.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AdminWelcome.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
                                     welcome2.setVisibility(View.GONE);
                                     welcome3.setVisibility(View.VISIBLE);
                                     layout5();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         }
@@ -751,7 +749,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AdminRegister.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminWelcome.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -780,7 +778,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void updateSuperUser() {
-        final ProgressDialog loading = ProgressDialog.show(AdminRegister.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Loading...", "Please wait...", false, false);
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
@@ -792,7 +790,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                     updateStation();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(AdminRegister.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                     break;
                             }
                             loading.dismiss();
@@ -856,7 +854,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     superStationName = s.toString();
-                    editor.putString("SuperStationName", superStationName);
+                    prefs.edit().putString("SuperStationName", superStationName).apply();
                 }
             }
         });
@@ -878,7 +876,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     superStationAddress = s.toString();
-                    editor.putString("SuperStationAddress", superStationAddress);
+                    prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
                 }
             }
         });
@@ -900,7 +898,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     superLicenseNo = s.toString();
-                    editor.putString("licenseNumbers", superLicenseNo);
+                    prefs.edit().putString("licenseNumbers", superLicenseNo).apply();
                 }
             }
         });
@@ -910,13 +908,13 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyFilePickerPermission(AdminRegister.this)) {
+                if (MainActivity.verifyFilePickerPermission(AdminWelcome.this)) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(AdminRegister.this);
+                            .pickPhoto(AdminWelcome.this);
                 } else {
-                    ActivityCompat.requestPermissions(AdminRegister.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    ActivityCompat.requestPermissions(AdminWelcome.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -964,7 +962,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
         editTextBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePicker = new DatePickerDialog(AdminRegister.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(AdminWelcome.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         birthday = pad(dayOfMonth) + "/" + pad(monthOfYear + 1) + "/" + year;
@@ -1083,19 +1081,19 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 if (termsAndConditions.isChecked()) {
                                     updateSuperUser();
                                 } else {
-                                    Toast.makeText(AdminRegister.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AdminWelcome.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(AdminRegister.this, "Lütfen istasyon lisans numarasını giriniz)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AdminWelcome.this, "Lütfen istasyon lisans numarasını giriniz)", Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(AdminRegister.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AdminWelcome.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(AdminRegister.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminWelcome.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(AdminRegister.this, "Kayıt işlemini tamamlayabilmek için istasyonunuzda olmanız gerekmektedir", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminWelcome.this, "Kayıt işlemini tamamlayabilmek için istasyonunuzda olmanız gerekmektedir", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -1182,13 +1180,106 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(AdminRegister.this, AdminMainActivity.class);
+                        Intent i = new Intent(AdminWelcome.this, AdminMainActivity.class);
                         startActivity(i);
                         finish();
                     }
                 }, 1500);
             }
         });
+    }
+
+    void fetchStation(final int stationID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            superStationID = obj.getInt("id");
+                            prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+                            superStationName = obj.getString("name");
+                            prefs.edit().putString("SuperStationName", superStationName).apply();
+
+                            superStationCountry = obj.getString("country");
+                            prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+                            superStationLocation = obj.getString("location");
+                            prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+                            superGoogleID = obj.getString("googleID");
+                            prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+                            superLicenseNo = obj.getString("licenseNo");
+                            prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+                            superStationLogo = obj.getString("photoURL");
+                            prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+                            ownedGasolinePrice = obj.getDouble("gasolinePrice");
+                            prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+
+                            ownedDieselPrice = obj.getDouble("dieselPrice");
+                            prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+
+                            ownedLPGPrice = obj.getDouble("lpgPrice");
+                            prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+
+                            ownedElectricityPrice = obj.getDouble("electricityPrice");
+                            prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+
+                            isStationVerified = obj.getInt("isVerified");
+                            prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+                            isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
+                            prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
+
+                            isSigned = true;
+                            prefs.edit().putBoolean("isSigned", isSigned).apply();
+                            isSuperUser = true;
+                            prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
+
+                            getVariables(prefs);
+                            getSuperVariables(prefs);
+
+                            Toast.makeText(AdminWelcome.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(AdminWelcome.this, AdminMainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }, 1500);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(stationID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     @Override
@@ -1213,7 +1304,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                     UCrop.of(Uri.parse("file://" + photo), Uri.fromFile(new File(folder, fileName)))
                             .withAspectRatio(1, 1)
                             .withMaxResultSize(1080, 1080)
-                            .start(AdminRegister.this);
+                            .start(AdminWelcome.this);
                 }
                 break;
             case UCrop.REQUEST_CROP:
@@ -1229,7 +1320,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     final Throwable cropError = UCrop.getError(data);
                     if (cropError != null) {
-                        Toast.makeText(AdminRegister.this, cropError.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminWelcome.this, cropError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
@@ -1240,9 +1331,9 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_ALL: {
-                if (ContextCompat.checkSelfPermission(AdminRegister.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AdminRegister.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     //Request location updates:
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(AdminRegister.this, new OnSuccessListener<Location>() {
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(AdminWelcome.this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
@@ -1251,8 +1342,18 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                                 MainActivity.userlon = String.valueOf(location.getLongitude());
                                 prefs.edit().putString("lat", MainActivity.userlat).apply();
                                 prefs.edit().putString("lon", MainActivity.userlon).apply();
+
                                 Localization();
-                                getVariables(prefs);
+
+                                if (userStations != null && userStations.length() > 0) {
+                                    // S/he already verified by us. Fetch station and redirect to MainActivity
+                                    superStationID = Integer.parseInt(userStations.split(";")[0]);
+                                    fetchStation(superStationID);
+                                } else {
+                                    welcome2.setVisibility(View.VISIBLE);
+                                    welcome1.setVisibility(View.GONE);
+                                    layout4();
+                                }
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(5000);
@@ -1261,33 +1362,15 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
                             }
                         }
                     });
-
-                    if (userStations != null && userStations.length() > 0) {
-                        // S/he already verified by us. Redirect to AdminMainActivity
-                        isSigned = true;
-                        prefs.edit().putBoolean("isSigned", isSigned).apply();
-                        isSuperUser = true;
-                        prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
-
-                        Toast.makeText(AdminRegister.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(AdminRegister.this, AdminMainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        welcome2.setVisibility(View.VISIBLE);
-                        welcome1.setVisibility(View.GONE);
-                        layout4();
-                    }
                 }
                 break;
             }
             case REQUEST_STORAGE: {
-                if (ActivityCompat.checkSelfPermission(AdminRegister.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
                     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(AdminRegister.this);
+                            .pickPhoto(AdminWelcome.this);
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -1358,7 +1441,7 @@ public class AdminRegister extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(AdminRegister.this, LoginActivity.class);
+        Intent i = new Intent(AdminWelcome.this, LoginActivity.class);
         startActivity(i);
         finish();
     }

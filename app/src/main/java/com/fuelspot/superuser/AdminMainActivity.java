@@ -78,7 +78,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     // General variables for SuperUser
     public static boolean superPremium;
 
-    public static int isStationVerified, superStationID;
+    public static int isStationVerified, isMobilePaymentAvailable, superStationID;
     public static double ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID;
 
@@ -117,6 +117,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         ownedLPGPrice = prefs.getFloat("superLPGPrice", 0);
         ownedElectricityPrice = prefs.getFloat("superElectricityPrice", 0);
         isStationVerified = prefs.getInt("isStationVerified", 0);
+        isMobilePaymentAvailable = prefs.getInt("isMobilePaymentAvaiable", 0);
     }
 
     @Override
@@ -154,7 +155,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
-        fragments.add(FragmentOwnedStation.newInstance());
+        fragments.add(FragmentMyStation.newInstance());
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentProfile.newInstance());
         fragments.add(FragmentNews.newInstance());
@@ -166,8 +167,8 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         //Add tabs
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
         AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorAccent);
 
         bottomNavigation.addItem(item1);
@@ -366,7 +367,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
             if (listOfStation.get(listOfStation.size() - 1).getID() != -999) {
                 StationItem item = new StationItem();
                 item.setID(-999);
-                item.setStationName(getString(R.string.add_new_station));
+                item.setVicinity(getString(R.string.add_new_station));
                 listOfStation.add(item);
             }
 
@@ -427,7 +428,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
 
         getSuperVariables(prefs);
 
-        FragmentOwnedStation frag = (FragmentOwnedStation) fragments.get(0);
+        FragmentMyStation frag = (FragmentMyStation) fragments.get(0);
         if (frag != null) {
             frag.checkLocationPermission();
         }
@@ -458,7 +459,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         }
 
         // Thanks to this brief code, we can call onActivityResult in a fragment
-        // Currently used in FragmentOwnedStation if user revoke location permission
+        // Currently used in FragmentMyStation if user revoke location permission
         Fragment fragment = mFragNavController.getCurrentFrag();
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);

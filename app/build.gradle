@@ -49,12 +49,12 @@ dependencies {
 
     // FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-messaging:17.3.3'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.google.firebase:firebase-ads:17.0.0'
 
     // FACEBOOK
     implementation 'com.facebook.android:facebook-android-sdk:4.37.0'
-    implementation 'com.facebook.android:audience-network-sdk:4.99.3'
+    implementation 'com.facebook.android:audience-network-sdk:4.99.0'
 
     // 3RD PARTY
     implementation 'de.hdodenhof:circleimageview:2.2.0'
