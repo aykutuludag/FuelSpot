@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/ic_camera" />
+        app:srcCompat="@drawable/default_campaign" />
 
     <TextView
         android:id="@+id/campaignTitle"

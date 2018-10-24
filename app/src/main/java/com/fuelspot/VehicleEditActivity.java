@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,19 +42,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
@@ -135,10 +125,11 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(VehicleEditActivity.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+               /*     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(VehicleEditActivity.this);
+                            .pickPhoto(VehicleEditActivity.this);*/
+                    Toast.makeText(VehicleEditActivity.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(VehicleEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -959,9 +950,9 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(VehicleEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                   /* FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(VehicleEditActivity.this);
+                            .pickPhoto(VehicleEditActivity.this);*/
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -980,7 +971,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
         String fileName = now + ".jpg";
 
         switch (requestCode) {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+         /*   case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     MainActivity.carPhoto = aq.get(0);
@@ -1011,6 +1002,7 @@ public class VehicleEditActivity extends AppCompatActivity implements AdapterVie
                     }
                 }
                 break;
+                */
         }
     }
 

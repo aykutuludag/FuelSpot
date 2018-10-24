@@ -463,7 +463,6 @@
                     android:layout_below="@+id/dummyImage5"
                     android:layout_alignStart="@+id/dummyImage5"
                     android:layout_marginTop="8dp"
-                    android:checkedButton="@+id/genderMale"
                     android:orientation="horizontal">
 
                     <RadioButton

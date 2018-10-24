@@ -17,14 +17,13 @@
             android:layout_height="wrap_content"
             android:background="#90EDEDED">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/station_photo"
                 android:layout_height="60dp"
                 android:layout_below="@+id/gasoline"
                 android:layout_alignParentStart="true"
-                android:padding="4dp"
-                card_view:layout_widthPercent="12%"
-                card_view:srcCompat="@drawable/default_station" />
+                android:src="@drawable/default_station"
+                card_view:layout_widthPercent="12.5%" />
 
             <TextView
                 android:id="@+id/station_name"
@@ -37,7 +36,7 @@
                 android:fontFamily="@font/gotham_black"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_widthPercent="17.5%" />
+                card_view:layout_widthPercent="15%" />
 
             <TextView
                 android:id="@+id/station_vicinity"
@@ -47,7 +46,7 @@
                 android:layout_alignParentStart="true"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="6dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
                 android:textSize="12sp" />
@@ -60,10 +59,10 @@
                 android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_widthPercent="14%" />
+                card_view:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/taxGasoline"
+                android:id="@+id/priceGasoline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/gasoline"
@@ -85,16 +84,16 @@
                 android:padding="4dp"
                 android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_widthPercent="14%" />
+                card_view:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/taxDiesel"
+                android:id="@+id/priceDiesel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/diesel"
                 android:layout_alignEnd="@+id/diesel"
                 android:layout_alignBottom="@+id/station_photo"
-                android:layout_toEndOf="@+id/taxGasoline"
+                android:layout_toEndOf="@+id/priceGasoline"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -109,23 +108,23 @@
                 android:padding="4dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_widthPercent="14%" />
+                card_view:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/TaxLPG"
+                android:id="@+id/priceLPG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lpg"
                 android:layout_alignEnd="@+id/lpg"
                 android:layout_alignRight="@+id/lpg"
                 android:layout_alignBottom="@+id/station_photo"
-                android:layout_toEndOf="@+id/taxDiesel"
-                android:layout_toRightOf="@+id/taxDiesel"
+                android:layout_toEndOf="@+id/priceDiesel"
+                android:layout_toRightOf="@+id/priceDiesel"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 tools:ignore="RtlHardcoded" />
 
             <ImageView
@@ -135,16 +134,16 @@
                 android:layout_toEndOf="@+id/lpg"
                 android:padding="4dp"
                 android:src="@drawable/electricity"
-                card_view:layout_widthPercent="14%" />
+                card_view:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/TaxElectricity"
+                android:id="@+id/priceElectricity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/electricity"
                 android:layout_alignEnd="@+id/electricity"
                 android:layout_alignBottom="@+id/station_photo"
-                android:layout_toEndOf="@+id/TaxLPG"
+                android:layout_toEndOf="@+id/priceLPG"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -158,7 +157,7 @@
                 android:layout_toEndOf="@+id/electricity"
                 android:padding="4dp"
                 android:src="@drawable/distance"
-                card_view:layout_widthPercent="14%" />
+                card_view:layout_widthPercent="14.5%" />
 
             <TextView
                 android:id="@+id/distance_ofStation"
@@ -167,7 +166,7 @@
                 android:layout_below="@+id/distance"
                 android:layout_alignEnd="@+id/distance"
                 android:layout_alignBottom="@+id/station_photo"
-                android:layout_toEndOf="@+id/TaxElectricity"
+                android:layout_toEndOf="@+id/priceElectricity"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"

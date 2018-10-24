@@ -48,6 +48,7 @@ import java.util.Map;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.userUnit;
 
 public class PurchaseDetails extends AppCompatActivity {
 
@@ -135,10 +136,10 @@ public class PurchaseDetails extends AppCompatActivity {
                 Glide.with(this).load(R.drawable.electricity).into(tur1);
                 break;
         }
-        birimFiyat1.setText(fuelPrice1 + "TL");
-        litre1.setText(fuelLiter1 + "LT");
+        birimFiyat1.setText(fuelPrice1 + " " + "currencySymbol");
+        litre1.setText(fuelLiter1 + " " + userUnit);
         int priceOne = (int) (fuelPrice1 * fuelLiter1);
-        String priceHolder = priceOne + " TL";
+        String priceHolder = priceOne + " " + "currencySymbol";
         fiyat1.setText(priceHolder);
 
         if (fuelType2 != -1) {
@@ -156,10 +157,10 @@ public class PurchaseDetails extends AppCompatActivity {
                     Glide.with(this).load(R.drawable.electricity).into(tur2);
                     break;
             }
-            birimFiyat2.setText(fuelPrice2 + "TL");
-            litre2.setText(fuelLiter2 + "LT");
+            birimFiyat2.setText(fuelPrice2 + " " + "currencySymbol");
+            litre2.setText(fuelLiter2 + " " + userUnit);
             int priceTwo = (int) (fuelPrice2 * fuelLiter2);
-            String priceHolder2 = priceTwo + " TL";
+            String priceHolder2 = priceTwo + " " + "currencySymbol";
             fiyat2.setText(priceHolder2);
         } else {
             tur2.setVisibility(View.GONE);

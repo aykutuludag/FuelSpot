@@ -54,7 +54,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    app:srcCompat="@drawable/ic_camera" />
+                    app:srcCompat="@drawable/default_campaign" />
 
                 <EditText
                     android:id="@+id/campaignTitle"
@@ -119,7 +119,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    app:srcCompat="@drawable/ic_camera" />
+                    app:srcCompat="@drawable/default_campaign" />
 
                 <EditText
                     android:id="@+id/campaignTitle2"
@@ -184,7 +184,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    app:srcCompat="@drawable/ic_camera" />
+                    app:srcCompat="@drawable/default_campaign" />
 
                 <EditText
                     android:id="@+id/campaignTitle3"

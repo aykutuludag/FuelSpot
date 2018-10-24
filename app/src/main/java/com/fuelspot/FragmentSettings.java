@@ -12,9 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.RemoteException;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
@@ -45,24 +43,15 @@ import com.android.volley.toolbox.Volley;
 import com.fuelspot.superuser.AdminMainActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
-
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
@@ -138,16 +127,16 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-        textViewGasolineTax = rootView.findViewById(R.id.taxGasoline);
+        textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
         textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
 
-        textViewDieselTax = rootView.findViewById(R.id.taxDiesel);
+        textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
         textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
 
-        textViewLPGTax = rootView.findViewById(R.id.TaxLPG);
+        textViewLPGTax = rootView.findViewById(R.id.priceLPG);
         textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
 
-        textViewElectricityTax = rootView.findViewById(R.id.TaxElectricity);
+        textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
         textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
 
         buttonTax = rootView.findViewById(R.id.button_tax);
@@ -364,10 +353,11 @@ public class FragmentSettings extends Fragment {
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(getActivity())) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                    /*FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(getActivity());
+                            .pickPhoto(getActivity());*/
+                    Toast.makeText(getActivity(), "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -449,10 +439,10 @@ public class FragmentSettings extends Fragment {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getActivity(), "Settings saved...", Toast.LENGTH_SHORT).show();
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                   /* FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(getActivity());
+                            .pickPhoto(getActivity());*/
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -467,7 +457,7 @@ public class FragmentSettings extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+          /*  case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     String ss = aq.get(0);
@@ -504,6 +494,7 @@ public class FragmentSettings extends Fragment {
                     }
                 }
                 break;
+                */
         }
     }
 }

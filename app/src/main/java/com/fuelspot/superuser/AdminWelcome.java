@@ -1,7 +1,6 @@
 package com.fuelspot.superuser;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -17,9 +16,7 @@ import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -32,6 +29,7 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -61,7 +59,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.fuelspot.LoginActivity;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.google.android.gms.auth.api.Auth;
@@ -87,19 +84,15 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Hashtable;
@@ -108,8 +101,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
@@ -118,6 +109,7 @@ import static com.fuelspot.MainActivity.REQUEST_ALL;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
@@ -183,6 +175,8 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_welcome);
+
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getSuperVariables(prefs);
@@ -280,6 +274,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                     photo = acct.getPhotoUrl().toString();
                     prefs.edit().putString("ProfilePhoto", photo).apply();
                 }
+
                 saveUserInfo();
             } else {
                 Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
@@ -376,7 +371,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("name", MainActivity.name);
+                params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
 
@@ -730,6 +725,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String res) {
+                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
                         if (res != null && res.length() > 0) {
                             switch (res) {
                                 case "Success":
@@ -767,6 +763,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
+                params.put("isActive", String.valueOf(1));
 
                 //returning parameters
                 return params;
@@ -784,7 +781,9 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String res) {
+                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
                         if (res != null && res.length() > 0) {
+                            System.out.println("UPDATESUPERUSER: " + res);
                             switch (res) {
                                 case "Success":
                                     updateStation();
@@ -909,10 +908,12 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(AdminWelcome.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                  /*  FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(AdminWelcome.this);
+                            */
+                    Toast.makeText(AdminWelcome.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(AdminWelcome.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -1120,6 +1121,10 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                         currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
                         prefs.edit().putString("userCurrency", currencyCode).apply();
 
+                        Currency userParaSembolu = Currency.getInstance(currencyCode);
+                        currencySymbol = userParaSembolu.getSymbol(userLocale);
+                        prefs.edit().putString("userCurrencySymbol", currencySymbol).apply();
+
                         switch (userCountry) {
                             // US GALLON COUNTRIES
                             case "BZ":
@@ -1293,7 +1298,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
             case MainActivity.GOOGLE_LOGIN:
                 googleSignIn(data);
                 break;
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+       /*     case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     photo = aq.get(0);
@@ -1324,6 +1329,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                     }
                 }
                 break;
+                */
         }
     }
 
@@ -1367,10 +1373,10 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
             }
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+              /*    FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(AdminWelcome.this);
+                            .pickPhoto(AdminWelcome.this); */
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -1441,8 +1447,6 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(AdminWelcome.this, LoginActivity.class);
-        startActivity(i);
         finish();
     }
 }

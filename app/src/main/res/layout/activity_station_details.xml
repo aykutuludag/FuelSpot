@@ -111,7 +111,7 @@
                     app:layout_widthPercent="14%" />
 
                 <TextView
-                    android:id="@+id/taxGasoline"
+                    android:id="@+id/priceGasoline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/gasoline"
@@ -136,13 +136,13 @@
                     app:layout_widthPercent="14%" />
 
                 <TextView
-                    android:id="@+id/taxDiesel"
+                    android:id="@+id/priceDiesel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/diesel"
                     android:layout_alignEnd="@+id/diesel"
                     android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/taxGasoline"
+                    android:layout_toEndOf="@+id/priceGasoline"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -160,15 +160,15 @@
                     app:layout_widthPercent="14%" />
 
                 <TextView
-                    android:id="@+id/TaxLPG"
+                    android:id="@+id/priceLPG"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lpg"
                     android:layout_alignEnd="@+id/lpg"
                     android:layout_alignRight="@+id/lpg"
                     android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/taxDiesel"
-                    android:layout_toRightOf="@+id/taxDiesel"
+                    android:layout_toEndOf="@+id/priceDiesel"
+                    android:layout_toRightOf="@+id/priceDiesel"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -186,13 +186,13 @@
                     app:layout_widthPercent="14%" />
 
                 <TextView
-                    android:id="@+id/TaxElectricity"
+                    android:id="@+id/priceElectricity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/electricity"
                     android:layout_alignEnd="@+id/electricity"
                     android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/TaxLPG"
+                    android:layout_toEndOf="@+id/priceLPG"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -215,7 +215,7 @@
                     android:layout_below="@+id/distance"
                     android:layout_alignEnd="@+id/distance"
                     android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/TaxElectricity"
+                    android:layout_toEndOf="@+id/priceElectricity"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"

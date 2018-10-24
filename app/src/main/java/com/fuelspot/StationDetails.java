@@ -72,6 +72,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
 
@@ -114,6 +115,7 @@ public class StationDetails extends AppCompatActivity {
 
         //StatusBar
         window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         //Collapsing Toolbar
         collapsingToolbarLayout = findViewById(R.id.collapsing_header);
@@ -147,10 +149,10 @@ public class StationDetails extends AppCompatActivity {
         textName = findViewById(R.id.station_name);
         textVicinity = findViewById(R.id.station_vicinity);
         textDistance = findViewById(R.id.distance_ofStation);
-        textGasoline = findViewById(R.id.taxGasoline);
-        textDiesel = findViewById(R.id.taxDiesel);
-        textLPG = findViewById(R.id.TaxLPG);
-        textElectricity = findViewById(R.id.TaxElectricity);
+        textGasoline = findViewById(R.id.priceGasoline);
+        textDiesel = findViewById(R.id.priceDiesel);
+        textLPG = findViewById(R.id.priceLPG);
+        textElectricity = findViewById(R.id.priceElectricity);
         textLastUpdated = findViewById(R.id.lastUpdated);
         stationIcon = findViewById(R.id.station_photo);
 
@@ -289,25 +291,25 @@ public class StationDetails extends AppCompatActivity {
                 if (gasolinePrice == 0) {
                     textGasoline.setText("-");
                 } else {
-                    textGasoline.setText(String.valueOf(gasolinePrice));
+                    textGasoline.setText(gasolinePrice + " " + currencySymbol);
                 }
 
                 if (dieselPrice == 0) {
                     textDiesel.setText("-");
                 } else {
-                    textDiesel.setText(String.valueOf(dieselPrice));
+                    textDiesel.setText(dieselPrice + " " + currencySymbol);
                 }
 
                 if (lpgPrice == 0) {
                     textLPG.setText("-");
                 } else {
-                    textLPG.setText(String.valueOf(lpgPrice));
+                    textLPG.setText(lpgPrice + " " + currencySymbol);
                 }
 
                 if (electricityPrice == 0) {
                     textElectricity.setText("-");
                 } else {
-                    textElectricity.setText(String.valueOf(electricityPrice));
+                    textElectricity.setText(electricityPrice + " " + currencySymbol);
                 }
 
                 try {

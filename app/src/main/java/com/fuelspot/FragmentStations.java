@@ -70,7 +70,6 @@ import eu.amirs.JSON;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
-import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -340,11 +339,76 @@ public class FragmentStations extends Fragment {
                                 } catch (Exception e) {
                                     stationCountry.add(i, "");
                                 }
-
-                                addStation(i);
                             }
-                            proggressBar.setVisibility(View.GONE);
-                            mRecyclerView.setVisibility(View.VISIBLE);
+
+                            if (json.key("next_page_token") != null && json.key("next_page_token").stringValue().length() > 0) {
+                                getNext20Station(json.key("next_page_token").stringValue());
+                            } else {
+                                for (int i = 0; i < stationName.size(); i++) {
+                                    addStation(i);
+                                }
+                            }
+                        } else {
+                            noStationError.setVisibility(View.VISIBLE);
+                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener()
+
+        {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                noStationError.setVisibility(View.VISIBLE);
+                Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    void getNext20Station(String token) {
+        //Search stations in a radius of mapDefaultRange
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSON json = new JSON(response);
+                        if (response != null && response.length() > 0) {
+                            for (int i = 0; i < json.key("results").count(); i++) {
+                                stationName.add(json.key("results").index(i).key("name").stringValue());
+                                vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
+                                googleID.add(json.key("results").index(i).key("place_id").stringValue());
+
+                                double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                                double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+                                location.add(lat + ";" + lon);
+
+                                stationIcon.add(stationPhotoChooser(stationName.get(i)));
+
+                                Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                try {
+                                    List<Address> addresses = geo.getFromLocation(lat, lon, 1);
+                                    if (addresses.size() > 0) {
+                                        stationCountry.add(i, addresses.get(0).getCountryCode());
+                                    } else {
+                                        stationCountry.add(i, "");
+                                    }
+                                } catch (Exception e) {
+                                    stationCountry.add(i, "");
+                                }
+                            }
+
+                            if (json.key("next_page_token") != null && json.key("next_page_token").stringValue().length() > 0) {
+                                getNext20Station(json.key("next_page_token").stringValue());
+                            } else {
+                                for (int i = 0; i < stationName.size(); i++) {
+                                    addStation(i);
+                                }
+                            }
                         } else {
                             noStationError.setVisibility(View.VISIBLE);
                             Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
@@ -416,8 +480,9 @@ public class FragmentStations extends Fragment {
                                         markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity"))));
                                     }
 
-                                    // Default - Sort by primary fuel
-                                    if (fuelPri != -1) {
+                                    if (index == stationName.size() - 1) {
+                                        proggressBar.setVisibility(View.GONE);
+                                        mRecyclerView.setVisibility(View.VISIBLE);
                                         tabLayout.getTabAt(4).select();
                                         sortBy(4);
                                     }

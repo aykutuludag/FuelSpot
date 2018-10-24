@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.userUnit;
 
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHolder> {
     private List<PurchaseItem> feedItemList;
@@ -88,15 +90,15 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         // AMOUNT 1
-        viewHolder.amount1.setText(feedItem.getFuelLiter() + " LT");
+        viewHolder.amount1.setText(feedItem.getFuelLiter() + " " + userUnit);
 
         // UNIT 1
-        String unitHolder = feedItem.getFuelPrice() + " TL";
+        String unitHolder = feedItem.getFuelPrice() + " " + currencySymbol;
         viewHolder.unitPrice1.setText(unitHolder);
 
         // PRICE 1
         int priceOne = (int) (feedItem.getFuelPrice() * feedItem.getFuelLiter());
-        String priceHolder = priceOne + " TL";
+        String priceHolder = priceOne + " " + currencySymbol;
         viewHolder.price1.setText(priceHolder);
 
         // If user didn't purchased second type of fuel just hide these textViews
@@ -118,15 +120,15 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             }
 
             // AMOUNT 2
-            viewHolder.amount2.setText(feedItem.getFuelLiter2() + " LT");
+            viewHolder.amount2.setText(feedItem.getFuelLiter2() + " " + userUnit);
 
             // UNIT 2
-            String unitHolder2 = feedItem.getFuelPrice2() + " TL";
+            String unitHolder2 = feedItem.getFuelPrice2() + " " + currencySymbol;
             viewHolder.unitPrice2.setText(unitHolder2);
 
             // PRICE 2
             int priceTwo = (int) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2());
-            String priceHolder2 = priceTwo + " TL";
+            String priceHolder2 = priceTwo + " " + currencySymbol;
             viewHolder.price2.setText(priceHolder2);
         } else {
             viewHolder.type2.setVisibility(View.GONE);
@@ -142,7 +144,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         viewHolder.totalTax.setText(taxHolder);
 
         //TotalPrice
-        String totalPriceHolder = "TOPLAM: " + (int) feedItem.getTotalPrice() + " TL";
+        String totalPriceHolder = "TOPLAM: " + (int) feedItem.getTotalPrice() + " " + currencySymbol;
         viewHolder.totalPrice.setText(totalPriceHolder);
 
         // PurchaseTime

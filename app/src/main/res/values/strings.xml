@@ -84,7 +84,6 @@
     <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-add.php</string> <!-- Create, return Station object -->
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-update.php</string> <!-- Updates station info, return SUCCESS or FAIL -->
     <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch.php</string> <!-- stationID, return Station object -->
-    <string name="API_FETCH_STATION_PLACEID" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch-placeid.php</string> <!-- placeID (Google), return Station object -->
 
     <!-- VEHICLE APIs -->
     <string name="API_ADD_VEHICLE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/vehicle-add.php</string>
@@ -95,16 +94,16 @@
     <!-- PURCHASE APIs -->
     <string name="API_ADD_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-add.php</string>
     <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-delete.php</string>
-    <string name="API_FETCH_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch.php</string> <!-- Vehicle -->
-    <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-user.php</string> <!-- User (all vehicles) -->
-    <string name="API_FETCH_STATION_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-station.php</string> <!-- Station -->
+    <string name="API_FETCH_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch.php</string> <!-- Vehicle's purchases -->
+    <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-user.php</string> <!-- User's purchases (all vehicles) -->
+    <string name="API_FETCH_STATION_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-station.php</string> <!-- Station's purchases -->
 
     <!-- COMMENT-ANSWER APIs -->
     <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-add.php</string>
     <string name="API_UPDATE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-update.php</string>
     <string name="API_DELETE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-delete.php</string>
-    <string name="API_FETCH_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-fetch.php</string>
-    <string name="API_FETCH_STATION_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-fetch-station.php</string>
+    <string name="API_FETCH_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-fetch.php</string> <!-- User's comments -->
+    <string name="API_FETCH_STATION_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-fetch-station.php</string> <!-- Station's comments -->
     <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/answer-add.php</string>
     <string name="API_DELETE_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/answer-delete.php</string>
 

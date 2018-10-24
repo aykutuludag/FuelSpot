@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -9,10 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,26 +43,18 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
@@ -167,10 +154,12 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(ProfileEditActivity.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                 /*   FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(ProfileEditActivity.this);
+                            */
+                    Toast.makeText(ProfileEditActivity.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(ProfileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -376,10 +365,11 @@ public class ProfileEditActivity extends AppCompatActivity {
             case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                   /* FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
                             .pickPhoto(ProfileEditActivity.this);
+                            */
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -395,7 +385,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         String fileName = now + ".jpg";
 
         switch (requestCode) {
-            case GOOGLE_PLACE_AUTOCOMPLETE:
+       /*     case GOOGLE_PLACE_AUTOCOMPLETE:
                 if (resultCode == RESULT_OK) {
                     Place place = PlaceAutocomplete.getPlace(this, data);
                     location = place.getAddress().toString();
@@ -436,6 +426,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     }
                 }
                 break;
+                */
         }
     }
 

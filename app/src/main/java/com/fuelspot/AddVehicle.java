@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -40,23 +36,17 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
@@ -127,10 +117,11 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(AddVehicle.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                  /*  FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(AddVehicle.this);
+                            .pickPhoto(AddVehicle.this);*/
+                    Toast.makeText(AddVehicle.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(AddVehicle.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -840,9 +831,10 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AddVehicle.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                   /* FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .pickPhoto(AddVehicle.this);
+                            */
                 }
                 break;
             }
@@ -859,7 +851,8 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
         String fileName = now + ".jpg";
 
         switch (requestCode) {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+            /*
+           case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     carPhoto = aq.get(0);
@@ -890,6 +883,7 @@ public class AddVehicle extends AppCompatActivity implements AdapterView.OnItemS
                     }
                 }
                 break;
+                */
         }
     }
 

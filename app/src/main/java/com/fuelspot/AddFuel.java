@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,10 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -46,23 +42,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
 import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
@@ -484,10 +473,11 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(AddFuel.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+               /*     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(AddFuel.this);
+                            .pickPhoto(AddFuel.this);*/
+                    Toast.makeText(AddFuel.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -705,10 +695,10 @@ public class AddFuel extends AppCompatActivity {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AddFuel.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                /*    FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(AddFuel.this);
+                            .pickPhoto(AddFuel.this);*/
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -723,7 +713,7 @@ public class AddFuel extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+           /* case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     billPhoto = aq.get(0);
@@ -757,7 +747,7 @@ public class AddFuel extends AppCompatActivity {
                         Toast.makeText(AddFuel.this, cropError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
-                break;
+                break;*/
         }
     }
 

@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +9,7 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -50,16 +46,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Hashtable;
 import java.util.List;
@@ -67,8 +59,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
@@ -81,6 +71,7 @@ import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
@@ -281,6 +272,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
                         prefs.edit().putString("userCurrency", currencyCode).apply();
 
+                        Currency userParaSembolu = Currency.getInstance(currencyCode);
+                        currencySymbol = userParaSembolu.getSymbol(userLocale);
+                        prefs.edit().putString("userCurrencySymbol", currencySymbol).apply();
+
                         switch (userCountry) {
                             // US GALLON COUNTRIES
                             case "BZ":
@@ -392,9 +387,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(WelcomeActivity.this)) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+                   /* FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(WelcomeActivity.this);
+                            .pickPhoto(WelcomeActivity.this);*/
+                    Toast.makeText(WelcomeActivity.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
                 } else {
                     ActivityCompat.requestPermissions(WelcomeActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -1269,10 +1265,10 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    FilePickerBuilder.getInstance().setMaxCount(1)
+               /*     FilePickerBuilder.getInstance().setMaxCount(1)
                             .setActivityTheme(R.style.AppTheme)
                             .enableCameraSupport(true)
-                            .pickPhoto(WelcomeActivity.this);
+                            .pickPhoto(WelcomeActivity.this);*/
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -1290,7 +1286,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         String fileName = username + "-CARPHOTO" + ".jpg";
 
         switch (requestCode) {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+         /*   case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     carPhoto = aq.get(0);
@@ -1323,6 +1319,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     }
                 }
                 break;
+                */
         }
     }
 

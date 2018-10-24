@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.currencySymbol;
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
     private List<StationItem> feedItemList;
@@ -87,7 +87,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getGasolinePrice() == 0) {
             gasolineHolder = "-";
         } else {
-            gasolineHolder = feedItem.getGasolinePrice() + " " + currencyCode;
+            gasolineHolder = feedItem.getGasolinePrice() + " " + currencySymbol;
         }
         viewHolder.gasolinePrice.setText(gasolineHolder);
 
@@ -95,7 +95,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getDieselPrice() == 0) {
             dieselHolder = "-";
         } else {
-            dieselHolder = feedItem.getDieselPrice() + " " + currencyCode;
+            dieselHolder = feedItem.getDieselPrice() + " " + currencySymbol;
         }
         viewHolder.dieselPrice.setText(dieselHolder);
 
@@ -103,7 +103,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getLpgPrice() == 0) {
             lpgHolder = "-";
         } else {
-            lpgHolder = feedItem.getLpgPrice() + " " + currencyCode;
+            lpgHolder = feedItem.getLpgPrice() + " " + currencySymbol;
         }
         viewHolder.lpgPrice.setText(lpgHolder);
 
@@ -111,7 +111,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getElectricityPrice() == 0) {
             elecHolder = "-";
         } else {
-            elecHolder = feedItem.getElectricityPrice() + " " + currencyCode;
+            elecHolder = feedItem.getElectricityPrice() + " " + currencySymbol;
         }
         viewHolder.electricityPrice.setText(elecHolder);
 
@@ -150,10 +150,10 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             background = itemView.findViewById(R.id.single_station);
             stationName = itemView.findViewById(R.id.station_name);
             vicinity = itemView.findViewById(R.id.station_vicinity);
-            gasolinePrice = itemView.findViewById(R.id.taxGasoline);
-            dieselPrice = itemView.findViewById(R.id.taxDiesel);
-            lpgPrice = itemView.findViewById(R.id.TaxLPG);
-            electricityPrice = itemView.findViewById(R.id.TaxElectricity);
+            gasolinePrice = itemView.findViewById(R.id.priceGasoline);
+            dieselPrice = itemView.findViewById(R.id.priceDiesel);
+            lpgPrice = itemView.findViewById(R.id.priceLPG);
+            electricityPrice = itemView.findViewById(R.id.priceElectricity);
             lastUpdated = itemView.findViewById(R.id.stationLastUpdate);
             stationPic = itemView.findViewById(R.id.station_photo);
             distance = itemView.findViewById(R.id.distance_ofStation);
