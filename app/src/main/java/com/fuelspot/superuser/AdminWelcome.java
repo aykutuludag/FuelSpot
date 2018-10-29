@@ -13,8 +13,10 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
@@ -1408,6 +1410,9 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         if (background != null) {
             String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background_login;
             Uri uri = Uri.parse(uriPath);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);
+            }
             background.setVideoURI(uri);
             background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override

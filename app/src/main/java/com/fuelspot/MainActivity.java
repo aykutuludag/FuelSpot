@@ -2,8 +2,6 @@ package com.fuelspot;
 
 
 import android.Manifest;
-import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -50,7 +48,6 @@ import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.fuelspot.adapter.VehicleAdapter;
 import com.fuelspot.model.VehicleItem;
-import com.fuelspot.service.GeofenceService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.maps.MapsInitializer;
@@ -62,7 +59,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -89,79 +85,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit;
-    // CAR MODELS START
-    public static String[] acura_models = {"RSX"};
-    public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};
-    public static String[] anadol_models = {"A"};
-    public static String[] astonMartin_models = {"DB7", "DB9", "DB11", "DBS", "Rapide", "Vanquish", "Vantage", "Virage"};
-    public static String[] audi_models = {"A1", "A3", "A4", "A5", "A6", "A7", "A8", "R8", "RS", "TT", "80 Series", "90 Series", "100 Series", "200 Series"};
-    public static String[] bentley_models = {"Arnage", "Bentayga", "Continental", "Flying Spur", "Mulsanne"};
-    public static String[] bmw_models = {"1 Series", "2 Series", "3 Series", "4 Series", "5 Series", "6 Series", "7 Series", "8 Series", "i Series", "M Series", "Z Series"};
-    public static String[] bugatti_models = {"Chiron"};
-    public static String[] buick_models = {"Century", "Park Avenue", "Regal", "Roadmaster"};
-    public static String[] cadillac_models = {"BLS", "Brougham", "CTS", "DeVille", "Fleetwood", "Seville", "STS"};
-    public static String[] cherry_models = {"Alia", "Chance", "Kimo", "Niche"};
-    public static String[] chevrolet_models = {"Aveo", "Camaro", "Caprice", "Celebrity", "Corvette", "Cruze", "Epica", "Evanda", "Geo Storm", "Impala", "Kalos", "Lacetti", "Rezzo", "Spark"};
-    public static String[] chyrsler_models = {"300 C", "300 M", "Concorde", "Crossfire", "Le Baron", "LHS", "Neon", "PT Cruiser", "Sebring", "Stratus"};
-    public static String[] citroen_models = {"BX", "C-Elysée", "C1", "C2", "C3", "C3 Picasso", "C4", "C4 Picasso", "C4 Grand Picasso", "C5", "C6", "C8", "Evasion", "Saxo", "Xantia", "XM", "Xsara", "ZX"};
-    public static String[] dacia_models = {"1304", "1310", "Lodgy", "Logan", "Sandero", "Solenza"};
-    public static String[] daeweo_models = {"Chairman", "Espero", "Lanos", "Leganza", "Matiz", "Nexia", "Nubira", "Racer", "Super Saloon", "Tico"};
-    public static String[] daihatsu_models = {"Applause", "Charade", "Cuore", "Materia", "Move", "Sirion", "YRV"};
-    public static String[] dodge_models = {"Avenger", "Challenger", "Charger", "Intrepid", "Magnum", "Viper"};
-    public static String[] ds_models = {"DS3", "DS4", "DS4 Crossback", "DS5"};
-    public static String[] eagle_models = {"Talon"};
-    public static String[] ferrari_models = {"360", "430", "456", "488", "458", "512", "575", "599", "612", "California", "F355", "FF", "F Series"};
-    public static String[] fiat_models = {"124 Spider", "126 Bis", "500 Family", "Albea", "Barchetta", "Brava", "Bravo", "Coupe", "Croma", "Egea", "Idea", "Linea", "Marea", "Mirafiori", "Palio", "Panda", "Punto", "Regata", "Sedici", "Seicento", "Siena", "Stilo", "Tempra", "Tipo", "Ulvsse"};
-    public static String[] ford_models = {"B-Max", "C-Max", "Cougar", "Crown Victoria", "Escort", "Festiva", "Fiesta", "Focus", "Fusion", "Galaxy", "Granada", "Granada C-Max", "Ka", "Mondeo", "Mustang", "Probe", "Puma", "Scorpio", "Sierra", "Taunus", "Taurus", "Thunderbird"};
-    public static String[] gaz_models = {"Volga"};
-    public static String[] geely_models = {"Echo", "Emgrand", "Familia", "FC"};
-    public static String[] honda_models = {"Accord", "City", "Civic", "CRX", "CR-Z", "Integra", "Jazz", "Legend", "Prelude", "S2000", "Shuttle", "S-MX", "Stream"};
-    public static String[] hyundai_models = {"Accent", "Accent Blue", "Accent Era", "Atos", "Coupe", "Dynasty", "Elentra", "Excel", "Genesis", "Getz", "Grandeur", "Ioniq", "i10", "i20", "i20 Active", "i20 Troy", "i30", "i40", "iX200", "Matrix", "S-Coupe", "Sonata", "Trajet"};
-    public static String[] ikco_models = {"Samand"};
-    public static String[] infiniti_models = {"G", "I30", "Q30", "Q50"};
-    public static String[] isuzu_models = {"Gemini"};
-    public static String[] jaguar_models = {"Daimler", "F-Type", "Sovereign", "S-Type", "XE", "XF", "XJ", "XJR", "XJS", "XK8", "XKR", "X-Type"};
-    public static String[] kia_models = {"Capital", "Carens", "Ceed", "Cerato", "Clarus", "Magentis", "Opirus", "Optima", "Picanto", "Pride", "Pro Ceed", "Rio", "Sephia", "Shuma", "Soul", "Venga"};
-    public static String[] kral_models = {"Grande-5"};
-    public static String[] lada_models = {"Kalina", "Nova", "Priora", "Samara", "Tavria", "Vaz", "Vega"};
-    public static String[] lamborghini_models = {"Aventador", "Gallardo", "Huracan"};
-    public static String[] lancia_models = {"Delta", "Thema", "Y (Ypsilon)"};
-    public static String[] lexus_models = {"IS", "LS", "RC"};
-    public static String[] lincoln_models = {"Continental", "LS", "MKS", "Town Car"};
-    public static String[] lotus_models = {"Elisa", "Esprit"};
-    public static String[] maserati_models = {"Series 4", "Cambiocorsa", "Ghibli", "GranCabrio", "GranTurismo", "GT", "Quattroporte", "Spyder"};
-    public static String[] maybach_models = {"62"};
-    public static String[] mazda_models = {"2", "3", "5", "6", "121", "323", "626", "929", "Lantis", "MX", "Premacy", "RX", "Xedos"};
-    public static String[] mercedes_models = {"A", "AMG GT", "B", "C", "CL", "CLA", "CLC", "CLK", "CLS", "E", "Maybach S", "R", "S", "SL", "SLC", "SLK", "SLS AMG", "190", "200", "220", "230", "240", "250", "260", "280", "300", "400", "420", "500", "560"};
-    public static String[] mercury_models = {"Sable"};
-    public static String[] mg_models = {"F", "ZR"};
-    public static String[] mini_models = {"Cooper", "Cooper Clubman", "Cooper S", "John Cooper", "One"};
-    public static String[] mitsubishi_models = {"Attrage", "Carisma", "Colt", "Eclipse", "Galant", "Grandis", "Lancer", "Lancer Evolution", "Space Star", "Space Wagon"};
-    public static String[] moskwitsch_models = {"1500 SL", "Aleko"};
-    public static String[] nissan_models = {"200 SX", "350 Z", "Almera", "Bluebird", "GT-R", "Maxima", "Micra", "Note", "NX Coupe", "Primera", "Pulsar", "Sunny"};
-    public static String[] oldsmobile_models = {"Cutlass Ciera"};
-    public static String[] opel_models = {"Adam", "Agila", "Ampera", "Ascona", "Astra", "Calibra", "Cascada", "Corsa", "GT (Roadster)", "Insignia", "Insignia Grand Sport", "Insignia Sports Tourer", "Kadett", "Manta", "Meriva", "Omega", "Rekord", "Senator", "Signum", "Tigra", "Vectra", "Zafira"};
-    public static String[] pagani_models = {"Huayra"};
-    public static String[] peugeot_models = {"106", "107", "205", "206", "206+", "207", "208", "301", "305", "306", "307", "308", "309", "405", "406", "407", "508", "605", "607", "806", "807", "RCZ"};
-    public static String[] plymouth_models = {"Laser"};
-    public static String[] pontiac_models = {"Firebird", "Grand Am", "Sunbird"};
-    public static String[] porsche_models = {"718", "911", "928", "944", "Boxster", "Cayman", "Panamera"};
-    public static String[] proton_models = {"218", "315", "415", "416", "418", "420", "Gen-2", "Persona", "Saga", "Savvy", "Waja"};
-    public static String[] renault_models = {"Clio", "Espace", "Fluence", "Fluence Z.E.", "Laguna", "Latitude", "Megane", "Modus", "Safrane", "Symbol", "Twizy", "ZOE", "Scenic", "Grand Scenic", "Talisman", "Twingo", "R 5", "R 9", "R 11", "R 12", "R 19", "R 21", "R 25"};
-    public static String[] rollsRoyce_models = {"Ghost", "Park Ward", "Phantom", "Wraith"};
-    public static String[] rover_models = {"25", "45", "75", "200", "214", "216", "218", "220", "400", "414", "416", "420", "620", "820", "Streetwise"};
-    public static String[] saab_models = {"900", "9000", "9-3", "9-5"};
-    public static String[] seat_models = {"Alhambra", "Altea", "Exeo", "Ibiza", "Leon", "Marbella", "Toledo"};
-    public static String[] skoda_models = {"Citigo", "Fabia", "Favorit", "Felicia", "Forman", "Octavia", "Rapid", "Roomster", "Superb"};
-    public static String[] smart_models = {"Forfour", "Fortwo", "Roadster"};
-    public static String[] subaru_models = {"BRZ", "Impreza", "Justy", "Legacy", "Levorg", "SVX", "Vivio"};
-    public static String[] suzuki_models = {"Alto", "Baleno", "Ignis", "Liana", "Maruti", "S-Cross", "Splash", "Swift", "SX4"};
-    public static String[] tata_models = {"Indica", "Indigo", "Manza", "Marina", "Vista"};
-    public static String[] tesla_models = {"Model S", "Model X"};
-    public static String[] tofas_models = {"Doğan", "Kartal", "Murat", "Serçe", "Şahin"};
-    public static String[] toyota_models = {"Auris", "Avensis", "Camry", "Carina", "Celica", "Corolla", "Corona", "Cressida", "Grown", "GT 86", "MR2", "Prius", "Starlet", "Supra", "Tercel", "Urban Cruiser", "Verso", "Yaris"};
-    public static String[] vw_models = {"Arteon", "Bora", "EOS", "Golf", "Jetta", "Lupo", "New Beetle", "The Beetle", "Passat", "Passat Variant", "Phaeton", "Polo", "Santana", "Scirocco", "Sharan", "Touran", "Vento", "VW CC"};
-    public static String[] volvo_models = {"C30", "C70", "S40", "S60", "S70", "S80", "S90", "V40", "V40 Cross Country", "V50", "V60", "V70", "V90 Cross Country", "240", "244", "440", "460", "480", "740", "850", "940", "960"};
+    String[] vehicleIDs;
+
+
     static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;
     static SharedPreferences prefs;
@@ -216,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         isGlobalNews = prefs.getBoolean("isGlobalNews", false);
-        mapDefaultRange = prefs.getInt("RANGE", 3000);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 12.5f);
+        mapDefaultRange = prefs.getInt("RANGE", 2500);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         userVehicles = prefs.getString("userVehicles", "");
         plateNo = prefs.getString("plateNo", "");
@@ -246,107 +172,77 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     public static String stationPhotoChooser(String stationName) {
         String photoURL;
-        switch (stationName) {
-            case "Akpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/akpet.jpg";
-                break;
-            case "Alpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/alpet.jpg";
-                break;
-            case "Aygaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aygaz.jpg";
-                break;
-            case "Aytemiz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aytemiz.jpg";
-                break;
-            case "Best":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/best.jpg";
-                break;
-            case "BP":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.jpg";
-                break;
-            case "Bpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bpet.jpg";
-                break;
-            case "Damla Petrol":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/damla-petrol.jpg";
-                break;
-            case "Energy":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/enegy.jpg";
-                break;
-            case "Euroil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/euroil.jpg";
-                break;
-            case "Exxon":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/exxon.jpg";
-                break;
-            case "GO":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/go.jpg";
-                break;
-            case "İpragaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/ipragaz.jpg";
-                break;
-            case "Jetpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/jetpet.jpg";
-                break;
-            case "Kadoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
-                break;
-            case "Kalegaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kalegaz.jpg";
-                break;
-            case "Lukoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
-                break;
-            case "Milangaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/milangaz.jpg";
-                break;
-            case "Mobil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mobil.jpg";
-                break;
-            case "Mogaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mogaz.jpg";
-                break;
-            case "Moil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/moil.jpg";
-                break;
-            case "Opet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
-                break;
-            case "Petline":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petline.jpg";
-                break;
-            case "Petrol Ofisi":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.jpg";
-                break;
-            case "Powerwax":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/powerwax.jpg";
-                break;
-            case "Shell":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.jpg";
-                break;
-            case "Sunoco":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sunoc.jpg";
-                break;
-            case "Termo":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/termo.jpg";
-                break;
-            case "Total":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/total.jpg";
-                break;
-            case "Türkiye Petrolleri":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkiye-petrolleri.jpg";
-                break;
-            case "Turkuaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkuaz.jpg";
-                break;
-            case "Valero":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/valero.jpg";
-                break;
-            default:
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.jpg";
-                break;
+
+        if (stationName.contains("Akpet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/akpet.jpg";
+        } else if (stationName.contains("Alpet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/alpet.jpg";
+        } else if (stationName.contains("Aygaz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aygaz.jpg";
+        } else if (stationName.contains("Aytemiz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aytemiz.jpg";
+        } else if (stationName.contains("Best")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/best.jpg";
+        } else if (stationName.contains("BP")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.jpg";
+        } else if (stationName.contains("Bpet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bpet.jpg";
+        } else if (stationName.contains("Damla Petrol")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/damla-petrol.jpg";
+        } else if (stationName.contains("Energy")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/enegy.jpg";
+        } else if (stationName.contains("Euroil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/euroil.jpg";
+        } else if (stationName.contains("Exxon")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/exxon.jpg";
+        } else if (stationName.contains("GO")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/go.jpg";
+        } else if (stationName.contains("İpragaz") || stationName.contains("Ipragaz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/ipragaz.jpg";
+        } else if (stationName.contains("Jetpet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/jetpet.jpg";
+        } else if (stationName.contains("Kadoil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
+        } else if (stationName.contains("Kalegaz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kalegaz.jpg";
+        } else if (stationName.contains("K-pet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kpet.jpg";
+        } else if (stationName.contains("Lukoil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+        } else if (stationName.contains("Milangaz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/milangaz.jpg";
+        } else if (stationName.contains("Mobil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mobil.jpg";
+        } else if (stationName.contains("Mogaz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mogaz.jpg";
+        } else if (stationName.contains("Moil")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/moil.jpg";
+        } else if (stationName.contains("Opet")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
+        } else if (stationName.contains("Petline")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petline.jpg";
+        } else if (stationName.contains("Petrol Ofisi") || stationName.contains("PO")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.jpg";
+        } else if (stationName.contains("Powerwax")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/powerwax.jpg";
+        } else if (stationName.contains("Shell")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.jpg";
+        } else if (stationName.contains("Sunoco")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sunoco.jpg";
+        } else if (stationName.contains("Termo")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/termo.jpg";
+        } else if (stationName.contains("Total")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/total.jpg";
+        } else if (stationName.contains("Türkiye Petrolleri") || stationName.contains("TP")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkiye-petrolleri.jpg";
+        } else if (stationName.contains("Turkuaz")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkuaz.jpg";
+        } else if (stationName.contains("Valero")) {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/valero.jpg";
+        } else {
+            photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.jpg";
         }
+
         return photoURL;
     }
 
@@ -416,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         admobInterstitial.loadAd(adRequest);
     }
 
-    public void GeofenceScheduler() {
+  /*  public void GeofenceScheduler() {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         Intent myIntent = new Intent(MainActivity.this, GeofenceService.class);
@@ -434,9 +330,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 alarmManager.cancel(pendingIntent);
             }
         }
-    }
+    }*/
 
-    private boolean isGeoServiceRunning() {
+ /*   private boolean isGeoServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         if (manager != null) {
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -446,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             }
         }
         return false;
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -504,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
-        GeofenceScheduler();
+        //GeofenceScheduler();
         buyPremiumPopup();
         InAppBilling();
 
@@ -600,16 +496,16 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     void fetchUserVehicles() {
         listOfVehicle.clear();
         if (userVehicles != null && userVehicles.length() > 0) {
-            String[] vehicleIDs = userVehicles.split(";");
+            vehicleIDs = userVehicles.split(";");
+            bottomNavigation.setNotification(vehicleIDs.length, 2);
             for (String vehicleID1 : vehicleIDs) {
                 fetchSingleVehicle(Integer.parseInt(vehicleID1));
             }
-            bottomNavigation.setNotification(vehicleIDs.length, 2);
         }
     }
 
     void fetchSingleVehicle(final int aracID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_VEHICLE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -772,7 +668,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                     Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasPremium", true).apply();
                     prefs.edit().putInt("RANGE", 50000).apply();
-                    prefs.edit().putFloat("ZOOM", 10f).apply();
+                    prefs.edit().putFloat("ZOOM", 7.5f).apply();
                     Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
                     if (i != null) {
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

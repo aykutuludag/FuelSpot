@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -92,11 +93,12 @@ public class FragmentStations extends Fragment {
     List<String> stationIcon = new ArrayList<>();
     List<Integer> distanceInMeters = new ArrayList<>();
     List<String> stationCountry = new ArrayList<>();
+    ArrayList<Marker> markers = new ArrayList<>();
 
+    Context mContext;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
-    ArrayList<Marker> markers = new ArrayList<>();
     RequestQueue queue;
     SharedPreferences prefs;
     Circle circle;
@@ -130,6 +132,7 @@ public class FragmentStations extends Fragment {
             t.setScreenName("İstasyonlar");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
+            mContext = getActivity();
         }
 
         //Variables
@@ -261,6 +264,33 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
+            /*    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        int dontHide;
+                        for (int i = 0; i < markers.size(); i++) {
+                            if (marker.equals(markers.get(i))) {
+                                RecyclerView.ViewHolder holder;
+                                dontHide = i;
+
+                                for (int j = 0; j < stationName.size(); j++) {
+                                    holder = mRecyclerView.findViewHolderForAdapterPosition(j);
+                                    if (holder != null) {
+                                        holder.itemView.setVisibility(View.GONE);
+                                    }
+                                }
+
+                                holder = mRecyclerView.findViewHolderForAdapterPosition(dontHide);
+                                if (holder != null) {
+                                    holder.itemView.setVisibility(View.VISIBLE);
+                                }
+                                mAdapter.notifyDataSetChanged();
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                });*/
                 googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
                     public void onCameraMove() {
@@ -281,6 +311,8 @@ public class FragmentStations extends Fragment {
     private void updateMapObject() {
         stationName.clear();
         vicinity.clear();
+        stationCountry.clear();
+        markers.clear();
         googleID.clear();
         location.clear();
         stationIcon.clear();
@@ -307,69 +339,19 @@ public class FragmentStations extends Fragment {
                 .fillColor(0x220000FF)
                 .strokeColor(Color.parseColor("#FF5635")));
 
-        //Search stations in a radius of mapDefaultRange
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&key=" + getString(R.string.g_api_key);
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSON json = new JSON(response);
-                        if (response != null && response.length() > 0) {
-                            for (int i = 0; i < json.key("results").count(); i++) {
-                                stationName.add(json.key("results").index(i).key("name").stringValue());
-                                vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
-                                googleID.add(json.key("results").index(i).key("place_id").stringValue());
-
-                                double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
-                                double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-                                location.add(lat + ";" + lon);
-
-                                stationIcon.add(stationPhotoChooser(stationName.get(i)));
-
-                                Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
-                                try {
-                                    List<Address> addresses = geo.getFromLocation(lat, lon, 1);
-                                    if (addresses.size() > 0) {
-                                        stationCountry.add(i, addresses.get(0).getCountryCode());
-                                    } else {
-                                        stationCountry.add(i, "");
-                                    }
-                                } catch (Exception e) {
-                                    stationCountry.add(i, "");
-                                }
-                            }
-
-                            if (json.key("next_page_token") != null && json.key("next_page_token").stringValue().length() > 0) {
-                                getNext20Station(json.key("next_page_token").stringValue());
-                            } else {
-                                for (int i = 0; i < stationName.size(); i++) {
-                                    addStation(i);
-                                }
-                            }
-                        } else {
-                            noStationError.setVisibility(View.VISIBLE);
-                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                }, new Response.ErrorListener()
-
-        {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                noStationError.setVisibility(View.VISIBLE);
-                Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        searchStations("");
     }
 
-    void getNext20Station(String token) {
-        //Search stations in a radius of mapDefaultRange
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
+    void searchStations(String token) {
+        String url;
+
+        if (token != null && token.length() > 0) {
+            // For getting next 20 stations
+            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
+        } else {
+            // For getting first 20 stations
+            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station" + "&key=" + getString(R.string.g_api_key);
+        }
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -378,40 +360,71 @@ public class FragmentStations extends Fragment {
                     public void onResponse(String response) {
                         JSON json = new JSON(response);
                         if (response != null && response.length() > 0) {
-                            for (int i = 0; i < json.key("results").count(); i++) {
-                                stationName.add(json.key("results").index(i).key("name").stringValue());
-                                vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
-                                googleID.add(json.key("results").index(i).key("place_id").stringValue());
+                            if (json.key("results").count() > 0) {
+                                for (int i = 0; i < json.key("results").count(); i++) {
+                                    stationName.add(json.key("results").index(i).key("name").stringValue());
+                                    vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
+                                    googleID.add(json.key("results").index(i).key("place_id").stringValue());
 
-                                double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
-                                double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-                                location.add(lat + ";" + lon);
+                                    double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                                    double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+                                    location.add(lat + ";" + lon);
 
-                                stationIcon.add(stationPhotoChooser(stationName.get(i)));
+                                    stationIcon.add(stationPhotoChooser(stationName.get(i)));
 
-                                Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
-                                try {
-                                    List<Address> addresses = geo.getFromLocation(lat, lon, 1);
-                                    if (addresses.size() > 0) {
-                                        stationCountry.add(i, addresses.get(0).getCountryCode());
-                                    } else {
+                                    Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                    try {
+                                        List<Address> addresses = geo.getFromLocation(lat, lon, 1);
+                                        if (addresses.size() > 0) {
+                                            stationCountry.add(i, addresses.get(0).getCountryCode());
+                                        } else {
+                                            stationCountry.add(i, "");
+                                        }
+                                    } catch (Exception e) {
                                         stationCountry.add(i, "");
                                     }
-                                } catch (Exception e) {
-                                    stationCountry.add(i, "");
                                 }
-                            }
 
-                            if (json.key("next_page_token") != null && json.key("next_page_token").stringValue().length() > 0) {
-                                getNext20Station(json.key("next_page_token").stringValue());
+                                if (json.key("next_page_token").stringValue() != null && json.key("next_page_token").stringValue().length() > 0) {
+                                    searchStations(json.key("next_page_token").stringValue());
+                                } else {
+                                    for (int i = 0; i < stationName.size(); i++) {
+                                        addStation(i);
+                                    }
+                                    proggressBar.setVisibility(View.GONE);
+                                    mRecyclerView.setVisibility(View.VISIBLE);
+                                    tabLayout.getTabAt(4).select();
+                                }
                             } else {
-                                for (int i = 0; i < stationName.size(); i++) {
-                                    addStation(i);
+                                // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
+                                if (mapDefaultRange == 2500) {
+                                    mapDefaultRange = 5000;
+                                    mapDefaultZoom = 12f;
+                                    Toast.makeText(getActivity(), "2500 metre içerisinde istasyon bulunamadı. YENİ MENZİL DENENİYOR: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    updateMapObject();
+                                } else if (mapDefaultRange == 5000) {
+                                    mapDefaultRange = 10000;
+                                    mapDefaultZoom = 11f;
+                                    Toast.makeText(getActivity(), "5000 metre içerisinde istasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    updateMapObject();
+                                } else if (mapDefaultRange == 10000) {
+                                    mapDefaultRange = 20000;
+                                    mapDefaultZoom = 10f;
+                                    Toast.makeText(getActivity(), "10000 metre içerisinde istasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    updateMapObject();
+                                } else if (mapDefaultRange == 20000) {
+                                    mapDefaultRange = 50000;
+                                    mapDefaultZoom = 8.75f;
+                                    Toast.makeText(getActivity(), "20000 metre içerisinde istasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    updateMapObject();
+                                } else {
+                                    noStationError.setVisibility(View.VISIBLE);
+                                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         } else {
                             noStationError.setVisibility(View.VISIBLE);
-                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener()
@@ -420,7 +433,7 @@ public class FragmentStations extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 noStationError.setVisibility(View.VISIBLE);
-                Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -471,6 +484,7 @@ public class FragmentStations extends Fragment {
                                     //DISTANCE END
 
                                     feedsList.add(item);
+                                    mAdapter.notifyDataSetChanged();
 
                                     //Add marker
                                     LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -480,12 +494,7 @@ public class FragmentStations extends Fragment {
                                         markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity"))));
                                     }
 
-                                    if (index == stationName.size() - 1) {
-                                        proggressBar.setVisibility(View.GONE);
-                                        mRecyclerView.setVisibility(View.VISIBLE);
-                                        tabLayout.getTabAt(4).select();
-                                        sortBy(4);
-                                    }
+                                    sortBy(4);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

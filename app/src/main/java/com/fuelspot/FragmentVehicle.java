@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,7 +80,7 @@ public class FragmentVehicle extends Fragment {
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
     TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice, emission;
     RelativeTimeTextView lastUpdated;
-    CircleImageView errorImage;
+    RelativeLayout userNoPurchaseLayout;
     RequestQueue requestQueue;
     View headerView;
 
@@ -119,7 +120,7 @@ public class FragmentVehicle extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        errorImage = view.findViewById(R.id.errorImage);
+        userNoPurchaseLayout = view.findViewById(R.id.noPurchaseLayout);
         requestQueue = Volley.newRequestQueue(getActivity());
 
         mRecyclerView = view.findViewById(R.id.feedView);
@@ -254,7 +255,7 @@ public class FragmentVehicle extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            errorImage.setVisibility(View.GONE);
+                            userNoPurchaseLayout.setVisibility(View.GONE);
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -339,7 +340,7 @@ public class FragmentVehicle extends Fragment {
                                 e.printStackTrace();
                             }
                         } else {
-                            errorImage.setVisibility(View.VISIBLE);
+                            userNoPurchaseLayout.setVisibility(View.VISIBLE);
                             //   Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG).show();
                             swipeContainer.setRefreshing(false);
                         }
@@ -469,7 +470,7 @@ public class FragmentVehicle extends Fragment {
     }
 
     private void updateCarInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_VEHICLE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

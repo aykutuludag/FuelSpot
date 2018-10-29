@@ -64,11 +64,12 @@ public class FragmentProfile extends Fragment {
     RecyclerView.Adapter mAdapter;
     List<CommentItem> feedsList = new ArrayList<>();
     SwipeRefreshLayout swipeContainer;
-    ImageView errorPhoto;
     TextView title;
     RequestOptions options;
     TextView userFullname;
     CircleImageView userProfileHolder;
+    View headerView;
+    RelativeLayout userNoCommentLayout;
 
     public static FragmentProfile newInstance() {
 
@@ -89,31 +90,17 @@ public class FragmentProfile extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        userProfileHolder = rootView.findViewById(R.id.user_picture);
+        headerView = rootView.findViewById(R.id.card_profile);
+
+        userProfileHolder = headerView.findViewById(R.id.user_picture_circle);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
-        userFullname = rootView.findViewById(R.id.userFullName);
+        userFullname = headerView.findViewById(R.id.userFullName);
 
-        title = rootView.findViewById(R.id.viewTitle);
-        if (isSuperUser) {
-            title.setText("Son cevaplarınız");
-        }
-
-        errorPhoto = rootView.findViewById(R.id.errorPhoto);
-
-        ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
-        updateUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button getPremium = rootView.findViewById(R.id.button_premium);
+        Button getPremium = headerView.findViewById(R.id.button_premium);
         getPremium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +124,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        Button openHelp = rootView.findViewById(R.id.button_help);
+        Button openHelp = headerView.findViewById(R.id.button_help);
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +146,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        Button openPrivacy = rootView.findViewById(R.id.button_privacy);
+        Button openPrivacy = headerView.findViewById(R.id.button_privacy);
         openPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +156,22 @@ public class FragmentProfile extends Fragment {
                 builder.setShowTitle(true);
                 builder.setToolbarColor(Color.parseColor("#212121"));
                 customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/privacy"));
+            }
+        });
+
+        title = rootView.findViewById(R.id.viewTitle);
+        if (isSuperUser) {
+            title.setText("Son cevaplarınız");
+        }
+
+        userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
+
+        ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
+        updateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -188,6 +191,9 @@ public class FragmentProfile extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        loadProfile();
+        fetchComments();
 
         return rootView;
     }
@@ -239,13 +245,13 @@ public class FragmentProfile extends Fragment {
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
-                                errorPhoto.setVisibility(View.VISIBLE);
+                                userNoCommentLayout.setVisibility(View.VISIBLE);
                                 //  snackBar.show();
                                 swipeContainer.setRefreshing(false);
                                 e.printStackTrace();
                             }
                         } else {
-                            errorPhoto.setVisibility(View.VISIBLE);
+                            userNoCommentLayout.setVisibility(View.VISIBLE);
                             // snackBar.show();
                             swipeContainer.setRefreshing(false);
                         }
@@ -254,7 +260,7 @@ public class FragmentProfile extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        errorPhoto.setVisibility(View.VISIBLE);
+                        userNoCommentLayout.setVisibility(View.VISIBLE);
                         // snackBar.show();
                         swipeContainer.setRefreshing(false);
                     }
@@ -275,17 +281,6 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        loadProfile();
-
-        if (mRecyclerView != null) {
-            fetchComments();
-        }
     }
 
     public class CommentAdapterforProfile extends RecyclerView.Adapter<CommentAdapterforProfile.ViewHolder2> {

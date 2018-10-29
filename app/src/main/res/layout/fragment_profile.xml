@@ -5,89 +5,61 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_picture"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/default_profile" />
-
-    <TextView
-        android:id="@+id/userFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_picture"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#ffffff" />
-
-    <ImageView
-        android:id="@+id/updateUserInfo"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
-        android:padding="4dp"
-        android:src="@drawable/edit" />
-
-    <Button
-        android:id="@+id/button_premium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userFullName"
-        android:layout_marginTop="4dp"
-        android:layout_toStartOf="@+id/user_picture"
-        android:background="@drawable/green_box"
-        android:text="@string/buy_premium_ads_title" />
-
-    <Button
-        android:id="@+id/button_privacy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userFullName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/white_box"
-        android:text="@string/privacy" />
-
-    <Button
-        android:id="@+id/button_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userFullName"
-        android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/user_picture"
-        android:background="@drawable/white_box"
-        android:text="@string/help" />
+    <include
+        android:id="@+id/includedProfile"
+        layout="@layout/card_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/viewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_premium"
+        android:layout_below="@id/includedProfile"
         android:layout_centerHorizontal="true"
-        android:layout_margin="4dp"
-        android:text="Son yorumlarınız"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="SON YORUMLAR"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
 
-    <ImageView
-        android:id="@+id/errorPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/swipeContainer"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/error_nocomment" />
+    <RelativeLayout
+        android:id="@+id/noCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/viewTitle"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Henüz hiç yorum yazmamışsınız. Yazdığınız yorumlar ve istasyon sahibinden gelen cevapları burada görebilirsin..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+
+        <ImageView
+            android:id="@+id/errorPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView20"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            app:srcCompat="@drawable/error_nocomment" />
+
+    </RelativeLayout>
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/viewTitle"
-        android:layout_marginTop="4dp"
         android:background="@android:color/transparent">
 
         <android.support.v7.widget.RecyclerView
@@ -96,5 +68,13 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ImageView
+        android:id="@+id/updateUserInfo"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:padding="4dp"
+        android:src="@drawable/edit" />
 
 </RelativeLayout>

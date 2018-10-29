@@ -627,7 +627,7 @@ public class StationDetails extends AppCompatActivity {
         final String[] reportReason = new String[1];
         final String[] reportDetails = new String[1];
 
-        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_report, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (Build.VERSION.SDK_INT >= 21) {

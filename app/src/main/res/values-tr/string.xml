@@ -2,5 +2,15 @@
 <resources>
 
     <string name="license_hint">BAY/XXX-XX/XXXXXX</string>
+    <string-array name="report_reasons">
+        <item>İstasyon mevcut değil</item>
+        <item>Mevcut bir yerin kopyası</item>
+        <item>Hatalı konum</item>
+        <item>Hatalı istasyon bilgileri</item>
+        <item>Fiyatlarda hata var</item>
+        <item>Hizmet ve kalite sorunları</item>
+        <item>Akaryakıt sorunları</item>
+        <item>Diğer</item>
+    </string-array>
 
 </resources>
