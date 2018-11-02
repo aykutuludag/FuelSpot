@@ -542,12 +542,12 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
+                    //All uppercase
+                    plateNo = s.toString().toUpperCase();
+
                     if (s.toString().contains(" ")) {
                         plateNo = s.toString().replaceAll(" ", "");
                     }
-
-                    //All uppercase
-                    plateNo = s.toString().toUpperCase();
 
                     prefs.edit().putString("plateNo", plateNo).apply();
                 }

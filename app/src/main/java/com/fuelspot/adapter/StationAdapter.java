@@ -49,6 +49,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
             intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
             intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
+            intent.putExtra("IS_VERIFIED", feedItemList.get(position).getIsVerified());
+            intent.putExtra("STATION_FACILITIES", feedItemList.get(position).getFacilities());
             mContext.startActivity(intent);
         }
     };

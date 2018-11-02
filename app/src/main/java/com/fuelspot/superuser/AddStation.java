@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,23 +60,10 @@ import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
-import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
-import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
-import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
-import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLocation;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationName;
 import static com.fuelspot.superuser.AdminMainActivity.userStations;
 
 public class AddStation extends AppCompatActivity {
 
-    Window window;
     Toolbar toolbar;
     TextView stationHint;
     EditText editTextStationName, editTextStationAddress, editTextStationLicense;
@@ -88,12 +74,14 @@ public class AddStation extends AppCompatActivity {
     Button finishRegistration;
     SharedPreferences prefs;
 
+    int stationID, doesStationVerified;
+    String googleID, stationName, stationAddress, stationCoordinates, stationCountry, licenseNo, stationLogo;
+    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_station);
-
-        window = this.window;
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -114,7 +102,7 @@ public class AddStation extends AppCompatActivity {
         stationHint = findViewById(R.id.stationHint);
 
         editTextStationName = findViewById(R.id.superStationName);
-        editTextStationName.setText(superStationName);
+        editTextStationName.setText(stationName);
         editTextStationName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -129,13 +117,13 @@ public class AddStation extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    superStationName = s.toString();
+                    stationName = s.toString();
                 }
             }
         });
 
         editTextStationAddress = findViewById(R.id.superStationAddress);
-        editTextStationAddress.setText(superStationAddress);
+        editTextStationAddress.setText(stationAddress);
         editTextStationAddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -150,13 +138,13 @@ public class AddStation extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    superStationAddress = s.toString();
+                    stationAddress = s.toString();
                 }
             }
         });
 
         editTextStationLicense = findViewById(R.id.editTextLicense);
-        editTextStationLicense.setText(superLicenseNo);
+        editTextStationLicense.setText(licenseNo);
         editTextStationLicense.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -171,7 +159,7 @@ public class AddStation extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    superLicenseNo = s.toString();
+                    licenseNo = s.toString();
                 }
             }
         });
@@ -180,9 +168,13 @@ public class AddStation extends AppCompatActivity {
         finishRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (superStationName != null && superStationName.length() > 0) {
-                    if (superLicenseNo != null && superLicenseNo.length() > 0) {
-                        updateSuperUser();
+                if (stationName != null && stationName.length() > 0) {
+                    if (licenseNo != null && licenseNo.length() > 0) {
+                        if (doesStationVerified == 0) {
+                            updateSuperUser();
+                        } else {
+                            Toast.makeText(AddStation.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         Toast.makeText(AddStation.this, "Lütfen istasyon lisans numarasını giriniz)", Toast.LENGTH_LONG).show();
                     }
@@ -268,47 +260,45 @@ public class AddStation extends AppCompatActivity {
                         JSON json = new JSON(response);
                         if (json.key("results").count() > 0) {
                             // Yes! He is in station. Probably there is only one station in 50m  so get the first value
-                            superGoogleID = json.key("results").index(0).key("place_id").stringValue();
+                            googleID = json.key("results").index(0).key("place_id").stringValue();
 
-                            superStationName = json.key("results").index(0).key("name").stringValue();
-                            editTextStationName.setText(superStationName);
+                            stationName = json.key("results").index(0).key("name").stringValue();
+                            editTextStationName.setText(stationName);
 
-                            superStationAddress = json.key("results").index(0).key("vicinity").stringValue();
-                            editTextStationAddress.setText(superStationAddress);
+                            stationAddress = json.key("results").index(0).key("vicinity").stringValue();
+                            editTextStationAddress.setText(stationAddress);
 
                             double lat = json.key("results").index(0).key("geometry").key("location").key("lat").doubleValue();
                             double lon = json.key("results").index(0).key("geometry").key("location").key("lng").doubleValue();
-                            superStationLocation = lat + ";" + lon;
+                            stationCoordinates = lat + ";" + lon;
 
                             Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
                             try {
                                 List<Address> addresses = geo.getFromLocation(lat, lon, 1);
                                 if (addresses.size() > 0) {
-                                    superStationCountry = addresses.get(0).getCountryCode();
+                                    stationCountry = addresses.get(0).getCountryCode();
                                 } else {
-                                    superStationCountry = "";
+                                    stationCountry = "";
                                 }
                             } catch (Exception e) {
-                                superStationCountry = "";
+                                stationCountry = "";
                             }
 
                             LatLng sydney = new LatLng(lat, lon);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
-
-                            stationHint.setTextColor(Color.parseColor("#00801e"));
+                            googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName).snippet(stationAddress));
 
                             addStation();
                         } else {
-                            superStationName = "";
-                            superStationAddress = "";
-                            superStationLocation = "";
-                            superStationCountry = "";
-                            superLicenseNo = "";
-                            superStationLogo = "";
+                            stationName = "";
+                            stationAddress = "";
+                            stationCoordinates = "";
+                            stationCountry = "";
+                            licenseNo = "";
+                            stationLogo = "";
 
-                            editTextStationName.setText(superStationName);
-                            editTextStationAddress.setText(superStationAddress);
-                            editTextStationLicense.setText(superLicenseNo);
+                            editTextStationName.setText(stationName);
+                            editTextStationAddress.setText(stationAddress);
+                            editTextStationLicense.setText(licenseNo);
                             stationHint.setTextColor(Color.parseColor("#ff0000"));
                         }
                     }
@@ -334,30 +324,31 @@ public class AddStation extends AppCompatActivity {
                                 JSONArray res = new JSONArray(s);
                                 JSONObject obj = res.getJSONObject(0);
 
-                                superStationID = obj.getInt("id");
+                                stationID = obj.getInt("id");
+                                stationName = obj.getString("name");
+                                stationAddress = obj.getString("country");
+                                stationCoordinates = obj.getString("location");
+                                googleID = obj.getString("googleID");
+                                licenseNo = obj.getString("licenseNo");
+                                stationLogo = obj.getString("photoURL");
+                                gasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                dieselPrice = (float) obj.getDouble("dieselPrice");
+                                lpgPrice = (float) obj.getDouble("lpgPrice");
+                                electricityPrice = (float) obj.getDouble("electricityPrice");
+                                doesStationVerified = obj.getInt("isVerified");
 
-                                userStations += superStationID + ";";
+                                editTextStationName.setText(stationName);
+                                editTextStationAddress.setText(stationAddress);
+                                editTextStationLicense.setText(licenseNo);
 
-                                superStationName = obj.getString("name");
+                                Toast.makeText(AddStation.this, "AQ: " + doesStationVerified, Toast.LENGTH_LONG).show();
 
-                                superStationCountry = obj.getString("country");
-
-                                superStationLocation = obj.getString("location");
-
-                                superGoogleID = obj.getString("googleID");
-
-                                superLicenseNo = obj.getString("licenseNo");
-                                editTextStationLicense.setText(superLicenseNo);
-
-                                superStationLogo = obj.getString("photoURL");
-
-                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
-
-                                ownedDieselPrice = obj.getDouble("dieselPrice");
-
-                                ownedLPGPrice = obj.getDouble("lpgPrice");
-
-                                ownedElectricityPrice = obj.getDouble("electricityPrice");
+                                if (doesStationVerified == 1) {
+                                    stationHint.setTextColor(Color.parseColor("#ff0000"));
+                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+                                } else {
+                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -376,12 +367,12 @@ public class AddStation extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("name", superStationName);
-                params.put("vicinity", superStationAddress);
-                params.put("country", superStationCountry);
-                params.put("location", superStationLocation);
-                params.put("googleID", superGoogleID);
-                params.put("photoURL", stationPhotoChooser(superStationName));
+                params.put("name", stationName);
+                params.put("vicinity", stationAddress);
+                params.put("country", stationCountry);
+                params.put("location", stationCoordinates);
+                params.put("googleID", googleID);
+                params.put("photoURL", stationPhotoChooser(stationLogo));
 
                 //returning parameters
                 return params;
@@ -401,6 +392,8 @@ public class AddStation extends AppCompatActivity {
                             switch (res) {
                                 case "Success":
                                     // Register process ended redirect user to AdminMainActivity to wait verification process.
+                                    userStations += stationID + ";";
+                                    prefs.edit().putString("userStations", userStations).apply();
                                     Toast.makeText(AddStation.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
                                     finish();
                                     break;
@@ -423,16 +416,15 @@ public class AddStation extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("stationID", String.valueOf(superStationID));
-                params.put("stationName", superStationName);
-                params.put("stationVicinity", superStationAddress);
-                params.put("licenseNo", superLicenseNo);
+                params.put("stationID", String.valueOf(stationID));
+                params.put("stationName", stationName);
+                params.put("stationVicinity", stationAddress);
+                params.put("licenseNo", licenseNo);
                 params.put("owner", username);
-                params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
-                params.put("dieselPrice", String.valueOf(ownedDieselPrice));
-                params.put("lpgPrice", String.valueOf(ownedLPGPrice));
-                params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
-
+                params.put("gasolinePrice", String.valueOf(gasolinePrice));
+                params.put("dieselPrice", String.valueOf(dieselPrice));
+                params.put("lpgPrice", String.valueOf(lpgPrice));
+                params.put("electricityPrice", String.valueOf(electricityPrice));
 
                 //returning parameters
                 return params;

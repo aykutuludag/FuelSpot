@@ -613,8 +613,6 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             LatLng sydney = new LatLng(lat, lon);
                             googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
 
-                            stationHint.setTextColor(Color.parseColor("#00801e"));
-
                             addStation();
                         } else {
                             superStationName = "";
@@ -677,17 +675,27 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                                 superStationLogo = obj.getString("photoURL");
                                 prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
-                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
 
-                                ownedDieselPrice = obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
 
-                                ownedLPGPrice = obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
 
-                                ownedElectricityPrice = obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+                                isStationVerified = obj.getInt("isVerified");
+                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+                                if (isStationVerified == 1) {
+                                    stationHint.setTextColor(Color.parseColor("#ff0000"));
+                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+                                } else {
+                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -1082,7 +1090,11 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                         if (email != null && email.length() > 0) {
                             if (superLicenseNo != null && superLicenseNo.length() > 0) {
                                 if (termsAndConditions.isChecked()) {
-                                    updateSuperUser();
+                                    if (isStationVerified == 0) {
+                                        updateSuperUser();
+                                    } else {
+                                        Toast.makeText(AdminWelcome.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
+                                    }
                                 } else {
                                     Toast.makeText(AdminWelcome.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
                                 }
@@ -1226,17 +1238,17 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             superStationLogo = obj.getString("photoURL");
                             prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
-                            ownedGasolinePrice = obj.getDouble("gasolinePrice");
-                            prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+                            ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                            prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
 
-                            ownedDieselPrice = obj.getDouble("dieselPrice");
-                            prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+                            ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                            prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
 
-                            ownedLPGPrice = obj.getDouble("lpgPrice");
-                            prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+                            ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                            prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
 
-                            ownedElectricityPrice = obj.getDouble("electricityPrice");
-                            prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+                            ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                            prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
                             isStationVerified = obj.getInt("isVerified");
                             prefs.edit().putInt("isStationVerified", isStationVerified).apply();
@@ -1244,24 +1256,26 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
                             prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
 
-                            isSigned = true;
-                            prefs.edit().putBoolean("isSigned", isSigned).apply();
-                            isSuperUser = true;
-                            prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
+                            if (isStationVerified == 1) {
+                                isSigned = true;
+                                prefs.edit().putBoolean("isSigned", isSigned).apply();
+                                isSuperUser = true;
+                                prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
-                            getVariables(prefs);
-                            getSuperVariables(prefs);
+                                getVariables(prefs);
+                                getSuperVariables(prefs);
 
-                            Toast.makeText(AdminWelcome.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AdminWelcome.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(AdminWelcome.this, AdminMainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }, 1500);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(AdminWelcome.this, AdminMainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }, 1500);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1354,9 +1368,11 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                                 Localization();
 
                                 if (userStations != null && userStations.length() > 0) {
-                                    // S/he already verified by us. Fetch station and redirect to MainActivity
-                                    superStationID = Integer.parseInt(userStations.split(";")[0]);
-                                    fetchStation(superStationID);
+                                    // S/he already verified by us. Fetch station and if any of the stations are verified redirect to MainActivity
+                                    for (int i = 0; i < userStations.split(";").length; i++) {
+                                        superStationID = Integer.parseInt(userStations.split(";")[i]);
+                                        fetchStation(superStationID);
+                                    }
                                 } else {
                                     welcome2.setVisibility(View.VISIBLE);
                                     welcome1.setVisibility(View.GONE);

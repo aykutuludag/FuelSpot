@@ -232,8 +232,6 @@ public class FragmentStations extends Fragment {
                             Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                         }
                     }
-                } else {
-                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                 }
             }
         };
@@ -347,7 +345,7 @@ public class FragmentStations extends Fragment {
 
         if (token != null && token.length() > 0) {
             // For getting next 20 stations
-            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
+            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&open_now=true&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
         } else {
             // For getting first 20 stations
             url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station" + "&key=" + getString(R.string.g_api_key);
@@ -461,6 +459,7 @@ public class FragmentStations extends Fragment {
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
                                     item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));
                                     item.setPhotoURL(obj.getString("photoURL"));

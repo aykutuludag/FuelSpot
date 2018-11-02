@@ -5,11 +5,10 @@
     <string-array name="report_reasons">
         <item>İstasyon mevcut değil</item>
         <item>Mevcut bir yerin kopyası</item>
-        <item>Hatalı konum</item>
         <item>Hatalı istasyon bilgileri</item>
-        <item>Fiyatlarda hata var</item>
+        <item>Hatalı tesis bilgileri</item>
         <item>Hizmet ve kalite sorunları</item>
-        <item>Akaryakıt sorunları</item>
+        <item>Fiyatlar uygulamadakinden farklı!</item>
         <item>Diğer</item>
     </string-array>
 

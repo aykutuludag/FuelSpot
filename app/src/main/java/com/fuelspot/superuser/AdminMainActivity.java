@@ -79,7 +79,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     public static boolean superPremium;
 
     public static int isStationVerified, isMobilePaymentAvailable, superStationID;
-    public static double ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
+    public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID;
 
     // Multiple station
@@ -181,6 +181,8 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setOnTabSelectedListener(this);
+
+        fetchUserStations();
 
         // AppRater
         RateThisApp.onCreate(this);
@@ -415,16 +417,16 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
         ownedGasolinePrice = item.getGasolinePrice();
-        prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+        prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
 
         ownedDieselPrice = item.getDieselPrice();
-        prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+        prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
 
         ownedLPGPrice = item.getLpgPrice();
-        prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+        prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
 
         ownedElectricityPrice = item.getElectricityPrice();
-        prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+        prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
         getSuperVariables(prefs);
 
@@ -475,9 +477,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     public void onResume() {
         super.onResume();
-        if (bottomNavigation != null) {
-            fetchUserStations();
-        }
     }
 
     @Override

@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".VehicleEditActivity"
+            android:name=".AutomobileEditActivity"
             android:label="Otomobil"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -58,7 +58,7 @@
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".AddVehicle"
+            android:name=".AddAutomobile"
             android:label="@string/title_activity_add_new_vehicle"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />

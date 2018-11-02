@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,15 +73,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
 
-    int stationDistance, choosenStationID, userCommentID;
+    int stationDistance, choosenStationID, userCommentID, isStationVerified;
     float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
-    String lastUpdated;
+    String lastUpdated, facilitiesOfStation;
 
     String stationName, stationVicinity, stationLocation, iconURL, userComment;
 
@@ -101,12 +104,15 @@ public class StationDetails extends AppCompatActivity {
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2;
+    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
     NestedScrollView scrollView;
-    ImageView errorPhoto, errorStreetView;
+    ImageView errorPhoto, errorStreetView, errorCampaign;
     CollapsingToolbarLayout collapsingToolbarLayout;
+    RelativeLayout verifiedSection;
+    TextView noCampaignText, noCommentText;
+    CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +146,10 @@ public class StationDetails extends AppCompatActivity {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        errorCampaign = findViewById(R.id.errorNoCampaign);
+        noCampaignText = findViewById(R.id.noCampaignText);
         errorPhoto = findViewById(R.id.errorPic);
+        noCommentText = findViewById(R.id.noCommentText);
         errorStreetView = findViewById(R.id.imageViewErrStreetView);
         scrollView = findViewById(R.id.scrollView);
         requestQueue = Volley.newRequestQueue(StationDetails.this);
@@ -155,6 +164,14 @@ public class StationDetails extends AppCompatActivity {
         textElectricity = findViewById(R.id.priceElectricity);
         textLastUpdated = findViewById(R.id.lastUpdated);
         stationIcon = findViewById(R.id.station_photo);
+        imageViewWC = findViewById(R.id.WC);
+        imageViewMarket = findViewById(R.id.Market);
+        imageViewCarWash = findViewById(R.id.CarWash);
+        imageViewTireRepair = findViewById(R.id.TireRepair);
+        imageViewMechanic = findViewById(R.id.Mechanic);
+
+        // if stationVerified == 1, this section shows up!
+        verifiedSection = findViewById(R.id.verifiedSection);
 
         // Nerden gelirse gelsin stationID boş olamaz.
         choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
@@ -171,22 +188,24 @@ public class StationDetails extends AppCompatActivity {
             electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
             lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
             iconURL = getIntent().getStringExtra("STATION_ICON");
+            isStationVerified = getIntent().getIntExtra("IS_VERIFIED", 0);
+            facilitiesOfStation = getIntent().getStringExtra("STATION_FACILITIES");
             loadStationDetails();
         } else {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
             fetchStation(choosenStationID);
         }
 
-        //Campaigns
+        // Campaigns
         mRecyclerView2 = findViewById(R.id.campaignView);
 
-        //Comments
+        // Comments
         mRecyclerView = findViewById(R.id.commentView);
 
+        // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
-        floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
-        floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
 
+        floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
         if (isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
         } else {
@@ -197,7 +216,18 @@ public class StationDetails extends AppCompatActivity {
                 }
             });
         }
+
+        floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reportPrices(v);
+            }
+        });
+
+
+        floatingActionButton3 = findViewById(R.id.material_design_floating_action_menu_item3);
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 materialDesignFAM.close(true);
@@ -230,12 +260,15 @@ public class StationDetails extends AppCompatActivity {
                             stationDistance = (int) loc1.distanceTo(loc2);
                             //DISTANCE END
 
+                            facilitiesOfStation = obj.getString("facilities");
                             gasolinePrice = (float) obj.getDouble("gasolinePrice");
                             dieselPrice = (float) obj.getDouble("dieselPrice");
                             lpgPrice = (float) obj.getDouble("lpgPrice");
                             electricityPrice = (float) obj.getDouble("electricityPrice");
                             lastUpdated = obj.getString("lastUpdated");
                             iconURL = obj.getString("photoURL");
+                            isStationVerified = obj.getInt("isVerified");
+
                             loadStationDetails();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -321,6 +354,43 @@ public class StationDetails extends AppCompatActivity {
                 }
                 Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
 
+                if (isStationVerified == 1) {
+                    verifiedSection.setVisibility(View.VISIBLE);
+                } else {
+                    verifiedSection.setVisibility(View.GONE);
+                }
+
+                // Facilities
+                if (facilitiesOfStation.contains("WC")) {
+                    imageViewWC.setAlpha(1.0f);
+                } else {
+                    imageViewWC.setAlpha(0.5f);
+                }
+
+                if (facilitiesOfStation.contains("Market")) {
+                    imageViewMarket.setAlpha(1.0f);
+                } else {
+                    imageViewMarket.setAlpha(0.5f);
+                }
+
+                if (facilitiesOfStation.contains("CarWash")) {
+                    imageViewCarWash.setAlpha(1.0f);
+                } else {
+                    imageViewCarWash.setAlpha(0.5f);
+                }
+
+                if (facilitiesOfStation.contains("TireRepair")) {
+                    imageViewTireRepair.setAlpha(1.0f);
+                } else {
+                    imageViewTireRepair.setAlpha(0.5f);
+                }
+
+                if (facilitiesOfStation.contains("Mechanic")) {
+                    imageViewMechanic.setAlpha(1.0f);
+                } else {
+                    imageViewMechanic.setAlpha(0.5f);
+                }
+
                 fetchCampaigns();
                 fetchComments();
             }
@@ -354,16 +424,28 @@ public class StationDetails extends AppCompatActivity {
                                 mAdapter2.notifyDataSetChanged();
                                 mRecyclerView2.setAdapter(mAdapter2);
                                 mRecyclerView2.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
+
+                                mRecyclerView2.setVisibility(View.VISIBLE);
+                                errorCampaign.setVisibility(View.GONE);
+                                noCampaignText.setVisibility(View.GONE);
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                mRecyclerView2.setVisibility(View.GONE);
+                                errorCampaign.setVisibility(View.VISIBLE);
+                                noCampaignText.setVisibility(View.VISIBLE);
                             }
+                        } else {
+                            mRecyclerView2.setVisibility(View.GONE);
+                            errorCampaign.setVisibility(View.VISIBLE);
+                            noCampaignText.setVisibility(View.VISIBLE);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        mRecyclerView2.setVisibility(View.GONE);
+                        errorCampaign.setVisibility(View.VISIBLE);
+                        noCampaignText.setVisibility(View.VISIBLE);
                     }
                 }) {
             @Override
@@ -419,6 +501,7 @@ public class StationDetails extends AppCompatActivity {
 
                                 mRecyclerView.setVisibility(View.VISIBLE);
                                 errorPhoto.setVisibility(View.GONE);
+                                noCommentText.setVisibility(View.GONE);
                                 mAdapter = new CommentAdapter(StationDetails.this, feedsList);
                                 GridLayoutManager mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
 
@@ -428,12 +511,14 @@ public class StationDetails extends AppCompatActivity {
                             } catch (JSONException e) {
                                 mRecyclerView.setVisibility(View.GONE);
                                 errorPhoto.setVisibility(View.VISIBLE);
+                                noCommentText.setVisibility(View.VISIBLE);
                                 hasAlreadyCommented = false;
                                 floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                             }
                         } else {
                             mRecyclerView.setVisibility(View.GONE);
                             errorPhoto.setVisibility(View.VISIBLE);
+                            noCommentText.setVisibility(View.VISIBLE);
                             hasAlreadyCommented = false;
                             floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                         }
@@ -623,7 +708,7 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    void reportStation(View view) {
+    void reportStation(final View view) {
         final String[] reportReason = new String[1];
         final String[] reportDetails = new String[1];
 
@@ -637,8 +722,13 @@ public class StationDetails extends AppCompatActivity {
         final Spinner spinner = customView.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                reportReason[0] = position + " - " + spinner.getItemAtPosition(position);
+            public void onItemSelected(AdapterView<?> parent, View view2, int position, long id) {
+                if (position == 4) {
+                    mPopupWindow.dismiss();
+                    reportPrices(view);
+                } else {
+                    reportReason[0] = position + " - " + spinner.getItemAtPosition(position);
+                }
             }
 
             @Override
@@ -702,6 +792,160 @@ public class StationDetails extends AppCompatActivity {
                         params.put("stationID", String.valueOf(choosenStationID));
                         params.put("report", reportReason[0]);
                         params.put("details", reportDetails[0]);
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
+        });
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    public void reportPrices(View view) {
+        final float[] benzinFiyat = new float[1];
+        final float[] dizelFiyat = new float[1];
+        final float[] LPGFiyat = new float[1];
+        final float[] ElektrikFiyat = new float[1];
+        final String[] pricesArray = new String[1];
+
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_report_prices, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        EditText editText = customView.findViewById(R.id.editTextGasoline);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    benzinFiyat[0] = Float.parseFloat(s.toString());
+                }
+            }
+        });
+
+        EditText editText2 = customView.findViewById(R.id.editTextDiesel);
+        editText2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    dizelFiyat[0] = Float.parseFloat(s.toString());
+                }
+            }
+        });
+
+        EditText editText3 = customView.findViewById(R.id.editTextLPG);
+        editText3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    LPGFiyat[0] = Float.parseFloat(s.toString());
+                }
+            }
+        });
+
+        EditText editText4 = customView.findViewById(R.id.editTextElectricity);
+        editText4.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    ElektrikFiyat[0] = Float.parseFloat(s.toString());
+                }
+            }
+        });
+
+        Button sendReport = customView.findViewById(R.id.sendFiyat);
+        sendReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pricesArray[0] = "{ gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0];
+                sendReporttoServer();
+            }
+
+            private void sendReporttoServer() {
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                loading.dismiss();
+                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("username", username);
+                        params.put("stationID", String.valueOf(choosenStationID));
+                        params.put("prices", pricesArray[0]);
 
                         //returning parameters
                         return params;

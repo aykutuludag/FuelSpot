@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/feedbackLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#EDEDED"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="FİYATLARI BİLDİR"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Eğer bu istasyondaki fiyatları biliyorsan bize bildirerek insanların öğrenmesine yardımcı olabilirsin. Fiyatlar ekiplerimizce incelendikten sonra sisteme girilecek ya da reddedilecektir." />
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/textView23"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/gasoline" />
+
+    <EditText
+        android:id="@+id/editTextGasoline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_alignBottom="@+id/editTextGasoline"
+        android:layout_toEndOf="@+id/editTextGasoline"
+        android:gravity="center"
+        android:text="TL" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignStart="@+id/imageView2"
+        android:layout_marginTop="16dp"
+        app:srcCompat="@drawable/diesel" />
+
+    <EditText
+        android:id="@+id/editTextDiesel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView3"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView3"
+        android:layout_alignBottom="@+id/editTextDiesel"
+        android:layout_toEndOf="@+id/editTextGasoline"
+        android:gravity="center"
+        android:text="TL" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@+id/imageView3"
+        android:layout_alignStart="@+id/imageView2"
+        android:layout_marginTop="16dp"
+        app:srcCompat="@drawable/lpg" />
+
+    <EditText
+        android:id="@+id/editTextLPG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView4"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView4"
+        android:layout_alignBottom="@+id/editTextLPG"
+        android:layout_toEndOf="@+id/editTextGasoline"
+        android:gravity="center"
+        android:text="TL" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@+id/imageView4"
+        android:layout_alignStart="@+id/imageView2"
+        android:layout_marginTop="16dp"
+        app:srcCompat="@drawable/electricity" />
+
+    <EditText
+        android:id="@+id/editTextElectricity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView5"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView5"
+        android:layout_alignBottom="@+id/editTextElectricity"
+        android:layout_toEndOf="@+id/editTextGasoline"
+        android:gravity="center"
+        android:text="TL" />
+
+    <Button
+        android:id="@+id/sendFiyat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="GÖNDER" />
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:padding="2dp"
+        app:srcCompat="@drawable/cancel" />
+
+</RelativeLayout>

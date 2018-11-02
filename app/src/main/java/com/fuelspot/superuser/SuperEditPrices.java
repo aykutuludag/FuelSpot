@@ -68,7 +68,7 @@ public class SuperEditPrices extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    ownedGasolinePrice = Double.parseDouble(s.toString());
+                    ownedGasolinePrice = Float.parseFloat(s.toString());
                 }
             }
         });
@@ -89,7 +89,7 @@ public class SuperEditPrices extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    ownedDieselPrice = Double.parseDouble(s.toString());
+                    ownedDieselPrice = Float.parseFloat(s.toString());
                 }
             }
         });
@@ -110,7 +110,7 @@ public class SuperEditPrices extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    ownedLPGPrice = Double.parseDouble(s.toString());
+                    ownedLPGPrice = Float.parseFloat(s.toString());
                 }
             }
         });
@@ -131,7 +131,7 @@ public class SuperEditPrices extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    ownedElectricityPrice = Double.parseDouble(s.toString());
+                    ownedElectricityPrice = Float.parseFloat(s.toString());
                 }
             }
         });

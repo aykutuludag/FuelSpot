@@ -236,7 +236,7 @@ public class FragmentVehicle extends Fragment {
         updateCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), VehicleEditActivity.class);
+                Intent intent = new Intent(getActivity(), AutomobileEditActivity.class);
                 startActivity(intent);
             }
         });

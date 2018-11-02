@@ -36,6 +36,7 @@
                 android:fontFamily="@font/gotham_black"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="13sp"
                 card_view:layout_widthPercent="15%" />
 
             <TextView

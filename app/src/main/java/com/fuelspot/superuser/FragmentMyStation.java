@@ -240,7 +240,7 @@ public class FragmentMyStation extends Fragment {
             }
         });
 
-        loadStationDetails();
+
         checkLocationPermission();
 
         return rootView;
@@ -279,6 +279,7 @@ public class FragmentMyStation extends Fragment {
                         //Scroll enable
                     }
                 });
+                loadStationDetails();
             }
         });
     }
@@ -315,17 +316,17 @@ public class FragmentMyStation extends Fragment {
                                 superStationLogo = obj.getString("photoURL");
                                 prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
-                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
 
-                                ownedDieselPrice = obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
 
-                                ownedLPGPrice = obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
 
-                                ownedElectricityPrice = obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
                                 isStationVerified = obj.getInt("isVerified");
                                 prefs.edit().putInt("isStationVerified", isStationVerified).apply();
@@ -344,20 +345,20 @@ public class FragmentMyStation extends Fragment {
                                 float distanceInMeters = loc1.distanceTo(loc2);
                                 textDistance.setText((int) distanceInMeters + " m");
 
-                                ownedGasolinePrice = obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", (float) ownedGasolinePrice).apply();
+                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
                                 textGasoline.setText(ownedGasolinePrice + "TL");
 
-                                ownedDieselPrice = obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", (float) ownedDieselPrice).apply();
+                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
                                 textDiesel.setText(ownedDieselPrice + "TL");
 
-                                ownedLPGPrice = obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", (float) ownedLPGPrice).apply();
+                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
                                 textLPG.setText(ownedLPGPrice + "TL");
 
-                                ownedElectricityPrice = obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", (float) ownedElectricityPrice).apply();
+                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
                                 textElectricity.setText(ownedElectricityPrice + "TL");
 
                                 //Last updated

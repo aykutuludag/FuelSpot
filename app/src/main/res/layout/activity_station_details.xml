@@ -238,10 +238,42 @@
             </android.support.percent.PercentRelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/verifiedSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/single_station"
+                android:background="#fafafa"
+                android:visibility="gone">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/verifiedStation"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/verified_station" />
+
+                <TextView
+                    android:id="@+id/textView25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="4dp"
+                    android:layout_toEndOf="@+id/verifiedStation"
+                    android:text="Bu istasyon FuelSpot tarafından onaylanmıştır." />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/campaignSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/single_station">
+                android:layout_below="@+id/verifiedSection"
+                android:background="#60ffffff">
 
                 <TextView
                     android:id="@+id/title_campaigns"
@@ -259,13 +291,119 @@
                     android:layout_below="@+id/title_campaigns"
                     android:background="@android:color/transparent" />
 
+                <ImageView
+                    android:id="@+id/errorNoCampaign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_campaigns"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/error_nocomment" />
+
+                <TextView
+                    android:id="@+id/noCampaignText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/errorNoCampaign"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="Bu istasyon henüz hiç kampanya eklememiş..."
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/facilitiesSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/campaignSection"
+                android:background="#50000000">
+
+                <TextView
+                    android:id="@+id/title_facilities"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="Tesisler"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_facilities"
+                    android:gravity="center">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/WC"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:alpha="0.5"
+                        android:src="@drawable/wc" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/Market"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_toEndOf="@id/WC"
+                        android:alpha="0.5"
+                        android:src="@drawable/market" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/CarWash"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_toEndOf="@id/Market"
+                        android:alpha="0.5"
+                        android:src="@drawable/carwash" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/TireRepair"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_toEndOf="@id/CarWash"
+                        android:alpha="0.5"
+                        android:src="@drawable/tirerepair" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/Mechanic"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_toEndOf="@id/TireRepair"
+                        android:alpha="0.5"
+                        android:src="@drawable/mechanic" />
+
+                </RelativeLayout>
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/commentSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/campaignSection">
+                android:layout_below="@+id/facilitiesSection"
+                android:background="#30ffffff">
 
                 <TextView
                     android:id="@+id/title_comments"
@@ -276,6 +414,13 @@
                     android:text="Son yorumlar"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/commentView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_comments"
+                    android:background="@android:color/transparent" />
+
                 <ImageView
                     android:id="@+id/errorPic"
                     android:layout_width="match_parent"
@@ -284,12 +429,16 @@
                     android:visibility="invisible"
                     app:srcCompat="@drawable/error_nocomment" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/commentView"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/noCommentText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_comments"
-                    android:background="@android:color/transparent" />
+                    android:layout_below="@id/errorPic"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:text="Bu istasyon için henüz hiç yorum yazılmamış. İlk yorumu sen yaz!"
+                    android:visibility="invisible" />
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -313,6 +462,14 @@
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_report_image"
+            fab:fab_label="Fiyatları bildir"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/material_design_floating_action_menu_item3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_report_image"

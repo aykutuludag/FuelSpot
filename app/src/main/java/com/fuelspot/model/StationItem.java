@@ -8,6 +8,7 @@ public class StationItem {
     private String countryCode;
     private String locStation;
     private String googleMapID;
+    private String facilities;
     private String licenseNo;
     private String owner;
     private String photoURL;
@@ -59,6 +60,14 @@ public class StationItem {
 
     public void setLocation(String locStation) {
         this.locStation = locStation;
+    }
+
+    public String getFacilities() {
+        return facilities;
+    }
+
+    public void setFacilities(String facilities) {
+        this.facilities = facilities;
     }
 
     public String getGoogleMapID() {

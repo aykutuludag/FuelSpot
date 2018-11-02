@@ -19,11 +19,10 @@
     <string-array name="report_reasons">
         <item>Station doesn\'t exist</item>
         <item>Copy of existing place</item>
-        <item>Inaccurate location</item>
         <item>Inaccurate station info</item>
-        <item>Inaccurate of prices</item>
+        <item>Inaccurate facilities info</item>
         <item>Service and quality issues</item>
-        <item>Fuel problems</item>
+        <item>Prices are different with app!</item>
         <item>Other</item>
     </string-array>
 
