@@ -78,9 +78,9 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     // General variables for SuperUser
     public static boolean superPremium;
 
-    public static int isStationVerified, isMobilePaymentAvailable, superStationID;
+    public static int isStationVerified, isMobilePaymentAvailable, superStationID, isStationActive;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
-    public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID;
+    public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
 
     // Multiple station
     public static List<StationItem> listOfStation = new ArrayList<>();
@@ -106,18 +106,20 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         // Station-specific information
         superStationID = prefs.getInt("SuperStationID", 0);
         superStationName = prefs.getString("SuperStationName", "");
-        superStationLocation = prefs.getString("SuperStationLocation", "");
         superStationAddress = prefs.getString("SuperStationAddress", "");
         superStationCountry = prefs.getString("SuperStationCountry", "");
-        superStationLogo = prefs.getString("SuperStationLogo", "");
+        superStationLocation = prefs.getString("SuperStationLocation", "");
         superGoogleID = prefs.getString("SuperGoogleID", "");
-        superLicenseNo = prefs.getString("SuperLicenseNo", "");
+        superFacilities = prefs.getString("SuperStationFacilities", "");
+        superStationLogo = prefs.getString("SuperStationLogo", "");
         ownedGasolinePrice = prefs.getFloat("superGasolinePrice", 0);
         ownedDieselPrice = prefs.getFloat("superDieselPrice", 0);
         ownedLPGPrice = prefs.getFloat("superLPGPrice", 0);
         ownedElectricityPrice = prefs.getFloat("superElectricityPrice", 0);
+        superLicenseNo = prefs.getString("SuperLicenseNo", "");
         isStationVerified = prefs.getInt("isStationVerified", 0);
         isMobilePaymentAvailable = prefs.getInt("isMobilePaymentAvaiable", 0);
+        isStationActive = prefs.getInt("isStationActive", 1);
     }
 
     @Override
@@ -144,6 +146,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         getSuperVariables(prefs);
         queue = Volley.newRequestQueue(this);
         popupWindow = new ListPopupWindow(this);
+
 
         // Last location
         locLastKnown = new Location("");
@@ -181,8 +184,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setOnTabSelectedListener(this);
-
-        fetchUserStations();
 
         // AppRater
         RateThisApp.onCreate(this);
@@ -286,7 +287,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }
 
-    void fetchUserStations() {
+    public void fetchUserStations() {
         listOfStation.clear();
         if (userStations != null && userStations.length() > 0) {
             String[] stationIDs = userStations.split(";");
@@ -401,6 +402,9 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         superStationName = item.getStationName();
         prefs.edit().putString("SuperStationName", superStationName).apply();
 
+        superStationAddress = item.getVicinity();
+        prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
         superStationCountry = item.getCountryCode();
         prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
 
@@ -410,8 +414,8 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         superGoogleID = item.getGoogleMapID();
         prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
-        superLicenseNo = item.getLicenseNo();
-        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+        superFacilities = item.getFacilities();
+        prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
 
         superStationLogo = item.getPhotoURL();
         prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
@@ -427,6 +431,20 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
 
         ownedElectricityPrice = item.getElectricityPrice();
         prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+        isStationVerified = item.getIsVerified();
+        prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+        isMobilePaymentAvailable = item.getHasSupportMobilePayment();
+        prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
+
+        isStationActive = item.getIsActive();
+        prefs.edit().putInt("isStationActive", isStationActive).apply();
+
+        superLastUpdate = item.getLastUpdated();
 
         getSuperVariables(prefs);
 
@@ -477,6 +495,8 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     public void onResume() {
         super.onResume();
+
+        fetchUserStations();
     }
 
     @Override

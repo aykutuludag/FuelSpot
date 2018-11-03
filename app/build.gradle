@@ -9,7 +9,7 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 22
+        versionCode 23
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -50,11 +50,9 @@ dependencies {
     // FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.google.firebase:firebase-ads:17.0.0'
 
     // FACEBOOK
     implementation 'com.facebook.android:facebook-android-sdk:4.37.0'
-    implementation 'com.facebook.android:audience-network-sdk:5.1.0-beta'
 
     // 3RD PARTY
     implementation 'de.hdodenhof:circleimageview:2.2.0'

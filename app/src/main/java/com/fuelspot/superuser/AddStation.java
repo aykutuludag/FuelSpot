@@ -25,7 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,6 +57,8 @@ import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.AdminMainActivity.userStations;
@@ -204,8 +205,8 @@ public class AddStation extends AppCompatActivity {
                     @Override
                     public void onMyLocationChange(Location arg0) {
                         Location loc1 = new Location("");
-                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
-                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
+                        loc1.setLatitude(Double.parseDouble(userlat));
+                        loc1.setLongitude(Double.parseDouble(userlon));
 
                         Location loc2 = new Location("");
                         loc2.setLatitude(arg0.getLatitude());
@@ -214,10 +215,10 @@ public class AddStation extends AppCompatActivity {
                         float distanceInMeters = loc1.distanceTo(loc2);
 
                         if (distanceInMeters >= mapDefaultStationRange / 2) {
-                            MainActivity.userlat = String.valueOf(arg0.getLatitude());
-                            MainActivity.userlon = String.valueOf(arg0.getLongitude());
-                            prefs.edit().putString("lat", MainActivity.userlat).apply();
-                            prefs.edit().putString("lon", MainActivity.userlon).apply();
+                            userlat = String.valueOf(arg0.getLatitude());
+                            userlon = String.valueOf(arg0.getLongitude());
+                            prefs.edit().putString("lat", userlat).apply();
+                            prefs.edit().putString("lon", userlon).apply();
                             getVariables(prefs);
                             updateMapObject();
                         }
@@ -235,22 +236,22 @@ public class AddStation extends AppCompatActivity {
 
         if (googleMap != null) {
             googleMap.clear();
+
+            //Draw a circle with radius of 150m
+            circle = googleMap.addCircle(new CircleOptions()
+                    .center(new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon)))
+                    .radius(mapDefaultStationRange)
+                    .strokeColor(Color.RED));
         }
 
-        //Draw a circle with radius of 150m
-        circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
-                .radius(mapDefaultStationRange)
-                .strokeColor(Color.RED));
-
         // For zooming automatically to the location of the marker
-        LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
+        LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 50m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&key=" + getString(R.string.google_api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&key=" + getString(R.string.google_api_key);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -259,35 +260,30 @@ public class AddStation extends AppCompatActivity {
                     public void onResponse(String response) {
                         JSON json = new JSON(response);
                         if (json.key("results").count() > 0) {
-                            // Yes! He is in station. Probably there is only one station in 50m  so get the first value
-                            googleID = json.key("results").index(0).key("place_id").stringValue();
+                            for (int i = 0; i < json.key("results").count(); i++) {
+                                googleID = json.key("results").index(i).key("place_id").stringValue();
+                                stationName = json.key("results").index(i).key("name").stringValue();
+                                stationAddress = json.key("results").index(i).key("vicinity").stringValue();
+                                double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                                double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+                                stationCoordinates = lat + ";" + lon;
 
-                            stationName = json.key("results").index(0).key("name").stringValue();
-                            editTextStationName.setText(stationName);
-
-                            stationAddress = json.key("results").index(0).key("vicinity").stringValue();
-                            editTextStationAddress.setText(stationAddress);
-
-                            double lat = json.key("results").index(0).key("geometry").key("location").key("lat").doubleValue();
-                            double lon = json.key("results").index(0).key("geometry").key("location").key("lng").doubleValue();
-                            stationCoordinates = lat + ";" + lon;
-
-                            Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
-                            try {
-                                List<Address> addresses = geo.getFromLocation(lat, lon, 1);
-                                if (addresses.size() > 0) {
-                                    stationCountry = addresses.get(0).getCountryCode();
-                                } else {
+                                Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                try {
+                                    List<Address> addresses = geo.getFromLocation(lat, lon, 1);
+                                    if (addresses.size() > 0) {
+                                        stationCountry = addresses.get(0).getCountryCode();
+                                    } else {
+                                        stationCountry = "";
+                                    }
+                                } catch (Exception e) {
                                     stationCountry = "";
                                 }
-                            } catch (Exception e) {
-                                stationCountry = "";
+
+                                stationLogo = stationPhotoChooser(stationName);
+
+                                addStation();
                             }
-
-                            LatLng sydney = new LatLng(lat, lon);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName).snippet(stationAddress));
-
-                            addStation();
                         } else {
                             stationName = "";
                             stationAddress = "";
@@ -318,36 +314,41 @@ public class AddStation extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String s) {
-                        if (s != null && s.length() > 0) {
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
                             try {
-                                JSONArray res = new JSONArray(s);
+                                JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
+                                if (obj.getInt("isActive") == 1) {
+                                    stationID = obj.getInt("id");
+                                    stationName = obj.getString("name");
+                                    stationAddress = obj.getString("vicinity");
+                                    stationCoordinates = obj.getString("location");
+                                    googleID = obj.getString("googleID");
+                                    licenseNo = obj.getString("licenseNo");
+                                    stationLogo = obj.getString("photoURL");
+                                    gasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                    dieselPrice = (float) obj.getDouble("dieselPrice");
+                                    lpgPrice = (float) obj.getDouble("lpgPrice");
+                                    electricityPrice = (float) obj.getDouble("electricityPrice");
+                                    doesStationVerified = obj.getInt("isVerified");
 
-                                stationID = obj.getInt("id");
-                                stationName = obj.getString("name");
-                                stationAddress = obj.getString("country");
-                                stationCoordinates = obj.getString("location");
-                                googleID = obj.getString("googleID");
-                                licenseNo = obj.getString("licenseNo");
-                                stationLogo = obj.getString("photoURL");
-                                gasolinePrice = (float) obj.getDouble("gasolinePrice");
-                                dieselPrice = (float) obj.getDouble("dieselPrice");
-                                lpgPrice = (float) obj.getDouble("lpgPrice");
-                                electricityPrice = (float) obj.getDouble("electricityPrice");
-                                doesStationVerified = obj.getInt("isVerified");
+                                    if (doesStationVerified == 1) {
+                                        stationHint.setTextColor(Color.parseColor("#ff0000"));
+                                        stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+                                    } else {
+                                        stationHint.setTextColor(Color.parseColor("#00801e"));
+                                    }
 
-                                editTextStationName.setText(stationName);
-                                editTextStationAddress.setText(stationAddress);
-                                editTextStationLicense.setText(licenseNo);
+                                    Double lat = Double.parseDouble(stationCoordinates.split(";")[0]);
+                                    Double lon = Double.parseDouble(stationCoordinates.split(";")[1]);
 
-                                Toast.makeText(AddStation.this, "AQ: " + doesStationVerified, Toast.LENGTH_LONG).show();
+                                    LatLng sydney = new LatLng(lat, lon);
+                                    googleMap.addMarker(new MarkerOptions().position(sydney).title(stationName).snippet(stationAddress));
 
-                                if (doesStationVerified == 1) {
-                                    stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
-                                } else {
-                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                    editTextStationName.setText(stationName);
+                                    editTextStationAddress.setText(stationAddress);
+                                    editTextStationLicense.setText(licenseNo);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -372,7 +373,7 @@ public class AddStation extends AppCompatActivity {
                 params.put("country", stationCountry);
                 params.put("location", stationCoordinates);
                 params.put("googleID", googleID);
-                params.put("photoURL", stationPhotoChooser(stationLogo));
+                params.put("photoURL", stationLogo);
 
                 //returning parameters
                 return params;
@@ -394,6 +395,7 @@ public class AddStation extends AppCompatActivity {
                                     // Register process ended redirect user to AdminMainActivity to wait verification process.
                                     userStations += stationID + ";";
                                     prefs.edit().putString("userStations", userStations).apply();
+                                    getSuperVariables(prefs);
                                     Toast.makeText(AddStation.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
                                     finish();
                                     break;
@@ -419,12 +421,14 @@ public class AddStation extends AppCompatActivity {
                 params.put("stationID", String.valueOf(stationID));
                 params.put("stationName", stationName);
                 params.put("stationVicinity", stationAddress);
+                params.put("facilities", "WC;Market;CarWash");
                 params.put("licenseNo", licenseNo);
                 params.put("owner", username);
                 params.put("gasolinePrice", String.valueOf(gasolinePrice));
                 params.put("dieselPrice", String.valueOf(dieselPrice));
                 params.put("lpgPrice", String.valueOf(lpgPrice));
                 params.put("electricityPrice", String.valueOf(electricityPrice));
+                params.put("isActive", String.valueOf(1));
 
                 //returning parameters
                 return params;

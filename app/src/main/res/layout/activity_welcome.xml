@@ -609,7 +609,7 @@
                 android:background="#ffffff" />
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/textViewOnayli"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -623,7 +623,7 @@
                 android:id="@+id/imageView19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView22"
+                android:layout_below="@+id/textViewOnayli"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="32dp"
                 app:srcCompat="@drawable/howtosirala" />

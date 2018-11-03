@@ -90,15 +90,58 @@ public class FragmentProfile extends Fragment {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        headerView = rootView.findViewById(R.id.card_profile);
+        headerView = rootView.findViewById(R.id.header_profile);
 
-        userProfileHolder = headerView.findViewById(R.id.user_picture_circle);
+        title = rootView.findViewById(R.id.viewTitle);
+        if (isSuperUser) {
+            title.setText("Son cevaplarınız");
+        }
+
+        userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
+
+        ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
+        updateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //Comments
+        mRecyclerView = rootView.findViewById(R.id.commentView);
+
+        swipeContainer = rootView.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchComments();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        return rootView;
+    }
+
+    void loadProfile() {
+        userProfileHolder = headerView.findViewById(R.id.profileImage);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
+        if (getActivity() != null && userProfileHolder != null) {
+            Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
+        }
 
         userFullname = headerView.findViewById(R.id.userFullName);
+        if (userFullname != null) {
+            userFullname.setText(name);
+        }
 
         Button getPremium = headerView.findViewById(R.id.button_premium);
         getPremium.setOnClickListener(new View.OnClickListener() {
@@ -158,54 +201,6 @@ public class FragmentProfile extends Fragment {
                 customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/privacy"));
             }
         });
-
-        title = rootView.findViewById(R.id.viewTitle);
-        if (isSuperUser) {
-            title.setText("Son cevaplarınız");
-        }
-
-        userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
-
-        ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
-        updateUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //Comments
-        mRecyclerView = rootView.findViewById(R.id.commentView);
-
-        swipeContainer = rootView.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchComments();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        loadProfile();
-        fetchComments();
-
-        return rootView;
-    }
-
-    void loadProfile() {
-        if (getActivity() != null && userProfileHolder != null) {
-            Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
-        }
-
-        if (userFullname != null) {
-            userFullname.setText(name);
-        }
     }
 
     public void fetchComments() {
@@ -281,6 +276,18 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (headerView != null) {
+            loadProfile();
+        }
+
+        if (mRecyclerView != null) {
+            fetchComments();
+        }
     }
 
     public class CommentAdapterforProfile extends RecyclerView.Adapter<CommentAdapterforProfile.ViewHolder2> {

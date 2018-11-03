@@ -42,14 +42,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.InterstitialAd;
-import com.facebook.ads.InterstitialAdListener;
 import com.fuelspot.adapter.VehicleAdapter;
 import com.fuelspot.model.VehicleItem;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
@@ -87,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit;
     String[] vehicleIDs;
 
-    static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;
+    /*static InterstitialAd facebookInterstitial;
+    static com.google.android.gms.ads.InterstitialAd admobInterstitial;*/
     static SharedPreferences prefs;
     //In-App Billings
     IInAppBillingService mService;
@@ -141,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         isGlobalNews = prefs.getBoolean("isGlobalNews", false);
-        mapDefaultRange = prefs.getInt("RANGE", 2500);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
+        mapDefaultRange = prefs.getInt("RANGE", 3000);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         userVehicles = prefs.getString("userVehicles", "");
         plateNo = prefs.getString("plateNo", "");
@@ -337,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     //First try to load Audience Network, fails load AdMob
-    public static void AudienceNetwork(final Context mContext) {
+    /*public static void AudienceNetwork(final Context mContext) {
         if (adCount < 2) {
             facebookInterstitial = new InterstitialAd(mContext, mContext.getString(R.string.interstitial_facebook));
             facebookInterstitial.setAdListener(new InterstitialAdListener() {
@@ -375,9 +369,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             });
             facebookInterstitial.loadAd();
         }
-    }
+    }*/
 
-    public static void AdMob(final Context mContext) {
+  /*  public static void AdMob(final Context mContext) {
         AdRequest adRequest = new AdRequest.Builder().build();
         admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
         admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
@@ -400,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             }
         });
         admobInterstitial.loadAd(adRequest);
-    }
+    }*/
 
   /*  public void GeofenceScheduler() {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -802,9 +796,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (mServiceConn != null) {
             unbindService(mServiceConn);
         }
-        if (facebookInterstitial != null) {
+       /* if (facebookInterstitial != null) {
             facebookInterstitial.destroy();
-        }
+        }*/
     }
 
     @Override

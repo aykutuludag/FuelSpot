@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/textView1"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:background="#70000000">
 
             <TextView
                 android:id="@+id/textView01"
@@ -58,7 +59,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/imageView"
                 android:gravity="center"
-                android:text="TÜRKİYE"
                 android:textColor="#fff" />
 
             <ImageView
@@ -78,7 +78,6 @@
                 android:layout_alignTop="@id/imageView11"
                 android:layout_alignBottom="@id/imageView11"
                 android:gravity="center"
-                android:text="TÜRKÇE"
                 android:textColor="#fff" />
 
             <ImageView
@@ -98,7 +97,6 @@
                 android:layout_alignTop="@+id/imageView122"
                 android:layout_alignBottom="@id/imageView122"
                 android:gravity="center"
-                android:text="Türk Lirası"
                 android:textColor="#fff" />
 
             <ImageView
@@ -118,7 +116,6 @@
                 android:layout_alignTop="@+id/imageView12"
                 android:layout_alignBottom="@id/imageView12"
                 android:gravity="center"
-                android:text="Litre, Kilometre (SI System)"
                 android:textColor="#fff" />
 
             <TextView
@@ -139,7 +136,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/settings_general"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:background="#70000000">
 
             <TextView
                 android:id="@+id/textViewMapTitle"
@@ -169,7 +167,6 @@
                 android:layout_alignBottom="@id/textViewRange"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/textViewRange"
-                android:text="5 kilometre"
                 android:textColor="#fff" />
 
             <TextView
@@ -188,7 +185,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/settings_map"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:background="#70000000">
 
             <TextView
                 android:id="@+id/textView4"
@@ -227,7 +225,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/settings_news"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:background="#70000000">
 
             <TextView
                 android:id="@+id/textView114"
@@ -365,7 +364,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/settings_tax"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:background="#70000000">
 
             <TextView
                 android:id="@+id/textView04"
@@ -411,7 +411,6 @@
                 android:layout_below="@id/button_rate"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="Anlık veri alınan istasyon sayısı: "
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#ffffff"
                 android:textStyle="bold" />

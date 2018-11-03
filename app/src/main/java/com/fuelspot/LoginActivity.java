@@ -58,10 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.fuelspot.MainActivity.adCount;
-import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencyCode;
-import static com.fuelspot.MainActivity.facebookInterstitial;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
@@ -251,7 +248,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (facebookInterstitial != null && facebookInterstitial.isAdLoaded()) {
+                            /*if (facebookInterstitial != null && facebookInterstitial.isAdLoaded()) {
                                 //Facebook ads loaded he will see Facebook
                                 startActivity(intent);
                                 facebookInterstitial.show();
@@ -267,6 +264,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 //Both ads doesn't loaded.
                                 startActivity(intent);
                             }
+                            finish();
+                            */
+                            startActivity(intent);
                             finish();
                         }
                     }, 3000);
@@ -366,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onCancel() {
-                Snackbar.make(background, getString(R.string.error_login_cancel), Snackbar.LENGTH_SHORT).show();
+                // Do nothing
             }
 
             @Override

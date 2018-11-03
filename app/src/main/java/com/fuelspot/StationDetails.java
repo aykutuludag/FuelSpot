@@ -77,12 +77,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
 
-    int stationDistance, choosenStationID, userCommentID, isStationVerified;
-    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
+    int stationDistance, choosenStationID, userCommentID, isStationVerified, numOfComments, sumOfPoints;
+    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, stationScore;
     String lastUpdated, facilitiesOfStation;
 
     String stationName, stationVicinity, stationLocation, iconURL, userComment;
@@ -112,7 +113,10 @@ public class StationDetails extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbarLayout;
     RelativeLayout verifiedSection;
     TextView noCampaignText, noCommentText;
-    CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic;
+    CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant;
+    float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
+    TextView literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,11 +168,18 @@ public class StationDetails extends AppCompatActivity {
         textElectricity = findViewById(R.id.priceElectricity);
         textLastUpdated = findViewById(R.id.lastUpdated);
         stationIcon = findViewById(R.id.station_photo);
+        literSectionTitle = findViewById(R.id.textViewUnitPrice);
+        textViewGasLt = findViewById(R.id.howMuchGasoline);
+        textViewDieselLt = findViewById(R.id.howMuchDiesel);
+        textViewLPGLt = findViewById(R.id.howMuchLPG);
+        textViewElectricityLt = findViewById(R.id.howMuchElectricity);
         imageViewWC = findViewById(R.id.WC);
         imageViewMarket = findViewById(R.id.Market);
         imageViewCarWash = findViewById(R.id.CarWash);
         imageViewTireRepair = findViewById(R.id.TireRepair);
         imageViewMechanic = findViewById(R.id.Mechanic);
+        imageViewRestaurant = findViewById(R.id.Restaurant);
+        ratingBar = findViewById(R.id.ratingBarScore);
 
         // if stationVerified == 1, this section shows up!
         verifiedSection = findViewById(R.id.verifiedSection);
@@ -360,6 +371,23 @@ public class StationDetails extends AppCompatActivity {
                     verifiedSection.setVisibility(View.GONE);
                 }
 
+                literCalculator();
+
+                String titleHolder = "100 " + currencySymbol + " ile şunları satın alabilirsiniz:";
+                literSectionTitle.setText(titleHolder);
+
+                String gasolineHolder = String.format(Locale.getDefault(), "%.2f", howMuchGas) + " " + userUnit;
+                textViewGasLt.setText(gasolineHolder);
+
+                String dieselHolder = String.format(Locale.getDefault(), "%.2f", howMuchDie) + " " + userUnit;
+                textViewDieselLt.setText(dieselHolder);
+
+                String lpgHolder = String.format(Locale.getDefault(), "%.2f", howMuchLPG) + " " + userUnit;
+                textViewLPGLt.setText(lpgHolder);
+
+                String electricityHolder = String.format(Locale.getDefault(), "%.2f", howMuchEle) + " " + getString(R.string.electricity_unit);
+                textViewElectricityLt.setText(electricityHolder);
+
                 // Facilities
                 if (facilitiesOfStation.contains("WC")) {
                     imageViewWC.setAlpha(1.0f);
@@ -389,6 +417,12 @@ public class StationDetails extends AppCompatActivity {
                     imageViewMechanic.setAlpha(1.0f);
                 } else {
                     imageViewMechanic.setAlpha(0.5f);
+                }
+
+                if (facilitiesOfStation.contains("Restaurant")) {
+                    imageViewRestaurant.setAlpha(1.0f);
+                } else {
+                    imageViewRestaurant.setAlpha(0.5f);
                 }
 
                 fetchCampaigns();
@@ -465,6 +499,8 @@ public class StationDetails extends AppCompatActivity {
     }
 
     public void fetchComments() {
+        sumOfPoints = 0;
+        numOfComments = 0;
         feedsList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
                 new Response.Listener<String>() {
@@ -497,6 +533,9 @@ public class StationDetails extends AppCompatActivity {
                                         floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit));
                                         floatingActionButton1.setLabelText("Edit comment");
                                     }
+
+                                    sumOfPoints += obj.getInt("stars");
+                                    numOfComments++;
                                 }
 
                                 mRecyclerView.setVisibility(View.VISIBLE);
@@ -508,6 +547,10 @@ public class StationDetails extends AppCompatActivity {
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
+
+                                // Calculate station score
+                                stationScore = sumOfPoints / numOfComments;
+                                ratingBar.setRating(stationScore);
                             } catch (JSONException e) {
                                 mRecyclerView.setVisibility(View.GONE);
                                 errorPhoto.setVisibility(View.VISIBLE);
@@ -969,6 +1012,24 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.setFocusable(true);
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    void literCalculator() {
+        if (gasolinePrice > 0) {
+            howMuchGas = 100 / gasolinePrice;
+        }
+
+        if (dieselPrice > 0) {
+            howMuchDie = 100 / dieselPrice;
+        }
+
+        if (lpgPrice > 0) {
+            howMuchLPG = 100 / lpgPrice;
+        }
+
+        if (electricityPrice > 0) {
+            howMuchEle = 100 / electricityPrice;
+        }
     }
 
     public void coloredBars(int color1, int color2) {

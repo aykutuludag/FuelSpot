@@ -47,9 +47,9 @@
                 android:layout_toEndOf="@+id/stationLogo"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_widthPercent="17.5%" />
+                app:layout_widthPercent="15%" />
 
             <TextView
                 android:id="@+id/ownedStationAddress"
@@ -72,7 +72,7 @@
                 android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_widthPercent="14%" />
+                app:layout_widthPercent="14.5%" />
 
             <TextView
                 android:id="@+id/priceGasoline"
@@ -97,7 +97,7 @@
                 android:padding="4dp"
                 android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_widthPercent="14%" />
+                app:layout_widthPercent="14.5%" />
 
             <TextView
                 android:id="@+id/priceDiesel"
@@ -121,7 +121,7 @@
                 android:padding="4dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_widthPercent="14%" />
+                app:layout_widthPercent="14.5%" />
 
             <TextView
                 android:id="@+id/priceLPG"
@@ -144,7 +144,7 @@
                 android:layout_toEndOf="@+id/lpg"
                 android:padding="4dp"
                 android:src="@drawable/electricity"
-                app:layout_widthPercent="14%" />
+                app:layout_widthPercent="14.5%" />
 
             <TextView
                 android:id="@+id/priceElectricity"
@@ -167,7 +167,7 @@
                 android:layout_toEndOf="@+id/electricity"
                 android:padding="4dp"
                 android:src="@drawable/distance"
-                app:layout_widthPercent="14%" />
+                app:layout_widthPercent="14.5%" />
 
             <TextView
                 android:id="@+id/distanceBetweenOwner"
@@ -194,6 +194,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </android.support.percent.PercentRelativeLayout>
 

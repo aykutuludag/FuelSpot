@@ -131,11 +131,13 @@ import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.AdminMainActivity.isMobilePaymentAvailable;
+import static com.fuelspot.superuser.AdminMainActivity.isStationActive;
 import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
 import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.AdminMainActivity.superFacilities;
 import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
 import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
@@ -561,13 +563,12 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
         if (googleMap != null) {
             googleMap.clear();
+            //Draw a circle with radius of 150m
+            circle = googleMap.addCircle(new CircleOptions()
+                    .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
+                    .radius(mapDefaultStationRange)
+                    .strokeColor(Color.RED));
         }
-
-        //Draw a circle with radius of 150m
-        circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
-                .radius(mapDefaultStationRange)
-                .strokeColor(Color.RED));
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
@@ -649,52 +650,67 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             try {
                                 JSONArray res = new JSONArray(s);
                                 JSONObject obj = res.getJSONObject(0);
+                                if (obj.getInt("isActive") == 1) {
+                                    superStationID = obj.getInt("id");
+                                    prefs.edit().putInt("SuperStationID", superStationID).apply();
 
-                                superStationID = obj.getInt("id");
-                                prefs.edit().putInt("SuperStationID", superStationID).apply();
+                                    // For multi station
+                                    userStations += superStationID + ";";
+                                    prefs.edit().putString("userStations", userStations).apply();
+                                    // For multi station
 
-                                userStations += superStationID + ";";
-                                prefs.edit().putString("userStations", userStations).apply();
+                                    superStationName = obj.getString("name");
+                                    prefs.edit().putString("SuperStationName", superStationName).apply();
 
-                                superStationName = obj.getString("name");
-                                prefs.edit().putString("SuperStationName", superStationName).apply();
+                                    superStationAddress = obj.getString("vicinity");
+                                    prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
 
-                                superStationCountry = obj.getString("country");
-                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+                                    superStationCountry = obj.getString("country");
+                                    prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
 
-                                superStationLocation = obj.getString("location");
-                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+                                    superStationLocation = obj.getString("location");
+                                    prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
 
-                                superGoogleID = obj.getString("googleID");
-                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+                                    superGoogleID = obj.getString("googleID");
+                                    prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
-                                superLicenseNo = obj.getString("licenseNo");
-                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
-                                editTextStationLicense.setText(superLicenseNo);
+                                    superFacilities = obj.getString("facilities");
+                                    prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
 
-                                superStationLogo = obj.getString("photoURL");
-                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+                                    superStationLogo = obj.getString("photoURL");
+                                    prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
-                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+                                    ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                    prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
 
-                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+                                    ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                                    prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
 
-                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+                                    ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                                    prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
 
-                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+                                    ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                                    prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
-                                isStationVerified = obj.getInt("isVerified");
-                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+                                    superLicenseNo = obj.getString("licenseNo");
+                                    prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+                                    editTextStationLicense.setText(superLicenseNo);
 
-                                if (isStationVerified == 1) {
-                                    stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
-                                } else {
-                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                    isStationVerified = obj.getInt("isVerified");
+                                    prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+                                    isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
+                                    prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
+
+                                    isStationActive = obj.getInt("isActive");
+                                    prefs.edit().putInt("isStationActive", isStationActive).apply();
+
+                                    if (isStationVerified == 1) {
+                                        stationHint.setTextColor(Color.parseColor("#ff0000"));
+                                        stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+                                    } else {
+                                        stationHint.setTextColor(Color.parseColor("#00801e"));
+                                    }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -767,12 +783,13 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 params.put("stationID", String.valueOf(superStationID));
                 params.put("stationName", superStationName);
                 params.put("stationVicinity", superStationAddress);
-                params.put("licenseNo", superLicenseNo);
-                params.put("owner", username);
+                params.put("facilities", "WC;Market;CarWash");
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
+                params.put("licenseNo", superLicenseNo);
+                params.put("owner", username);
                 params.put("isActive", String.valueOf(1));
 
                 //returning parameters
@@ -1232,8 +1249,8 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             superGoogleID = obj.getString("googleID");
                             prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
-                            superLicenseNo = obj.getString("licenseNo");
-                            prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+                            superFacilities = obj.getString("facilities");
+                            prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
 
                             superStationLogo = obj.getString("photoURL");
                             prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
@@ -1250,11 +1267,17 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
                             prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
+                            superLicenseNo = obj.getString("licenseNo");
+                            prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
                             isStationVerified = obj.getInt("isVerified");
                             prefs.edit().putInt("isStationVerified", isStationVerified).apply();
 
                             isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
                             prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
+
+                            isStationActive = obj.getInt("isActive");
+                            prefs.edit().putInt("isStationActive", isStationActive).apply();
 
                             if (isStationVerified == 1) {
                                 isSigned = true;

@@ -514,7 +514,7 @@ public class AddFuel extends AppCompatActivity {
                                     //Disimissing the progress dialog
                                     loading.dismiss();
                                     Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                                    updateStation();
+                                    // updateStation();
                                 }
                             },
                             new Response.ErrorListener() {

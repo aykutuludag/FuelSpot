@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -46,7 +45,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -73,7 +71,9 @@ import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.AdminMainActivity.superFacilities;
 import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
+import static com.fuelspot.superuser.AdminMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
 import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
@@ -92,7 +92,6 @@ public class FragmentMyStation extends Fragment {
     ImageView stationIcon;
     Button editStation, openPurchases, openComments, openCampaings, openPosts;
     FusedLocationProviderClient mFusedLocationClient;
-    Circle circle;
     private GoogleMap googleMap;
     Location locLastKnown = new Location("");
     LocationRequest mLocationRequest;
@@ -181,7 +180,7 @@ public class FragmentMyStation extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isStationVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperEditPrices.class);
+                    Intent i = new Intent(getActivity(), SuperUpdateStation.class);
                     startActivity(i);
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
@@ -301,6 +300,9 @@ public class FragmentMyStation extends Fragment {
                                 superStationName = obj.getString("name");
                                 prefs.edit().putString("SuperStationName", superStationName).apply();
 
+                                superStationAddress = obj.getString("vicinity");
+                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
                                 superStationCountry = obj.getString("country");
                                 prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
 
@@ -309,6 +311,9 @@ public class FragmentMyStation extends Fragment {
 
                                 superGoogleID = obj.getString("googleID");
                                 prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+                                superFacilities = obj.getString("facilities");
+                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
 
                                 superLicenseNo = obj.getString("licenseNo");
                                 prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
@@ -334,8 +339,8 @@ public class FragmentMyStation extends Fragment {
                                 isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
                                 prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
 
-                                textName.setText(obj.getString("name"));
-                                textVicinity.setText(obj.getString("vicinity"));
+                                textName.setText(superStationName);
+                                textVicinity.setText(superStationAddress);
                                 Location loc1 = new Location("");
                                 loc1.setLatitude(Double.parseDouble(userlat));
                                 loc1.setLongitude(Double.parseDouble(userlon));
@@ -345,32 +350,29 @@ public class FragmentMyStation extends Fragment {
                                 float distanceInMeters = loc1.distanceTo(loc2);
                                 textDistance.setText((int) distanceInMeters + " m");
 
-                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
                                 prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
                                 textGasoline.setText(ownedGasolinePrice + "TL");
 
-                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
                                 prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
                                 textDiesel.setText(ownedDieselPrice + "TL");
 
-                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
                                 prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
                                 textLPG.setText(ownedLPGPrice + "TL");
 
-                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
                                 prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
                                 textElectricity.setText(ownedElectricityPrice + "TL");
 
                                 //Last updated
                                 try {
                                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                                    Date date = format.parse(obj.getString("lastUpdated"));
+                                    superLastUpdate = obj.getString("lastUpdated");
+                                    Date date = format.parse(superLastUpdate);
                                     textLastUpdated.setReferenceTime(date.getTime());
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
 
-                                Glide.with(getActivity()).load(Uri.parse(obj.getString("photoURL"))).into(stationIcon);
+                                Glide.with(getActivity()).load(superStationLogo).into(stationIcon);
 
                                 //Add marker to stationLoc
                                 String[] locationHolder = superStationLocation.split(";");
@@ -381,11 +383,11 @@ public class FragmentMyStation extends Fragment {
                                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17f).build();
                                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                                         (cameraPosition));
-
-                                circle = googleMap.addCircle(new CircleOptions()
+                                googleMap.addCircle(new CircleOptions()
                                         .center(sydney)
                                         .radius(mapDefaultStationRange)
-                                        .strokeColor(Color.RED));
+                                        .fillColor(0x220000FF)
+                                        .strokeColor(Color.parseColor("#FF5635")));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -13,6 +13,7 @@
     <string name="unitSystem1">Litre</string>
     <string name="unitSystem2">Galon</string>
     <string name="unitSystem3">Imperial galon</string>
+    <string name="electricity_unit">kW</string>
     <string name="license_hint">Station License No</string>
     <string name="smth_go_wrong">Somethings go wrong! Please try again later…</string>
 
