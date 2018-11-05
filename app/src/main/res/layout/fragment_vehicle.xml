@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_vehicle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/purchasePage">
 
     <include
         layout="@layout/card_automobile"
@@ -51,10 +51,7 @@
             android:layout_below="@id/textView20"
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
-            android:src="@drawable/error_nopurchase"
-            app:civ_border_color="#EA6C34"
-            app:civ_border_width="1dp" />
-
+            android:src="@drawable/error_nopurchase" />
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout

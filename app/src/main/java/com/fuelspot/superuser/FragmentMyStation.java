@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -232,7 +231,8 @@ public class FragmentMyStation extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isStationVerified == 1) {
-                    Toast.makeText(getActivity(), "Coming soon...", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(getActivity(), SuperPromotions.class);
+                    startActivity(i);
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
                 }

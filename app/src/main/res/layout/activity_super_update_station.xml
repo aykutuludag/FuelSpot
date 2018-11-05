@@ -6,26 +6,24 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.fuelspot.superuser.SuperUpdateStation">
+    tools:context=".superuser.SuperUpdateStation">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay.Dark">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay.Dark" />
 
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -241,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/priceSec"
                 android:layout_margin="8dp"
-                android:background="#60ffffff">
+                android:background="#60000000">
 
                 <TextView
                     android:id="@+id/title_facilities"

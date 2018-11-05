@@ -16,6 +16,8 @@
     <string name="electricity_unit">kW</string>
     <string name="license_hint">Station License No</string>
     <string name="smth_go_wrong">Somethings go wrong! Please try again later…</string>
+    <string name="show_vehicles">Show vehicles</string>
+    <string name="show_stations">Show stations</string>
 
     <string-array name="report_reasons">
         <item>Station doesn\'t exist</item>
@@ -56,12 +58,14 @@
     <string name="fab_go">Go</string>
     <string name="fab_report">Report station</string>
 
-    <string name="title_activity_add_new_vehicle">AddNewVehicle</string>
-    <string name="add_new_car">Add new vehicle</string>
-    <string name="show_vehicles">Show vehicles</string>
-    <string name="show_stations">Show stations</string>
-    <string name="add_new_station">Add new station</string>
-    <string name="title_activity_add_station">AddStation</string>
+    <string name="title_activity_add_new_vehicle">Add automobile</string>
+    <string name="title_activity_add_new_station">Add new station</string>
+    <string name="title_activity_add_station">Add station</string>
+    <string name="title_activity_update_station">Update station</string>
+    <string name="title_activity_super_comments">Comments</string>
+    <string name="title_activity_super_campaigns">Campaigns</string>
+    <string name="title_activity_super_purchases">Purchases</string>
+    <string name="title_activity_super_promotions">Promotions</string>
 
     <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>

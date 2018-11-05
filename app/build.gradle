@@ -43,12 +43,12 @@ dependencies {
     // PLAY-SERVICES
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-analytics:16.0.4'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.5'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.android.gms:play-services-places:16.0.0'
 
     // FIREBASE
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
     // FACEBOOK
@@ -65,6 +65,7 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
 apply plugin: 'com.google.gms.google-services'

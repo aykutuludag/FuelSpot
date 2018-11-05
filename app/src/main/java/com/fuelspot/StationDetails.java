@@ -601,7 +601,7 @@ public class StationDetails extends AppCompatActivity {
             mPopupWindow.setElevation(5.0f);
         }
 
-        TextView titlePopup = customView.findViewById(R.id.title);
+        TextView titlePopup = customView.findViewById(R.id.campaignPhoto);
         if (hasAlreadyCommented) {
             titlePopup.setText("Yorumu güncelle");
         } else {
@@ -766,7 +766,7 @@ public class StationDetails extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view2, int position, long id) {
-                if (position == 4) {
+                if (position == 5) {
                     mPopupWindow.dismiss();
                     reportPrices(view);
                 } else {

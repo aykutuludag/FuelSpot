@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/campaignPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -22,13 +22,16 @@
         android:id="@+id/editTextAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/campaignPhoto"
         android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
+        android:hint="Enter your answer..."
         android:inputType="textMultiLine"
-        android:padding="16dp"
-        android:text="sanane laaan" />
+        android:padding="16dp" />
 
     <Button
         android:id="@+id/buttonAddAnswer"

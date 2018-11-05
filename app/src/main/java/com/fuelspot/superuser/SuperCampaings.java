@@ -1,15 +1,30 @@
 package com.fuelspot.superuser;
 
-import android.net.Uri;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,8 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.R;
+import com.fuelspot.adapter.CampaignAdapter;
+import com.fuelspot.model.CampaignItem;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 
@@ -26,124 +44,129 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.fuelspot.MainActivity.universalTimeStamp;
+import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
 
     RequestQueue requestQueue;
-    ArrayList<String> campaignName = new ArrayList<>();
-    ArrayList<String> campaignDesc = new ArrayList<>();
-    ArrayList<String> campaignPhoto = new ArrayList<>();
-    ArrayList<String> campaignStart = new ArrayList<>();
-    ArrayList<String> campaignEnd = new ArrayList<>();
-
-    ImageView imageViewCampaign, imageViewCampaign2, imageViewCampaign3, imageViewDelete, imageViewDelete2, imageViewDelete3;
-    EditText editTextCampaignName, editTextCampaignDetail, editTextCampaignName2, editTextCampaignDetail2, editTextCampaignName3, editTextCampaignDetail3;
-    TextView startTimeText, endTimeText, startTimeText2, endTimeText2, startTimeText3, endTimeText3;
-
     SimpleDateFormat sdf;
-    private SlideDateTimeListener listener = new SlideDateTimeListener() {
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    List<CampaignItem> feedsList = new ArrayList<>();
 
-        @Override
-        public void onDateTimeSet(Date date) {
-            campaignStart.add(0, sdf.format(date));
-            startTimeText.setText(sdf.format(date));
-        }
+    String campaignName, campaignDesc, campaignPhoto, sTime, eTime;
 
-        @Override
-        public void onDateTimeCancel() {
-            // Overriding onDateTimeCancel() is optional.
-        }
-    };
-    private SlideDateTimeListener listener2 = new SlideDateTimeListener() {
-
-        @Override
-        public void onDateTimeSet(Date date) {
-            campaignEnd.add(0, sdf.format(date));
-            endTimeText.setText(sdf.format(date));
-        }
-
-        @Override
-        public void onDateTimeCancel() {
-            // Overriding onDateTimeCancel() is optional.
-        }
-    };
-    private SlideDateTimeListener listener3 = new SlideDateTimeListener() {
-
-        @Override
-        public void onDateTimeSet(Date date) {
-            campaignStart.add(1, sdf.format(date));
-            startTimeText2.setText(sdf.format(date));
-        }
-
-        @Override
-        public void onDateTimeCancel() {
-            // Overriding onDateTimeCancel() is optional.
-        }
-    };
-    private SlideDateTimeListener listener4 = new SlideDateTimeListener() {
-
-        @Override
-        public void onDateTimeSet(Date date) {
-            campaignEnd.add(1, sdf.format(date));
-            endTimeText2.setText(sdf.format(date));
-        }
-
-        @Override
-        public void onDateTimeCancel() {
-            // Overriding onDateTimeCancel() is optional.
-        }
-    };
-    private SlideDateTimeListener listener5 = new SlideDateTimeListener() {
-
-        @Override
-        public void onDateTimeSet(Date date) {
-            campaignStart.add(2, sdf.format(date));
-            startTimeText3.setText(sdf.format(date));
-        }
-
-        @Override
-        public void onDateTimeCancel() {
-            // Overriding onDateTimeCancel() is optional.
-        }
-    };
-    private SlideDateTimeListener listener6 = new SlideDateTimeListener() {
-
-        @Override
-        public void onDateTimeSet(Date date) {
-            campaignEnd.add(2, sdf.format(date));
-            endTimeText3.setText(sdf.format(date));
-        }
-
-        @Override
-        public void onDateTimeCancel() {
-            // Overriding onDateTimeCancel() is optional.
-        }
-    };
+    Window window;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_super_campaings);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        window = this.getWindow();
+
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        coloredBars(Color.parseColor("#7B1FA2"), Color.parseColor("#9C27B0"));
 
         requestQueue = Volley.newRequestQueue(this);
-        sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+        sdf = new SimpleDateFormat(universalTimeStamp, Locale.getDefault());
+        // Comments
+        mRecyclerView = findViewById(R.id.campaignView);
 
-        // CAMPAIGN 1
-        imageViewCampaign = findViewById(R.id.title);
-        editTextCampaignName = findViewById(R.id.campaignTitle);
+        FloatingActionButton myFab = findViewById(R.id.fab);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                addCampaign(v);
+            }
+        });
+
+        fetchCampaigns();
+    }
+
+    public void fetchCampaigns() {
+        feedsList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CampaignItem item = new CampaignItem();
+                                    item.setCampaignName(obj.getString("campaignName"));
+                                    item.setCampaignDesc(obj.getString("campaignDesc"));
+                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                    item.setCampaignStart(obj.getString("campaignStart"));
+                                    item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    feedsList.add(item);
+                                }
+
+                                mAdapter = new CampaignAdapter(SuperCampaings.this, feedsList);
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                //mRecyclerView.setLayoutManager(new LinearLayoutManager(SuperCampaings.this, LinearLayoutManager.HORIZONTAL, false));
+
+                                mRecyclerView.setVisibility(View.VISIBLE);
+                            } catch (JSONException e) {
+                                mRecyclerView.setVisibility(View.GONE);
+                            }
+                        } else {
+                            Toast.makeText(SuperCampaings.this, "Henüz hiç kampanya eklememişsiniz.", Toast.LENGTH_LONG).show();
+                            mRecyclerView.setVisibility(View.GONE);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mRecyclerView.setVisibility(View.GONE);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+                //Adding parameters
+                params.put("id", String.valueOf(superStationID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    void addCampaign(View view) {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_add_campaign, null);
+        final PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        EditText editTextCampaignName = customView.findViewById(R.id.editTextCampaignName);
         editTextCampaignName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -158,11 +181,12 @@ public class SuperCampaings extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    campaignName.add(0, s.toString());
+                    campaignName = s.toString();
                 }
             }
         });
-        editTextCampaignDetail = findViewById(R.id.campaignDesc);
+
+        EditText editTextCampaignDetail = customView.findViewById(R.id.editTextCampaignDesc);
         editTextCampaignDetail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -177,11 +201,23 @@ public class SuperCampaings extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    campaignDesc.add(0, s.toString());
+                    campaignDesc = s.toString();
                 }
             }
         });
-        startTimeText = findViewById(R.id.startTime);
+
+        final SlideDateTimeListener listener = new SlideDateTimeListener() {
+            @Override
+            public void onDateTimeSet(Date date) {
+                sTime = sdf.format(date);
+            }
+
+            @Override
+            public void onDateTimeCancel() {
+                sTime = "";
+            }
+        };
+        EditText startTimeText = customView.findViewById(R.id.editTextsTime);
         startTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +230,19 @@ public class SuperCampaings extends AppCompatActivity {
                         .show();
             }
         });
-        endTimeText = findViewById(R.id.endTime);
+
+        final SlideDateTimeListener listener2 = new SlideDateTimeListener() {
+            @Override
+            public void onDateTimeSet(Date date) {
+                eTime = sdf.format(date);
+            }
+
+            @Override
+            public void onDateTimeCancel() {
+                eTime = "";
+            }
+        };
+        EditText endTimeText = customView.findViewById(R.id.editTexteTime);
         endTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,231 +255,132 @@ public class SuperCampaings extends AppCompatActivity {
                         .show();
             }
         });
-        imageViewDelete = findViewById(R.id.deleteCampaignOne);
-        imageViewDelete.setOnClickListener(new View.OnClickListener() {
+
+        ImageView imageViewCampaign = customView.findViewById(R.id.imageViewCampaignPhoto);
+        imageViewCampaign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteCampaign(0);
+                ImagePicker.create(SuperCampaings.this).single().start();
             }
         });
-        // CAMPAIGN 1
 
-        // CAMPAIGN 2
-        imageViewCampaign2 = findViewById(R.id.campaignPhoto2);
-        editTextCampaignName2 = findViewById(R.id.campaignTitle2);
-        editTextCampaignName2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    campaignName.add(1, s.toString());
-                }
-            }
-        });
-        editTextCampaignDetail2 = findViewById(R.id.campaignDesc2);
-        editTextCampaignDetail2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    campaignDesc.add(1, s.toString());
-                }
-            }
-        });
-        startTimeText2 = findViewById(R.id.startTime2);
-        startTimeText2.setOnClickListener(new View.OnClickListener() {
+        Button sendValues = customView.findViewById(R.id.buttonAddCampaign);
+        sendValues.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SlideDateTimePicker.Builder(getSupportFragmentManager())
-                        .setListener(listener3)
-                        .setIs24HourTime(true)
-                        .setInitialDate(new Date())
-                        .setMinDate(new Date())
-                        .build()
-                        .show();
-            }
-        });
-        endTimeText2 = findViewById(R.id.endTime2);
-        endTimeText2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SlideDateTimePicker.Builder(getSupportFragmentManager())
-                        .setListener(listener4)
-                        .setIs24HourTime(true)
-                        .setInitialDate(new Date())
-                        .setMinDate(new Date())
-                        .build()
-                        .show();
-            }
-        });
-        // CAMPAIGN 2
-
-        // CAMPAIGN 3
-        imageViewCampaign3 = findViewById(R.id.campaignPhoto3);
-        editTextCampaignName3 = findViewById(R.id.campaignTitle3);
-        editTextCampaignName3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    campaignName.add(2, s.toString());
-                }
-            }
-        });
-        editTextCampaignDetail3 = findViewById(R.id.campaignDesc3);
-        editTextCampaignDetail3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    campaignDesc.add(2, s.toString());
-                }
-            }
-        });
-        startTimeText3 = findViewById(R.id.startTime3);
-        startTimeText3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SlideDateTimePicker.Builder(getSupportFragmentManager())
-                        .setListener(listener5)
-                        .setIs24HourTime(true)
-                        .setInitialDate(new Date())
-                        .setMinDate(new Date())
-                        .build()
-                        .show();
-            }
-        });
-        endTimeText3 = findViewById(R.id.endTime3);
-        endTimeText3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SlideDateTimePicker.Builder(getSupportFragmentManager())
-                        .setListener(listener6)
-                        .setIs24HourTime(true)
-                        .setInitialDate(new Date())
-                        .setMinDate(new Date())
-                        .build()
-                        .show();
-            }
-        });
-        // CAMPAIGN 3
-
-        fetchCampaigns();
-    }
-
-    public void fetchCampaigns() {
-        campaignName.clear();
-        campaignDesc.clear();
-        campaignPhoto.clear();
-        campaignStart.clear();
-        campaignEnd.clear();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("AMK:" + response);
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    campaignName.add(i, obj.getString("campaignName"));
-                                    campaignDesc.add(i, obj.getString("campaignDesc"));
-                                    campaignPhoto.add(i, obj.getString("campaignPhoto"));
-                                    campaignStart.add(i, obj.getString("campaignStart"));
-                                    campaignEnd.add(i, obj.getString("campaignEnd"));
-
-                                    if (i == 0) {
-                                        Glide.with(SuperCampaings.this).load(Uri.parse(campaignPhoto.get(0))).into(imageViewCampaign);
-                                        editTextCampaignName.setText(campaignName.get(0));
-                                        editTextCampaignDetail.setText(campaignDesc.get(0));
-                                        startTimeText.setText(campaignStart.get(0));
-                                        endTimeText.setText(campaignEnd.get(0));
-                                    } else if (i == 1) {
-                                        Glide.with(SuperCampaings.this).load(Uri.parse(campaignPhoto.get(1))).into(imageViewCampaign2);
-                                        editTextCampaignName2.setText(campaignName.get(1));
-                                        editTextCampaignDetail2.setText(campaignDesc.get(1));
-                                        startTimeText2.setText(campaignStart.get(1));
-                                        endTimeText2.setText(campaignEnd.get(1));
-                                    } else {
-                                        Glide.with(SuperCampaings.this).load(Uri.parse(campaignPhoto.get(2))).into(imageViewCampaign3);
-                                        editTextCampaignName3.setText(campaignName.get(2));
-                                        editTextCampaignDetail3.setText(campaignDesc.get(2));
-                                        startTimeText3.setText(campaignStart.get(2));
-                                        endTimeText3.setText(campaignEnd.get(2));
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                if (campaignName != null && campaignName.length() > 0) {
+                    if (campaignDesc != null && campaignDesc.length() > 0) {
+                        if (sTime != null && sTime.length() > 0) {
+                            if (eTime != null && eTime.length() > 0) {
+                                sendCampaignToServer();
+                            } else {
+                                Toast.makeText(SuperCampaings.this, "Lütfen bitiş zamanını seçiniz.", Toast.LENGTH_LONG).show();
                             }
                         } else {
-
+                            Toast.makeText(SuperCampaings.this, "Lütfen başlangıç zamanını seçiniz.", Toast.LENGTH_LONG).show();
                         }
+                    } else {
+                        Toast.makeText(SuperCampaings.this, "Lütfen kampanya açıklaması yazınız.", Toast.LENGTH_LONG).show();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
-
-                //returning parameters
-                return params;
+                } else {
+                    Toast.makeText(SuperCampaings.this, "Lütfen kampanya adını giriniz", Toast.LENGTH_LONG).show();
+                }
             }
-        };
 
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
+            private void sendCampaignToServer() {
+                final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, "Sending report...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_CAMPAING),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                switch (response) {
+                                    case "Success":
+                                        Toast.makeText(SuperCampaings.this, "Kampanya eklendi...", Toast.LENGTH_LONG).show();
+                                        mPopupWindow.dismiss();
+                                        fetchCampaigns();
+                                        break;
+                                    case "Fail":
+                                        break;
+                                }
+                                loading.dismiss();
+                                Toast.makeText(SuperCampaings.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("stationID", String.valueOf(superStationID));
+                        params.put("campaignName", campaignName);
+                        params.put("campaignDesc", campaignDesc);
+                        params.put("campaignPhoto", campaignPhoto);
+                        params.put("campaignStart", sTime);
+                        params.put("campaignEnd", eTime);
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
+        });
+
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    void deleteCampaign(int index) {
+    void updateCampaign(int campaignID) {
 
+    }
+
+    void deleteCampaign(int campaignID) {
+
+    }
+
+    public void coloredBars(int color1, int color2) {
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(color1);
+            toolbar.setBackgroundColor(color2);
+        } else {
+            toolbar.setBackgroundColor(color2);
+        }
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                Bitmap bmp = BitmapFactory.decodeFile(image.getPath());
+                campaignPhoto = getStringImage(bmp);
+            } else {
+                campaignPhoto = "";
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

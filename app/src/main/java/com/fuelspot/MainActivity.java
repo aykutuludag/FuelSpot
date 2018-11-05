@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
+    public static String universalTimeStamp = "dd-MM-yyyy HH:mm";
     public static List<VehicleItem> listOfVehicle = new ArrayList<>();
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
     public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
@@ -215,6 +216,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             case "Damla Petrol":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/damla-petrol.jpg";
                 break;
+            case "Ecogaz":
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/ecogaz.jpg";
+                break;
             case "Energy":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/energy.jpg";
                 break;
@@ -229,6 +233,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Gulf":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/gulf.jpg";
+                break;
+            case "Güneygaz":
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/guneygaz.jpg";
                 break;
             case "Güvenal Gaz":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/guvenalgaz.jpg";
@@ -302,6 +309,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Sunoco":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sunoco.jpg";
+                break;
+            case "Sunpet":
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sunpet.jpg";
+                break;
+            case "Teco":
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/teco.jpg";
                 break;
             case "Termo":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/termo.jpg";
@@ -467,11 +480,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         mFragNavController = builder.build();
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimary);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorPrimary);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorPrimary);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorPrimary);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorPrimary);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
@@ -479,8 +492,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.addItem(item4);
         bottomNavigation.addItem(item5);
 
+        bottomNavigation.setColored(true);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
@@ -644,7 +657,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             if (listOfVehicle.get(listOfVehicle.size() - 1).getID() != -999) {
                 VehicleItem item = new VehicleItem();
                 item.setID(-999);
-                item.setVehicleBrand(getString(R.string.add_new_car));
+                item.setVehicleBrand(getString(R.string.title_activity_add_new_vehicle));
                 listOfVehicle.add(item);
             }
 

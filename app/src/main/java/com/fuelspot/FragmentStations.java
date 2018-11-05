@@ -395,7 +395,7 @@ public class FragmentStations extends Fragment {
                                 }
                             } else {
                                 // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-                                if (mapDefaultRange == 2500) {
+                                if (mapDefaultRange == 3000) {
                                     mapDefaultRange = 5000;
                                     mapDefaultZoom = 12f;
                                     Toast.makeText(getActivity(), "2500 metre içerisinde istasyon bulunamadı. YENİ MENZİL DENENİYOR: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
@@ -417,12 +417,12 @@ public class FragmentStations extends Fragment {
                                     updateMapObject();
                                 } else {
                                     noStationError.setVisibility(View.VISIBLE);
-                                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         } else {
                             noStationError.setVisibility(View.VISIBLE);
-                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener()
@@ -431,7 +431,7 @@ public class FragmentStations extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 noStationError.setVisibility(View.VISIBLE);
-                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getActivity().findViewById(android.R.id.content), error.toString(), Snackbar.LENGTH_LONG).show();
             }
         });
 

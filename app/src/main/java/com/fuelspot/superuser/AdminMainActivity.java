@@ -129,6 +129,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
 
         //Window
         window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
@@ -146,7 +147,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         getSuperVariables(prefs);
         queue = Volley.newRequestQueue(this);
         popupWindow = new ListPopupWindow(this);
-
 
         // Last location
         locLastKnown = new Location("");
@@ -168,11 +168,11 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorAccent);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorAccent);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorAccent);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorAccent);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorPrimaryDark);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.stationPage);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
@@ -181,8 +181,8 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation.addItem(item5);
 
         // Bottombar Settings
+        bottomNavigation.setColored(true);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setOnTabSelectedListener(this);
 
         // AppRater
@@ -370,7 +370,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
             if (listOfStation.get(listOfStation.size() - 1).getID() != -999) {
                 StationItem item = new StationItem();
                 item.setID(-999);
-                item.setVicinity(getString(R.string.add_new_station));
+                item.setVicinity(getString(R.string.title_activity_add_new_station));
                 listOfStation.add(item);
             }
 
@@ -495,7 +495,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     public void onResume() {
         super.onResume();
-
         fetchUserStations();
     }
 

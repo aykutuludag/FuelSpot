@@ -1,5 +1,6 @@
 package com.fuelspot.superuser;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -56,18 +59,23 @@ public class SuperUpdateStation extends AppCompatActivity {
     CircleImageView imageViewStationLogo, imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic;
     RelativeLayout verifiedLayout;
     RequestOptions options;
+    Window window;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_super_update_station);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        window = this.getWindow();
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        coloredBars(Color.BLACK, Color.parseColor("#212121"));
 
         requestQueue = Volley.newRequestQueue(SuperUpdateStation.this);
         options = new RequestOptions().centerCrop().error(R.drawable.default_station).error(R.drawable.default_station)
@@ -337,6 +345,17 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    public void coloredBars(int color1, int color2) {
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(color1);
+            toolbar.setBackgroundColor(color2);
+        } else {
+            toolbar.setBackgroundColor(color2);
+        }
     }
 
     @Override

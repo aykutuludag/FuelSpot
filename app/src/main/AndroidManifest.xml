@@ -71,22 +71,30 @@
         <activity android:name=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperUpdateStation"
+            android:label="@string/title_activity_update_station"
             android:parentActivityName=".superuser.AdminMainActivity"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".superuser.AddStation"
+            android:label="@string/title_activity_add_station"
+            android:parentActivityName=".superuser.AdminMainActivity" />
+        <activity
             android:name=".superuser.SuperPurchases"
-            android:label="Satın almalar"
-            android:parentActivityName=".superuser.AdminMainActivity"
-            android:theme="@style/AppTheme" />
+            android:label="@string/title_activity_super_purchases"
+            android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperComments"
-            android:parentActivityName=".superuser.AdminMainActivity"
-            android:theme="@style/AppTheme" />
+            android:label="@string/title_activity_super_comments"
+            android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperCampaings"
-            android:parentActivityName=".superuser.AdminMainActivity"
-            android:theme="@style/AppTheme" />
+            android:label="@string/title_activity_super_campaigns"
+            android:parentActivityName=".superuser.AdminMainActivity" />
+        <activity
+            android:name=".superuser.SuperPromotions"
+            android:label="@string/title_activity_super_promotions"
+            android:parentActivityName=".superuser.AdminMainActivity" />
+
 
         <!-- BootUpReceiver -->
         <receiver
@@ -109,12 +117,6 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admobAppId" />
-
-        <!-- ImageCrop -->
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- Facebook -->
         <meta-data
@@ -176,16 +178,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <activity
-            android:name=".superuser.AddStation"
-            android:label="@string/title_activity_add_station"
-            android:parentActivityName=".superuser.AdminMainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fuelspot.superuser.AdminMainActivity" />
-        </activity>
     </application>
 
 </manifest>

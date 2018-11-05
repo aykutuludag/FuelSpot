@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_profile"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/commentPage">
 
     <include
         android:id="@+id/includedProfile"
@@ -43,17 +43,15 @@
             android:text="Henüz hiç yorum yazmamışsınız. Yazdığınız yorumlar ve istasyon sahibinden gelen cevapları burada görebilirsin..."
             android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/errorPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textView20"
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
-            app:srcCompat="@drawable/error_nocomment" />
-
+            android:src="@drawable/error_nocomment" />
     </RelativeLayout>
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
