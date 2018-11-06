@@ -208,7 +208,7 @@ public class FragmentStations extends Fragment {
                                 if (distanceInMeter >= (mapDefaultRange / 5)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                    updateMapObject();
+                                    loadMap();
                                 } else {
                                     if (feedsList != null && feedsList.size() > 0) {
                                         for (int i = 0; i < feedsList.size(); i++) {
@@ -262,45 +262,6 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
-            /*    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        int dontHide;
-                        for (int i = 0; i < markers.size(); i++) {
-                            if (marker.equals(markers.get(i))) {
-                                RecyclerView.ViewHolder holder;
-                                dontHide = i;
-
-                                for (int j = 0; j < stationName.size(); j++) {
-                                    holder = mRecyclerView.findViewHolderForAdapterPosition(j);
-                                    if (holder != null) {
-                                        holder.itemView.setVisibility(View.GONE);
-                                    }
-                                }
-
-                                holder = mRecyclerView.findViewHolderForAdapterPosition(dontHide);
-                                if (holder != null) {
-                                    holder.itemView.setVisibility(View.VISIBLE);
-                                }
-                                mAdapter.notifyDataSetChanged();
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-                });*/
-                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-                    @Override
-                    public void onCameraMove() {
-                        //Scroll iptal
-                    }
-                });
-                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                    @Override
-                    public void onCameraIdle() {
-                        //Scroll enable
-                    }
-                });
                 updateMapObject();
             }
         });

@@ -492,7 +492,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.addItem(item4);
         bottomNavigation.addItem(item5);
 
-        bottomNavigation.setColored(true);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setOnTabSelectedListener(this);
 
@@ -504,6 +503,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
+
+        fetchUserVehicles();
     }
 
     private void buyPremiumPopup() {
@@ -798,9 +799,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public void onResume() {
         super.onResume();
-        if (bottomNavigation != null) {
-            fetchUserVehicles();
-        }
     }
 
     @Override

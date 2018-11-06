@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,9 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import java.io.ByteArrayOutputStream;
@@ -63,6 +66,7 @@ import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -122,7 +126,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         bOther = findViewById(R.id.genderOther);
 
         // Setting name
-        editName.setText(MainActivity.name);
+        editName.setText(name);
 
         // Setting email
         editMail.setText(email);
@@ -141,6 +145,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0 && s.toString().contains("@")) {
                     email = s.toString();
+                    editor.putString("Email", email);
                 }
             }
         });
@@ -200,6 +205,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     userPhoneNumber = s.toString();
+                    editor.putString("userPhoneNumber", userPhoneNumber);
                 }
             }
         });
@@ -230,6 +236,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         birthday = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                         editBirthday.setText(birthday);
+                        editor.putString("Birthday", birthday);
                     }
                 }, calendarYear, calendarMonth, calendarDay);
 
@@ -262,6 +269,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 } else {
                     gender = "transsexual";
                 }
+                editor.putString("Gender", gender);
             }
         });
     }
@@ -271,8 +279,15 @@ public class ProfileEditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                        finish();
+                        switch (response) {
+                            case "Success":
+                                Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
+                                finish();
+                                break;
+                            case "Fail":
+                                Toast.makeText(ProfileEditActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                break;
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -343,11 +358,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                 return true;
             case R.id.navigation_save:
                 if (MainActivity.isNetworkConnected(this)) {
-                    editor.putString("Email", email);
-                    editor.putString("Gender", gender);
-                    editor.putString("Location", location);
-                    editor.putString("Birthday", birthday);
-                    editor.putString("userPhoneNumber", userPhoneNumber);
                     editor.apply();
                     updateUserInfo();
                 } else {
@@ -385,17 +395,18 @@ public class ProfileEditActivity extends AppCompatActivity {
         String fileName = now + ".jpg";
 
         switch (requestCode) {
-       /*     case GOOGLE_PLACE_AUTOCOMPLETE:
+            case GOOGLE_PLACE_AUTOCOMPLETE:
                 if (resultCode == RESULT_OK) {
                     Place place = PlaceAutocomplete.getPlace(this, data);
                     location = place.getAddress().toString();
                     editLocation.setText(location);
+                    editor.putString("Location", location);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(this, data);
                     Log.i("Error", status.getStatusMessage());
                 }
                 break;
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+           /* case FilePickerConst.REQUEST_CODE_PHOTO:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
                     photo = aq.get(0);
@@ -425,8 +436,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                         Toast.makeText(ProfileEditActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
-                break;
-                */
+                break;*/
+
         }
     }
 

@@ -327,108 +327,109 @@ public class StationDetails extends AppCompatActivity {
                     }
                 });
 
-                //SingleStation
-                textName.setText(stationName);
-                textVicinity.setText(stationVicinity);
-                textDistance.setText(stationDistance + " m");
-
-                if (gasolinePrice == 0) {
-                    textGasoline.setText("-");
-                } else {
-                    textGasoline.setText(gasolinePrice + " " + currencySymbol);
-                }
-
-                if (dieselPrice == 0) {
-                    textDiesel.setText("-");
-                } else {
-                    textDiesel.setText(dieselPrice + " " + currencySymbol);
-                }
-
-                if (lpgPrice == 0) {
-                    textLPG.setText("-");
-                } else {
-                    textLPG.setText(lpgPrice + " " + currencySymbol);
-                }
-
-                if (electricityPrice == 0) {
-                    textElectricity.setText("-");
-                } else {
-                    textElectricity.setText(electricityPrice + " " + currencySymbol);
-                }
-
-                try {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    Date date = format.parse(lastUpdated);
-                    textLastUpdated.setReferenceTime(date.getTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
-
-                if (isStationVerified == 1) {
-                    verifiedSection.setVisibility(View.VISIBLE);
-                } else {
-                    verifiedSection.setVisibility(View.GONE);
-                }
-
-                literCalculator();
-
-                String titleHolder = "100 " + currencySymbol + " ile şunları satın alabilirsiniz:";
-                literSectionTitle.setText(titleHolder);
-
-                String gasolineHolder = String.format(Locale.getDefault(), "%.2f", howMuchGas) + " " + userUnit;
-                textViewGasLt.setText(gasolineHolder);
-
-                String dieselHolder = String.format(Locale.getDefault(), "%.2f", howMuchDie) + " " + userUnit;
-                textViewDieselLt.setText(dieselHolder);
-
-                String lpgHolder = String.format(Locale.getDefault(), "%.2f", howMuchLPG) + " " + userUnit;
-                textViewLPGLt.setText(lpgHolder);
-
-                String electricityHolder = String.format(Locale.getDefault(), "%.2f", howMuchEle) + " " + getString(R.string.electricity_unit);
-                textViewElectricityLt.setText(electricityHolder);
-
-                // Facilities
-                if (facilitiesOfStation.contains("WC")) {
-                    imageViewWC.setAlpha(1.0f);
-                } else {
-                    imageViewWC.setAlpha(0.5f);
-                }
-
-                if (facilitiesOfStation.contains("Market")) {
-                    imageViewMarket.setAlpha(1.0f);
-                } else {
-                    imageViewMarket.setAlpha(0.5f);
-                }
-
-                if (facilitiesOfStation.contains("CarWash")) {
-                    imageViewCarWash.setAlpha(1.0f);
-                } else {
-                    imageViewCarWash.setAlpha(0.5f);
-                }
-
-                if (facilitiesOfStation.contains("TireRepair")) {
-                    imageViewTireRepair.setAlpha(1.0f);
-                } else {
-                    imageViewTireRepair.setAlpha(0.5f);
-                }
-
-                if (facilitiesOfStation.contains("Mechanic")) {
-                    imageViewMechanic.setAlpha(1.0f);
-                } else {
-                    imageViewMechanic.setAlpha(0.5f);
-                }
-
-                if (facilitiesOfStation.contains("Restaurant")) {
-                    imageViewRestaurant.setAlpha(1.0f);
-                } else {
-                    imageViewRestaurant.setAlpha(0.5f);
-                }
-
-                fetchCampaigns();
-                fetchComments();
             }
         });
+
+        //SingleStation
+        textName.setText(stationName);
+        textVicinity.setText(stationVicinity);
+        textDistance.setText(stationDistance + " m");
+
+        if (gasolinePrice == 0) {
+            textGasoline.setText("-");
+        } else {
+            textGasoline.setText(gasolinePrice + " " + currencySymbol);
+        }
+
+        if (dieselPrice == 0) {
+            textDiesel.setText("-");
+        } else {
+            textDiesel.setText(dieselPrice + " " + currencySymbol);
+        }
+
+        if (lpgPrice == 0) {
+            textLPG.setText("-");
+        } else {
+            textLPG.setText(lpgPrice + " " + currencySymbol);
+        }
+
+        if (electricityPrice == 0) {
+            textElectricity.setText("-");
+        } else {
+            textElectricity.setText(electricityPrice + " " + currencySymbol);
+        }
+
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = format.parse(lastUpdated);
+            textLastUpdated.setReferenceTime(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
+
+        if (isStationVerified == 1) {
+            verifiedSection.setVisibility(View.VISIBLE);
+        } else {
+            verifiedSection.setVisibility(View.GONE);
+        }
+
+        literCalculator();
+
+        String titleHolder = "100 " + currencySymbol + " ile şunları satın alabilirsiniz:";
+        literSectionTitle.setText(titleHolder);
+
+        String gasolineHolder = String.format(Locale.getDefault(), "%.2f", howMuchGas) + " " + userUnit;
+        textViewGasLt.setText(gasolineHolder);
+
+        String dieselHolder = String.format(Locale.getDefault(), "%.2f", howMuchDie) + " " + userUnit;
+        textViewDieselLt.setText(dieselHolder);
+
+        String lpgHolder = String.format(Locale.getDefault(), "%.2f", howMuchLPG) + " " + userUnit;
+        textViewLPGLt.setText(lpgHolder);
+
+        String electricityHolder = String.format(Locale.getDefault(), "%.2f", howMuchEle) + " " + getString(R.string.electricity_unit);
+        textViewElectricityLt.setText(electricityHolder);
+
+        // Facilities
+        if (facilitiesOfStation.contains("WC")) {
+            imageViewWC.setAlpha(1.0f);
+        } else {
+            imageViewWC.setAlpha(0.5f);
+        }
+
+        if (facilitiesOfStation.contains("Market")) {
+            imageViewMarket.setAlpha(1.0f);
+        } else {
+            imageViewMarket.setAlpha(0.5f);
+        }
+
+        if (facilitiesOfStation.contains("CarWash")) {
+            imageViewCarWash.setAlpha(1.0f);
+        } else {
+            imageViewCarWash.setAlpha(0.5f);
+        }
+
+        if (facilitiesOfStation.contains("TireRepair")) {
+            imageViewTireRepair.setAlpha(1.0f);
+        } else {
+            imageViewTireRepair.setAlpha(0.5f);
+        }
+
+        if (facilitiesOfStation.contains("Mechanic")) {
+            imageViewMechanic.setAlpha(1.0f);
+        } else {
+            imageViewMechanic.setAlpha(0.5f);
+        }
+
+        if (facilitiesOfStation.contains("Restaurant")) {
+            imageViewRestaurant.setAlpha(1.0f);
+        } else {
+            imageViewRestaurant.setAlpha(0.5f);
+        }
+
+        fetchCampaigns();
+        fetchComments();
     }
 
     void fetchCampaigns() {
@@ -1055,10 +1056,18 @@ public class StationDetails extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.navigation_go:
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
-                startActivity(intent);
+            case R.id.menu_fav:
+                Toast.makeText(StationDetails.this, "Coming soon:", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "http://fuel-spot.com/stations?id=" + choosenStationID);
+                startActivity(Intent.createChooser(intent, getString(R.string.menu_share)));
+                return true;
+            case R.id.menu_go:
+                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

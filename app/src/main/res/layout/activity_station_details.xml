@@ -238,7 +238,7 @@
 
                 <RatingBar
                     android:id="@+id/ratingBarScore"
-                    style="?android:attr/ratingBarStyle"
+                    style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/station_vicinity"
@@ -246,6 +246,8 @@
                     android:isIndicator="true"
                     android:max="5"
                     android:numStars="5"
+                    android:scaleX="0.75"
+                    android:scaleY="0.75"
                     android:stepSize="0.5" />
             </android.support.percent.PercentRelativeLayout>
 

@@ -72,8 +72,8 @@ public class FragmentProfile extends Fragment {
     RelativeLayout userNoCommentLayout;
 
     public static FragmentProfile newInstance() {
-
         Bundle args = new Bundle();
+        args.putString("FRAGMENT", "Profile");
 
         FragmentProfile fragment = new FragmentProfile();
         fragment.setArguments(args);
@@ -86,7 +86,7 @@ public class FragmentProfile extends Fragment {
 
         // Analytics
         Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("Profil");
+        t.setScreenName("Profile");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -188,6 +188,16 @@ public class FragmentProfile extends Fragment {
                 }
             }
         });
+
+        Button openFavorites = headerView.findViewById(R.id.button_fav);
+        openFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserFavorites.class);
+                startActivity(intent);
+            }
+        });
+
 
         Button openPrivacy = headerView.findViewById(R.id.button_privacy);
         openPrivacy.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +301,6 @@ public class FragmentProfile extends Fragment {
     }
 
     public class CommentAdapterforProfile extends RecyclerView.Adapter<CommentAdapterforProfile.ViewHolder2> {
-
         private List<CommentItem> feedItemList;
         private Context mContext;
         private String userName;

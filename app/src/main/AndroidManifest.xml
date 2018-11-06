@@ -62,6 +62,10 @@
             android:label="@string/title_activity_add_new_vehicle"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".UserFavorites"
+            android:label="@string/title_activity_user_favorites"
+            android:parentActivityName=".MainActivity" />
 
         <!-- SuperUser Class -->
         <activity
@@ -94,7 +98,6 @@
             android:name=".superuser.SuperPromotions"
             android:label="@string/title_activity_super_promotions"
             android:parentActivityName=".superuser.AdminMainActivity" />
-
 
         <!-- BootUpReceiver -->
         <receiver

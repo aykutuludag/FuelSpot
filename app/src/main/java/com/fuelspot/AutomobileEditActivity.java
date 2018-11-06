@@ -324,9 +324,21 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        loading.dismiss();
-                        Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
-                        finish();
+                        switch (s) {
+                            case "Success":
+                                loading.dismiss();
+                                Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
+                                finish();
+                                break;
+                            case "Fail":
+                                loading.dismiss();
+                                Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
+                                break;
+                            default:
+                                loading.dismiss();
+                                Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
+                                break;
+                        }
                     }
                 },
                 new Response.ErrorListener() {

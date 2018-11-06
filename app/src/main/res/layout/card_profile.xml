@@ -3,18 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_profile"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="200dp"
+    android:background="#EDEDED">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:src="@drawable/default_profile" />
 
     <TextView
@@ -23,14 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/profileImage"
         android:layout_centerHorizontal="true"
-        android:layout_margin="4dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <android.support.percent.PercentRelativeLayout
+        android:id="@+id/buttonBars"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/userFullName">
+        android:layout_below="@id/userFullName"
+        android:layout_margin="4dp">
 
         <Button
             android:id="@+id/button_premium"
@@ -38,18 +40,28 @@
             android:layout_height="wrap_content"
             android:background="@drawable/green_box"
             android:text="@string/buy_premium_ads_title"
-            app:layout_marginPercent="1.66%"
-            app:layout_widthPercent="30%" />
+            app:layout_marginPercent="0.5%"
+            app:layout_widthPercent="24%" />
+
+        <Button
+            android:id="@+id/button_fav"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/button_premium"
+            android:background="@drawable/white_box"
+            android:text="@string/favorites"
+            app:layout_marginPercent="0.5%"
+            app:layout_widthPercent="24%" />
 
         <Button
             android:id="@+id/button_privacy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_premium"
+            android:layout_toEndOf="@id/button_fav"
             android:background="@drawable/white_box"
             android:text="@string/privacy"
-            app:layout_marginPercent="1.66%"
-            app:layout_widthPercent="30%" />
+            app:layout_marginPercent="0.5%"
+            app:layout_widthPercent="24%" />
 
         <Button
             android:id="@+id/button_help"
@@ -58,8 +70,8 @@
             android:layout_toEndOf="@id/button_privacy"
             android:background="@drawable/white_box"
             android:text="@string/help"
-            app:layout_marginPercent="1.67%"
-            app:layout_widthPercent="30%" />
+            app:layout_marginPercent="0.5%"
+            app:layout_widthPercent="24%" />
 
     </android.support.percent.PercentRelativeLayout>
 

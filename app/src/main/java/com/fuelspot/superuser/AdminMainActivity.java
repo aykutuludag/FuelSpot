@@ -181,7 +181,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation.addItem(item5);
 
         // Bottombar Settings
-        bottomNavigation.setColored(true);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setOnTabSelectedListener(this);
 
