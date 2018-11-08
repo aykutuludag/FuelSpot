@@ -71,6 +71,7 @@ import eu.amirs.JSON;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.bannedGoogleIDs;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -111,6 +112,7 @@ public class FragmentStations extends Fragment {
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
     NestedScrollView nScrollView;
+    boolean mapIsUpdating;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -208,7 +210,10 @@ public class FragmentStations extends Fragment {
                                 if (distanceInMeter >= (mapDefaultRange / 5)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                    loadMap();
+                                    if (!mapIsUpdating) {
+                                        mapIsUpdating = true;
+                                        updateMapObject();
+                                    }
                                 } else {
                                     if (feedsList != null && feedsList.size() > 0) {
                                         for (int i = 0; i < feedsList.size(); i++) {
@@ -262,7 +267,10 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
-                updateMapObject();
+                if (!mapIsUpdating) {
+                    mapIsUpdating = true;
+                    updateMapObject();
+                }
             }
         });
     }
@@ -320,46 +328,40 @@ public class FragmentStations extends Fragment {
                         JSON json = new JSON(response);
                         if (response != null && response.length() > 0) {
                             if (json.key("results").count() > 0) {
+                                // Checking whether place is banned or not
                                 for (int i = 0; i < json.key("results").count(); i++) {
-                                    stationName.add(json.key("results").index(i).key("name").stringValue());
-                                    vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
-                                    googleID.add(json.key("results").index(i).key("place_id").stringValue());
+                                    String tempPlaceID = json.key("results").index(i).key("place_id").stringValue();
+                                    if (!checkPlaceIsBanned(tempPlaceID)) {
+                                        googleID.add(json.key("results").index(i).key("place_id").stringValue());
+                                        stationName.add(json.key("results").index(i).key("name").stringValue());
+                                        vicinity.add(json.key("results").index(i).key("vicinity").stringValue());
 
-                                    double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
-                                    double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-                                    location.add(lat + ";" + lon);
+                                        double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
+                                        double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
+                                        location.add(lat + ";" + lon);
 
-                                    stationIcon.add(stationPhotoChooser(stationName.get(i)));
-
-                                    Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
-                                    try {
-                                        List<Address> addresses = geo.getFromLocation(lat, lon, 1);
-                                        if (addresses.size() > 0) {
-                                            stationCountry.add(i, addresses.get(0).getCountryCode());
-                                        } else {
-                                            stationCountry.add(i, "");
-                                        }
-                                    } catch (Exception e) {
-                                        stationCountry.add(i, "");
+                                        stationIcon.add(stationPhotoChooser(json.key("results").index(i).key("name").stringValue()));
+                                        stationCountry.add(countryFinder(lat, lon));
                                     }
                                 }
 
                                 if (json.key("next_page_token").stringValue() != null && json.key("next_page_token").stringValue().length() > 0) {
                                     searchStations(json.key("next_page_token").stringValue());
                                 } else {
-                                    for (int i = 0; i < stationName.size(); i++) {
+                                    for (int i = 0; i < googleID.size(); i++) {
                                         addStation(i);
                                     }
+                                    tabLayout.getTabAt(4).select();
                                     proggressBar.setVisibility(View.GONE);
                                     mRecyclerView.setVisibility(View.VISIBLE);
-                                    tabLayout.getTabAt(4).select();
+                                    mapIsUpdating = false;
                                 }
                             } else {
                                 // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
                                 if (mapDefaultRange == 3000) {
                                     mapDefaultRange = 5000;
                                     mapDefaultZoom = 12f;
-                                    Toast.makeText(getActivity(), "2500 metre içerisinde istasyon bulunamadı. YENİ MENZİL DENENİYOR: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "3000 metre içerisinde istasyon bulunamadı. YENİ MENZİL DENENİYOR: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else if (mapDefaultRange == 5000) {
                                     mapDefaultRange = 10000;
@@ -384,6 +386,28 @@ public class FragmentStations extends Fragment {
                         } else {
                             noStationError.setVisibility(View.VISIBLE);
                             Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+
+                    private String countryFinder(double lat, double lon) {
+                        Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                        try {
+                            List<Address> addresses = geo.getFromLocation(lat, lon, 1);
+                            if (addresses.size() > 0) {
+                                return addresses.get(0).getCountryCode();
+                            } else {
+                                return "";
+                            }
+                        } catch (Exception e) {
+                            return "";
+                        }
+                    }
+
+                    private boolean checkPlaceIsBanned(String tempPlaceID) {
+                        if (bannedGoogleIDs != null && bannedGoogleIDs.length() > 0) {
+                            return bannedGoogleIDs.contains(tempPlaceID);
+                        } else {
+                            return false;
                         }
                     }
                 }, new Response.ErrorListener()
@@ -455,6 +479,18 @@ public class FragmentStations extends Fragment {
                                     }
 
                                     sortBy(4);
+
+                                    if (bannedGoogleIDs != null && bannedGoogleIDs.length() > 0) {
+                                        if (bannedGoogleIDs.contains(obj.getString("googleID"))) {
+                                            // Probably station was banned, but the ban removed.
+                                            bannedGoogleIDs = bannedGoogleIDs.replace(obj.getString("googleID") + "-----", "");
+                                            prefs.edit().putString("bannedStations", bannedGoogleIDs).apply();
+                                        }
+                                    }
+                                } else {
+                                    // The place is banned. Add to bannedList so do not fetch again.
+                                    bannedGoogleIDs += obj.getString("googleID") + "-----";
+                                    prefs.edit().putString("bannedStations", bannedGoogleIDs).apply();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -556,7 +592,8 @@ public class FragmentStations extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {

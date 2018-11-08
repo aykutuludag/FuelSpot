@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -124,8 +125,8 @@ public class SuperCampaings extends AppCompatActivity {
                                 mAdapter = new CampaignAdapter(SuperCampaings.this, feedsList);
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
-                                //mRecyclerView.setLayoutManager(new LinearLayoutManager(SuperCampaings.this, LinearLayoutManager.HORIZONTAL, false));
-
+                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(SuperCampaings.this, 2);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setVisibility(View.VISIBLE);
                             } catch (JSONException e) {
                                 mRecyclerView.setVisibility(View.GONE);

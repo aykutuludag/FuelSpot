@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit;
     String[] vehicleIDs;
+    public static String bannedGoogleIDs;
 
     /*static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;*/
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         carbonEmission = prefs.getInt("carbonEmission", 0);
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
         currencySymbol = prefs.getString("userCurrencySymbol", "");
+        bannedGoogleIDs = prefs.getString("bannedStations", "");
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -239,6 +241,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Güvenal Gaz":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/guvenalgaz.jpg";
+                break;
+            case "Habaş":
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/habas.jpg";
                 break;
             case "İpragaz":
             case "Ipragaz":

@@ -236,19 +236,40 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textSize="12sp" />
 
-                <RatingBar
-                    android:id="@+id/ratingBarScore"
-                    style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/station_vicinity"
-                    android:layout_centerHorizontal="true"
-                    android:isIndicator="true"
-                    android:max="5"
-                    android:numStars="5"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75"
-                    android:stepSize="0.5" />
+                    android:layout_below="@id/station_vicinity">
+
+                    <TextView
+                        android:id="@+id/stationPoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/gotham_medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp" />
+
+                    <RatingBar
+                        android:id="@+id/ratingBarScore"
+                        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stationPoint"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="0dp"
+                        android:isIndicator="true"
+                        android:max="5"
+                        android:numStars="5"
+                        android:scaleX="0.75"
+                        android:scaleY="0.75"
+                        android:stepSize="0.5" />
+
+                </RelativeLayout>
+
+
             </android.support.percent.PercentRelativeLayout>
 
             <RelativeLayout

@@ -64,6 +64,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,8 +83,8 @@ import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
 
-    int stationDistance, choosenStationID, userCommentID, isStationVerified, numOfComments, sumOfPoints;
-    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, stationScore;
+    int stationDistance, choosenStationID, userCommentID, isStationVerified;
+    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
     String lastUpdated, facilitiesOfStation;
 
     String stationName, stationVicinity, stationLocation, iconURL, userComment;
@@ -92,7 +93,7 @@ public class StationDetails extends AppCompatActivity {
     boolean hasAlreadyCommented;
 
     ImageView stationIcon;
-    TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
+    TextView noCampaignText, noCommentText, textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
     RelativeTimeTextView textLastUpdated;
 
     StreetViewPanoramaView mStreetViewPanoramaView;
@@ -112,10 +113,8 @@ public class StationDetails extends AppCompatActivity {
     ImageView errorPhoto, errorStreetView, errorCampaign;
     CollapsingToolbarLayout collapsingToolbarLayout;
     RelativeLayout verifiedSection;
-    TextView noCampaignText, noCommentText;
     CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant;
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
-    TextView literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt;
     RatingBar ratingBar;
 
     @Override
@@ -180,6 +179,7 @@ public class StationDetails extends AppCompatActivity {
         imageViewMechanic = findViewById(R.id.Mechanic);
         imageViewRestaurant = findViewById(R.id.Restaurant);
         ratingBar = findViewById(R.id.ratingBarScore);
+        textViewStationPoint = findViewById(R.id.stationPoint);
 
         // if stationVerified == 1, this section shows up!
         verifiedSection = findViewById(R.id.verifiedSection);
@@ -441,7 +441,6 @@ public class StationDetails extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
 
@@ -550,8 +549,10 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView.setLayoutManager(mLayoutManager);
 
                                 // Calculate station score
+                                DecimalFormat df = new DecimalFormat("#.#");
                                 stationScore = sumOfPoints / numOfComments;
                                 ratingBar.setRating(stationScore);
+                                textViewStationPoint.setText(df.format(stationScore));
                             } catch (JSONException e) {
                                 mRecyclerView.setVisibility(View.GONE);
                                 errorPhoto.setVisibility(View.VISIBLE);

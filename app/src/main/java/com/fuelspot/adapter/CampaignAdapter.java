@@ -45,7 +45,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
             }
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
             ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
             Glide.with(mContext).load(mItemList.get(position).getCampaignPhoto()).into(imgPopup);

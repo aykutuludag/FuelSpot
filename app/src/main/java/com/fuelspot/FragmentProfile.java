@@ -56,6 +56,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 
 public class FragmentProfile extends Fragment {
 
@@ -215,10 +217,18 @@ public class FragmentProfile extends Fragment {
 
     public void fetchComments() {
         feedsList.clear();
-        String whichApi = getString(R.string.API_FETCH_COMMENTS);
+
+        final String whichApi, whichParamater, whichValue;
         if (isSuperUser) {
             whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
+            whichParamater = "id";
+            whichValue = String.valueOf(superStationID);
+        } else {
+            whichApi = getString(R.string.API_FETCH_COMMENTS);
+            whichParamater = "username";
+            whichValue = username;
         }
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, whichApi,
                 new Response.Listener<String>() {
                     @Override
@@ -276,7 +286,7 @@ public class FragmentProfile extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
+                params.put(whichParamater, whichValue);
 
                 //returning parameters
                 return params;

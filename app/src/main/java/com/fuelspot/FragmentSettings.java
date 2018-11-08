@@ -217,13 +217,7 @@ public class FragmentSettings extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-                                superUserCount.setText("Anlık veri alınan istasyon sayısı: " + obj.getInt("id"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            superUserCount.setText("Kayıtlı istasyon sayısı: " + response);
                         }
                     }
                 },

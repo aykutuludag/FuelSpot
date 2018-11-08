@@ -172,7 +172,7 @@ public class AddStation extends AppCompatActivity {
                 if (stationName != null && stationName.length() > 0) {
                     if (licenseNo != null && licenseNo.length() > 0) {
                         if (doesStationVerified == 0) {
-                            updateSuperUser();
+                            updateStation();
                         } else {
                             Toast.makeText(AddStation.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
                         }
@@ -396,8 +396,7 @@ public class AddStation extends AppCompatActivity {
                                     userStations += stationID + ";";
                                     prefs.edit().putString("userStations", userStations).apply();
                                     getSuperVariables(prefs);
-                                    Toast.makeText(AddStation.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
-                                    finish();
+                                    updateSuperUser();
                                     break;
                                 case "Fail":
                                     Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
@@ -449,7 +448,8 @@ public class AddStation extends AppCompatActivity {
                         if (res != null && res.length() > 0) {
                             switch (res) {
                                 case "Success":
-                                    updateStation();
+                                    Toast.makeText(AddStation.this, "Tüm bilgileriniz kaydedildi. Onay için sizinle en kısa iletişime geçeceğiz.", Toast.LENGTH_SHORT).show();
+                                    finish();
                                     break;
                                 case "Fail":
                                     Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
