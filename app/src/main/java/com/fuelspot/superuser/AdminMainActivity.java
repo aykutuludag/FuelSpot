@@ -293,7 +293,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
             for (String stationID1 : stationIDs) {
                 fetchSingleStation(Integer.parseInt(stationID1));
             }
-            bottomNavigation.setNotification(stationIDs.length, 2);
         }
     }
 

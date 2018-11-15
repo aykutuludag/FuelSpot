@@ -76,20 +76,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     VideoView background;
     RelativeLayout notLogged;
-
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     int googleSign = 9001;
-
     CallbackManager callbackManager;
     LoginButton loginButton;
-
     SharedPreferences prefs;
-
     Handler handler;
-
     ImageView doUHaveStation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +219,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 startActivity(i);
             }
         });
+
     }
 
     void arrangeLayouts() {
@@ -294,8 +289,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                if (tmpusername.length() > 21) {
-                    MainActivity.username = tmpusername.substring(0, 20);
+                if (tmpusername.length() > 31) {
+                    MainActivity.username = tmpusername.substring(0, 30);
                 } else {
                     MainActivity.username = tmpusername;
                 }

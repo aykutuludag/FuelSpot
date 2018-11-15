@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.fuelspot.AnalyticsApplication;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
+import com.fuelspot.StationComments;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -205,7 +206,7 @@ public class FragmentMyStation extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isStationVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperComments.class);
+                    Intent i = new Intent(getActivity(), StationComments.class);
                     startActivity(i);
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();

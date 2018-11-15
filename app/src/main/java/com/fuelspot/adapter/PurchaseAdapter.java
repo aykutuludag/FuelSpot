@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.userUnit;
 
@@ -140,7 +139,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         //TOTALTAX
         float tax1 = feedItem.getFuelPrice() * feedItem.getFuelLiter() * feedItem.getFuelTax();
         float tax2 = feedItem.getFuelPrice2() * feedItem.getFuelLiter2() * feedItem.getFuelTax2();
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " " + currencyCode;
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " " + currencySymbol;
         viewHolder.totalTax.setText(taxHolder);
 
         //TotalPrice

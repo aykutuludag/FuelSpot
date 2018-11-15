@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,13 +41,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.automobile.Brands;
 import com.fuelspot.automobile.Models;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -127,11 +129,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(AutomobileEditActivity.this)) {
-               /*     FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(AutomobileEditActivity.this);*/
-                    Toast.makeText(AutomobileEditActivity.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                    ImagePicker.create(AutomobileEditActivity.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(AutomobileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -312,14 +310,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     Snackbar.make(view, "Araç silebilmek için en az 2 aracınız olmalıdır.", Snackbar.LENGTH_LONG).show();
                 }
 
-
             }
         });
     }
 
     private void updateVehicle() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AutomobileEditActivity.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(AutomobileEditActivity.this, "Updating automobile...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
@@ -331,10 +328,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                 finish();
                                 break;
                             case "Fail":
-                                loading.dismiss();
-                                Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
-                                break;
-                            default:
                                 loading.dismiss();
                                 Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
                                 break;
@@ -377,47 +370,20 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         requestQueue.add(stringRequest);
     }
 
-    public void deleteVehicle() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_DELETE_AUTOMOBILE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        userVehicles = userVehicles.replaceAll(vehicleID + ";", "");
-                        prefs.edit().putString("userVehicles", userVehicles).apply();
-                        Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                        updateUser();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("vehicleID", String.valueOf(vehicleID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
     private void updateUser() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                        finish();
+                        switch (response) {
+                            case "Success":
+                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
+                                finish();
+                                break;
+                            case "Fail":
+                                Toast.makeText(AutomobileEditActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                break;
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -452,9 +418,58 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         requestQueue.add(stringRequest);
     }
 
+    public void deleteVehicle() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_DELETE_AUTOMOBILE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        switch (response) {
+                            case "Success":
+                                userVehicles = userVehicles.replaceAll(vehicleID + ";", "");
+                                prefs.edit().putString("userVehicles", userVehicles).apply();
+                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
+                                updateUser();
+                                break;
+                            case "Fail":
+                                break;
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("vehicleID", String.valueOf(vehicleID));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     public String getStringImage(Bitmap bmp) {
+        Bitmap bmp2;
+        if (bmp.getWidth() > 720 || bmp.getHeight() > 1280) {
+            float aspectRatio = bmp.getWidth() / bmp.getHeight();
+            bmp2 = Bitmap.createScaledBitmap(bmp, (int) (720 * aspectRatio), (int) (1280 * aspectRatio), true);
+        } else {
+            bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
+        }
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
+
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
@@ -963,9 +978,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AutomobileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                   /* FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(AutomobileEditActivity.this);*/
+                    ImagePicker.create(AutomobileEditActivity.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -979,43 +992,15 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-        String fileName = now + ".jpg";
-
-        switch (requestCode) {
-         /*   case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    MainActivity.carPhoto = aq.get(0);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
-                    folder.mkdirs();
-
-                    UCrop.of(Uri.parse("file://" + MainActivity.carPhoto), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(AutomobileEditActivity.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        Glide.with(this).load(bitmap).apply(options).into(carPic);
-                        editor.putString("CarPhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + now + ".jpg");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(AutomobileEditActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-                */
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(carPic);
+                carPhoto = "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos/" + username + "-" + plateNo + ".jpg";
+                editor.putString("CarPhoto", carPhoto);
+            }
         }
     }
 

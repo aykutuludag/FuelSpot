@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/campaignPhoto"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/gotham_book"
         android:gravity="center"
         android:text="Eğer bu istasyondaki fiyatları biliyorsan bize bildirerek insanların öğrenmesine yardımcı olabilirsin. Her geri bildirim ekiplerimiz tarafında dikkatle incelenmekte ve süratla uygulamaya konulmaktadır." />
 

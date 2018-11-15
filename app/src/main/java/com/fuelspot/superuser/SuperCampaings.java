@@ -66,7 +66,7 @@ public class SuperCampaings extends AppCompatActivity {
     List<CampaignItem> feedsList = new ArrayList<>();
 
     String campaignName, campaignDesc, campaignPhoto, sTime, eTime;
-
+    Bitmap bmp;
     Window window;
     Toolbar toolbar;
 
@@ -325,7 +325,9 @@ public class SuperCampaings extends AppCompatActivity {
                         params.put("stationID", String.valueOf(superStationID));
                         params.put("campaignName", campaignName);
                         params.put("campaignDesc", campaignDesc);
-                        params.put("campaignPhoto", campaignPhoto);
+                        if (bmp != null) {
+                            params.put("campaignPhoto", getStringImage(bmp));
+                        }
                         params.put("campaignStart", sTime);
                         params.put("campaignEnd", eTime);
 
@@ -372,16 +374,13 @@ public class SuperCampaings extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
-                Bitmap bmp = BitmapFactory.decodeFile(image.getPath());
-                campaignPhoto = getStringImage(bmp);
-            } else {
-                campaignPhoto = "";
+                bmp = BitmapFactory.decodeFile(image.getPath());
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

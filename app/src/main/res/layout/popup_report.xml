@@ -13,9 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:fontFamily="@font/gotham_black"
         android:gravity="center"
         android:text="İSTASYONU RAPOR ET"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <Spinner
         android:id="@+id/spinner"

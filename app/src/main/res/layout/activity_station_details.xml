@@ -8,42 +8,17 @@
     tools:context=".StationDetails">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/Appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_collapseMode="parallax">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_header"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentScrim="#ffffff"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <com.google.android.gms.maps.StreetViewPanoramaView
-                android:id="@+id/street_view_panorama"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
-
-            <ImageView
-                android:id="@+id/imageViewErrStreetView"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_below="@id/toolbar"
-                android:src="@drawable/error_general"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
@@ -58,434 +33,311 @@
             android:layout_height="wrap_content"
             android:background="@drawable/background_main">
 
-            <android.support.percent.PercentRelativeLayout
-                android:id="@+id/single_station"
+            <RelativeLayout
+                android:id="@+id/baseInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="#EDEDED">
+                android:background="#EAEAEA">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/station_photo"
-                    android:layout_height="60dp"
-                    android:layout_below="@+id/gasoline"
-                    android:layout_alignParentStart="true"
-                    app:layout_widthPercent="12.5%"
-                    app:srcCompat="@drawable/default_station" />
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="#ffffff"
+                    android:src="@drawable/default_station" />
+
+                <TextView
+                    android:id="@+id/station_ID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/station_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/station_photo"
-                    android:layout_alignBottom="@+id/station_photo"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/station_photo"
-                    android:fontFamily="@font/gotham_black"
+                    android:layout_below="@id/station_photo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="15%" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="#161616" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/verifiedStation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/station_photo"
+                    android:layout_alignBottom="@id/station_name"
+                    android:layout_toEndOf="@id/station_name"
+                    android:src="@drawable/verified"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/station_vicinity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/station_photo"
-                    android:layout_alignParentStart="true"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/gasoline"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/station_name"
-                    android:padding="4dp"
-                    android:src="@drawable/gasoline"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:layout_widthPercent="14.5%" />
-
-                <TextView
-                    android:id="@+id/priceGasoline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/gasoline"
-                    android:layout_alignEnd="@+id/gasoline"
-                    android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/station_name"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/diesel"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/gasoline"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:src="@drawable/diesel"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:layout_widthPercent="14.5%" />
-
-                <TextView
-                    android:id="@+id/priceDiesel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/diesel"
-                    android:layout_alignEnd="@+id/diesel"
-                    android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/priceGasoline"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/lpg"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/diesel"
-                    android:padding="4dp"
-                    android:src="@drawable/lpg"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:layout_widthPercent="14.5%" />
-
-                <TextView
-                    android:id="@+id/priceLPG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lpg"
-                    android:layout_alignEnd="@+id/lpg"
-                    android:layout_alignRight="@+id/lpg"
-                    android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/priceDiesel"
-                    android:layout_toRightOf="@+id/priceDiesel"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    tools:ignore="RtlHardcoded" />
-
-                <ImageView
-                    android:id="@+id/electricity"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/lpg"
-                    android:padding="4dp"
-                    android:src="@drawable/electricity"
-                    app:layout_widthPercent="14.5%" />
-
-                <TextView
-                    android:id="@+id/priceElectricity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/electricity"
-                    android:layout_alignEnd="@+id/electricity"
-                    android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/priceLPG"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:id="@+id/distance"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/electricity"
-                    android:padding="4dp"
-                    android:src="@drawable/distance"
-                    app:layout_widthPercent="14.5%" />
-
-                <TextView
-                    android:id="@+id/distance_ofStation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/distance"
-                    android:layout_alignEnd="@+id/distance"
-                    android:layout_alignBottom="@+id/station_photo"
-                    android:layout_toEndOf="@+id/priceElectricity"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp" />
-
-                <com.github.curioustechizen.ago.RelativeTimeTextView
-                    android:id="@+id/lastUpdated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/gasoline"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@+id/gasoline"
+                    android:layout_below="@+id/station_name"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="2dp"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:padding="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+                    android:textColor="#161616" />
+
+                <com.github.curioustechizen.ago.RelativeTimeTextView
+                    android:id="@+id/stationLastUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/station_vicinity"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
                     android:textSize="12sp" />
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/section_comment"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/station_vicinity">
+                    android:layout_below="@id/stationLastUpdate"
+                    android:layout_centerHorizontal="true"
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/stationPoint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:fontFamily="@font/gotham_medium"
+                        android:layout_margin="2dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#6D6D6D"
-                        android:textSize="12sp" />
-
-                    <RatingBar
-                        android:id="@+id/ratingBarScore"
-                        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/stationPoint"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="0dp"
-                        android:isIndicator="true"
-                        android:max="5"
-                        android:numStars="5"
-                        android:scaleX="0.75"
-                        android:scaleY="0.75"
-                        android:stepSize="0.5" />
-
-                </RelativeLayout>
-
-
-            </android.support.percent.PercentRelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/verifiedSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/single_station"
-                android:background="#fafafa"
-                android:visibility="gone">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/verifiedStation"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/verified_station" />
-
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="4dp"
-                    android:layout_toEndOf="@+id/verifiedStation"
-                    android:text="Bu istasyon FuelSpot tarafından onaylanmıştır." />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/informLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/verifiedSection"
-                android:background="#626262">
-
-                <TextView
-                    android:id="@+id/textViewUnitPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#fff" />
-
-                <android.support.percent.PercentRelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textViewUnitPrice">
+                        android:textColor="#161616" />
 
                     <ImageView
-                        android:id="@+id/dummyGasoline"
+                        android:id="@+id/imageView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/stationPoint"
+                        android:layout_alignBottom="@id/stationPoint"
+                        android:layout_toEndOf="@id/stationPoint"
+                        fab:srcCompat="@drawable/egikyildiz" />
+                </RelativeLayout>
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/single_station"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/section_comment"
+                    android:background="#ffffff">
+
+                    <ImageView
+                        android:id="@+id/gasoline"
                         android:layout_height="40dp"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="8dp"
                         android:padding="4dp"
                         android:src="@drawable/gasoline"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        app:layout_widthPercent="25%" />
+                        app:layout_marginStartPercent="10%"
+                        app:layout_widthPercent="20%" />
+
+                    <TextView
+                        android:id="@+id/priceGasoline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/gasoline"
+                        android:layout_alignStart="@+id/gasoline"
+                        android:layout_alignEnd="@+id/gasoline"
+                        android:fontFamily="@font/gotham_medium"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
+
+                    <ImageView
+                        android:id="@+id/diesel"
+                        android:layout_height="40dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/gasoline"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:src="@drawable/diesel"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        app:layout_widthPercent="20%" />
+
+                    <TextView
+                        android:id="@+id/priceDiesel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/diesel"
+                        android:layout_alignEnd="@+id/diesel"
+                        android:layout_toEndOf="@+id/priceGasoline"
+                        android:fontFamily="@font/gotham_medium"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
+
+                    <ImageView
+                        android:id="@+id/lpg"
+                        android:layout_height="40dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/diesel"
+                        android:padding="4dp"
+                        android:src="@drawable/lpg"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        app:layout_widthPercent="20%" />
+
+                    <TextView
+                        android:id="@+id/priceLPG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lpg"
+                        android:layout_alignEnd="@+id/lpg"
+                        android:layout_alignRight="@+id/lpg"
+                        android:layout_toEndOf="@+id/priceDiesel"
+                        android:layout_toRightOf="@+id/priceDiesel"
+                        android:fontFamily="@font/gotham_medium"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        tools:ignore="RtlHardcoded" />
+
+                    <ImageView
+                        android:id="@+id/electricity"
+                        android:layout_height="40dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/lpg"
+                        android:padding="4dp"
+                        android:src="@drawable/electricity"
+                        app:layout_marginEndPercent="10%"
+                        app:layout_widthPercent="20%" />
+
+                    <TextView
+                        android:id="@+id/priceElectricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/electricity"
+                        android:layout_alignEnd="@+id/electricity"
+                        android:layout_toEndOf="@+id/priceLPG"
+                        android:fontFamily="@font/gotham_medium"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
+
+                    <TextView
+                        android:id="@+id/textViewUnitPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/priceElectricity"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="100 TL ile şunları alabilirsiniz:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
 
                     <TextView
                         android:id="@+id/howMuchGasoline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/dummyGasoline"
-                        android:layout_alignStart="@id/dummyGasoline"
-                        android:layout_alignEnd="@+id/dummyGasoline"
+                        android:layout_below="@+id/textViewUnitPrice"
+                        android:layout_alignStart="@id/gasoline"
+                        android:layout_alignEnd="@+id/gasoline"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#fff"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:id="@+id/dummyDiesel"
-                        android:layout_height="40dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/dummyGasoline"
-                        android:gravity="center"
-                        android:padding="4dp"
-                        android:src="@drawable/diesel"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        app:layout_widthPercent="25%" />
+                        android:textColor="#161616" />
 
                     <TextView
                         android:id="@+id/howMuchDiesel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/dummyDiesel"
-                        android:layout_alignEnd="@+id/dummyDiesel"
+                        android:layout_below="@+id/textViewUnitPrice"
+                        android:layout_alignEnd="@+id/diesel"
                         android:layout_toEndOf="@+id/howMuchGasoline"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#fff"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:id="@+id/dummyLPG"
-                        android:layout_height="40dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/dummyDiesel"
-                        android:padding="4dp"
-                        android:src="@drawable/lpg"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        app:layout_widthPercent="25%" />
+                        android:textColor="#161616" />
 
                     <TextView
                         android:id="@+id/howMuchLPG"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/dummyLPG"
-                        android:layout_alignEnd="@+id/dummyLPG"
-                        android:layout_alignRight="@+id/dummyLPG"
+                        android:layout_below="@+id/textViewUnitPrice"
+                        android:layout_alignEnd="@+id/lpg"
+                        android:layout_alignRight="@+id/lpg"
                         android:layout_toEndOf="@+id/howMuchDiesel"
+                        android:layout_toRightOf="@+id/howMuchDiesel"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#fff"
-                        android:textSize="14sp"
+                        android:textColor="#161616"
                         tools:ignore="RtlHardcoded" />
-
-                    <ImageView
-                        android:id="@+id/dummyElectricity"
-                        android:layout_height="40dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_toEndOf="@+id/dummyLPG"
-                        android:padding="4dp"
-                        android:src="@drawable/electricity"
-                        app:layout_widthPercent="25%" />
 
                     <TextView
                         android:id="@+id/howMuchElectricity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/dummyElectricity"
-                        android:layout_alignEnd="@+id/dummyElectricity"
-                        android:layout_toEndOf="@+id/howMuchLPG"
+                        android:layout_below="@+id/textViewUnitPrice"
+                        android:layout_alignEnd="@+id/electricity"
+                        android:layout_toEndOf="@+id/lpg"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#fff"
-                        android:textSize="14sp" />
+                        android:textColor="#161616" />
                 </android.support.percent.PercentRelativeLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/campaignSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/informLayout"
-                android:background="#60ffffff">
-
-                <TextView
-                    android:id="@+id/title_campaigns"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
-                    android:text="Kampanyalar"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/campaignView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_campaigns"
-                    android:background="@android:color/transparent" />
-
-                <ImageView
-                    android:id="@+id/errorNoCampaign"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/title_campaigns"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/error_nocomment" />
-
-                <TextView
-                    android:id="@+id/noCampaignText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/errorNoCampaign"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:text="Bu istasyon henüz hiç kampanya eklememiş..."
-                    android:visibility="invisible" />
-
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/facilitiesSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/campaignSection"
-                android:background="#50000000">
+                android:layout_below="@id/baseInfo"
+                android:background="#ffffff">
 
                 <TextView
                     android:id="@+id/title_facilities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="Tesisler"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -496,102 +348,128 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/WC"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="5dp"
-                        android:alpha="0.5"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="4dp"
                         android:src="@drawable/wc" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Market"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="4dp"
                         android:layout_toEndOf="@id/WC"
-                        android:alpha="0.5"
                         android:src="@drawable/market" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/CarWash"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="4dp"
                         android:layout_toEndOf="@id/Market"
-                        android:alpha="0.5"
                         android:src="@drawable/carwash" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/TireRepair"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="4dp"
                         android:layout_toEndOf="@id/CarWash"
-                        android:alpha="0.5"
-                        android:src="@drawable/tirerepair" />
+                        android:src="@drawable/tirerepair"
+                        android:visibility="gone" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Mechanic"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="4dp"
                         android:layout_toEndOf="@id/TireRepair"
-                        android:alpha="0.5"
-                        android:src="@drawable/mechanic" />
+                        android:src="@drawable/mechanic"
+                        android:visibility="gone" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Restaurant"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="5dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="4dp"
                         android:layout_toEndOf="@id/Mechanic"
-                        android:alpha="0.5"
-                        android:src="@drawable/restaurant" />
+                        android:src="@drawable/restaurant"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/commentSection"
+                android:id="@+id/campaignSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/facilitiesSection"
-                android:background="#30ffffff">
+                android:background="#ffffff">
 
                 <TextView
-                    android:id="@+id/title_comments"
+                    android:id="@+id/title_campaigns"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    android:text="Son yorumlar"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored" />
+                    android:text="Kampanyalar"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/commentView"
+                    android:id="@+id/campaignView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_comments"
-                    android:background="@android:color/transparent" />
+                    android:layout_below="@+id/title_campaigns"
+                    android:background="@android:color/transparent"
+                    android:visibility="visible" />
 
                 <ImageView
-                    android:id="@+id/errorPic"
+                    android:id="@+id/errorNoCampaign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_comments"
-                    android:visibility="invisible"
+                    android:layout_below="@id/title_campaigns"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/error_nocomment" />
 
                 <TextView
-                    android:id="@+id/noCommentText"
+                    android:id="@+id/noCampaignText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/errorPic"
+                    android:layout_below="@id/errorNoCampaign"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="Bu istasyon için henüz hiç yorum yazılmamış. İlk yorumu sen yaz!"
-                    android:visibility="invisible" />
+                    android:text="Bu istasyon henüz hiç kampanya eklememiş..."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sokakgorunumu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/campaignSection"
+                android:background="#ffffff">
+
+                <com.google.android.gms.maps.StreetViewPanoramaView
+                    android:id="@+id/street_view_panorama"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp" />
+
+                <ImageView
+                    android:id="@+id/imageViewErrStreetView"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:src="@drawable/error_general"
+                    android:visibility="gone" />
+
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -604,14 +482,6 @@
         app:layout_anchor="@+id/scrollView"
         app:layout_anchorGravity="right|bottom"
         app:menu_colorNormal="#000000">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/material_design_floating_action_menu_item1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fab_comment"
-            fab:fab_label="@string/fab_comment"
-            fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/material_design_floating_action_menu_item2"

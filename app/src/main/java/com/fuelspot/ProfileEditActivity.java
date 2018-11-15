@@ -2,11 +2,15 @@ package com.fuelspot;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -24,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -40,6 +45,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -50,6 +57,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,6 +96,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     Bitmap bitmap;
     RequestQueue requestQueue;
     RequestOptions options;
+    Button logOutFromAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,12 +168,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(ProfileEditActivity.this)) {
-                 /*   FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(ProfileEditActivity.this);
-                            */
-                    Toast.makeText(ProfileEditActivity.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                    ImagePicker.create(ProfileEditActivity.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(ProfileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -272,20 +276,51 @@ public class ProfileEditActivity extends AppCompatActivity {
                 editor.putString("Gender", gender);
             }
         });
+
+        logOutFromAccount = findViewById(R.id.button5);
+        logOutFromAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog alertDialog = new AlertDialog.Builder(ProfileEditActivity.this).create();
+                alertDialog.setTitle("ÇIKIŞ YAP");
+                alertDialog.setMessage("Hesaptan çıkılacak ve bu cihaza kaydedilmiş veriler silinecek?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
+                                File[] listFiles = sharedPreferenceFile.listFiles();
+                                for (File file : listFiles) {
+                                    file.delete();
+                                }
+
+                                PackageManager packageManager = ProfileEditActivity.this.getPackageManager();
+                                Intent intent = packageManager.getLaunchIntentForPackage(ProfileEditActivity.this.getPackageName());
+                                ComponentName componentName = intent.getComponent();
+                                Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                                ProfileEditActivity.this.startActivity(mainIntent);
+                                Runtime.getRuntime().exit(0);
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
     }
 
     private void updateUserInfo() {
+        final ProgressDialog loading = ProgressDialog.show(ProfileEditActivity.this, "Updating profile...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         switch (response) {
                             case "Success":
+                                loading.dismiss();
+                                editor.apply();
                                 Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
                                 finish();
                                 break;
                             case "Fail":
-                                Toast.makeText(ProfileEditActivity.this, "Error", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
@@ -294,7 +329,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
-                        Toast.makeText(ProfileEditActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        loading.dismiss();
+                        Toast.makeText(ProfileEditActivity.this, "Something went wrong with our servers. Please try again later.", Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -326,8 +362,17 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public String getStringImage(Bitmap bmp) {
+        Bitmap bmp2;
+        if (bmp.getWidth() > 720 || bmp.getHeight() > 1280) {
+            float aspectRatio = bmp.getWidth() / bmp.getHeight();
+            bmp2 = Bitmap.createScaledBitmap(bmp, (int) (720 * aspectRatio), (int) (1280 * aspectRatio), true);
+        } else {
+            bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
+        }
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
+
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
@@ -358,7 +403,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                 return true;
             case R.id.navigation_save:
                 if (MainActivity.isNetworkConnected(this)) {
-                    editor.apply();
                     updateUserInfo();
                 } else {
                     Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
@@ -375,11 +419,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                   /* FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(ProfileEditActivity.this);
-                            */
+                    ImagePicker.create(ProfileEditActivity.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -391,53 +431,26 @@ public class ProfileEditActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-        String fileName = now + ".jpg";
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(userPic);
+                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + username + ".jpg";
+                editor.putString("ProfilePhoto", photo);
+            }
+        }
 
-        switch (requestCode) {
-            case GOOGLE_PLACE_AUTOCOMPLETE:
-                if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    location = place.getAddress().toString();
-                    editLocation.setText(location);
-                    editor.putString("Location", location);
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(this, data);
-                    Log.i("Error", status.getStatusMessage());
-                }
-                break;
-           /* case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    photo = aq.get(0);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos");
-                    folder.mkdirs();
-
-                    UCrop.of(Uri.parse("file://" + photo), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(ProfileEditActivity.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        Glide.with(this).load(bitmap).apply(options).into(userPic);
-                        editor.putString("ProfilePhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(ProfileEditActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;*/
-
+        // AUTOCOMPLETE
+        if (requestCode == GOOGLE_PLACE_AUTOCOMPLETE && resultCode == RESULT_OK) {
+            Place place = PlaceAutocomplete.getPlace(this, data);
+            location = place.getAddress().toString();
+            editLocation.setText(location);
+            editor.putString("Location", location);
+        } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+            Status status = PlaceAutocomplete.getStatus(this, data);
+            Log.i("Error", status.getStatusMessage());
         }
     }
 

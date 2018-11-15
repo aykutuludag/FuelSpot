@@ -286,6 +286,15 @@
                     android:text="Diğer" />
             </RadioGroup>
 
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/radioGroupGender"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                android:background="@drawable/green_box"
+                android:text="ÇIKIŞ YAP" />
 
         </RelativeLayout>
     </ScrollView>

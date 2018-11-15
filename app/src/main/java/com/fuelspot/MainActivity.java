@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         isGlobalNews = prefs.getBoolean("isGlobalNews", false);
-        mapDefaultRange = prefs.getInt("RANGE", 3000);
+        mapDefaultRange = prefs.getInt("RANGE", 2500);
         mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         userVehicles = prefs.getString("userVehicles", "");
@@ -191,10 +191,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aytemiz.jpg";
                 break;
             case "Best":
+            case "Best Oil":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/best.jpg";
-                break;
-            case "Bizimgaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bizimgaz.jpg";
                 break;
             case "BP":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.jpg";
@@ -203,11 +201,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bpet.jpg";
                 break;
             case "Chevron":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/akpet.jpg";
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/chevron.jpg";
                 break;
             case "Circle-K":
             case "Circle K":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/akpet.jpg";
+                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/circle-k.jpg";
                 break;
             case "Citgo":
                 photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/citgo.jpg";
@@ -600,7 +598,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         listOfVehicle.clear();
         if (userVehicles != null && userVehicles.length() > 0) {
             vehicleIDs = userVehicles.split(";");
-            bottomNavigation.setNotification(vehicleIDs.length, 2);
             for (String vehicleID1 : vehicleIDs) {
                 fetchSingleVehicle(Integer.parseInt(vehicleID1));
             }
@@ -638,7 +635,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "ARAÇ LİSTESİ ÇEKİLİRKEN BİR HATA OLDU", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override

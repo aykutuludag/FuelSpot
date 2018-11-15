@@ -6,7 +6,7 @@
     <string name="privacy">Privacy</string>
     <string name="help">Help</string>
     <string name="buy_premium_ads_title">Upgrade</string>
-    <string name="buy_premium_ads_content">Are you tired of the ads in the application? By switching to FuelSpot Premium, you can remove all ads in the application and increase your range up to 50 kilometers!</string>
+    <string name="buy_premium_ads_content">Are you tired of the ads in the application? By switching to FuelSpot Premium, you can remove all ads in the application!</string>
     <string name="buy_premium_ads_okay">BUY!</string>
     <string name="buy_premium_ads_later">Later</string>
     <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>

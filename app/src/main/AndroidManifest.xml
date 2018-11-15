@@ -50,9 +50,11 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileEditActivity"
-            android:label="Profil"
-            android:parentActivityName=".MainActivity"
+            android:label="Profili düzenle"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".StationComments"
+            android:label="@string/title_activity_super_comments" />
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/FullScreen"
@@ -85,10 +87,6 @@
         <activity
             android:name=".superuser.SuperPurchases"
             android:label="@string/title_activity_super_purchases"
-            android:parentActivityName=".superuser.AdminMainActivity" />
-        <activity
-            android:name=".superuser.SuperComments"
-            android:label="@string/title_activity_super_comments"
             android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperCampaings"

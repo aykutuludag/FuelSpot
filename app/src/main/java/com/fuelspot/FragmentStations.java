@@ -45,8 +45,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -81,19 +79,19 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class FragmentStations extends Fragment {
 
+    //Station variables
+    static List<String> stationName = new ArrayList<>();
     MapView mMapView;
     SpinKitView proggressBar;
 
     List<StationItem> feedsList = new ArrayList<>();
-
-    //Station variables
-    List<String> stationName = new ArrayList<>();
-    List<String> googleID = new ArrayList<>();
-    List<String> vicinity = new ArrayList<>();
-    List<String> location = new ArrayList<>();
-    List<String> stationIcon = new ArrayList<>();
+    static List<String> googleID = new ArrayList<>();
+    static List<String> vicinity = new ArrayList<>();
+    static List<String> location = new ArrayList<>();
+    static List<String> stationIcon = new ArrayList<>();
+    static List<String> stationCountry = new ArrayList<>();
     List<Integer> distanceInMeters = new ArrayList<>();
-    List<String> stationCountry = new ArrayList<>();
+    private static boolean doesStationSearched;
     ArrayList<Marker> markers = new ArrayList<>();
 
     Context mContext;
@@ -108,11 +106,9 @@ public class FragmentStations extends Fragment {
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
     Location locLastKnown = new Location("");
-    BitmapDescriptor verifiedIcon;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
     NestedScrollView nScrollView;
-    boolean mapIsUpdating;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -139,13 +135,12 @@ public class FragmentStations extends Fragment {
 
         //Variables
         prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        queue = Volley.newRequestQueue(getActivity());
 
         nScrollView = rootView.findViewById(R.id.nestedScrollView);
         noStationError = rootView.findViewById(R.id.errorPicture);
-        verifiedIcon = BitmapDescriptorFactory.fromResource(R.drawable.verified_station);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        queue = Volley.newRequestQueue(getActivity());
 
         tabLayout = rootView.findViewById(R.id.sortBar);
         tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
@@ -155,7 +150,6 @@ public class FragmentStations extends Fragment {
                 int position = tab.getPosition();
                 sortBy(position);
             }
-
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -186,7 +180,7 @@ public class FragmentStations extends Fragment {
         locLastKnown.setLongitude(Double.parseDouble(userlon));
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(15000);
+        mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -210,10 +204,8 @@ public class FragmentStations extends Fragment {
                                 if (distanceInMeter >= (mapDefaultRange / 5)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                    if (!mapIsUpdating) {
-                                        mapIsUpdating = true;
-                                        updateMapObject();
-                                    }
+                                    updateMapObject();
+
                                 } else {
                                     if (feedsList != null && feedsList.size() > 0) {
                                         for (int i = 0; i < feedsList.size(); i++) {
@@ -267,10 +259,7 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
-                if (!mapIsUpdating) {
-                    mapIsUpdating = true;
-                    updateMapObject();
-                }
+                updateMapObject();
             }
         });
     }
@@ -306,7 +295,11 @@ public class FragmentStations extends Fragment {
                 .fillColor(0x220000FF)
                 .strokeColor(Color.parseColor("#FF5635")));
 
-        searchStations("");
+        if (doesStationSearched) {
+            addStations();
+        } else {
+            searchStations("");
+        }
     }
 
     void searchStations(String token) {
@@ -345,42 +338,40 @@ public class FragmentStations extends Fragment {
                                     }
                                 }
 
-                                if (json.key("next_page_token").stringValue() != null && json.key("next_page_token").stringValue().length() > 0) {
+                                if (json.key("next_page_token") != null && json.key("next_page_token").stringValue().length() > 0) {
                                     searchStations(json.key("next_page_token").stringValue());
                                 } else {
-                                    for (int i = 0; i < googleID.size(); i++) {
-                                        addStation(i);
-                                    }
+                                    addStations();
                                     tabLayout.getTabAt(4).select();
                                     proggressBar.setVisibility(View.GONE);
                                     mRecyclerView.setVisibility(View.VISIBLE);
-                                    mapIsUpdating = false;
+                                    doesStationSearched = true;
                                 }
                             } else {
                                 // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-                                if (mapDefaultRange == 3000) {
+                                if (mapDefaultRange == 2500) {
                                     mapDefaultRange = 5000;
                                     mapDefaultZoom = 12f;
-                                    Toast.makeText(getActivity(), "3000 metre içerisinde istasyon bulunamadı. YENİ MENZİL DENENİYOR: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else if (mapDefaultRange == 5000) {
                                     mapDefaultRange = 10000;
                                     mapDefaultZoom = 11f;
-                                    Toast.makeText(getActivity(), "5000 metre içerisinde istasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else if (mapDefaultRange == 10000) {
                                     mapDefaultRange = 20000;
                                     mapDefaultZoom = 10f;
-                                    Toast.makeText(getActivity(), "10000 metre içerisinde istasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else if (mapDefaultRange == 20000) {
                                     mapDefaultRange = 50000;
                                     mapDefaultZoom = 8.75f;
-                                    Toast.makeText(getActivity(), "20000 metre içerisinde istasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else {
                                     noStationError.setVisibility(View.VISIBLE);
-                                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı.", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(getActivity().findViewById(android.R.id.content), "İstasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         } else {
@@ -426,7 +417,7 @@ public class FragmentStations extends Fragment {
 
     /* This method add_fuel stations. If station exists in db, then update it (except prices). Returns stationInfos.
      * To update stationPrices, use API_UPDATE_STATION */
-    private void addStation(final int index) {
+    private void addStations() {
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
                 new Response.Listener<String>() {
@@ -435,72 +426,76 @@ public class FragmentStations extends Fragment {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-                                if (obj.getInt("isActive") == 1) {
-                                    StationItem item = new StationItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setStationName(obj.getString("name"));
-                                    item.setVicinity(obj.getString("vicinity"));
-                                    item.setCountryCode(obj.getString("country"));
-                                    item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
-                                    item.setFacilities(obj.getString("facilities"));
-                                    item.setLicenseNo(obj.getString("licenseNo"));
-                                    item.setOwner(obj.getString("owner"));
-                                    item.setPhotoURL(obj.getString("photoURL"));
-                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
-                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
-                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
-                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                    item.setIsVerified(obj.getInt("isVerified"));
-                                    item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
-                                    item.setIsActive(obj.getInt("isActive"));
-                                    item.setLastUpdated(obj.getString("lastUpdated"));
+                                for (int i = 0; i < stationName.size(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    if (obj.getInt("isActive") == 1) {
+                                        StationItem item = new StationItem();
+                                        item.setID(obj.getInt("id"));
+                                        item.setStationName(obj.getString("name"));
+                                        item.setVicinity(obj.getString("vicinity"));
+                                        item.setCountryCode(obj.getString("country"));
+                                        item.setLocation(obj.getString("location"));
+                                        item.setGoogleMapID(obj.getString("googleID"));
+                                        item.setFacilities(obj.getString("facilities"));
+                                        item.setLicenseNo(obj.getString("licenseNo"));
+                                        item.setOwner(obj.getString("owner"));
+                                        item.setPhotoURL(obj.getString("photoURL"));
+                                        item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                        item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                        item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                        item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                        item.setIsVerified(obj.getInt("isVerified"));
+                                        item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
+                                        item.setIsActive(obj.getInt("isActive"));
+                                        item.setLastUpdated(obj.getString("lastUpdated"));
 
-                                    //DISTANCE START
-                                    Location loc = new Location("");
-                                    String[] stationKonum = item.getLocation().split(";");
-                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
-                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
-                                    float uzaklik = locLastKnown.distanceTo(loc);
-                                    distanceInMeters.add((int) uzaklik);
-                                    item.setDistance((int) uzaklik);
-                                    //DISTANCE END
+                                        //DISTANCE START
+                                        Location loc = new Location("");
+                                        String[] stationKonum = item.getLocation().split(";");
+                                        loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                        loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                        float uzaklik = locLastKnown.distanceTo(loc);
+                                        distanceInMeters.add((int) uzaklik);
+                                        item.setDistance((int) uzaklik);
+                                        //DISTANCE END
 
-                                    feedsList.add(item);
-                                    mAdapter.notifyDataSetChanged();
+                                        feedsList.add(item);
+                                        mAdapter.notifyDataSetChanged();
 
-                                    //Add marker
-                                    LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
-                                    if (item.getIsVerified() == 1) {
-                                        markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity")).icon(verifiedIcon)));
-                                    } else {
+                                        //Add marker
+                                        LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
                                         markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity"))));
-                                    }
 
-                                    sortBy(4);
+                                        sortBy(4);
 
-                                    if (bannedGoogleIDs != null && bannedGoogleIDs.length() > 0) {
-                                        if (bannedGoogleIDs.contains(obj.getString("googleID"))) {
-                                            // Probably station was banned, but the ban removed.
-                                            bannedGoogleIDs = bannedGoogleIDs.replace(obj.getString("googleID") + "-----", "");
-                                            prefs.edit().putString("bannedStations", bannedGoogleIDs).apply();
+                                        if (bannedGoogleIDs != null && bannedGoogleIDs.length() > 0) {
+                                            if (bannedGoogleIDs.contains(obj.getString("googleID"))) {
+                                                // Probably station was banned, but the ban removed.
+                                                bannedGoogleIDs = bannedGoogleIDs.replace(obj.getString("googleID") + "-----", "");
+                                                prefs.edit().putString("bannedStations", bannedGoogleIDs).apply();
+                                            }
                                         }
+                                    } else {
+                                        // The place is banned. Add to bannedList so do not fetch again.
+                                        bannedGoogleIDs += obj.getString("googleID") + "-----";
+                                        prefs.edit().putString("bannedStations", bannedGoogleIDs).apply();
                                     }
-                                } else {
-                                    // The place is banned. Add to bannedList so do not fetch again.
-                                    bannedGoogleIDs += obj.getString("googleID") + "-----";
-                                    prefs.edit().putString("bannedStations", bannedGoogleIDs).apply();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                noStationError.setVisibility(View.VISIBLE);
+                                Snackbar.make(getActivity().findViewById(android.R.id.content), "İstasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
                             }
+                        } else {
+                            noStationError.setVisibility(View.VISIBLE);
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), "İstasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        noStationError.setVisibility(View.VISIBLE);
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "İstasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -508,13 +503,28 @@ public class FragmentStations extends Fragment {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
-                //Adding parameters
-                params.put("name", stationName.get(index));
-                params.put("vicinity", vicinity.get(index));
-                params.put("country", stationCountry.get(index));
-                params.put("location", location.get(index));
-                params.put("googleID", googleID.get(index));
-                params.put("photoURL", stationIcon.get(index));
+                JSONArray Jname = new JSONArray();
+                JSONArray Jvicinity = new JSONArray();
+                JSONArray Jcountry = new JSONArray();
+                JSONArray Jlocation = new JSONArray();
+                JSONArray JgoogleID = new JSONArray();
+                JSONArray JphotoURL = new JSONArray();
+
+                for (int i = 0; i < stationName.size(); i++) {
+                    Jname.put(stationName.get(i));
+                    Jvicinity.put(vicinity.get(i));
+                    Jcountry.put(stationCountry.get(i));
+                    Jlocation.put(location.get(i));
+                    JgoogleID.put(googleID.get(i));
+                    JphotoURL.put(stationIcon.get(i));
+                }
+
+                params.put("name", Jname.toString());
+                params.put("vicinity", Jvicinity.toString());
+                params.put("country", Jcountry.toString());
+                params.put("location", Jlocation.toString());
+                params.put("googleID", JgoogleID.toString());
+                params.put("photoURL", JphotoURL.toString());
 
                 //returning parameters
                 return params;
@@ -620,6 +630,7 @@ public class FragmentStations extends Fragment {
         if (mMapView != null) {
             mMapView.onPause();
         }
+        doesStationSearched = false;
     }
 
     @Override
@@ -632,6 +643,8 @@ public class FragmentStations extends Fragment {
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
+
+        doesStationSearched = false;
     }
 
     @Override

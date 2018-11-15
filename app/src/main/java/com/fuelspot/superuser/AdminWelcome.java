@@ -262,8 +262,8 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                if (tmpusername.length() > 21) {
-                    username = tmpusername.substring(0, 20);
+                if (tmpusername.length() > 31) {
+                    username = tmpusername.substring(0, 30);
                 } else {
                     username = tmpusername;
                 }

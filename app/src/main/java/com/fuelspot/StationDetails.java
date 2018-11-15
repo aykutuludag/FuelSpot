@@ -7,13 +7,9 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,7 +41,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.fuelspot.adapter.CampaignAdapter;
-import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
@@ -77,45 +71,39 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
 
-    int stationDistance, choosenStationID, userCommentID, isStationVerified;
-    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
-    String lastUpdated, facilitiesOfStation;
-
-    String stationName, stationVicinity, stationLocation, iconURL, userComment;
-
-    int stars = 5;
-    boolean hasAlreadyCommented;
+    public static int stars = 5;
+    public static int stationDistance, choosenStationID, userCommentID, isStationVerified;
+    public static float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
+    public static String lastUpdated, facilitiesOfStation, stationName, stationVicinity, stationLocation, iconURL, userComment;
+    public static boolean hasAlreadyCommented;
 
     ImageView stationIcon;
-    TextView noCampaignText, noCommentText, textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
+    public static List<CommentItem> commentList = new ArrayList<>();
     RelativeTimeTextView textLastUpdated;
 
     StreetViewPanoramaView mStreetViewPanoramaView;
-    AppBarLayout appBarLayout;
     StreetViewPanorama mPanorama;
-    RecyclerView mRecyclerView, mRecyclerView2;
-    RecyclerView.Adapter mAdapter, mAdapter2;
-    List<CommentItem> feedsList = new ArrayList<>();
-    List<CampaignItem> feedsList2 = new ArrayList<>();
+    TextView noCampaignText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    List<CampaignItem> campaignList = new ArrayList<>();
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+    FloatingActionButton floatingActionButton1, floatingActionButton2;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
     NestedScrollView scrollView;
-    ImageView errorPhoto, errorStreetView, errorCampaign;
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    RelativeLayout verifiedSection;
+    ImageView errorStreetView, errorCampaign;
+    CircleImageView verifiedSection;
     CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant;
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
-    RatingBar ratingBar;
+    RelativeLayout commentSection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,11 +114,6 @@ public class StationDetails extends AppCompatActivity {
         window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        //Collapsing Toolbar
-        collapsingToolbarLayout = findViewById(R.id.collapsing_header);
-        collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
-        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
-
         //Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -140,7 +123,6 @@ public class StationDetails extends AppCompatActivity {
         }
 
         //Dynamic bar colors
-        appBarLayout = findViewById(R.id.Appbar);
         coloredBars(Color.RED, Color.TRANSPARENT);
 
         // Analytics
@@ -151,21 +133,19 @@ public class StationDetails extends AppCompatActivity {
 
         errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
-        errorPhoto = findViewById(R.id.errorPic);
-        noCommentText = findViewById(R.id.noCommentText);
         errorStreetView = findViewById(R.id.imageViewErrStreetView);
         scrollView = findViewById(R.id.scrollView);
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);
         textName = findViewById(R.id.station_name);
+        textStationID = findViewById(R.id.station_ID);
         textVicinity = findViewById(R.id.station_vicinity);
-        textDistance = findViewById(R.id.distance_ofStation);
         textGasoline = findViewById(R.id.priceGasoline);
         textDiesel = findViewById(R.id.priceDiesel);
         textLPG = findViewById(R.id.priceLPG);
         textElectricity = findViewById(R.id.priceElectricity);
-        textLastUpdated = findViewById(R.id.lastUpdated);
+        textLastUpdated = findViewById(R.id.stationLastUpdate);
         stationIcon = findViewById(R.id.station_photo);
         literSectionTitle = findViewById(R.id.textViewUnitPrice);
         textViewGasLt = findViewById(R.id.howMuchGasoline);
@@ -178,17 +158,31 @@ public class StationDetails extends AppCompatActivity {
         imageViewTireRepair = findViewById(R.id.TireRepair);
         imageViewMechanic = findViewById(R.id.Mechanic);
         imageViewRestaurant = findViewById(R.id.Restaurant);
-        ratingBar = findViewById(R.id.ratingBarScore);
+        commentSection = findViewById(R.id.section_comment);
+        commentSection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StationDetails.this, StationComments.class);
+                startActivity(intent);
+            }
+        });
         textViewStationPoint = findViewById(R.id.stationPoint);
+        textViewStationPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StationDetails.this, StationComments.class);
+                startActivity(intent);
+            }
+        });
 
         // if stationVerified == 1, this section shows up!
-        verifiedSection = findViewById(R.id.verifiedSection);
+        verifiedSection = findViewById(R.id.verifiedStation);
 
         // Nerden gelirse gelsin stationID boş olamaz.
         choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
         stationName = getIntent().getStringExtra("STATION_NAME");
         if (stationName != null && stationName.length() > 0) {
-            collapsingToolbarLayout.setTitle(stationName);
+            getSupportActionBar().setTitle(stationName);
             //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
             stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
             stationLocation = getIntent().getStringExtra("STATION_LOCATION");
@@ -208,28 +202,25 @@ public class StationDetails extends AppCompatActivity {
         }
 
         // Campaigns
-        mRecyclerView2 = findViewById(R.id.campaignView);
-
-        // Comments
-        mRecyclerView = findViewById(R.id.commentView);
+        mRecyclerView = findViewById(R.id.campaignView);
 
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
 
-        floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
+      /*  floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
         if (isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
         } else {
             floatingActionButton1.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     materialDesignFAM.close(true);
-                    addUpdateCommentPopup(v);
+                   // addUpdateCommentPopup(v);
                 }
             });
-        }
+        }*/
 
-        floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item2);
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item2);
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reportPrices(v);
@@ -237,8 +228,8 @@ public class StationDetails extends AppCompatActivity {
         });
 
 
-        floatingActionButton3 = findViewById(R.id.material_design_floating_action_menu_item3);
-        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item3);
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 materialDesignFAM.close(true);
@@ -257,7 +248,7 @@ public class StationDetails extends AppCompatActivity {
                             JSONObject obj = res.getJSONObject(0);
 
                             stationName = obj.getString("name");
-                            collapsingToolbarLayout.setTitle(stationName);
+                            getSupportActionBar().setTitle(stationName);
                             stationVicinity = obj.getString("vicinity");
                             stationLocation = obj.getString("location");
                             //DISTANCE START
@@ -333,7 +324,7 @@ public class StationDetails extends AppCompatActivity {
         //SingleStation
         textName.setText(stationName);
         textVicinity.setText(stationVicinity);
-        textDistance.setText(stationDistance + " m");
+        textStationID.setText("" + choosenStationID);
 
         if (gasolinePrice == 0) {
             textGasoline.setText("-");
@@ -379,53 +370,72 @@ public class StationDetails extends AppCompatActivity {
         String titleHolder = "100 " + currencySymbol + " ile şunları satın alabilirsiniz:";
         literSectionTitle.setText(titleHolder);
 
-        String gasolineHolder = String.format(Locale.getDefault(), "%.2f", howMuchGas) + " " + userUnit;
-        textViewGasLt.setText(gasolineHolder);
+        if (howMuchGas == 0) {
+            textViewGasLt.setText("-");
+        } else {
+            String gasolineHolder = String.format(Locale.getDefault(), "%.1f", howMuchGas) + " " + userUnit;
+            textViewGasLt.setText(gasolineHolder);
+        }
 
-        String dieselHolder = String.format(Locale.getDefault(), "%.2f", howMuchDie) + " " + userUnit;
-        textViewDieselLt.setText(dieselHolder);
+        if (howMuchDie == 0) {
+            textViewDieselLt.setText("-");
+        } else {
+            String dieselHolder = String.format(Locale.getDefault(), "%.1f", howMuchDie) + " " + userUnit;
+            textViewDieselLt.setText(dieselHolder);
 
-        String lpgHolder = String.format(Locale.getDefault(), "%.2f", howMuchLPG) + " " + userUnit;
-        textViewLPGLt.setText(lpgHolder);
+        }
 
-        String electricityHolder = String.format(Locale.getDefault(), "%.2f", howMuchEle) + " " + getString(R.string.electricity_unit);
-        textViewElectricityLt.setText(electricityHolder);
+        if (howMuchLPG == 0) {
+            textViewLPGLt.setText("-");
+        } else {
+            String lpgHolder = String.format(Locale.getDefault(), "%.1f", howMuchLPG) + " " + userUnit;
+            textViewLPGLt.setText(lpgHolder);
+        }
+
+
+        if (howMuchEle == 0) {
+            textViewElectricityLt.setText("-");
+        } else {
+            String electricityHolder = String.format(Locale.getDefault(), "%.1f", howMuchEle) + " " + getString(R.string.electricity_unit);
+            textViewElectricityLt.setText(electricityHolder);
+        }
+
 
         // Facilities
         if (facilitiesOfStation.contains("WC")) {
-            imageViewWC.setAlpha(1.0f);
+            imageViewWC.setVisibility(View.VISIBLE);
         } else {
-            imageViewWC.setAlpha(0.5f);
+            imageViewWC.setVisibility(View.GONE);
         }
 
         if (facilitiesOfStation.contains("Market")) {
-            imageViewMarket.setAlpha(1.0f);
+            imageViewMarket.setVisibility(View.VISIBLE);
         } else {
-            imageViewMarket.setAlpha(0.5f);
+            imageViewMarket.setVisibility(View.GONE);
         }
 
         if (facilitiesOfStation.contains("CarWash")) {
-            imageViewCarWash.setAlpha(1.0f);
+            imageViewCarWash.setVisibility(View.VISIBLE);
         } else {
-            imageViewCarWash.setAlpha(0.5f);
+            imageViewCarWash.setVisibility(View.GONE);
         }
 
         if (facilitiesOfStation.contains("TireRepair")) {
-            imageViewTireRepair.setAlpha(1.0f);
+            imageViewTireRepair.setVisibility(View.VISIBLE);
         } else {
-            imageViewTireRepair.setAlpha(0.5f);
+            imageViewTireRepair.setVisibility(View.GONE);
         }
 
         if (facilitiesOfStation.contains("Mechanic")) {
-            imageViewMechanic.setAlpha(1.0f);
+            imageViewMechanic.setVisibility(View.VISIBLE);
         } else {
-            imageViewMechanic.setAlpha(0.5f);
+            imageViewMechanic.setVisibility(View.GONE);
         }
 
         if (facilitiesOfStation.contains("Restaurant")) {
-            imageViewRestaurant.setAlpha(1.0f);
+            imageViewRestaurant.setVisibility(View.VISIBLE);
         } else {
-            imageViewRestaurant.setAlpha(0.5f);
+            imageViewRestaurant.setVisibility(View.GONE);
         }
 
         fetchCampaigns();
@@ -433,7 +443,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void fetchCampaigns() {
-        feedsList2.clear();
+        campaignList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
                 new Response.Listener<String>() {
                     @Override
@@ -450,25 +460,24 @@ public class StationDetails extends AppCompatActivity {
                                     item.setCampaignPhoto(obj.getString("campaignPhoto"));
                                     item.setCampaignStart(obj.getString("campaignStart"));
                                     item.setCampaignEnd(obj.getString("campaignEnd"));
-                                    feedsList2.add(item);
+                                    campaignList.add(item);
                                 }
 
-                                mAdapter2 = new CampaignAdapter(StationDetails.this, feedsList2);
+                                mAdapter = new CampaignAdapter(StationDetails.this, campaignList);
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
 
-                                mAdapter2.notifyDataSetChanged();
-                                mRecyclerView2.setAdapter(mAdapter2);
-                                mRecyclerView2.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
-
-                                mRecyclerView2.setVisibility(View.VISIBLE);
+                                mRecyclerView.setVisibility(View.VISIBLE);
                                 errorCampaign.setVisibility(View.GONE);
                                 noCampaignText.setVisibility(View.GONE);
                             } catch (JSONException e) {
-                                mRecyclerView2.setVisibility(View.GONE);
+                                mRecyclerView.setVisibility(View.GONE);
                                 errorCampaign.setVisibility(View.VISIBLE);
                                 noCampaignText.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            mRecyclerView2.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.GONE);
                             errorCampaign.setVisibility(View.VISIBLE);
                             noCampaignText.setVisibility(View.VISIBLE);
                         }
@@ -477,7 +486,7 @@ public class StationDetails extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mRecyclerView2.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.GONE);
                         errorCampaign.setVisibility(View.VISIBLE);
                         noCampaignText.setVisibility(View.VISIBLE);
                     }
@@ -501,7 +510,7 @@ public class StationDetails extends AppCompatActivity {
     public void fetchComments() {
         sumOfPoints = 0;
         numOfComments = 0;
-        feedsList.clear();
+        commentList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
@@ -509,7 +518,6 @@ public class StationDetails extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
                                     CommentItem item = new CommentItem();
@@ -523,59 +531,36 @@ public class StationDetails extends AppCompatActivity {
                                     item.setAnswer(obj.getString("answer"));
                                     item.setReplyTime(obj.getString("replyTime"));
                                     item.setLogo(obj.getString("logo"));
-                                    feedsList.add(item);
+                                    commentList.add(item);
 
                                     if (obj.getString("username").equals(username)) {
                                         hasAlreadyCommented = true;
                                         userCommentID = obj.getInt("id");
                                         userComment = obj.getString("comment");
                                         stars = obj.getInt("stars");
-                                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.edit));
-                                        floatingActionButton1.setLabelText("Edit comment");
                                     }
 
                                     sumOfPoints += obj.getInt("stars");
                                     numOfComments++;
                                 }
 
-                                mRecyclerView.setVisibility(View.VISIBLE);
-                                errorPhoto.setVisibility(View.GONE);
-                                noCommentText.setVisibility(View.GONE);
-                                mAdapter = new CommentAdapter(StationDetails.this, feedsList);
-                                GridLayoutManager mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
-
-                                mAdapter.notifyDataSetChanged();
-                                mRecyclerView.setAdapter(mAdapter);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-
                                 // Calculate station score
-                                DecimalFormat df = new DecimalFormat("#.#");
+                                DecimalFormat df = new DecimalFormat("#.##");
                                 stationScore = sumOfPoints / numOfComments;
-                                ratingBar.setRating(stationScore);
-                                textViewStationPoint.setText(df.format(stationScore));
+                                textViewStationPoint.setText((int) numOfComments + " yorum" + " - " + df.format(stationScore));
                             } catch (JSONException e) {
-                                mRecyclerView.setVisibility(View.GONE);
-                                errorPhoto.setVisibility(View.VISIBLE);
-                                noCommentText.setVisibility(View.VISIBLE);
                                 hasAlreadyCommented = false;
-                                floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
+                                textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
                             }
                         } else {
-                            mRecyclerView.setVisibility(View.GONE);
-                            errorPhoto.setVisibility(View.VISIBLE);
-                            noCommentText.setVisibility(View.VISIBLE);
                             hasAlreadyCommented = false;
-                            floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mRecyclerView.setVisibility(View.GONE);
-                        errorPhoto.setVisibility(View.VISIBLE);
                         hasAlreadyCommented = false;
-                        floatingActionButton1.setImageDrawable(ContextCompat.getDrawable(StationDetails.this, R.drawable.fab_comment));
                     }
                 }) {
             @Override
@@ -593,164 +578,6 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    void addUpdateCommentPopup(View view) {
-        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup_comment, null);
-        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.setElevation(5.0f);
-        }
-
-        TextView titlePopup = customView.findViewById(R.id.campaignPhoto);
-        if (hasAlreadyCommented) {
-            titlePopup.setText("Yorumu güncelle");
-        } else {
-            titlePopup.setText("Yorum yaz");
-        }
-
-        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
-        sendAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userComment != null && userComment.length() > 0) {
-                    if (hasAlreadyCommented) {
-                        updateComment();
-                    } else {
-                        sendComment();
-                    }
-                } else {
-                    Toast.makeText(StationDetails.this, "Lütfen yorum ekleyiniz", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            private void sendComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Adding comment...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                                fetchComments();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("comment", userComment);
-                        params.put("station_id", String.valueOf(choosenStationID));
-                        params.put("username", username);
-                        params.put("user_photo", MainActivity.photo);
-                        params.put("stars", String.valueOf(stars));
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
-            }
-
-            private void updateComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Updating comment...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                                fetchComments();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("commentID", String.valueOf(userCommentID));
-                        params.put("comment", userComment);
-                        params.put("station_id", String.valueOf(choosenStationID));
-                        params.put("username", username);
-                        params.put("user_photo", MainActivity.photo);
-                        params.put("stars", String.valueOf(stars));
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
-            }
-        });
-
-        EditText getComment = customView.findViewById(R.id.editTextComment);
-        if (userComment != null && userComment.length() > 0) {
-            getComment.setText(userComment);
-        }
-        getComment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    userComment = s.toString();
-                }
-            }
-        });
-
-        final RatingBar ratingBar = customView.findViewById(R.id.ratingBar);
-        ratingBar.setRating(stars);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                stars = (int) rating;
-            }
-        });
-
-        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
-        // Set a click listener for the popup window close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dismiss the popup window
-                mPopupWindow.dismiss();
-            }
-        });
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.update();
-        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     void reportStation(final View view) {
@@ -960,7 +787,7 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pricesArray[0] = "{ gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0];
+                pricesArray[0] = "{ gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
                 sendReporttoServer();
             }
 
