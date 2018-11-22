@@ -39,27 +39,24 @@
                 android:layout_height="wrap_content"
                 android:background="#EAEAEA">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/station_photo"
-                    android:layout_width="125dp"
-                    android:layout_height="125dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="#ffffff"
-                    android:src="@drawable/default_station" />
-
                 <TextView
                     android:id="@+id/station_ID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_margin="4dp"
+                    android:layout_margin="16dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="#161616" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/station_photo"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="16dp"
+                    android:background="#ffffff"
+                    android:src="@drawable/default_station" />
 
                 <TextView
                     android:id="@+id/station_name"
@@ -257,7 +254,7 @@
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
-                        android:text="100 TL ile şunları alabilirsiniz:"
+                        android:text="@string/HundredDollarText"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616" />
 
@@ -335,7 +332,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="Tesisler"
+                    android:text="@string/facilities"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#161616" />
 
@@ -413,7 +410,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    android:text="Kampanyalar"
+                    android:text="@string/campaigns"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#161616" />
 
@@ -452,10 +449,72 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/commentSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/campaignSection"
+                android:background="#ffffff">
+
+                <TextView
+                    android:id="@+id/title_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:text="@string/comments"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/commentView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_comments"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/button_seeAllComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/commentView"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/see_all" />
+
+                <ImageView
+                    android:id="@+id/errorNoComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_comments"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/error_nocomment" />
+
+                <TextView
+                    android:id="@+id/noCommentText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/errorNoComment"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="Bu istasyon için henüz hiç yorum yazılmamış..."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/sokakgorunumu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/campaignSection"
+                android:layout_below="@id/commentSection"
                 android:background="#ffffff">
 
                 <com.google.android.gms.maps.StreetViewPanoramaView
@@ -488,7 +547,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_report_image"
-            fab:fab_label="Fiyatları bildir"
+            fab:fab_label="@string/fab_report_price"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton

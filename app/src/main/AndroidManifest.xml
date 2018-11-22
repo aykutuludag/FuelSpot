@@ -54,19 +54,31 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".StationComments"
-            android:label="@string/title_activity_super_comments" />
+            android:label="@string/comments" />
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".AddAutomobile"
-            android:label="@string/title_activity_add_new_vehicle"
+            android:label="@string/add_vehicle"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UserFavorites"
-            android:label="@string/title_activity_user_favorites"
+            android:label="@string/favorites"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MyWalletActivity"
+            android:label="@string/title_activity_my_wallet"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".UserComments"
+            android:label="@string/comments"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".UserReports"
+            android:label="@string/reports"
             android:parentActivityName=".MainActivity" />
 
         <!-- SuperUser Class -->
@@ -77,42 +89,31 @@
         <activity android:name=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperUpdateStation"
-            android:label="@string/title_activity_update_station"
+            android:label="@string/update_station"
             android:parentActivityName=".superuser.AdminMainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".superuser.AddStation"
-            android:label="@string/title_activity_add_station"
+            android:label="@string/add_station"
             android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperPurchases"
-            android:label="@string/title_activity_super_purchases"
+            android:label="@string/purchases"
             android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperCampaings"
-            android:label="@string/title_activity_super_campaigns"
+            android:label="@string/campaigns"
             android:parentActivityName=".superuser.AdminMainActivity" />
         <activity
             android:name=".superuser.SuperPromotions"
-            android:label="@string/title_activity_super_promotions"
+            android:label="@string/promotions"
             android:parentActivityName=".superuser.AdminMainActivity" />
 
-        <!-- BootUpReceiver -->
-        <receiver
-            android:name=".service.BootUpReceiver"
-            android:enabled="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
         <!-- BackgroundLocation - Geofence -->
-        <service
-            android:name=".service.GeofenceService"
-            android:enabled="true" />
+        <receiver
+            android:name=".receiver.FenceApiReceiver"
+            android:enabled="true"
+            android:exported="true" />
 
         <!-- AdMob -->
         <meta-data

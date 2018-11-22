@@ -77,11 +77,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static String universalTimeStamp = "dd-MM-yyyy HH:mm";
     public static List<VehicleItem> listOfVehicle = new ArrayList<>();
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
-    public static float averageCons, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
+    public static float averageCons, userFuelSpotMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit;
     String[] vehicleIDs;
-    public static String bannedGoogleIDs;
 
     /*static InterstitialAd facebookInterstitial;
     static com.google.android.gms.ads.InterstitialAd admobInterstitial;*/
@@ -137,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         isGlobalNews = prefs.getBoolean("isGlobalNews", false);
-        mapDefaultRange = prefs.getInt("RANGE", 2500);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
+        mapDefaultRange = prefs.getInt("RANGE", 3000);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 12.5f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         userVehicles = prefs.getString("userVehicles", "");
         plateNo = prefs.getString("plateNo", "");
@@ -146,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         carbonEmission = prefs.getInt("carbonEmission", 0);
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
         currencySymbol = prefs.getString("userCurrencySymbol", "");
-        bannedGoogleIDs = prefs.getString("bannedStations", "");
+        userFuelSpotMoney = prefs.getFloat("userFuelSpotMoney", 0);
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -476,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentNews.newInstance());
-        fragments.add(FragmentVehicle.newInstance());
+        fragments.add(FragmentAutomobile.newInstance());
         fragments.add(FragmentProfile.newInstance());
         fragments.add(FragmentSettings.newInstance());
         builder.rootFragments(fragments);
@@ -499,7 +498,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
-        //GeofenceScheduler();
         buyPremiumPopup();
         InAppBilling();
 
@@ -574,7 +572,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 premium = true;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
                 prefs.edit().putInt("RANGE", 50000).apply();
-                prefs.edit().putFloat("ZOOM", 10f).apply();
+                prefs.edit().putFloat("ZOOM", 7.5f).apply();
             } else {
                 premium = false;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
@@ -635,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(MainActivity.this, "ARAÇ LİSTESİ ÇEKİLİRKEN BİR HATA OLDU", Toast.LENGTH_SHORT).show();
+                        volleyError.printStackTrace();
                     }
                 }) {
             @Override
@@ -660,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             if (listOfVehicle.get(listOfVehicle.size() - 1).getID() != -999) {
                 VehicleItem item = new VehicleItem();
                 item.setID(-999);
-                item.setVehicleBrand(getString(R.string.title_activity_add_new_vehicle));
+                item.setVehicleBrand(getString(R.string.add_vehicle));
                 listOfVehicle.add(item);
             }
 
@@ -718,7 +716,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         getVariables(prefs);
 
-        FragmentVehicle frag = (FragmentVehicle) fragments.get(2);
+        FragmentAutomobile frag = (FragmentAutomobile) fragments.get(2);
         if (frag != null) {
             if (frag.headerView != null) {
                 frag.loadVehicleProfile();
@@ -791,16 +789,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
-
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
         mFragNavController.switchTab(position);
         return true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -816,22 +808,56 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            adCount = 0;
-            super.onBackPressed();
-            mFragNavController.clearStack();
-            finish();
-            return;
+        // FragmentHome OnBackPressed
+        if (fragments.get(0) != null) {
+            if (fragments.get(0).isVisible()) {
+                if (doubleBackToExitPressedOnce) {
+                    adCount = 0;
+                    mFragNavController.clearStack();
+                    super.onBackPressed();
+                    finish();
+                    return;
+                }
+
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
+            }
         }
 
-        doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
+        if (fragments.get(1) != null) {
+            if (fragments.get(1).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
             }
-        }, 2000);
+        }
+
+        if (fragments.get(2) != null) {
+            if (fragments.get(2).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
+
+        if (fragments.get(3) != null) {
+            if (fragments.get(3).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
+
+        if (fragments.get(4) != null) {
+            if (fragments.get(4).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
     }
 }

@@ -368,7 +368,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
             if (listOfStation.get(listOfStation.size() - 1).getID() != -999) {
                 StationItem item = new StationItem();
                 item.setID(-999);
-                item.setVicinity(getString(R.string.title_activity_add_new_station));
+                item.setVicinity(getString(R.string.add_station));
                 listOfStation.add(item);
             }
 

@@ -2,7 +2,10 @@ package com.fuelspot;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +30,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -38,6 +44,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,9 +53,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.username;
 
 public class PurchaseDetails extends AppCompatActivity {
 
@@ -64,6 +74,7 @@ public class PurchaseDetails extends AppCompatActivity {
     ImageView istasyonLogo, fatura, tur1, tur2;
     TextView fiyat1, litre1, fiyat2, litre2, birimFiyat1, birimFiyat2, vergi, toplamfiyat;
     RelativeTimeTextView tarih;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +112,7 @@ public class PurchaseDetails extends AppCompatActivity {
         fuelTax2 = getIntent().getFloatExtra("FUEL_TAX_2", 0);
         totalPrice = getIntent().getFloatExtra("TOTAL_PRICE", 0);
 
-        istasyonLogo = findViewById(R.id.stationLogo);
+        istasyonLogo = findViewById(R.id.imageViewStationLogo);
         fatura = findViewById(R.id.billPhoto);
         tur1 = findViewById(R.id.type1);
         tur2 = findViewById(R.id.type2);
@@ -119,6 +130,16 @@ public class PurchaseDetails extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
         Glide.with(this).load(billPhoto).apply(options).into(fatura);
+        fatura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
+                    ImagePicker.create(PurchaseDetails.this).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
 
 
         Glide.with(this).load(iconURL).into(istasyonLogo);
@@ -260,9 +281,78 @@ public class PurchaseDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void updatePurchase() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_UPDATE_PURCHASE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(PurchaseDetails.this, "Bill photo added...", Toast.LENGTH_LONG).show();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("id", String.valueOf(purchaseID));
+                params.put("username", username);
+                params.put("billPhoto", getStringImage(bitmap));
+
+                //returning parameters
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        Bitmap bmp2;
+        if (bmp.getWidth() > 720 || bmp.getHeight() > 1280) {
+            float aspectRatio = bmp.getWidth() / bmp.getHeight();
+            bmp2 = Bitmap.createScaledBitmap(bmp, (int) (720 * aspectRatio), (int) (1280 * aspectRatio), true);
+        } else {
+            bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
+
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
+            case REQUEST_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (ActivityCompat.checkSelfPermission(PurchaseDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                    ImagePicker.create(PurchaseDetails.this).single().start();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                }
+            }
             case REQUEST_LOCATION: {
                 if (ActivityCompat.checkSelfPermission(PurchaseDetails.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -271,6 +361,20 @@ public class PurchaseDetails extends AppCompatActivity {
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(fatura);
+                updatePurchase();
             }
         }
     }

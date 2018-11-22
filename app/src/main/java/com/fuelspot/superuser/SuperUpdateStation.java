@@ -88,7 +88,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         editTextStationAddress = findViewById(R.id.editTextStationAddress);
         editTextStationAddress.setText(superStationAddress);
 
-        imageViewStationLogo = findViewById(R.id.stationLogo);
+        imageViewStationLogo = findViewById(R.id.imageViewStationLogo);
         Glide.with(this).load(superStationLogo).apply(options).into(imageViewStationLogo);
 
         //Last updated

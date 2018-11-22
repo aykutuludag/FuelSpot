@@ -81,6 +81,7 @@ public class FragmentSettings extends Fragment {
     TextView userRange, userPremium;
     //Creating a Request Queue
     RequestQueue requestQueue;
+    View rootView;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -93,120 +94,122 @@ public class FragmentSettings extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("SETTINGS");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+            // Analytics
+            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            t.setScreenName("SETTINGS");
+            t.enableAdvertisingIdCollection(true);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
-        requestQueue = Volley.newRequestQueue(getActivity());
+            requestQueue = Volley.newRequestQueue(getActivity());
 
-        countryText = rootView.findViewById(R.id.textViewCountryName);
-        countryText.setText(userCountryName);
+            countryText = rootView.findViewById(R.id.textViewCountryName);
+            countryText.setText(userCountryName);
 
-        languageText = rootView.findViewById(R.id.textViewLanguage);
-        languageText.setText(userDisplayLanguage);
+            languageText = rootView.findViewById(R.id.textViewLanguage);
+            languageText.setText(userDisplayLanguage);
 
-        currencyText = rootView.findViewById(R.id.textViewCurrency);
-        currencyText.setText(currencyCode);
+            currencyText = rootView.findViewById(R.id.textViewCurrency);
+            currencyText.setText(currencyCode);
 
-        unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
-        unitSystemText.setText(userUnit);
+            unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
+            unitSystemText.setText(userUnit);
 
-        globalNewsSwitch = rootView.findViewById(R.id.switch1);
-        globalNewsSwitch.setChecked(isGlobalNews);
-        globalNewsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isGlobalNews = isChecked;
-                prefs.edit().putBoolean("isGlobalNews", isGlobalNews).apply();
-            }
-        });
+            globalNewsSwitch = rootView.findViewById(R.id.switch1);
+            globalNewsSwitch.setChecked(isGlobalNews);
+            globalNewsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    isGlobalNews = isChecked;
+                    prefs.edit().putBoolean("isGlobalNews", isGlobalNews).apply();
+                }
+            });
 
-        textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
-        textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
+            textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
+            textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
 
-        textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
-        textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
+            textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
+            textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
 
-        textViewLPGTax = rootView.findViewById(R.id.priceLPG);
-        textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
+            textViewLPGTax = rootView.findViewById(R.id.priceLPG);
+            textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
 
-        textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
-        textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
+            textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
+            textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
 
-        buttonTax = rootView.findViewById(R.id.button_tax);
-        buttonTax.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateTaxRates();
-            }
-        });
+            buttonTax = rootView.findViewById(R.id.button_tax);
+            buttonTax.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateTaxRates();
+                }
+            });
 
-        buttonBeta = rootView.findViewById(R.id.button_beta);
-        buttonBeta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                CustomTabsIntent customTabsIntent = builder.build();
-                builder.enableUrlBarHiding();
-                builder.setShowTitle(true);
-                builder.setToolbarColor(Color.parseColor("#FF7439"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://play.google.com/apps/testing/com.fuelspot"));
-            }
-        });
+            buttonBeta = rootView.findViewById(R.id.button_beta);
+            buttonBeta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    builder.enableUrlBarHiding();
+                    builder.setShowTitle(true);
+                    builder.setToolbarColor(Color.parseColor("#FF7439"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://play.google.com/apps/testing/com.fuelspot"));
+                }
+            });
 
-        buttonFeedback = rootView.findViewById(R.id.button_feedback);
-        buttonFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFeedBackPopup(v);
-            }
-        });
+            buttonFeedback = rootView.findViewById(R.id.button_feedback);
+            buttonFeedback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openFeedBackPopup(v);
+                }
+            });
 
-        buttonRate = rootView.findViewById(R.id.button_rate);
-        buttonRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fuelspot"));
-                startActivity(intent);
-            }
-        });
+            buttonRate = rootView.findViewById(R.id.button_rate);
+            buttonRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fuelspot"));
+                    startActivity(intent);
+                }
+            });
 
-        userRange = rootView.findViewById(R.id.textViewMenzil);
-        userRange.setText((mapDefaultRange / 1000) + " km");
+            userRange = rootView.findViewById(R.id.textViewMenzil);
+            userRange.setText((mapDefaultRange / 1000) + " km");
 
-        userPremium = rootView.findViewById(R.id.textViewPremium);
-        userPremium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainActivity.isSuperUser) {
-                    try {
-                        ((AdminMainActivity) getActivity()).buyAdminPremium();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        ((MainActivity) getActivity()).buyPremium();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
+            userPremium = rootView.findViewById(R.id.textViewPremium);
+            userPremium.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (MainActivity.isSuperUser) {
+                        try {
+                            ((AdminMainActivity) getActivity()).buyAdminPremium();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            ((MainActivity) getActivity()).buyPremium();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        superUserCount = rootView.findViewById(R.id.textViewSuperUserCount);
+            superUserCount = rootView.findViewById(R.id.textViewSuperUserCount);
 
-        fetchStats();
+            fetchStats();
+        }
 
         return rootView;
     }

@@ -172,7 +172,7 @@ public class FragmentMyStation extends Fragment {
         textLPG = rootView.findViewById(R.id.priceLPG);
         textElectricity = rootView.findViewById(R.id.priceElectricity);
         textLastUpdated = rootView.findViewById(R.id.lastUpdateTime);
-        stationIcon = rootView.findViewById(R.id.stationLogo);
+        stationIcon = rootView.findViewById(R.id.imageViewStationLogo);
 
         //Buttons
         editStation = rootView.findViewById(R.id.buttonEditStation);

@@ -21,7 +21,7 @@
             android:background="#f0f0f0">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/other_profile_pic"
+                android:id="@+id/imageViewStationLogo"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="8dp"
@@ -29,13 +29,13 @@
                 android:src="@drawable/default_profile" />
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/textViewReportReason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/other_profile_pic"
-                android:layout_alignBottom="@+id/other_profile_pic"
+                android:layout_alignTop="@+id/imageViewStationLogo"
+                android:layout_alignBottom="@+id/imageViewStationLogo"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/other_profile_pic"
+                android:layout_toEndOf="@+id/imageViewStationLogo"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
@@ -44,8 +44,8 @@
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/username"
-                android:layout_alignBottom="@+id/username"
+                android:layout_alignTop="@+id/textViewReportReason"
+                android:layout_alignBottom="@+id/textViewReportReason"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
@@ -56,11 +56,11 @@
                 android:id="@+id/comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/other_profile_pic"
+                android:layout_below="@+id/imageViewStationLogo"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="#626262" />
 
@@ -70,7 +70,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comment"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="-8dp"
                 android:clickable="false"
                 android:focusable="false"
                 android:isIndicator="true"

@@ -76,15 +76,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         switch (feedItem.getFuelType()) {
             case 0:
                 Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type1);
+                viewHolder.type1Text.setText(mContext.getString(R.string.gasoline));
                 break;
             case 1:
                 Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type1);
+                viewHolder.type1Text.setText(mContext.getString(R.string.diesel));
                 break;
             case 2:
                 Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type1);
+                viewHolder.type1Text.setText(mContext.getString(R.string.lpg));
                 break;
             case 3:
                 Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type1);
+                viewHolder.type1Text.setText(mContext.getString(R.string.electricity));
                 break;
         }
 
@@ -106,15 +110,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             switch (feedItem.getFuelType2()) {
                 case 0:
                     Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type2);
+                    viewHolder.type2Text.setText(mContext.getString(R.string.gasoline));
                     break;
                 case 1:
                     Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type2);
+                    viewHolder.type2Text.setText(mContext.getString(R.string.diesel));
                     break;
                 case 2:
                     Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type2);
+                    viewHolder.type2Text.setText(mContext.getString(R.string.lpg));
                     break;
                 case 3:
                     Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type2);
+                    viewHolder.type2Text.setText(mContext.getString(R.string.electricity));
                     break;
             }
 
@@ -130,7 +138,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             String priceHolder2 = priceTwo + " " + currencySymbol;
             viewHolder.price2.setText(priceHolder2);
         } else {
-            viewHolder.type2.setVisibility(View.GONE);
+            viewHolder.type2Layout.setVisibility(View.GONE);
             viewHolder.amount2.setVisibility(View.GONE);
             viewHolder.unitPrice2.setVisibility(View.GONE);
             viewHolder.price2.setVisibility(View.GONE);
@@ -156,7 +164,9 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         //Station Icon
-        Glide.with(mContext).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);
+        if (feedItem.getStationIcon() != null && feedItem.getStationIcon().length() > 0) {
+            Glide.with(mContext).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);
+        }
 
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);
@@ -170,15 +180,15 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout backgroundClick;
-        TextView price1, unitPrice1, amount1, price2, unitPrice2, amount2, totalTax, totalPrice;
+        RelativeLayout backgroundClick, type1Layout, type2Layout;
+        TextView price1, unitPrice1, amount1, price2, unitPrice2, amount2, totalTax, totalPrice, type1Text, type2Text;
         ImageView stationLogo, type1, type2;
         RelativeTimeTextView purchaseTime;
 
         ViewHolder(View itemView) {
             super(itemView);
             backgroundClick = itemView.findViewById(R.id.single_purchase);
-            stationLogo = itemView.findViewById(R.id.stationLogo);
+            stationLogo = itemView.findViewById(R.id.imageViewStationLogo);
             type1 = itemView.findViewById(R.id.type1);
             price1 = itemView.findViewById(R.id.price1);
             unitPrice1 = itemView.findViewById(R.id.unitPrice1);
@@ -190,6 +200,10 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             totalTax = itemView.findViewById(R.id.totalTax);
             totalPrice = itemView.findViewById(R.id.totalPrice);
             purchaseTime = itemView.findViewById(R.id.purchaseTime);
+            type1Text = itemView.findViewById(R.id.type1Text);
+            type2Text = itemView.findViewById(R.id.fuelType2Text);
+            type1Layout = itemView.findViewById(R.id.typeLayout);
+            type2Layout = itemView.findViewById(R.id.typeLayout2);
         }
     }
 }

@@ -18,7 +18,14 @@
     <string name="smth_go_wrong">Somethings go wrong! Please try again later…</string>
     <string name="show_vehicles">Show vehicles</string>
     <string name="show_stations">Show stations</string>
-    <string name="favorites">Favorites</string>
+    <string name="favorites">Favorite stations</string>
+    <string name="wallet">MyWallet</string>
+    <string name="title_activity_my_wallet">MyWallet</string>
+
+    <string name="gasoline">Gasoline</string>
+    <string name="diesel">Diesel</string>
+    <string name="lpg">LPG</string>
+    <string name="electricity">Electricity</string>
 
     <string-array name="report_reasons">
         <item>Station doesn\'t exist</item>
@@ -60,15 +67,29 @@
     <string name="menu_share">Share station</string>>
     <string name="fab_comment">Write comment</string>
     <string name="fab_report">Report station</string>
+    <string name="fab_report_price">Report prices</string>
+    <string name="HundredDollarText">You can get followings by $100:</string>
+    <string name="facilities">Facilities</string>
+    <string name="campaigns">Campaigns</string>
+    <string name="comments">Comments</string>
 
-    <string name="title_activity_add_new_vehicle">Add automobile</string>
-    <string name="title_activity_add_new_station">Add new station</string>
-    <string name="title_activity_add_station">Add station</string>
-    <string name="title_activity_update_station">Update station</string>
-    <string name="title_activity_super_comments">Comments</string>
-    <string name="title_activity_super_campaigns">Campaigns</string>
-    <string name="title_activity_super_purchases">Purchases</string>
-    <string name="title_activity_super_promotions">Promotions</string>
+    <string name="add_vehicle">Add automobile</string>
+    <string name="add_station">Add station</string>
+    <string name="update_station">Update station</string>
+
+    <string name="bill">BILL</string>
+    <string name="purchases">Purchases</string>
+    <string name="promotions">Promotions</string>
+
+    <string name="kilometer">Kilometer</string>
+    <string name="rewards">Rewards</string>
+    <string name="fuelspot_money">FuelSpot Money</string>
+    <string name="reports">Reports</string>
+
+    <string name="see_all">See all</string>
+    <string name="station_id">STATION ID:</string>
+    <string name="report_close">Close</string>
+    <string name="report_open">Open</string>
 
     <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>
@@ -91,7 +112,7 @@
     <string name="API_SUPERUSER_FETCH" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-fetch.php</string>
 
     <!-- STATION APIs -->
-    <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-add.php</string> <!-- Create, return Station object -->
+    <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-add.php</string> <!-- Create and return Station objects as bulk -->
     <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-update.php</string> <!-- Updates station info, return SUCCESS or FAIL -->
     <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch.php</string> <!-- stationID, return Station object -->
 
@@ -103,6 +124,7 @@
 
     <!-- PURCHASE APIs -->
     <string name="API_ADD_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-add.php</string>
+    <string name="API_UPDATE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-update.php</string> <!-- Only adding bill photo available -->
     <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-delete.php</string>
     <string name="API_FETCH_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch.php</string> <!-- Vehicle's purchases -->
     <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-user.php</string> <!-- User's purchases (all vehicles) -->
@@ -123,11 +145,14 @@
     <string name="API_FETCH_CAMPAINGS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/campaign-fetch.php</string>
     <string name="API_DELETE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/campaign-delete.php</string>
 
+    <!-- REPORT APIs -->
+    <string name="API_REPORT_ADD" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/report-add.php</string>
+    <string name="API_REPORT_FETCH" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/report-fetch.php</string>
+
     <!-- OTHER APIs -->
     <string name="API_TAX" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-tax.php</string>
     <string name="API_FEEDBACK" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-feedback.php</string>
-    <string name="API_REPORT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-report.php</string>
+
     <string name="API_STATS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-stats.php</string>
     <string name="API_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>
-    <string name="title_activity_user_favorites">UserFavorites</string>
 </resources>

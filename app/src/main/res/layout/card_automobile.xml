@@ -3,182 +3,212 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_vehicle"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="250dp"
     android:background="#EDEDED">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/carPicture"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/default_automobile" />
-
-    <TextView
-        android:id="@+id/car_kilometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/carPicture"
-        android:layout_alignStart="@id/carPicture"
-        android:layout_alignEnd="@id/carPicture"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-    <TextView
-        android:id="@+id/carFullname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView6"
-        android:layout_alignBottom="@+id/imageView6"
-        android:layout_marginStart="4dp"
-        android:layout_toEndOf="@+id/imageView6"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-    <ImageView
-        android:id="@+id/car_fuelType"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_alignStart="@+id/carFullname"
-        android:layout_alignTop="@+id/imageView7"
-        android:padding="2dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-    <ImageView
-        android:id="@+id/car_fuelType2"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_alignTop="@+id/car_fuelType"
-        android:layout_marginStart="4dp"
-        android:layout_toEndOf="@+id/car_fuelTypeText"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-    <TextView
-        android:id="@+id/car_fuelTypeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/car_fuelType"
-        android:layout_alignBottom="@+id/car_fuelType"
-        android:layout_toEndOf="@+id/car_fuelType"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/car_fuelTypeText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/car_fuelType"
-        android:layout_alignBottom="@+id/car_fuelType2"
-        android:layout_toEndOf="@+id/car_fuelType2"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/car_avgCons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/carFullname"
-        android:layout_alignTop="@+id/imageView8"
-        android:layout_alignBottom="@+id/imageView8"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/car_avgPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/carFullname"
-        android:layout_alignTop="@+id/imageView9"
-        android:layout_alignBottom="@+id/imageView9"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/car_carbonEmission"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/carFullname"
-        android:layout_alignTop="@+id/imageView10"
-        android:layout_alignBottom="@+id/imageView10"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <com.github.curioustechizen.ago.RelativeTimeTextView
-        android:id="@+id/car_lastUpdated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/carPicture"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <ImageView
         android:id="@+id/updateCarInfo"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="4dp"
         android:padding="4dp"
         android:src="@drawable/edit" />
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/carPicture"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:layout_toEndOf="@+id/carPicture"
-        app:srcCompat="@drawable/icon_arac" />
+        android:layout_centerHorizontal="true"
+        android:layout_margin="4dp"
+        android:src="@drawable/default_automobile" />
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/imageView6"
-        android:layout_alignStart="@id/imageView6"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/icon_yakitturu" />
+    <TextView
+        android:id="@+id/carFullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/carPicture"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/imageView7"
-        android:layout_alignStart="@id/imageView6"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/icon_avgcons" />
+    <TextView
+        android:id="@+id/car_plateNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/carFullname"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:textAllCaps="true" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/imageView8"
-        android:layout_alignStart="@id/imageView6"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/icon_montlyliter" />
+    <RelativeLayout
+        android:id="@+id/fuelTypeSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/car_plateNo"
+        android:gravity="center">
 
-    <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/imageView9"
-        android:layout_alignStart="@id/imageView6"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        app:srcCompat="@drawable/co2icon" />
+        <ImageView
+            android:id="@+id/car_fuelType"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:padding="2dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
+        <ImageView
+            android:id="@+id/car_fuelType2"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignTop="@+id/car_fuelType"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/car_fuelTypeText"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:id="@+id/car_fuelTypeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/car_fuelType"
+            android:layout_alignBottom="@+id/car_fuelType"
+            android:layout_toEndOf="@+id/car_fuelType"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/car_fuelTypeText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/car_fuelType"
+            android:layout_alignBottom="@+id/car_fuelType2"
+            android:layout_toEndOf="@+id/car_fuelType2"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:id="@+id/car_lastUpdated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fuelTypeSection"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <RelativeLayout
+        android:id="@+id/tripSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fuelTypeSection"
+        android:background="#ffffff">
+
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/tripBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/dummy0"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%"
+                app:srcCompat="@drawable/icon_avgcons" />
+
+            <ImageView
+                android:id="@+id/dummy1"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_toEndOf="@id/dummy0"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%"
+                app:srcCompat="@drawable/icon_montlyliter" />
+
+            <ImageView
+                android:id="@+id/dummy2"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_toEndOf="@id/dummy1"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%"
+                app:srcCompat="@drawable/co2icon" />
+
+            <ImageView
+                android:id="@+id/dummy3"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_toEndOf="@id/dummy2"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%"
+                app:srcCompat="@drawable/kilometer" />
+
+        </android.support.percent.PercentRelativeLayout>
+
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/tripBar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tripBar">
+
+            <TextView
+                android:id="@+id/report_sID"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%" />
+
+            <TextView
+                android:id="@+id/report_reason"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/report_sID"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%" />
+
+            <TextView
+                android:id="@+id/report_reward"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/report_reason"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%" />
+
+            <TextView
+                android:id="@+id/car_kilometer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/report_reward"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_marginPercent="0.5%"
+                app:layout_widthPercent="24%" />
+
+        </android.support.percent.PercentRelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

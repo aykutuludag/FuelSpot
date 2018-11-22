@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.fuelspot.adapter.CampaignAdapter;
+import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
@@ -83,14 +85,14 @@ public class StationDetails extends AppCompatActivity {
     public static boolean hasAlreadyCommented;
 
     ImageView stationIcon;
-    public static List<CommentItem> commentList = new ArrayList<>();
+    public static List<CommentItem> stationCommentList = new ArrayList<>();
     RelativeTimeTextView textLastUpdated;
 
     StreetViewPanoramaView mStreetViewPanoramaView;
     StreetViewPanorama mPanorama;
     TextView noCampaignText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
+    RecyclerView mRecyclerView, mRecyclerView2;
+    RecyclerView.Adapter mAdapter, mAdapter2;
     List<CampaignItem> campaignList = new ArrayList<>();
     Toolbar toolbar;
     Window window;
@@ -104,6 +106,7 @@ public class StationDetails extends AppCompatActivity {
     CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant;
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
     RelativeLayout commentSection;
+    Button seeAllComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +177,14 @@ public class StationDetails extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        seeAllComments = findViewById(R.id.button_seeAllComments);
+        seeAllComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StationDetails.this, StationComments.class);
+                startActivity(intent);
+            }
+        });
 
         // if stationVerified == 1, this section shows up!
         verifiedSection = findViewById(R.id.verifiedStation);
@@ -204,20 +215,11 @@ public class StationDetails extends AppCompatActivity {
         // Campaigns
         mRecyclerView = findViewById(R.id.campaignView);
 
+        // Comments
+        mRecyclerView2 = findViewById(R.id.commentView);
+
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
-
-      /*  floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item1);
-        if (isSuperUser) {
-            floatingActionButton1.setVisibility(View.GONE);
-        } else {
-            floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    materialDesignFAM.close(true);
-                   // addUpdateCommentPopup(v);
-                }
-            });
-        }*/
 
         floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +228,6 @@ public class StationDetails extends AppCompatActivity {
                 reportPrices(v);
             }
         });
-
 
         floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item3);
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
@@ -357,6 +358,7 @@ public class StationDetails extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
         Glide.with(StationDetails.this).load(Uri.parse(iconURL)).into(stationIcon);
 
         if (isStationVerified == 1) {
@@ -439,7 +441,7 @@ public class StationDetails extends AppCompatActivity {
         }
 
         fetchCampaigns();
-        fetchComments();
+        fetchStationComments();
     }
 
     void fetchCampaigns() {
@@ -507,15 +509,16 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void fetchComments() {
+    public void fetchStationComments() {
         sumOfPoints = 0;
         numOfComments = 0;
-        commentList.clear();
+        stationCommentList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
+                            List<CommentItem> dummyList = new ArrayList<>();
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -531,7 +534,11 @@ public class StationDetails extends AppCompatActivity {
                                     item.setAnswer(obj.getString("answer"));
                                     item.setReplyTime(obj.getString("replyTime"));
                                     item.setLogo(obj.getString("logo"));
-                                    commentList.add(item);
+                                    stationCommentList.add(item);
+
+                                    if (i < 3) {
+                                        dummyList.add(item);
+                                    }
 
                                     if (obj.getString("username").equals(username)) {
                                         hasAlreadyCommented = true;
@@ -542,18 +549,28 @@ public class StationDetails extends AppCompatActivity {
 
                                     sumOfPoints += obj.getInt("stars");
                                     numOfComments++;
+
                                 }
 
                                 // Calculate station score
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 stationScore = sumOfPoints / numOfComments;
                                 textViewStationPoint.setText((int) numOfComments + " yorum" + " - " + df.format(stationScore));
+
+                                // Display first three comments
+                                mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
+                                GridLayoutManager mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
+
+                                mAdapter2.notifyDataSetChanged();
+                                mRecyclerView2.setAdapter(mAdapter2);
+                                mRecyclerView2.setLayoutManager(mLayoutManager);
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
                                 textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
                             }
                         } else {
                             hasAlreadyCommented = false;
+                            textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
                         }
                     }
                 },
@@ -561,6 +578,7 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
+                        textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
                     }
                 }) {
             @Override
@@ -638,7 +656,7 @@ public class StationDetails extends AppCompatActivity {
 
             private void sendReporttoServer() {
                 final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_ADD),
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -793,7 +811,7 @@ public class StationDetails extends AppCompatActivity {
 
             private void sendReporttoServer() {
                 final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_ADD),
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

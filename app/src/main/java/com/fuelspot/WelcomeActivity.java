@@ -88,6 +88,7 @@ import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userFuelSpotMoney;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userVehicles;
@@ -222,6 +223,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                             userVehicles = obj.getString("vehicles");
                             prefs.edit().putString("userVehicles", userVehicles).apply();
+
+                            userFuelSpotMoney = (float) obj.getDouble("reward");
+                            prefs.edit().putFloat("userFuelSpotMoney", userFuelSpotMoney).apply();
 
                             getVariables(prefs);
                             continueButton.setAlpha(1.0f);

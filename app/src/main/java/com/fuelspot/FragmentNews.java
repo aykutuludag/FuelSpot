@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -43,7 +42,6 @@ import static com.fuelspot.MainActivity.username;
 
 public class FragmentNews extends Fragment {
 
-    SwipeRefreshLayout swipeContainer;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
@@ -52,6 +50,8 @@ public class FragmentNews extends Fragment {
     ImageView errorPhoto;
     SharedPreferences prefs;
     SpinKitView proggressBar;
+
+    View rootView;
 
     public static FragmentNews newInstance() {
 
@@ -64,41 +64,27 @@ public class FragmentNews extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_news, container, false);
 
-        // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("Haberler");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+            // Analytics
+            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            t.setScreenName("Haberler");
+            t.enableAdvertisingIdCollection(true);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
-        proggressBar = rootView.findViewById(R.id.spin_kit);
-        proggressBar.setColor(Color.WHITE);
+            proggressBar = rootView.findViewById(R.id.spin_kit);
+            proggressBar.setColor(Color.WHITE);
 
-        swipeContainer = rootView.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (feedURL != null && feedURL.length() > 0) {
-                    fetchNews(feedURL);
-                }
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+            feedsList = new ArrayList<>();
+            mRecyclerView = rootView.findViewById(R.id.feedView);
 
-        feedsList = new ArrayList<>();
-        mRecyclerView = rootView.findViewById(R.id.feedView);
+            errorPhoto = rootView.findViewById(R.id.errorPhoto);
 
-        errorPhoto = rootView.findViewById(R.id.errorPhoto);
-
-        contentChooserByCountry(userCountry);
+            contentChooserByCountry(userCountry);
+        }
 
         return rootView;
     }
@@ -157,7 +143,6 @@ public class FragmentNews extends Fragment {
                                         mAdapter.notifyDataSetChanged();
                                         mRecyclerView.setAdapter(mAdapter);
                                         mRecyclerView.setLayoutManager(mLayoutManager);
-                                        swipeContainer.setRefreshing(false);
                                         errorPhoto.setVisibility(View.GONE);
                                         proggressBar.setVisibility(View.GONE);
                                     }
@@ -199,7 +184,6 @@ public class FragmentNews extends Fragment {
     }
 
     void errorLayout() {
-        swipeContainer.setRefreshing(false);
         errorPhoto.setVisibility(View.VISIBLE);
         Snackbar.make(getActivity().findViewById(android.R.id.content), "Ülkenizle alakalı bir haber bulunamadı. Tüm haberleri göster?", Snackbar.LENGTH_LONG)
                 .setAction("Tamam", new View.OnClickListener() {

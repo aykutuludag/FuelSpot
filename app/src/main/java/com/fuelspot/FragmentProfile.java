@@ -3,6 +3,7 @@ package com.fuelspot;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,9 +31,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.fuelspot.adapter.CommentAdapter;
+import com.fuelspot.adapter.ReportAdapter;
 import com.fuelspot.model.CommentItem;
+import com.fuelspot.model.ReportItem;
 import com.fuelspot.superuser.AdminMainActivity;
-import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -42,36 +43,47 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.birthday;
+import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.userCountry;
+import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userFuelSpotMoney;
+import static com.fuelspot.MainActivity.userPhoneNumber;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 
 public class FragmentProfile extends Fragment {
 
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    List<CommentItem> feedsList = new ArrayList<>();
-    SwipeRefreshLayout swipeContainer;
+    public static List<CommentItem> userCommentList = new ArrayList<>();
+    public static List<ReportItem> userReportList = new ArrayList<>();
+    RecyclerView mRecyclerView, mRecyclerView2;
+    RecyclerView.Adapter mAdapter, mAdapter2;
     TextView title;
     RequestOptions options;
     TextView userFullname;
     CircleImageView userProfileHolder;
     View headerView;
     RelativeLayout userNoCommentLayout;
+    Button buttonSeeAllRewards, buttonSeeAllComments;
+    TextView textViewFMoney;
+    RequestQueue requestQueue;
+    SharedPreferences prefs;
+    View rootView;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -84,50 +96,162 @@ public class FragmentProfile extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-        t.setScreenName("Profile");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+            // Analytics
+            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            t.setScreenName("Profile");
+            t.enableAdvertisingIdCollection(true);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        headerView = rootView.findViewById(R.id.header_profile);
+            headerView = rootView.findViewById(R.id.header_profile);
 
-        title = rootView.findViewById(R.id.viewTitle);
-        if (isSuperUser) {
-            title.setText("Son cevaplarınız");
+            title = rootView.findViewById(R.id.titleComment);
+            if (isSuperUser) {
+                title.setText("Son cevaplarınız");
+            }
+
+            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+            requestQueue = Volley.newRequestQueue(getActivity());
+            userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
+
+            ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
+            updateUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            Button getPremium = rootView.findViewById(R.id.button_premium);
+            getPremium.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isSuperUser) {
+                        try {
+                            ((AdminMainActivity) getActivity()).buyAdminPremium();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            ((MainActivity) getActivity()).buyPremium();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+            buttonSeeAllRewards = rootView.findViewById(R.id.button_seeAllRewards);
+            buttonSeeAllRewards.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UserReports.class);
+                    startActivity(intent);
+                }
+            });
+
+            buttonSeeAllComments = rootView.findViewById(R.id.button_seeAllComments);
+            buttonSeeAllComments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UserComments.class);
+                    startActivity(intent);
+                }
+            });
+
+            //Comments
+            mRecyclerView = rootView.findViewById(R.id.commentView);
+
+            //Reports
+            mRecyclerView2 = rootView.findViewById(R.id.rewardsView);
+
+            fetchProfile();
+            fetchReports();
+            fetchComments();
         }
 
-        userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
-
-        ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
-        updateUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //Comments
-        mRecyclerView = rootView.findViewById(R.id.commentView);
-
-        swipeContainer = rootView.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchComments();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
         return rootView;
+    }
+
+    void fetchProfile() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            name = obj.getString("name");
+                            prefs.edit().putString("Name", name).apply();
+
+                            email = obj.getString("email");
+                            prefs.edit().putString("Email", email).apply();
+
+                            photo = obj.getString("photo");
+                            prefs.edit().putString("ProfilePhoto", photo).apply();
+
+                            gender = obj.getString("gender");
+                            prefs.edit().putString("Gender", gender).apply();
+
+                            birthday = obj.getString("birthday");
+                            prefs.edit().putString("Birthday", birthday).apply();
+
+                            userPhoneNumber = obj.getString("phoneNumber");
+                            prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
+
+                            location = obj.getString("location");
+                            prefs.edit().putString("Location", location).apply();
+
+                            userCountry = obj.getString("country");
+                            prefs.edit().putString("userCountry", userCountry).apply();
+
+                            userDisplayLanguage = obj.getString("language");
+                            prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                            userVehicles = obj.getString("vehicles");
+                            prefs.edit().putString("userVehicles", userVehicles).apply();
+
+                            userFuelSpotMoney = (float) obj.getDouble("reward");
+                            prefs.edit().putFloat("userFuelSpotMoney", userFuelSpotMoney).apply();
+
+                            getVariables(prefs);
+
+                            loadProfile();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     void loadProfile() {
@@ -145,27 +269,20 @@ public class FragmentProfile extends Fragment {
             userFullname.setText(name);
         }
 
-        Button getPremium = headerView.findViewById(R.id.button_premium);
-        getPremium.setOnClickListener(new View.OnClickListener() {
+
+        textViewFMoney = headerView.findViewById(R.id.textViewFMoney);
+        String dummyMoneyText = userFuelSpotMoney + " " + currencySymbol;
+        textViewFMoney.setText(dummyMoneyText);
+
+        TextView userusername = headerView.findViewById(R.id.userUsername);
+        userusername.setText(username);
+
+        Button myWallet = headerView.findViewById(R.id.button_wallet);
+        myWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuperUser) {
-                    try {
-                        ((AdminMainActivity) getActivity()).buyAdminPremium();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        ((MainActivity) getActivity()).buyPremium();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (IntentSender.SendIntentException e) {
-                        e.printStackTrace();
-                    }
-                }
+                Intent intent = new Intent(getActivity(), MyWalletActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -215,8 +332,75 @@ public class FragmentProfile extends Fragment {
         });
     }
 
+    public void fetchReports() {
+        userReportList.clear();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_FETCH),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            List<ReportItem> dummyList = new ArrayList<>();
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    ReportItem item = new ReportItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setStationID(obj.getInt("stationID"));
+                                    item.setReportType(obj.getString("report"));
+                                    item.setReportMessage(obj.getString("details"));
+                                    item.setReportPhoto(obj.getString("photo"));
+                                    item.setPrices(obj.getString("prices"));
+                                    item.setIsReviewed(obj.getInt("status"));
+                                    item.setReward((float) obj.getDouble("reward"));
+                                    item.setReportTime(obj.getString("reportTime"));
+                                    userReportList.add(item);
+
+                                    if (i < 3) {
+                                        dummyList.add(item);
+                                    }
+                                }
+
+                                mAdapter2 = new ReportAdapter(getActivity(), dummyList);
+                                GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
+                                mAdapter2.notifyDataSetChanged();
+                                mRecyclerView2.setAdapter(mAdapter2);
+                                mRecyclerView2.setLayoutManager(mLayoutManager);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     public void fetchComments() {
-        feedsList.clear();
+        userCommentList.clear();
 
         final String whichApi, whichParamater, whichValue;
         if (isSuperUser) {
@@ -234,6 +418,7 @@ public class FragmentProfile extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
+                            List<CommentItem> dummyList = new ArrayList<>();
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -250,25 +435,23 @@ public class FragmentProfile extends Fragment {
                                     item.setAnswer(obj.getString("answer"));
                                     item.setReplyTime(obj.getString("replyTime"));
                                     item.setLogo(obj.getString("logo"));
-                                    feedsList.add(item);
+                                    userCommentList.add(item);
+
+                                    if (i < 3) {
+                                        dummyList.add(item);
+                                    }
                                 }
-                                mAdapter = new CommentAdapterforProfile(getActivity(), feedsList);
-                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                                mAdapter = new CommentAdapter(getActivity(), dummyList, "USER_COMMENTS");
+                                GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
-                                swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
                                 userNoCommentLayout.setVisibility(View.VISIBLE);
-                                //  snackBar.show();
-                                swipeContainer.setRefreshing(false);
-                                e.printStackTrace();
                             }
                         } else {
                             userNoCommentLayout.setVisibility(View.VISIBLE);
-                            // snackBar.show();
-                            swipeContainer.setRefreshing(false);
                         }
                     }
                 },
@@ -276,8 +459,6 @@ public class FragmentProfile extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         userNoCommentLayout.setVisibility(View.VISIBLE);
-                        // snackBar.show();
-                        swipeContainer.setRefreshing(false);
                     }
                 }) {
             @Override
@@ -292,133 +473,8 @@ public class FragmentProfile extends Fragment {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (headerView != null) {
-            loadProfile();
-        }
-
-        if (mRecyclerView != null) {
-            fetchComments();
-        }
-    }
-
-    public class CommentAdapterforProfile extends RecyclerView.Adapter<CommentAdapterforProfile.ViewHolder2> {
-        private List<CommentItem> feedItemList;
-        private Context mContext;
-        private String userName;
-
-        private View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ViewHolder2 holder2 = (ViewHolder2) view.getTag();
-                final int position = holder2.getAdapterPosition();
-                userName = feedItemList.get(position).getUsername();
-
-                String localUser = MainActivity.username;
-                if (localUser.equals(userName)) {
-                    Intent intent = new Intent(mContext, StationDetails.class);
-                    intent.putExtra("STATION_ID", feedItemList.get(position).getStationID());
-                    mContext.startActivity(intent);
-                }
-            }
-        };
-
-        CommentAdapterforProfile(Context context, List<CommentItem> feedItemList) {
-            this.feedItemList = feedItemList;
-            this.mContext = context;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder2 onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_comment, viewGroup, false);
-            return new ViewHolder2(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder2 viewHolder, int i) {
-            CommentItem feedItem = feedItemList.get(i);
-            userName = feedItem.getUsername();
-
-            viewHolder.username.setText(userName);
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            Date date = new Date();
-            try {
-                date = format.parse(feedItem.getTime());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            viewHolder.time.setReferenceTime(date.getTime());
-
-            viewHolder.commentHolder.setText(feedItem.getComment());
-
-            RequestOptions options = new RequestOptions()
-                    .centerCrop()
-                    .placeholder(R.drawable.default_profile)
-                    .error(R.drawable.default_profile)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .priority(Priority.HIGH);
-            Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
-
-            viewHolder.rating.setRating(feedItem.getRating());
-
-            if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
-                viewHolder.answerView.setVisibility(View.VISIBLE);
-
-                viewHolder.answerHolder.setText(feedItem.getAnswer());
-                try {
-                    Date date2 = format.parse(feedItem.getReplyTime());
-                    viewHolder.replyTime.setReferenceTime(date2.getTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                //Station Icon
-                Glide.with(mContext).load(feedItem.getLogo()).into(viewHolder.logo);
-            }
-
-            // Handle click event on image click
-            viewHolder.card.setOnClickListener(clickListener);
-            viewHolder.card.setTag(viewHolder);
-        }
-
-        @Override
-        public int getItemCount() {
-            return (null != feedItemList ? feedItemList.size() : 0);
-        }
-
-        class ViewHolder2 extends RecyclerView.ViewHolder {
-
-            RelativeLayout card, answerView;
-            TextView commentHolder, answerHolder;
-            TextView username;
-            RelativeTimeTextView time, replyTime;
-            ImageView profilePic, logo;
-            RatingBar rating;
-
-            ViewHolder2(View itemView) {
-                super(itemView);
-                card = itemView.findViewById(R.id.single_comment);
-                commentHolder = itemView.findViewById(R.id.comment);
-                username = itemView.findViewById(R.id.username);
-                time = itemView.findViewById(R.id.time);
-                profilePic = itemView.findViewById(R.id.other_profile_pic);
-                rating = itemView.findViewById(R.id.ratingBar);
-                answerView = itemView.findViewById(R.id.answerView);
-                answerHolder = itemView.findViewById(R.id.answer);
-                replyTime = itemView.findViewById(R.id.textViewReplyTime);
-                logo = itemView.findViewById(R.id.imageViewLogo);
-            }
-        }
     }
 }

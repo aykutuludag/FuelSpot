@@ -1,75 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_profile"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <include
-        layout="@layout/card_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/viewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="SON YORUMLAR"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
-        android:id="@+id/noCommentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/viewTitle"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="Henüz hiç yorum yazmamışsınız. Yazdığınız yorumlar ve istasyon sahibinden gelen cevapları burada görebilirsin..."
-            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+        <ImageView
+            android:id="@+id/updateUserInfo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:src="@drawable/edit" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/errorPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView20"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:src="@drawable/error_nocomment" />
-    </RelativeLayout>
+        <include
+            layout="@layout/card_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/viewTitle"
-        android:background="@android:color/transparent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/commentView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_marginTop="250dp">
 
-    <ImageView
-        android:id="@+id/updateUserInfo"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
-        android:padding="4dp"
-        android:src="@drawable/edit" />
+            <RelativeLayout
+                android:id="@+id/accountLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="#f0f0f0">
 
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/titleAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Hesap bilgileri"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <RelativeLayout
+                    android:id="@+id/goPremiumLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleAccount">
+
+                    <TextView
+                        android:id="@+id/textView28"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:fontFamily="@font/gotham_black"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:text="Hesap türü:" />
+
+                    <TextView
+                        android:id="@+id/textView49"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/textView28"
+                        android:layout_alignBottom="@id/textView28"
+                        android:layout_marginStart="4dp"
+                        android:layout_toEndOf="@id/textView28"
+                        android:gravity="center"
+                        android:text="Standart" />
+
+                    <TextView
+                        android:id="@+id/whyPremium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView28"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:text="Premium sürüme geçerek uygulama içerisindeki reklamları kaldırabilir, menzilinizi 50 kilometreye kadar artırabilirsiniz." />
+
+                    <Button
+                        android:id="@+id/button_premium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/whyPremium"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/green_box"
+                        android:fontFamily="@font/gotham_black"
+                        android:text="@string/buy_premium_ads_title" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rewardsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/accountLayout"
+                android:layout_margin="4dp"
+                android:background="#90000000">
+
+                <TextView
+                    android:id="@+id/titleRewards"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/rewards"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse" />
+
+                <TextView
+                    android:id="@+id/textView30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleRewards"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:text="Gönderdiğiniz geçerli raporlar ve mobil ödeme ile yaptığınız alışverişlerden FuelSpot Para kazanırsınız. \n\n Buradan sadece raporlar için kazandığın paraları görebilirsin. \n\n Bütün hesap hareketlerini cüzdandan görebilirsin"
+                    android:textColor="#f1f1f1" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rewardsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView30" />
+
+                <Button
+                    android:id="@+id/button_seeAllRewards"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rewardsView"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/see_all" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/commentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rewardsLayout"
+                android:layout_margin="4dp">
+
+                <TextView
+                    android:id="@+id/titleComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/comments"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/commentView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleComment" />
+
+                <Button
+                    android:id="@+id/button_seeAllComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/commentView"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/see_all" />
+
+                <RelativeLayout
+                    android:id="@+id/noCommentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/titleComment"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="Henüz hiç yorum yazmamışsınız. Yazdığınız yorumlar ve istasyon sahibinden gelen cevapları burada görebilirsin..."
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/errorPhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView20"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/error_nocomment" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

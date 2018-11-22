@@ -261,7 +261,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Benzin"
+                        android:text="@string/gasoline"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -272,7 +272,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Dizel"
+                        android:text="@string/diesel"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -283,7 +283,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="LPG"
+                        android:text="@string/lpg"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -294,7 +294,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Elektrik"
+                        android:text="@string/electricity"
                         android:textColor="#757575" />
                 </RadioGroup>
 
@@ -307,7 +307,7 @@
                     android:layout_marginTop="24dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Kilometre"
+                    android:text="@string/kilometer"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -321,7 +321,7 @@
                     android:layout_marginRight="16dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:hint="7500"
+                    android:hint="17500"
                     android:inputType="numberSigned|numberDecimal"
                     android:shadowColor="#3A3A3A"
                     android:textColor="#3A3A3A" />
@@ -424,7 +424,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Gasoline" />
+                android:text="@string/gasoline" />
 
             <ImageView
                 android:id="@+id/imageView15"
@@ -445,7 +445,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Diesel" />
+                android:text="@string/diesel" />
 
             <ImageView
                 android:id="@+id/imageView16"
@@ -466,7 +466,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="LPG" />
+                android:text="@string/lpg" />
 
             <ImageView
                 android:id="@+id/imageView17"
@@ -488,7 +488,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Electricity" />
+                android:text="@string/electricity" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewIndicator"

@@ -3,19 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_profile"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="250dp"
     android:background="#EDEDED">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_margin="4dp"
         android:src="@drawable/default_profile" />
 
     <TextView
@@ -25,53 +22,96 @@
         android:layout_below="@+id/profileImage"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:textAllCaps="true" />
+
+    <TextView
+        android:id="@+id/userUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userFullName"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <RelativeLayout
+        android:id="@+id/fuelSpotMoney"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userUsername"
+        android:gravity="center"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/gotham_black"
+            android:padding="2dp"
+            android:text="@string/fuelspot_money" />
+
+        <TextView
+            android:id="@+id/textViewFMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/textView31"
+            android:layout_alignBottom="@id/textView31"
+            android:layout_toEndOf="@+id/textView31"
+            android:gravity="center"
+            android:text="7.65 TRY" />
+    </RelativeLayout>
 
     <android.support.percent.PercentRelativeLayout
         android:id="@+id/buttonBars"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/userFullName"
+        android:layout_below="@id/fuelSpotMoney"
         android:layout_margin="4dp">
 
         <Button
-            android:id="@+id/button_premium"
+            android:id="@+id/button_wallet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/green_box"
-            android:text="@string/buy_premium_ads_title"
-            app:layout_marginPercent="0.5%"
-            app:layout_widthPercent="24%" />
+            android:text="@string/wallet"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="#212121"
+            app:layout_marginPercent="0.25%"
+            app:layout_widthPercent="24.5%" />
 
         <Button
             android:id="@+id/button_fav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_premium"
+            android:layout_toEndOf="@id/button_wallet"
             android:background="@drawable/white_box"
             android:text="@string/favorites"
-            app:layout_marginPercent="0.5%"
-            app:layout_widthPercent="24%" />
-
-        <Button
-            android:id="@+id/button_privacy"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_fav"
-            android:background="@drawable/white_box"
-            android:text="@string/privacy"
-            app:layout_marginPercent="0.5%"
-            app:layout_widthPercent="24%" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_marginPercent="0.25%"
+            app:layout_widthPercent="24.5%" />
 
         <Button
             android:id="@+id/button_help"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_privacy"
+            android:layout_toEndOf="@id/button_fav"
             android:background="@drawable/white_box"
             android:text="@string/help"
-            app:layout_marginPercent="0.5%"
-            app:layout_widthPercent="24%" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_marginPercent="0.25%"
+            app:layout_widthPercent="24.5%" />
+
+        <Button
+            android:id="@+id/button_privacy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/button_help"
+            android:background="@drawable/white_box"
+            android:text="@string/privacy"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_marginPercent="0.25%"
+            app:layout_widthPercent="24.5%" />
 
     </android.support.percent.PercentRelativeLayout>
 
