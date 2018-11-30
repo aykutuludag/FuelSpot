@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -8,69 +9,73 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="-4dp"
+        android:layout_marginBottom="-4dp"
+        android:background="#ffffff"
+        card_view:cardCornerRadius="24dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:id="@+id/single_purchase"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#90EDEDED">
-
-            <ImageView
-                android:id="@+id/imageViewStationLogo"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_margin="4dp"
-                card_view:srcCompat="@drawable/default_station" />
-
-            <TextView
-                android:id="@+id/section1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/imageViewStationLogo"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="@font/gotham_black"
-                android:gravity="center"
-                android:text="@string/bill"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="18sp" />
+            android:layout_height="wrap_content">
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/purchaseTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/imageViewStationLogo"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="4dp"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <android.support.percent.PercentRelativeLayout
                 android:id="@+id/bill_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/section1"
-                android:layout_margin="8dp">
+                android:layout_below="@id/purchaseTime"
+                android:layout_margin="4dp">
+
+                <RelativeLayout
+                    android:id="@+id/stationInfo"
+                    android:layout_height="wrap_content"
+                    app:layout_marginBottomPercent="1%"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="5%"
+                    app:layout_marginTopPercent="1%"
+                    app:layout_widthPercent="20%">
+
+                    <ImageView
+                        android:id="@+id/imageViewStationLogo"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_centerHorizontal="true"
+                        app:srcCompat="@drawable/default_station" />
+
+                    <TextView
+                        android:id="@+id/station_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imageViewStationLogo"
+                        android:fontFamily="@font/gotham_bold"
+                        android:gravity="center"
+                        android:text="Shell"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#000000" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/title_type"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/stationInfo"
                     android:gravity="center"
                     android:text="Tür"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_widthPercent="25%" />
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="20%" />
 
                 <TextView
                     android:id="@+id/title_amount"
@@ -81,164 +86,147 @@
                     android:gravity="center"
                     android:text="Miktar"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    card_view:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/title_unit"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/title_amount"
-                    android:gravity="center"
-                    android:text="Birim fiyat"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_widthPercent="25%" />
+                    app:layout_marginPercent="1%"
+                    card_view:layout_widthPercent="20%" />
 
                 <TextView
                     android:id="@+id/title_price"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@+id/title_amount"
                     android:gravity="center"
                     android:text="Tutar"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_widthPercent="25%" />
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="20%" />
 
                 <RelativeLayout
                     android:id="@+id/typeLayout"
-                    android:layout_height="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/title_type"
-                    android:gravity="center"
-                    app:layout_widthPercent="25%">
+                    android:layout_alignStart="@id/title_type"
+                    android:layout_alignEnd="@id/title_type"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/type1"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentStart="true" />
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:srcCompat="@drawable/diesel" />
 
                     <TextView
                         android:id="@+id/type1Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/type1"
+                        android:layout_alignBottom="@+id/type1"
+                        android:layout_marginStart="4dp"
                         android:layout_toEndOf="@+id/type1"
                         android:gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColor="#626262" />
+                        android:text="Diesel"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#212121" />
                 </RelativeLayout>
-
 
                 <TextView
                     android:id="@+id/amount1"
-                    android:layout_height="25dp"
-                    android:layout_below="@+id/title_type"
-                    android:layout_toEndOf="@+id/title_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/title_amount"
+                    android:layout_alignStart="@id/title_amount"
+                    android:layout_alignEnd="@id/title_amount"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="#626262"
-                    card_view:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/unitPrice1"
-                    android:layout_height="25dp"
-                    android:layout_alignTop="@+id/typeLayout"
-                    android:layout_toEndOf="@+id/amount1"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="#626262"
-                    card_view:layout_widthPercent="25%" />
+                    android:text="16.52 lt"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    card_view:layout_widthPercent="20%" />
 
                 <TextView
                     android:id="@+id/price1"
-                    android:layout_height="25dp"
-                    android:layout_below="@+id/title_type"
-                    android:layout_alignParentEnd="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/title_price"
+                    android:layout_alignStart="@id/title_price"
+                    android:layout_alignEnd="@id/title_price"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="#626262"
-                    card_view:layout_widthPercent="25%" />
+                    android:text="100 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    card_view:layout_widthPercent="20%" />
 
                 <RelativeLayout
                     android:id="@+id/typeLayout2"
-                    android:layout_height="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
                     android:layout_below="@+id/typeLayout"
-                    android:gravity="center"
-                    app:layout_widthPercent="25%">
+                    android:layout_alignStart="@id/typeLayout"
+                    android:layout_alignEnd="@id/typeLayout"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/type2"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentStart="true" />
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lpg" />
 
                     <TextView
                         android:id="@+id/type1Text2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/type2"
+                        android:layout_alignBottom="@+id/type2"
+                        android:layout_marginStart="4dp"
                         android:layout_toEndOf="@+id/type2"
                         android:gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColor="#626262" />
+                        android:text="LPG"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#212121" />
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/amount2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_below="@+id/typeLayout"
-                    android:layout_toEndOf="@+id/title_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/amount1"
+                    android:layout_alignStart="@id/amount1"
+                    android:layout_alignEnd="@id/amount1"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="#626262"
-                    card_view:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/unitPrice2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_below="@+id/unitPrice1"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/amount2"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="#626262"
-                    card_view:layout_widthPercent="25%" />
+                    android:text="32.25 lt"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121" />
 
                 <TextView
                     android:id="@+id/price2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_below="@+id/typeLayout"
-                    android:layout_alignParentEnd="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/price1"
+                    android:layout_alignStart="@id/price1"
+                    android:layout_alignEnd="@id/price1"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="#626262"
-                    card_view:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/totalTax"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/typeLayout2"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="VERGİ : "
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    card_view:layout_widthPercent="75%" />
+                    android:text="100 TL"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121" />
 
                 <TextView
                     android:id="@+id/totalPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/totalTax"
+                    android:layout_below="@+id/stationInfo"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:fontFamily="@font/gotham_bold"
                     android:gravity="center"
                     android:text="TOPLAM : "
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="#424242"
-                    app:layout_widthPercent="75%" />
+                    android:textColor="#424242" />
 
             </android.support.percent.PercentRelativeLayout>
 

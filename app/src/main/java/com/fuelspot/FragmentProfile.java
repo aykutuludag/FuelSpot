@@ -32,7 +32,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.adapter.CommentAdapter;
-import com.fuelspot.adapter.ReportAdapter;
 import com.fuelspot.model.CommentItem;
 import com.fuelspot.model.ReportItem;
 import com.fuelspot.superuser.AdminMainActivity;
@@ -71,11 +70,10 @@ public class FragmentProfile extends Fragment {
 
     public static List<CommentItem> userCommentList = new ArrayList<>();
     public static List<ReportItem> userReportList = new ArrayList<>();
-    RecyclerView mRecyclerView, mRecyclerView2;
-    RecyclerView.Adapter mAdapter, mAdapter2;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
     TextView title;
     RequestOptions options;
-    TextView userFullname;
     CircleImageView userProfileHolder;
     View headerView;
     RelativeLayout userNoCommentLayout;
@@ -149,14 +147,6 @@ public class FragmentProfile extends Fragment {
                 }
             });
 
-            buttonSeeAllRewards = rootView.findViewById(R.id.button_seeAllRewards);
-            buttonSeeAllRewards.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), UserReports.class);
-                    startActivity(intent);
-                }
-            });
 
             buttonSeeAllComments = rootView.findViewById(R.id.button_seeAllComments);
             buttonSeeAllComments.setOnClickListener(new View.OnClickListener() {
@@ -170,14 +160,9 @@ public class FragmentProfile extends Fragment {
             //Comments
             mRecyclerView = rootView.findViewById(R.id.commentView);
 
-            //Reports
-            mRecyclerView2 = rootView.findViewById(R.id.rewardsView);
-
             fetchProfile();
-            fetchReports();
             fetchComments();
         }
-
         return rootView;
     }
 
@@ -186,6 +171,7 @@ public class FragmentProfile extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println(response);
                         try {
                             JSONArray res = new JSONArray(response);
                             JSONObject obj = res.getJSONObject(0);
@@ -220,11 +206,7 @@ public class FragmentProfile extends Fragment {
                             userVehicles = obj.getString("vehicles");
                             prefs.edit().putString("userVehicles", userVehicles).apply();
 
-                            userFuelSpotMoney = (float) obj.getDouble("reward");
-                            prefs.edit().putFloat("userFuelSpotMoney", userFuelSpotMoney).apply();
-
                             getVariables(prefs);
-
                             loadProfile();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -263,12 +245,6 @@ public class FragmentProfile extends Fragment {
         if (getActivity() != null && userProfileHolder != null) {
             Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
         }
-
-        userFullname = headerView.findViewById(R.id.userFullName);
-        if (userFullname != null) {
-            userFullname.setText(name);
-        }
-
 
         textViewFMoney = headerView.findViewById(R.id.textViewFMoney);
         String dummyMoneyText = userFuelSpotMoney + " " + currencySymbol;
@@ -332,73 +308,6 @@ public class FragmentProfile extends Fragment {
         });
     }
 
-    public void fetchReports() {
-        userReportList.clear();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_FETCH),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            List<ReportItem> dummyList = new ArrayList<>();
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    ReportItem item = new ReportItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setUsername(obj.getString("username"));
-                                    item.setStationID(obj.getInt("stationID"));
-                                    item.setReportType(obj.getString("report"));
-                                    item.setReportMessage(obj.getString("details"));
-                                    item.setReportPhoto(obj.getString("photo"));
-                                    item.setPrices(obj.getString("prices"));
-                                    item.setIsReviewed(obj.getInt("status"));
-                                    item.setReward((float) obj.getDouble("reward"));
-                                    item.setReportTime(obj.getString("reportTime"));
-                                    userReportList.add(item);
-
-                                    if (i < 3) {
-                                        dummyList.add(item);
-                                    }
-                                }
-
-                                mAdapter2 = new ReportAdapter(getActivity(), dummyList);
-                                GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
-                                mAdapter2.notifyDataSetChanged();
-                                mRecyclerView2.setAdapter(mAdapter2);
-                                mRecyclerView2.setLayoutManager(mLayoutManager);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
     public void fetchComments() {
         userCommentList.clear();
 
@@ -439,6 +348,8 @@ public class FragmentProfile extends Fragment {
 
                                     if (i < 3) {
                                         dummyList.add(item);
+                                    } else {
+                                        buttonSeeAllComments.setVisibility(View.VISIBLE);
                                     }
                                 }
                                 mAdapter = new CommentAdapter(getActivity(), dummyList, "USER_COMMENTS");

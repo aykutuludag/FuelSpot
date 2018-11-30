@@ -3,430 +3,390 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/addOrEditPage"
+    android:background="#EAEAEA"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="AYARLAR"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#fff"
-            android:textStyle="bold" />
-
         <RelativeLayout
             android:id="@+id/settings_general"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textView1"
             android:layout_margin="8dp"
-            android:background="#70000000">
+            android:background="@drawable/round_layout_white">
 
             <TextView
                 android:id="@+id/textView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:text="GENEL"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#fff"
-                android:textStyle="bold" />
-
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_below="@id/textView01"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/country_icon" />
-
-            <TextView
-                android:id="@+id/textViewCountryName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/imageView"
-                android:layout_alignBottom="@id/imageView"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/imageView"
-                android:gravity="center"
-                android:textColor="#fff" />
-
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_below="@+id/imageView"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/language" />
-
-            <TextView
-                android:id="@+id/textViewLanguage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textViewCountryName"
-                android:layout_alignTop="@id/imageView11"
-                android:layout_alignBottom="@id/imageView11"
-                android:gravity="center"
-                android:textColor="#fff" />
-
-            <ImageView
-                android:id="@+id/imageView122"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_below="@+id/imageView11"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/currency_icon" />
-
-            <TextView
-                android:id="@+id/textViewCurrency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textViewCountryName"
-                android:layout_alignTop="@+id/imageView122"
-                android:layout_alignBottom="@id/imageView122"
-                android:gravity="center"
-                android:textColor="#fff" />
-
-            <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_below="@+id/textViewCurrency"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/units" />
-
-            <TextView
-                android:id="@+id/textViewUnitSystem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textViewCountryName"
-                android:layout_alignTop="@+id/imageView12"
-                android:layout_alignBottom="@id/imageView12"
-                android:gravity="center"
-                android:textColor="#fff" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView12"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Ülke değiştirdiğiniz FuelSpot bu ayarları otomatik güncelleyecektir."
-                android:textColor="#fff" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/settings_map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_general"
-            android:layout_margin="8dp"
-            android:background="#70000000">
-
-            <TextView
-                android:id="@+id/textViewMapTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="HARİTA"
+                android:layout_margin="8dp"
+                android:text="Genel ayarlar"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#fff"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewRange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewMapTitle"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                android:text="MENZİL:"
-                android:textColor="#fff" />
-
-            <TextView
-                android:id="@+id/textViewMenzil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/textViewRange"
-                android:layout_alignBottom="@id/textViewRange"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/textViewRange"
-                android:textColor="#fff" />
-
-            <TextView
-                android:id="@+id/textViewPremium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewRange"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="Premium sürüme geçerek menzilinizi 50 kilometreye çıkarabilir ve reklamları kaldırabilirsiniz.\n\n Premium sürüme geçmek için tıklayınız."
-                android:textColor="#fff" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/settings_news"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_map"
-            android:layout_margin="8dp"
-            android:background="#70000000">
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="HABERLER"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#fff"
-                android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/switch1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView4"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="8dp"
-                android:text="Global news"
-                android:textColor="#fff" />
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/switch1"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="4dp"
-                android:text="Global news i açarak tüm dünyadan haberleri okuyabilirsiniz."
-                android:textColor="#fff" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/settings_tax"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_news"
-            android:layout_margin="8dp"
-            android:background="#70000000">
-
-            <TextView
-                android:id="@+id/textView114"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="VERGİ"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#fff"
+                android:textColor="#212121"
                 android:textStyle="bold" />
 
             <android.support.percent.PercentRelativeLayout
-                android:id="@+id/single_tax"
+                android:id="@+id/userGen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView114"
-                android:layout_margin="8dp"
-                android:background="#EDEDED">
-
-                <ImageView
-                    android:id="@+id/gasoline"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:padding="5dp"
-                    android:src="@drawable/gasoline"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="25%" />
+                android:layout_below="@id/textView01"
+                android:layout_margin="8dp">
 
                 <TextView
-                    android:id="@+id/priceGasoline"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/dummy001"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/gasoline"
-                    android:layout_alignStart="@+id/gasoline"
-                    android:layout_alignEnd="@+id/gasoline"
                     android:gravity="center"
-                    android:padding="4dp"
-                    android:text="53 %"
+                    android:padding="2dp"
+                    android:text="Ülke"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="#424242"
+                    app:layout_marginPercent="2.5%"
+                    app:layout_widthPercent="20%" />
 
-                <ImageView
-                    android:id="@+id/diesel"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/gasoline"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:src="@drawable/diesel"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="25%" />
 
                 <TextView
-                    android:id="@+id/priceDiesel"
+                    android:id="@+id/dummy002"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/diesel"
-                    android:layout_alignEnd="@+id/diesel"
-                    android:layout_toEndOf="@+id/priceGasoline"
+                    android:layout_toEndOf="@id/dummy001"
                     android:gravity="center"
-                    android:padding="4dp"
-                    android:text="51 %"
+                    android:padding="2dp"
+                    android:text="Dil"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="#424242"
+                    app:layout_marginPercent="2.5%"
+                    app:layout_widthPercent="20%" />
 
-                <ImageView
-                    android:id="@+id/lpg"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/diesel"
-                    android:padding="5dp"
-                    android:src="@drawable/lpg"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="25%" />
 
                 <TextView
-                    android:id="@+id/priceLPG"
+                    android:id="@+id/dummy003"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lpg"
-                    android:layout_alignEnd="@+id/lpg"
-                    android:layout_toEndOf="@+id/priceDiesel"
+                    android:layout_toEndOf="@id/dummy002"
                     android:gravity="center"
-                    android:padding="4dp"
-                    android:text="45 %"
+                    android:padding="2dp"
+                    android:text="Para birimi"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="#424242"
+                    app:layout_marginPercent="2.5%"
+                    app:layout_widthPercent="20%" />
 
-                <ImageView
-                    android:id="@+id/electricity"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/lpg"
-                    android:padding="5dp"
-                    android:src="@drawable/electricity"
-                    app:layout_widthPercent="25%" />
 
                 <TextView
-                    android:id="@+id/priceElectricity"
+                    android:id="@+id/dummy004"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/electricity"
-                    android:layout_alignEnd="@+id/electricity"
-                    android:layout_toEndOf="@+id/priceLPG"
+                    android:layout_toEndOf="@id/dummy003"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="Birim"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#424242"
+                    app:layout_marginPercent="2.5%"
+                    app:layout_widthPercent="20%" />
+
+                <TextView
+                    android:id="@+id/textViewCountryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dummy001"
+                    android:layout_alignStart="@id/dummy001"
+                    android:layout_alignEnd="@id/dummy001"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="30 %"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/textViewLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dummy002"
+                    android:layout_alignStart="@id/dummy002"
+                    android:layout_alignEnd="@id/dummy002"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/textViewCurrency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dummy003"
+                    android:layout_alignStart="@id/dummy003"
+                    android:layout_alignEnd="@id/dummy003"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/textViewUnitSystem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dummy004"
+                    android:layout_alignStart="@id/dummy004"
+                    android:layout_alignEnd="@id/dummy004"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:textColor="#000000" />
+
             </android.support.percent.PercentRelativeLayout>
 
-            <Button
-                android:id="@+id/button_tax"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/single_tax"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="VERGİ ORANLARINI GÜNCELLE" />
+
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/settings_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_tax"
-            android:layout_margin="8dp"
-            android:background="#70000000">
+            android:layout_below="@+id/settings_general"
+            android:background="@drawable/round_layout_white">
+
+            <RelativeLayout
+                android:id="@+id/settings_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="HABERLER"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView4"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="8dp"
+                    android:text="Global news"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/switch1"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="4dp"
+                    android:text="Global news i açarak tüm dünyadan haberleri okuyabilirsiniz."
+                    android:textColor="#000" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/settings_tax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/settings_news">
+
+                <TextView
+                    android:id="@+id/textView114"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="VERGİ"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/single_tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView114"
+                    android:layout_margin="8dp"
+                    android:background="#EDEDED">
+
+                    <ImageView
+                        android:id="@+id/gasoline"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:padding="5dp"
+                        android:src="@drawable/gasoline"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textSize="12sp"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceGasoline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/gasoline"
+                        android:layout_alignStart="@+id/gasoline"
+                        android:layout_alignEnd="@+id/gasoline"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="53 %"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/diesel"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/gasoline"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/diesel"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textSize="12sp"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceDiesel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/diesel"
+                        android:layout_alignEnd="@+id/diesel"
+                        android:layout_toEndOf="@+id/priceGasoline"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="51 %"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/lpg"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/diesel"
+                        android:padding="5dp"
+                        android:src="@drawable/lpg"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textSize="12sp"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceLPG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lpg"
+                        android:layout_alignEnd="@+id/lpg"
+                        android:layout_toEndOf="@+id/priceDiesel"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="45 %"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/electricity"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/lpg"
+                        android:padding="5dp"
+                        android:src="@drawable/electricity"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceElectricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/electricity"
+                        android:layout_alignEnd="@+id/electricity"
+                        android:layout_toEndOf="@+id/priceLPG"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="30 %"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </android.support.percent.PercentRelativeLayout>
+
+                <Button
+                    android:id="@+id/button_tax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/single_tax"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="VERGİ ORANLARINI GÜNCELLE" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/settings_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/settings_tax">
+
+                <TextView
+                    android:id="@+id/textView04"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="DİĞER"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/button_feedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView04"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="FEEDBACK" />
+
+                <Button
+                    android:id="@+id/button_beta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/button_feedback"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="BETA TESTİNE KATIL" />
+
+                <Button
+                    android:id="@+id/button_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/button_beta"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="RATE THE APP" />
+
+                <TextView
+                    android:id="@+id/textViewSuperUserCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/button_rate"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+
+
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/textView04"
+                android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="DİĞER"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#fff"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/button_feedback"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textView04"
+                android:layout_below="@+id/settings_other"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="FEEDBACK" />
-
-            <Button
-                android:id="@+id/button_beta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button_feedback"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="BETA TESTİNE KATIL" />
-
-            <Button
-                android:id="@+id/button_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button_beta"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="RATE THE APP" />
-
-            <TextView
-                android:id="@+id/textViewSuperUserCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/button_rate"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
-
-
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="FuelSpot 2018 - Made with ♥ in Ankara"
+                android:textColor="#212121" />
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_other"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:text="© Copyright 2018 FuelSpot"
-            android:textColor="#fff" />
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -136,7 +136,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         layoutHow2 = findViewById(R.id.howto2);
         layoutHow3 = findViewById(R.id.howto3);
 
-        continueButton = findViewById(R.id.button2);
+        continueButton = findViewById(R.id.buttonContinue);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1337,6 +1337,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onBackPressed() {
-        // Do nothing
+        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
+        finish();
     }
 }

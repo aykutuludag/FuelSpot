@@ -632,7 +632,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
+                error.printStackTrace();
             }
         });
 
@@ -810,7 +810,6 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                     public void onResponse(String res) {
                         Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
                         if (res != null && res.length() > 0) {
-                            System.out.println("UPDATESUPERUSER: " + res);
                             switch (res) {
                                 case "Success":
                                     updateStation();

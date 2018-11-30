@@ -573,6 +573,7 @@ public class AddFuel extends AppCompatActivity {
         }
     }
 
+    // BUNUN YERİNE REPORT GÖNDERECEK.
     private void updateStation() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
@@ -606,6 +607,7 @@ public class AddFuel extends AppCompatActivity {
                 params.put("stationID", String.valueOf(chosenStationID));
                 params.put("stationName", chosenStationName);
                 params.put("stationVicinity", chosenStationAddress);
+                params.put("stationLogo", chosenStationAddress);
                 if (fuelType != null && fuelType.length() > 0 && selectedUnitPrice > 0) {
                     if (fuelType.contains("gasoline")) {
                         params.put("gasolinePrice", String.valueOf(selectedUnitPrice));

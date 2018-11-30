@@ -4,6 +4,7 @@
     android:id="@+id/layout_vehicle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EAEAEA"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
@@ -15,27 +16,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/purchaseTitle"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/containerPurchases"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="250dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/gotham_black"
-            android:gravity="center"
-            android:text="SATIN ALMALAR"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="#ffffff" />
+            android:layout_marginTop="300dp"
+            android:background="@drawable/round_layout"
+            android:elevation="8dp">
+
+            <TextView
+                android:id="@+id/purchaseTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:fontFamily="@font/gotham_black"
+                android:gravity="center"
+                android:text="Satın Almalar"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="#000000" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/purchaseView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/purchaseTitle" />
+
+            <Button
+                android:id="@+id/button_seeAllPurchases"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/purchaseView"
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/green_box"
+                android:fontFamily="@font/gotham_black"
+                android:text="@string/see_all"
+                android:visibility="invisible" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/noPurchaseLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/purchaseTitle"
+            android:layout_below="@+id/containerPurchases"
             android:visibility="gone">
 
             <TextView
@@ -59,14 +84,6 @@
                 android:layout_margin="8dp"
                 android:src="@drawable/error_nopurchase" />
         </RelativeLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/feedView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/purchaseTitle">
-
-        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

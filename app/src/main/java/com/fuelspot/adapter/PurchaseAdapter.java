@@ -95,10 +95,6 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         // AMOUNT 1
         viewHolder.amount1.setText(feedItem.getFuelLiter() + " " + userUnit);
 
-        // UNIT 1
-        String unitHolder = feedItem.getFuelPrice() + " " + currencySymbol;
-        viewHolder.unitPrice1.setText(unitHolder);
-
         // PRICE 1
         int priceOne = (int) (feedItem.getFuelPrice() * feedItem.getFuelLiter());
         String priceHolder = priceOne + " " + currencySymbol;
@@ -129,10 +125,6 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             // AMOUNT 2
             viewHolder.amount2.setText(feedItem.getFuelLiter2() + " " + userUnit);
 
-            // UNIT 2
-            String unitHolder2 = feedItem.getFuelPrice2() + " " + currencySymbol;
-            viewHolder.unitPrice2.setText(unitHolder2);
-
             // PRICE 2
             int priceTwo = (int) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2());
             String priceHolder2 = priceTwo + " " + currencySymbol;
@@ -140,15 +132,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         } else {
             viewHolder.type2Layout.setVisibility(View.GONE);
             viewHolder.amount2.setVisibility(View.GONE);
-            viewHolder.unitPrice2.setVisibility(View.GONE);
             viewHolder.price2.setVisibility(View.GONE);
         }
-
-        //TOTALTAX
-        float tax1 = feedItem.getFuelPrice() * feedItem.getFuelLiter() * feedItem.getFuelTax();
-        float tax2 = feedItem.getFuelPrice2() * feedItem.getFuelLiter2() * feedItem.getFuelTax2();
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " " + currencySymbol;
-        viewHolder.totalTax.setText(taxHolder);
 
         //TotalPrice
         String totalPriceHolder = "TOPLAM: " + (int) feedItem.getTotalPrice() + " " + currencySymbol;
@@ -181,7 +166,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout backgroundClick, type1Layout, type2Layout;
-        TextView price1, unitPrice1, amount1, price2, unitPrice2, amount2, totalTax, totalPrice, type1Text, type2Text;
+        TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text;
         ImageView stationLogo, type1, type2;
         RelativeTimeTextView purchaseTime;
 
@@ -189,21 +174,22 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             super(itemView);
             backgroundClick = itemView.findViewById(R.id.single_purchase);
             stationLogo = itemView.findViewById(R.id.imageViewStationLogo);
+            stationName = itemView.findViewById(R.id.station_name);
+
+            type1Layout = itemView.findViewById(R.id.typeLayout);
             type1 = itemView.findViewById(R.id.type1);
-            price1 = itemView.findViewById(R.id.price1);
-            unitPrice1 = itemView.findViewById(R.id.unitPrice1);
+            type1Text = itemView.findViewById(R.id.type1Text);
             amount1 = itemView.findViewById(R.id.amount1);
+            price1 = itemView.findViewById(R.id.price1);
+
+            type2Layout = itemView.findViewById(R.id.typeLayout2);
             type2 = itemView.findViewById(R.id.type2);
-            price2 = itemView.findViewById(R.id.price2);
-            unitPrice2 = itemView.findViewById(R.id.unitPrice2);
+            type2Text = itemView.findViewById(R.id.fuelType2Text);
             amount2 = itemView.findViewById(R.id.amount2);
-            totalTax = itemView.findViewById(R.id.totalTax);
+            price2 = itemView.findViewById(R.id.price2);
+
             totalPrice = itemView.findViewById(R.id.totalPrice);
             purchaseTime = itemView.findViewById(R.id.purchaseTime);
-            type1Text = itemView.findViewById(R.id.type1Text);
-            type2Text = itemView.findViewById(R.id.fuelType2Text);
-            type1Layout = itemView.findViewById(R.id.typeLayout);
-            type2Layout = itemView.findViewById(R.id.typeLayout2);
         }
     }
 }

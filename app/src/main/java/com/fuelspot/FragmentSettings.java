@@ -4,7 +4,6 @@ package com.fuelspot;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
@@ -40,7 +38,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fuelspot.superuser.AdminMainActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -62,7 +59,6 @@ import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.isGlobalNews;
 import static com.fuelspot.MainActivity.isSuperUser;
-import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
@@ -179,7 +175,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            userRange = rootView.findViewById(R.id.textViewMenzil);
+           /* userRange = rootView.findViewById(R.id.textViewMenzil);
             userRange.setText((mapDefaultRange / 1000) + " km");
 
             userPremium = rootView.findViewById(R.id.textViewPremium);
@@ -204,7 +200,7 @@ public class FragmentSettings extends Fragment {
                         }
                     }
                 }
-            });
+            });*/
 
             superUserCount = rootView.findViewById(R.id.textViewSuperUserCount);
 

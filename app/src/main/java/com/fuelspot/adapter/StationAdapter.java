@@ -82,7 +82,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         // Setting stationName
         viewHolder.stationName.setText(feedItem.getStationName());
-        viewHolder.vicinity.setText(feedItem.getVicinity());
+        //viewHolder.vicinity.setText(feedItem.getVicinity());
 
         // Setting prices
         String gasolineHolder;
@@ -142,7 +142,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView stationName, vicinity, gasolinePrice, dieselPrice, lpgPrice, electricityPrice, distance;
+        TextView stationName, gasolinePrice, dieselPrice, lpgPrice, electricityPrice, distance;
         RelativeTimeTextView lastUpdated;
         ImageView stationPic;
         RelativeLayout background;
@@ -151,7 +151,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             super(itemView);
             background = itemView.findViewById(R.id.single_station);
             stationName = itemView.findViewById(R.id.station_name);
-            vicinity = itemView.findViewById(R.id.station_vicinity);
+            // vicinity = itemView.findViewById(R.id.station_vicinity);
             gasolinePrice = itemView.findViewById(R.id.priceGasoline);
             dieselPrice = itemView.findViewById(R.id.priceDiesel);
             lpgPrice = itemView.findViewById(R.id.priceLPG);

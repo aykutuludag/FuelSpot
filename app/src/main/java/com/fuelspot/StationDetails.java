@@ -84,13 +84,13 @@ public class StationDetails extends AppCompatActivity {
     public static String lastUpdated, facilitiesOfStation, stationName, stationVicinity, stationLocation, iconURL, userComment;
     public static boolean hasAlreadyCommented;
 
-    ImageView stationIcon;
+    CircleImageView stationIcon;
     public static List<CommentItem> stationCommentList = new ArrayList<>();
     RelativeTimeTextView textLastUpdated;
 
     StreetViewPanoramaView mStreetViewPanoramaView;
     StreetViewPanorama mPanorama;
-    TextView noCampaignText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
+    TextView noCampaignText, noCommentText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
     RecyclerView mRecyclerView, mRecyclerView2;
     RecyclerView.Adapter mAdapter, mAdapter2;
     List<CampaignItem> campaignList = new ArrayList<>();
@@ -101,7 +101,7 @@ public class StationDetails extends AppCompatActivity {
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
     NestedScrollView scrollView;
-    ImageView errorStreetView, errorCampaign;
+    ImageView errorStreetView, errorCampaign, errorComment;
     CircleImageView verifiedSection;
     CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant;
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
@@ -162,6 +162,8 @@ public class StationDetails extends AppCompatActivity {
         imageViewMechanic = findViewById(R.id.Mechanic);
         imageViewRestaurant = findViewById(R.id.Restaurant);
         commentSection = findViewById(R.id.section_comment);
+        errorComment = findViewById(R.id.errorNoComment);
+        noCommentText = findViewById(R.id.noCommentText);
         commentSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -538,6 +540,8 @@ public class StationDetails extends AppCompatActivity {
 
                                     if (i < 3) {
                                         dummyList.add(item);
+                                    } else {
+                                        seeAllComments.setVisibility(View.VISIBLE);
                                     }
 
                                     if (obj.getString("username").equals(username)) {
@@ -567,10 +571,14 @@ public class StationDetails extends AppCompatActivity {
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
                                 textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
+                                errorComment.setVisibility(View.VISIBLE);
+                                noCommentText.setVisibility(View.VISIBLE);
                             }
                         } else {
                             hasAlreadyCommented = false;
                             textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
+                            errorComment.setVisibility(View.VISIBLE);
+                            noCommentText.setVisibility(View.VISIBLE);
                         }
                     }
                 },
@@ -805,7 +813,7 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pricesArray[0] = "{ gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
+                pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
                 sendReporttoServer();
             }
 

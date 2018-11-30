@@ -281,7 +281,6 @@ public class AddStation extends AppCompatActivity {
                                 }
 
                                 stationLogo = stationPhotoChooser(stationName);
-
                                 addStation();
                             }
                         } else {
@@ -301,7 +300,7 @@ public class AddStation extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
+                error.printStackTrace();
             }
         });
 
@@ -421,13 +420,13 @@ public class AddStation extends AppCompatActivity {
                 params.put("stationName", stationName);
                 params.put("stationVicinity", stationAddress);
                 params.put("facilities", "WC;Market;CarWash");
+                params.put("stationLogo", stationLogo);
                 params.put("licenseNo", licenseNo);
                 params.put("owner", username);
                 params.put("gasolinePrice", String.valueOf(gasolinePrice));
                 params.put("dieselPrice", String.valueOf(dieselPrice));
                 params.put("lpgPrice", String.valueOf(lpgPrice));
                 params.put("electricityPrice", String.valueOf(electricityPrice));
-                params.put("isActive", String.valueOf(1));
 
                 //returning parameters
                 return params;

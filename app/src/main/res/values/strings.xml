@@ -90,6 +90,7 @@
     <string name="station_id">STATION ID:</string>
     <string name="report_close">Close</string>
     <string name="report_open">Open</string>
+    <string name="sort">Sort</string>
 
     <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>

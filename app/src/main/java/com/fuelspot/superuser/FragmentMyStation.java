@@ -289,7 +289,6 @@ public class FragmentMyStation extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("İSTASYON DETAYI:" + response);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);

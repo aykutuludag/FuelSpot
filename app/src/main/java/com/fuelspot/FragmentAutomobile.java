@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -82,7 +83,7 @@ public class FragmentAutomobile extends Fragment {
     RelativeLayout userNoPurchaseLayout;
     RequestQueue requestQueue;
     View headerView;
-
+    Button buttonSeeAllPurchases;
     View view;
 
     public static FragmentAutomobile newInstance() {
@@ -112,7 +113,16 @@ public class FragmentAutomobile extends Fragment {
             userNoPurchaseLayout = view.findViewById(R.id.noPurchaseLayout);
             requestQueue = Volley.newRequestQueue(getActivity());
 
-            mRecyclerView = view.findViewById(R.id.feedView);
+            mRecyclerView = view.findViewById(R.id.purchaseView);
+
+            buttonSeeAllPurchases = view.findViewById(R.id.button_seeAllPurchases);
+            buttonSeeAllPurchases.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UserPurchases.class);
+                    startActivity(intent);
+                }
+            });
 
             fetchVehiclePurchases();
             loadVehicleProfile();
@@ -132,11 +142,11 @@ public class FragmentAutomobile extends Fragment {
                 .priority(Priority.HIGH);
         Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
-        kilometerText = headerView.findViewById(R.id.car_kilometer);
+        kilometerText = headerView.findViewById(R.id.automobile_kilometer);
         String kmHolder = kilometer + " km";
         kilometerText.setText(kmHolder);
 
-        TextView textViewPlaka = headerView.findViewById(R.id.car_plateNo);
+        TextView textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
         textViewPlaka.setText(plateNo);
 
         //Marka-model
@@ -180,38 +190,53 @@ public class FragmentAutomobile extends Fragment {
             case 0:
                 fuelText2 = "gasoline";
                 fuelTypeIndicator2.setImageResource(R.drawable.gasoline);
+
+                fuelType2.setVisibility(View.VISIBLE);
+                fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 fuelText2 = "diesel";
                 fuelTypeIndicator2.setImageResource(R.drawable.diesel);
+
+                fuelType2.setVisibility(View.VISIBLE);
+                fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 fuelText2 = "lpg";
                 fuelTypeIndicator2.setImageResource(R.drawable.lpg);
+
+                fuelType2.setVisibility(View.VISIBLE);
+                fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 fuelText2 = "electric";
                 fuelTypeIndicator2.setImageResource(R.drawable.electricity);
+
+                fuelType2.setVisibility(View.VISIBLE);
+                fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             default:
                 fuelText2 = "";
                 fuelTypeIndicator2.setImageDrawable(null);
+
+                fuelType2.setVisibility(View.GONE);
+                fuelTypeIndicator2.setVisibility(View.GONE);
         }
         fuelType2.setText(fuelText2);
         //Yakıt tipi bitiş
 
         //Ortalama tüketim
-        avgText = headerView.findViewById(R.id.report_sID);
+        avgText = headerView.findViewById(R.id.automobile_consumption);
         String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
         avgText.setText(avgDummy);
 
         //Ortalama maliyet
-        avgPrice = headerView.findViewById(R.id.report_reason);
+        avgPrice = headerView.findViewById(R.id.automobile_priceCons);
         String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
         //Ortalama emisyon
-        emission = headerView.findViewById(R.id.report_reward);
+        emission = headerView.findViewById(R.id.automobile_emission);
         String emissionHolder = calculateCarbonEmission() + " g/100km";
         emission.setText(emissionHolder);
 
@@ -252,6 +277,7 @@ public class FragmentAutomobile extends Fragment {
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             userNoPurchaseLayout.setVisibility(View.GONE);
+                            List<PurchaseItem> dummyList = new ArrayList<>();
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -275,6 +301,12 @@ public class FragmentAutomobile extends Fragment {
                                     item.setBillPhoto(obj.getString("billPhoto"));
                                     feedsList.add(item);
 
+                                    if (i < 3) {
+                                        dummyList.add(item);
+                                    } else {
+                                        buttonSeeAllPurchases.setVisibility(View.VISIBLE);
+                                    }
+
                                     purchaseTimes.add(i, obj.getString("time"));
                                     purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
                                     purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
@@ -282,7 +314,7 @@ public class FragmentAutomobile extends Fragment {
                                     purchaseKilometers.add(i, obj.getInt("kilometer"));
                                     purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
 
-                                    mAdapter = new PurchaseAdapter(getActivity(), feedsList);
+                                    mAdapter = new PurchaseAdapter(getActivity(), dummyList);
                                     mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
                                     mAdapter.notifyDataSetChanged();
@@ -448,10 +480,10 @@ public class FragmentAutomobile extends Fragment {
                     carbonEmission += (int) (emissionlpg * averageCons);
                     break;
                 case 3:
-                    carbonEmission = 0;
+                    carbonEmission += 0;
                     break;
                 default:
-                    carbonEmission = 0;
+                    carbonEmission += 0;
                     break;
             }
 

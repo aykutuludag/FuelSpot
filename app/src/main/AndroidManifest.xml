@@ -80,6 +80,15 @@
             android:name=".UserReports"
             android:label="@string/reports"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".UserPurchases"
+            android:label="@string/purchases"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fuelspot.MainActivity" />
+        </activity>
 
         <!-- SuperUser Class -->
         <activity

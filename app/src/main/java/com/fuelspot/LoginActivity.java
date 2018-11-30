@@ -243,28 +243,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            /*if (facebookInterstitial != null && facebookInterstitial.isAdLoaded()) {
-                                //Facebook ads loaded he will see Facebook
-                                startActivity(intent);
-                                facebookInterstitial.show();
-                                adCount++;
-                                facebookInterstitial = null;
-                            } else if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-                                //Facebook ads doesnt loaded he will see AdMob
-                                startActivity(intent);
-                                admobInterstitial.show();
-                                adCount++;
-                                admobInterstitial = null;
-                            } else {
-                                //Both ads doesn't loaded.
-                                startActivity(intent);
-                            }
-                            finish();
-                            */
                             startActivity(intent);
                             finish();
                         }
-                    }, 3000);
+                    }, 2200);
                 } else {
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -272,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             startActivity(intent);
                             finish();
                         }
-                    }, 3000);
+                    }, 2200);
                 }
             }
         }

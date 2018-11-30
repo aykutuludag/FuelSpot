@@ -13,7 +13,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -22,7 +21,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -80,6 +82,7 @@ public class FragmentStations extends Fragment {
 
     //Station variables
     static List<String> stationName = new ArrayList<>();
+    List<StationItem> dummyList = new ArrayList<>();
     MapView mMapView;
     SpinKitView proggressBar;
 
@@ -93,13 +96,13 @@ public class FragmentStations extends Fragment {
     ArrayList<Marker> markers = new ArrayList<>();
 
     Context mContext;
+    RelativeLayout stationLayout;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     RequestQueue queue;
     SharedPreferences prefs;
     Circle circle;
-    TabLayout tabLayout;
     ImageView noStationError;
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
@@ -107,8 +110,10 @@ public class FragmentStations extends Fragment {
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
     NestedScrollView nScrollView;
-
+    Button seeAllStations;
     View rootView;
+    boolean isAllStationsListed;
+    RelativeLayout sortGasolineLayout, sortDieselLayout, sortLPGLayout, sortElectricityLayout, sortDistanceLayout;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -142,7 +147,10 @@ public class FragmentStations extends Fragment {
 
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-            tabLayout = rootView.findViewById(R.id.sortBar);
+            stationLayout = rootView.findViewById(R.id.stationLayout);
+            proggressBar = rootView.findViewById(R.id.spin_kit);
+
+            /*tabLayout = rootView.findViewById(R.id.sortBar);
             tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -160,18 +168,64 @@ public class FragmentStations extends Fragment {
                 public void onTabReselected(TabLayout.Tab tab) {
                     // DO NOTHING
                 }
+            });*/
+            sortGasolineLayout = rootView.findViewById(R.id.sortGasoline);
+            sortDieselLayout = rootView.findViewById(R.id.sortDiesel);
+            sortLPGLayout = rootView.findViewById(R.id.sortLPG);
+            sortElectricityLayout = rootView.findViewById(R.id.sortElectric);
+            sortDistanceLayout = rootView.findViewById(R.id.sortDistance);
+
+            sortGasolineLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sortBy(0);
+                }
+            });
+            sortDieselLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sortBy(1);
+                }
+            });
+            sortLPGLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sortBy(2);
+                }
+            });
+            sortElectricityLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sortBy(3);
+                }
+            });
+            sortDistanceLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sortBy(4);
+                }
             });
 
-            proggressBar = rootView.findViewById(R.id.spin_kit);
-            proggressBar.setColor(Color.WHITE);
 
-            mRecyclerView = rootView.findViewById(R.id.feedView);
-            mAdapter = new StationAdapter(getActivity(), feedsList);
+            mRecyclerView = rootView.findViewById(R.id.stationView);
+            mAdapter = new StationAdapter(getActivity(), dummyList);
             mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setNestedScrollingEnabled(false);
+
+            seeAllStations = rootView.findViewById(R.id.button_seeAllStations);
+            seeAllStations.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter = new StationAdapter(getActivity(), feedsList);
+                    mAdapter.notifyDataSetChanged();
+                    mRecyclerView.setAdapter(mAdapter);
+                    seeAllStations.setVisibility(View.GONE);
+                    isAllStationsListed = true;
+                }
+            });
 
             mMapView = rootView.findViewById(R.id.mapView);
             mMapView.onCreate(savedInstanceState);
@@ -180,7 +234,7 @@ public class FragmentStations extends Fragment {
             locLastKnown.setLongitude(Double.parseDouble(userlon));
 
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(10000);
+            mLocationRequest.setInterval(5000);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -274,7 +328,12 @@ public class FragmentStations extends Fragment {
         stationIcon.clear();
         distanceInMeters.clear();
         feedsList.clear();
+        dummyList.clear();
         mAdapter.notifyDataSetChanged();
+
+        stationLayout.setVisibility(View.GONE);
+        proggressBar.setVisibility(View.VISIBLE);
+        seeAllStations.setVisibility(View.GONE);
 
         if (circle != null) {
             circle.remove();
@@ -318,7 +377,6 @@ public class FragmentStations extends Fragment {
                         JSON json = new JSON(response);
                         if (response != null && response.length() > 0) {
                             if (json.key("results").count() > 0) {
-                                // Checking whether place is banned or not
                                 for (int i = 0; i < json.key("results").count(); i++) {
                                     googleID.add(json.key("results").index(i).key("place_id").stringValue());
                                     stationName.add(json.key("results").index(i).key("name").stringValue());
@@ -326,13 +384,13 @@ public class FragmentStations extends Fragment {
 
                                     double lat = json.key("results").index(i).key("geometry").key("location").key("lat").doubleValue();
                                     double lon = json.key("results").index(i).key("geometry").key("location").key("lng").doubleValue();
-                                    location.add(lat + ";" + lon);
+                                    location.add(String.format(Locale.US, "%.5f", lat) + ";" + String.format(Locale.US, "%.5f", lon));
 
                                     stationIcon.add(stationPhotoChooser(json.key("results").index(i).key("name").stringValue()));
                                     stationCountry.add(countryFinder(lat, lon));
                                 }
 
-                                if (json.key("next_page_token") != null && json.key("next_page_token").stringValue().length() > 0) {
+                                if (!json.key("next_page_token").isNull() && json.key("next_page_token").stringValue().length() > 0) {
                                     searchStations(json.key("next_page_token").stringValue());
                                 } else {
                                     for (int i = 0; i < googleID.size(); i++) {
@@ -341,7 +399,7 @@ public class FragmentStations extends Fragment {
                                 }
                             } else {
                                 // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-                                if (mapDefaultRange == 3000) {
+                                if (mapDefaultRange == 2500) {
                                     mapDefaultRange = 5000;
                                     mapDefaultZoom = 12f;
                                     Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
@@ -443,17 +501,20 @@ public class FragmentStations extends Fragment {
 
                                 feedsList.add(item);
 
+                                if (feedsList.size() <= 15) {
+                                    dummyList.add(item);
+                                } else {
+                                    seeAllStations.setVisibility(View.VISIBLE);
+                                }
+
                                 //Add marker
                                 LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
-                                markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity"))));
+                                markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity")).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance))));
 
-                                //addGeofence(index);
-
-                                mAdapter.notifyDataSetChanged();
                                 sortBy(4);
-                                tabLayout.getTabAt(4).select();
+                                noStationError.setVisibility(View.GONE);
+                                stationLayout.setVisibility(View.VISIBLE);
                                 proggressBar.setVisibility(View.GONE);
-                                mRecyclerView.setVisibility(View.VISIBLE);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -488,73 +549,127 @@ public class FragmentStations extends Fragment {
     }
 
     private void sortBy(int position) {
+        List<StationItem> tempList;
+
+        if (isAllStationsListed) {
+            tempList = feedsList;
+        } else {
+            tempList = dummyList;
+        }
+
         switch (position) {
             case 0:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
+                Collections.sort(tempList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getGasolinePrice() == 0) {
-                            return Integer.MAX_VALUE;
+                        if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() == 0) {
+                            // 0TL, 0TL
+                            return 1;
+                        } else if (obj1.getGasolinePrice() == 0) {
+                            // 0 TL, 5 TL
+                            return 1;
                         } else if (obj2.getGasolinePrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else if (obj1.getGasolinePrice() == obj2.getGasolinePrice()) {
-                            return 0;
+                            // 5TL, 0TL
+                            return -1;
                         } else {
-                            return Double.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
+                            // 3.85 TL, 3.97 TL
+                            return Float.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
                         }
                     }
                 });
+
+                sortGasolineLayout.setAlpha(1.0f);
+                sortDieselLayout.setAlpha(0.5f);
+                sortLPGLayout.setAlpha(0.5f);
+                sortElectricityLayout.setAlpha(0.5f);
+                sortDistanceLayout.setAlpha(0.5f);
                 break;
             case 1:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
+                Collections.sort(tempList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getDieselPrice() == 0) {
-                            return Integer.MAX_VALUE;
+                        if (obj1.getDieselPrice() == 0 && obj2.getDieselPrice() == 0) {
+                            // 0TL, 0TL
+                            return 1;
+                        } else if (obj1.getDieselPrice() == 0) {
+                            // 0 TL, 5 TL
+                            return 1;
                         } else if (obj2.getDieselPrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else if (obj1.getDieselPrice() == obj2.getDieselPrice()) {
-                            return 0;
+                            // 5TL, 0TL
+                            return -1;
                         } else {
-                            return Double.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
+                            // 3.85 TL, 3.97 TL
+                            return Float.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
                         }
                     }
                 });
+
+                sortGasolineLayout.setAlpha(0.5f);
+                sortDieselLayout.setAlpha(1.0f);
+                sortLPGLayout.setAlpha(0.5f);
+                sortElectricityLayout.setAlpha(0.5f);
+                sortDistanceLayout.setAlpha(0.5f);
                 break;
             case 2:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
+                Collections.sort(tempList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getLpgPrice() == 0) {
-                            return Integer.MAX_VALUE;
+                        if (obj1.getLpgPrice() == 0 && obj2.getLpgPrice() == 0) {
+                            // 0TL, 0TL
+                            return 1;
+                        } else if (obj1.getLpgPrice() == 0) {
+                            // 0 TL, 5 TL
+                            return 1;
                         } else if (obj2.getLpgPrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else if (obj1.getLpgPrice() == obj2.getLpgPrice()) {
-                            return 0;
+                            // 5TL, 0TL
+                            return -1;
                         } else {
-                            return Double.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
+                            // 3.85 TL, 3.97 TL
+                            return Float.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
                         }
                     }
                 });
+
+                sortGasolineLayout.setAlpha(0.5f);
+                sortDieselLayout.setAlpha(0.5f);
+                sortLPGLayout.setAlpha(1.0f);
+                sortElectricityLayout.setAlpha(0.5f);
+                sortDistanceLayout.setAlpha(0.5f);
                 break;
             case 3:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
+                Collections.sort(tempList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        if (obj1.getElectricityPrice() == 0) {
-                            return Integer.MAX_VALUE;
+                        if (obj1.getElectricityPrice() == 0 && obj2.getElectricityPrice() == 0) {
+                            // 0TL, 0TL
+                            return 1;
+                        } else if (obj1.getElectricityPrice() == 0) {
+                            // 0 TL, 5 TL
+                            return 1;
                         } else if (obj2.getElectricityPrice() == 0) {
-                            return Integer.MAX_VALUE;
-                        } else if (obj1.getElectricityPrice() == obj2.getElectricityPrice()) {
-                            return 0;
+                            // 5TL, 0TL
+                            return -1;
                         } else {
-                            return Double.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
+                            // 3.85 TL, 3.97 TL
+                            return Float.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
                         }
                     }
                 });
+
+                sortGasolineLayout.setAlpha(0.5f);
+                sortDieselLayout.setAlpha(0.5f);
+                sortLPGLayout.setAlpha(0.5f);
+                sortElectricityLayout.setAlpha(1.0f);
+                sortDistanceLayout.setAlpha(0.5f);
                 break;
             case 4:
-                Collections.sort(feedsList, new Comparator<StationItem>() {
+                Collections.sort(tempList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
-                        return Double.compare(obj1.getDistance(), obj2.getDistance());
+                        return Float.compare(obj1.getDistance(), obj2.getDistance());
                     }
                 });
+
+                sortGasolineLayout.setAlpha(0.5f);
+                sortDieselLayout.setAlpha(0.5f);
+                sortLPGLayout.setAlpha(0.5f);
+                sortElectricityLayout.setAlpha(0.5f);
+                sortDistanceLayout.setAlpha(1.0f);
                 break;
         }
         // Updating layout

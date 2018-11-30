@@ -37,7 +37,6 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.superuser.AdminMainActivity.isStationActive;
 import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
 import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
@@ -312,8 +311,16 @@ public class SuperUpdateStation extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        Toast.makeText(SuperUpdateStation.this, s, Toast.LENGTH_LONG).show();
-                        finish();
+                        switch (s) {
+                            case "Success":
+                                Toast.makeText(SuperUpdateStation.this, "İstasyon bilgileri güncellendi.", Toast.LENGTH_LONG).show();
+                                finish();
+                                break;
+                            case "Fail":
+                                Toast.makeText(SuperUpdateStation.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -332,11 +339,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                 params.put("stationName", superStationName);
                 params.put("stationVicinity", superStationAddress);
                 params.put("facilities", superFacilities);
+                params.put("stationLogo", superStationLogo);
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
-                params.put("isActive", String.valueOf(isStationActive));
 
                 //returning parameters
                 return params;
