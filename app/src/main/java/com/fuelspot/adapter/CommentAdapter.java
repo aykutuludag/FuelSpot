@@ -58,7 +58,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private String commentUserName;
     private String answer;
     private int commentID;
-    private String text;
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -66,6 +65,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             CommentAdapter.ViewHolder holder = (CommentAdapter.ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
+            String text;
             switch (whichScreen) {
                 case "USER_COMMENTS":
                     Intent intent = new Intent(mContext, StationDetails.class);
@@ -215,7 +215,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(id));
+                params.put("commentID", String.valueOf(id));
+                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -266,6 +267,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 params.put("commentID", String.valueOf(commentID));
                 params.put("answer", userAnswer);
                 params.put("logo", superStationLogo);
+                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -313,6 +315,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                 //Adding parameters
                 params.put("commentID", String.valueOf(commentID));
+                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

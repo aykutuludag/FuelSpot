@@ -363,7 +363,7 @@ public class FragmentStations extends Fragment {
 
         if (token != null && token.length() > 0) {
             // For getting next 20 stations
-            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&open_now=true&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
+            url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station&pagetoken=" + token + "&key=" + getString(R.string.g_api_key);
         } else {
             // For getting first 20 stations
             url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultRange + "&type=gas_station" + "&key=" + getString(R.string.g_api_key);
@@ -479,7 +479,7 @@ public class FragmentStations extends Fragment {
                                 item.setFacilities(obj.getString("facilities"));
                                 item.setLicenseNo(obj.getString("licenseNo"));
                                 item.setOwner(obj.getString("owner"));
-                                item.setPhotoURL(obj.getString("photoURL"));
+                                item.setPhotoURL(obj.getString("logoURL"));
                                 item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
                                 item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                 item.setLpgPrice((float) obj.getDouble("lpgPrice"));
@@ -501,7 +501,7 @@ public class FragmentStations extends Fragment {
 
                                 feedsList.add(item);
 
-                                if (feedsList.size() <= 15) {
+                                if (feedsList.size() <= 10) {
                                     dummyList.add(item);
                                 } else {
                                     seeAllStations.setVisibility(View.VISIBLE);
@@ -537,7 +537,8 @@ public class FragmentStations extends Fragment {
                 params.put("country", stationCountry.get(index));
                 params.put("location", location.get(index));
                 params.put("googleID", googleID.get(index));
-                params.put("photoURL", stationPhotoChooser(stationName.get(index)));
+                params.put("logoURL", stationPhotoChooser(stationName.get(index)));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -715,6 +716,10 @@ public class FragmentStations extends Fragment {
 
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+
+        if (queue != null) {
+            queue.cancelAll(getActivity());
         }
     }
 

@@ -69,6 +69,7 @@ import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -353,7 +354,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 params.put("carModel", carModel);
                 params.put("fuelPri", String.valueOf(fuelPri));
                 params.put("fuelSec", String.valueOf(fuelSec));
-                params.put("km", String.valueOf(kilometer));
+                params.put("kilometer", String.valueOf(kilometer));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 }
@@ -408,6 +409,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
                 params.put("phoneNumber", userPhoneNumber);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -459,17 +461,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     }
 
     public String getStringImage(Bitmap bmp) {
-        Bitmap bmp2;
-        if (bmp.getWidth() > 720 || bmp.getHeight() > 1280) {
-            float aspectRatio = bmp.getWidth() / bmp.getHeight();
-            bmp2 = Bitmap.createScaledBitmap(bmp, (int) (720 * aspectRatio), (int) (1280 * aspectRatio), true);
-        } else {
-            bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
-        }
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
-
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
@@ -998,8 +991,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                carPhoto = "http://fuel-spot.com/FUELSPOTAPP/uploads/carphotos/" + username + "-" + plateNo + ".jpg";
-                editor.putString("CarPhoto", carPhoto);
+                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                prefs.edit().putString("ProfilePhoto", photo).apply();
             }
         }
     }

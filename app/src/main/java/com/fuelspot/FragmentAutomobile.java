@@ -125,7 +125,6 @@ public class FragmentAutomobile extends Fragment {
             });
 
             fetchVehiclePurchases();
-            loadVehicleProfile();
         }
 
         return view;
@@ -147,6 +146,13 @@ public class FragmentAutomobile extends Fragment {
         kilometerText.setText(kmHolder);
 
         TextView textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
+        // Check if plateNo changed. plateNo changed means user switched automobile.
+        if (textViewPlaka.getText() != null && textViewPlaka.getText().length() > 0) {
+            if (textViewPlaka.getText() != plateNo) {
+                fetchVehiclePurchases();
+            }
+        }
+        // If switched, new vehicle purchases are fetching right now.
         textViewPlaka.setText(plateNo);
 
         //Marka-model
@@ -385,6 +391,7 @@ public class FragmentAutomobile extends Fragment {
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -491,6 +498,15 @@ public class FragmentAutomobile extends Fragment {
             prefs.edit().putInt("carbonEmission", carbonEmission).apply();
         }
         return carbonEmission;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (headerView != null) {
+            loadVehicleProfile();
+        }
     }
 
    /* private void updateCarInfo() {

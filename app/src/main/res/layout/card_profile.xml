@@ -60,51 +60,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fuelSpotMoney"
-        android:padding="8dp">
-
-        <Button
-            android:id="@+id/button_wallet"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/round_layout_white"
-            android:text="@string/wallet"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="#212121"
-            app:layout_marginPercent="0.25%"
-            app:layout_widthPercent="24.5%" />
+        android:padding="4dp">
 
         <Button
             android:id="@+id/button_fav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_wallet"
             android:background="@drawable/round_layout_white"
             android:text="@string/favorites"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            app:layout_marginPercent="0.25%"
-            app:layout_widthPercent="24.5%" />
+            app:layout_marginPercent="1.33%"
+            app:layout_widthPercent="32%" />
+
+        <Button
+            android:id="@+id/button_wallet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/button_fav"
+            android:background="@drawable/round_layout_white"
+            android:text="@string/wallet"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="#212121"
+            app:layout_marginPercent="1.33%"
+            app:layout_widthPercent="32%" />
 
         <Button
             android:id="@+id/button_help"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_fav"
+            android:layout_toEndOf="@id/button_wallet"
             android:background="@drawable/round_layout_white"
             android:text="@string/help"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            app:layout_marginPercent="0.25%"
-            app:layout_widthPercent="24.5%" />
-
-        <Button
-            android:id="@+id/button_privacy"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/button_help"
-            android:background="@drawable/round_layout_white"
-            android:text="@string/privacy"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            app:layout_marginPercent="0.25%"
-            app:layout_widthPercent="24.5%" />
+            app:layout_marginPercent="1.34%"
+            app:layout_widthPercent="32%" />
 
     </android.support.percent.PercentRelativeLayout>
 

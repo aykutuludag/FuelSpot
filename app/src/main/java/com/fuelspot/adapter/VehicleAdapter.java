@@ -1,16 +1,24 @@
 package com.fuelspot.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.fuelspot.AddAutomobile;
+import com.fuelspot.FragmentProfile;
 import com.fuelspot.R;
 import com.fuelspot.model.VehicleItem;
 
@@ -18,81 +26,142 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.FragmentProfile.userAutomobileList;
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
+import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.kilometer;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.vehicleID;
 
-public class VehicleAdapter extends BaseAdapter {
-    private LayoutInflater mLayoutInflater;
+public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHolder> {
     private List<VehicleItem> mItemList;
     private Context mContext;
+    private FragmentProfile fragment;
 
-    public VehicleAdapter(Context context, List<VehicleItem> itemList) {
-        mLayoutInflater = LayoutInflater.from(context);
-        mContext = context;
-        mItemList = itemList;
-    }
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View view) {
+            VehicleAdapter.ViewHolder holder = (VehicleAdapter.ViewHolder) view.getTag();
+            int position = holder.getAdapterPosition();
 
-    @Override
-    public int getCount() {
-        return mItemList.size();
-    }
-
-    @Override
-    public VehicleItem getItem(int i) {
-        return mItemList.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.card_automobile_mini, null);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+            if (userAutomobileList.get(position).getID() == -999) {
+                Intent intent = new Intent(mContext, AddAutomobile.class);
+                mContext.startActivity(intent);
+            } else {
+                changeVehicle(position);
+                Snackbar.make(view, "ARAÇ SEÇİLDİ: " + plateNo, Snackbar.LENGTH_SHORT).show();
+            }
         }
+    };
+
+    public VehicleAdapter(Context context, List<VehicleItem> itemList, FragmentProfile fragment) {
+        this.mContext = context;
+        this.mItemList = itemList;
+        this.fragment = fragment;
+    }
+
+    @NonNull
+    @Override
+    public VehicleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_automobile_mini, viewGroup, false);
+        return new VehicleAdapter.ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull VehicleAdapter.ViewHolder viewHolder, int position) {
+        VehicleItem feedItem = mItemList.get(position);
 
         String carName;
-        if (getItem(position).getVehicleModel() != null && getItem(position).getVehicleModel().length() > 0) {
-            carName = getItem(position).getVehicleBrand() + " " + getItem(position).getVehicleModel();
+        if (feedItem.getVehicleModel() != null && feedItem.getVehicleModel().length() > 0) {
+            carName = feedItem.getVehicleBrand() + " " + feedItem.getVehicleModel();
         } else {
             // Add new car row
-            carName = getItem(position).getVehicleBrand();
+            carName = feedItem.getVehicleBrand();
         }
 
-        holder.carFullName.setText(carName);
+        viewHolder.carFullName.setText(carName);
 
-        String plate = getItem(position).getVehiclePlateNo();
-        holder.carPlateNo.setText(plate);
+        String plate = feedItem.getVehiclePlateNo();
+        viewHolder.carPlateNo.setText(plate);
 
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
-        Glide.with(mContext).load(getItem(position).getVehiclePhoto()).apply(options).into(holder.carPhoto);
+        Glide.with(mContext).load(feedItem.getVehiclePhoto()).apply(options).into(viewHolder.carPhoto);
 
-        if (getItem(position).getID() == vehicleID) {
-            holder.isCarSelected.setVisibility(View.VISIBLE);
+        if (feedItem.getID() == vehicleID) {
+            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#6000FF00"));
         } else {
-            holder.isCarSelected.setVisibility(View.INVISIBLE);
+            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
         }
 
-        return convertView;
+        // Handle click event on image click
+        viewHolder.vehicleLayout.setOnClickListener(clickListener);
+        viewHolder.vehicleLayout.setTag(viewHolder);
     }
 
-    static class ViewHolder {
-        TextView carFullName, carPlateNo;
-        CircleImageView carPhoto, isCarSelected;
+    @Override
+    public int getItemCount() {
+        return (null != mItemList ? mItemList.size() : 0);
+    }
 
-        ViewHolder(View view) {
-            carFullName = view.findViewById(R.id.carFullname);
-            carPlateNo = view.findViewById(R.id.carPlateNo);
-            carPhoto = view.findViewById(R.id.carPicture);
-            isCarSelected = view.findViewById(R.id.carIsSelected);
+    private void changeVehicle(int position) {
+        SharedPreferences prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        VehicleItem item = userAutomobileList.get(position);
+
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+        fragment.parseUserVehicles();
+
+        getVariables(prefs);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout vehicleLayout;
+        TextView carFullName, carPlateNo;
+        CircleImageView carPhoto;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            vehicleLayout = itemView.findViewById(R.id.autumobile_background);
+            carFullName = itemView.findViewById(R.id.carFullname);
+            carPlateNo = itemView.findViewById(R.id.carPlate);
+            carPhoto = itemView.findViewById(R.id.carPic);
         }
     }
 }

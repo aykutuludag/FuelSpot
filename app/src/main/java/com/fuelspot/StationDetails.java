@@ -2,6 +2,7 @@ package com.fuelspot;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,6 +62,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -271,7 +274,7 @@ public class StationDetails extends AppCompatActivity {
                             lpgPrice = (float) obj.getDouble("lpgPrice");
                             electricityPrice = (float) obj.getDouble("electricityPrice");
                             lastUpdated = obj.getString("lastUpdated");
-                            iconURL = obj.getString("photoURL");
+                            iconURL = obj.getString("logoURL");
                             isStationVerified = obj.getInt("isVerified");
 
                             loadStationDetails();
@@ -292,6 +295,7 @@ public class StationDetails extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("stationID", String.valueOf(stationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -500,7 +504,8 @@ public class StationDetails extends AppCompatActivity {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
                 //Adding parameters
-                params.put("id", String.valueOf(choosenStationID));
+                params.put("stationID", String.valueOf(choosenStationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -595,7 +600,8 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(choosenStationID));
+                params.put("stationID", String.valueOf(choosenStationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -659,46 +665,10 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendReporttoServer();
+                sendReporttoServer(username, choosenStationID, reportReason[0], reportDetails[0], null, null);
             }
 
-            private void sendReporttoServer() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_ADD),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
 
-                        //Adding parameters
-                        params.put("username", username);
-                        params.put("stationID", String.valueOf(choosenStationID));
-                        params.put("report", reportReason[0]);
-                        params.put("details", reportDetails[0]);
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
-            }
         });
 
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
@@ -814,44 +784,7 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
-                sendReporttoServer();
-            }
-
-            private void sendReporttoServer() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_ADD),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("username", username);
-                        params.put("stationID", String.valueOf(choosenStationID));
-                        params.put("prices", pricesArray[0]);
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
+                sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], null, pricesArray[0], null);
             }
         });
 
@@ -867,6 +800,59 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.setFocusable(true);
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    private void sendReporttoServer(final String kullaniciAdi, final int istasyonID, final String raporSebebi, final String raporDetayi, final String fiyatlar, final Bitmap bitmap) {
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_ADD),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loading.dismiss();
+                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                        mPopupWindow.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", kullaniciAdi);
+                params.put("stationID", String.valueOf(istasyonID));
+                params.put("report", raporSebebi);
+                params.put("details", raporDetayi);
+                params.put("prices", fiyatlar);
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                }
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
+
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     void literCalculator() {

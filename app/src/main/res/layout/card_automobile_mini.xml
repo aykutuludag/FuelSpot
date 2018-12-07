@@ -1,51 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/header_vehicle"
-    android:layout_width="match_parent"
+    android:id="@+id/autumobile_background"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#EDEDED">
+    android:background="#EDEDED"
+    android:padding="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/carPicture"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:id="@+id/carPic"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_margin="8dp"
         android:src="@drawable/default_automobile" />
 
     <TextView
-        android:id="@+id/carPlateNo"
+        android:id="@+id/carPlate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/carFullname"
-        android:layout_alignBottom="@+id/carPicture"
-        android:layout_marginStart="-1dp"
-        android:layout_marginBottom="11dp"
+        android:layout_alignBottom="@+id/carPic"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="06GC6515"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/carFullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/carPicture"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="3dp"
-        android:layout_toEndOf="@+id/carPicture"
+        android:layout_alignTop="@+id/carPic"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/carPic"
         android:gravity="center"
-        android:text="Renault Symbol"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/carIsSelected"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/save"
-        android:visibility="gone" />
 
 </RelativeLayout>

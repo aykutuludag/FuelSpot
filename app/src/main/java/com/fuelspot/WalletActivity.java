@@ -8,12 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MyWalletActivity extends AppCompatActivity {
+import com.fuelspot.model.VehicleItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class WalletActivity extends AppCompatActivity {
+
+    public static List<VehicleItem> userRewardList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_wallet);
+        setContentView(R.layout.activity_store);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

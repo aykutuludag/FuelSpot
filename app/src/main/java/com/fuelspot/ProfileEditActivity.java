@@ -351,6 +351,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 }
                 params.put("vehicles", userVehicles);
                 params.put("phoneNumber", userPhoneNumber);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -362,17 +363,8 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public String getStringImage(Bitmap bmp) {
-        Bitmap bmp2;
-        if (bmp.getWidth() > 720 || bmp.getHeight() > 1280) {
-            float aspectRatio = bmp.getWidth() / bmp.getHeight();
-            bmp2 = Bitmap.createScaledBitmap(bmp, (int) (720 * aspectRatio), (int) (1280 * aspectRatio), true);
-        } else {
-            bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
-        }
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
-
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
@@ -437,7 +429,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(userPic);
-                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/userphotos/" + username + ".jpg";
+                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/users/" + username + ".jpg";
                 editor.putString("ProfilePhoto", photo);
             }
         }

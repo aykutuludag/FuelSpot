@@ -59,11 +59,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.currencyCode;
-import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
-import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
@@ -71,6 +72,7 @@ import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
+import static com.fuelspot.MainActivity.username;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -272,23 +274,27 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
                 if (tmpusername.length() > 31) {
-                    MainActivity.username = tmpusername.substring(0, 30);
+                    username = tmpusername.substring(0, 30);
                 } else {
-                    MainActivity.username = tmpusername;
+                    username = tmpusername;
                 }
-                prefs.edit().putString("UserName", MainActivity.username).apply();
+                prefs.edit().putString("UserName", username).apply();
 
                 //EMAİL
-                MainActivity.email = acct.getEmail();
-                prefs.edit().putString("Email", MainActivity.email).apply();
+                email = acct.getEmail();
+                prefs.edit().putString("Email", email).apply();
 
                 //PHOTO
                 if (acct.getPhotoUrl() != null && acct.getPhotoUrl().toString().length() > 0) {
-                    MainActivity.photo = acct.getPhotoUrl().toString();
-                    prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
+                    photo = acct.getPhotoUrl().toString();
+                    prefs.edit().putString("ProfilePhoto", photo).apply();
                 }
 
-                saveUserInfo();
+                if (isNetworkConnected(LoginActivity.this)) {
+                    register();
+                } else {
+                    Snackbar.make(background, "İnternet bağlantınızda bir sorun bulunmakta.", Snackbar.LENGTH_SHORT).show();
+                }
             } else {
                 Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                 prefs.edit().putBoolean("isSigned", false).apply();
@@ -302,6 +308,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void facebookLogin() {
         callbackManager = CallbackManager.Factory.create();
         loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions("public_profile");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -312,30 +319,30 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 if (response.getError() != null) {
                                     Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                                 } else {
-                                    MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
-                                    prefs.edit().putString("Name", MainActivity.name).apply();
+                                    name = me.optString("name");
+                                    prefs.edit().putString("Name", name).apply();
 
-                                    MainActivity.email = me.optString("email");
-                                    prefs.edit().putString("Email", MainActivity.email).apply();
+                                    email = me.optString("email");
+                                    prefs.edit().putString("Email", email).apply();
 
-                                    MainActivity.photo = me.optString("profile_pic");
-                                    prefs.edit().putString("ProfilePhoto", MainActivity.photo).apply();
-
-                                    gender = me.optString("gender");
-                                    prefs.edit().putString("Gender", gender).apply();
-
-                                    location = me.optString("location");
-                                    prefs.edit().putString("Location", location).apply();
+                                    photo = me.optString("picture");
+                                    prefs.edit().putString("ProfilePhoto", photo).apply();
 
                                     //USERNAME
-                                    String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                                    if (tmpusername.length() > 21) {
-                                        MainActivity.username = tmpusername.substring(0, 20);
+                                    String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                                    if (tmpusername.length() > 31) {
+                                        username = tmpusername.substring(0, 30);
                                     } else {
-                                        MainActivity.username = tmpusername;
+                                        username = tmpusername;
                                     }
-                                    prefs.edit().putString("UserName", MainActivity.username).apply();
-                                    saveUserInfo();
+                                    prefs.edit().putString("UserName", username).apply();
+
+                                    if (isNetworkConnected(LoginActivity.this)) {
+                                        register();
+                                    } else {
+                                        Snackbar.make(background, "İnternet bağlantınızda bir sorun bulunmakta.", Snackbar.LENGTH_SHORT).show();
+                                    }
+
                                 }
                             }
                         }).executeAsync();
@@ -353,24 +360,34 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
     }
 
-    private void saveUserInfo() {
+    private void register() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Giriş yapılıyor", "Lütfen bekleyiniz...", false, true);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_USER),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String s) {
-                        loading.dismiss();
-                        Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
-                        notLogged.setVisibility(View.GONE);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(LoginActivity.this, WelcomeActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }, 2000);
+                    public void onResponse(String response) {
+                        switch (response) {
+                            case "Success":
+                                loading.dismiss();
+                                Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
+                                notLogged.setVisibility(View.GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent i = new Intent(LoginActivity.this, WelcomeActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                }, 2000);
+                                break;
+                            case "Fail":
+                                //Dismissing the progress dialog
+                                loading.dismiss();
+                                Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                                prefs.edit().putBoolean("isSigned", false).apply();
+                                break;
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -388,11 +405,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", MainActivity.username);
-                params.put("name", MainActivity.name);
-                params.put("email", MainActivity.email);
-                params.put("photo", MainActivity.photo);
-                params.put("gender", gender);
+                params.put("username", username);
+                params.put("name", name);
+                params.put("email", email);
+                params.put("photo", photo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -430,6 +447,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == googleSign) {
             googleSignIn(data);
         }

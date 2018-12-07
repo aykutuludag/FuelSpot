@@ -479,6 +479,7 @@ public class AddStation extends AppCompatActivity {
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
                 params.put("stationIDs", userStations);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

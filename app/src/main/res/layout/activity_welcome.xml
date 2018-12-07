@@ -61,6 +61,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
             android:clickable="false"
+            android:alpha="0.5"
             android:fontFamily="@font/gotham_black"
             android:text="DEVAM"
             android:textColor="#212121" />
@@ -82,7 +83,7 @@
             android:focusableInTouchMode="true">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewCar"
+                android:id="@+id/imageViewCarHolder"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_alignParentTop="true"
@@ -94,7 +95,7 @@
                 android:id="@+id/carNameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageViewCar"
+                android:layout_below="@+id/imageViewCarHolder"
                 android:background="#EDEDED">
 
                 <TextView

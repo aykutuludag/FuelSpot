@@ -18,9 +18,8 @@
     <string name="smth_go_wrong">Somethings go wrong! Please try again later…</string>
     <string name="show_vehicles">Show vehicles</string>
     <string name="show_stations">Show stations</string>
-    <string name="favorites">Favorite stations</string>
-    <string name="wallet">MyWallet</string>
-    <string name="title_activity_my_wallet">MyWallet</string>
+    <string name="favorites">Favorites</string>
+    <string name="wallet">Wallet</string>
 
     <string name="gasoline">Gasoline</string>
     <string name="diesel">Diesel</string>
@@ -49,7 +48,7 @@
     <!-- BottomNavigation -->
     <string name="tab_mystation">MyStation</string>
     <string name="tab_stations">Stations</string>
-    <string name="tab_news">News</string>
+    <string name="tab_news">Latest</string>
     <string name="tab_vehicle">Vehicle</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_settings">Settings</string>
@@ -72,7 +71,7 @@
     <string name="facilities">Facilities</string>
     <string name="campaigns">Campaigns</string>
     <string name="comments">Comments</string>
-
+    <string name="automobiles">Automobiles</string>
     <string name="add_vehicle">Add automobile</string>
     <string name="add_station">Add station</string>
     <string name="update_station">Update station</string>
@@ -84,7 +83,6 @@
     <string name="kilometer">Kilometer</string>
     <string name="rewards">Rewards</string>
     <string name="fuelspot_money">FuelSpot Money</string>
-    <string name="reports">Reports</string>
 
     <string name="see_all">See all</string>
     <string name="station_id">STATION ID:</string>
@@ -97,10 +95,9 @@
     <string name="facebook_app_id" translatable="false">380327342377274</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="g_api_key" translatable="false">AIzaSyCWJQ1LJYb3P5J0-hng71OcmG_Wr9mDfi8</string>
+    <string name="fuelspot_api_key" translatable="false">FPh76g0MSZ2okeWQmShYDlXakjgjhbej</string>
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
-    <string name="interstitial_facebook" translatable="false">380327342377274_384927721917236</string>
-    <string name="inline_facebook" translatable="false">380327342377274_421669164909758</string>
 
     <!-- USER APIs -->
     <string name="API_CREATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/user-create.php</string>
@@ -148,7 +145,6 @@
 
     <!-- REPORT APIs -->
     <string name="API_REPORT_ADD" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/report-add.php</string>
-    <string name="API_REPORT_FETCH" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/report-fetch.php</string>
 
     <!-- OTHER APIs -->
     <string name="API_TAX" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-tax.php</string>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.automobile.Brands;
 import com.fuelspot.automobile.Models;
 import com.google.android.gms.analytics.HitBuilders;
@@ -44,7 +51,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -57,12 +63,12 @@ import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AddAutomobile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -78,10 +84,11 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     Button addCarButton;
     EditText plateText;
     SharedPreferences prefs;
+    RequestOptions options;
 
     // Temp variables to add a vehicle
-    int vehicleID, fuelPri, kilometer = 0;
-    int fuelSec = -1;
+    int vehicleID, kilometer = 0;
+    int fuelPri, fuelSec = -1;
     String carBrand = "Acura";
     String carModel = "RSX";
     String plateNo = "";
@@ -112,18 +119,15 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
         requestQueue = Volley.newRequestQueue(this);
-
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyFilePickerPermission(AddAutomobile.this)) {
-                  /*  FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(AddAutomobile.this);*/
-                    Toast.makeText(AddAutomobile.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                if (MainActivity.verifyFilePickerPermission(AddAutomobile.this)) {
+                    ImagePicker.create(AddAutomobile.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(AddAutomobile.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -140,7 +144,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         //MODEL SEÇİMİ
         spinner2 = findViewById(R.id.spinner_models);
 
-        //Yakıt seçenekleri
+        // FUEL SECTION START
         gasoline = findViewById(R.id.gasoline);
         diesel = findViewById(R.id.diesel);
         lpg = findViewById(R.id.lpg);
@@ -149,8 +153,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         diesel2 = findViewById(R.id.diesel2);
         lpg2 = findViewById(R.id.lpg2);
         elec2 = findViewById(R.id.electricity2);
-
-        //1. yakıt
         final RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         final RadioGroup radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
 
@@ -172,7 +174,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        //2. yakıt
         radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -189,8 +190,48 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
+        switch (fuelPri) {
+            case 0:
+                gasoline.setChecked(true);
+                break;
+            case 1:
+                diesel.setChecked(true);
+                break;
+            case 2:
+                lpg.setChecked(true);
+                break;
+            case 3:
+                elec.setChecked(true);
+                break;
+            default:
+                fuelPri = -1;
+                radioGroup1.clearCheck();
+                break;
+        }
+
+        switch (fuelSec) {
+            case 0:
+                gasoline2.setChecked(true);
+                break;
+            case 1:
+                diesel2.setChecked(true);
+                break;
+            case 2:
+                lpg2.setChecked(true);
+                break;
+            case 3:
+                elec2.setChecked(true);
+                break;
+            default:
+                fuelSec = -1;
+                radioGroup2.clearCheck();
+                break;
+        }
+        // FUEL SECTION END
+
         //Kilometre
         EditText eText = findViewById(R.id.editText_km);
+        eText.setText("" + kilometer);
         eText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -204,7 +245,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() >= 1) {
+                if (s.length() > 0) {
                     kilometer = Integer.parseInt(s.toString());
                 }
             }
@@ -212,6 +253,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         //PlakaNO
         plateText = findViewById(R.id.editText_plate);
+        plateText.setText(plateNo);
         plateText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -226,18 +268,17 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
+                    //All uppercase
+                    plateNo = s.toString().toUpperCase();
+
                     if (s.toString().contains(" ")) {
                         plateNo = s.toString().replaceAll(" ", "");
-                    } else {
-                        plateNo = s.toString();
                     }
 
-                    //All uppercase
-                    plateNo = plateNo.toUpperCase();
+                    prefs.edit().putString("plateNo", plateNo).apply();
                 }
             }
         });
-
 
         addCarButton = findViewById(R.id.button4);
         addCarButton.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +287,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 if (plateText.getText().length() > 0) {
                     addVehicle();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), "Lütfen plakanızı giriniz", Snackbar.LENGTH_SHORT);
+                    Snackbar.make(v, "Lütfen plakanızı giriniz", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -292,13 +333,15 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 params.put("username", username);
                 params.put("carBrand", carBrand);
                 params.put("carModel", carModel);
+                params.put("plateNo", plateNo);
                 params.put("fuelPri", String.valueOf(fuelPri));
+                params.put("kilometer", String.valueOf(kilometer));
                 params.put("fuelSec", String.valueOf(fuelSec));
-                params.put("km", String.valueOf(kilometer));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 }
-                params.put("plate", plateNo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
 
                 //returning parameters
                 return params;
@@ -314,15 +357,22 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(AddAutomobile.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
-                        finish();
+                        if (response != null && response.length() > 0) {
+                            if (response.equals("Success")) {
+                                Toast.makeText(AddAutomobile.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AddAutomobile.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
-                        finish();
+                        Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -340,6 +390,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
                 params.put("phoneNumber", userPhoneNumber);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -833,10 +884,9 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AddAutomobile.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                   /* FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(AddAutomobile.this);
-                            */
+                    ImagePicker.create(AddAutomobile.this).single().start();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -849,43 +899,15 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-        String fileName = now + ".jpg";
-
-        switch (requestCode) {
-            /*
-           case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    carPhoto = aq.get(0);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
-                    folder.mkdirs();
-
-                    UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(AddAutomobile.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        carPic.setImageBitmap(bitmap);
-                        carPhoto = Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + now + ".jpg";
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(AddAutomobile.this, cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-                */
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(carPic);
+                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                prefs.edit().putString("ProfilePhoto", photo).apply();
+            }
         }
     }
 

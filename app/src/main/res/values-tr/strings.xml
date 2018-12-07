@@ -24,8 +24,8 @@
     <!-- BottomNavigation -->
     <string name="tab_mystation">MyStation</string>
     <string name="tab_stations">İstasyonlar</string>
-    <string name="tab_news">Haberler</string>
-    <string name="tab_vehicle">Otomobiller</string>
+    <string name="tab_news">Güncel</string>
+    <string name="tab_vehicle">Otomobil</string>
     <string name="tab_profile">Profil</string>
     <string name="tab_settings">Ayarlar</string>
 
@@ -36,7 +36,7 @@
     <string name="promotions">Tanıtımlar</string>
 
     <string name="wallet">Cüzdan</string>
-    <string name="favorites">Favori istasyonlar</string>
+    <string name="favorites">Favoriler</string>
     <string name="help">Yardım</string>
     <string name="privacy">Gizlilik</string>
 
@@ -63,7 +63,6 @@
     <string name="rewards">Ödüller</string>
     <string name="see_all">Hepsini gör</string>
     <string name="fuelspot_money">FuelSpot Para</string>
-    <string name="reports">Raporlar</string>
 
     <string name="buy_premium_ads_title">Yükselt</string>
     <string name="buy_premium_ads_content">Reklamlardan sıkıldınız mı? Premium sürüme geçerek hem reklamları kaldırabilir hem de menzilinizi 50 kilometreye kadar artırabilirsiniz.</string>
@@ -73,4 +72,5 @@
     <string name="report_close">Kapalı</string>
     <string name="report_open">Açık</string>
     <string name="sort">Sırala</string>
+    <string name="automobiles">Araçlar</string>
 </resources>

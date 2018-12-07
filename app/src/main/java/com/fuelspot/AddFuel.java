@@ -274,6 +274,7 @@ public class AddFuel extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("googleID", googleID);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -630,6 +631,7 @@ public class AddFuel extends AppCompatActivity {
                         params.put("electricityPrice", String.valueOf(selectedUnitPrice2));
                     }
                 }
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

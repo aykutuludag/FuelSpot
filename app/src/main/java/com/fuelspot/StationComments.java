@@ -224,7 +224,9 @@ public class StationComments extends AppCompatActivity {
 
     public void fetchStationComments() {
         stationCommentList.clear();
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
                 new Response.Listener<String>() {
@@ -293,7 +295,8 @@ public class StationComments extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(choosenStationID));
+                params.put("stationID", String.valueOf(choosenStationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -331,10 +334,11 @@ public class StationComments extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("comment", userComment);
-                params.put("station_id", String.valueOf(choosenStationID));
+                params.put("stationID", String.valueOf(choosenStationID));
                 params.put("username", username);
-                params.put("user_photo", photo);
                 params.put("stars", String.valueOf(stars));
+                params.put("user_photo", photo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -372,10 +376,8 @@ public class StationComments extends AppCompatActivity {
                 //Adding parameters
                 params.put("commentID", String.valueOf(userCommentID));
                 params.put("comment", userComment);
-                params.put("station_id", String.valueOf(choosenStationID));
-                params.put("username", username);
-                params.put("user_photo", photo);
                 params.put("stars", String.valueOf(stars));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

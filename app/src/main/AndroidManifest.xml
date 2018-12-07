@@ -69,16 +69,16 @@
             android:label="@string/favorites"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".MyWalletActivity"
-            android:label="@string/title_activity_my_wallet"
+            android:name=".WalletActivity"
+            android:label="@string/wallet"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".UserComments"
             android:label="@string/comments"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".UserReports"
-            android:label="@string/reports"
+            android:name=".UserRewards"
+            android:label="@string/rewards"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".UserPurchases"
@@ -143,13 +143,12 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
 
         <!-- Google Maps && PlaceAutoComplete -->
         <meta-data

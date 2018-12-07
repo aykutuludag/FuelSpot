@@ -8,30 +8,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fuelspot.adapter.ReportAdapter;
-import com.fuelspot.model.ReportItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Hashtable;
-import java.util.Map;
-
-import static com.fuelspot.FragmentProfile.userReportList;
-import static com.fuelspot.MainActivity.username;
-
-public class UserReports extends AppCompatActivity {
+public class UserRewards extends AppCompatActivity {
 
     Window window;
     Toolbar toolbar;
@@ -44,7 +27,7 @@ public class UserReports extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_reports);
+        setContentView(R.layout.activity_user_rewards);
 
         window = this.getWindow();
 
@@ -58,7 +41,7 @@ public class UserReports extends AppCompatActivity {
         coloredBars(Color.parseColor("#0288D1"), Color.parseColor("#03A9F4"));
 
         //Comments
-        requestQueue = Volley.newRequestQueue(UserReports.this);
+        requestQueue = Volley.newRequestQueue(UserRewards.this);
         mRecyclerView = findViewById(R.id.reportView);
 
         swipeContainer = findViewById(R.id.swipeContainer);
@@ -66,7 +49,7 @@ public class UserReports extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchReports();
+                //   fetchReports(); >>>  loadRewards();
             }
         });
         // Configure the refreshing colors
@@ -75,22 +58,12 @@ public class UserReports extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        loadReports();
+        //   fetchReports(); >>>  loadRewards();
     }
 
-    public void loadReports() {
-        mAdapter = new ReportAdapter(UserReports.this, userReportList);
-        mLayoutManager = new GridLayoutManager(UserReports.this, 1);
 
-        mAdapter.notifyDataSetChanged();
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        swipeContainer.setRefreshing(false);
-    }
-
-    // Depends on user, it changes with user comments or station comments
-    public void fetchReports() {
+    //fetchRewards (banking-api)
+   /* public void fetchReports() {
         userReportList.clear();
         mAdapter.notifyDataSetChanged();
 
@@ -118,11 +91,20 @@ public class UserReports extends AppCompatActivity {
                                     userReportList.add(item);
                                 }
 
-                                mLayoutManager = new GridLayoutManager(UserReports.this, 1);
+                                mLayoutManager = new GridLayoutManager(UserRewards.this, 1);
 
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
+
+             mAdapter = new ReportAdapter(UserRewards.this, userReportList);
+        mLayoutManager = new GridLayoutManager(UserRewards.this, 1);
+
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        swipeContainer.setRefreshing(false);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -147,11 +129,12 @@ public class UserReports extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(UserReports.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(UserRewards.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
+*/
 
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {

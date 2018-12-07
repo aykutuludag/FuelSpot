@@ -18,44 +18,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.fuelspot.adapter.VehicleAdapter;
-import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
@@ -75,15 +57,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int mapDefaultStationRange = 50;
 
     public static String universalTimeStamp = "dd-MM-yyyy HH:mm";
-    public static List<VehicleItem> listOfVehicle = new ArrayList<>();
     public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
-    public static float averageCons, userFuelSpotMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
+    public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
-    public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit;
-    String[] vehicleIDs;
+    public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
 
-    /*static InterstitialAd facebookInterstitial;
-    static com.google.android.gms.ads.InterstitialAd admobInterstitial;*/
     static SharedPreferences prefs;
     //In-App Billings
     IInAppBillingService mService;
@@ -93,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
     RequestQueue requestQueue;
-    List<Fragment> fragments = new ArrayList<>(5);
+    public static List<Fragment> fragments = new ArrayList<>(5);
     AHBottomNavigation bottomNavigation;
     ListPopupWindow popupWindow;
     // Static values END
@@ -145,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         carbonEmission = prefs.getInt("carbonEmission", 0);
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
         currencySymbol = prefs.getString("userCurrencySymbol", "");
-        userFuelSpotMoney = prefs.getFloat("userFuelSpotMoney", 0);
+        userFSMoney = prefs.getFloat("userFSMoney", 0);
+        userFavorites = prefs.getString("userFavorites", "");
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -550,8 +529,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
-
-        fetchUserVehicles();
     }
 
     private void buyPremiumPopup() {
@@ -638,143 +615,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 0, 0);
     }
 
-    void fetchUserVehicles() {
-        listOfVehicle.clear();
-        if (userVehicles != null && userVehicles.length() > 0) {
-            vehicleIDs = userVehicles.split(";");
-            for (String vehicleID1 : vehicleIDs) {
-                fetchSingleVehicle(Integer.parseInt(vehicleID1));
-            }
-        }
-    }
-
-    void fetchSingleVehicle(final int aracID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                VehicleItem item = new VehicleItem();
-                                item.setID(obj.getInt("id"));
-                                item.setVehicleBrand(obj.getString("car_brand"));
-                                item.setVehicleModel(obj.getString("car_model"));
-                                item.setVehicleFuelPri(obj.getInt("fuelPri"));
-                                item.setVehicleFuelSec(obj.getInt("fuelSec"));
-                                item.setVehicleKilometer(obj.getInt("kilometer"));
-                                item.setVehiclePhoto(obj.getString("carPhoto"));
-                                item.setVehiclePlateNo(obj.getString("plateNo"));
-                                item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
-                                item.setVehicleEmission(obj.getInt("carbonEmission"));
-                                listOfVehicle.add(item);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("vehicleID", String.valueOf(aracID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    void openVehicleChoosePopup(View parent) {
-        if (listOfVehicle != null && listOfVehicle.size() > 0) {
-            if (listOfVehicle.get(listOfVehicle.size() - 1).getID() != -999) {
-                VehicleItem item = new VehicleItem();
-                item.setID(-999);
-                item.setVehicleBrand(getString(R.string.add_vehicle));
-                listOfVehicle.add(item);
-            }
-
-            ListAdapter adapter = new VehicleAdapter(MainActivity.this, listOfVehicle);
-            popupWindow.setAnchorView(parent);
-            popupWindow.setAdapter(adapter);
-            popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (listOfVehicle.get(i).getID() == -999) {
-                        Intent intent = new Intent(MainActivity.this, AddAutomobile.class);
-                        startActivity(intent);
-                    } else {
-                        changeVehicle(i);
-                    }
-                    popupWindow.dismiss();
-                }
-            });
-            popupWindow.show();
-        }
-    }
-
-    void changeVehicle(int position) {
-        VehicleItem item = listOfVehicle.get(position);
-
-        vehicleID = item.getID();
-        prefs.edit().putInt("vehicleID", vehicleID).apply();
-
-        carBrand = item.getVehicleBrand();
-        prefs.edit().putString("carBrand", carBrand).apply();
-
-        carModel = item.getVehicleModel();
-        prefs.edit().putString("carModel", carModel).apply();
-
-        fuelPri = item.getVehicleFuelPri();
-        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
-
-        fuelSec = item.getVehicleFuelSec();
-        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
-
-        kilometer = item.getVehicleKilometer();
-        prefs.edit().putInt("Kilometer", kilometer).apply();
-
-        carPhoto = item.getVehiclePhoto();
-        prefs.edit().putString("CarPhoto", carPhoto).apply();
-
-        plateNo = item.getVehiclePlateNo();
-        prefs.edit().putString("plateNo", plateNo).apply();
-
-        averageCons = item.getVehicleConsumption();
-        prefs.edit().putFloat("averageConsumption", averageCons).apply();
-
-        carbonEmission = item.getVehicleEmission();
-        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
-
-        getVariables(prefs);
-
-        FragmentAutomobile frag = (FragmentAutomobile) fragments.get(2);
-        if (frag != null) {
-            if (frag.headerView != null) {
-                frag.loadVehicleProfile();
-            }
-            if (frag.mRecyclerView != null) {
-                frag.fetchVehiclePurchases();
-            }
-        }
-
-        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ SEÇİLDİ: " + plateNo, Snackbar.LENGTH_SHORT).show();
-    }
-
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -783,23 +623,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             toolbar.setBackgroundColor(color2);
         } else {
             toolbar.setBackgroundColor(color2);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_showVehicles:
-                openVehicleChoosePopup(bottomNavigation);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 

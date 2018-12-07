@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -40,6 +41,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.automobile.Brands;
 import com.fuelspot.automobile.Models;
 import com.google.android.gms.analytics.HitBuilders;
@@ -66,6 +69,10 @@ import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_ALL;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
+import static com.fuelspot.MainActivity.TAX_DIESEL;
+import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
+import static com.fuelspot.MainActivity.TAX_GASOLINE;
+import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
@@ -88,7 +95,7 @@ import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userFuelSpotMoney;
+import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userVehicles;
@@ -96,7 +103,6 @@ import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
-import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -113,6 +119,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     ArrayAdapter<String> adapter2;
     boolean howto1, howto2, howto3;
     RadioGroup radioGroup1, radioGroup2;
+    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +142,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         layoutHow1 = findViewById(R.id.howto1);
         layoutHow2 = findViewById(R.id.howto2);
         layoutHow3 = findViewById(R.id.howto3);
+
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
         continueButton = findViewById(R.id.buttonContinue);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -189,49 +199,51 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            loading.dismiss();
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                loading.dismiss();
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
 
-                            name = obj.getString("name");
-                            prefs.edit().putString("Name", name).apply();
+                                name = obj.getString("name");
+                                prefs.edit().putString("Name", name).apply();
 
-                            email = obj.getString("email");
-                            prefs.edit().putString("Email", email).apply();
+                                email = obj.getString("email");
+                                prefs.edit().putString("Email", email).apply();
 
-                            photo = obj.getString("photo");
-                            prefs.edit().putString("ProfilePhoto", photo).apply();
+                                photo = obj.getString("photo");
+                                prefs.edit().putString("ProfilePhoto", photo).apply();
 
-                            gender = obj.getString("gender");
-                            prefs.edit().putString("Gender", gender).apply();
+                                gender = obj.getString("gender");
+                                prefs.edit().putString("Gender", gender).apply();
 
-                            birthday = obj.getString("birthday");
-                            prefs.edit().putString("Birthday", birthday).apply();
+                                birthday = obj.getString("birthday");
+                                prefs.edit().putString("Birthday", birthday).apply();
 
-                            userPhoneNumber = obj.getString("phoneNumber");
-                            prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
+                                userPhoneNumber = obj.getString("phoneNumber");
+                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
 
-                            location = obj.getString("location");
-                            prefs.edit().putString("Location", location).apply();
+                                location = obj.getString("location");
+                                prefs.edit().putString("Location", location).apply();
 
-                            userCountry = obj.getString("country");
-                            prefs.edit().putString("userCountry", userCountry).apply();
+                                userCountry = obj.getString("country");
+                                prefs.edit().putString("userCountry", userCountry).apply();
 
-                            userDisplayLanguage = obj.getString("language");
-                            prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+                                userDisplayLanguage = obj.getString("language");
+                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                            userVehicles = obj.getString("vehicles");
-                            prefs.edit().putString("userVehicles", userVehicles).apply();
+                                userVehicles = obj.getString("vehicles");
+                                prefs.edit().putString("userVehicles", userVehicles).apply();
 
-                            userFuelSpotMoney = (float) obj.getDouble("reward");
-                            prefs.edit().putFloat("userFuelSpotMoney", userFuelSpotMoney).apply();
+                                userFavorites = obj.getString("favStations");
+                                prefs.edit().putString("userFavorites", userFavorites).apply();
 
-                            getVariables(prefs);
-                            continueButton.setAlpha(1.0f);
-                            continueButton.setClickable(true);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                getVariables(prefs);
+                                continueButton.setAlpha(1.0f);
+                                continueButton.setClickable(true);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },
@@ -248,6 +260,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                 //Adding parameters
                 params.put("username", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -338,17 +351,17 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
-                                MainActivity.TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
-                                prefs.edit().putFloat("taxGasoline", MainActivity.TAX_GASOLINE).apply();
+                                TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
+                                prefs.edit().putFloat("taxGasoline", TAX_GASOLINE).apply();
 
-                                MainActivity.TAX_DIESEL = (float) obj.getDouble("dieselTax");
-                                prefs.edit().putFloat("taxDiesel", MainActivity.TAX_DIESEL).apply();
+                                TAX_DIESEL = (float) obj.getDouble("dieselTax");
+                                prefs.edit().putFloat("taxDiesel", TAX_DIESEL).apply();
 
-                                MainActivity.TAX_LPG = (float) obj.getDouble("LPGTax");
-                                prefs.edit().putFloat("taxLPG", MainActivity.TAX_LPG).apply();
+                                TAX_LPG = (float) obj.getDouble("LPGTax");
+                                prefs.edit().putFloat("taxLPG", TAX_LPG).apply();
 
-                                MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
-                                prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
+                                TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
+                                prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
 
                                 getVariables(prefs);
                             } catch (JSONException e) {
@@ -368,7 +381,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("country", MainActivity.userCountry);
+                params.put("country", userCountry);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -381,7 +395,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     public void loadCarSelection() {
         //CarPic
-        carPic = findViewById(R.id.imageViewCar);
+        carPic = findViewById(R.id.imageViewCarHolder);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.default_automobile)
@@ -392,11 +406,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         carPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyFilePickerPermission(WelcomeActivity.this)) {
-                   /* FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .pickPhoto(WelcomeActivity.this);*/
-                    Toast.makeText(WelcomeActivity.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                if (MainActivity.verifyFilePickerPermission(WelcomeActivity.this)) {
+                    ImagePicker.create(WelcomeActivity.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(WelcomeActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -566,6 +577,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
@@ -629,13 +641,14 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("username", username);
                 params.put("carBrand", carBrand);
                 params.put("carModel", carModel);
+                params.put("plateNo", plateNo);
                 params.put("fuelPri", String.valueOf(fuelPri));
+                params.put("kilometer", String.valueOf(kilometer));
                 params.put("fuelSec", String.valueOf(fuelSec));
-                params.put("km", String.valueOf(kilometer));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 }
-                params.put("plate", plateNo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -672,17 +685,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("email", email);
-                params.put("gender", gender);
-                params.put("birthday", birthday);
-                params.put("location", location);
-                params.put("country", userCountry);
-                params.put("language", userDisplayLanguage);
-                if (bitmap != null) {
-                    params.put("photo", getStringImage(bitmap));
-                }
                 params.put("vehicles", userVehicles);
-                params.put("phoneNumber", userPhoneNumber);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -698,6 +702,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(WelcomeActivity.this, "FETCH VEHICLE: " + response, Toast.LENGTH_LONG).show();
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -747,16 +752,16 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Snackbar.make(findViewById(R.id.mainContainer), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "ARAÇ BİLGİSİ ÇEKİLİRKEN BİR HATA OLDU", Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
-
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(aracID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1227,7 +1232,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        // Do Nothing
+        carBrand = "Acura";
+        carModel = "RSX";
     }
 
     @Override
@@ -1270,10 +1276,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-               /*     FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(WelcomeActivity.this);*/
+                    ImagePicker.create(WelcomeActivity.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -1288,43 +1291,15 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String fileName = username + "-CARPHOTO" + ".jpg";
-
-        switch (requestCode) {
-         /*   case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    carPhoto = aq.get(0);
-
-                    System.out.println("file://" + carPhoto);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos");
-                    folder.mkdirs();
-
-                    UCrop.of(Uri.parse("file://" + carPhoto), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(WelcomeActivity.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        Glide.with(WelcomeActivity.this).load(bitmap).into(carPic);
-                        prefs.edit().putString("CarPhoto", "file://" + Environment.getExternalStorageDirectory() + "/FuelSpot/CarPhotos/" + fileName).apply();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(WelcomeActivity.this, cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-                */
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(carPic);
+                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                prefs.edit().putString("ProfilePhoto", photo).apply();
+            }
         }
     }
 

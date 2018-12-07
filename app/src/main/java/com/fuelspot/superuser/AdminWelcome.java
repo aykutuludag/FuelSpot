@@ -378,6 +378,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -446,6 +447,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
                 //Adding parameters
                 params.put("username", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -846,6 +848,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
                 params.put("stationIDs", userStations);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
