@@ -71,6 +71,7 @@ import eu.amirs.JSON;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -78,15 +79,13 @@ import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
-public class FragmentStations extends Fragment {
+public class FragmentStations extends Fragment implements OnMapReadyCallback {
 
     //Station variables
-    static List<String> stationName = new ArrayList<>();
-    List<StationItem> dummyList = new ArrayList<>();
-    MapView mMapView;
-    SpinKitView proggressBar;
-
     public List<StationItem> feedsList = new ArrayList<>();
+    List<StationItem> dummyList = new ArrayList<>();
+
+    static List<String> stationName = new ArrayList<>();
     static List<String> googleID = new ArrayList<>();
     static List<String> vicinity = new ArrayList<>();
     static List<String> location = new ArrayList<>();
@@ -94,6 +93,9 @@ public class FragmentStations extends Fragment {
     static List<String> stationCountry = new ArrayList<>();
     List<Integer> distanceInMeters = new ArrayList<>();
     ArrayList<Marker> markers = new ArrayList<>();
+
+    MapView mMapView;
+    SpinKitView proggressBar;
 
     Context mContext;
     RelativeLayout stationLayout;
@@ -150,25 +152,6 @@ public class FragmentStations extends Fragment {
             stationLayout = rootView.findViewById(R.id.stationLayout);
             proggressBar = rootView.findViewById(R.id.spin_kit);
 
-            /*tabLayout = rootView.findViewById(R.id.sortBar);
-            tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    int position = tab.getPosition();
-                    sortBy(position);
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                    // DO NOTHING
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                    // DO NOTHING
-                }
-            });*/
             sortGasolineLayout = rootView.findViewById(R.id.sortGasoline);
             sortDieselLayout = rootView.findViewById(R.id.sortDiesel);
             sortLPGLayout = rootView.findViewById(R.id.sortLPG);
@@ -296,27 +279,10 @@ public class FragmentStations extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-            loadMap();
+            mMapView.getMapAsync(this);
         }
     }
 
-    void loadMap() {
-        //Detect location and set on map
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setAllGesturesEnabled(true);
-                googleMap.getUiSettings().setMapToolbarEnabled(false);
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
-                updateMapObject();
-            }
-        });
-    }
 
     private void updateMapObject() {
         stationName.clear();
@@ -466,7 +432,6 @@ public class FragmentStations extends Fragment {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-
                                 JSONObject obj = res.getJSONObject(0);
 
                                 StationItem item = new StationItem();
@@ -501,7 +466,7 @@ public class FragmentStations extends Fragment {
 
                                 feedsList.add(item);
 
-                                if (feedsList.size() <= 10) {
+                                if (feedsList.size() <= 5) {
                                     dummyList.add(item);
                                 } else {
                                     seeAllStations.setVisibility(View.VISIBLE);
@@ -511,7 +476,7 @@ public class FragmentStations extends Fragment {
                                 LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
                                 markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity")).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance))));
 
-                                sortBy(4);
+                                sortBy(fuelPri);
                                 noStationError.setVisibility(View.GONE);
                                 stationLayout.setVisibility(View.VISIBLE);
                                 proggressBar.setVisibility(View.GONE);
@@ -683,12 +648,26 @@ public class FragmentStations extends Fragment {
             case REQUEST_LOCATION: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
                     mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-                    loadMap();
+                    mMapView.getMapAsync(this);
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onMapReady(GoogleMap mMap) {
+        googleMap = mMap;
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.setTrafficEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        updateMapObject();
     }
 
     @Override

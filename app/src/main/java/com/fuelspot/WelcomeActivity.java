@@ -120,6 +120,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     boolean howto1, howto2, howto3;
     RadioGroup radioGroup1, radioGroup2;
     RequestOptions options;
+    TextWatcher mTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +159,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         saveCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(WelcomeActivity.this, plateNo, Toast.LENGTH_LONG).show();
                 if (plateNo != null && plateNo.length() > 0) {
                     addVehicle();
                 } else {
@@ -533,7 +535,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() >= 1) {
+                if (s != null && s.length() > 0) {
                     kilometer = Integer.parseInt(s.toString());
                     prefs.edit().putInt("Kilometer", kilometer).apply();
                 }
@@ -543,7 +545,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         //PlakaNO
         final EditText plateText = findViewById(R.id.editText_plate);
         plateText.setText(plateNo);
-        plateText.addTextChangedListener(new TextWatcher() {
+        mTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -557,17 +559,20 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    //All uppercase
-                    plateNo = s.toString().toUpperCase();
+                    // Normalize
+                    plateNo = s.toString();
+                    if (plateNo.contains(" ")) {
+                        plateNo = plateNo.replace(" ", "");
 
-                    if (s.toString().contains(" ")) {
-                        plateNo = s.toString().replaceAll(" ", "");
+                        plateText.removeTextChangedListener(mTextWatcher);
+                        plateText.setText(plateNo);
+                        plateText.addTextChangedListener(mTextWatcher);
                     }
-
                     prefs.edit().putString("plateNo", plateNo).apply();
                 }
             }
-        });
+        };
+        plateText.addTextChangedListener(mTextWatcher);
     }
 
     private void addVehicle() {
@@ -577,7 +582,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
@@ -664,17 +668,18 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        if (response.equals("Success")) {
+                            layout3.setVisibility(View.VISIBLE);
+                            layout2.setVisibility(View.GONE);
+                        } else {
+                            Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
+                        }
                         getVariables(prefs);
-                        Toast.makeText(WelcomeActivity.this, response, Toast.LENGTH_LONG).show();
-                        layout3.setVisibility(View.VISIBLE);
-                        layout2.setVisibility(View.GONE);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        getVariables(prefs);
-                        //Showing toast
                         Toast.makeText(WelcomeActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -685,6 +690,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                 //Adding parameters
                 params.put("username", username);
+                params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
@@ -702,7 +709,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(WelcomeActivity.this, "FETCH VEHICLE: " + response, Toast.LENGTH_LONG).show();
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -926,7 +932,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.geely_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.geely_models, carModel), true);
                         break;
                     case 25:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.honda_models);
@@ -1028,7 +1034,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mazda_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mazda_models, carModel), true);
                         break;
                     case 42:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mercedes_models);
@@ -1058,7 +1064,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mitsubishi_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mitsubishi_models, carModel), true);
                         break;
                     case 47:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.moskwitsch_models);
@@ -1297,7 +1303,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                photo = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
                 prefs.edit().putString("ProfilePhoto", photo).apply();
             }
         }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -24,11 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +37,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
+import com.fuelspot.model.CompanyItem;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -46,7 +57,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -57,8 +70,8 @@ import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
-import static com.fuelspot.MainActivity.isGlobalNews;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
@@ -66,18 +79,25 @@ import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
-    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax, superUserCount;
+    public static List<CompanyItem> companyList = new ArrayList<>();
+    public static List<String> companyNameList = new ArrayList<>();
+    public static List<Integer> companyVerifiedNumberList = new ArrayList<>();
+    public static List<Integer> companyStationNumberList = new ArrayList<>();
+    ArrayList<PieEntry> entries = new ArrayList<>();
+
+    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax, textViewVerifiedNumber, textViewTotalNumber;
     Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
-    Switch globalNewsSwitch;
     SharedPreferences prefs;
     String feedbackMessage;
     Bitmap bitmap;
     ImageView getScreenshot;
     PopupWindow mPopupWindow;
-    TextView userRange, userPremium;
+    RequestOptions options;
     //Creating a Request Queue
     RequestQueue requestQueue;
     View rootView;
+    PieChart chart;
+    int otherStations, totalVerified, totalStation;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -102,6 +122,8 @@ public class FragmentSettings extends Fragment {
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
             requestQueue = Volley.newRequestQueue(getActivity());
+            options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
             countryText = rootView.findViewById(R.id.textViewCountryName);
             countryText.setText(userCountryName);
@@ -115,26 +137,16 @@ public class FragmentSettings extends Fragment {
             unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
             unitSystemText.setText(userUnit);
 
-            globalNewsSwitch = rootView.findViewById(R.id.switch1);
-            globalNewsSwitch.setChecked(isGlobalNews);
-            globalNewsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    isGlobalNews = isChecked;
-                    prefs.edit().putBoolean("isGlobalNews", isGlobalNews).apply();
-                }
-            });
-
-            textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
+            textViewGasolineTax = rootView.findViewById(R.id.taxGasoline);
             textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
 
-            textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
+            textViewDieselTax = rootView.findViewById(R.id.taxDiesel);
             textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
 
-            textViewLPGTax = rootView.findViewById(R.id.priceLPG);
+            textViewLPGTax = rootView.findViewById(R.id.taxLPG);
             textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
 
-            textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
+            textViewElectricityTax = rootView.findViewById(R.id.taxElectric);
             textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
 
             buttonTax = rootView.findViewById(R.id.button_tax);
@@ -175,48 +187,106 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-           /* userRange = rootView.findViewById(R.id.textViewMenzil);
-            userRange.setText((mapDefaultRange / 1000) + " km");
+            textViewVerifiedNumber = rootView.findViewById(R.id.textViewonayliSayi);
+            textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
 
-            userPremium = rootView.findViewById(R.id.textViewPremium);
-            userPremium.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (MainActivity.isSuperUser) {
-                        try {
-                            ((AdminMainActivity) getActivity()).buyAdminPremium();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            ((MainActivity) getActivity()).buyPremium();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });*/
+            chart = rootView.findViewById(R.id.chart1);
+            chart.getDescription().setEnabled(false);
+            chart.setExtraOffsets(5, 10, 5, 5);
+            chart.setDragDecelerationFrictionCoef(0.95f);
+            chart.setDrawHoleEnabled(false);
+            chart.getLegend().setEnabled(false);
+            chart.setTransparentCircleColor(Color.BLACK);
+            chart.setTransparentCircleAlpha(110);
+            chart.setTransparentCircleRadius(61f);
+            chart.setUsePercentValues(false);
+            chart.setRotationEnabled(true);
+            chart.setHighlightPerTapEnabled(true);
+            chart.setEntryLabelColor(Color.BLACK);
+            chart.setEntryLabelTextSize(12f);
 
-            superUserCount = rootView.findViewById(R.id.textViewSuperUserCount);
-
-            fetchStats();
+            fetchCompanyStats();
         }
 
         return rootView;
     }
 
-    void fetchStats() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_STATS),
+    void fetchCompanyStats() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            superUserCount.setText("Kayıtlı istasyon sayısı: " + response);
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CompanyItem item = new CompanyItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setName(obj.getString("companyName"));
+                                    item.setLogo(obj.getString("companyLogo"));
+                                    item.setWebsite(obj.getString("companyWebsite"));
+                                    item.setName(obj.getString("companyPhone"));
+                                    item.setName(obj.getString("companyAddress"));
+                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                    item.setNumOfStations(obj.getInt("numOfStations"));
+
+                                    companyNameList.add(obj.getString("companyName"));
+                                    companyVerifiedNumberList.add(obj.getInt("numOfVerifieds"));
+                                    companyStationNumberList.add(obj.getInt("numOfStations"));
+                                    companyList.add(item);
+
+                                    totalVerified += obj.getInt("numOfVerifieds");
+                                    totalStation += obj.getInt("numOfStations");
+
+                                    if (companyStationNumberList.get(i) >= 250) {
+                                        entries.add(new PieEntry((float) companyStationNumberList.get(i), obj.getString("companyName")));
+                                    } else {
+                                        otherStations += companyStationNumberList.get(i);
+                                    }
+                                }
+
+                                textViewVerifiedNumber.setText("Onaylı istasyon sayısı: " + totalVerified);
+                                textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
+
+                                entries.add(new PieEntry((float) otherStations, "Diğer"));
+
+                                PieDataSet dataSet = new PieDataSet(entries, "Akaryakıt dağıtım firmaları");
+                                dataSet.setDrawIcons(false);
+
+                                // add a lot of colors
+                                ArrayList<Integer> colors = new ArrayList<>();
+
+                                for (int c : ColorTemplate.VORDIPLOM_COLORS)
+                                    colors.add(c);
+
+                                for (int c : ColorTemplate.JOYFUL_COLORS)
+                                    colors.add(c);
+
+                                for (int c : ColorTemplate.COLORFUL_COLORS)
+                                    colors.add(c);
+
+                                for (int c : ColorTemplate.LIBERTY_COLORS)
+                                    colors.add(c);
+
+                                for (int c : ColorTemplate.PASTEL_COLORS)
+                                    colors.add(c);
+
+                                colors.add(ColorTemplate.getHoloBlue());
+
+                                dataSet.setColors(colors);
+                                //dataSet.setSelectionShift(0f);
+
+                                PieData data = new PieData(dataSet);
+                                data.setValueTextSize(11f);
+                                data.setValueTextColor(Color.BLACK);
+                                chart.setData(data);
+                                chart.highlightValues(null);
+                                chart.invalidate();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },
@@ -231,7 +301,7 @@ public class FragmentSettings extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("country", MainActivity.userCountry);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -294,7 +364,8 @@ public class FragmentSettings extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("country", MainActivity.userCountry);
+                params.put("country", userCountry);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -342,15 +413,12 @@ public class FragmentSettings extends Fragment {
         });
 
         getScreenshot = customView.findViewById(R.id.campaignPhoto);
+        Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
         getScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (verifyFilePickerPermission(getActivity())) {
-                    /*FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(getActivity());*/
-                    Toast.makeText(getActivity(), "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                    ImagePicker.create(getActivity()).single().start();
                 } else {
                     ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -432,10 +500,7 @@ public class FragmentSettings extends Fragment {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getActivity(), "Settings saved...", Toast.LENGTH_SHORT).show();
-                   /* FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(getActivity());*/
+                    ImagePicker.create(getActivity()).single().start();
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -449,45 +514,14 @@ public class FragmentSettings extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-          /*  case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    String ss = aq.get(0);
 
-                    System.out.println("file://" + ss);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/Feedback");
-                    folder.mkdirs();
-
-                    CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-                    String fileName = now + ".jpg";
-
-                    UCrop.of(Uri.parse("file://" + ss), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(getActivity());
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
-                        if (getScreenshot != null) {
-                            getScreenshot.setImageBitmap(bitmap);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(getActivity(), cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-                */
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
+            }
         }
     }
 }

@@ -34,123 +34,143 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/baseInfoLayout"
+                android:id="@+id/sokakgorunumu"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#EAEAEA">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/station_ID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#161616" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/station_photo"
-                    android:layout_width="125dp"
-                    android:layout_height="125dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/default_station" />
-
-                <TextView
-                    android:id="@+id/station_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/station_photo"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#161616" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/verifiedStation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/station_photo"
-                    android:layout_alignBottom="@id/station_name"
-                    android:layout_toEndOf="@id/station_name"
-                    android:src="@drawable/verified"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/station_vicinity"
+                <com.google.android.gms.maps.StreetViewPanoramaView
+                    android:id="@+id/street_view_panorama"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/station_name"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="2dp"
-                    android:fontFamily="@font/gotham_book"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
-                    android:textColor="#161616" />
+                    android:layout_height="300dp" />
 
-                <com.github.curioustechizen.ago.RelativeTimeTextView
-                    android:id="@+id/stationLastUpdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/station_vicinity"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/gotham_book"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616"
-                    android:textSize="12sp" />
-
-                <RelativeLayout
-                    android:id="@+id/section_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/stationLastUpdate"
-                    android:layout_centerHorizontal="true"
-                    android:padding="4dp">
-
-                    <TextView
-                        android:id="@+id/stationPoint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="2dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#161616" />
-
-                    <ImageView
-                        android:id="@+id/imageView13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/stationPoint"
-                        android:layout_alignBottom="@id/stationPoint"
-                        android:layout_toEndOf="@id/stationPoint"
-                        fab:srcCompat="@drawable/egikyildiz" />
-                </RelativeLayout>
-
+                <ImageView
+                    android:id="@+id/imageViewErrStreetView"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:src="@drawable/error_general"
+                    android:visibility="gone" />
             </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/baseInfoLayout"
+                android:layout_below="@+id/sokakgorunumu"
+                android:layout_marginTop="-36dp"
                 android:background="@drawable/round_layout"
                 android:elevation="8dp">
+
+                <RelativeLayout
+                    android:id="@+id/baseInfoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/station_ID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="#161616" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/station_photo"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="16dp"
+                        android:src="@drawable/default_station" />
+
+                    <TextView
+                        android:id="@+id/station_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/station_photo"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="#161616" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/verifiedStation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/station_photo"
+                        android:layout_alignBottom="@id/station_name"
+                        android:layout_toEndOf="@id/station_name"
+                        android:src="@drawable/verified"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/station_vicinity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/station_name"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+                        android:textColor="#161616" />
+
+                    <com.github.curioustechizen.ago.RelativeTimeTextView
+                        android:id="@+id/stationLastUpdate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/station_vicinity"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        android:textSize="12sp" />
+
+                    <RelativeLayout
+                        android:id="@+id/section_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stationLastUpdate"
+                        android:layout_centerHorizontal="true"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/stationPoint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_margin="2dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
+
+                        <ImageView
+                            android:id="@+id/imageView13"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@id/stationPoint"
+                            android:layout_alignBottom="@id/stationPoint"
+                            android:layout_toEndOf="@id/stationPoint"
+                            fab:srcCompat="@drawable/egikyildiz" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <android.support.percent.PercentRelativeLayout
                     android:id="@+id/single_station"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/baseInfoLayout">
 
                     <ImageView
                         android:id="@+id/gasoline"
@@ -164,7 +184,7 @@
                         app:layout_widthPercent="20%" />
 
                     <TextView
-                        android:id="@+id/priceGasoline"
+                        android:id="@+id/taxGasoline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/gasoline"
@@ -189,12 +209,12 @@
                         app:layout_widthPercent="20%" />
 
                     <TextView
-                        android:id="@+id/priceDiesel"
+                        android:id="@+id/taxDiesel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/diesel"
                         android:layout_alignEnd="@+id/diesel"
-                        android:layout_toEndOf="@+id/priceGasoline"
+                        android:layout_toEndOf="@+id/taxGasoline"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
@@ -213,14 +233,14 @@
                         app:layout_widthPercent="20%" />
 
                     <TextView
-                        android:id="@+id/priceLPG"
+                        android:id="@+id/taxLPG"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/lpg"
                         android:layout_alignEnd="@+id/lpg"
                         android:layout_alignRight="@+id/lpg"
-                        android:layout_toEndOf="@+id/priceDiesel"
-                        android:layout_toRightOf="@+id/priceDiesel"
+                        android:layout_toEndOf="@+id/taxDiesel"
+                        android:layout_toRightOf="@+id/taxDiesel"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
@@ -240,12 +260,12 @@
                         app:layout_widthPercent="20%" />
 
                     <TextView
-                        android:id="@+id/priceElectricity"
+                        android:id="@+id/taxElectric"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/electricity"
                         android:layout_alignEnd="@+id/electricity"
-                        android:layout_toEndOf="@+id/priceLPG"
+                        android:layout_toEndOf="@+id/taxLPG"
                         android:fontFamily="@font/gotham_medium"
                         android:gravity="center"
                         android:padding="4dp"
@@ -256,7 +276,7 @@
                         android:id="@+id/textViewUnitPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/priceElectricity"
+                        android:layout_below="@id/taxElectric"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
@@ -324,10 +344,34 @@
                 </android.support.percent.PercentRelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/facilitiesSection"
+                    android:id="@+id/statsSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/single_station">
+
+                    <TextView
+                        android:id="@+id/title_stats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:text="@string/priceHistory"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#161616" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="225dp"
+                        android:layout_below="@id/title_stats" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/facilitiesSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/statsSection">
 
                     <TextView
                         android:id="@+id/title_facilities"
@@ -429,19 +473,11 @@
                         android:background="@android:color/transparent"
                         android:visibility="visible" />
 
-                    <ImageView
-                        android:id="@+id/errorNoCampaign"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/title_campaigns"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/error_nocomment" />
-
                     <TextView
                         android:id="@+id/noCampaignText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/errorNoCampaign"
+                        android:layout_below="@id/campaignView"
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
@@ -453,6 +489,14 @@
                         android:textColor="#161616"
                         android:visibility="gone" />
 
+                    <ImageView
+                        android:id="@+id/errorNoCampaign"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/noCampaignText"
+                        android:layout_margin="8dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/error_nocomment" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -490,49 +534,27 @@
                         android:text="@string/see_all"
                         android:visibility="gone" />
 
-                    <ImageView
-                        android:id="@+id/errorNoComment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/title_comments"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/error_nocomment" />
-
                     <TextView
                         android:id="@+id/noCommentText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/errorNoComment"
+                        android:layout_below="@id/title_comments"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_margin="8dp"
                         android:gravity="center"
                         android:text="Bu istasyon için henüz hiç yorum yazılmamış..."
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616"
                         android:visibility="gone" />
 
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/sokakgorunumu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/commentSection">
-
-                    <com.google.android.gms.maps.StreetViewPanoramaView
-                        android:id="@+id/street_view_panorama"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp" />
-
                     <ImageView
-                        android:id="@+id/imageViewErrStreetView"
+                        android:id="@+id/errorNoComment"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:src="@drawable/error_general"
-                        android:visibility="gone" />
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/noCommentText"
+                        android:layout_margin="8dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/error_nocomment" />
 
                 </RelativeLayout>
 

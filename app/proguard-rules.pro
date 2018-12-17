@@ -30,3 +30,6 @@
 
 # Okio
 -dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# MPAndroidChart
+-keep class com.github.mikephil.charting.** { *; }

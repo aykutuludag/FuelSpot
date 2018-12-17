@@ -78,6 +78,7 @@ import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
@@ -106,9 +107,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.brand_logo);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         //Window
         window = this.getWindow();
@@ -341,16 +343,17 @@ public class ProfileEditActivity extends AppCompatActivity {
                 //Adding parameters
                 params.put("username", username);
                 params.put("email", email);
+                params.put("phoneNumber", userPhoneNumber);
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                }
                 params.put("gender", gender);
                 params.put("birthday", birthday);
                 params.put("location", location);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-                if (bitmap != null) {
-                    params.put("photo", getStringImage(bitmap));
-                }
                 params.put("vehicles", userVehicles);
-                params.put("phoneNumber", userPhoneNumber);
+                params.put("favStations", userFavorites);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -429,7 +432,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(userPic);
-                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/users/" + username + ".jpg";
+                photo = "https://fuel-spot.com/uploads/users/" + username + ".jpg";
                 editor.putString("ProfilePhoto", photo);
             }
         }

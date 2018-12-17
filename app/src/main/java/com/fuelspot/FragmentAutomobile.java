@@ -64,6 +64,7 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentAutomobile extends Fragment {
 
+    public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
     public static ArrayList<String> purchaseTimes = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
@@ -75,7 +76,7 @@ public class FragmentAutomobile extends Fragment {
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
-    List<PurchaseItem> feedsList = new ArrayList<>();
+
     SharedPreferences prefs;
     ImageView fuelTypeIndicator, fuelTypeIndicator2;
     TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice, emission;
@@ -270,12 +271,13 @@ public class FragmentAutomobile extends Fragment {
     }
 
     public void fetchVehiclePurchases() {
-        feedsList.clear();
+        vehiclePurchaseList.clear();
         purchaseTimes.clear();
         purchaseKilometers.clear();
         purchasePrices.clear();
         purchaseUnitPrice.clear();
         purchaseUnitPrice2.clear();
+        purchaseLiters.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_PURCHASES),
                 new Response.Listener<String>() {
@@ -305,7 +307,7 @@ public class FragmentAutomobile extends Fragment {
                                     item.setFuelTax2((float) obj.getDouble("fuelTax2"));
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
-                                    feedsList.add(item);
+                                    vehiclePurchaseList.add(item);
 
                                     if (i < 3) {
                                         dummyList.add(item);
@@ -319,14 +321,14 @@ public class FragmentAutomobile extends Fragment {
                                     purchasePrices.add(i, obj.getDouble("totalPrice"));
                                     purchaseKilometers.add(i, obj.getInt("kilometer"));
                                     purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
-
-                                    mAdapter = new PurchaseAdapter(getActivity(), dummyList);
-                                    mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
-                                    mAdapter.notifyDataSetChanged();
-                                    mRecyclerView.setAdapter(mAdapter);
-                                    mRecyclerView.setLayoutManager(mLayoutManager);
                                 }
+
+                                mAdapter = new PurchaseAdapter(getActivity(), dummyList);
+                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mAdapter);
+                                mRecyclerView.setLayoutManager(mLayoutManager);
 
                                 //update kilometer
                                 if (kilometerText != null) {

@@ -75,7 +75,7 @@
                 app:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/priceGasoline"
+                android:id="@+id/taxGasoline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/gasoline"
@@ -100,13 +100,13 @@
                 app:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/priceDiesel"
+                android:id="@+id/taxDiesel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/diesel"
                 android:layout_alignEnd="@+id/diesel"
                 android:layout_alignBottom="@+id/imageViewStationLogo"
-                android:layout_toEndOf="@+id/priceGasoline"
+                android:layout_toEndOf="@+id/taxGasoline"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
@@ -124,13 +124,13 @@
                 app:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/priceLPG"
+                android:id="@+id/taxLPG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lpg"
                 android:layout_alignEnd="@+id/lpg"
                 android:layout_alignBottom="@+id/imageViewStationLogo"
-                android:layout_toEndOf="@+id/priceDiesel"
+                android:layout_toEndOf="@+id/taxDiesel"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
@@ -147,13 +147,13 @@
                 app:layout_widthPercent="14.5%" />
 
             <TextView
-                android:id="@+id/priceElectricity"
+                android:id="@+id/taxElectric"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/electricity"
                 android:layout_alignEnd="@+id/electricity"
                 android:layout_alignBottom="@+id/imageViewStationLogo"
-                android:layout_toEndOf="@+id/priceLPG"
+                android:layout_toEndOf="@+id/taxLPG"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"
@@ -176,7 +176,7 @@
                 android:layout_below="@+id/distance"
                 android:layout_alignEnd="@+id/distance"
                 android:layout_alignBottom="@+id/imageViewStationLogo"
-                android:layout_toEndOf="@+id/priceElectricity"
+                android:layout_toEndOf="@+id/taxElectric"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#6D6D6D"

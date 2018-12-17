@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <external-path
-        name="UserPhotos"
-        path="FuelSpot/UserPhotos/" />
-    <external-path
-        name="Bills"
-        path="FuelSpot/Bills/" />
-    <external-path
-        name="CarPhotos"
-        path="FuelSpot/CarPhotos/" />
-    <external-path
-        name="Licenses"
-        path="FuelSpot/Licenses/" />
-    <external-path
-        name="Feedback"
-        path="FuelSpot/Feedback/" />
+        name="Main"
+        path="FuelSpot/" />
 </paths>

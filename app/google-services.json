@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "82431707983-sljfvf8dto1bkn2qcfohhji1udb8vb8s.apps.googleusercontent.com",
+          "client_id": "82431707983-ghj5clc2668lh1o7bgvg58k95h9dqorc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fuelspot",
@@ -23,7 +23,7 @@
           }
         },
         {
-          "client_id": "82431707983-8g79durkhmddbvf1rcmgc3gae1pdv327.apps.googleusercontent.com",
+          "client_id": "82431707983-nacu6ra1hrss5pd5c072ge1n3fbtk6n0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fuelspot",
@@ -31,7 +31,7 @@
           }
         },
         {
-          "client_id": "82431707983-1fgjmi1jdvp4jt25edugifm2h1j46f1e.apps.googleusercontent.com",
+          "client_id": "82431707983-je28ruu6o78s0fen5bkggus357dkde4p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -48,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "82431707983-1fgjmi1jdvp4jt25edugifm2h1j46f1e.apps.googleusercontent.com",
+              "client_id": "82431707983-je28ruu6o78s0fen5bkggus357dkde4p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

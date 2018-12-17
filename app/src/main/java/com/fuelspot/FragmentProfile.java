@@ -173,14 +173,14 @@ public class FragmentProfile extends Fragment {
                     builder.enableUrlBarHiding();
                     builder.setShowTitle(true);
                     builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/help"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help"));
                 } else {
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                     CustomTabsIntent customTabsIntent = builder.build();
                     builder.enableUrlBarHiding();
                     builder.setShowTitle(true);
                     builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/help-for-superuser"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help-for-superuser"));
                 }
             }
         });
@@ -204,7 +204,7 @@ public class FragmentProfile extends Fragment {
                 builder.enableUrlBarHiding();
                 builder.setShowTitle(true);
                 builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("http://fuel-spot.com/privacy"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
             }
         });*/
     }

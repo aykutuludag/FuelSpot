@@ -36,6 +36,14 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="country_codes">
+        <item>AZ</item>
+        <item>DE</item>
+        <item>RU</item>
+        <item>TR</item>
+        <item>US</item>
+    </string-array>
+
     <!-- LoginActivity -->
     <string name="loginWithGoogle">Login with Google</string>
     <string name="loginWithFacebook">Login with Facebook</string>
@@ -89,6 +97,7 @@
     <string name="report_close">Close</string>
     <string name="report_open">Open</string>
     <string name="sort">Sort</string>
+    <string name="priceHistory">Price history</string>
 
     <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>
@@ -100,56 +109,58 @@
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
 
     <!-- USER APIs -->
-    <string name="API_CREATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/user-create.php</string>
-    <string name="API_UPDATE_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/user-update.php</string>
-    <string name="API_FETCH_USER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/user-fetch.php</string>
+    <string name="API_CREATE_USER" translatable="false">https://fuel-spot.com/api/user-create.php</string>
+    <string name="API_UPDATE_USER" translatable="false">https://fuel-spot.com/api/user-update.php</string>
+    <string name="API_FETCH_USER" translatable="false">https://fuel-spot.com/api/user-fetch.php</string>
 
     <!-- SUPERUSER APIs -->
-    <string name="API_SUPERUSER_CREATE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-create.php</string>
-    <string name="API_SUPERUSER_UPDATE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-update.php</string>
-    <string name="API_SUPERUSER_FETCH" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/superuser-fetch.php</string>
+    <string name="API_SUPERUSER_CREATE" translatable="false">https://fuel-spot.com/api/superuser-create.php</string>
+    <string name="API_SUPERUSER_UPDATE" translatable="false">https://fuel-spot.com/api/superuser-update.php</string>
+    <string name="API_SUPERUSER_FETCH" translatable="false">https://fuel-spot.com/api/superuser-fetch.php</string>
 
     <!-- STATION APIs -->
-    <string name="API_ADD_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-add.php</string> <!-- Create and return Station objects as bulk -->
-    <string name="API_UPDATE_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-update.php</string> <!-- Updates station info, return SUCCESS or FAIL -->
-    <string name="API_FETCH_STATION" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/station-fetch.php</string> <!-- stationID, return Station object -->
+    <string name="API_ADD_STATION" translatable="false">https://fuel-spot.com/api/station-add.php</string> <!-- Create and return Station objects as bulk -->
+    <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station-update.php</string> <!-- Updates station info, return SUCCESS or FAIL -->
+    <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station-fetch.php</string> <!-- stationID, return Station object -->
 
     <!-- AUTOMOBILE APIs -->
-    <string name="API_ADD_AUTOMOBILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/automobile-add.php</string>
-    <string name="API_FETCH_AUTOMOBILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/automobile-fetch.php</string>
-    <string name="API_UPDATE_AUTOMOBILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/automobile-update.php</string>
-    <string name="API_DELETE_AUTOMOBILE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/automobile-delete.php</string>
+    <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile-add.php</string>
+    <string name="API_FETCH_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile-fetch.php</string>
+    <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile-update.php</string>
+    <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile-delete.php</string>
 
     <!-- PURCHASE APIs -->
-    <string name="API_ADD_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-add.php</string>
-    <string name="API_UPDATE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-update.php</string> <!-- Only adding bill photo available -->
-    <string name="API_DELETE_PURCHASE" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-delete.php</string>
-    <string name="API_FETCH_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch.php</string> <!-- Vehicle's purchases -->
-    <string name="API_FETCH_USER_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-user.php</string> <!-- User's purchases (all vehicles) -->
-    <string name="API_FETCH_STATION_PURCHASES" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/purchase-fetch-station.php</string> <!-- Station's purchases -->
+    <string name="API_ADD_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase-add.php</string>
+    <string name="API_UPDATE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase-update.php</string> <!-- Only adding bill photo available -->
+    <string name="API_DELETE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase-delete.php</string>
+    <string name="API_FETCH_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch.php</string> <!-- Vehicle's purchases -->
+    <string name="API_FETCH_USER_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-user.php</string> <!-- User's purchases (all vehicles) -->
+    <string name="API_FETCH_STATION_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-station.php</string> <!-- Station's purchases -->
+    <string name="API_FETCH_COUNTRY_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-country.php</string> <!-- Station's purchases -->
 
     <!-- COMMENT-ANSWER APIs -->
-    <string name="API_ADD_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-add.php</string>
-    <string name="API_UPDATE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-update.php</string>
-    <string name="API_DELETE_COMMENT" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-delete.php</string>
-    <string name="API_FETCH_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-fetch.php</string> <!-- User's comments -->
-    <string name="API_FETCH_STATION_COMMENTS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/comment-fetch-station.php</string> <!-- Station's comments -->
-    <string name="API_ADD_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/answer-add.php</string>
-    <string name="API_DELETE_ANSWER" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/answer-delete.php</string>
+    <string name="API_ADD_COMMENT" translatable="false">https://fuel-spot.com/api/comment-add.php</string>
+    <string name="API_UPDATE_COMMENT" translatable="false">https://fuel-spot.com/api/comment-update.php</string>
+    <string name="API_DELETE_COMMENT" translatable="false">https://fuel-spot.com/api/comment-delete.php</string>
+    <string name="API_FETCH_COMMENTS" translatable="false">https://fuel-spot.com/api/comment-fetch.php</string> <!-- User's comments -->
+    <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuel-spot.com/api/comment-fetch-station.php</string> <!-- Station's comments -->
+    <string name="API_ADD_ANSWER" translatable="false">https://fuel-spot.com/api/answer-add.php</string>
+    <string name="API_DELETE_ANSWER" translatable="false">https://fuel-spot.com/api/answer-delete.php</string>
 
     <!-- CAMPAIGNS APIs -->
-    <string name="API_CREATE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/campaign-add.php</string>
-    <string name="API_UPDATE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/campaign-update.php</string>
-    <string name="API_FETCH_CAMPAINGS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/campaign-fetch.php</string>
-    <string name="API_DELETE_CAMPAING" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/campaign-delete.php</string>
+    <string name="API_CREATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign-add.php</string>
+    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign-update.php</string>
+    <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuel-spot.com/api/campaign-fetch.php</string>
+    <string name="API_DELETE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign-delete.php</string>
 
-    <!-- REPORT APIs -->
-    <string name="API_REPORT_ADD" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/report-add.php</string>
+    <!-- FINANCE APIs -->
+    <string name="API_FETCH_FINANCE" translatable="false">https://fuel-spot.com/api/finance-fetch.php</string> <!-- COUNTRY -->
+    <string name="API_FETCH_STATION_FINANCE" translatable="false">https://fuel-spot.com/api/finance-fetch-station.php</string> <!-- STATION -->
 
     <!-- OTHER APIs -->
-    <string name="API_TAX" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-tax.php</string>
-    <string name="API_FEEDBACK" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-feedback.php</string>
-
-    <string name="API_STATS" translatable="false">http://fuel-spot.com/FUELSPOTAPP/api/other-stats.php</string>
-    <string name="API_NEWS" translatable="false">http://fuel-spot.com/feed/json</string>
+    <string name="API_REPORT" translatable="false">https://fuel-spot.com/api/other-report.php</string>
+    <string name="API_TAX" translatable="false">https://fuel-spot.com/api/other-tax.php</string>
+    <string name="API_FEEDBACK" translatable="false">https://fuel-spot.com/api/other-feedback.php</string>
+    <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other-news.php</string>
+    <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other-company.php</string>
 </resources>

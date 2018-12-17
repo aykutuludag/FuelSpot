@@ -57,23 +57,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.averageCons;
-import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
-import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
-import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
-import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.userCountry;
-import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
@@ -103,8 +96,10 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
@@ -280,15 +275,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
+                    // Normalize
                     if (s.toString().contains(" ")) {
-                        plateNo = s.toString().replaceAll(" ", "");
+                        plateNo = s.toString().replace(" ", "");
+                        plateText.setText(plateNo);
                     } else {
                         plateNo = s.toString();
                     }
-
-                    //All uppercase
-                    plateNo = plateNo.toUpperCase();
-
                     editor.putString("plateNo", plateNo);
                 }
             }
@@ -317,20 +310,20 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
     private void updateVehicle() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AutomobileEditActivity.this, "Updating automobile...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(AutomobileEditActivity.this, "Updating automobile...", "Please wait...", false, true);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String s) {
-                        switch (s) {
+                    public void onResponse(String response) {
+                        switch (response) {
                             case "Success":
                                 loading.dismiss();
-                                Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
+                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
                                 finish();
                                 break;
                             case "Fail":
                                 loading.dismiss();
-                                Toast.makeText(AutomobileEditActivity.this, s, Toast.LENGTH_LONG).show();
+                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
@@ -361,6 +354,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 params.put("plate", plateNo);
                 params.put("avgCons", String.valueOf(averageCons));
                 params.put("carbonEmission", String.valueOf(carbonEmission));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -401,14 +395,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("email", email);
-                params.put("gender", gender);
-                params.put("birthday", birthday);
-                params.put("location", location);
-                params.put("country", userCountry);
-                params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
-                params.put("phoneNumber", userPhoneNumber);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -450,6 +437,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -632,7 +620,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.geely_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, MainActivity.carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.geely_models, MainActivity.carModel), true);
                         break;
                     case 25:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.honda_models);
@@ -734,7 +722,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mazda_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, MainActivity.carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mazda_models, MainActivity.carModel), true);
                         break;
                     case 42:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mercedes_models);
@@ -764,7 +752,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mitsubishi_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, MainActivity.carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mitsubishi_models, MainActivity.carModel), true);
                         break;
                     case 47:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.moskwitsch_models);
@@ -991,7 +979,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                photo = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
                 prefs.edit().putString("ProfilePhoto", photo).apply();
             }
         }

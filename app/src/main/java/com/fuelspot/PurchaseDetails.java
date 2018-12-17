@@ -241,7 +241,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 googleMap = mMap;
                 LatLng mStationLoc = new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1]));
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(mStationLoc).zoom(16f).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                         (cameraPosition));
                 googleMap.addMarker(new MarkerOptions().position(mStationLoc).title(stationName).snippet(tarih.getText().toString()));
             }

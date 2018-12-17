@@ -61,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/purchaseTitle"
                 android:layout_margin="16dp"
-                android:background="@drawable/round_layout_white">
+                android:background="@drawable/round_layout_white"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView20"

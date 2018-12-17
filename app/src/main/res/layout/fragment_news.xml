@@ -7,28 +7,129 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/layoutOuter"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/feedView"
+        <RelativeLayout
+            android:id="@+id/layout_news"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.Circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            <TextView
+                android:id="@+id/title_News"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/tab_news"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-        <ImageView
-            android:id="@+id/errorPhoto"
-            android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/spinner_countries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:entries="@array/country_codes"
+                android:padding="4dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/newsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_News" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Large.Circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_News"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                app:SpinKit_Color="@android:color/black" />
+
+            <RelativeLayout
+                android:id="@+id/newsErrorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/title_News"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/errorPhoto"
+                    android:layout_width="225dp"
+                    android:layout_height="225dp"
+                    android:layout_centerHorizontal="true"
+                    app:srcCompat="@drawable/error_nonews" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/statsLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/error_nonews" />
+            android:layout_below="@+id/layout_news">
+
+            <TextView
+                android:id="@+id/title_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="Piyasa verileri"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chartAveragePrice"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_below="@id/title_stats"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/dummy000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartAveragePrice"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chartVolume"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_below="@id/dummy000"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/dummy001"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chartVolume"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        </RelativeLayout>
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

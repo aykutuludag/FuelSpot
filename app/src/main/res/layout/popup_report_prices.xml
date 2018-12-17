@@ -150,6 +150,14 @@
         android:text="GÖNDER" />
 
     <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@+id/sendFiyat"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/default_station" />
+
+    <ImageView
         android:id="@+id/imageViewClose"
         android:layout_width="32dp"
         android:layout_height="32dp"

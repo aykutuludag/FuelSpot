@@ -152,10 +152,10 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             background = itemView.findViewById(R.id.single_station);
             stationName = itemView.findViewById(R.id.station_name);
             // vicinity = itemView.findViewById(R.id.station_vicinity);
-            gasolinePrice = itemView.findViewById(R.id.priceGasoline);
-            dieselPrice = itemView.findViewById(R.id.priceDiesel);
-            lpgPrice = itemView.findViewById(R.id.priceLPG);
-            electricityPrice = itemView.findViewById(R.id.priceElectricity);
+            gasolinePrice = itemView.findViewById(R.id.taxGasoline);
+            dieselPrice = itemView.findViewById(R.id.taxDiesel);
+            lpgPrice = itemView.findViewById(R.id.taxLPG);
+            electricityPrice = itemView.findViewById(R.id.taxElectric);
             lastUpdated = itemView.findViewById(R.id.stationLastUpdate);
             stationPic = itemView.findViewById(R.id.station_photo);
             distance = itemView.findViewById(R.id.distance_ofStation);

@@ -575,7 +575,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 50m
@@ -1095,7 +1095,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         termsAndConditions = findViewById(R.id.checkBoxTerms);
         termsAndConditions.setText("");
         termsAndConditions.setText(Html.fromHtml(
-                "Şartlar ve koşulları okudum, <a href='http://fuel-spot.com/terms-and-conditions'>kabul ediyorum.</a>"));
+                "Şartlar ve koşulları okudum, <a href='https://fuel-spot.com/terms-and-conditions'>kabul ediyorum.</a>"));
         termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 

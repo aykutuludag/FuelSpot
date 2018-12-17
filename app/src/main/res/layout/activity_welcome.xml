@@ -59,9 +59,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
+            android:alpha="0.5"
             android:background="@drawable/green_box"
             android:clickable="false"
-            android:alpha="0.5"
             android:fontFamily="@font/gotham_black"
             android:text="DEVAM"
             android:textColor="#212121" />
@@ -350,9 +350,9 @@
                     android:layout_marginBottom="16dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:textAllCaps="true"
                     android:inputType="textCapCharacters"
                     android:shadowColor="#3A3A3A"
+                    android:textAllCaps="true"
                     android:textColor="#3A3A3A" />
             </RelativeLayout>
 

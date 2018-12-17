@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,23 +48,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         NewsItem feedItem = feedItemList.get(i);
 
-        // Download image using picasso library
-        if (feedItem.getThumbnail() != null && feedItem.getThumbnail().length() > 0) {
-            String encodedUrl = feedItem.getThumbnail().replace("ç", "%C3%A7").replace("Ç", "%C3%87").replace("ğ", "%C4%9F")
-                    .replace("Ğ", "%C4%9E").replace("ı", "%C4%B1").replace("İ", "%C4%B0").replace("ö", "%C3%B6")
-                    .replace("Ö", "%C3%96").replace("ş", "%C5%9F").replace("Ş", "%C5%9E").replace("ü", "%C3%BC")
-                    .replace("Ü", "%C3%9C");
-
-            RequestOptions options = new RequestOptions()
-                    .centerCrop()
-                    .placeholder(R.drawable.photo_placeholder)
-                    .error(R.drawable.photo_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .priority(Priority.HIGH);
-            Glide.with(mContext).load(Uri.parse(encodedUrl)).apply(options).into(viewHolder.image);
-        }
-
-
         // Setting text view title
         if (feedItem.getTitle() != null && feedItem.getTitle().length() > 0) {
             viewHolder.text.setText(feedItem.getTitle());
@@ -71,7 +55,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         // NewsTime
         if (feedItem.getPublishDate() != null && feedItem.getPublishDate().length() > 0) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             try {
                 Date date = sdf.parse(feedItem.getPublishDate());
                 viewHolder.newsTime.setReferenceTime(date.getTime());
@@ -80,14 +64,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             }
         }
 
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+        Glide.with(mContext).load(feedItem.getPhoto()).apply(options).into(viewHolder.background);
+
         // Handle click event on both title and image click
-        viewHolder.text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNews(viewHolder.getAdapterPosition());
-            }
-        });
-        viewHolder.image.setOnClickListener(new View.OnClickListener() {
+        viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openNews(viewHolder.getAdapterPosition());
@@ -97,7 +83,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private void openNews(int position) {
         NewsItem feedItem = feedItemList.get(position);
-        Uri newsUri = Uri.parse(feedItem.getLink());
+        Uri newsUri = Uri.parse(feedItem.getURL());
 
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         CustomTabsIntent customTabsIntent = builder.build();
@@ -114,13 +100,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView image;
+        RelativeLayout layout;
+        ImageView background;
         public TextView text;
         RelativeTimeTextView newsTime;
 
         ViewHolder(View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.img_thumbnail);
+            background = itemView.findViewById(R.id.newsBackground);
+            layout = itemView.findViewById(R.id.top_layout);
             text = itemView.findViewById(R.id.txt_text);
             newsTime = itemView.findViewById(R.id.news_published);
         }

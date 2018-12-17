@@ -73,4 +73,5 @@
     <string name="report_open">Açık</string>
     <string name="sort">Sırala</string>
     <string name="automobiles">Araçlar</string>
+    <string name="priceHistory">Fiyat geçmişi</string>
 </resources>

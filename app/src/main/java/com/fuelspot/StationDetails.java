@@ -2,13 +2,17 @@ package com.fuelspot;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,6 +47,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.model.CampaignItem;
@@ -50,6 +59,12 @@ import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
@@ -75,7 +90,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 
@@ -89,6 +107,10 @@ public class StationDetails extends AppCompatActivity {
 
     CircleImageView stationIcon;
     public static List<CommentItem> stationCommentList = new ArrayList<>();
+    List<Entry> gasolinePriceHistory = new ArrayList<>();
+    List<Entry> dieselPriceHistory = new ArrayList<>();
+    List<Entry> lpgPriceHistory = new ArrayList<>();
+    List<Entry> elecPriceHistory = new ArrayList<>();
     RelativeTimeTextView textLastUpdated;
 
     StreetViewPanoramaView mStreetViewPanoramaView;
@@ -110,6 +132,10 @@ public class StationDetails extends AppCompatActivity {
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
     RelativeLayout commentSection;
     Button seeAllComments;
+    LineChart chart;
+    Bitmap bitmap;
+    ImageView reportPricePhoto;
+    RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,10 +173,10 @@ public class StationDetails extends AppCompatActivity {
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
         textVicinity = findViewById(R.id.station_vicinity);
-        textGasoline = findViewById(R.id.priceGasoline);
-        textDiesel = findViewById(R.id.priceDiesel);
-        textLPG = findViewById(R.id.priceLPG);
-        textElectricity = findViewById(R.id.priceElectricity);
+        textGasoline = findViewById(R.id.taxGasoline);
+        textDiesel = findViewById(R.id.taxDiesel);
+        textLPG = findViewById(R.id.taxLPG);
+        textElectricity = findViewById(R.id.taxElectric);
         textLastUpdated = findViewById(R.id.stationLastUpdate);
         stationIcon = findViewById(R.id.station_photo);
         literSectionTitle = findViewById(R.id.textViewUnitPrice);
@@ -193,6 +219,8 @@ public class StationDetails extends AppCompatActivity {
 
         // if stationVerified == 1, this section shows up!
         verifiedSection = findViewById(R.id.verifiedStation);
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_station).error(R.drawable.default_station)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
         // Nerden gelirse gelsin stationID boş olamaz.
         choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
@@ -286,6 +314,7 @@ public class StationDetails extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -295,6 +324,89 @@ public class StationDetails extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("stationID", String.valueOf(stationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    void fetchStationFinance() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_FINANCE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    gasolinePriceHistory.add(new Entry(i, (float) obj.getDouble("gasolinePrice")));
+                                    dieselPriceHistory.add(new Entry(i, (float) obj.getDouble("dieselPrice")));
+                                    lpgPriceHistory.add(new Entry(i, (float) obj.getDouble("lpgPrice")));
+                                    elecPriceHistory.add(new Entry(i, (float) obj.getDouble("electricityPrice")));
+                                }
+
+                                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+
+                                if (gasolinePrice != 0) {
+                                    LineDataSet dataSet = new LineDataSet(gasolinePriceHistory, getString(R.string.gasoline)); // add entries to dataset
+                                    dataSet.setDrawCircles(false);
+                                    dataSet.setColor(Color.BLACK);
+                                    dataSets.add(dataSet);
+                                }
+
+                                if (dieselPrice != 0) {
+                                    LineDataSet dataSet2 = new LineDataSet(dieselPriceHistory, getString(R.string.diesel)); // add entries to dataset
+                                    dataSet2.setColor(Color.RED);
+                                    dataSet2.setDrawCircles(false);
+                                    dataSets.add(dataSet2);
+                                }
+
+                                if (lpgPrice != 0) {
+                                    LineDataSet dataSet3 = new LineDataSet(lpgPriceHistory, getString(R.string.lpg)); // add entries to dataset
+                                    dataSet3.setColor(Color.BLUE);
+                                    dataSet3.setDrawCircles(false);
+                                    dataSets.add(dataSet3);
+                                }
+
+                                if (electricityPrice != 0) {
+                                    LineDataSet dataSet4 = new LineDataSet(elecPriceHistory, getString(R.string.electricity)); // add entries to dataset
+                                    dataSet4.setColor(Color.GREEN);
+                                    dataSet4.setDrawCircles(false);
+                                    dataSets.add(dataSet4);
+                                }
+
+                                LineData lineData = new LineData(dataSets);
+                                chart.setData(lineData);
+                                chart.getAxisRight().setEnabled(false);
+                                chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+                                chart.getDescription().setText(currencySymbol + " / " + userUnit);
+                                chart.invalidate(); // refresh
+                            } catch (JSONException e) {
+                                Toast.makeText(StationDetails.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(choosenStationID));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -400,7 +512,6 @@ public class StationDetails extends AppCompatActivity {
             textViewLPGLt.setText(lpgHolder);
         }
 
-
         if (howMuchEle == 0) {
             textViewElectricityLt.setText("-");
         } else {
@@ -408,6 +519,7 @@ public class StationDetails extends AppCompatActivity {
             textViewElectricityLt.setText(electricityHolder);
         }
 
+        chart = findViewById(R.id.chart);
 
         // Facilities
         if (facilitiesOfStation.contains("WC")) {
@@ -446,6 +558,7 @@ public class StationDetails extends AppCompatActivity {
             imageViewRestaurant.setVisibility(View.GONE);
         }
 
+        fetchStationFinance();
         fetchCampaigns();
         fetchStationComments();
     }
@@ -779,12 +892,24 @@ public class StationDetails extends AppCompatActivity {
             }
         });
 
+        reportPricePhoto = customView.findViewById(R.id.imageView);
+        reportPricePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.verifyFilePickerPermission(StationDetails.this)) {
+                    ImagePicker.create(StationDetails.this).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(StationDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
+
         Button sendReport = customView.findViewById(R.id.sendFiyat);
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
-                sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], null, pricesArray[0], null);
+                sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], null, pricesArray[0], bitmap);
             }
         });
 
@@ -803,21 +928,34 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void sendReporttoServer(final String kullaniciAdi, final int istasyonID, final String raporSebebi, final String raporDetayi, final String fiyatlar, final Bitmap bitmap) {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT_ADD),
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, true);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loading.dismiss();
-                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                        mPopupWindow.dismiss();
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    loading.dismiss();
+                                    Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                    mPopupWindow.dismiss();
+                                    break;
+                                case "Fail":
+                                    loading.dismiss();
+                                    Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            loading.dismiss();
+                            Toast.makeText(StationDetails.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
                         loading.dismiss();
+                        Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -829,8 +967,12 @@ public class StationDetails extends AppCompatActivity {
                 params.put("username", kullaniciAdi);
                 params.put("stationID", String.valueOf(istasyonID));
                 params.put("report", raporSebebi);
-                params.put("details", raporDetayi);
-                params.put("prices", fiyatlar);
+                if (raporDetayi != null && raporDetayi.length() > 0) {
+                    params.put("details", raporDetayi);
+                }
+                if (fiyatlar != null && fiyatlar.length() > 0) {
+                    params.put("prices", fiyatlar);
+                }
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 }
@@ -902,7 +1044,7 @@ public class StationDetails extends AppCompatActivity {
             case R.id.menu_share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "http://fuel-spot.com/stations?id=" + choosenStationID);
+                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "https://fuel-spot.com/stations?id=" + choosenStationID);
                 startActivity(Intent.createChooser(intent, getString(R.string.menu_share)));
                 return true;
             case R.id.menu_go:
@@ -911,6 +1053,35 @@ public class StationDetails extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (ActivityCompat.checkSelfPermission(StationDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                    ImagePicker.create(StationDetails.this).single().start();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(reportPricePhoto);
+                photo = "https://fuel-spot.com/uploads/users/" + username + ".jpg";
+            }
         }
     }
 

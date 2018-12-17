@@ -247,7 +247,7 @@ public class AddStation extends AppCompatActivity {
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                 (cameraPosition));
 
         //Search stations in a radius of 50m

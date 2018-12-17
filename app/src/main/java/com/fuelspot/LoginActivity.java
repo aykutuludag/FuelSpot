@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,12 +51,14 @@ import com.google.android.gms.common.api.Scope;
 import org.json.JSONObject;
 
 import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.GOOGLE_LOGIN;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -80,11 +81,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     RelativeLayout notLogged;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
-    int googleSign = 9001;
     CallbackManager callbackManager;
     LoginButton loginButton;
     SharedPreferences prefs;
-    Handler handler;
+    Handler handler = new Handler();
     ImageView doUHaveStation;
 
     @Override
@@ -108,8 +108,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         MainActivity.getVariables(prefs);
 
-        handler = new Handler();
-
         //Layout objects
         signInButton = findViewById(R.id.buttonGoogle);
         loginButton = findViewById(R.id.facebookButton);
@@ -117,72 +115,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (isSigned) {
             if (userlat != null && userlon != null) {
                 if (userlat.length() > 0 && userlon.length() > 0) {
-                    Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
-                    try {
-                        List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
-                        if (addresses.size() > 0) {
-                            //Check the user if s/he trip another country and if s/he is, re-logged him
-                            if (!userCountry.equals(addresses.get(0).getCountryCode())) {
-                                //User has changes his/her country. Fetch the tax rates/unit/currency.
-                                //Language will be automatically changed
-                                isSigned = false;
-                                prefs.edit().putBoolean("isSigned", false).apply();
-
-                                userCountry = addresses.get(0).getCountryCode();
-                                prefs.edit().putString("userCountry", userCountry).apply();
-
-                                userCountryName = addresses.get(0).getCountryName();
-                                prefs.edit().putString("userCountryName", userCountryName).apply();
-
-                                userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
-                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
-
-                                Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
-                                currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
-                                prefs.edit().putString("userCurrency", currencyCode).apply();
-
-                                switch (userCountry) {
-                                    // US GALLON COUNTRIES
-                                    case "BZ":
-                                    case "CO":
-                                    case "DO":
-                                    case "EC":
-                                    case "GT":
-                                    case "HN":
-                                    case "HT":
-                                    case "LR":
-                                    case "MM":
-                                    case "NI":
-                                    case "PE":
-                                    case "US":
-                                    case "SV":
-                                        userUnit = getString(R.string.unitSystem2);
-                                        break;
-                                    // IMPERIAL GALLON COUNTRIES
-                                    case "AI":
-                                    case "AG":
-                                    case "BS":
-                                    case "DM":
-                                    case "GD":
-                                    case "KN":
-                                    case "KY":
-                                    case "LC":
-                                    case "MS":
-                                    case "VC":
-                                    case "VG":
-                                        userUnit = getString(R.string.unitSystem3);
-                                        break;
-                                    default:
-                                        // LITRE COUNTRIES. REST OF THE WORLD.
-                                        userUnit = getString(R.string.unitSystem1);
-                                        break;
-                                }
-                                prefs.edit().putString("userUnit", userUnit).apply();
-                            }
-                        }
-                    } catch (Exception e) {
-                        // Do nothing
-                    }
+                    Localization();
                 }
             }
         }
@@ -203,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View view) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, googleSign);
+                startActivityForResult(signInIntent, GOOGLE_LOGIN);
             }
         });
         //END
@@ -224,9 +157,79 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
+    void Localization() {
+        Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
+            if (addresses.size() > 0) {
+                //Check the user if s/he trip another country and if s/he is, re-logged him
+                if (!userCountry.equals(addresses.get(0).getCountryCode())) {
+                    //User has changes his/her country. Fetch the tax rates/unit/currency.
+                    //Language will be automatically changed
+                    isSigned = false;
+                    prefs.edit().putBoolean("isSigned", false).apply();
+
+                    userCountry = addresses.get(0).getCountryCode();
+                    prefs.edit().putString("userCountry", userCountry).apply();
+
+                    userCountryName = addresses.get(0).getCountryName();
+                    prefs.edit().putString("userCountryName", userCountryName).apply();
+
+                    userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+                    prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                    Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
+                    currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
+                    prefs.edit().putString("userCurrency", currencyCode).apply();
+
+                    switch (userCountry) {
+                        // US GALLON COUNTRIES
+                        case "BZ":
+                        case "CO":
+                        case "DO":
+                        case "EC":
+                        case "GT":
+                        case "HN":
+                        case "HT":
+                        case "LR":
+                        case "MM":
+                        case "NI":
+                        case "PE":
+                        case "US":
+                        case "SV":
+                            userUnit = getString(R.string.unitSystem2);
+                            break;
+                        // IMPERIAL GALLON COUNTRIES
+                        case "AI":
+                        case "AG":
+                        case "BS":
+                        case "DM":
+                        case "GD":
+                        case "KN":
+                        case "KY":
+                        case "LC":
+                        case "MS":
+                        case "VC":
+                        case "VG":
+                            userUnit = getString(R.string.unitSystem3);
+                            break;
+                        default:
+                            // LITRE COUNTRIES. REST OF THE WORLD.
+                            userUnit = getString(R.string.unitSystem1);
+                            break;
+                    }
+                    prefs.edit().putString("userUnit", userUnit).apply();
+                }
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
     void arrangeLayouts() {
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
+
             //Check user is regular or superUser
             if (isSuperUser) {
                 handler.postDelayed(new Runnable() {
@@ -236,19 +239,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         startActivity(i);
                         finish();
                     }
-                }, 3000);
+                }, 2000);
             } else {
                 final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 // Check user has premium and connected to internet
                 if (isNetworkConnected(LoginActivity.this) && !premium) {
-                    // AudienceNetwork(LoginActivity.this);
+                    // AdMob(LoginActivity.this);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             startActivity(intent);
                             finish();
                         }
-                    }, 2200);
+                    }, 2000);
                 } else {
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -256,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             startActivity(intent);
                             finish();
                         }
-                    }, 2200);
+                    }, 2000);
                 }
             }
         }
@@ -273,7 +276,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 //USERNAME
                 String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                if (tmpusername.length() > 31) {
+                if (tmpusername.length() > 30) {
                     username = tmpusername.substring(0, 30);
                 } else {
                     username = tmpusername;
@@ -307,45 +310,44 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void facebookLogin() {
         callbackManager = CallbackManager.Factory.create();
-        loginButton.setReadPermissions("email");
-        loginButton.setReadPermissions("public_profile");
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+        loginButton.setReadPermissions();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject me, GraphResponse response) {
-                                if (response.getError() != null) {
-                                    Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
-                                } else {
-                                    name = me.optString("name");
-                                    prefs.edit().putString("Name", name).apply();
+                GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject me, GraphResponse response) {
+                        System.out.println(response.toString());
+                        name = me.optString("name");
+                        prefs.edit().putString("Name", name).apply();
 
-                                    email = me.optString("email");
-                                    prefs.edit().putString("Email", email).apply();
+                        email = me.optString("email");
+                        prefs.edit().putString("Email", email).apply();
 
-                                    photo = me.optString("picture");
-                                    prefs.edit().putString("ProfilePhoto", photo).apply();
+                        photo = me.optString("picture");
 
-                                    //USERNAME
-                                    String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
-                                    if (tmpusername.length() > 31) {
-                                        username = tmpusername.substring(0, 30);
-                                    } else {
-                                        username = tmpusername;
-                                    }
-                                    prefs.edit().putString("UserName", username).apply();
+                                /*if (me.has("picture")) {
+                                    photo = me.getJSONObject("picture").getJSONObject("data").getString("url");
+                                }*/
+                        prefs.edit().putString("ProfilePhoto", photo).apply();
 
-                                    if (isNetworkConnected(LoginActivity.this)) {
-                                        register();
-                                    } else {
-                                        Snackbar.make(background, "İnternet bağlantınızda bir sorun bulunmakta.", Snackbar.LENGTH_SHORT).show();
-                                    }
+                        //USERNAME
+                        String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                        if (tmpusername.length() > 30) {
+                            username = tmpusername.substring(0, 30);
+                        } else {
+                            username = tmpusername;
+                        }
+                        prefs.edit().putString("UserName", username).apply();
 
-                                }
-                            }
-                        }).executeAsync();
+                        if (isNetworkConnected(LoginActivity.this)) {
+                            register();
+                        } else {
+                            Snackbar.make(background, "İnternet bağlantınızda bir sorun bulunmakta.", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                }).executeAsync();
             }
 
             @Override
@@ -433,12 +435,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);
             }
             background.setVideoURI(uri);
-            background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    background.start();
-                }
-            });
             background.start();
         }
         arrangeLayouts();
@@ -447,8 +443,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // FACEBOOK
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == googleSign) {
+
+        // GOOGLE
+        if (requestCode == GOOGLE_LOGIN) {
             googleSignIn(data);
         }
     }

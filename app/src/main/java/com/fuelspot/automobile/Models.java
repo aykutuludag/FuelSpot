@@ -1,7 +1,6 @@
 package com.fuelspot.automobile;
 
 public class Models {
-
     // CAR MODELS START
     public static String[] acura_models = {"RSX"};
     public static String[] alfaRomeo_models = {"33", "75", "145", "146", "147", "155", "156", "159", "164", "166", "Brera", "Giulia", "Giulietta", "GT", "MiTo", "Spider"};

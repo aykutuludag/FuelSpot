@@ -2,12 +2,9 @@ package com.fuelspot;
 
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,7 +16,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int mapDefaultStationRange = 50;
 
     public static String universalTimeStamp = "dd-MM-yyyy HH:mm";
-    public static boolean premium, isSigned, isSuperUser, isGlobalNews, isGeofenceOpen;
+    public static boolean premium, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
@@ -113,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_DIESEL = prefs.getFloat("taxDiesel", 0);
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
-        isGlobalNews = prefs.getBoolean("isGlobalNews", false);
         mapDefaultRange = prefs.getInt("RANGE", 2500);
         mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
@@ -149,267 +144,237 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         String photoURL;
         switch (stationName) {
             case "Akçagaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/akcagaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/akcagaz.jpg";
                 break;
             case "Akpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/akpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/akpet.jpg";
                 break;
             case "Alpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/alpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/alpet.jpg";
                 break;
             case "Amaco":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/amaco.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/amaco.jpg";
                 break;
             case "Anadolugaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/anadolugaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/anadolugaz.jpg";
                 break;
             case "Antoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/antoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/antoil.jpg";
                 break;
             case "Aygaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aygaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/aygaz.jpg";
                 break;
             case "Aytemiz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/aytemiz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/aytemiz.jpg";
                 break;
             case "Best":
             case "Best Oil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/best.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/best.jpg";
                 break;
             case "BP":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bp.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/bp.jpg";
                 break;
             case "Bpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/bpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/bpet.jpg";
                 break;
             case "Çekoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/cekoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/cekoil.jpg";
                 break;
             case "Chevron":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/chevron.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/chevron.jpg";
                 break;
             case "Circle-K":
             case "Circle K":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/circle-k.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/circle-k.jpg";
                 break;
             case "Citgo":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/citgo.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/citgo.jpg";
                 break;
             case "Class":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/class.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/class.jpg";
                 break;
             case "Damla Petrol":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/damla-petrol.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/damla-petrol.jpg";
                 break;
             case "Ecogaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/ecogaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/ecogaz.jpg";
                 break;
             case "Energy":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/energy.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/energy.jpg";
                 break;
             case "Erk":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/erk.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/erk.jpg";
                 break;
             case "Euroil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/euroil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/euroil.jpg";
+                break;
+            case "Exengaz":
+                photoURL = "https://fuel-spot.com/station_icons/exengaz.jpg";
                 break;
             case "Exxon":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/exxon.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/exxon.jpg";
                 break;
             case "GO":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/go.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/go.jpg";
                 break;
             case "Gulf":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/gulf.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/gulf.jpg";
                 break;
             case "Güneygaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/guneygaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/guneygaz.jpg";
                 break;
             case "Güvenal Gaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/guvenalgaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/guvenalgaz.jpg";
                 break;
             case "Habaş":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/habas.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/habas.jpg";
+                break;
+            case "Hisarpet":
+                photoURL = "https://fuel-spot.com/station_icons/hisarpet.jpg";
                 break;
             case "İpragaz":
             case "Ipragaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/ipragaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/ipragaz.jpg";
                 break;
             case "Jetpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/jetpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/jetpet.jpg";
                 break;
             case "Kadoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kadoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/kadoil.jpg";
                 break;
             case "Kalegaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kalegaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/kalegaz.jpg";
                 break;
             case "Kalepet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kalepet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/kalepet.jpg";
                 break;
             case "K-pet":
             case "Kpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/kpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/kpet.jpg";
+                break;
+            case "Ligoil":
+                photoURL = "https://fuel-spot.com/station_icons/ligoil.jpg";
                 break;
             case "Lipetgaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lipetgaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/lipetgaz.jpg";
                 break;
             case "Lukoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/lukoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/lukoil.jpg";
                 break;
             case "Marathon":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/marathon.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/marathon.jpg";
+                break;
+            case "Memoil":
+                photoURL = "https://fuel-spot.com/station_icons/memoil.jpg";
                 break;
             case "Milangaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/milangaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/milangaz.jpg";
                 break;
             case "Mobil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mobil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/mobil.jpg";
                 break;
             case "Mogaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mogaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/mogaz.jpg";
                 break;
             case "Moil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/moil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/moil.jpg";
                 break;
             case "Mola":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/mola.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/mola.jpg";
                 break;
             case "Opet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/opet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/opet.jpg";
                 break;
             case "Pacific":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/pacific.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/pacific.jpg";
                 break;
             case "Parkoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/parkoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/parkoil.jpg";
                 break;
             case "Petline":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petline.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/petline.jpg";
                 break;
             case "Petrol Ofisi":
             case "PO":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petrol-ofisi.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/petrol-ofisi.jpg";
                 break;
             case "Petrotürk":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/petroturk.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/petroturk.jpg";
                 break;
             case "Powerwax":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/powerwax.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/powerwax.jpg";
                 break;
             case "Qplus":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/qplus.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/qplus.jpg";
                 break;
             case "Quicktrip":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/quicktrip.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/quicktrip.jpg";
                 break;
             case "Remoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/remoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/remoil.jpg";
                 break;
             case "Sanoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sanoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/sanoil.jpg";
                 break;
             case "Shell":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/shell.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/shell.jpg";
                 break;
             case "S Oil":
             case "S-Oil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/s-oil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/s-oil.jpg";
                 break;
             case "Starpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/starpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/starpet.jpg";
                 break;
             case "Sunoco":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sunoco.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/sunoco.jpg";
                 break;
             case "Sunpet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/sunpet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/sunpet.jpg";
                 break;
             case "Teco":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/teco.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/teco.jpg";
                 break;
             case "Termo":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/termo.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/termo.jpg";
                 break;
             case "Texaco":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/texaco.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/texaco.jpg";
                 break;
             case "Total":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/total.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/total.jpg";
+                break;
+            case "Turkuaz":
+                photoURL = "https://fuel-spot.com/station_icons/turkuaz.jpg";
                 break;
             case "Türkiş":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkis.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/turkis.jpg";
                 break;
             case "Türkiye Petrolleri":
             case "TP":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkiye-petrolleri.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/turkiye-petrolleri.jpg";
                 break;
             case "Türkoil":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkoil.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/turkoil.jpg";
                 break;
             case "Türkpetrol":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkpetrol.jpg";
-                break;
-            case "Turkuaz":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/turkuaz.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/turkpetrol.jpg";
                 break;
             case "United":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/united.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/united.jpg";
                 break;
             case "Uspet":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/uspet.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/uspet.jpg";
                 break;
             case "Valero":
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/valero.jpg";
+                photoURL = "https://fuel-spot.com/station_icons/valero.jpg";
                 break;
             default:
-                photoURL = "http://fuel-spot.com/FUELSPOTAPP/station_icons/unknown.jpg";
+                photoURL = "https://fuel-spot.com/default_icons/station.jpg";
                 break;
         }
-
         return photoURL;
     }
-
-    //First try to load Audience Network, fails load AdMob
-    /*public static void AudienceNetwork(final Context mContext) {
-        if (adCount < 2) {
-            facebookInterstitial = new InterstitialAd(mContext, mContext.getString(R.string.interstitial_facebook));
-            facebookInterstitial.setAdListener(new InterstitialAdListener() {
-                @Override
-                public void onInterstitialDisplayed(Ad ad) {
-                    // Interstitial displayed callback
-                }
-
-                @Override
-                public void onInterstitialDismissed(Ad ad) {
-                    // Interstitial dismissed callback
-                    AudienceNetwork(mContext);
-                }
-
-                @Override
-                public void onError(Ad ad, AdError adError) {
-                    // Ad error callback
-                    AdMob(mContext);
-                }
-
-                @Override
-                public void onAdLoaded(Ad ad) {
-                    // Show the ad when it's done loading.
-                }
-
-                @Override
-                public void onAdClicked(Ad ad) {
-                    // Ad clicked callback
-                }
-
-                @Override
-                public void onLoggingImpression(Ad ad) {
-
-                }
-            });
-            facebookInterstitial.loadAd();
-        }
-    }*/
 
   /*  public static void AdMob(final Context mContext) {
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -434,38 +399,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             }
         });
         admobInterstitial.loadAd(adRequest);
-    }*/
-
-  /*  public void GeofenceScheduler() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        Intent myIntent = new Intent(MainActivity.this, GeofenceService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        if (alarmManager != null) {
-            if (isGeofenceOpen && !isGeoServiceRunning()) {
-                // Start the service
-                startService(new Intent(MainActivity.this, GeofenceService.class));
-
-                // and set alarm for every hour
-                Calendar currentTime = Calendar.getInstance();
-                alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis() + 60 * 60 * 1000, AlarmManager.INTERVAL_HOUR, pendingIntent);
-            } else {
-                alarmManager.cancel(pendingIntent);
-            }
-        }
-    }*/
-
- /*   private boolean isGeoServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        if (manager != null) {
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if ("com.fuelspot.service.GeofenceService".equals(service.service.getClassName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }*/
 
     @Override
@@ -523,44 +456,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
-        buyPremiumPopup();
         InAppBilling();
 
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
-    }
-
-    private void buyPremiumPopup() {
-        openCount = prefs.getInt("howMany", 0);
-        openCount++;
-        prefs.edit().putInt("howMany", openCount).apply();
-
-        if (openCount >= 25 && !premium) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.buy_premium_ads_title)
-                    .setMessage(R.string.buy_premium_ads_content)
-                    .setPositiveButton(R.string.buy_premium_ads_okay, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                buyPremium();
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            } catch (IntentSender.SendIntentException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    })
-                    .setNegativeButton(R.string.buy_premium_ads_later, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openCount = 0;
-                            prefs.edit().putInt("howMany", openCount).apply();
-                        }
-                    })
-                    .show();
-        }
     }
 
     private void InAppBilling() {
@@ -594,8 +494,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             if (ownedSkus.contains("premium")) {
                 premium = true;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
-                prefs.edit().putInt("RANGE", 50000).apply();
-                prefs.edit().putFloat("ZOOM", 7.5f).apply();
+                prefs.edit().putInt("RANGE", 5000).apply();
+                prefs.edit().putFloat("ZOOM", 12f).apply();
             } else {
                 premium = false;
                 prefs.edit().putBoolean("hasPremium", premium).apply();
@@ -603,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
-    public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
+    /*public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(MainActivity.this,
                 "Premium sürüme geçerek uygulama içerisindeki tüm reklamları kaldırabilirsiniz. Ayrıca 50 km'ye kadar çevrenizdeki bütün istasyon fiyatlarını görebilirsiniz.", Toast.LENGTH_LONG)
                 .show();
@@ -613,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         assert pendingIntent != null;
         startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_NORMAL_PREMIUM, new Intent(), 0,
                 0, 0);
-    }
+    }*/
 
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -630,12 +530,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case PURCHASE_NORMAL_PREMIUM:
+           /* case PURCHASE_NORMAL_PREMIUM:
                 if (resultCode == RESULT_OK) {
                     Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", true).apply();
+                    prefs.edit().putBoolean("hasPremum", true).apply();
                     prefs.edit().putInt("RANGE", 50000).apply();
-                    prefs.edit().putFloat("ZOOM", 7.5f).apply();
+                    prefs.edit().putFloat("ZOOM", 12f).apply();
                     Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
                     if (i != null) {
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -647,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                             Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasPremium", false).apply();
                 }
-                break;
+                break;*/
         }
 
         // Thanks to this brief code, we can call onActivityResult in a fragment
@@ -670,9 +570,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (mServiceConn != null) {
             unbindService(mServiceConn);
         }
-       /* if (facebookInterstitial != null) {
-            facebookInterstitial.destroy();
-        }*/
     }
 
     @Override
@@ -685,7 +582,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                     mFragNavController.clearStack();
                     super.onBackPressed();
                     finish();
-                    return;
                 }
 
                 this.doubleBackToExitPressedOnce = true;

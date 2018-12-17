@@ -1,9 +1,7 @@
 package com.fuelspot;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.Normalizer;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -58,15 +57,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
-import static com.fuelspot.MainActivity.birthday;
-import static com.fuelspot.MainActivity.email;
-import static com.fuelspot.MainActivity.gender;
-import static com.fuelspot.MainActivity.getVariables;
-import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.photo;
-import static com.fuelspot.MainActivity.userCountry;
-import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
 
@@ -83,15 +74,14 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     RequestQueue requestQueue;
     Button addCarButton;
     EditText plateText;
-    SharedPreferences prefs;
     RequestOptions options;
 
     // Temp variables to add a vehicle
-    int vehicleID, kilometer = 0;
-    int fuelPri, fuelSec = -1;
-    String carBrand = "Acura";
-    String carModel = "RSX";
-    String plateNo = "";
+    int dummyVehicleID, dummyKilometer = 0;
+    int dummyFuelPri, dummyFuelSec = -1;
+    String dummyCarBrand = "Acura";
+    String dummyCarModel = "RSX";
+    String dummyPlateNo = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +95,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         // Analytics
         Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
@@ -161,15 +149,15 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.gasoline) {
-                    fuelPri = 0;
+                    dummyFuelPri = 0;
                 } else if (checkedId == R.id.diesel) {
-                    fuelPri = 1;
+                    dummyFuelPri = 1;
                 } else if (checkedId == R.id.lpg) {
-                    fuelPri = 2;
+                    dummyFuelPri = 2;
                 } else {
-                    fuelPri = 3;
+                    dummyFuelPri = 3;
                 }
-                fuelSec = -1;
+                dummyFuelPri = -1;
                 radioGroup2.clearCheck();
             }
         });
@@ -179,18 +167,18 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // find which radio button is selected
                 if (checkedId == R.id.gasoline2) {
-                    fuelSec = 0;
+                    dummyFuelSec = 0;
                 } else if (checkedId == R.id.diesel2) {
-                    fuelSec = 1;
+                    dummyFuelSec = 1;
                 } else if (checkedId == R.id.lpg2) {
-                    fuelSec = 2;
+                    dummyFuelSec = 2;
                 } else if (checkedId == R.id.electricity2) {
-                    fuelSec = 3;
+                    dummyFuelSec = 3;
                 }
             }
         });
 
-        switch (fuelPri) {
+        switch (dummyFuelPri) {
             case 0:
                 gasoline.setChecked(true);
                 break;
@@ -204,12 +192,12 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 elec.setChecked(true);
                 break;
             default:
-                fuelPri = -1;
+                dummyFuelPri = -1;
                 radioGroup1.clearCheck();
                 break;
         }
 
-        switch (fuelSec) {
+        switch (dummyFuelSec) {
             case 0:
                 gasoline2.setChecked(true);
                 break;
@@ -223,7 +211,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 elec2.setChecked(true);
                 break;
             default:
-                fuelSec = -1;
+                dummyFuelSec = -1;
                 radioGroup2.clearCheck();
                 break;
         }
@@ -231,7 +219,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         //Kilometre
         EditText eText = findViewById(R.id.editText_km);
-        eText.setText("" + kilometer);
+        eText.setText("" + dummyKilometer);
         eText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -246,14 +234,14 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    kilometer = Integer.parseInt(s.toString());
+                    dummyKilometer = Integer.parseInt(s.toString());
                 }
             }
         });
 
         //PlakaNO
         plateText = findViewById(R.id.editText_plate);
-        plateText.setText(plateNo);
+        plateText.setText(dummyPlateNo);
         plateText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -268,14 +256,8 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    //All uppercase
-                    plateNo = s.toString().toUpperCase();
-
-                    if (s.toString().contains(" ")) {
-                        plateNo = s.toString().replaceAll(" ", "");
-                    }
-
-                    prefs.edit().putString("plateNo", plateNo).apply();
+                    // Normalize
+                    dummyPlateNo = Normalizer.normalize(dummyPlateNo, Normalizer.Form.NFD).replaceAll("[^A-Z0-9]", "").replace(" ", "").toUpperCase();
                 }
             }
         });
@@ -306,14 +288,15 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
-                                vehicleID = obj.getInt("id");
-                                userVehicles += vehicleID + ";";
-                                prefs.edit().putString("userVehicles", userVehicles).apply();
-                                getVariables(prefs);
+                                dummyVehicleID = obj.getInt("id");
+                                userVehicles += dummyVehicleID + ";";
                                 updateUser();
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Toast.makeText(AddAutomobile.this, "Hata", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Toast.makeText(AddAutomobile.this, "Hata", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -322,6 +305,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
+                        Toast.makeText(AddAutomobile.this, "Hata", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -331,12 +315,12 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("carBrand", carBrand);
-                params.put("carModel", carModel);
-                params.put("plateNo", plateNo);
-                params.put("fuelPri", String.valueOf(fuelPri));
-                params.put("kilometer", String.valueOf(kilometer));
-                params.put("fuelSec", String.valueOf(fuelSec));
+                params.put("carBrand", dummyCarBrand);
+                params.put("carModel", dummyCarModel);
+                params.put("plateNo", dummyPlateNo);
+                params.put("fuelPri", String.valueOf(dummyFuelPri));
+                params.put("kilometer", String.valueOf(dummyKilometer));
+                params.put("fuelSec", String.valueOf(dummyFuelSec));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
                 }
@@ -382,14 +366,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("email", email);
-                params.put("gender", gender);
-                params.put("birthday", birthday);
-                params.put("location", location);
-                params.put("country", userCountry);
-                params.put("language", userDisplayLanguage);
                 params.put("vehicles", userVehicles);
-                params.put("phoneNumber", userPhoneNumber);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -429,444 +406,444 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, dummyCarModel), true);
                         break;
                     case 1:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.alfaRomeo_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.alfaRomeo_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.alfaRomeo_models, dummyCarModel), true);
                         break;
                     case 2:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.anadol_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.anadol_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.anadol_models, dummyCarModel), true);
                         break;
                     case 3:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.astonMartin_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.astonMartin_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.astonMartin_models, dummyCarModel), true);
                         break;
                     case 4:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.audi_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.audi_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.audi_models, dummyCarModel), true);
                         break;
                     case 5:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.bentley_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.bentley_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.bentley_models, dummyCarModel), true);
                         break;
                     case 6:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.bmw_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.bmw_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.bmw_models, dummyCarModel), true);
                         break;
                     case 7:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.bugatti_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.bugatti_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.bugatti_models, dummyCarModel), true);
                         break;
                     case 8:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.buick_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.buick_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.buick_models, dummyCarModel), true);
                         break;
                     case 9:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.cadillac_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.cadillac_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.cadillac_models, dummyCarModel), true);
                         break;
                     case 10:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.cherry_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.cherry_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.cherry_models, dummyCarModel), true);
                         break;
                     case 11:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.chevrolet_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.chevrolet_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.chevrolet_models, dummyCarModel), true);
                         break;
                     case 12:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.chyrsler_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.chyrsler_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.chyrsler_models, dummyCarModel), true);
                         break;
                     case 13:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.citroen_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.citroen_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.citroen_models, dummyCarModel), true);
                         break;
                     case 14:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.dacia_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.dacia_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.dacia_models, dummyCarModel), true);
                         break;
                     case 15:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.daeweo_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.daeweo_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.daeweo_models, dummyCarModel), true);
                         break;
                     case 16:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.daihatsu_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.daihatsu_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.daihatsu_models, dummyCarModel), true);
                         break;
                     case 17:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.dodge_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.dodge_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.dodge_models, dummyCarModel), true);
                         break;
                     case 18:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.ds_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.ds_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.ds_models, dummyCarModel), true);
                         break;
                     case 19:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.eagle_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.eagle_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.eagle_models, dummyCarModel), true);
                         break;
                     case 20:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.ferrari_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.ferrari_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.ferrari_models, dummyCarModel), true);
                         break;
                     case 21:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.fiat_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.fiat_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.fiat_models, dummyCarModel), true);
                         break;
                     case 22:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.ford_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.ford_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.ford_models, dummyCarModel), true);
                         break;
                     case 23:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.gaz_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.gaz_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.gaz_models, dummyCarModel), true);
                         break;
                     case 24:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.geely_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.geely_models, dummyCarModel), true);
                         break;
                     case 25:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.honda_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.honda_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.honda_models, dummyCarModel), true);
                         break;
                     case 26:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.hyundai_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.hyundai_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.hyundai_models, dummyCarModel), true);
                         break;
                     case 27:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.ikco_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.ikco_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.ikco_models, dummyCarModel), true);
                         break;
                     case 28:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.infiniti_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.infiniti_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.infiniti_models, dummyCarModel), true);
                         break;
                     case 29:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.isuzu_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.isuzu_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.isuzu_models, dummyCarModel), true);
                         break;
                     case 30:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.jaguar_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.jaguar_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.jaguar_models, dummyCarModel), true);
                         break;
                     case 31:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.kia_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.kia_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.kia_models, dummyCarModel), true);
                         break;
                     case 32:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.kral_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.kral_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.kral_models, dummyCarModel), true);
                         break;
                     case 33:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.lada_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.lada_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.lada_models, dummyCarModel), true);
                         break;
                     case 34:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.lamborghini_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.lamborghini_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.lamborghini_models, dummyCarModel), true);
                         break;
                     case 35:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.lancia_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.lancia_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.lancia_models, dummyCarModel), true);
                         break;
                     case 36:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.lexus_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.lexus_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.lexus_models, dummyCarModel), true);
                         break;
                     case 37:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.lincoln_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.lincoln_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.lincoln_models, dummyCarModel), true);
                         break;
                     case 38:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.lotus_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.lotus_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.lotus_models, dummyCarModel), true);
                         break;
                     case 39:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.maserati_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.maserati_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.maserati_models, dummyCarModel), true);
                         break;
                     case 40:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.maybach_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.maybach_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.maybach_models, dummyCarModel), true);
                         break;
                     case 41:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mazda_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mazda_models, dummyCarModel), true);
                         break;
                     case 42:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mercedes_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.mercedes_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mercedes_models, dummyCarModel), true);
                         break;
                     case 43:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mercury_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.mercury_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mercury_models, dummyCarModel), true);
                         break;
                     case 44:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mg_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.mg_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mg_models, dummyCarModel), true);
                         break;
                     case 45:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mini_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.mini_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mini_models, dummyCarModel), true);
                         break;
                     case 46:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.mitsubishi_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.mitsubishi_models, dummyCarModel), true);
                         break;
                     case 47:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.moskwitsch_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.moskwitsch_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.moskwitsch_models, dummyCarModel), true);
                         break;
                     case 48:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.nissan_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.nissan_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.nissan_models, dummyCarModel), true);
                         break;
                     case 49:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.oldsmobile_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.oldsmobile_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.oldsmobile_models, dummyCarModel), true);
                         break;
                     case 50:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.opel_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.opel_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.opel_models, dummyCarModel), true);
                         break;
                     case 51:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.pagani_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.pagani_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.pagani_models, dummyCarModel), true);
                         break;
                     case 52:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.peugeot_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.peugeot_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.peugeot_models, dummyCarModel), true);
                         break;
                     case 53:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.plymouth_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.plymouth_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.plymouth_models, dummyCarModel), true);
                         break;
                     case 54:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.pontiac_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.pontiac_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.pontiac_models, dummyCarModel), true);
                         break;
                     case 55:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.porsche_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.porsche_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.porsche_models, dummyCarModel), true);
                         break;
                     case 56:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.proton_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.proton_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.proton_models, dummyCarModel), true);
                         break;
                     case 57:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.renault_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.renault_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.renault_models, dummyCarModel), true);
                         break;
                     case 58:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.rollsRoyce_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.rollsRoyce_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.rollsRoyce_models, dummyCarModel), true);
                         break;
                     case 59:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.rover_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.rover_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.rover_models, dummyCarModel), true);
                         break;
                     case 60:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.saab_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.saab_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.saab_models, dummyCarModel), true);
                         break;
                     case 61:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.seat_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.seat_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.seat_models, dummyCarModel), true);
                         break;
                     case 62:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.skoda_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.skoda_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.skoda_models, dummyCarModel), true);
                         break;
                     case 63:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.smart_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.smart_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.smart_models, dummyCarModel), true);
                         break;
                     case 64:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.subaru_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.subaru_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.subaru_models, dummyCarModel), true);
                         break;
                     case 65:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.suzuki_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.suzuki_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.suzuki_models, dummyCarModel), true);
                         break;
                     case 66:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.tata_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.tata_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.tata_models, dummyCarModel), true);
                         break;
                     case 67:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.tesla_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.tesla_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.tesla_models, dummyCarModel), true);
                         break;
                     case 68:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.tofas_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.tofas_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.tofas_models, dummyCarModel), true);
                         break;
                     case 69:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.toyota_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.toyota_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.toyota_models, dummyCarModel), true);
                         break;
                     case 70:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.vw_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.vw_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.vw_models, dummyCarModel), true);
                         break;
                     case 71:
                         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.volvo_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
-                        spinner2.setSelection(MainActivity.getIndexOf(Models.volvo_models, carModel), true);
+                        spinner2.setSelection(MainActivity.getIndexOf(Models.volvo_models, dummyCarModel), true);
                         break;
                     default:
                         break;
                 }
                 spinner2.setOnItemSelectedListener(this);
 
-                carBrand = spinner.getSelectedItem().toString();
-                carModel = spinner2.getSelectedItem().toString();
+                dummyCarBrand = spinner.getSelectedItem().toString();
+                dummyCarModel = spinner2.getSelectedItem().toString();
                 break;
             case R.id.spinner_models:
-                carModel = spinner2.getSelectedItem().toString();
+                dummyCarModel = spinner2.getSelectedItem().toString();
                 break;
             default:
                 break;
@@ -875,8 +852,8 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        carBrand = "Acura";
-        carModel = "RSX";
+        dummyCarBrand = "Acura";
+        dummyCarModel = "RSX";
     }
 
     @Override
@@ -905,8 +882,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                photo = "http://fuel-spot.com/FUELSPOTAPP/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
-                prefs.edit().putString("ProfilePhoto", photo).apply();
+                photo = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + dummyPlateNo + ".jpg";
             }
         }
     }
