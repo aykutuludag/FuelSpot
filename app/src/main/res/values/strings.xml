@@ -19,7 +19,7 @@
     <string name="show_vehicles">Show vehicles</string>
     <string name="show_stations">Show stations</string>
     <string name="favorites">Favorites</string>
-    <string name="wallet">Wallet</string>
+    <string name="store">Store</string>
 
     <string name="gasoline">Gasoline</string>
     <string name="diesel">Diesel</string>
@@ -89,7 +89,7 @@
     <string name="promotions">Promotions</string>
 
     <string name="kilometer">Kilometer</string>
-    <string name="rewards">Rewards</string>
+    <string name="banking">Banking activity</string>
     <string name="fuelspot_money">FuelSpot Money</string>
 
     <string name="see_all">See all</string>

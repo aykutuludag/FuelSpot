@@ -16,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Menu;
@@ -87,6 +89,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     ArrayAdapter<String> adapter2;
     RequestQueue requestQueue;
     RequestOptions options;
+    TextWatcher mTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,7 +264,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         //PlakaNO
         final EditText plateText = findViewById(R.id.editText_plate);
         plateText.setText(plateNo);
-        plateText.addTextChangedListener(new TextWatcher() {
+        mTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -276,16 +279,25 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     // Normalize
-                    if (s.toString().contains(" ")) {
-                        plateNo = s.toString().replace(" ", "");
-                        plateText.setText(plateNo);
-                    } else {
-                        plateNo = s.toString();
-                    }
-                    editor.putString("plateNo", plateNo);
+                    plateNo = s.toString().replaceAll(" ", "");
+                    plateNo = plateNo.toUpperCase();
+                    prefs.edit().putString("plateNo", plateNo).apply();
                 }
             }
-        });
+        };
+        InputFilter filter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isLetterOrDigit(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+        plateText.setFilters(new InputFilter[]{filter});
+        plateText.addTextChangedListener(mTextWatcher);
 
         final int vehicleNumber = userVehicles.split(";").length;
         FloatingActionButton fab = findViewById(R.id.fab);

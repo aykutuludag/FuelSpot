@@ -48,6 +48,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.Normalizer;
@@ -59,18 +61,25 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.GOOGLE_LOGIN;
+import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
+import static com.fuelspot.MainActivity.userFavorites;
+import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -369,8 +378,47 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        switch (response) {
-                            case "Success":
+                        if (response != null && response.length() > 0) {
+                            try {
+                                loading.dismiss();
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                name = obj.getString("name");
+                                prefs.edit().putString("Name", name).apply();
+
+                                email = obj.getString("email");
+                                prefs.edit().putString("Email", email).apply();
+
+                                photo = obj.getString("photo");
+                                prefs.edit().putString("ProfilePhoto", photo).apply();
+
+                                gender = obj.getString("gender");
+                                prefs.edit().putString("Gender", gender).apply();
+
+                                birthday = obj.getString("birthday");
+                                prefs.edit().putString("Birthday", birthday).apply();
+
+                                userPhoneNumber = obj.getString("phoneNumber");
+                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
+
+                                location = obj.getString("location");
+                                prefs.edit().putString("Location", location).apply();
+
+                                userCountry = obj.getString("country");
+                                prefs.edit().putString("userCountry", userCountry).apply();
+
+                                userDisplayLanguage = obj.getString("language");
+                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                                userVehicles = obj.getString("vehicles");
+                                prefs.edit().putString("userVehicles", userVehicles).apply();
+
+                                userFavorites = obj.getString("favStations");
+                                prefs.edit().putString("userFavorites", userFavorites).apply();
+
+                                getVariables(prefs);
+
                                 loading.dismiss();
                                 Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 notLogged.setVisibility(View.GONE);
@@ -382,13 +430,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                         finish();
                                     }
                                 }, 2000);
-                                break;
-                            case "Fail":
+                            } catch (JSONException e) {
                                 //Dismissing the progress dialog
                                 loading.dismiss();
-                                Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
                                 prefs.edit().putBoolean("isSigned", false).apply();
-                                break;
+                            }
                         }
                     }
                 },

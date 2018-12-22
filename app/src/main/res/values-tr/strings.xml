@@ -35,7 +35,7 @@
     <string name="purchases">Satın almalar</string>
     <string name="promotions">Tanıtımlar</string>
 
-    <string name="wallet">Cüzdan</string>
+    <string name="store">Mağaza</string>
     <string name="favorites">Favoriler</string>
     <string name="help">Yardım</string>
     <string name="privacy">Gizlilik</string>
@@ -60,7 +60,7 @@
     <!-- PurchaseDetails -->
     <string name="bill">FATURA</string>
     <string name="kilometer">Kilometre</string>
-    <string name="rewards">Ödüller</string>
+    <string name="banking">Hesap hareketleri</string>
     <string name="see_all">Hepsini gör</string>
     <string name="fuelspot_money">FuelSpot Para</string>
 

@@ -43,12 +43,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.fuelspot.model.CompanyItem;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -57,9 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -79,13 +71,8 @@ import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
-    public static List<CompanyItem> companyList = new ArrayList<>();
-    public static List<String> companyNameList = new ArrayList<>();
-    public static List<Integer> companyVerifiedNumberList = new ArrayList<>();
-    public static List<Integer> companyStationNumberList = new ArrayList<>();
-    ArrayList<PieEntry> entries = new ArrayList<>();
 
-    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax, textViewVerifiedNumber, textViewTotalNumber;
+    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
     Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
     SharedPreferences prefs;
     String feedbackMessage;
@@ -96,8 +83,6 @@ public class FragmentSettings extends Fragment {
     //Creating a Request Queue
     RequestQueue requestQueue;
     View rootView;
-    PieChart chart;
-    int otherStations, totalVerified, totalStation;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -186,130 +171,9 @@ public class FragmentSettings extends Fragment {
                     startActivity(intent);
                 }
             });
-
-            textViewVerifiedNumber = rootView.findViewById(R.id.textViewonayliSayi);
-            textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
-
-            chart = rootView.findViewById(R.id.chart1);
-            chart.getDescription().setEnabled(false);
-            chart.setExtraOffsets(5, 10, 5, 5);
-            chart.setDragDecelerationFrictionCoef(0.95f);
-            chart.setDrawHoleEnabled(false);
-            chart.getLegend().setEnabled(false);
-            chart.setTransparentCircleColor(Color.BLACK);
-            chart.setTransparentCircleAlpha(110);
-            chart.setTransparentCircleRadius(61f);
-            chart.setUsePercentValues(false);
-            chart.setRotationEnabled(true);
-            chart.setHighlightPerTapEnabled(true);
-            chart.setEntryLabelColor(Color.BLACK);
-            chart.setEntryLabelTextSize(12f);
-
-            fetchCompanyStats();
         }
 
         return rootView;
-    }
-
-    void fetchCompanyStats() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    CompanyItem item = new CompanyItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setName(obj.getString("companyName"));
-                                    item.setLogo(obj.getString("companyLogo"));
-                                    item.setWebsite(obj.getString("companyWebsite"));
-                                    item.setName(obj.getString("companyPhone"));
-                                    item.setName(obj.getString("companyAddress"));
-                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                    item.setNumOfStations(obj.getInt("numOfStations"));
-
-                                    companyNameList.add(obj.getString("companyName"));
-                                    companyVerifiedNumberList.add(obj.getInt("numOfVerifieds"));
-                                    companyStationNumberList.add(obj.getInt("numOfStations"));
-                                    companyList.add(item);
-
-                                    totalVerified += obj.getInt("numOfVerifieds");
-                                    totalStation += obj.getInt("numOfStations");
-
-                                    if (companyStationNumberList.get(i) >= 250) {
-                                        entries.add(new PieEntry((float) companyStationNumberList.get(i), obj.getString("companyName")));
-                                    } else {
-                                        otherStations += companyStationNumberList.get(i);
-                                    }
-                                }
-
-                                textViewVerifiedNumber.setText("Onaylı istasyon sayısı: " + totalVerified);
-                                textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
-
-                                entries.add(new PieEntry((float) otherStations, "Diğer"));
-
-                                PieDataSet dataSet = new PieDataSet(entries, "Akaryakıt dağıtım firmaları");
-                                dataSet.setDrawIcons(false);
-
-                                // add a lot of colors
-                                ArrayList<Integer> colors = new ArrayList<>();
-
-                                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.JOYFUL_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.COLORFUL_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.LIBERTY_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.PASTEL_COLORS)
-                                    colors.add(c);
-
-                                colors.add(ColorTemplate.getHoloBlue());
-
-                                dataSet.setColors(colors);
-                                //dataSet.setSelectionShift(0f);
-
-                                PieData data = new PieData(dataSet);
-                                data.setValueTextSize(11f);
-                                data.setValueTextColor(Color.BLACK);
-                                chart.setData(data);
-                                chart.highlightValues(null);
-                                chart.invalidate();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
     }
 
     void updateTaxRates() {

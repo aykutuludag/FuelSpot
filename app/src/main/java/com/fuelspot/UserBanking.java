@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-public class UserRewards extends AppCompatActivity {
+public class UserBanking extends AppCompatActivity {
 
     Window window;
     Toolbar toolbar;
@@ -27,7 +27,7 @@ public class UserRewards extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_rewards);
+        setContentView(R.layout.activity_user_banking);
 
         window = this.getWindow();
 
@@ -41,7 +41,7 @@ public class UserRewards extends AppCompatActivity {
         coloredBars(Color.parseColor("#0288D1"), Color.parseColor("#03A9F4"));
 
         //Comments
-        requestQueue = Volley.newRequestQueue(UserRewards.this);
+        requestQueue = Volley.newRequestQueue(UserBanking.this);
         mRecyclerView = findViewById(R.id.reportView);
 
         swipeContainer = findViewById(R.id.swipeContainer);
@@ -91,14 +91,14 @@ public class UserRewards extends AppCompatActivity {
                                     userReportList.add(item);
                                 }
 
-                                mLayoutManager = new GridLayoutManager(UserRewards.this, 1);
+                                mLayoutManager = new GridLayoutManager(UserBanking.this, 1);
 
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-             mAdapter = new ReportAdapter(UserRewards.this, userReportList);
-        mLayoutManager = new GridLayoutManager(UserRewards.this, 1);
+             mAdapter = new ReportAdapter(UserBanking.this, userReportList);
+        mLayoutManager = new GridLayoutManager(UserBanking.this, 1);
 
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -129,7 +129,7 @@ public class UserRewards extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(UserRewards.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(UserBanking.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);

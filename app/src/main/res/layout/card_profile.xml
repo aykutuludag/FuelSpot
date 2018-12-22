@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/button_fav"
             android:background="@drawable/round_layout_white"
-            android:text="@string/wallet"
+            android:text="@string/store"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="#212121"
             app:layout_marginPercent="1.33%"

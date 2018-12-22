@@ -277,59 +277,10 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/settings_stats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_tax"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_layout_white">
-
-            <TextView
-                android:id="@+id/textView0001"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="İstatistikler"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart1"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_below="@id/textView0001" />
-
-            <TextView
-                android:id="@+id/textViewonayliSayi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chart1"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:text="Onaylı istasyon sayısı: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000" />
-
-            <TextView
-                android:id="@+id/textViewtoplamSayi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textViewonayliSayi"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:text="Kayıtlı istasyon sayısı: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/settings_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_stats"
+            android:layout_below="@+id/settings_tax"
             android:layout_margin="8dp"
             android:background="@drawable/round_layout_white">
 

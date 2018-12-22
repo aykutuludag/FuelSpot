@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         return hasStorage;
     }
 
-    // Updated on Nov 27, 2018
+    // Updated on Dec 22, 2018
     public static String stationPhotoChooser(String stationName) {
         String photoURL;
         switch (stationName) {
@@ -151,9 +151,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Alpet":
                 photoURL = "https://fuel-spot.com/station_icons/alpet.jpg";
-                break;
-            case "Amaco":
-                photoURL = "https://fuel-spot.com/station_icons/amaco.jpg";
                 break;
             case "Anadolugaz":
                 photoURL = "https://fuel-spot.com/station_icons/anadolugaz.jpg";
@@ -168,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 photoURL = "https://fuel-spot.com/station_icons/aytemiz.jpg";
                 break;
             case "Best":
-            case "Best Oil":
                 photoURL = "https://fuel-spot.com/station_icons/best.jpg";
                 break;
             case "BP":
@@ -179,16 +175,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Çekoil":
                 photoURL = "https://fuel-spot.com/station_icons/cekoil.jpg";
-                break;
-            case "Chevron":
-                photoURL = "https://fuel-spot.com/station_icons/chevron.jpg";
-                break;
-            case "Circle-K":
-            case "Circle K":
-                photoURL = "https://fuel-spot.com/station_icons/circle-k.jpg";
-                break;
-            case "Citgo":
-                photoURL = "https://fuel-spot.com/station_icons/citgo.jpg";
                 break;
             case "Class":
                 photoURL = "https://fuel-spot.com/station_icons/class.jpg";
@@ -210,9 +196,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Exengaz":
                 photoURL = "https://fuel-spot.com/station_icons/exengaz.jpg";
-                break;
-            case "Exxon":
-                photoURL = "https://fuel-spot.com/station_icons/exxon.jpg";
                 break;
             case "GO":
                 photoURL = "https://fuel-spot.com/station_icons/go.jpg";
@@ -261,17 +244,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             case "Lukoil":
                 photoURL = "https://fuel-spot.com/station_icons/lukoil.jpg";
                 break;
-            case "Marathon":
-                photoURL = "https://fuel-spot.com/station_icons/marathon.jpg";
-                break;
             case "Memoil":
                 photoURL = "https://fuel-spot.com/station_icons/memoil.jpg";
                 break;
             case "Milangaz":
                 photoURL = "https://fuel-spot.com/station_icons/milangaz.jpg";
-                break;
-            case "Mobil":
-                photoURL = "https://fuel-spot.com/station_icons/mobil.jpg";
                 break;
             case "Mogaz":
                 photoURL = "https://fuel-spot.com/station_icons/mogaz.jpg";
@@ -281,6 +258,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Mola":
                 photoURL = "https://fuel-spot.com/station_icons/mola.jpg";
+                break;
+            case "Onex":
+                photoURL = "https://fuel-spot.com/station_icons/opet.jpg";
                 break;
             case "Opet":
                 photoURL = "https://fuel-spot.com/station_icons/opet.jpg";
@@ -295,7 +275,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 photoURL = "https://fuel-spot.com/station_icons/petline.jpg";
                 break;
             case "Petrol Ofisi":
-            case "PO":
                 photoURL = "https://fuel-spot.com/station_icons/petrol-ofisi.jpg";
                 break;
             case "Petrotürk":
@@ -307,9 +286,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             case "Qplus":
                 photoURL = "https://fuel-spot.com/station_icons/qplus.jpg";
                 break;
-            case "Quicktrip":
-                photoURL = "https://fuel-spot.com/station_icons/quicktrip.jpg";
-                break;
             case "Remoil":
                 photoURL = "https://fuel-spot.com/station_icons/remoil.jpg";
                 break;
@@ -319,15 +295,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             case "Shell":
                 photoURL = "https://fuel-spot.com/station_icons/shell.jpg";
                 break;
-            case "S Oil":
             case "S-Oil":
                 photoURL = "https://fuel-spot.com/station_icons/s-oil.jpg";
                 break;
             case "Starpet":
                 photoURL = "https://fuel-spot.com/station_icons/starpet.jpg";
-                break;
-            case "Sunoco":
-                photoURL = "https://fuel-spot.com/station_icons/sunoco.jpg";
                 break;
             case "Sunpet":
                 photoURL = "https://fuel-spot.com/station_icons/sunpet.jpg";
@@ -337,9 +309,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Termo":
                 photoURL = "https://fuel-spot.com/station_icons/termo.jpg";
-                break;
-            case "Texaco":
-                photoURL = "https://fuel-spot.com/station_icons/texaco.jpg";
                 break;
             case "Total":
                 photoURL = "https://fuel-spot.com/station_icons/total.jpg";
@@ -351,7 +320,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 photoURL = "https://fuel-spot.com/station_icons/turkis.jpg";
                 break;
             case "Türkiye Petrolleri":
-            case "TP":
                 photoURL = "https://fuel-spot.com/station_icons/turkiye-petrolleri.jpg";
                 break;
             case "Türkoil":
@@ -365,9 +333,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 break;
             case "Uspet":
                 photoURL = "https://fuel-spot.com/station_icons/uspet.jpg";
-                break;
-            case "Valero":
-                photoURL = "https://fuel-spot.com/station_icons/valero.jpg";
                 break;
             default:
                 photoURL = "https://fuel-spot.com/default_icons/station.jpg";

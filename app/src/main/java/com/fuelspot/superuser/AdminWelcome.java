@@ -1147,7 +1147,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                         userCountryName = addresses.get(0).getCountryName();
                         prefs.edit().putString("userCountryName", userCountryName).apply();
 
-                        userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+                        userDisplayLanguage = Locale.getDefault().getLanguage();
                         prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
                         Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());

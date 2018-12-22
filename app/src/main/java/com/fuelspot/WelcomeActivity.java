@@ -17,6 +17,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
@@ -159,7 +161,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         saveCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(WelcomeActivity.this, plateNo, Toast.LENGTH_LONG).show();
                 if (plateNo != null && plateNo.length() > 0) {
                     addVehicle();
                 } else {
@@ -192,7 +193,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        fetchUserInfo();
+        // fetchUserInfo();
     }
 
     public void fetchUserInfo() {
@@ -560,18 +561,24 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     // Normalize
-                    plateNo = s.toString();
-                    if (plateNo.contains(" ")) {
-                        plateNo = plateNo.replace(" ", "");
-
-                        plateText.removeTextChangedListener(mTextWatcher);
-                        plateText.setText(plateNo);
-                        plateText.addTextChangedListener(mTextWatcher);
-                    }
+                    plateNo = s.toString().replaceAll(" ", "");
+                    plateNo = plateNo.toUpperCase();
                     prefs.edit().putString("plateNo", plateNo).apply();
                 }
             }
         };
+        InputFilter filter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isLetterOrDigit(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+        plateText.setFilters(new InputFilter[]{filter});
         plateText.addTextChangedListener(mTextWatcher);
     }
 

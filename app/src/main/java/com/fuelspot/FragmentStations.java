@@ -72,6 +72,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -82,8 +83,8 @@ import static com.fuelspot.MainActivity.userlon;
 public class FragmentStations extends Fragment implements OnMapReadyCallback {
 
     //Station variables
-    public List<StationItem> feedsList = new ArrayList<>();
-    List<StationItem> dummyList = new ArrayList<>();
+    static List<StationItem> fullStationList = new ArrayList<>();
+    static List<StationItem> shortStationList = new ArrayList<>();
 
     static List<String> stationName = new ArrayList<>();
     static List<String> googleID = new ArrayList<>();
@@ -91,8 +92,8 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
     static List<String> location = new ArrayList<>();
     static List<String> stationIcon = new ArrayList<>();
     static List<String> stationCountry = new ArrayList<>();
-    List<Integer> distanceInMeters = new ArrayList<>();
-    ArrayList<Marker> markers = new ArrayList<>();
+    static List<Integer> distanceInMeters = new ArrayList<>();
+    static ArrayList<Marker> markers = new ArrayList<>();
 
     MapView mMapView;
     SpinKitView proggressBar;
@@ -191,7 +192,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
 
 
             mRecyclerView = rootView.findViewById(R.id.stationView);
-            mAdapter = new StationAdapter(getActivity(), dummyList);
+            mAdapter = new StationAdapter(getActivity(), shortStationList);
             mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
             mRecyclerView.setAdapter(mAdapter);
@@ -202,7 +203,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             seeAllStations.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter = new StationAdapter(getActivity(), feedsList);
+                    mAdapter = new StationAdapter(getActivity(), fullStationList);
                     mAdapter.notifyDataSetChanged();
                     mRecyclerView.setAdapter(mAdapter);
                     seeAllStations.setVisibility(View.GONE);
@@ -220,7 +221,6 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             mLocationRequest.setInterval(5000);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
             mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
@@ -229,23 +229,25 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                             super.onLocationResult(locationResult);
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();
                                     prefs.edit().putString("lon", userlon).apply();
-                                    MainActivity.getVariables(prefs);
+                                    getVariables(prefs);
 
                                     float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                    if (distanceInMeter >= (mapDefaultRange / 5)) {
+                                    if (distanceInMeter >= (mapDefaultRange / 2)) {
+                                        // User's position has been changed. Load the new map
                                         locLastKnown.setLatitude(Double.parseDouble(userlat));
                                         locLastKnown.setLongitude(Double.parseDouble(userlon));
                                         updateMapObject();
                                     } else {
-                                        if (feedsList != null && feedsList.size() > 0) {
-                                            for (int i = 0; i < feedsList.size(); i++) {
-                                                String[] stationLocation = feedsList.get(i).getLocation().split(";");
+                                        // User position changed a little. Just update distances
+                                        if (fullStationList != null && fullStationList.size() > 0) {
+                                            for (int i = 0; i < fullStationList.size(); i++) {
+                                                String[] stationLocation = fullStationList.get(i).getLocation().split(";");
                                                 double stationLat = Double.parseDouble(stationLocation[0]);
                                                 double stationLon = Double.parseDouble(stationLocation[1]);
 
@@ -255,7 +257,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
 
                                                 float newDistance = locCurrent.distanceTo(locStation);
                                                 distanceInMeters.set(i, (int) newDistance);
-                                                feedsList.get(i).setDistance((int) newDistance);
+                                                fullStationList.get(i).setDistance((int) newDistance);
                                             }
                                             mAdapter.notifyDataSetChanged();
                                         }
@@ -283,7 +285,6 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
     private void updateMapObject() {
         stationName.clear();
         vicinity.clear();
@@ -293,8 +294,8 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
         location.clear();
         stationIcon.clear();
         distanceInMeters.clear();
-        feedsList.clear();
-        dummyList.clear();
+        fullStationList.clear();
+        shortStationList.clear();
         mAdapter.notifyDataSetChanged();
 
         stationLayout.setVisibility(View.GONE);
@@ -376,8 +377,8 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                                     Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else if (mapDefaultRange == 10000) {
-                                    mapDefaultRange = 20000;
-                                    mapDefaultZoom = 10f;
+                                    mapDefaultRange = 25000;
+                                    mapDefaultZoom = 9.5f;
                                     Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
                                     updateMapObject();
                                 } else if (mapDefaultRange == 20000) {
@@ -464,10 +465,10 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                                 item.setDistance((int) uzaklik);
                                 //DISTANCE END
 
-                                feedsList.add(item);
+                                fullStationList.add(item);
 
-                                if (feedsList.size() <= 5) {
-                                    dummyList.add(item);
+                                if (fullStationList.size() <= 5) {
+                                    shortStationList.add(item);
                                 } else {
                                     seeAllStations.setVisibility(View.VISIBLE);
                                 }
@@ -476,10 +477,10 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                                 LatLng sydney = new LatLng(loc.getLatitude(), loc.getLongitude());
                                 markers.add(googleMap.addMarker(new MarkerOptions().position(sydney).title(obj.getString("name")).snippet(obj.getString("vicinity")).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance))));
 
-                                sortBy(fuelPri);
                                 noStationError.setVisibility(View.GONE);
                                 stationLayout.setVisibility(View.VISIBLE);
                                 proggressBar.setVisibility(View.GONE);
+                                sortBy(fuelPri);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -518,9 +519,9 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
         List<StationItem> tempList;
 
         if (isAllStationsListed) {
-            tempList = feedsList;
+            tempList = fullStationList;
         } else {
-            tempList = dummyList;
+            tempList = shortStationList;
         }
 
         switch (position) {

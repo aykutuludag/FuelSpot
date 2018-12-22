@@ -13,7 +13,7 @@ import com.fuelspot.model.VehicleItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WalletActivity extends AppCompatActivity {
+public class StoreActivity extends AppCompatActivity {
 
     public static List<VehicleItem> userRewardList = new ArrayList<>();
 

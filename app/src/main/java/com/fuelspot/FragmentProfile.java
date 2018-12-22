@@ -158,7 +158,7 @@ public class FragmentProfile extends Fragment {
         myWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WalletActivity.class);
+                Intent intent = new Intent(getActivity(), StoreActivity.class);
                 startActivity(intent);
             }
         });

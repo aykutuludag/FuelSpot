@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
@@ -49,7 +51,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.text.Normalizer;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -82,6 +83,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     String dummyCarBrand = "Acura";
     String dummyCarModel = "RSX";
     String dummyPlateNo = "";
+    TextWatcher mTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,7 +244,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         //PlakaNO
         plateText = findViewById(R.id.editText_plate);
         plateText.setText(dummyPlateNo);
-        plateText.addTextChangedListener(new TextWatcher() {
+        mTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -257,10 +259,24 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
                     // Normalize
-                    dummyPlateNo = Normalizer.normalize(dummyPlateNo, Normalizer.Form.NFD).replaceAll("[^A-Z0-9]", "").replace(" ", "").toUpperCase();
+                    dummyPlateNo = s.toString().replaceAll(" ", "");
+                    dummyPlateNo = dummyPlateNo.toUpperCase();
                 }
             }
-        });
+        };
+        InputFilter filter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!Character.isLetterOrDigit(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+        plateText.setFilters(new InputFilter[]{filter});
+        plateText.addTextChangedListener(mTextWatcher);
 
         addCarButton = findViewById(R.id.button4);
         addCarButton.setOnClickListener(new View.OnClickListener() {
