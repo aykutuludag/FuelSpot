@@ -26,19 +26,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.NewsAdapter;
-import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.NewsItem;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -81,16 +75,6 @@ public class FragmentNews extends Fragment {
     LineChart chart2;
     List<Entry> purchaseHistoryOf = new ArrayList<>();
     TextView lastUpdatedVolume;
-
-    public static List<CompanyItem> companyList = new ArrayList<>();
-    public static List<String> companyNameList = new ArrayList<>();
-    public static List<Integer> companyVerifiedNumberList = new ArrayList<>();
-    public static List<Integer> companyStationNumberList = new ArrayList<>();
-    ArrayList<PieEntry> entries = new ArrayList<>();
-    PieChart chart3;
-    TextView textViewVerifiedNumber, textViewTotalNumber;
-
-    int otherStations, totalVerified, totalStation;
 
     public static FragmentNews newInstance() {
 
@@ -146,25 +130,6 @@ public class FragmentNews extends Fragment {
             // Select spinner and fetch news based on user country
             int index = getIndexOf(getResources().getStringArray(R.array.country_codes), userCountry);
             spinner.setSelection(index);
-
-            textViewVerifiedNumber = rootView.findViewById(R.id.textViewonayliSayi);
-            textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
-
-            chart3 = rootView.findViewById(R.id.chart3);
-            chart3.getDescription().setEnabled(false);
-            chart3.setDragDecelerationFrictionCoef(0.95f);
-            chart3.setDrawHoleEnabled(false);
-            chart3.getLegend().setEnabled(false);
-            chart3.setTransparentCircleColor(Color.BLACK);
-            chart3.setTransparentCircleAlpha(110);
-            chart3.setTransparentCircleRadius(61f);
-            chart3.setUsePercentValues(false);
-            chart3.setRotationEnabled(true);
-            chart3.setHighlightPerTapEnabled(true);
-            chart3.setEntryLabelColor(Color.BLACK);
-            chart3.setEntryLabelTextSize(12f);
-
-            fetchCompanyStats();
         }
         return rootView;
     }
@@ -237,7 +202,7 @@ public class FragmentNews extends Fragment {
     }
 
     private void fetchCountryFinance(final String tempCountryCode) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_FINANCE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COUNTRY_PRICES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -335,7 +300,7 @@ public class FragmentNews extends Fragment {
     }
 
     private void fetchVolume(final String tempCountryCode) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COUNTRY_PURCHASES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COUNTRY_VOLUME),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -388,107 +353,6 @@ public class FragmentNews extends Fragment {
 
                 //Adding parameters
                 params.put("country", tempCountryCode);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    void fetchCompanyStats() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    CompanyItem item = new CompanyItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setName(obj.getString("companyName"));
-                                    item.setLogo(obj.getString("companyLogo"));
-                                    item.setWebsite(obj.getString("companyWebsite"));
-                                    item.setName(obj.getString("companyPhone"));
-                                    item.setName(obj.getString("companyAddress"));
-                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                    item.setNumOfStations(obj.getInt("numOfStations"));
-
-                                    companyNameList.add(obj.getString("companyName"));
-                                    companyVerifiedNumberList.add(obj.getInt("numOfVerifieds"));
-                                    companyStationNumberList.add(obj.getInt("numOfStations"));
-                                    companyList.add(item);
-
-                                    totalVerified += obj.getInt("numOfVerifieds");
-                                    totalStation += obj.getInt("numOfStations");
-
-                                    if (companyStationNumberList.get(i) >= 225) {
-                                        entries.add(new PieEntry((float) companyStationNumberList.get(i), obj.getString("companyName")));
-                                    } else {
-                                        otherStations += companyStationNumberList.get(i);
-                                    }
-                                }
-
-                                textViewVerifiedNumber.setText("Onaylı istasyon sayısı: " + totalVerified);
-                                textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
-
-                                entries.add(new PieEntry((float) otherStations, "Diğer"));
-
-                                PieDataSet dataSet = new PieDataSet(entries, "Akaryakıt dağıtım firmaları");
-                                dataSet.setDrawIcons(false);
-
-                                // add a lot of colors
-                                ArrayList<Integer> colors = new ArrayList<>();
-
-                                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.JOYFUL_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.COLORFUL_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.LIBERTY_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.PASTEL_COLORS)
-                                    colors.add(c);
-
-                                colors.add(ColorTemplate.getHoloBlue());
-
-                                dataSet.setColors(colors);
-                                //dataSet.setSelectionShift(0f);
-
-                                PieData data = new PieData(dataSet);
-                                data.setValueTextSize(11f);
-                                data.setValueTextColor(Color.BLACK);
-                                chart3.setData(data);
-                                chart3.highlightValues(null);
-                                chart3.invalidate();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

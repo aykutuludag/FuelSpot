@@ -644,7 +644,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
     private void addStation() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {

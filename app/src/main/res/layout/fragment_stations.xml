@@ -196,7 +196,7 @@
                     android:id="@+id/sortDistance"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/sortElectric"
-                    android:alpha="0.5"
+                    android:alpha="1.0"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
                     app:layout_widthPercent="14%">

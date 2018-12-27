@@ -30,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,11 +69,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
-import com.google.android.gms.maps.StreetViewPanorama;
-import com.google.android.gms.maps.StreetViewPanoramaView;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,8 +110,6 @@ public class StationDetails extends AppCompatActivity {
     List<Entry> elecPriceHistory = new ArrayList<>();
     RelativeTimeTextView textLastUpdated;
 
-    StreetViewPanoramaView mStreetViewPanoramaView;
-    StreetViewPanorama mPanorama;
     TextView noCampaignText, noCommentText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
     RecyclerView mRecyclerView, mRecyclerView2;
     RecyclerView.Adapter mAdapter, mAdapter2;
@@ -136,6 +131,7 @@ public class StationDetails extends AppCompatActivity {
     Bitmap bitmap;
     ImageView reportPricePhoto;
     RequestOptions options;
+    WebView webview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,13 +159,14 @@ public class StationDetails extends AppCompatActivity {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        webview = findViewById(R.id.webView);
+        webview.getSettings().setJavaScriptEnabled(true);
+
         errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
         errorStreetView = findViewById(R.id.imageViewErrStreetView);
         scrollView = findViewById(R.id.scrollView);
         requestQueue = Volley.newRequestQueue(StationDetails.this);
-        mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
-        mStreetViewPanoramaView.onCreate(savedInstanceState);
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
         textVicinity = findViewById(R.id.station_vicinity);
@@ -336,7 +333,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void fetchStationFinance() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_FINANCE),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -418,25 +415,12 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void loadStationDetails() {
-        //Panorama
-        mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
-            @Override
-            public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
-                panorama.setStreetNamesEnabled(true);
-                panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
-                panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
-                    @Override
-                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
-                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
-                            mPanorama = panorama;
-                        } else {
-                            errorStreetView.setVisibility(View.VISIBLE);
-                            Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
+    void loadStationDetails() {
+        webview.loadUrl("https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c");
+        webview.setWebViewClient(new WebViewClient() {
+            public void onPageFinished(WebView view, String url) {
+                webview.loadUrl("javascript:document.getElementById('tuv-immersive-top-bar').style.display = 'none'; void(0);");
             }
         });
 
@@ -1090,35 +1074,5 @@ public class StationDetails extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mStreetViewPanoramaView.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mStreetViewPanoramaView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mStreetViewPanoramaView.onPause();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mStreetViewPanoramaView.onLowMemory();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mStreetViewPanoramaView.onSaveInstanceState(outState);
     }
 }

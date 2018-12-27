@@ -160,8 +160,7 @@
                 android:id="@+id/single_tax"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView114"
-                android:background="#f5f5f5">
+                android:layout_below="@+id/textView114">
 
                 <ImageView
                     android:id="@+id/gasoline"
@@ -277,10 +276,64 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/settings_other"
+            android:id="@+id/statsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/settings_tax"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_layout_white">
+
+            <TextView
+                android:id="@+id/title_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="İstatistikler"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chart3"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_below="@id/title_stats"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textViewonayliSayi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chart3"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="2dp"
+                android:padding="2dp"
+                android:text="Onaylı istasyon sayısı: "
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/textViewtoplamSayi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewonayliSayi"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="2dp"
+                android:padding="2dp"
+                android:text="Kayıtlı istasyon sayısı: "
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#000" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settings_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statsLayout"
             android:layout_margin="8dp"
             android:background="@drawable/round_layout_white">
 
@@ -333,7 +386,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="FuelSpot 2018 - Made with ♥ in Ankara"
+            android:text="FuelSpot 2019 - Made with ♥ in Ankara"
             android:textColor="#212121" />
 
     </RelativeLayout>

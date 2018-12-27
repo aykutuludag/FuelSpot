@@ -138,7 +138,7 @@ public class SuperPurchases extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(AdminMainActivity.superStationID));
+                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
 
                 //returning parameters
                 return params;

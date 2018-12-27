@@ -119,9 +119,9 @@
     <string name="API_SUPERUSER_FETCH" translatable="false">https://fuel-spot.com/api/superuser-fetch.php</string>
 
     <!-- STATION APIs -->
-    <string name="API_ADD_STATION" translatable="false">https://fuel-spot.com/api/station-add.php</string> <!-- Create and return Station objects as bulk -->
-    <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station-update.php</string> <!-- Updates station info, return SUCCESS or FAIL -->
-    <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station-fetch.php</string> <!-- stationID, return Station object -->
+    <string name="API_SEARCH_STATION" translatable="false">https://fuel-spot.com/api/station-search.php</string>
+    <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station-update.php</string>
+    <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station-fetch.php</string>
 
     <!-- AUTOMOBILE APIs -->
     <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile-add.php</string>
@@ -135,8 +135,7 @@
     <string name="API_DELETE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase-delete.php</string>
     <string name="API_FETCH_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch.php</string> <!-- Vehicle's purchases -->
     <string name="API_FETCH_USER_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-user.php</string> <!-- User's purchases (all vehicles) -->
-    <string name="API_FETCH_STATION_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-station.php</string> <!-- Station's purchases -->
-    <string name="API_FETCH_COUNTRY_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-country.php</string> <!-- Station's purchases -->
+    <string name="API_FETCH_STATION_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase-fetch-station.php</string> <!-- STATION's purchases -->
 
     <!-- COMMENT-ANSWER APIs -->
     <string name="API_ADD_COMMENT" translatable="false">https://fuel-spot.com/api/comment-add.php</string>
@@ -154,8 +153,9 @@
     <string name="API_DELETE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign-delete.php</string>
 
     <!-- FINANCE APIs -->
-    <string name="API_FETCH_FINANCE" translatable="false">https://fuel-spot.com/api/finance-fetch.php</string> <!-- COUNTRY -->
-    <string name="API_FETCH_STATION_FINANCE" translatable="false">https://fuel-spot.com/api/finance-fetch-station.php</string> <!-- STATION -->
+    <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuel-spot.com/api/finance-fetch-prices.php</string> <!-- COUNTRY -->
+    <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuel-spot.com/api/finance-fetch-station-prices.php</string> <!-- STATION -->
+    <string name="API_FETCH_COUNTRY_VOLUME" translatable="false">https://fuel-spot.com/api/finance-fetch-volume.php</string> <!-- COUNTRY -->
 
     <!-- OTHER APIs -->
     <string name="API_REPORT" translatable="false">https://fuel-spot.com/api/other-report.php</string>
@@ -163,4 +163,5 @@
     <string name="API_FEEDBACK" translatable="false">https://fuel-spot.com/api/other-feedback.php</string>
     <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other-news.php</string>
     <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other-company.php</string>
+    <string name="API_STREETVIEW" translatable="false">https://fuel-spot.com/api/other-streetview.php</string>
 </resources>

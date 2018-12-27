@@ -234,7 +234,7 @@ public class AddFuel extends AppCompatActivity {
 
     private void fetchStation(final String googleID) {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
