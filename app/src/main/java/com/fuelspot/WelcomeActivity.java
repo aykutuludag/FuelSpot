@@ -280,6 +280,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 continueButton.setClickable(true);
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                loading.dismiss();
                             }
                         }
                     }
@@ -287,6 +288,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(WelcomeActivity.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                         loading.dismiss();
                     }
                 }) {

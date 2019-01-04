@@ -9,10 +9,11 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 31
+        versionCode 32
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+        useLibrary 'org.apache.http.legacy'
     }
 
     buildTypes {
@@ -60,7 +61,7 @@ dependencies {
     implementation 'com.github.curioustechizen.android-ago:library:1.4.0'
     implementation 'io.github.kobakei:ratethisapp:1.2.0'
     implementation 'com.github.pwiniars:SlideDateTimePicker:v1.0.8'
-    implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
+    implementation 'com.aurelhubert:ahbottomnavigation:2.2.0'
     implementation 'com.ncapdevi:frag-nav:2.4.0'
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'

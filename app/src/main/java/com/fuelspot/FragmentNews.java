@@ -70,6 +70,7 @@ public class FragmentNews extends Fragment {
     List<Entry> dieselPriceHistory = new ArrayList<>();
     List<Entry> lpgPriceHistory = new ArrayList<>();
     List<Entry> elecPriceHistory = new ArrayList<>();
+    List<String> priceInputTimes = new ArrayList<>();
     TextView lastUpdatedAvgPrice;
 
     LineChart chart2;
@@ -230,6 +231,8 @@ public class FragmentNews extends Fragment {
                                     if (obj.getDouble("electricityPrice") != 0) {
                                         elecPriceHistory.add(new Entry(i, (float) obj.getDouble("electricityPrice")));
                                     }
+
+                                    priceInputTimes.add(obj.getString("date"));
                                 }
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -266,6 +269,14 @@ public class FragmentNews extends Fragment {
                                 chart.setData(lineData);
                                 chart.getAxisRight().setEnabled(false);
                                 chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+                                /*chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+                                    @Override
+                                    public String getFormattedValue(float value, AxisBase axis) {
+                                        DateFormat formatter = new SimpleDateFormat(universalTimeStamp, Locale.getDefault());
+                                        Date date = formatter.parse(priceInputTimes.get(index));
+                                        return String.valueOf(date.getTime());
+                                    }
+                                });*/
                                 chart.getDescription().setText(currencySymbol + " / " + userUnit);
                                 chart.invalidate(); // refresh
                             } catch (JSONException e) {

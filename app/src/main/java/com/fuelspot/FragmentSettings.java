@@ -140,16 +140,16 @@ public class FragmentSettings extends Fragment {
             unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
             unitSystemText.setText(userUnit);
 
-            textViewGasolineTax = rootView.findViewById(R.id.taxGasoline);
+            textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
             textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
 
-            textViewDieselTax = rootView.findViewById(R.id.taxDiesel);
+            textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
             textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
 
-            textViewLPGTax = rootView.findViewById(R.id.taxLPG);
+            textViewLPGTax = rootView.findViewById(R.id.priceLPG);
             textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
 
-            textViewElectricityTax = rootView.findViewById(R.id.taxElectric);
+            textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
             textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
 
             buttonTax = rootView.findViewById(R.id.button_tax);
@@ -242,7 +242,7 @@ public class FragmentSettings extends Fragment {
                                     totalVerified += obj.getInt("numOfVerifieds");
                                     totalStation += obj.getInt("numOfStations");
 
-                                    if (companyStationNumberList.get(i) >= 225) {
+                                    if (companyStationNumberList.get(i) >= 200) {
                                         entries.add(new PieEntry((float) companyStationNumberList.get(i), obj.getString("companyName")));
                                     } else {
                                         otherStations += companyStationNumberList.get(i);

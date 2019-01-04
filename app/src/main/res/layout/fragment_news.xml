@@ -87,7 +87,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="Piyasa verileri"
+                android:text="FuelSpot Akaryakıt Endeksi"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <com.github.mikephil.charting.charts.LineChart

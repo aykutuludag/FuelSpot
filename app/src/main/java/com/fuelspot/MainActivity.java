@@ -24,8 +24,6 @@ import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.maps.MapsInitializer;
@@ -66,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
-    RequestQueue requestQueue;
     public static List<Fragment> fragments = new ArrayList<>(5);
     AHBottomNavigation bottomNavigation;
     ListPopupWindow popupWindow;
@@ -388,11 +385,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         // Some variables
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
-        requestQueue = Volley.newRequestQueue(this);
         popupWindow = new ListPopupWindow(MainActivity.this);
-
-        // Activate map
-        MapsInitializer.initialize(this.getApplicationContext());
+        MapsInitializer.initialize(this);
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);

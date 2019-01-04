@@ -170,10 +170,10 @@ public class StationDetails extends AppCompatActivity {
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
         textVicinity = findViewById(R.id.station_vicinity);
-        textGasoline = findViewById(R.id.taxGasoline);
-        textDiesel = findViewById(R.id.taxDiesel);
-        textLPG = findViewById(R.id.taxLPG);
-        textElectricity = findViewById(R.id.taxElectric);
+        textGasoline = findViewById(R.id.priceGasoline);
+        textDiesel = findViewById(R.id.priceDiesel);
+        textLPG = findViewById(R.id.priceLPG);
+        textElectricity = findViewById(R.id.priceElectricity);
         textLastUpdated = findViewById(R.id.stationLastUpdate);
         stationIcon = findViewById(R.id.station_photo);
         literSectionTitle = findViewById(R.id.textViewUnitPrice);

@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
+            android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:layout_alignParentTop="true"
@@ -26,7 +26,7 @@
             style="@style/SpinKitView.Large.FadingCircle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mapView"
+            android:layout_below="@id/map"
             android:layout_centerInParent="false"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="false"
@@ -37,7 +37,7 @@
             android:id="@+id/stationLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/mapView"
+            android:layout_below="@id/map"
             android:layout_marginTop="-24dp"
             android:background="@drawable/round_layout"
             android:elevation="8dp">
@@ -252,7 +252,7 @@
             android:id="@+id/errorPicture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mapView"
+            android:layout_below="@id/map"
             android:visibility="gone"
             app:srcCompat="@drawable/error_general" />
 

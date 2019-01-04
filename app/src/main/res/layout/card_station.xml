@@ -64,7 +64,7 @@
                 card_view:layout_widthPercent="14%" />
 
             <TextView
-                android:id="@+id/taxGasoline"
+                android:id="@+id/priceGasoline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/gasoline"
@@ -90,7 +90,7 @@
                 card_view:layout_widthPercent="14%" />
 
             <TextView
-                android:id="@+id/taxDiesel"
+                android:id="@+id/priceDiesel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/diesel"
@@ -115,7 +115,7 @@
                 card_view:layout_widthPercent="14%" />
 
             <TextView
-                android:id="@+id/taxLPG"
+                android:id="@+id/priceLPG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lpg"
@@ -139,7 +139,7 @@
                 card_view:layout_widthPercent="14%" />
 
             <TextView
-                android:id="@+id/taxElectric"
+                android:id="@+id/priceElectricity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/electricity"

@@ -167,10 +167,10 @@ public class FragmentMyStation extends Fragment {
         textName = rootView.findViewById(R.id.ownedStationName);
         textVicinity = rootView.findViewById(R.id.ownedStationAddress);
         textDistance = rootView.findViewById(R.id.distanceBetweenOwner);
-        textGasoline = rootView.findViewById(R.id.taxGasoline);
-        textDiesel = rootView.findViewById(R.id.taxDiesel);
-        textLPG = rootView.findViewById(R.id.taxLPG);
-        textElectricity = rootView.findViewById(R.id.taxElectric);
+        textGasoline = rootView.findViewById(R.id.priceGasoline);
+        textDiesel = rootView.findViewById(R.id.priceDiesel);
+        textLPG = rootView.findViewById(R.id.priceLPG);
+        textElectricity = rootView.findViewById(R.id.priceElectricity);
         textLastUpdated = rootView.findViewById(R.id.lastUpdateTime);
         stationIcon = rootView.findViewById(R.id.imageViewStationLogo);
 
