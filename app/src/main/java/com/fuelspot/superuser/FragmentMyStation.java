@@ -28,7 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.fuelspot.AnalyticsApplication;
+import com.fuelspot.Application;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
@@ -111,7 +111,7 @@ public class FragmentMyStation extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_mystation, container, false);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+        Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
         t.setScreenName("MyStation");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -226,20 +226,6 @@ public class FragmentMyStation extends Fragment {
                 }
             }
         });
-
-        openPosts = rootView.findViewById(R.id.buttonPromo);
-        openPosts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isStationVerified == 1) {
-                    Intent i = new Intent(getActivity(), SuperPromotions.class);
-                    startActivity(i);
-                } else {
-                    Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
-
 
         checkLocationPermission();
 

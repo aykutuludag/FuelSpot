@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fuelspot">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.fuelspot"
+    tools:targetApi="p">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission
+        android:name="android.permission.VIBRATE"
+        android:requiredFeature="false" />
 
     <application
-        android:name=".AnalyticsApplication"
+        android:name=".Application"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -82,10 +87,6 @@
             android:label="@string/comments"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".UserBanking"
-            android:label="@string/banking"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".UserPurchases"
             android:label="@string/purchases"
             android:parentActivityName=".MainActivity"
@@ -118,16 +119,16 @@
             android:name=".superuser.SuperCampaings"
             android:label="@string/campaigns"
             android:parentActivityName=".superuser.AdminMainActivity" />
-        <activity
-            android:name=".superuser.SuperPromotions"
-            android:label="@string/promotions"
-            android:parentActivityName=".superuser.AdminMainActivity" />
 
-        <!-- BackgroundLocation - Geofence -->
+        <!-- AlarmReceiver -->
         <receiver
-            android:name=".receiver.FenceApiReceiver"
+            android:name=".receiver.AlarmReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <!-- AdMob -->
         <meta-data
@@ -148,30 +149,30 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
 
 
-        <!-- Google Maps && PlaceAutoComplete -->
+        <!-- Google Maps && PlaceAutoComplete && Awareness -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/g_api_key" />
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="@string/g_api_key" />
 
         <!-- Firebase -->
         <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service android:name=".service.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 

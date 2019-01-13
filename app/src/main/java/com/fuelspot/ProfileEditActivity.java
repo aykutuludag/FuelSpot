@@ -73,6 +73,7 @@ import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
@@ -117,7 +118,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Profil düzenle");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -183,7 +184,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry(userCountry).build();
+                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry(userCountry).setTypeFilter(Place.TYPE_ADMINISTRATIVE_AREA_LEVEL_1).build();
                     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(ProfileEditActivity.this);
                     startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
                 } catch (GooglePlayServicesRepairableException e) {
@@ -314,16 +315,20 @@ public class ProfileEditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        switch (response) {
-                            case "Success":
-                                loading.dismiss();
-                                editor.apply();
-                                Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                                finish();
-                                break;
-                            case "Fail":
-                                Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
-                                break;
+                        loading.dismiss();
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    editor.apply();
+                                    Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
+                                    finish();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -397,7 +402,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.navigation_save:
-                if (MainActivity.isNetworkConnected(this)) {
+                if (isNetworkConnected(this)) {
                     updateUserInfo();
                 } else {
                     Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();

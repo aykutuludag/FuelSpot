@@ -60,7 +60,6 @@
                         android:layout_below="@id/imageViewStationLogo"
                         android:fontFamily="@font/gotham_bold"
                         android:gravity="center"
-                        android:text="Shell"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000" />
 
@@ -112,8 +111,7 @@
                     <ImageView
                         android:id="@+id/type1"
                         android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        app:srcCompat="@drawable/diesel" />
+                        android:layout_height="20dp" />
 
                     <TextView
                         android:id="@+id/type1Text"
@@ -124,7 +122,6 @@
                         android:layout_marginStart="4dp"
                         android:layout_toEndOf="@+id/type1"
                         android:gravity="center"
-                        android:text="Diesel"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#212121" />
                 </RelativeLayout>
@@ -138,7 +135,6 @@
                     android:layout_alignEnd="@id/title_amount"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:text="16.52 lt"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121"
                     card_view:layout_widthPercent="20%" />
@@ -152,7 +148,6 @@
                     android:layout_alignEnd="@id/title_price"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:text="100 TL"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121"
                     card_view:layout_widthPercent="20%" />
@@ -170,8 +165,7 @@
                     <ImageView
                         android:id="@+id/type2"
                         android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/lpg" />
+                        android:layout_height="20dp" />
 
                     <TextView
                         android:id="@+id/type1Text2"
@@ -182,7 +176,6 @@
                         android:layout_marginStart="4dp"
                         android:layout_toEndOf="@+id/type2"
                         android:gravity="center"
-                        android:text="LPG"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#212121" />
                 </RelativeLayout>
@@ -197,7 +190,6 @@
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:text="32.25 lt"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121" />
 
@@ -211,17 +203,34 @@
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
-                    android:text="100 TL"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121" />
+
+                <TextView
+                    android:id="@+id/bonus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stationInfo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="BONUS : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="#00801e" />
 
                 <TextView
                     android:id="@+id/totalPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/stationInfo"
+                    android:layout_below="@+id/bonus"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_bold"
                     android:gravity="center"
                     android:text="TOPLAM : "

@@ -78,29 +78,21 @@ import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.averageCons;
-import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
-import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.kilometer;
-import static com.fuelspot.MainActivity.location;
-import static com.fuelspot.MainActivity.name;
-import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userFavorites;
-import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.userlat;
@@ -112,9 +104,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     RequestQueue requestQueue;
     SharedPreferences prefs;
-    Button continueButton, saveCarButton, finishButton;
-    RelativeLayout layout1, layout3, layoutHow1, layoutHow2, layoutHow3;
-    ScrollView layout2;
+    Button continueButton, userHasCar, userNoCar, saveCarButton, finishButton;
+    RelativeLayout layout1, layout2, layout4, layoutHow1, layoutHow2, layoutHow3;
+    ScrollView layout3;
     Bitmap bitmap;
     CircleImageView carPic;
     Spinner spinner, spinner2;
@@ -132,7 +124,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_welcome);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Hoşgeldin");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -143,6 +135,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         layout1 = findViewById(R.id.layout1);
         layout2 = findViewById(R.id.layout2);
         layout3 = findViewById(R.id.layout3);
+        layout4 = findViewById(R.id.layout4);
 
         layoutHow1 = findViewById(R.id.howto1);
         layoutHow2 = findViewById(R.id.howto2);
@@ -150,6 +143,23 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+
+        userHasCar = findViewById(R.id.button6);
+        userHasCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout3.setVisibility(View.VISIBLE);
+                layout2.setVisibility(View.GONE);
+            }
+        });
+        userNoCar = findViewById(R.id.button7);
+        userNoCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout4.setVisibility(View.VISIBLE);
+                layout2.setVisibility(View.GONE);
+            }
+        });
 
         continueButton = findViewById(R.id.buttonContinue);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -226,88 +236,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 }
             }
         });
-
-        // fetchUserInfo();
-    }
-
-    public void fetchUserInfo() {
-        final ProgressDialog loading = ProgressDialog.show(WelcomeActivity.this, "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                loading.dismiss();
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                name = obj.getString("name");
-                                prefs.edit().putString("Name", name).apply();
-
-                                email = obj.getString("email");
-                                prefs.edit().putString("Email", email).apply();
-
-                                photo = obj.getString("photo");
-                                prefs.edit().putString("ProfilePhoto", photo).apply();
-
-                                gender = obj.getString("gender");
-                                prefs.edit().putString("Gender", gender).apply();
-
-                                birthday = obj.getString("birthday");
-                                prefs.edit().putString("Birthday", birthday).apply();
-
-                                userPhoneNumber = obj.getString("phoneNumber");
-                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
-
-                                location = obj.getString("location");
-                                prefs.edit().putString("Location", location).apply();
-
-                                userCountry = obj.getString("country");
-                                prefs.edit().putString("userCountry", userCountry).apply();
-
-                                userDisplayLanguage = obj.getString("language");
-                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
-
-                                userVehicles = obj.getString("vehicles");
-                                prefs.edit().putString("userVehicles", userVehicles).apply();
-
-                                userFavorites = obj.getString("favStations");
-                                prefs.edit().putString("userFavorites", userFavorites).apply();
-
-                                getVariables(prefs);
-                                continueButton.setAlpha(1.0f);
-                                continueButton.setClickable(true);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                loading.dismiss();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(WelcomeActivity.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
     }
 
     private void Localization() {
@@ -790,7 +718,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 getVariables(prefs);
 
                                 Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
-                                layout3.setVisibility(View.VISIBLE);
+                                layout4.setVisibility(View.VISIBLE);
                                 layout1.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -1346,8 +1274,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                photo = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
-                prefs.edit().putString("ProfilePhoto", photo).apply();
+                carPhoto = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                prefs.edit().putString("CarPhoto", carPhoto).apply();
             }
         }
     }

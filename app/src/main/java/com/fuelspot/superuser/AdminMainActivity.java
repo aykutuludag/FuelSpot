@@ -46,7 +46,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.FragmentNews;
-import com.fuelspot.FragmentProfile;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
 import com.fuelspot.R;
@@ -160,7 +159,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
         fragments.add(FragmentMyStation.newInstance());
         fragments.add(FragmentStations.newInstance());
-        fragments.add(FragmentProfile.newInstance());
+        fragments.add(FragmentSuperProfile.newInstance());
         fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentSettings.newInstance());
         builder.rootFragments(fragments);

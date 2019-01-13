@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userUnit;
 
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHolder> {
@@ -135,13 +136,17 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             viewHolder.price2.setVisibility(View.GONE);
         }
 
+        // Bonus
+        String bonusHolder = "BONUS: " + String.format(Locale.getDefault(), "%.2f", feedItem.getBonus()) + " " + currencySymbol;
+        viewHolder.bonusText.setText(bonusHolder);
+
         //TotalPrice
-        String totalPriceHolder = "TOPLAM: " + (int) feedItem.getTotalPrice() + " " + currencySymbol;
+        String totalPriceHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", feedItem.getTotalPrice()) + " " + currencySymbol;
         viewHolder.totalPrice.setText(totalPriceHolder);
 
         // PurchaseTime
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
             Date date = format.parse(feedItem.getPurchaseTime());
             viewHolder.purchaseTime.setReferenceTime(date.getTime());
         } catch (ParseException e) {
@@ -166,7 +171,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout backgroundClick, type1Layout, type2Layout;
-        TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text;
+        TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text, bonusText;
         ImageView stationLogo, type1, type2;
         RelativeTimeTextView purchaseTime;
 
@@ -188,6 +193,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             amount2 = itemView.findViewById(R.id.amount2);
             price2 = itemView.findViewById(R.id.price2);
 
+            bonusText = itemView.findViewById(R.id.bonus);
             totalPrice = itemView.findViewById(R.id.totalPrice);
             purchaseTime = itemView.findViewById(R.id.purchaseTime);
         }

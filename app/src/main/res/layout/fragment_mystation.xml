@@ -314,31 +314,5 @@
                 android:text="SATIN ALMALAR" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/promo_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/purchase_section"
-            android:background="#f0f0f0"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="İstasyonunuzu tanıtarak işlerinizi daha da büyetebilirsiniz." />
-
-            <Button
-                android:id="@+id/buttonPromo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView12"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:background="@drawable/green_box"
-                android:text="GÖNDERİLER" />
-        </RelativeLayout>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

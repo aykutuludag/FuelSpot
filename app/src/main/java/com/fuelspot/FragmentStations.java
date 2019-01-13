@@ -64,6 +64,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.getVariables;
@@ -73,11 +74,11 @@ import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
-public class FragmentStations extends Fragment {
+public class FragmentStations extends Fragment implements OnMapReadyCallback {
 
     // Station variables
+    public static List<StationItem> fullStationList = new ArrayList<>();
     static List<StationItem> shortStationList = new ArrayList<>();
-    static List<StationItem> fullStationList = new ArrayList<>();
     static ArrayList<Marker> markers = new ArrayList<>();
 
     boolean isAllStationsListed, mapIsUpdating;
@@ -118,7 +119,7 @@ public class FragmentStations extends Fragment {
 
             // Analytics
             if (getActivity() != null) {
-                Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+                Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
                 t.setScreenName("İstasyonlar");
                 t.enableAdvertisingIdCollection(true);
                 t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -149,7 +150,8 @@ public class FragmentStations extends Fragment {
                             super.onLocationResult(locationResult);
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                                // <= 250m accuracy is sufficient for first load
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();
@@ -290,20 +292,7 @@ public class FragmentStations extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-            mMapView.getMapAsync(new OnMapReadyCallback() {
-                @SuppressLint("MissingPermission")
-                @Override
-                public void onMapReady(GoogleMap mMap) {
-                    googleMap = mMap;
-                    googleMap.setMyLocationEnabled(true);
-                    googleMap.getUiSettings().setCompassEnabled(true);
-                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                    googleMap.getUiSettings().setAllGesturesEnabled(true);
-                    googleMap.getUiSettings().setMapToolbarEnabled(false);
-                    googleMap.setTrafficEnabled(true);
-                    googleMap.getUiSettings().setZoomControlsEnabled(true);
-                }
-            });
+            mMapView.getMapAsync(this);
         }
     }
 
@@ -382,12 +371,14 @@ public class FragmentStations extends Fragment {
 
                                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                                 googleMap.setInfoWindowAdapter(customInfoWindow);
-
                                 markers.get(0).showInfoWindow();
                                 mapIsUpdating = false;
                                 noStationError.setVisibility(View.GONE);
                                 stationLayout.setVisibility(View.VISIBLE);
                                 proggressBar.setVisibility(View.GONE);
+
+                                // Create a fence
+                                AlarmBuilder(getActivity());
                             } catch (JSONException e) {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
@@ -619,9 +610,10 @@ public class FragmentStations extends Fragment {
         markers.get(0).showInfoWindow();
     }
 
-    private void addMarker(StationItem sItem) {
+    private void addMarker(final StationItem sItem) {
         // Add marker
         MarkerItem info = new MarkerItem();
+        info.setID(sItem.getID());
         info.setStationName(sItem.getStationName());
         info.setPhotoURL(sItem.getPhotoURL());
         info.setGasolinePrice(sItem.getGasolinePrice());
@@ -707,5 +699,18 @@ public class FragmentStations extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onMapReady(GoogleMap mMap) {
+        googleMap = mMap;
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.setTrafficEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
     }
 }

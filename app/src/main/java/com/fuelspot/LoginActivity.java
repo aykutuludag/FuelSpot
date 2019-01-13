@@ -96,6 +96,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     Handler handler = new Handler();
     ImageView doUHaveStation;
 
+    int temp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         notLogged = findViewById(R.id.notLoggedLayout);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplicationContext()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplicationContext()).getDefaultTracker();
         t.setScreenName("LoginActivity");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -116,6 +118,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         MainActivity.getVariables(prefs);
+
+        // TEMP
+        temp = prefs.getInt("TEMP", 0);
+        if (temp == 0) {
+            isSigned = false;
+
+            temp++;
+            prefs.edit().putInt("TEMP", temp).apply();
+        }
+        // TEMP
 
         //Layout objects
         signInButton = findViewById(R.id.buttonGoogle);

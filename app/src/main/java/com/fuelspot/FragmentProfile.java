@@ -91,7 +91,7 @@ public class FragmentProfile extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
             // Analytics
-            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
             t.setScreenName("Profile");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -193,20 +193,6 @@ public class FragmentProfile extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-       /* Button openPrivacy = headerView.findViewById(R.id.button_privacy);
-        openPrivacy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                CustomTabsIntent customTabsIntent = builder.build();
-                builder.enableUrlBarHiding();
-                builder.setShowTitle(true);
-                builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
-            }
-        });*/
     }
 
     public void parseUserVehicles() {
@@ -379,76 +365,4 @@ public class FragmentProfile extends Fragment {
             parseUserVehicles();
         }
     }
-
-    /* void fetchProfile() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println(response);
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-
-                            name = obj.getString("name");
-                            prefs.edit().putString("Name", name).apply();
-
-                            email = obj.getString("email");
-                            prefs.edit().putString("Email", email).apply();
-
-                            photo = obj.getString("photo");
-                            prefs.edit().putString("ProfilePhoto", photo).apply();
-
-                            gender = obj.getString("gender");
-                            prefs.edit().putString("Gender", gender).apply();
-
-                            birthday = obj.getString("birthday");
-                            prefs.edit().putString("Birthday", birthday).apply();
-
-                            userPhoneNumber = obj.getString("phoneNumber");
-                            prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
-
-                            location = obj.getString("location");
-                            prefs.edit().putString("Location", location).apply();
-
-                            userCountry = obj.getString("country");
-                            prefs.edit().putString("userCountry", userCountry).apply();
-
-                            userDisplayLanguage = obj.getString("language");
-                            prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
-
-                            userVehicles = obj.getString("vehicles");
-                            prefs.edit().putString("userVehicles", userVehicles).apply();
-
-                            getVariables(prefs);
-                            loadProfile();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-    */
 }

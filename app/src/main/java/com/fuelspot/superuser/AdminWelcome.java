@@ -121,6 +121,7 @@ import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
+import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -1332,7 +1333,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
+        CharSequence now = android.text.format.DateFormat.format(universalTimeFormat, new Date());
         String fileName = now + ".jpg";
 
         switch (requestCode) {

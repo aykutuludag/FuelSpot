@@ -67,7 +67,6 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
-import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
@@ -105,7 +104,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         }
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Araç düzenle");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -991,8 +990,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                photo = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
-                prefs.edit().putString("ProfilePhoto", photo).apply();
+                carPhoto = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                prefs.edit().putString("CarPhoto", carPhoto).apply();
             }
         }
     }

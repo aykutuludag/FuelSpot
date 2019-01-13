@@ -154,7 +154,7 @@ public class StationDetails extends AppCompatActivity {
         coloredBars(Color.RED, Color.TRANSPARENT);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("İstasyon detay");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -917,6 +917,7 @@ public class StationDetails extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_LONG).show();
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":

@@ -36,14 +36,6 @@
         <item>Other</item>
     </string-array>
 
-    <string-array name="country_codes">
-        <item>AZ</item>
-        <item>DE</item>
-        <item>RU</item>
-        <item>TR</item>
-        <item>US</item>
-    </string-array>
-
     <!-- LoginActivity -->
     <string name="loginWithGoogle">Login with Google</string>
     <string name="loginWithFacebook">Login with Facebook</string>
@@ -63,6 +55,7 @@
 
     <!-- AddFuel -->
     <string name="add_fuel">Yakıt ekle</string>
+    <string name="last_answers">Son cevaplarınız</string>
 
     <!-- AdminMainActivity -->
     <string name="edit_prices">Edit prices</string>

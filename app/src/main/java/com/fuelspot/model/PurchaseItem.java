@@ -17,6 +17,7 @@ public class PurchaseItem {
     private float fuelTax2;
     private float totalPrice;
     private String billPhoto;
+    private float bonus;
 
     public int getID() {
         return ID;
@@ -136,5 +137,13 @@ public class PurchaseItem {
 
     public void setBillPhoto(String billPhoto) {
         this.billPhoto = billPhoto;
+    }
+
+    public float getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(float bonus) {
+        this.bonus = bonus;
     }
 }

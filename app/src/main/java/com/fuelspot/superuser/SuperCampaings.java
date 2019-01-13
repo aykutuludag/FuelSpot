@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.fuelspot.MainActivity.universalTimeStamp;
+import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
@@ -87,7 +87,7 @@ public class SuperCampaings extends AppCompatActivity {
         coloredBars(Color.parseColor("#7B1FA2"), Color.parseColor("#9C27B0"));
 
         requestQueue = Volley.newRequestQueue(this);
-        sdf = new SimpleDateFormat(universalTimeStamp, Locale.getDefault());
+        sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
         // Comments
         mRecyclerView = findViewById(R.id.campaignView);
 

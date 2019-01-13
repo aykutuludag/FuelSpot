@@ -9,7 +9,7 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 32
+        versionCode 33
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -47,10 +47,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-analytics:16.0.6'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.android.gms:play-services-places:16.0.0'
+    implementation 'com.google.android.gms:play-services-awareness:16.0.0'
 
     // FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.firebase:firebase-appindexing:17.1.0'
+    implementation 'com.google.firebase:firebase-ads:17.1.2'
 
     // FACEBOOK
     implementation 'com.facebook.android:facebook-android-sdk:4.39.0'

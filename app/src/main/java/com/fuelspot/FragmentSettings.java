@@ -117,7 +117,7 @@ public class FragmentSettings extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
             // Analytics
-            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
             t.setScreenName("SETTINGS");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -208,6 +208,21 @@ public class FragmentSettings extends Fragment {
                     startActivity(intent);
                 }
             });
+
+
+
+       /* Button openPrivacy = headerView.findViewById(R.id.button_privacy);
+        openPrivacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#212121"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
+            }
+        });*/
         }
 
         return rootView;

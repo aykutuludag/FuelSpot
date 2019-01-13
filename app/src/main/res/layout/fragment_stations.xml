@@ -21,18 +21,6 @@
             map:cameraTargetLng="32.8347552"
             map:cameraZoom="11.5" />
 
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.FadingCircle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/map"
-            android:layout_centerInParent="false"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="false"
-            android:layout_marginTop="48dp"
-            app:SpinKit_Color="#FF441F" />
-
         <RelativeLayout
             android:id="@+id/stationLayout"
             android:layout_width="match_parent"
@@ -232,6 +220,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sortBar"
                 android:layout_margin="4dp" />
+
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Large.FadingCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sortBar"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                app:SpinKit_Color="#FF441F" />
 
             <Button
                 android:id="@+id/button_seeAllStations"

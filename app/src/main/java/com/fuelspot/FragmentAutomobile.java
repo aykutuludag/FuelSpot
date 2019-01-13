@@ -102,7 +102,7 @@ public class FragmentAutomobile extends Fragment {
             view = inflater.inflate(R.layout.fragment_automobile, container, false);
 
             // Analytics
-            Tracker t = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
             t.setScreenName("Vehicle");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -305,6 +305,7 @@ public class FragmentAutomobile extends Fragment {
                                     item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
                                     item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
                                     item.setFuelTax2((float) obj.getDouble("fuelTax2"));
+                                    item.setBonus((float) obj.getDouble("bonus"));
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
                                     vehiclePurchaseList.add(item);

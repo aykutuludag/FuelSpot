@@ -2,9 +2,12 @@ package com.fuelspot;
 
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -26,11 +29,13 @@ import android.widget.Toast;
 import com.android.vending.billing.IInAppBillingService;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.fuelspot.receiver.AlarmReceiver;
 import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    public static String FENCE_RECEIVER_ACTION = "com.fuelspotFENCE_RECEIVER_ACTION";
 
     public static final int GOOGLE_LOGIN = 100;
     public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
@@ -50,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
-    public static String universalTimeStamp = "dd-MM-yyyy HH:mm";
+    public static String universalTimeFormat = "yyyy-MM-dd HH:mm:ss";
+    public static String shortTimeFormat = "dd-MMM HH:mm";
     public static boolean premium, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
@@ -363,6 +370,18 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         admobInterstitial.loadAd(adRequest);
     }*/
 
+    public static void AlarmBuilder(Context mContext) {
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
+
+        Intent myIntent = new Intent(mContext, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        if (alarmManager != null) {
+            Calendar currentTime = Calendar.getInstance();
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -382,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
+
         // Some variables
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
@@ -389,30 +409,32 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         MapsInitializer.initialize(this);
 
         // Bottom navigation
-        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
-        fragments.add(FragmentStations.newInstance());
-        fragments.add(FragmentNews.newInstance());
-        fragments.add(FragmentAutomobile.newInstance());
-        fragments.add(FragmentProfile.newInstance());
-        fragments.add(FragmentSettings.newInstance());
-        builder.rootFragments(fragments);
-        mFragNavController = builder.build();
+        if (savedInstanceState == null) {
+            FragNavController.Builder builder = FragNavController.newBuilder(null, getSupportFragmentManager(), R.id.mainContainer);
+            fragments.add(FragmentStations.newInstance());
+            fragments.add(FragmentNews.newInstance());
+            fragments.add(FragmentAutomobile.newInstance());
+            fragments.add(FragmentProfile.newInstance());
+            fragments.add(FragmentSettings.newInstance());
+            builder.rootFragments(fragments);
+            mFragNavController = builder.build();
 
-        bottomNavigation = findViewById(R.id.bottom_navigation);
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
+            bottomNavigation = findViewById(R.id.bottom_navigation);
+            AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
+            AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+            AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
+            AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
+            AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
 
-        bottomNavigation.addItem(item1);
-        bottomNavigation.addItem(item2);
-        bottomNavigation.addItem(item3);
-        bottomNavigation.addItem(item4);
-        bottomNavigation.addItem(item5);
+            bottomNavigation.addItem(item1);
+            bottomNavigation.addItem(item2);
+            bottomNavigation.addItem(item3);
+            bottomNavigation.addItem(item4);
+            bottomNavigation.addItem(item5);
 
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-        bottomNavigation.setOnTabSelectedListener(this);
+            bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+            bottomNavigation.setOnTabSelectedListener(this);
+        }
 
         //In-App Services
         InAppBilling();
@@ -462,17 +484,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
-    /*public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
+    public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(MainActivity.this,
-                "Premium sürüme geçerek uygulama içerisindeki tüm reklamları kaldırabilirsiniz. Ayrıca 50 km'ye kadar çevrenizdeki bütün istasyon fiyatlarını görebilirsiniz.", Toast.LENGTH_LONG)
+                "Premium sürüm reklamları kaldırır ve menzilinizi 2 katına çıkarır.", Toast.LENGTH_LONG)
                 .show();
         Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium", "subs",
-                "/tYMgwhg1DVikb4R4iLNAO5pNj/QWh19+vwajyUFbAyw93xVnDkeTZFdhdSdJ8M");
+                "dfgfddfgdfgasd/sdfsffgdgfgjkjk/ajyUFbAyw93xVnDkeTZFdhdSdJ8M");
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
         assert pendingIntent != null;
         startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_NORMAL_PREMIUM, new Intent(), 0,
                 0, 0);
-    }*/
+    }
 
     public void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -489,11 +511,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-           /* case PURCHASE_NORMAL_PREMIUM:
+            case PURCHASE_NORMAL_PREMIUM:
                 if (resultCode == RESULT_OK) {
                     Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasPremum", true).apply();
-                    prefs.edit().putInt("RANGE", 50000).apply();
+                    prefs.edit().putInt("RANGE", 5000).apply();
                     prefs.edit().putFloat("ZOOM", 12f).apply();
                     Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
                     if (i != null) {
@@ -506,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                             Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasPremium", false).apply();
                 }
-                break;*/
+                break;
         }
 
         // Thanks to this brief code, we can call onActivityResult in a fragment

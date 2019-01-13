@@ -82,7 +82,7 @@ public class PurchaseDetails extends AppCompatActivity {
         setContentView(R.layout.activity_purchase_details);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Satın alma detay");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());

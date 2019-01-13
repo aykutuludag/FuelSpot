@@ -2,7 +2,6 @@ package com.fuelspot;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -52,8 +50,6 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
-import eu.amirs.JSON;
-
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
@@ -65,12 +61,9 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
-import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userUnit;
-import static com.fuelspot.MainActivity.userlat;
-import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
@@ -81,18 +74,17 @@ public class AddFuel extends AppCompatActivity {
     Toolbar toolbar;
     SharedPreferences prefs;
     RequestQueue requestQueue;
-    ProgressDialog pDialog;
     RequestOptions options;
 
     int chosenStationID;
-    String chosenGoogleID, chosenStationName, chosenStationAddress, chosenStationLoc;
+    String googleID, stationName, stationAddress, stationLoc;
     float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, tax1, tax2, taxTotal, totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
     String fuelType, fuelType2, billPhoto;
-    TextView fuelType1Text, fuelType2Text, fuelVergi, fuelGrandTotal;
+    TextView fuelType1Text, fuelType2Text, fuelGrandTotal;
     ImageView fuelType1Icon, fuelType2Icon;
     EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
     Bitmap bitmap;
@@ -138,7 +130,7 @@ public class AddFuel extends AppCompatActivity {
         MainActivity.getVariables(prefs);
 
         // Analytics
-        Tracker t = ((AnalyticsApplication) this.getApplication()).getDefaultTracker();
+        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Yakıt ekle");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
@@ -149,10 +141,7 @@ public class AddFuel extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
-        pDialog = new ProgressDialog(AddFuel.this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        chosenStationID = getIntent().getIntExtra("STATION_ID", 0);
 
         scrollView = findViewById(R.id.addfuel_layout1);
 
@@ -175,66 +164,15 @@ public class AddFuel extends AppCompatActivity {
         textViewLitre2 = findViewById(R.id.editTextLiter2);
         textViewTotalFiyat2 = findViewById(R.id.editTextPrice2);
 
-        fuelVergi = findViewById(R.id.textViewVergi);
         fuelGrandTotal = findViewById(R.id.textViewGrandTotal);
 
         // Check whether user is at station or not
-        checkIsAtStation();
+        fetchSingleStation();
     }
 
-    public void checkIsAtStation() {
-        //Search stations in a radius of 50m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + userlat + "," + userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&key=" + getString(R.string.g_api_key);
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSON json = new JSON(response);
-                        if (json.key("results").count() > 0) {
-                            // Yes! He is in station. Probably there is only one station in 100m so get the first value
-                            chosenGoogleID = json.key("results").index(0).key("place_id").stringValue();
-                            fetchStation(chosenGoogleID);
-                        } else {
-                            informUser();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                informUser();
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        requestQueue.add(stringRequest);
-    }
-
-    void informUser() {
-        pDialog.dismiss();
-        chosenStationID = 0;
-        chosenStationName = "";
-        chosenStationLoc = "";
-        chosenGoogleID = "";
-        chosenStationAddress = "";
-
-        new AlertDialog.Builder(this)
-                .setTitle("Hata")
-                .setMessage("Şu an bir istasyonda bulunmadığınızdan dolayı yakıt ekleyemezsiniz.")
-                .setNeutralButton("TAMAM", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setCancelable(false)
-                .show();
-    }
-
-    private void fetchStation(final String googleID) {
+    private void fetchSingleStation() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -244,17 +182,15 @@ public class AddFuel extends AppCompatActivity {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
-                                chosenStationID = obj.getInt("id");
-                                chosenStationName = obj.getString("name");
-                                chosenStationAddress = obj.getString("vicinity");
-                                chosenStationLoc = obj.getString("location");
+                                stationName = obj.getString("name");
+                                stationAddress = obj.getString("vicinity");
+                                stationLoc = obj.getString("location");
                                 gasolinePrice = (float) obj.getDouble("gasolinePrice");
                                 dieselPrice = (float) obj.getDouble("dieselPrice");
                                 LPGPrice = (float) obj.getDouble("lpgPrice");
                                 electricityPrice = (float) obj.getDouble("electricityPrice");
 
                                 scrollView.setAlpha(1.0f);
-                                pDialog.dismiss();
                                 loadLayout();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -273,7 +209,7 @@ public class AddFuel extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("googleID", googleID);
+                params.put("stationID", String.valueOf(chosenStationID));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -461,7 +397,7 @@ public class AddFuel extends AppCompatActivity {
                 if (s != null && s.length() > 0) {
                     entryPrice2 = Float.parseFloat(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
-                    String literText2 = String.format("%.2f", buyedLiter2);
+                    String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
                     textViewLitre2.setText(literText2);
                     totalPrice = entryPrice + entryPrice2;
                     updateTaxandGrandTotal();
@@ -503,79 +439,75 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void addPurchase() {
-        if (chosenStationName != null && chosenStationName.length() > 0) {
-            if (isNetworkConnected(AddFuel.this)) {
-                if (totalPrice > 0) {
-                    //Showing the progress dialog
-                    final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String s) {
-                                    //Disimissing the progress dialog
-                                    loading.dismiss();
-                                    Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                                    // updateStation();
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError volleyError) {
-                                    //Dismissing the progress dialog
-                                    loading.dismiss();
-                                    //Showing toast
-                                    Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            //Creating parameters
-                            Map<String, String> params = new Hashtable<>();
-
-                            //Adding parameters
-                            params.put("username", username);
-                            params.put("vehicleID", String.valueOf(vehicleID));
-                            params.put("plateNO", plateNo);
-                            params.put("stationID", String.valueOf(chosenStationID));
-                            params.put("stationNAME", chosenStationName);
-                            params.put("stationICON", stationPhotoChooser(chosenStationName));
-                            params.put("stationLOC", chosenStationLoc);
-                            params.put("fuelType", String.valueOf(fuelPri));
-                            params.put("fuelPrice", String.valueOf(selectedUnitPrice));
-                            params.put("fuelLiter", String.valueOf(buyedLiter));
-                            params.put("fuelTax", String.valueOf(selectedTaxRate));
-                            params.put("fuelType2", String.valueOf(fuelSec));
-                            params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
-                            params.put("fuelLiter2", String.valueOf(buyedLiter2));
-                            params.put("fuelTax2", String.valueOf(selectedTaxRate2));
-                            params.put("totalPrice", String.valueOf(totalPrice));
-                            if (bitmap != null) {
-                                params.put("billPhoto", getStringImage(bitmap));
+        if (isNetworkConnected(AddFuel.this)) {
+            if (totalPrice > 0) {
+                //Showing the progress dialog
+                final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String s) {
+                                //Disimissing the progress dialog
+                                loading.dismiss();
+                                Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
+                                // updateStation();
                             }
-                            params.put("kilometer", String.valueOf(kilometer));
-                            params.put("unit", String.valueOf(userUnit));
-                            params.put("currency", String.valueOf(currencyCode));
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Dismissing the progress dialog
+                                loading.dismiss();
+                                //Showing toast
+                                Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
 
-                            //returning parameters
-                            return params;
+                        //Adding parameters
+                        params.put("username", username);
+                        params.put("vehicleID", String.valueOf(vehicleID));
+                        params.put("plateNO", plateNo);
+                        params.put("stationID", String.valueOf(chosenStationID));
+                        params.put("stationNAME", stationName);
+                        params.put("stationICON", stationPhotoChooser(stationName));
+                        params.put("stationLOC", stationLoc);
+                        params.put("fuelType", String.valueOf(fuelPri));
+                        params.put("fuelPrice", String.valueOf(selectedUnitPrice));
+                        params.put("fuelLiter", String.valueOf(buyedLiter));
+                        params.put("fuelTax", String.valueOf(selectedTaxRate));
+                        params.put("fuelType2", String.valueOf(fuelSec));
+                        params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
+                        params.put("fuelLiter2", String.valueOf(buyedLiter2));
+                        params.put("fuelTax2", String.valueOf(selectedTaxRate2));
+                        params.put("totalPrice", String.valueOf(totalPrice));
+                        if (bitmap != null) {
+                            params.put("billPhoto", getStringImage(bitmap));
                         }
-                    };
+                        params.put("kilometer", String.valueOf(kilometer));
+                        params.put("unit", String.valueOf(userUnit));
+                        params.put("currency", String.valueOf(currencyCode));
 
-                    //Adding request to the queue
-                    requestQueue.add(stringRequest);
-                } else {
-                    Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
-                }
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
             } else {
-                Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(AddFuel.this, "Şu anda bir benzin istasyonunda değilsiniz. Yakıt aldığınız istasyonu seçiniz.", Toast.LENGTH_LONG).show();
+            Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
         }
     }
 
-    // BUNUN YERİNE REPORT GÖNDERECEK.
-    private void updateStation() {
+    // BU İŞLEMİ PHP İÇİNDE YAP
+  /*  private void updateStation() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
                     @Override
@@ -640,15 +572,13 @@ public class AddFuel extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
+    }*/
 
     private void updateTaxandGrandTotal() {
         tax1 = taxCalculator(fuelPri, entryPrice);
         tax2 = taxCalculator(fuelSec, entryPrice2);
 
         taxTotal = tax1 + tax2;
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", taxTotal) + " " + currencyCode;
-        fuelVergi.setText(taxHolder);
         totalPrice = entryPrice + entryPrice2;
         String totalHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
@@ -678,9 +608,9 @@ public class AddFuel extends AppCompatActivity {
             case android.R.id.home:
                 //Remove variables
                 bitmap = null;
-                chosenStationName = null;
-                chosenGoogleID = null;
-                chosenStationLoc = null;
+                stationName = null;
+                googleID = null;
+                stationLoc = null;
                 gasolinePrice = 0;
                 dieselPrice = 0;
                 electricityPrice = 0;
@@ -760,9 +690,9 @@ public class AddFuel extends AppCompatActivity {
         super.onBackPressed();
         //Remove variables
         bitmap = null;
-        chosenStationName = null;
-        chosenGoogleID = null;
-        chosenStationLoc = null;
+        stationName = null;
+        googleID = null;
+        stationLoc = null;
         gasolinePrice = 0;
         dieselPrice = 0;
         electricityPrice = 0;

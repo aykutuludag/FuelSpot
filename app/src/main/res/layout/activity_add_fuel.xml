@@ -330,26 +330,11 @@
                 android:background="#EDEDED">
 
                 <TextView
-                    android:id="@+id/textViewVergi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:hint="TAX"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#424242" />
-
-                <TextView
                     android:id="@+id/textViewGrandTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textViewVergi"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:hint="TOTAL"
@@ -374,7 +359,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="İsterseniz daha sonra kolay hatırlamak için fiş/fatura ekleyebilirsiniz."
+                    android:text="Bonus kazanmak için fiş/fatura fotoğrafı ekle! Fotoğrafı daha sonra da ekleyebilirsin."
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="#f1f1f1" />
 
