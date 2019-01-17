@@ -96,11 +96,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         Intent myIntent = new Intent(mContext, AlarmReceiver.class);
-        mPendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        mPendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, mPendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
         }
     }
 
@@ -118,7 +118,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             for (int i = 0; i < fullStationList.size(); i++) {
                 double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
                 double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
-                locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
+                locationFence = LocationFence.in(stationLat, stationLon, 50, 10000L);
                 AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
                 registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
             }
@@ -190,7 +190,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     // Add fence
                                     double lat = Double.parseDouble(item.getLocation().split(";")[0]);
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
-                                    locationFence = LocationFence.in(lat, lon, 50, 15000L);
+                                    locationFence = LocationFence.in(lat, lon, 50, 10000L);
                                     AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
                                     registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
                                 }
@@ -255,10 +255,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
-                    Log.i(TAG, "Fence was successfully registered.");
+                    System.out.println("Fence was successfully registered.");
                     queryFence(fenceKey);
                 } else {
-                    Log.e(TAG, "Fence could not be registered: " + status);
+                    System.out.println("Fence could not be registered: " + status);
                 }
             }
         });
@@ -289,7 +289,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent intentLauncher = new Intent(mContext, AddFuel.class);
         intentLauncher.putExtra("STATION_ID", Integer.parseInt(stationID));
         notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mPendingIntent = PendingIntent.getActivity(mContext, 2, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
+        mPendingIntent = PendingIntent.getActivity(mContext, 1, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelName = "Yakıt ekleme";

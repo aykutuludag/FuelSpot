@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
         Intent myIntent = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();

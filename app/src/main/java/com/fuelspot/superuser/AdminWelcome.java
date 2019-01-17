@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -54,6 +55,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -84,7 +87,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
@@ -103,8 +105,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import eu.amirs.JSON;
 
+import static com.fuelspot.MainActivity.GOOGLE_LOGIN;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_ALL;
@@ -120,8 +122,6 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
-import static com.fuelspot.MainActivity.stationPhotoChooser;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -131,8 +131,8 @@ import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
+import static com.fuelspot.superuser.AdminMainActivity.isDeliveryAvailable;
 import static com.fuelspot.superuser.AdminMainActivity.isMobilePaymentAvailable;
-import static com.fuelspot.superuser.AdminMainActivity.isStationActive;
 import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
 import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
@@ -140,6 +140,7 @@ import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.AdminMainActivity.superFacilities;
 import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
+import static com.fuelspot.superuser.AdminMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
 import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
@@ -347,17 +348,55 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
-                        fetchSuperUserInfo();
-                        loading.dismiss();
-                        Toast.makeText(AdminWelcome.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                registerLayout.setVisibility(View.GONE);
-                                welcome1.setVisibility(View.VISIBLE);
-                                background.setVisibility(View.INVISIBLE);
+                        if (s != null && s.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(s);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                name = obj.getString("name");
+                                prefs.edit().putString("Name", name).apply();
+
+                                email = obj.getString("email");
+                                prefs.edit().putString("Email", email).apply();
+
+                                photo = obj.getString("photo");
+                                prefs.edit().putString("ProfilePhoto", photo).apply();
+
+                                gender = obj.getString("gender");
+                                prefs.edit().putString("Gender", gender).apply();
+
+                                birthday = obj.getString("birthday");
+                                prefs.edit().putString("Birthday", birthday).apply();
+
+                                userPhoneNumber = obj.getString("phoneNumber");
+                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
+
+                                userCountry = obj.getString("country");
+                                prefs.edit().putString("userCountry", userCountry).apply();
+
+                                userDisplayLanguage = obj.getString("language");
+                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+
+                                userStations = obj.getString("stations");
+                                prefs.edit().putString("userStations", userStations).apply();
+
+                                getVariables(prefs);
+                                getSuperVariables(prefs);
+
+                                loading.dismiss();
+                                Toast.makeText(AdminWelcome.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        registerLayout.setVisibility(View.GONE);
+                                        background.setVisibility(View.INVISIBLE);
+                                        welcome1.setVisibility(View.VISIBLE);
+                                    }
+                                }, 1500);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        }, 1500);
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -390,73 +429,74 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         requestQueue.add(stringRequest);
     }
 
-    public void fetchSuperUserInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_FETCH),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
+    private void Localization() {
+        if (userlat != null && userlon != null) {
+            if (userlat.length() > 0 && userlon.length() > 0) {
+                Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
+                    if (addresses.size() > 0) {
+                        userCountry = addresses.get(0).getCountryCode();
+                        prefs.edit().putString("userCountry", userCountry).apply();
 
-                                name = obj.getString("name");
-                                prefs.edit().putString("Name", name).apply();
+                        userCountryName = addresses.get(0).getCountryName();
+                        prefs.edit().putString("userCountryName", userCountryName).apply();
 
-                                email = obj.getString("email");
-                                prefs.edit().putString("Email", email).apply();
+                        userDisplayLanguage = Locale.getDefault().getLanguage();
+                        prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                                photo = obj.getString("photo");
-                                prefs.edit().putString("ProfilePhoto", photo).apply();
+                        Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
+                        currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
+                        prefs.edit().putString("userCurrency", currencyCode).apply();
 
-                                gender = obj.getString("gender");
-                                prefs.edit().putString("Gender", gender).apply();
+                        Currency userParaSembolu = Currency.getInstance(currencyCode);
+                        currencySymbol = userParaSembolu.getSymbol(userLocale);
+                        prefs.edit().putString("userCurrencySymbol", currencySymbol).apply();
 
-                                birthday = obj.getString("birthday");
-                                prefs.edit().putString("Birthday", birthday).apply();
-
-                                userPhoneNumber = obj.getString("phoneNumber");
-                                prefs.edit().putString("userPhoneNumber", userPhoneNumber).apply();
-
-                                userCountry = obj.getString("country");
-                                prefs.edit().putString("userCountry", userCountry).apply();
-
-                                userDisplayLanguage = obj.getString("language");
-                                prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
-
-                                userStations = obj.getString("stations");
-                                prefs.edit().putString("userStations", userStations).apply();
-
-                                getVariables(prefs);
-                                getSuperVariables(prefs);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        switch (userCountry) {
+                            // US GALLON COUNTRIES
+                            case "BZ":
+                            case "CO":
+                            case "DO":
+                            case "EC":
+                            case "GT":
+                            case "HN":
+                            case "HT":
+                            case "LR":
+                            case "MM":
+                            case "NI":
+                            case "PE":
+                            case "US":
+                            case "SV":
+                                userUnit = getString(R.string.unitSystem2);
+                                break;
+                            // IMPERIAL GALLON COUNTRIES
+                            case "AI":
+                            case "AG":
+                            case "BS":
+                            case "DM":
+                            case "GD":
+                            case "KN":
+                            case "KY":
+                            case "LC":
+                            case "MS":
+                            case "VC":
+                            case "VG":
+                                userUnit = getString(R.string.unitSystem3);
+                                break;
+                            default:
+                                // LITRE COUNTRIES. REST OF THE WORLD.
+                                userUnit = getString(R.string.unitSystem1);
+                                break;
                         }
+                        prefs.edit().putString("userUnit", userUnit).apply();
+                        fetchTaxRates();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
+                } catch (Exception e) {
+                    // Do nothing
+                }
             }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
+        }
     }
 
     public void fetchTaxRates() {
@@ -505,6 +545,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
                 //Adding parameters
                 params.put("country", MainActivity.userCountry);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -515,206 +556,80 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         requestQueue.add(stringRequest);
     }
 
-    void loadMap() {
-        //Detect location and set on map
-        MapsInitializer.initialize(this.getApplicationContext());
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                googleMap.getUiSettings().setScrollGesturesEnabled(false);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setMapToolbarEnabled(false);
-
-                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                    @Override
-                    public void onMyLocationChange(Location arg0) {
-                        Location loc1 = new Location("");
-                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
-                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
-
-                        Location loc2 = new Location("");
-                        loc2.setLatitude(arg0.getLatitude());
-                        loc2.setLongitude(arg0.getLongitude());
-
-                        float distanceInMeters = loc1.distanceTo(loc2);
-
-                        if (distanceInMeters >= mapDefaultStationRange / 2) {
-                            MainActivity.userlat = String.valueOf(arg0.getLatitude());
-                            MainActivity.userlon = String.valueOf(arg0.getLongitude());
-                            prefs.edit().putString("lat", MainActivity.userlat).apply();
-                            prefs.edit().putString("lon", MainActivity.userlon).apply();
-                            getVariables(prefs);
-                            updateMapObject();
-                        }
-                    }
-                });
-                updateMapObject();
-            }
-        });
-    }
-
-    private void updateMapObject() {
-        if (circle != null) {
-            circle.remove();
-        }
-
-        if (googleMap != null) {
-            googleMap.clear();
-            //Draw a circle with radius of 150m
-            circle = googleMap.addCircle(new CircleOptions()
-                    .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
-                    .radius(mapDefaultStationRange)
-                    .strokeColor(Color.RED));
-        }
-
-        // For zooming automatically to the location of the marker
-        LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
-                (cameraPosition));
-
-        //Search stations in a radius of 50m
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + MainActivity.userlat + "," + MainActivity.userlon + "&radius=" + mapDefaultStationRange + "&type=gas_station&key=" + getString(R.string.google_api_key);
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+    void fetchStation(final int stationID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JSON json = new JSON(response);
-                        if (json.key("results").count() > 0) {
-                            // Yes! He is in station. Probably there is only one station in 50m  so get the first value
-                            superGoogleID = json.key("results").index(0).key("place_id").stringValue();
-
-                            superStationName = json.key("results").index(0).key("name").stringValue();
-                            editTextStationName.setText(superStationName);
-
-                            superStationAddress = json.key("results").index(0).key("vicinity").stringValue();
-                            editTextStationAddress.setText(superStationAddress);
-
-                            double lat = json.key("results").index(0).key("geometry").key("location").key("lat").doubleValue();
-                            double lon = json.key("results").index(0).key("geometry").key("location").key("lng").doubleValue();
-                            superStationLocation = lat + ";" + lon;
-
-                            Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                        if (response != null && response.length() > 0) {
                             try {
-                                List<Address> addresses = geo.getFromLocation(lat, lon, 1);
-                                if (addresses.size() > 0) {
-                                    superStationCountry = addresses.get(0).getCountryCode();
-                                } else {
-                                    superStationCountry = "";
-                                }
-                            } catch (Exception e) {
-                                superStationCountry = "";
-                            }
-
-                            LatLng sydney = new LatLng(lat, lon);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress));
-
-                            addStation();
-                        } else {
-                            superStationName = "";
-                            superStationAddress = "";
-                            superStationLocation = "";
-                            superStationCountry = "";
-                            superLicenseNo = "";
-                            superStationLogo = "";
-
-                            editTextStationName.setText(superStationName);
-                            editTextStationAddress.setText(superStationAddress);
-                            editTextStationLicense.setText(superLicenseNo);
-                            stationHint.setTextColor(Color.parseColor("#ff0000"));
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        requestQueue.add(stringRequest);
-    }
-
-    private void addStation() {
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        if (s != null && s.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(s);
+                                JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
-                                if (obj.getInt("isActive") == 1) {
-                                    superStationID = obj.getInt("id");
-                                    prefs.edit().putInt("SuperStationID", superStationID).apply();
 
-                                    // For multi station
-                                    userStations += superStationID + ";";
-                                    prefs.edit().putString("userStations", userStations).apply();
-                                    // For multi station
+                                superStationID = obj.getInt("id");
+                                prefs.edit().putInt("SuperStationID", superStationID).apply();
 
-                                    superStationName = obj.getString("name");
-                                    prefs.edit().putString("SuperStationName", superStationName).apply();
+                                superStationName = obj.getString("name");
+                                prefs.edit().putString("SuperStationName", superStationName).apply();
 
-                                    superStationAddress = obj.getString("vicinity");
-                                    prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+                                superStationAddress = obj.getString("vicinity");
+                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
 
-                                    superStationCountry = obj.getString("country");
-                                    prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+                                superStationCountry = obj.getString("country");
+                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
 
-                                    superStationLocation = obj.getString("location");
-                                    prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+                                superStationLocation = obj.getString("location");
+                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
 
-                                    superGoogleID = obj.getString("googleID");
-                                    prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+                                superGoogleID = obj.getString("googleID");
+                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
-                                    superFacilities = obj.getString("facilities");
-                                    prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+                                superFacilities = obj.getString("facilities");
+                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
 
-                                    superStationLogo = obj.getString("photoURL");
-                                    prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+                                superStationLogo = obj.getString("logoURL");
+                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
-                                    ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
-                                    prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
 
-                                    ownedDieselPrice = (float) obj.getDouble("dieselPrice");
-                                    prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
 
-                                    ownedLPGPrice = (float) obj.getDouble("lpgPrice");
-                                    prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
 
-                                    ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
-                                    prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
-                                    superLicenseNo = obj.getString("licenseNo");
-                                    prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
-                                    editTextStationLicense.setText(superLicenseNo);
+                                superLicenseNo = obj.getString("licenseNo");
+                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
 
-                                    isStationVerified = obj.getInt("isVerified");
-                                    prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+                                isStationVerified = obj.getInt("isVerified");
+                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
 
-                                    isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
-                                    prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
+                                isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
+                                prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
 
-                                    isStationActive = obj.getInt("isActive");
-                                    prefs.edit().putInt("isStationActive", isStationActive).apply();
+                                isDeliveryAvailable = obj.getInt("isDeliveryAvailable");
+                                prefs.edit().putInt("isDeliveryAvailable", isDeliveryAvailable).apply();
 
-                                    if (isStationVerified == 1) {
-                                        stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                        stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
-                                    } else {
-                                        stationHint.setTextColor(Color.parseColor("#00801e"));
-                                    }
-                                }
+                                superLastUpdate = obj.getString("lastUpdated");
+                                prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+                                isSigned = true;
+                                prefs.edit().putBoolean("isSigned", isSigned).apply();
+
+                                isSuperUser = true;
+                                prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
+
+                                getVariables(prefs);
+                                getSuperVariables(prefs);
+
+                                Toast.makeText(AdminWelcome.this, "FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(AdminWelcome.this, AdminMainActivity.class);
+                                startActivity(intent);
+                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -724,7 +639,8 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
+                        volleyError.printStackTrace();
+                        Toast.makeText(AdminWelcome.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -733,122 +649,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("name", superStationName);
-                params.put("vicinity", superStationAddress);
-                params.put("country", superStationCountry);
-                params.put("location", superStationLocation);
-                params.put("googleID", superGoogleID);
-                params.put("photoURL", stationPhotoChooser(superStationName));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    public void updateStation() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String res) {
-                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
-                        if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    // Register process ended redirect user to AdminMainActivity to wait verification process.
-                                    Toast.makeText(AdminWelcome.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
-                                    welcome2.setVisibility(View.GONE);
-                                    welcome3.setVisibility(View.VISIBLE);
-                                    layout5();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AdminWelcome.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(superStationID));
-                params.put("stationName", superStationName);
-                params.put("stationVicinity", superStationAddress);
-                params.put("facilities", "WC;Market;CarWash");
-                params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
-                params.put("dieselPrice", String.valueOf(ownedDieselPrice));
-                params.put("lpgPrice", String.valueOf(ownedLPGPrice));
-                params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
-                params.put("licenseNo", superLicenseNo);
-                params.put("owner", username);
-                params.put("isActive", String.valueOf(1));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    public void updateSuperUser() {
-        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Loading...", "Please wait...", false, false);
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String res) {
-                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
-                        if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    updateStation();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
-                            loading.dismiss();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-                params.put("name", name);
-                params.put("email", email);
-                if (bitmap != null) {
-                    params.put("photo", getStringImage(bitmap));
-                }
-                params.put("gender", gender);
-                params.put("birthday", birthday);
-                params.put("phoneNumber", userPhoneNumber);
-                params.put("country", userCountry);
-                params.put("language", userDisplayLanguage);
-                params.put("stationIDs", userStations);
+                params.put("stationID", String.valueOf(stationID));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -938,12 +739,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(AdminWelcome.this)) {
-                  /*  FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(AdminWelcome.this);
-                            */
-                    Toast.makeText(AdminWelcome.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                    ImagePicker.create(AdminWelcome.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(AdminWelcome.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -1119,7 +915,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                                     Toast.makeText(AdminWelcome.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(AdminWelcome.this, "Lütfen istasyon lisans numarasını giriniz)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AdminWelcome.this, "Lütfen istasyon lisans numarasını giriniz", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(AdminWelcome.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
@@ -1135,74 +931,307 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         /* LAYOUT 04 END */
     }
 
-    private void Localization() {
-        if (userlat != null && userlon != null) {
-            if (userlat.length() > 0 && userlon.length() > 0) {
-                Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
-                try {
-                    List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
-                    if (addresses.size() > 0) {
-                        userCountry = addresses.get(0).getCountryCode();
-                        prefs.edit().putString("userCountry", userCountry).apply();
+    void loadMap() {
+        //Detect location and set on map
+        MapsInitializer.initialize(this.getApplicationContext());
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(false);
+                googleMap.getUiSettings().setCompassEnabled(true);
+                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-                        userCountryName = addresses.get(0).getCountryName();
-                        prefs.edit().putString("userCountryName", userCountryName).apply();
+                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(Location arg0) {
+                        Location loc1 = new Location("");
+                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
 
-                        userDisplayLanguage = Locale.getDefault().getLanguage();
-                        prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
+                        Location loc2 = new Location("");
+                        loc2.setLatitude(arg0.getLatitude());
+                        loc2.setLongitude(arg0.getLongitude());
 
-                        Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());
-                        currencyCode = Currency.getInstance(userLocale).getCurrencyCode();
-                        prefs.edit().putString("userCurrency", currencyCode).apply();
+                        float distanceInMeters = loc1.distanceTo(loc2);
 
-                        Currency userParaSembolu = Currency.getInstance(currencyCode);
-                        currencySymbol = userParaSembolu.getSymbol(userLocale);
-                        prefs.edit().putString("userCurrencySymbol", currencySymbol).apply();
-
-                        switch (userCountry) {
-                            // US GALLON COUNTRIES
-                            case "BZ":
-                            case "CO":
-                            case "DO":
-                            case "EC":
-                            case "GT":
-                            case "HN":
-                            case "HT":
-                            case "LR":
-                            case "MM":
-                            case "NI":
-                            case "PE":
-                            case "US":
-                            case "SV":
-                                userUnit = getString(R.string.unitSystem2);
-                                break;
-                            // IMPERIAL GALLON COUNTRIES
-                            case "AI":
-                            case "AG":
-                            case "BS":
-                            case "DM":
-                            case "GD":
-                            case "KN":
-                            case "KY":
-                            case "LC":
-                            case "MS":
-                            case "VC":
-                            case "VG":
-                                userUnit = getString(R.string.unitSystem3);
-                                break;
-                            default:
-                                // LITRE COUNTRIES. REST OF THE WORLD.
-                                userUnit = getString(R.string.unitSystem1);
-                                break;
+                        if (distanceInMeters >= mapDefaultStationRange / 2) {
+                            MainActivity.userlat = String.valueOf(arg0.getLatitude());
+                            MainActivity.userlon = String.valueOf(arg0.getLongitude());
+                            prefs.edit().putString("lat", MainActivity.userlat).apply();
+                            prefs.edit().putString("lon", MainActivity.userlon).apply();
+                            getVariables(prefs);
+                            updateMapObject();
                         }
-                        prefs.edit().putString("userUnit", userUnit).apply();
-                        fetchTaxRates();
                     }
-                } catch (Exception e) {
-                    // Do nothing
-                }
+                });
+                updateMapObject();
             }
+        });
+    }
+
+    private void updateMapObject() {
+        if (circle != null) {
+            circle.remove();
         }
+
+        if (googleMap != null) {
+            googleMap.clear();
+            //Draw a circle with radius of 150m
+            circle = googleMap.addCircle(new CircleOptions()
+                    .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
+                    .radius(mapDefaultStationRange)
+                    .fillColor(0x220000FF)
+                    .strokeColor(Color.RED));
+        }
+
+        // For zooming automatically to the location of the marker
+        LatLng mCurrentLocation = new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(17f).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
+                (cameraPosition));
+
+
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                superStationID = obj.getInt("id");
+                                prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+                                // For multi station
+                                userStations += superStationID + ";";
+                                prefs.edit().putString("userStations", userStations).apply();
+                                // For multi station
+
+                                superStationName = obj.getString("name");
+                                prefs.edit().putString("SuperStationName", superStationName).apply();
+
+                                superStationAddress = obj.getString("vicinity");
+                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
+                                superStationCountry = obj.getString("country");
+                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+                                superStationLocation = obj.getString("location");
+                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+                                superGoogleID = obj.getString("googleID");
+                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+                                superFacilities = obj.getString("facilities");
+                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+
+                                superStationLogo = obj.getString("logoURL");
+                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+
+                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
+                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+
+                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
+                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+
+                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
+                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+                                superLicenseNo = obj.getString("licenseNo");
+                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+                                editTextStationLicense.setText(superLicenseNo);
+
+                                isStationVerified = obj.getInt("isVerified");
+                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+                                isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
+                                prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
+
+                                if (isStationVerified == 1) {
+                                    stationHint.setTextColor(Color.parseColor("#ff0000"));
+                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+                                } else {
+                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                }
+
+                                loadStationDetails();
+                            } catch (JSONException e) {
+                                superStationName = "";
+                                superStationAddress = "";
+                                superStationLocation = "";
+                                superStationCountry = "";
+                                superLicenseNo = "";
+                                superStationLogo = "";
+                                stationHint.setTextColor(Color.parseColor("#ff0000"));
+                                loadStationDetails();
+                                Toast.makeText(AdminWelcome.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                        } else {
+                            superStationName = "";
+                            superStationAddress = "";
+                            superStationLocation = "";
+                            superStationCountry = "";
+                            superLicenseNo = "";
+                            superStationLogo = "";
+                            stationHint.setTextColor(Color.parseColor("#ff0000"));
+                            loadStationDetails();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        superStationName = "";
+                        superStationAddress = "";
+                        superStationLocation = "";
+                        superStationCountry = "";
+                        superLicenseNo = "";
+                        superStationLogo = "";
+                        stationHint.setTextColor(Color.parseColor("#ff0000"));
+                        loadStationDetails();
+
+                        Toast.makeText(AdminWelcome.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                params.put("location", userlat + ";" + userlon);
+                params.put("radius", String.valueOf(mapDefaultStationRange));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    void loadStationDetails() {
+        editTextStationName.setText(superStationName);
+        editTextStationAddress.setText(superStationAddress);
+        editTextStationLicense.setText(superLicenseNo);
+    }
+
+    public void updateStation() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String res) {
+                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
+                        if (res != null && res.length() > 0) {
+                            switch (res) {
+                                case "Success":
+                                    // Register process ended redirect user to AdminMainActivity to wait verification process.
+                                    Toast.makeText(AdminWelcome.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
+                                    welcome2.setVisibility(View.GONE);
+                                    welcome3.setVisibility(View.VISIBLE);
+                                    layout5();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(AdminWelcome.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(superStationID));
+                params.put("licenseNo", superLicenseNo);
+                params.put("owner", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateSuperUser() {
+        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Loading...", "Please wait...", false, false);
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String res) {
+                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
+                        if (res != null && res.length() > 0) {
+                            switch (res) {
+                                case "Success":
+                                    updateStation();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                            loading.dismiss();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("name", name);
+                params.put("email", email);
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                }
+                params.put("gender", gender);
+                params.put("birthday", birthday);
+                params.put("phoneNumber", userPhoneNumber);
+                params.put("country", userCountry);
+                params.put("language", userDisplayLanguage);
+                params.put("stationIDs", userStations);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     void layout5() {
@@ -1228,150 +1257,23 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         });
     }
 
-    void fetchStation(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            JSONObject obj = res.getJSONObject(0);
-
-                            superStationID = obj.getInt("id");
-                            prefs.edit().putInt("SuperStationID", superStationID).apply();
-
-                            superStationName = obj.getString("name");
-                            prefs.edit().putString("SuperStationName", superStationName).apply();
-
-                            superStationCountry = obj.getString("country");
-                            prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
-
-                            superStationLocation = obj.getString("location");
-                            prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-                            superGoogleID = obj.getString("googleID");
-                            prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
-
-                            superFacilities = obj.getString("facilities");
-                            prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
-
-                            superStationLogo = obj.getString("photoURL");
-                            prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
-
-                            ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
-                            prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
-
-                            ownedDieselPrice = (float) obj.getDouble("dieselPrice");
-                            prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
-
-                            ownedLPGPrice = (float) obj.getDouble("lpgPrice");
-                            prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
-
-                            ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
-                            prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
-
-                            superLicenseNo = obj.getString("licenseNo");
-                            prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
-
-                            isStationVerified = obj.getInt("isVerified");
-                            prefs.edit().putInt("isStationVerified", isStationVerified).apply();
-
-                            isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
-                            prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
-
-                            isStationActive = obj.getInt("isActive");
-                            prefs.edit().putInt("isStationActive", isStationActive).apply();
-
-                            if (isStationVerified == 1) {
-                                isSigned = true;
-                                prefs.edit().putBoolean("isSigned", isSigned).apply();
-                                isSuperUser = true;
-                                prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
-
-                                getVariables(prefs);
-                                getSuperVariables(prefs);
-
-                                Toast.makeText(AdminWelcome.this, "Zaten daha önce hesabınız onaylanmış. FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent intent = new Intent(AdminWelcome.this, AdminMainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }, 1500);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(stationID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CharSequence now = android.text.format.DateFormat.format(universalTimeFormat, new Date());
-        String fileName = now + ".jpg";
+        if (requestCode == GOOGLE_LOGIN) {
+            googleSignIn(data);
+        }
 
-        switch (requestCode) {
-            case MainActivity.GOOGLE_LOGIN:
-                googleSignIn(data);
-                break;
-       /*     case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    photo = aq.get(0);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos");
-                    folder.mkdirs();
-
-                    UCrop.of(Uri.parse("file://" + photo), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(AdminWelcome.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        Glide.with(this).load(bitmap).apply(options).into(userPhoto);
-                        prefs.edit().putString("ProfilePhoto", Environment.getExternalStorageDirectory() + "/FuelSpot/UserPhotos/" + fileName).apply();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(AdminWelcome.this, cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-                */
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(bitmap).apply(options).into(userPhoto);
+                photo = "https://fuel-spot.com/uploads/superusers/" + username + ".jpg";
+                prefs.edit().putString("ProfilePhoto", photo).apply();
+            }
         }
     }
 
@@ -1395,10 +1297,8 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
                                 if (userStations != null && userStations.length() > 0) {
                                     // S/he already verified by us. Fetch station and if any of the stations are verified redirect to MainActivity
-                                    for (int i = 0; i < userStations.split(";").length; i++) {
-                                        superStationID = Integer.parseInt(userStations.split(";")[i]);
-                                        fetchStation(superStationID);
-                                    }
+                                    superStationID = Integer.parseInt(userStations.split(";")[0]);
+                                    fetchStation(superStationID);
                                 } else {
                                     welcome2.setVisibility(View.VISIBLE);
                                     welcome1.setVisibility(View.GONE);
@@ -1417,10 +1317,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
             }
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
-              /*    FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(AdminWelcome.this); */
+                    ImagePicker.create(AdminWelcome.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }

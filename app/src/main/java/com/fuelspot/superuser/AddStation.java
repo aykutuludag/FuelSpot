@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,13 +24,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -41,11 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-
-import eu.amirs.JSON;
 
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
@@ -53,7 +44,6 @@ import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.name;
-import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
@@ -220,16 +210,16 @@ public class AddStation extends AppCompatActivity {
                             prefs.edit().putString("lat", userlat).apply();
                             prefs.edit().putString("lon", userlon).apply();
                             getVariables(prefs);
-                            updateMapObject();
+                            // updateMapObject();
                         }
                     }
                 });
-                updateMapObject();
+                // updateMapObject();
             }
         });
     }
 
-    private void updateMapObject() {
+   /* private void updateMapObject() {
         if (circle != null) {
             circle.remove();
         }
@@ -306,7 +296,7 @@ public class AddStation extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         requestQueue.add(stringRequest);
-    }
+    }*/
 
     private void addStation() {
         //Showing the progress dialog

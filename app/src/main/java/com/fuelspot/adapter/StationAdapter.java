@@ -29,7 +29,9 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.currencySymbol;
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
+
     private List<StationItem> feedItemList;
+    private String whichScreen;
     private Context mContext;
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -37,27 +39,34 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             ViewHolder holder = (ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
-            Intent intent = new Intent(mContext, StationDetails.class);
-            intent.putExtra("STATION_ID", feedItemList.get(position).getID());
-            intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
-            intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
-            intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
-            intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
-            intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
-            intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
-            intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
-            intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
-            intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
-            intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
-            intent.putExtra("IS_VERIFIED", feedItemList.get(position).getIsVerified());
-            intent.putExtra("STATION_FACILITIES", feedItemList.get(position).getFacilities());
-            mContext.startActivity(intent);
+            switch (whichScreen) {
+                case "NEARBY_STATIONS":
+                    Intent intent = new Intent(mContext, StationDetails.class);
+                    intent.putExtra("STATION_ID", feedItemList.get(position).getID());
+                    intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
+                    intent.putExtra("STATION_VICINITY", feedItemList.get(position).getVicinity());
+                    intent.putExtra("STATION_LOCATION", feedItemList.get(position).getLocation());
+                    intent.putExtra("STATION_DISTANCE", feedItemList.get(position).getDistance());
+                    intent.putExtra("STATION_LASTUPDATED", feedItemList.get(position).getLastUpdated());
+                    intent.putExtra("STATION_GASOLINE", feedItemList.get(position).getGasolinePrice());
+                    intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
+                    intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
+                    intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+                    intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
+                    intent.putExtra("IS_VERIFIED", feedItemList.get(position).getIsVerified());
+                    intent.putExtra("STATION_FACILITIES", feedItemList.get(position).getFacilities());
+                    mContext.startActivity(intent);
+                    break;
+                case "SUPERUSER_STATIONS":
+                    break;
+            }
         }
     };
 
-    public StationAdapter(Context context, List<StationItem> feedItemList) {
+    public StationAdapter(Context context, List<StationItem> feedItemList, String whichPage) {
         this.feedItemList = feedItemList;
         this.mContext = context;
+        this.whichScreen = whichPage;
     }
 
     @NonNull
@@ -151,7 +160,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             super(itemView);
             background = itemView.findViewById(R.id.single_station);
             stationName = itemView.findViewById(R.id.station_name);
-            // vicinity = itemView.findViewById(R.id.station_vicinity);
             gasolinePrice = itemView.findViewById(R.id.priceGasoline);
             dieselPrice = itemView.findViewById(R.id.priceDiesel);
             lpgPrice = itemView.findViewById(R.id.priceLPG);

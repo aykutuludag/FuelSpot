@@ -14,30 +14,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -54,14 +44,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -77,13 +61,9 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     // General variables for SuperUser
     public static boolean superPremium;
 
-    public static int isStationVerified, isMobilePaymentAvailable, superStationID, isStationActive;
+    public static int isStationVerified, isMobilePaymentAvailable, isDeliveryAvailable, superStationID;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
-
-    // Multiple station
-    public static List<StationItem> listOfStation = new ArrayList<>();
-    ListPopupWindow popupWindow;
 
     boolean doubleBackToExitPressedOnce;
     RequestQueue queue;
@@ -118,7 +98,8 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         superLicenseNo = prefs.getString("SuperLicenseNo", "");
         isStationVerified = prefs.getInt("isStationVerified", 0);
         isMobilePaymentAvailable = prefs.getInt("isMobilePaymentAvaiable", 0);
-        isStationActive = prefs.getInt("isStationActive", 1);
+        isDeliveryAvailable = prefs.getInt("isDeliveryAvailable", 0);
+        superLastUpdate = prefs.getString("SuperLastUpdate", "");
     }
 
     @Override
@@ -145,7 +126,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         getVariables(prefs);
         getSuperVariables(prefs);
         queue = Volley.newRequestQueue(this);
-        popupWindow = new ListPopupWindow(this);
 
         // Last location
         locLastKnown = new Location("");
@@ -158,9 +138,9 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
         fragments.add(FragmentMyStation.newInstance());
+        fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentSuperProfile.newInstance());
-        fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentSettings.newInstance());
         builder.rootFragments(fragments);
         mFragNavController = builder.build();
@@ -168,9 +148,9 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorPrimaryDark);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.stationPage);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.stationPage);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
         AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
 
         bottomNavigation.addItem(item1);
@@ -285,84 +265,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }
 
-    public void fetchUserStations() {
-        listOfStation.clear();
-        if (userStations != null && userStations.length() > 0) {
-            String[] stationIDs = userStations.split(";");
-            for (String stationID1 : stationIDs) {
-                fetchSingleStation(Integer.parseInt(stationID1));
-            }
-        }
-    }
-
-    void fetchSingleStation(final int sID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                StationItem item = new StationItem();
-                                item.setID(obj.getInt("id"));
-                                item.setStationName(obj.getString("name"));
-                                item.setVicinity(obj.getString("vicinity"));
-                                item.setCountryCode(obj.getString("country"));
-                                item.setLocation(obj.getString("location"));
-                                item.setGoogleMapID(obj.getString("googleID"));
-                                item.setLicenseNo(obj.getString("licenseNo"));
-                                item.setOwner(obj.getString("owner"));
-                                item.setPhotoURL(obj.getString("photoURL"));
-                                item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
-                                item.setDieselPrice((float) obj.getDouble("dieselPrice"));
-                                item.setLpgPrice((float) obj.getDouble("lpgPrice"));
-                                item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                item.setIsVerified(obj.getInt("isVerified"));
-                                item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
-                                item.setIsActive(obj.getInt("isActive"));
-                                item.setLastUpdated(obj.getString("lastUpdated"));
-
-                                //DISTANCE START
-                                Location loc = new Location("");
-                                String[] stationKonum = item.getLocation().split(";");
-                                loc.setLatitude(Double.parseDouble(stationKonum[0]));
-                                loc.setLongitude(Double.parseDouble(stationKonum[1]));
-                                float uzaklik = locLastKnown.distanceTo(loc);
-                                item.setDistance((int) uzaklik);
-                                //DISTANCE END
-
-                                listOfStation.add(item);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(sID));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        queue.add(stringRequest);
-    }
-
-    void openStationChoosePopup(View parent) {
+    /*void openStationChoosePopup(View parent) {
         if (listOfStation != null && listOfStation.size() > 0) {
             if (listOfStation.get(listOfStation.size() - 1).getID() != -999) {
                 StationItem item = new StationItem();
@@ -388,9 +291,9 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
             });
             popupWindow.show();
         }
-    }
+    }*/
 
-    void changeStation(int position) {
+    /*void changeStation(int position) {
         StationItem item = listOfStation.get(position);
 
         superStationID = item.getID();
@@ -438,9 +341,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         isMobilePaymentAvailable = item.getHasSupportMobilePayment();
         prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
 
-        isStationActive = item.getIsActive();
-        prefs.edit().putInt("isStationActive", isStationActive).apply();
-
         superLastUpdate = item.getLastUpdated();
 
         getSuperVariables(prefs);
@@ -451,7 +351,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         }
 
         Snackbar.make(findViewById(R.id.pager), "İSTASYON SEÇİLDİ: " + superStationName, Snackbar.LENGTH_SHORT).show();
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -492,24 +392,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     public void onResume() {
         super.onResume();
-        fetchUserStations();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_admin_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_showStations:
-                openStationChoosePopup(bottomNavigation);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

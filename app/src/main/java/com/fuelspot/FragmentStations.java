@@ -68,6 +68,7 @@ import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -139,7 +140,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             locLastKnown.setLongitude(Double.parseDouble(userlon));
 
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(5000);
+            mLocationRequest.setInterval(10000);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationCallback = new LocationCallback() {
@@ -243,7 +244,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             });
 
             mRecyclerView = rootView.findViewById(R.id.stationView);
-            mAdapter = new StationAdapter(getActivity(), shortStationList);
+            mAdapter = new StationAdapter(getActivity(), shortStationList, "NEARBY_STATIONS");
             mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
             mRecyclerView.setAdapter(mAdapter);
@@ -254,7 +255,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             seeAllStations.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter = new StationAdapter(getActivity(), fullStationList);
+                    mAdapter = new StationAdapter(getActivity(), fullStationList, "NEARBY_STATIONS");
                     mAdapter.notifyDataSetChanged();
                     mRecyclerView.setAdapter(mAdapter);
                     seeAllStations.setVisibility(View.GONE);
@@ -361,12 +362,14 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
 
                                     if (fullStationList.size() <= 5) {
                                         shortStationList.add(item);
-                                    } else {
-                                        seeAllStations.setVisibility(View.VISIBLE);
                                     }
 
                                     // Add marker
                                     addMarker(item);
+                                }
+
+                                if (fullStationList.size() > 5) {
+                                    seeAllStations.setVisibility(View.VISIBLE);
                                 }
 
                                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
@@ -378,7 +381,9 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                                 proggressBar.setVisibility(View.GONE);
 
                                 // Create a fence
-                                AlarmBuilder(getActivity());
+                                if (!isSuperUser) {
+                                    AlarmBuilder(getActivity());
+                                }
                             } catch (JSONException e) {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -33,11 +33,9 @@ import com.fuelspot.Application;
 import com.fuelspot.ProfileEditActivity;
 import com.fuelspot.R;
 import com.fuelspot.StoreActivity;
-import com.fuelspot.UserComments;
 import com.fuelspot.UserFavorites;
-import com.fuelspot.adapter.CommentAdapter;
-import com.fuelspot.model.CommentItem;
-import com.fuelspot.model.VehicleItem;
+import com.fuelspot.adapter.StationAdapter;
+import com.fuelspot.model.StationItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -52,28 +50,22 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
-import static com.fuelspot.MainActivity.userFSMoney;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.AdminMainActivity.userStations;
 
 public class FragmentSuperProfile extends Fragment {
 
-    public static List<VehicleItem> userAutomobileList = new ArrayList<>();
-    public static List<CommentItem> userCommentList = new ArrayList<>();
-    static List<String> vehicleIDs = new ArrayList<>();
-
-    RecyclerView mRecyclerView, mRecyclerView2;
-    RecyclerView.Adapter mAdapter, mAdapter2;
+    public static List<StationItem> listOfOwnedStations = new ArrayList<>();
+    RecyclerView mRecyclerView;
+    GridLayoutManager mLayoutManager;
+    RecyclerView.Adapter mAdapter;
     TextView title;
     RequestOptions options;
     CircleImageView userProfileHolder;
     View headerView;
-    RelativeLayout userNoCommentLayout;
-    Button buttonSeeAllComments;
-    TextView textViewFMoney;
     RequestQueue requestQueue;
     SharedPreferences prefs;
     View rootView;
@@ -113,34 +105,22 @@ public class FragmentSuperProfile extends Fragment {
             });
 
             // Automobiles
-            mRecyclerView = rootView.findViewById(R.id.automobileView);
+            mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
+            mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
+            mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setNestedScrollingEnabled(false);
+
 
             // Comments
             title = rootView.findViewById(R.id.titleComment);
-            if (isSuperUser) {
-                title.setText("Son cevaplarınız");
-            }
-
-            userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
-            mRecyclerView2 = rootView.findViewById(R.id.commentView);
-
-            buttonSeeAllComments = rootView.findViewById(R.id.button_seeAllComments);
-            buttonSeeAllComments.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), UserComments.class);
-                    startActivity(intent);
-                }
-            });
 
             loadProfile();
-            fetchComments();
         }
+
         return rootView;
-    }
-
-    void parseUserStations() {
-
     }
 
     void loadProfile() {
@@ -153,14 +133,10 @@ public class FragmentSuperProfile extends Fragment {
             Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
         }
 
-        textViewFMoney = headerView.findViewById(R.id.textViewFMoney);
-        String dummyMoneyText = userFSMoney + " " + currencySymbol;
-        textViewFMoney.setText(dummyMoneyText);
-
         TextView userusername = headerView.findViewById(R.id.userUsername);
         userusername.setText(username);
 
-        Button myWallet = headerView.findViewById(R.id.button_wallet);
+        Button myWallet = headerView.findViewById(R.id.button_store);
         myWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,21 +149,12 @@ public class FragmentSuperProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isSuperUser) {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help"));
-                } else {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help-for-superuser"));
-                }
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#212121"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help-for-superuser"));
             }
         });
 
@@ -199,70 +166,75 @@ public class FragmentSuperProfile extends Fragment {
                 startActivity(intent);
             }
         });
+
+        parseUserStations();
     }
 
-    public void fetchComments() {
-        userCommentList.clear();
-
-        final String whichApi, whichParamater, whichValue;
-        if (isSuperUser) {
-            whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
-            whichParamater = "stationID";
-            whichValue = String.valueOf(superStationID);
-        } else {
-            whichApi = getString(R.string.API_FETCH_COMMENTS);
-            whichParamater = "username";
-            whichValue = username;
+    void parseUserStations() {
+        listOfOwnedStations.clear();
+        if (userStations != null && userStations.length() > 0) {
+            String[] stationIDs = userStations.split(";");
+            for (String stationID1 : stationIDs) {
+                if (stationID1.length() > 0) {
+                    fetchSingleStation(Integer.parseInt(stationID1));
+                }
+            }
         }
+    }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, whichApi,
+    void fetchSingleStation(final int sID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            List<CommentItem> dummyList = new ArrayList<>();
                             try {
                                 JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
+                                JSONObject obj = res.getJSONObject(0);
 
-                                    CommentItem item = new CommentItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setComment(obj.getString("comment"));
-                                    item.setTime(obj.getString("time"));
-                                    item.setStationID(obj.getInt("station_id"));
-                                    item.setUsername(obj.getString("username"));
-                                    item.setProfile_pic(obj.getString("user_photo"));
-                                    item.setRating(obj.getInt("stars"));
-                                    item.setAnswer(obj.getString("answer"));
-                                    item.setReplyTime(obj.getString("replyTime"));
-                                    item.setLogo(obj.getString("logo"));
-                                    userCommentList.add(item);
+                                StationItem item = new StationItem();
+                                item.setID(obj.getInt("id"));
+                                item.setStationName(obj.getString("name"));
+                                item.setVicinity(obj.getString("vicinity"));
+                                item.setCountryCode(obj.getString("country"));
+                                item.setLocation(obj.getString("location"));
+                                item.setGoogleMapID(obj.getString("googleID"));
+                                item.setLicenseNo(obj.getString("licenseNo"));
+                                item.setOwner(obj.getString("owner"));
+                                item.setPhotoURL(obj.getString("logoURL"));
+                                item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                item.setIsVerified(obj.getInt("isVerified"));
+                                item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
+                                item.setIsActive(obj.getInt("isActive"));
+                                item.setLastUpdated(obj.getString("lastUpdated"));
 
-                                    if (i < 3) {
-                                        dummyList.add(item);
-                                    } else {
-                                        buttonSeeAllComments.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                                mAdapter2 = new CommentAdapter(getActivity(), dummyList, "USER_COMMENTS");
-                                GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                                //DISTANCE START
+                                Location locLastKnow = new Location("");
+                                locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                locLastKnow.setLongitude(Double.parseDouble(userlon));
 
-                                mAdapter2.notifyDataSetChanged();
-                                mRecyclerView2.setAdapter(mAdapter2);
-                                mRecyclerView2.setLayoutManager(mLayoutManager);
+                                Location loc = new Location("");
+                                String[] stationKonum = item.getLocation().split(";");
+                                loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                float uzaklik = locLastKnow.distanceTo(loc);
+                                item.setDistance((int) uzaklik);
+                                //DISTANCE END
+
+                                listOfOwnedStations.add(item);
+                                mAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {
-                                userNoCommentLayout.setVisibility(View.VISIBLE);
+                                e.printStackTrace();
                             }
-                        } else {
-                            userNoCommentLayout.setVisibility(View.VISIBLE);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        userNoCommentLayout.setVisibility(View.VISIBLE);
+                    public void onErrorResponse(VolleyError volleyError) {
                     }
                 }) {
             @Override
@@ -271,7 +243,7 @@ public class FragmentSuperProfile extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put(whichParamater, whichValue);
+                params.put("stationID", String.valueOf(sID));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -281,13 +253,5 @@ public class FragmentSuperProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (userAutomobileList.size() == 0) {
-            parseUserStations();
-        }
     }
 }

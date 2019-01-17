@@ -55,7 +55,6 @@ import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
 
 public class FragmentProfile extends Fragment {
 
@@ -154,7 +153,7 @@ public class FragmentProfile extends Fragment {
         TextView userusername = headerView.findViewById(R.id.userUsername);
         userusername.setText(username);
 
-        Button myWallet = headerView.findViewById(R.id.button_wallet);
+        Button myWallet = headerView.findViewById(R.id.button_store);
         myWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,6 +192,8 @@ public class FragmentProfile extends Fragment {
                 startActivity(intent);
             }
         });
+
+        parseUserVehicles();
     }
 
     public void parseUserVehicles() {
@@ -279,18 +280,7 @@ public class FragmentProfile extends Fragment {
     public void fetchComments() {
         userCommentList.clear();
 
-        final String whichApi, whichParamater, whichValue;
-        if (isSuperUser) {
-            whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
-            whichParamater = "stationID";
-            whichValue = String.valueOf(superStationID);
-        } else {
-            whichApi = getString(R.string.API_FETCH_COMMENTS);
-            whichParamater = "username";
-            whichValue = username;
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, whichApi,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -346,7 +336,7 @@ public class FragmentProfile extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put(whichParamater, whichValue);
+                params.put("username", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -356,13 +346,5 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (userAutomobileList.size() == 0) {
-            parseUserVehicles();
-        }
     }
 }
