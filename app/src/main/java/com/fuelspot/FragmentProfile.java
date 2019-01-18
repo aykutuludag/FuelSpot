@@ -33,6 +33,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.VehicleAdapter;
+import com.fuelspot.model.BankingItem;
 import com.fuelspot.model.CommentItem;
 import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.analytics.HitBuilders;
@@ -45,12 +46,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.userVehicles;
@@ -60,6 +61,7 @@ public class FragmentProfile extends Fragment {
 
     public static List<VehicleItem> userAutomobileList = new ArrayList<>();
     public static List<CommentItem> userCommentList = new ArrayList<>();
+    public static List<BankingItem> userBankingList = new ArrayList<>();
     static List<String> vehicleIDs = new ArrayList<>();
 
     RecyclerView mRecyclerView, mRecyclerView2;
@@ -112,12 +114,6 @@ public class FragmentProfile extends Fragment {
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
 
-            // Comments
-            title = rootView.findViewById(R.id.titleComment);
-            if (isSuperUser) {
-                title.setText("Son cevaplarınız");
-            }
-
             userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
             mRecyclerView2 = rootView.findViewById(R.id.commentView);
 
@@ -130,7 +126,7 @@ public class FragmentProfile extends Fragment {
                 }
             });
 
-            loadProfile();
+            fetchBanking();
             fetchComments();
         }
         return rootView;
@@ -147,8 +143,6 @@ public class FragmentProfile extends Fragment {
         }
 
         textViewFMoney = headerView.findViewById(R.id.textViewFMoney);
-        String dummyMoneyText = userFSMoney + " " + currencySymbol;
-        textViewFMoney.setText(dummyMoneyText);
 
         TextView userusername = headerView.findViewById(R.id.userUsername);
         userusername.setText(username);
@@ -166,21 +160,12 @@ public class FragmentProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isSuperUser) {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help"));
-                } else {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help-for-superuser"));
-                }
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#212121"));
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help"));
             }
         });
 
@@ -203,8 +188,10 @@ public class FragmentProfile extends Fragment {
         if (userVehicles != null && userVehicles.length() > 0) {
             String[] dummy = userVehicles.split(";");
             for (int i = 0; i < dummy.length; i++) {
-                vehicleIDs.add(i, dummy[i]);
-                fetchSingleVehicle(Integer.parseInt(dummy[i]));
+                if (dummy[i].length() > 0) {
+                    vehicleIDs.add(i, dummy[i]);
+                    fetchSingleVehicle(Integer.parseInt(dummy[i]));
+                }
             }
         } else {
             Toast.makeText(getActivity(), "Sistemde kayıtlı aracınız bulunamadı...", Toast.LENGTH_LONG).show();
@@ -266,6 +253,65 @@ public class FragmentProfile extends Fragment {
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(aracID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    void fetchBanking() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_BANKING),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    BankingItem item = new BankingItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setType(obj.getString("processType"));
+                                    item.setCurrency(obj.getString("currency"));
+                                    item.setCountry(obj.getString("country"));
+                                    item.setAmount((float) obj.getDouble("amount"));
+                                    item.setPreviousBalance((float) obj.getDouble("previous_balance"));
+                                    item.setCurrentBalance((float) obj.getDouble("current_balance"));
+                                    item.setTransactionTime(obj.getString("time"));
+                                    item.setNotes(obj.getString("notes"));
+                                    userBankingList.add(item);
+                                }
+
+                                userFSMoney = (float) res.getJSONObject(0).getDouble("current_balance");
+                                String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " " + currencySymbol;
+                                textViewFMoney.setText(dummyMoneyText);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -346,5 +392,15 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (headerView != null) {
+            loadProfile();
+        } else {
+            Toast.makeText(getActivity(), "Profil yüklenemedi.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

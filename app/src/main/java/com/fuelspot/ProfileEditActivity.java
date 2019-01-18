@@ -22,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,12 +48,6 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,7 +60,6 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.MainActivity.GOOGLE_PLACE_AUTOCOMPLETE;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
@@ -139,6 +131,25 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         // Setting name
         editName.setText(name);
+        editName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    name = s.toString();
+                    editor.putString("Name", name);
+                }
+            }
+        });
 
         // Setting email
         editMail.setText(email);
@@ -155,9 +166,11 @@ public class ProfileEditActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0 && s.toString().contains("@")) {
-                    email = s.toString();
-                    editor.putString("Email", email);
+                if (s != null && s.length() > 0) {
+                    if (s.toString().contains("@")) {
+                        email = s.toString();
+                        editor.putString("Email", email);
+                    }
                 }
             }
         });
@@ -180,17 +193,22 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //  Setting location and retrieving changes
         editLocation.setText(location);
-        editLocation.setOnClickListener(new View.OnClickListener() {
+        editLocation.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                try {
-                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setCountry(userCountry).setTypeFilter(Place.TYPE_ADMINISTRATIVE_AREA_LEVEL_1).build();
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter).build(ProfileEditActivity.this);
-                    startActivityForResult(intent, GOOGLE_PLACE_AUTOCOMPLETE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    location = s.toString();
+                    editor.putString("Location", location);
                 }
             }
         });
@@ -347,6 +365,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
                 //Adding parameters
                 params.put("username", username);
+                params.put("name", name);
                 params.put("email", email);
                 params.put("phoneNumber", userPhoneNumber);
                 if (bitmap != null) {
@@ -403,7 +422,11 @@ public class ProfileEditActivity extends AppCompatActivity {
                 return true;
             case R.id.navigation_save:
                 if (isNetworkConnected(this)) {
-                    updateUserInfo();
+                    if (email.contains("@")) {
+                        updateUserInfo();
+                    } else {
+                        Toast.makeText(ProfileEditActivity.this, "Lütfen geçerli bir e-posta adresi giriniz", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
                 }
@@ -436,21 +459,10 @@ public class ProfileEditActivity extends AppCompatActivity {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(bitmap).apply(options).into(userPic);
+                Glide.with(this).load(image.getPath()).apply(options).into(userPic);
                 photo = "https://fuel-spot.com/uploads/users/" + username + ".jpg";
                 editor.putString("ProfilePhoto", photo);
             }
-        }
-
-        // AUTOCOMPLETE
-        if (requestCode == GOOGLE_PLACE_AUTOCOMPLETE && resultCode == RESULT_OK) {
-            Place place = PlaceAutocomplete.getPlace(this, data);
-            location = place.getAddress().toString();
-            editLocation.setText(location);
-            editor.putString("Location", location);
-        } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-            Status status = PlaceAutocomplete.getStatus(this, data);
-            Log.i("Error", status.getStatusMessage());
         }
     }
 

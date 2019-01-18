@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -91,6 +94,8 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.prefs;
+import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 
@@ -101,9 +106,10 @@ public class StationDetails extends AppCompatActivity {
     public static float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
     public static String lastUpdated, facilitiesOfStation, stationName, stationVicinity, stationLocation, iconURL, userComment;
     public static boolean hasAlreadyCommented;
+    public static List<CommentItem> stationCommentList = new ArrayList<>();
+    public static List<CampaignItem> campaignList = new ArrayList<>();
 
     CircleImageView stationIcon;
-    public static List<CommentItem> stationCommentList = new ArrayList<>();
     List<Entry> gasolinePriceHistory = new ArrayList<>();
     List<Entry> dieselPriceHistory = new ArrayList<>();
     List<Entry> lpgPriceHistory = new ArrayList<>();
@@ -113,7 +119,6 @@ public class StationDetails extends AppCompatActivity {
     TextView noCampaignText, noCommentText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
     RecyclerView mRecyclerView, mRecyclerView2;
     RecyclerView.Adapter mAdapter, mAdapter2;
-    List<CampaignItem> campaignList = new ArrayList<>();
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
@@ -132,6 +137,8 @@ public class StationDetails extends AppCompatActivity {
     ImageView reportPricePhoto;
     RequestOptions options;
     WebView webview;
+
+    Drawable favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +165,12 @@ public class StationDetails extends AppCompatActivity {
         t.setScreenName("İstasyon detay");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            favorite = ContextCompat.getDrawable(this, R.drawable.ic_fav);
+        } else {
+            favorite = getResources().getDrawable(R.drawable.ic_fav);
+        }
 
         webview = findViewById(R.id.webView);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -240,6 +253,11 @@ public class StationDetails extends AppCompatActivity {
         } else {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
             fetchStation(choosenStationID);
+        }
+
+        // check the station added favorites
+        if (userFavorites.contains(String.valueOf(choosenStationID))) {
+            favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);
         }
 
         // Campaigns
@@ -1011,6 +1029,31 @@ public class StationDetails extends AppCompatActivity {
         }
     }
 
+    void clearVaribles() {
+        stationDistance = 0;
+        choosenStationID = 0;
+        userCommentID = 0;
+        isStationVerified = 0;
+        gasolinePrice = 0;
+        dieselPrice = 0;
+        lpgPrice = 0;
+        electricityPrice = 0;
+        numOfComments = 0;
+        sumOfPoints = 0;
+        stationScore = 0;
+        lastUpdated = "";
+        facilitiesOfStation = "";
+        stationName = "";
+        stationVicinity = "";
+        stationLocation = "";
+        iconURL = "";
+        userComment = "";
+        hasAlreadyCommented = false;
+        stationCommentList.clear();
+        campaignList.clear();
+        favorite.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_station, menu);
@@ -1021,10 +1064,20 @@ public class StationDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                clearVaribles();
                 finish();
                 return true;
             case R.id.menu_fav:
-                Toast.makeText(StationDetails.this, "Coming soon:", Toast.LENGTH_SHORT).show();
+                if (userFavorites.contains(choosenStationID + ";")) {
+                    userFavorites = userFavorites.replace(choosenStationID + ";", "");
+                    favorite.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                    Toast.makeText(StationDetails.this, "Favorilerinizden çıkartıldı.", Toast.LENGTH_SHORT).show();
+                } else {
+                    userFavorites += choosenStationID + ";";
+                    favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);
+                    Toast.makeText(StationDetails.this, "Favorilerinize eklendi.", Toast.LENGTH_SHORT).show();
+                }
+                prefs.edit().putString("userFavorites", userFavorites).apply();
                 return true;
             case R.id.menu_share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
@@ -1074,6 +1127,7 @@ public class StationDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        clearVaribles();
         finish();
     }
 }

@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,7 +34,6 @@ import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.MarkerItem;
 import com.fuelspot.model.StationItem;
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -75,7 +75,7 @@ import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
-public class FragmentStations extends Fragment implements OnMapReadyCallback {
+public class FragmentStations extends Fragment {
 
     // Station variables
     public static List<StationItem> fullStationList = new ArrayList<>();
@@ -85,8 +85,6 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
     boolean isAllStationsListed, mapIsUpdating;
 
     MapView mMapView;
-    SpinKitView proggressBar;
-    Context mContext;
     RecyclerView mRecyclerView;
     GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
@@ -103,6 +101,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
     Button seeAllStations;
     View rootView;
     RelativeLayout stationLayout, sortGasolineLayout, sortDieselLayout, sortLPGLayout, sortElectricityLayout, sortDistanceLayout;
+    Window window;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -124,7 +123,6 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                 t.setScreenName("İstasyonlar");
                 t.enableAdvertisingIdCollection(true);
                 t.send(new HitBuilders.ScreenViewBuilder().build());
-                mContext = getActivity();
             }
 
             // Objects
@@ -204,7 +202,6 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             nScrollView = rootView.findViewById(R.id.nestedScrollView);
             noStationError = rootView.findViewById(R.id.errorPicture);
             stationLayout = rootView.findViewById(R.id.stationLayout);
-            proggressBar = rootView.findViewById(R.id.spin_kit);
 
             sortGasolineLayout = rootView.findViewById(R.id.sortGasoline);
             sortDieselLayout = rootView.findViewById(R.id.sortDiesel);
@@ -293,7 +290,20 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-            mMapView.getMapAsync(this);
+            mMapView.getMapAsync(new OnMapReadyCallback() {
+                @SuppressLint("MissingPermission")
+                @Override
+                public void onMapReady(GoogleMap mMap) {
+                    googleMap = mMap;
+                    googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setCompassEnabled(true);
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    googleMap.getUiSettings().setAllGesturesEnabled(true);
+                    googleMap.getUiSettings().setMapToolbarEnabled(false);
+                    googleMap.setTrafficEnabled(true);
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
+                }
+            });
         }
     }
 
@@ -314,9 +324,8 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                     .strokeColor(Color.parseColor("#FF5635")));
         }
 
-        stationLayout.setVisibility(View.GONE);
-        proggressBar.setVisibility(View.VISIBLE);
         seeAllStations.setVisibility(View.GONE);
+        noStationError.setVisibility(View.GONE);
 
         // For zooming automatically to the location of the marker
         LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
@@ -364,6 +373,8 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                                         shortStationList.add(item);
                                     }
 
+                                    mAdapter.notifyDataSetChanged();
+
                                     // Add marker
                                     addMarker(item);
                                 }
@@ -375,17 +386,17 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                                 googleMap.setInfoWindowAdapter(customInfoWindow);
                                 markers.get(0).showInfoWindow();
+
                                 mapIsUpdating = false;
                                 noStationError.setVisibility(View.GONE);
-                                stationLayout.setVisibility(View.VISIBLE);
-                                proggressBar.setVisibility(View.GONE);
 
                                 // Create a fence
                                 if (!isSuperUser) {
                                     AlarmBuilder(getActivity());
                                 }
                             } catch (JSONException e) {
-                                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                                mapIsUpdating = false;
+                                noStationError.setVisibility(View.VISIBLE);
                                 e.printStackTrace();
                             }
                         } else {
@@ -396,7 +407,7 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        noStationError.setVisibility(View.VISIBLE);
                         volleyError.printStackTrace();
                     }
                 }) {
@@ -704,18 +715,5 @@ public class FragmentStations extends Fragment implements OnMapReadyCallback {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onMapReady(GoogleMap mMap) {
-        googleMap = mMap;
-        googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
-        googleMap.setTrafficEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
     }
 }

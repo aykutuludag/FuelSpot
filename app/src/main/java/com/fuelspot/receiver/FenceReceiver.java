@@ -33,7 +33,8 @@ public class FenceReceiver extends BroadcastReceiver {
         if (FENCE_RECEIVER_ACTION.equals(intent.getAction())) {
             // User entered the station
             FenceState fenceState = FenceState.extract(intent);
-            if (fenceState.getCurrentState() == 1) {
+            if (fenceState.getCurrentState() == 2) {
+                // 2 means user is at Station
                 if (currentStationID != Integer.parseInt(fenceState.getFenceKey())) {
                     currentStationID = Integer.parseInt(fenceState.getFenceKey());
                     sendNotification(fenceState.getFenceKey());
@@ -46,7 +47,7 @@ public class FenceReceiver extends BroadcastReceiver {
         Intent intentLauncher = new Intent(mContext, AddFuel.class);
         intentLauncher.putExtra("STATION_ID", Integer.parseInt(stationID));
         notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mPendingIntent = PendingIntent.getActivity(mContext, 1, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
+        mPendingIntent = PendingIntent.getActivity(mContext, 13200, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelName = "Yakıt ekleme";

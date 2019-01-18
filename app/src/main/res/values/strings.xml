@@ -157,4 +157,5 @@
     <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other-news.php</string>
     <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other-company.php</string>
     <string name="API_STREETVIEW" translatable="false">https://fuel-spot.com/api/other-streetview.php</string>
+    <string name="API_BANKING" translatable="false">https://fuel-spot.com/api/other-banking.php</string>
 </resources>

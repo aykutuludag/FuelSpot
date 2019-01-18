@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         carbonEmission = prefs.getInt("carbonEmission", 0);
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
         currencySymbol = prefs.getString("userCurrencySymbol", "");
-        userFSMoney = prefs.getFloat("userFSMoney", 0);
         userFavorites = prefs.getString("userFavorites", "");
     }
 
@@ -374,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
         Intent myIntent = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
@@ -389,7 +388,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         //Window
         window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);

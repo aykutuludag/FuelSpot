@@ -2,21 +2,15 @@ package com.fuelspot.receiver;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,16 +18,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fuelspot.AddFuel;
 import com.fuelspot.R;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.fence.AwarenessFence;
 import com.google.android.gms.awareness.fence.DetectedActivityFence;
-import com.google.android.gms.awareness.fence.FenceQueryRequest;
-import com.google.android.gms.awareness.fence.FenceQueryResult;
-import com.google.android.gms.awareness.fence.FenceState;
-import com.google.android.gms.awareness.fence.FenceStateMap;
 import com.google.android.gms.awareness.fence.FenceUpdateRequest;
 import com.google.android.gms.awareness.fence.LocationFence;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,11 +39,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
 import static com.fuelspot.FragmentStations.fullStationList;
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 import static com.fuelspot.MainActivity.getVariables;
@@ -84,10 +71,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
 
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            //If phone restarted, this section detects that and recreate geofences
+            // If phone restarted, this section detects that and reschedule alarm
             scheduleAlarm();
         } else {
-            // Every XX mins, re-create fences.
+            // Every 15 mins, re-create fences.
             createFences();
         }
     }
@@ -124,9 +111,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         } else {
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(5000);
+            mLocationRequest.setInterval(15 * 60 * 1000);
             mLocationRequest.setFastestInterval(1000);
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
@@ -250,13 +237,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     protected void registerFence(final String fenceKey, final AwarenessFence fence) {
         Intent intent = new Intent(FENCE_RECEIVER_ACTION);
-        mPendingIntent = PendingIntent.getBroadcast(mContext, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        mPendingIntent = PendingIntent.getBroadcast(mContext, 13200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Awareness.FenceApi.updateFences(client, new FenceUpdateRequest.Builder().addFence(fenceKey, fence, mPendingIntent).build()).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
                     System.out.println("Fence was successfully registered.");
-                    queryFence(fenceKey);
+                    // queryFence(fenceKey);
                 } else {
                     System.out.println("Fence could not be registered: " + status);
                 }
@@ -264,7 +251,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         });
     }
 
-    protected void queryFence(final String fenceKey) {
+   /* protected void queryFence(final String fenceKey) {
         Awareness.FenceApi.queryFences(client,
                 FenceQueryRequest.forFences(Collections.singletonList(fenceKey)))
                 .setResultCallback(new ResultCallback<FenceQueryResult>() {
@@ -283,9 +270,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
                     }
                 });
-    }
+    }*/
 
-    private void sendNotification(String stationID) {
+    /*private void sendNotification(String stationID) {
         Intent intentLauncher = new Intent(mContext, AddFuel.class);
         intentLauncher.putExtra("STATION_ID", Integer.parseInt(stationID));
         notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -318,5 +305,5 @@ public class AlarmReceiver extends BroadcastReceiver {
         // Send notification
         Notification notification = builder.build();
         notificationManager.notify(0, notification);
-    }
+    }*/
 }

@@ -76,8 +76,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UserFavorites"
-            android:label="@string/favorites"
-            android:parentActivityName=".MainActivity" />
+            android:label="@string/favorites" />
         <activity
             android:name=".StoreActivity"
             android:label="@string/store"

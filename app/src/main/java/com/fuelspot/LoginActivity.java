@@ -76,7 +76,6 @@ import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userVehicles;
@@ -95,8 +94,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SharedPreferences prefs;
     Handler handler = new Handler();
     ImageView doUHaveStation;
-
-    int temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,16 +115,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         MainActivity.getVariables(prefs);
-
-        // TEMP
-        temp = prefs.getInt("TEMP", 0);
-        if (temp == 0) {
-            isSigned = false;
-
-            temp++;
-            prefs.edit().putInt("TEMP", temp).apply();
-        }
-        // TEMP
 
         //Layout objects
         signInButton = findViewById(R.id.buttonGoogle);
@@ -425,9 +412,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 userVehicles = obj.getString("vehicles");
                                 prefs.edit().putString("userVehicles", userVehicles).apply();
-
-                                userFavorites = obj.getString("favStations");
-                                prefs.edit().putString("userFavorites", userFavorites).apply();
 
                                 getVariables(prefs);
 

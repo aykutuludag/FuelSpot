@@ -330,6 +330,7 @@ public class FragmentAutomobile extends Fragment {
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
+                                userNoPurchaseLayout.setVisibility(View.GONE);
 
                                 //update kilometer
                                 if (kilometerText != null) {
@@ -372,6 +373,7 @@ public class FragmentAutomobile extends Fragment {
                                     //BURAYA BİR KONTROL MEKANİZMASI KOY BİLGİLER DEĞİŞTİĞİNDE UPDATE ETSİN SADECE
                                 }
                             } catch (JSONException e) {
+                                userNoPurchaseLayout.setVisibility(View.VISIBLE);
                                 e.printStackTrace();
                             }
                         } else {

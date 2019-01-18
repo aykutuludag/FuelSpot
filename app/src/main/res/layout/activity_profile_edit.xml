@@ -69,9 +69,8 @@
                 android:layout_alignStart="@+id/dummyImage1"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
-                android:enabled="false"
                 android:gravity="bottom"
-                android:inputType="none"
+                android:inputType="textPersonName"
                 android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
@@ -172,7 +171,7 @@
                 android:layout_toEndOf="@+id/indicator_loc"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Konum"
+                android:text="Adres"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -183,9 +182,7 @@
                 android:layout_alignStart="@+id/indicator_loc"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none"
+                android:inputType="textPostalAddress"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <ImageView
