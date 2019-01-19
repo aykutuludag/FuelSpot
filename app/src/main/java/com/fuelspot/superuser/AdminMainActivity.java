@@ -1,11 +1,8 @@
 package com.fuelspot.superuser;
 
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -49,9 +46,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.MainActivity.PURCHASE_ADMIN_PREMIUM;
 import static com.fuelspot.MainActivity.getVariables;
-import static com.fuelspot.MainActivity.openCount;
+import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -59,8 +55,6 @@ import static com.fuelspot.MainActivity.userlon;
 public class AdminMainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     // General variables for SuperUser
-    public static boolean superPremium;
-
     public static int isStationVerified, isMobilePaymentAvailable, isDeliveryAvailable, superStationID;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
@@ -80,7 +74,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     public static void getSuperVariables(SharedPreferences prefs) {
         // General information
         userStations = prefs.getString("userStations", "");
-        superPremium = prefs.getBoolean("hasSuperPremium", false);
 
         // Station-specific information
         superStationID = prefs.getInt("SuperStationID", 0);
@@ -168,40 +161,7 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         RateThisApp.showRateDialogIfNeeded(this);
 
         //In-App Services
-        buyPremiumPopup();
         InAppBilling();
-    }
-
-    private void buyPremiumPopup() {
-        openCount = prefs.getInt("howMany", 0);
-        openCount++;
-        prefs.edit().putInt("howMany", openCount).apply();
-
-        if (openCount >= 15 && !premium) {
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setTitle(R.string.buy_premium_ads_title)
-                    .setMessage(R.string.buy_premium_ads_content)
-                    .setPositiveButton(R.string.buy_premium_ads_okay, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                buyAdminPremium();
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            } catch (IntentSender.SendIntentException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    })
-                    .setNegativeButton(R.string.buy_premium_ads_later, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openCount = 0;
-                            prefs.edit().putInt("howMany", openCount).apply();
-                        }
-                    })
-                    .show();
-        }
     }
 
     private void InAppBilling() {
@@ -232,26 +192,13 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         if (ownedItems.getInt("RESPONSE_CODE") == 0) {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;
-            if (ownedSkus.contains("premium_admin")) {
-                premium = true;
-                prefs.edit().putBoolean("hasPremium", premium).apply();
-            } else {
-                premium = false;
-                prefs.edit().putBoolean("hasPremium", premium).apply();
-            }
-        }
-    }
 
-    public void buyAdminPremium() throws RemoteException, IntentSender.SendIntentException {
-        Toast.makeText(AdminMainActivity.this,
-                "Premium sürüme geçerek uygulama içerisindeki tüm reklamları kaldırabilirsiniz. Ayrıca 50 km'ye kadar çevrenizdeki bütün istasyon fiyatlarını görebilirsiniz.", Toast.LENGTH_LONG)
-                .show();
-        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium_admin", "subs",
-                "/tYMgwhg1DVikb4R4iLNAO5pNj/QWh19+vwajyUFbAyw93xVnDkeTZFdhdSdJ8M");
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        assert pendingIntent != null;
-        startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_ADMIN_PREMIUM, new Intent(), 0,
-                0, 0);
+            premium = ownedSkus.contains("premium");
+            prefs.edit().putBoolean("hasPremium", premium).apply();
+
+            hasDoubleRange = ownedSkus.contains("2x_range");
+            prefs.edit().putBoolean("hasDoubleRange", premium).apply();
+        }
     }
 
     public void coloredBars(int color1, int color2) {
@@ -356,24 +303,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PURCHASE_ADMIN_PREMIUM:
-                if (resultCode == RESULT_OK) {
-                    Toast.makeText(AdminMainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", true).apply();
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    if (i != null) {
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(AdminMainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
-                            Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", false).apply();
-                }
-                break;
-        }
 
         // Thanks to this brief code, we can call onActivityResult in a fragment
         // Currently used in FragmentMyStation if user revoke location permission

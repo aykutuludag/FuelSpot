@@ -125,7 +125,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Hoşgeldin");
+        t.setScreenName("Welcome");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 

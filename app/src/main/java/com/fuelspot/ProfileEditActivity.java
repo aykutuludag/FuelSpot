@@ -184,7 +184,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(ProfileEditActivity.this)) {
-                    ImagePicker.create(ProfileEditActivity.this).single().start();
+                    ImagePicker.create(ProfileEditActivity.this).single().showCamera(true).start();
                 } else {
                     ActivityCompat.requestPermissions(ProfileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }

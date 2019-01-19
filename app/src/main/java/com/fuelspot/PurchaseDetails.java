@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -41,6 +42,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -52,11 +54,15 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 
@@ -66,7 +72,7 @@ public class PurchaseDetails extends AppCompatActivity {
     MapView mMapView;
     GoogleMap googleMap;
     FloatingActionButton fab;
-    int purchaseID, fuelType1, fuelType2;
+    int purchaseID, fuelType1, fuelType2, isPurchaseVerified;
     String stationName, iconURL, stationLocation, billPhoto;
     String purchaseTime;
     float fuelPrice1, fuelLiter1, fuelTax1, fuelPrice2, fuelLiter2, fuelTax2, totalPrice;
@@ -75,6 +81,8 @@ public class PurchaseDetails extends AppCompatActivity {
     TextView fiyat1, litre1, fiyat2, litre2, birimFiyat1, birimFiyat2, vergi, toplamfiyat;
     RelativeTimeTextView tarih;
     Bitmap bitmap;
+    CircleImageView circleImageViewStatus;
+    TextView textViewStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +119,11 @@ public class PurchaseDetails extends AppCompatActivity {
         fuelTax1 = getIntent().getFloatExtra("FUEL_TAX_1", 0);
         fuelTax2 = getIntent().getFloatExtra("FUEL_TAX_2", 0);
         totalPrice = getIntent().getFloatExtra("TOTAL_PRICE", 0);
+        isPurchaseVerified = getIntent().getIntExtra("IS_PURCHASE_VERIFIED", 0);
 
         istasyonLogo = findViewById(R.id.imageViewStationLogo);
+        circleImageViewStatus = findViewById(R.id.statusIcon);
+        textViewStatus = findViewById(R.id.statusText);
         fatura = findViewById(R.id.billPhoto);
         tur1 = findViewById(R.id.type1);
         tur2 = findViewById(R.id.type2);
@@ -133,14 +144,25 @@ public class PurchaseDetails extends AppCompatActivity {
         fatura.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
-                    ImagePicker.create(PurchaseDetails.this).single().start();
+                if (isPurchaseVerified == 1) {
+                    Toast.makeText(PurchaseDetails.this, "Onaylanmış siparişlerde değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
                 } else {
-                    ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
+                        ImagePicker.create(PurchaseDetails.this).single().start();
+                    } else {
+                        ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    }
                 }
             }
         });
 
+        if (isPurchaseVerified == 1) {
+            circleImageViewStatus.setBackgroundResource(R.drawable.verified);
+            textViewStatus.setText("Satın alma onaylandı! Bonus hesabınıza yansıtılmıştır.");
+        } else {
+            circleImageViewStatus.setBackgroundResource(R.drawable.question);
+            textViewStatus.setText("Satın alma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+        }
 
         Glide.with(this).load(iconURL).into(istasyonLogo);
         switch (fuelType1) {
@@ -213,10 +235,13 @@ public class PurchaseDetails extends AppCompatActivity {
                         .setAction("SİL", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                deletePurchase();
+                                if (isPurchaseVerified == 1) {
+                                    Toast.makeText(PurchaseDetails.this, "Onaylanmış siparişlerde değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                                } else {
+                                    deletePurchase();
+                                }
                             }
-                        })
-                        .show();
+                        }).show();
             }
         });
 
@@ -244,6 +269,12 @@ public class PurchaseDetails extends AppCompatActivity {
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
                         (cameraPosition));
                 googleMap.addMarker(new MarkerOptions().position(mStationLoc).title(stationName).snippet(tarih.getText().toString()));
+                //Draw a circle with radius of mapDefaultRange
+                googleMap.addCircle(new CircleOptions()
+                        .center(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])))
+                        .radius(mapDefaultStationRange)
+                        .fillColor(0x220000FF)
+                        .strokeColor(Color.parseColor("#FF5635")));
             }
         });
     }
@@ -253,14 +284,26 @@ public class PurchaseDetails extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(PurchaseDetails.this, response, Toast.LENGTH_LONG).show();
-                        finish();
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(PurchaseDetails.this, "Satın alma silindi", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        error.printStackTrace();
+                        Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -314,6 +357,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 //Adding parameters
                 params.put("id", String.valueOf(purchaseID));
                 params.put("username", username);
+                params.put("plateNO", plateNo);
                 params.put("billPhoto", getStringImage(bitmap));
 
                 //returning parameters

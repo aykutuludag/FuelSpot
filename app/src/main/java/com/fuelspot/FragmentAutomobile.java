@@ -284,8 +284,13 @@ public class FragmentAutomobile extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
+                            mRecyclerView.setVisibility(View.VISIBLE);
                             userNoPurchaseLayout.setVisibility(View.GONE);
+
                             List<PurchaseItem> dummyList = new ArrayList<>();
+                            mAdapter = new PurchaseAdapter(getActivity(), dummyList);
+                            mLayoutManager = new GridLayoutManager(getActivity(), 1);
+
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -308,6 +313,7 @@ public class FragmentAutomobile extends Fragment {
                                     item.setBonus((float) obj.getDouble("bonus"));
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
                                     vehiclePurchaseList.add(item);
 
                                     if (i < 3) {
@@ -322,15 +328,11 @@ public class FragmentAutomobile extends Fragment {
                                     purchasePrices.add(i, obj.getDouble("totalPrice"));
                                     purchaseKilometers.add(i, obj.getInt("kilometer"));
                                     purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
+                                    mAdapter.notifyDataSetChanged();
                                 }
 
-                                mAdapter = new PurchaseAdapter(getActivity(), dummyList);
-                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
-                                mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
-                                userNoPurchaseLayout.setVisibility(View.GONE);
 
                                 //update kilometer
                                 if (kilometerText != null) {
@@ -369,16 +371,17 @@ public class FragmentAutomobile extends Fragment {
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-
-                                    //BURAYA BİR KONTROL MEKANİZMASI KOY BİLGİLER DEĞİŞTİĞİNDE UPDATE ETSİN SADECE
                                 }
                             } catch (JSONException e) {
                                 userNoPurchaseLayout.setVisibility(View.VISIBLE);
+                                buttonSeeAllPurchases.setVisibility(View.GONE);
+                                mRecyclerView.setVisibility(View.GONE);
                                 e.printStackTrace();
                             }
                         } else {
                             userNoPurchaseLayout.setVisibility(View.VISIBLE);
-                            //   Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Henüz hiç satın alma yapmamışsınız.", Snackbar.LENGTH_LONG).show();
+                            buttonSeeAllPurchases.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.GONE);
                         }
                     }
                 },

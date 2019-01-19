@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.fuelspot.fuelify.PurchaseDetails">
+        tools:context=".PurchaseDetails">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -41,11 +41,45 @@
                     android:layout_height="300dp" />
 
                 <RelativeLayout
+                    android:id="@+id/purchaseStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mapView"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#fafafa">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/statusIcon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/statusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_toEndOf="@+id/statusIcon" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/single_purchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mapView"
-                    android:layout_marginTop="16dp"
+                    android:layout_below="@id/purchaseStatus"
                     android:background="#EDEDED">
 
                     <ImageView

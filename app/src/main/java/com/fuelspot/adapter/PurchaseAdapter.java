@@ -52,6 +52,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             intent.putExtra("FUEL_TAX_2", feedItemList.get(position).getFuelTax2());
             intent.putExtra("TOTAL_PRICE", feedItemList.get(position).getTotalPrice());
             intent.putExtra("BILL_PHOTO", feedItemList.get(position).getBillPhoto());
+            intent.putExtra("IS_PURCHASE_VERIFIED", feedItemList.get(position).getIsVerified());
             mContext.startActivity(intent);
         }
     };

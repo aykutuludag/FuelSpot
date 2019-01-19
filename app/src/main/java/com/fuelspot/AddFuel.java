@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +39,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -63,10 +66,10 @@ import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.stationPhotoChooser;
+import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
-import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class AddFuel extends AppCompatActivity {
 
@@ -83,7 +86,7 @@ public class AddFuel extends AppCompatActivity {
     /* LAYOUT 1 ÖĞELER */
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
-    String fuelType, fuelType2, billPhoto;
+    String fuelType, fuelType2;
     TextView fuelType1Text, fuelType2Text, fuelGrandTotal;
     ImageView fuelType1Icon, fuelType2Icon;
     EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
@@ -177,7 +180,6 @@ public class AddFuel extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
@@ -247,25 +249,25 @@ public class AddFuel extends AppCompatActivity {
             case 0:
                 selectedUnitPrice = gasolinePrice;
                 selectedTaxRate = TAX_GASOLINE;
-                fuelType = "gasoline";
+                fuelType = "Benzin";
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
                 break;
             case 1:
                 selectedUnitPrice = dieselPrice;
                 selectedTaxRate = TAX_DIESEL;
-                fuelType = "diesel";
+                fuelType = "Dizel";
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
                 break;
             case 2:
                 selectedUnitPrice = LPGPrice;
                 selectedTaxRate = TAX_LPG;
-                fuelType = "lpg";
+                fuelType = "LPG";
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
                 break;
             case 3:
                 selectedUnitPrice = electricityPrice;
                 selectedTaxRate = TAX_ELECTRICITY;
-                fuelType = "electric";
+                fuelType = "Elektrik";
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
                 break;
             default:
@@ -282,25 +284,25 @@ public class AddFuel extends AppCompatActivity {
             case 0:
                 selectedUnitPrice2 = gasolinePrice;
                 selectedTaxRate2 = TAX_GASOLINE;
-                fuelType2 = "gasoline";
+                fuelType2 = "Benzin";
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
                 break;
             case 1:
                 selectedUnitPrice2 = dieselPrice;
                 selectedTaxRate2 = TAX_DIESEL;
-                fuelType2 = "diesel";
+                fuelType2 = "Dizel";
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
                 break;
             case 2:
                 selectedUnitPrice2 = LPGPrice;
                 selectedTaxRate2 = TAX_LPG;
-                fuelType2 = "lpg";
+                fuelType2 = "LPG";
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
                 break;
             case 3:
                 selectedUnitPrice2 = electricityPrice;
                 selectedTaxRate2 = TAX_ELECTRICITY;
-                fuelType2 = "electric";
+                fuelType2 = "Elektrik";
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
                 break;
             default:
@@ -409,12 +411,8 @@ public class AddFuel extends AppCompatActivity {
         photoHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyFilePickerPermission(AddFuel.this)) {
-               /*     FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(AddFuel.this);*/
-                    Toast.makeText(AddFuel.this, "Geçici olarak deactive edildi.", Toast.LENGTH_LONG).show();
+                if (MainActivity.verifyFilePickerPermission(AddFuel.this)) {
+                    ImagePicker.create(AddFuel.this).single().showCamera(true).start();
                 } else {
                     ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -425,7 +423,19 @@ public class AddFuel extends AppCompatActivity {
         sendVariables.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPurchase();
+                if (isNetworkConnected(AddFuel.this)) {
+                    if (totalPrice > 0) {
+                        if (kilometer != 0) {
+                            addPurchase();
+                        } else {
+                            Toast.makeText(AddFuel.this, "Lütfen aracın kilometresini giriniz", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -439,96 +449,35 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void addPurchase() {
-        if (isNetworkConnected(AddFuel.this)) {
-            if (totalPrice > 0) {
-                //Showing the progress dialog
-                final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Uploading...", "Please wait...", false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String s) {
-                                //Disimissing the progress dialog
-                                loading.dismiss();
-                                Toast.makeText(AddFuel.this, s, Toast.LENGTH_LONG).show();
-                                // updateStation();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Dismissing the progress dialog
-                                loading.dismiss();
-                                //Showing toast
-                                Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("username", username);
-                        params.put("vehicleID", String.valueOf(vehicleID));
-                        params.put("plateNO", plateNo);
-                        params.put("stationID", String.valueOf(chosenStationID));
-                        params.put("stationNAME", stationName);
-                        params.put("stationICON", stationPhotoChooser(stationName));
-                        params.put("stationLOC", stationLoc);
-                        params.put("fuelType", String.valueOf(fuelPri));
-                        params.put("fuelPrice", String.valueOf(selectedUnitPrice));
-                        params.put("fuelLiter", String.valueOf(buyedLiter));
-                        params.put("fuelTax", String.valueOf(selectedTaxRate));
-                        params.put("fuelType2", String.valueOf(fuelSec));
-                        params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
-                        params.put("fuelLiter2", String.valueOf(buyedLiter2));
-                        params.put("fuelTax2", String.valueOf(selectedTaxRate2));
-                        params.put("totalPrice", String.valueOf(totalPrice));
-                        if (bitmap != null) {
-                            params.put("billPhoto", getStringImage(bitmap));
-                        }
-                        params.put("kilometer", String.valueOf(kilometer));
-                        params.put("unit", String.valueOf(userUnit));
-                        params.put("currency", String.valueOf(currencyCode));
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
-            } else {
-                Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    // BU İŞLEMİ PHP İÇİNDE YAP
-  /*  private void updateStation() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+        //Showing the progress dialog
+        final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Yakıt ekleniyor...", "Lütfen bekleyiniz...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String s) {
-                        prefs.edit().putInt("Kilometer", kilometer).apply();
-                        bitmap = null;
-                        chosenStationName = null;
-                        chosenGoogleID = null;
-                        chosenStationLoc = null;
-                        gasolinePrice = 0;
-                        dieselPrice = 0;
-                        electricityPrice = 0;
-                        LPGPrice = 0;
-                        billPhoto = null;
-                        finish();
+                    public void onResponse(String response) {
+                        loading.dismiss();
+
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(AddFuel.this, "Yakıt başarıyla eklendi...", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AddFuel.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        loading.dismiss();
+                        volleyError.printStackTrace();
+                        Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -537,34 +486,30 @@ public class AddFuel extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
+                params.put("username", username);
+                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("plateNO", plateNo);
+                params.put("kilometer", String.valueOf(kilometer));
                 params.put("stationID", String.valueOf(chosenStationID));
-                params.put("stationName", chosenStationName);
-                params.put("stationVicinity", chosenStationAddress);
-                params.put("stationLogo", chosenStationAddress);
-                if (fuelType != null && fuelType.length() > 0 && selectedUnitPrice > 0) {
-                    if (fuelType.contains("gasoline")) {
-                        params.put("gasolinePrice", String.valueOf(selectedUnitPrice));
-                    } else if (fuelType.contains("diesel")) {
-                        params.put("dieselPrice", String.valueOf(selectedUnitPrice));
-                    } else if (fuelType.contains("lpg")) {
-                        params.put("lpgPrice", String.valueOf(selectedUnitPrice));
-                    } else {
-                        params.put("electricityPrice", String.valueOf(selectedUnitPrice));
-                    }
-                }
-                if (fuelType2 != null && fuelType2.length() > 0 && selectedUnitPrice2 > 0) {
-                    if (fuelType2.contains("gasoline")) {
-                        params.put("gasolinePrice", String.valueOf(selectedUnitPrice2));
-                    } else if (fuelType2.contains("diesel")) {
-                        params.put("dieselPrice", String.valueOf(selectedUnitPrice2));
-                    } else if (fuelType2.contains("lpg")) {
-                        params.put("lpgPrice", String.valueOf(selectedUnitPrice2));
-                    } else {
-                        params.put("electricityPrice", String.valueOf(selectedUnitPrice2));
-                    }
+                params.put("stationNAME", stationName);
+                params.put("stationLOC", stationLoc);
+                params.put("stationICON", stationPhotoChooser(stationName));
+                params.put("fuelType", String.valueOf(fuelPri));
+                params.put("fuelPrice", String.valueOf(selectedUnitPrice));
+                params.put("fuelLiter", String.valueOf(buyedLiter));
+                params.put("fuelTax", String.valueOf(selectedTaxRate));
+                params.put("fuelType2", String.valueOf(fuelSec));
+                params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
+                params.put("fuelLiter2", String.valueOf(buyedLiter2));
+                params.put("fuelTax2", String.valueOf(selectedTaxRate2));
+                params.put("totalPrice", String.valueOf(totalPrice));
+                params.put("country", userCountry);
+                params.put("unit", String.valueOf(userUnit));
+                params.put("currency", String.valueOf(currencyCode));
+                if (bitmap != null) {
+                    params.put("billPhoto", getStringImage(bitmap));
                 }
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
                 //returning parameters
                 return params;
             }
@@ -572,7 +517,8 @@ public class AddFuel extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }*/
+
+    }
 
     private void updateTaxandGrandTotal() {
         tax1 = taxCalculator(fuelPri, entryPrice);
@@ -615,7 +561,6 @@ public class AddFuel extends AppCompatActivity {
                 dieselPrice = 0;
                 electricityPrice = 0;
                 LPGPrice = 0;
-                billPhoto = null;
                 finish();
                 return true;
             default:
@@ -629,10 +574,7 @@ public class AddFuel extends AppCompatActivity {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AddFuel.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
-                /*    FilePickerBuilder.getInstance().setMaxCount(1)
-                            .setActivityTheme(R.style.AppTheme)
-                            .enableCameraSupport(true)
-                            .pickPhoto(AddFuel.this);*/
+                    ImagePicker.create(AddFuel.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -646,42 +588,13 @@ public class AddFuel extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-           /* case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    ArrayList<String> aq = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
-                    billPhoto = aq.get(0);
-
-                    System.out.println("file://" + billPhoto);
-
-                    File folder = new File(Environment.getExternalStorageDirectory() + "/FuelSpot/Bills");
-                    folder.mkdirs();
-
-                    CharSequence now = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", new Date());
-                    String fileName = now + ".jpg";
-
-                    UCrop.of(Uri.parse("file://" + billPhoto), Uri.fromFile(new File(folder, fileName)))
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(1080, 1080)
-                            .start(AddFuel.this);
-                }
-                break;
-            case UCrop.REQUEST_CROP:
-                if (resultCode == RESULT_OK) {
-                    final Uri resultUri = UCrop.getOutput(data);
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                        photoHolder.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (resultCode == UCrop.RESULT_ERROR) {
-                    final Throwable cropError = UCrop.getError(data);
-                    if (cropError != null) {
-                        Toast.makeText(AddFuel.this, cropError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;*/
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                bitmap = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(image.getPath()).apply(options).into(photoHolder);
+            }
         }
     }
 
@@ -697,7 +610,6 @@ public class AddFuel extends AppCompatActivity {
         dieselPrice = 0;
         electricityPrice = 0;
         LPGPrice = 0;
-        billPhoto = null;
         finish();
     }
 }

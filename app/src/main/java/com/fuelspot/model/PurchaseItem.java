@@ -18,6 +18,7 @@ public class PurchaseItem {
     private float totalPrice;
     private String billPhoto;
     private float bonus;
+    private int isVerified;
 
     public int getID() {
         return ID;
@@ -145,5 +146,13 @@ public class PurchaseItem {
 
     public void setBonus(float bonus) {
         this.bonus = bonus;
+    }
+
+    public int getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(int isVerified) {
+        this.isVerified = isVerified;
     }
 }

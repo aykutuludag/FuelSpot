@@ -298,10 +298,10 @@ public class FragmentStations extends Fragment {
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setCompassEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                    googleMap.getUiSettings().setAllGesturesEnabled(true);
+                    googleMap.getUiSettings().setAllGesturesEnabled(false);
                     googleMap.getUiSettings().setMapToolbarEnabled(false);
-                    googleMap.setTrafficEnabled(true);
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.setTrafficEnabled(true);
                 }
             });
         }
@@ -682,19 +682,26 @@ public class FragmentStations extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
 
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
@@ -708,12 +715,16 @@ public class FragmentStations extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        mMapView.onSaveInstanceState(outState);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 }

@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -50,20 +49,18 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     public static final int GOOGLE_LOGIN = 100;
     public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
-    public static final int PURCHASE_NORMAL_PREMIUM = 1000;
-    public static final int PURCHASE_ADMIN_PREMIUM = 1001;
 
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
     public static String universalTimeFormat = "yyyy-MM-dd HH:mm:ss";
     public static String shortTimeFormat = "dd-MMM HH:mm";
-    public static boolean premium, isSigned, isSuperUser, isGeofenceOpen;
+    public static boolean premium, hasDoubleRange, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
 
-    static SharedPreferences prefs;
+    SharedPreferences prefs;
     //In-App Billings
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
@@ -100,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         userlat = prefs.getString("lat", "39.925054");
         userlon = prefs.getString("lon", "32.8347552");
         premium = prefs.getBoolean("hasPremium", false);
+        hasDoubleRange = prefs.getBoolean("hasDoubleRange", false);
         isSigned = prefs.getBoolean("isSigned", false);
         isSuperUser = prefs.getBoolean("isSuperUser", false);
         userCountry = prefs.getString("userCountry", "");
@@ -399,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
-
         // Some variables
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
@@ -470,28 +467,13 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (ownedItems.getInt("RESPONSE_CODE") == 0) {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;
-            if (ownedSkus.contains("premium")) {
-                premium = true;
-                prefs.edit().putBoolean("hasPremium", premium).apply();
-                prefs.edit().putInt("RANGE", 5000).apply();
-                prefs.edit().putFloat("ZOOM", 12f).apply();
-            } else {
-                premium = false;
-                prefs.edit().putBoolean("hasPremium", premium).apply();
-            }
-        }
-    }
 
-    public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
-        Toast.makeText(MainActivity.this,
-                "Premium sürüm reklamları kaldırır ve menzilinizi 2 katına çıkarır.", Toast.LENGTH_LONG)
-                .show();
-        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium", "subs",
-                "dfgfddfgdfgasd/sdfsffgdgfgjkjk/ajyUFbAyw93xVnDkeTZFdhdSdJ8M");
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        assert pendingIntent != null;
-        startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_NORMAL_PREMIUM, new Intent(), 0,
-                0, 0);
+            premium = ownedSkus.contains("premium");
+            prefs.edit().putBoolean("hasPremium", premium).apply();
+
+            hasDoubleRange = ownedSkus.contains("2x_range");
+            prefs.edit().putBoolean("hasDoubleRange", premium).apply();
+        }
     }
 
     public void coloredBars(int color1, int color2) {
@@ -508,26 +490,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PURCHASE_NORMAL_PREMIUM:
-                if (resultCode == RESULT_OK) {
-                    Toast.makeText(MainActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremum", true).apply();
-                    prefs.edit().putInt("RANGE", 5000).apply();
-                    prefs.edit().putFloat("ZOOM", 12f).apply();
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    if (i != null) {
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.",
-                            Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", false).apply();
-                }
-                break;
-        }
 
         // Thanks to this brief code, we can call onActivityResult in a fragment
         // Currently used in FragmentStations if user revoke location permission

@@ -1,7 +1,9 @@
 package com.fuelspot;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -94,7 +96,6 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.photo;
-import static com.fuelspot.MainActivity.prefs;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -137,6 +138,7 @@ public class StationDetails extends AppCompatActivity {
     ImageView reportPricePhoto;
     RequestOptions options;
     WebView webview;
+    SharedPreferences prefs;
 
     Drawable favorite;
 
@@ -165,6 +167,8 @@ public class StationDetails extends AppCompatActivity {
         t.setScreenName("İstasyon detay");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             favorite = ContextCompat.getDrawable(this, R.drawable.ic_fav);
@@ -256,7 +260,7 @@ public class StationDetails extends AppCompatActivity {
         }
 
         // check the station added favorites
-        if (userFavorites.contains(String.valueOf(choosenStationID))) {
+        if (userFavorites.contains(choosenStationID + ";")) {
             favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);
         }
 
