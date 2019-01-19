@@ -65,8 +65,6 @@ public class UserFavorites extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        parseUserFavorites();
     }
 
     void parseUserFavorites() {
@@ -163,6 +161,12 @@ public class UserFavorites extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        parseUserFavorites();
     }
 
     @Override

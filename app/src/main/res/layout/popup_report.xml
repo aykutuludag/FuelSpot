@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/feedbackLayout"
+    android:id="@+id/reportStationLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#EDEDED"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    android:background="#ffffff">
 
     <TextView
         android:id="@+id/campaignPhoto"
@@ -25,7 +25,8 @@
         android:layout_below="@+id/campaignPhoto"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:entries="@array/report_reasons" />
+        android:entries="@array/report_reasons"
+        android:padding="8dp" />
 
     <EditText
         android:id="@+id/editTextReport"
@@ -36,12 +37,20 @@
         android:ems="10"
         android:inputType="textMultiLine" />
 
+    <ImageView
+        android:id="@+id/imageViewReport"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/editTextReport"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        app:srcCompat="@drawable/photo_placeholder" />
 
     <Button
         android:id="@+id/sendReport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextReport"
+        android:layout_below="@+id/imageViewReport"
         android:layout_marginTop="8dp"
         android:background="#FF6838"
         android:text="SEND"

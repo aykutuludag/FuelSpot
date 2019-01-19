@@ -4,37 +4,47 @@
     android:id="@+id/feedbackLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#EDEDED"
+    android:layout_margin="4dp"
+    android:background="#ffffff"
     android:padding="8dp">
 
-    <ImageView
-        android:id="@+id/campaignPhoto"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
+    <TextView
+        android:id="@+id/textView36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/default_feedback" />
+        android:layout_marginTop="4dp"
+        android:text="Feedback"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <EditText
         android:id="@+id/editTextFeedback"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/campaignPhoto"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView36"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:background="#FFF"
         android:ems="10"
-        android:gravity="center"
         android:hint="Please describe your problems"
         android:inputType="textMultiLine"
+        android:padding="8dp"
+        android:textColor="#000"
         android:textSize="14sp" />
 
+    <ImageView
+        android:id="@+id/feedBackPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/editTextFeedback"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/photo_placeholder" />
 
     <Button
         android:id="@+id/sendFeedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextFeedback"
+        android:layout_below="@+id/feedBackPhoto"
         android:layout_marginTop="16dp"
         android:background="#FF6838"
         android:text="SEND"

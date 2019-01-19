@@ -184,7 +184,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(ProfileEditActivity.this)) {
-                    ImagePicker.create(ProfileEditActivity.this).single().showCamera(true).start();
+                    ImagePicker.create(ProfileEditActivity.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(ProfileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -406,7 +406,6 @@ public class ProfileEditActivity extends AppCompatActivity {
             toolbar.setBackgroundColor(color2);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

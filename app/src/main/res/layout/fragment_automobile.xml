@@ -11,81 +11,102 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            layout="@layout/card_automobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <RelativeLayout
-            android:id="@+id/containerPurchases"
+            android:id="@+id/userRegularLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="300dp"
-            android:background="@drawable/round_layout"
-            android:elevation="8dp">
+            android:visibility="visible">
 
-            <TextView
-                android:id="@+id/purchaseTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:fontFamily="@font/gotham_black"
-                android:gravity="center"
-                android:text="Satın Almalar"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="#000000" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/purchaseView"
+            <include
+                layout="@layout/card_automobile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/purchaseTitle" />
-
-            <Button
-                android:id="@+id/button_seeAllPurchases"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/purchaseView"
-                android:layout_centerInParent="true"
-                android:layout_margin="8dp"
-                android:background="@drawable/green_box"
-                android:fontFamily="@font/gotham_black"
-                android:text="@string/see_all"
-                android:visibility="invisible" />
+                android:layout_height="wrap_content" />
 
             <RelativeLayout
-                android:id="@+id/noPurchaseLayout"
+                android:id="@+id/containerPurchases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/purchaseTitle"
-                android:layout_margin="16dp"
-                android:background="@drawable/round_layout_white"
-                android:visibility="gone">
+                android:layout_marginTop="300dp"
+                android:background="@drawable/round_layout"
+                android:elevation="8dp">
 
                 <TextView
-                    android:id="@+id/textView20"
+                    android:id="@+id/purchaseTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    android:text="Henüz hiç satın alma yapmamışsınız. Aldığınız yakıtları, detaylarını ve aracınız hakkında birçok infografiği burada görebilirsin... Ayrıca yakıt eklediğinde bonus kazanacaksın!"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                    android:textColor="#212121" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/errorImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView20"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    android:src="@drawable/error_nopurchase" />
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="Satın Almalar"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="#000000" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/purchaseView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/purchaseTitle" />
+
+                <Button
+                    android:id="@+id/button_seeAllPurchases"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/purchaseView"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/see_all"
+                    android:visibility="invisible" />
+
+                <RelativeLayout
+                    android:id="@+id/noPurchaseLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/purchaseTitle"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/round_layout_white"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:text="Henüz hiç satın alma yapmamışsınız. Aldığınız yakıtları, detaylarını ve aracınız hakkında birçok infografiği burada görebilirsin... Ayrıca yakıt eklediğinde bonus kazanacaksın!"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                        android:textColor="#212121" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/errorImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView20"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/error_nopurchase" />
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/userNoCarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/dummy" />
+        </RelativeLayout>
+    </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

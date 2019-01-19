@@ -95,7 +95,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -135,12 +134,14 @@ public class StationDetails extends AppCompatActivity {
     Button seeAllComments;
     LineChart chart;
     Bitmap bitmap;
+    ImageView reportStationPhoto;
     ImageView reportPricePhoto;
     RequestOptions options;
     WebView webview;
     SharedPreferences prefs;
-
     Drawable favorite;
+    int reportRequest;
+    String reportReason, reportDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -468,8 +469,8 @@ public class StationDetails extends AppCompatActivity {
         } else {
             textLPG.setText(lpgPrice + " " + currencySymbol);
         }
-
         if (electricityPrice == 0) {
+
             textElectricity.setText("-");
         } else {
             textElectricity.setText(electricityPrice + " " + currencySymbol);
@@ -732,9 +733,6 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void reportStation(final View view) {
-        final String[] reportReason = new String[1];
-        final String[] reportDetails = new String[1];
-
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_report, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -750,13 +748,13 @@ public class StationDetails extends AppCompatActivity {
                     mPopupWindow.dismiss();
                     reportPrices(view);
                 } else {
-                    reportReason[0] = position + " - " + spinner.getItemAtPosition(position);
+                    reportReason = position + " - " + spinner.getItemAtPosition(position);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                reportReason[0] = 0 + " - " + spinner.getItemAtPosition(0);
+                reportReason = 0 + " - " + spinner.getItemAtPosition(0);
             }
         });
 
@@ -775,7 +773,20 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    reportDetails[0] = s.toString();
+                    reportDetails = s.toString();
+                }
+            }
+        });
+
+        reportStationPhoto = customView.findViewById(R.id.imageViewReport);
+        reportStationPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reportRequest = 0;
+                if (MainActivity.verifyFilePickerPermission(StationDetails.this)) {
+                    ImagePicker.create(StationDetails.this).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(StationDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -784,7 +795,7 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendReporttoServer(username, choosenStationID, reportReason[0], reportDetails[0], null, null);
+                sendReporttoServer(username, choosenStationID, reportReason, reportDetails, null, bitmap);
             }
 
 
@@ -898,10 +909,11 @@ public class StationDetails extends AppCompatActivity {
             }
         });
 
-        reportPricePhoto = customView.findViewById(R.id.imageView);
+        reportPricePhoto = customView.findViewById(R.id.imageViewPricesPhoto);
         reportPricePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                reportRequest = 1;
                 if (MainActivity.verifyFilePickerPermission(StationDetails.this)) {
                     ImagePicker.create(StationDetails.this).single().start();
                 } else {
@@ -1104,7 +1116,7 @@ public class StationDetails extends AppCompatActivity {
             case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (ActivityCompat.checkSelfPermission(StationDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.create(StationDetails.this).single().start();
+                    ImagePicker.create(StationDetails.this).single().start(reportRequest);
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -1115,18 +1127,22 @@ public class StationDetails extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Imagepicker
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(bitmap).apply(options).into(reportPricePhoto);
-                photo = "https://fuel-spot.com/uploads/users/" + username + ".jpg";
+                switch (reportRequest) {
+                    case 0:
+                        Glide.with(StationDetails.this).load(image.getPath()).apply(options).into(reportStationPhoto);
+                        break;
+                    case 1:
+                        Glide.with(StationDetails.this).load(image.getPath()).apply(options).into(reportPricePhoto);
+                        break;
+                }
             }
         }
     }
-
 
     @Override
     public void onBackPressed() {

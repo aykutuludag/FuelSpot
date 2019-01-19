@@ -37,6 +37,7 @@ import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHolder> {
@@ -95,11 +96,19 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 .priority(Priority.HIGH);
         Glide.with(mContext).load(feedItem.getVehiclePhoto()).apply(options).into(viewHolder.carPhoto);
 
-        if (feedItem.getID() == vehicleID) {
-            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#6000FF00"));
+        if (vehicleID == 0) {
+            if (userVehicles != null && userVehicles.length() > 0) {
+                // This is called after first automobile added. We're choosing added one automatically.
+                changeVehicle(0);
+            }
         } else {
-            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            if (feedItem.getID() == vehicleID) {
+                viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#6000FF00"));
+            } else {
+                viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            }
         }
+
 
         // Handle click event on image click
         viewHolder.vehicleLayout.setOnClickListener(clickListener);

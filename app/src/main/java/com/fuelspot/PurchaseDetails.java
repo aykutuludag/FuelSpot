@@ -17,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +73,6 @@ public class PurchaseDetails extends AppCompatActivity {
     RequestOptions options;
     MapView mMapView;
     GoogleMap googleMap;
-    FloatingActionButton fab;
     int purchaseID, fuelType1, fuelType2, isPurchaseVerified;
     String stationName, iconURL, stationLocation, billPhoto;
     String purchaseTime;
@@ -83,22 +84,31 @@ public class PurchaseDetails extends AppCompatActivity {
     Bitmap bitmap;
     CircleImageView circleImageViewStatus;
     TextView textViewStatus;
+    Toolbar toolbar;
+    Window window;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase_details);
 
+        // Initializing Toolbar and setting it as the actionbar
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        //Window
+        window = this.getWindow();
+        coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Satın alma detay");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMapView = findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -312,7 +322,8 @@ public class PurchaseDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(purchaseID));
+                params.put("purchaseID", String.valueOf(purchaseID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -332,7 +343,8 @@ public class PurchaseDetails extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(PurchaseDetails.this, "Bill photo added...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PurchaseDetails.this, "Satın alma güncellendi...", Toast.LENGTH_LONG).show();
+                                    finish();
                                     break;
                                 case "Fail":
                                     Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
@@ -355,10 +367,11 @@ public class PurchaseDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("id", String.valueOf(purchaseID));
+                params.put("purchaseID", String.valueOf(purchaseID));
                 params.put("username", username);
                 params.put("plateNO", plateNo);
                 params.put("billPhoto", getStringImage(bitmap));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -384,6 +397,17 @@ public class PurchaseDetails extends AppCompatActivity {
 
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public void coloredBars(int color1, int color2) {
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(color1);
+            toolbar.setBackgroundColor(color2);
+        } else {
+            toolbar.setBackgroundColor(color2);
+        }
     }
 
     @Override

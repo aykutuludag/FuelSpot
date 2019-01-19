@@ -178,6 +178,12 @@ public class UserComments extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadComments();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

@@ -1,7 +1,9 @@
 package com.fuelspot;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -79,11 +81,13 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
     // Temp variables to add a vehicle
     int dummyVehicleID, dummyKilometer = 0;
-    int dummyFuelPri, dummyFuelSec = -1;
+    int dummyFuelPri = 0;
+    int dummyFuelSec = -1;
     String dummyCarBrand = "Acura";
     String dummyCarModel = "RSX";
     String dummyPlateNo = "";
     TextWatcher mTextWatcher;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +102,17 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        //Window
+        window = this.getWindow();
+        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
         t.setScreenName("Araç ekle");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        //Window
-        window = this.getWindow();
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
-
+        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
@@ -159,7 +164,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 } else {
                     dummyFuelPri = 3;
                 }
-                dummyFuelPri = -1;
+                dummyFuelSec = -1;
                 radioGroup2.clearCheck();
             }
         });
@@ -305,14 +310,13 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
                                 dummyVehicleID = obj.getInt("id");
-                                userVehicles += dummyVehicleID + ";";
                                 updateUser();
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(AddAutomobile.this, "Hata", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddAutomobile.this, e.toString(), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(AddAutomobile.this, "Hata", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -321,7 +325,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(AddAutomobile.this, "Hata", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAutomobile.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -358,11 +362,16 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            if (response.equals("Success")) {
-                                Toast.makeText(AddAutomobile.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
-                                finish();
-                            } else {
-                                Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            switch (response) {
+                                case "Success":
+                                    userVehicles += dummyVehicleID + ";";
+                                    prefs.edit().putString("userVehicles", userVehicles).apply();
+                                    Toast.makeText(AddAutomobile.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    break;
                             }
                         } else {
                             Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
@@ -372,7 +381,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddAutomobile.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override

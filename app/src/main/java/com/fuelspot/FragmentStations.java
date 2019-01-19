@@ -72,6 +72,7 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
@@ -392,7 +393,9 @@ public class FragmentStations extends Fragment {
 
                                 // Create a fence
                                 if (!isSuperUser) {
-                                    AlarmBuilder(getActivity());
+                                    if (userVehicles != null && userVehicles.length() > 0) {
+                                        AlarmBuilder(getActivity());
+                                    }
                                 }
                             } catch (JSONException e) {
                                 mapIsUpdating = false;

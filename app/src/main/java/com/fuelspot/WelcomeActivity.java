@@ -156,6 +156,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         userNoCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
                 layout4.setVisibility(View.VISIBLE);
                 layout2.setVisibility(View.GONE);
             }

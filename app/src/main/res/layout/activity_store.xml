@@ -53,7 +53,7 @@
                     android:layout_below="@id/textView0"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="Burada hesabınızdaki son para hareketlerini (bonus, ödül, satın almalar) görebilirsiniz."
+                    android:text="Burada hesabınızdaki son hareketleri (bonus, ödül, satın almalar) görebilirsiniz."
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView

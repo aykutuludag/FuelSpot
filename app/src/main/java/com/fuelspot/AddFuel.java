@@ -62,6 +62,7 @@ import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
@@ -121,8 +122,10 @@ public class AddFuel extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         //Window
         window = this.getWindow();
@@ -130,7 +133,7 @@ public class AddFuel extends AppCompatActivity {
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        MainActivity.getVariables(prefs);
+        getVariables(prefs);
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -224,6 +227,7 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void loadLayout() {
+        final int temp = kilometer;
         enterKilometer.setText(String.valueOf(kilometer));
         enterKilometer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -426,7 +430,11 @@ public class AddFuel extends AppCompatActivity {
                 if (isNetworkConnected(AddFuel.this)) {
                     if (totalPrice > 0) {
                         if (kilometer != 0) {
-                            addPurchase();
+                            if (temp < kilometer) {
+                                addPurchase();
+                            } else {
+                                Toast.makeText(AddFuel.this, "Aracınızın yeni kilometresi daha yüksek olmalı", Toast.LENGTH_LONG).show();
+                            }
                         } else {
                             Toast.makeText(AddFuel.this, "Lütfen aracın kilometresini giriniz", Toast.LENGTH_LONG).show();
                         }
@@ -455,12 +463,14 @@ public class AddFuel extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(AddFuel.this, response, Toast.LENGTH_LONG).show();
                         loading.dismiss();
 
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
                                     Toast.makeText(AddFuel.this, "Yakıt başarıyla eklendi...", Toast.LENGTH_LONG).show();
+                                    prefs.edit().putInt("Kilometer", kilometer).apply();
                                     finish();
                                     break;
                                 case "Fail":

@@ -60,11 +60,13 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentAutomobile extends Fragment {
 
     public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
+
     public static ArrayList<String> purchaseTimes = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
     public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
@@ -86,6 +88,7 @@ public class FragmentAutomobile extends Fragment {
     View headerView;
     Button buttonSeeAllPurchases;
     View view;
+    RelativeLayout regularLayout, noAracLayout;
 
     public static FragmentAutomobile newInstance() {
         Bundle args = new Bundle();
@@ -111,6 +114,8 @@ public class FragmentAutomobile extends Fragment {
 
             headerView = view.findViewById(R.id.header_vehicle);
 
+            regularLayout = view.findViewById(R.id.userRegularLayout);
+            noAracLayout = view.findViewById(R.id.userNoCarLayout);
             userNoPurchaseLayout = view.findViewById(R.id.noPurchaseLayout);
             requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -124,8 +129,6 @@ public class FragmentAutomobile extends Fragment {
                     startActivity(intent);
                 }
             });
-
-            fetchVehiclePurchases();
         }
 
         return view;
@@ -268,6 +271,8 @@ public class FragmentAutomobile extends Fragment {
                 startActivity(intent);
             }
         });
+
+        fetchVehiclePurchases();
     }
 
     public void fetchVehiclePurchases() {
@@ -505,6 +510,7 @@ public class FragmentAutomobile extends Fragment {
             carbonEmission = carbonEmission / 2;
             prefs.edit().putInt("carbonEmission", carbonEmission).apply();
         }
+
         return carbonEmission;
     }
 
@@ -513,46 +519,14 @@ public class FragmentAutomobile extends Fragment {
         super.onResume();
 
         if (headerView != null) {
-            loadVehicleProfile();
+            if (userVehicles != null && userVehicles.length() > 0) {
+                noAracLayout.setVisibility(View.GONE);
+                regularLayout.setVisibility(View.VISIBLE);
+                loadVehicleProfile();
+            } else {
+                noAracLayout.setVisibility(View.VISIBLE);
+                regularLayout.setVisibility(View.GONE);
+            }
         }
     }
-
-   /* private void updateCarInfo() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                params.put("vehicleID", String.valueOf(vehicleID));
-                params.put("carBrand", carBrand);
-                params.put("carModel", carModel);
-                params.put("fuelPri", String.valueOf(fuelPri));
-                params.put("fuelSec", String.valueOf(fuelSec));
-                params.put("km", String.valueOf(kilometer));
-                params.put("plate", plateNo);
-                params.put("avgCons", String.valueOf(averageCons));
-                params.put("carbonEmission", String.valueOf(carbonEmission));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-    */
 }

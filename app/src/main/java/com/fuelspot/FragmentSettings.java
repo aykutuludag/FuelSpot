@@ -80,8 +80,12 @@ import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 public class FragmentSettings extends Fragment {
 
 
+    public static List<CompanyItem> companyList = new ArrayList<>();
+    public static List<String> companyNameList = new ArrayList<>();
+    public static List<Integer> companyVerifiedNumberList = new ArrayList<>();
+    public static List<Integer> companyStationNumberList = new ArrayList<>();
     TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
-    Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
+    Button buttonTax, buttonEksikIstasyon, buttonBeta, buttonFeedback, buttonRate;
     SharedPreferences prefs;
     String feedbackMessage;
     Bitmap bitmap;
@@ -91,14 +95,9 @@ public class FragmentSettings extends Fragment {
     //Creating a Request Queue
     RequestQueue requestQueue;
     View rootView;
-
-    public static List<CompanyItem> companyList = new ArrayList<>();
-    public static List<String> companyNameList = new ArrayList<>();
-    public static List<Integer> companyVerifiedNumberList = new ArrayList<>();
-    public static List<Integer> companyStationNumberList = new ArrayList<>();
     ArrayList<PieEntry> entries = new ArrayList<>();
     PieChart chart3;
-    TextView textViewVerifiedNumber, textViewTotalNumber;
+    TextView textViewTotalNumber;
 
     int otherStations, totalVerified, totalStation;
 
@@ -160,7 +159,6 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            textViewVerifiedNumber = rootView.findViewById(R.id.textViewonayliSayi);
             textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
 
             chart3 = rootView.findViewById(R.id.chart3);
@@ -178,6 +176,14 @@ public class FragmentSettings extends Fragment {
             chart3.setEntryLabelTextSize(12f);
 
             fetchCompanyStats();
+
+            buttonEksikIstasyon = rootView.findViewById(R.id.button_missingStation);
+            buttonEksikIstasyon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openMissingStationPopup(v);
+                }
+            });
 
             buttonBeta = rootView.findViewById(R.id.button_beta);
             buttonBeta.setOnClickListener(new View.OnClickListener() {
@@ -209,20 +215,31 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
+            TextView openTerms = rootView.findViewById(R.id.textView34);
+            openTerms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    builder.enableUrlBarHiding();
+                    builder.setShowTitle(true);
+                    builder.setToolbarColor(Color.parseColor("#212121"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/terms-and-conditions"));
+                }
+            });
 
-
-       /* Button openPrivacy = headerView.findViewById(R.id.button_privacy);
-        openPrivacy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                CustomTabsIntent customTabsIntent = builder.build();
-                builder.enableUrlBarHiding();
-                builder.setShowTitle(true);
-                builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
-            }
-        });*/
+            TextView openPrivacy = rootView.findViewById(R.id.textView35);
+            openPrivacy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    builder.enableUrlBarHiding();
+                    builder.setShowTitle(true);
+                    builder.setToolbarColor(Color.parseColor("#212121"));
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
+                }
+            });
         }
 
         return rootView;
@@ -264,7 +281,6 @@ public class FragmentSettings extends Fragment {
                                     }
                                 }
 
-                                textViewVerifiedNumber.setText("Onaylı istasyon sayısı: " + totalVerified);
                                 textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
 
                                 entries.add(new PieEntry((float) otherStations, "Diğer"));
@@ -401,6 +417,39 @@ public class FragmentSettings extends Fragment {
             mPopupWindow.setElevation(5.0f);
         }
 
+        EditText getFeedback = customView.findViewById(R.id.editTextFeedback);
+        getFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    feedbackMessage = s.toString();
+                }
+            }
+        });
+
+        getScreenshot = customView.findViewById(R.id.campaignPhoto);
+        Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
+        getScreenshot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyFilePickerPermission(getActivity())) {
+                    ImagePicker.create(getActivity()).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
+
         Button sendFeedback = customView.findViewById(R.id.sendFeedback);
         sendFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -408,6 +457,29 @@ public class FragmentSettings extends Fragment {
                 sendFeedback();
             }
         });
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    void openMissingStationPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_feedback, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
 
         EditText getFeedback = customView.findViewById(R.id.editTextFeedback);
         getFeedback.addTextChangedListener(new TextWatcher() {
@@ -439,6 +511,14 @@ public class FragmentSettings extends Fragment {
                 } else {
                     ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
+            }
+        });
+
+        Button sendFeedback = customView.findViewById(R.id.sendFeedback);
+        sendFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendFeedback();
             }
         });
 
@@ -516,7 +596,6 @@ public class FragmentSettings extends Fragment {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), "Settings saved...", Toast.LENGTH_SHORT).show();
                     ImagePicker.create(getActivity()).single().start();
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
@@ -537,7 +616,7 @@ public class FragmentSettings extends Fragment {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
+                Glide.with(this).load(image.getPath()).apply(options).into(getScreenshot);
             }
         }
     }

@@ -82,8 +82,6 @@ public class UserPurchases extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        loadPurchases();
     }
 
     public void loadPurchases() {
@@ -191,6 +189,12 @@ public class UserPurchases extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPurchases();
     }
 
     @Override

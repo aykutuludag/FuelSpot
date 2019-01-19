@@ -51,11 +51,15 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentProfile extends Fragment {
 
@@ -125,9 +129,6 @@ public class FragmentProfile extends Fragment {
                     startActivity(intent);
                 }
             });
-
-            fetchBanking();
-            fetchComments();
         }
         return rootView;
     }
@@ -179,6 +180,8 @@ public class FragmentProfile extends Fragment {
         });
 
         parseUserVehicles();
+        fetchBanking();
+        fetchComments();
     }
 
     public void parseUserVehicles() {
@@ -194,7 +197,15 @@ public class FragmentProfile extends Fragment {
                 }
             }
         } else {
-            Toast.makeText(getActivity(), "Sistemde kayıtlı aracınız bulunamadı...", Toast.LENGTH_LONG).show();
+            VehicleItem item2 = new VehicleItem();
+            item2.setID(-999);
+            item2.setVehicleBrand(getString(R.string.add_vehicle));
+            userAutomobileList.add(item2);
+
+            mAdapter = new VehicleAdapter(getActivity(), userAutomobileList, FragmentProfile.this);
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         }
     }
 
@@ -220,6 +231,10 @@ public class FragmentProfile extends Fragment {
                                 item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
                                 item.setVehicleEmission(obj.getInt("carbonEmission"));
                                 userAutomobileList.add(item);
+
+                                if (item.getVehiclePlateNo().equals(plateNo) && item.getVehicleConsumption() != averageCons) {
+                                    updateVehicle();
+                                }
 
                                 if (userAutomobileList.size() == vehicleIDs.size()) {
                                     if (userAutomobileList.get(userAutomobileList.size() - 1).getID() != -999) {
@@ -383,6 +398,39 @@ public class FragmentProfile extends Fragment {
 
                 //Adding parameters
                 params.put("username", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateVehicle() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Do nothing
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("avgCons", String.valueOf(averageCons));
+                params.put("carbonEmission", String.valueOf(carbonEmission));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
