@@ -37,19 +37,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
     public static final int REQUEST_ALL = 2;
-
+    public static final int GOOGLE_LOGIN = 100;
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     public static String FENCE_RECEIVER_ACTION = "com.fuelspotFENCE_RECEIVER_ACTION";
-
-    public static final int GOOGLE_LOGIN = 100;
-    public static final int GOOGLE_PLACE_AUTOCOMPLETE = 1320;
-
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
-
+    public static List<Fragment> fragments = new ArrayList<>(5);
     SharedPreferences prefs;
     //In-App Billings
     IInAppBillingService mService;
@@ -68,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     Toolbar toolbar;
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
-    public static List<Fragment> fragments = new ArrayList<>(5);
     AHBottomNavigation bottomNavigation;
     ListPopupWindow popupWindow;
     // Static values END
@@ -430,7 +425,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-                return false;
+                mFragNavController.switchTab(position);
+                return true;
             }
         });
 
@@ -504,12 +500,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @Override
-    public boolean onTabSelected(int position, boolean wasSelected) {
-        mFragNavController.switchTab(position);
-        return true;
     }
 
     @Override

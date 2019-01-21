@@ -96,13 +96,13 @@ public class FragmentStations extends Fragment {
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
     Location locLastKnown = new Location("");
-    private GoogleMap googleMap;
-    private FusedLocationProviderClient mFusedLocationClient;
     NestedScrollView nScrollView;
     Button seeAllStations;
     View rootView;
     RelativeLayout stationLayout, sortGasolineLayout, sortDieselLayout, sortLPGLayout, sortElectricityLayout, sortDistanceLayout;
     Window window;
+    private GoogleMap googleMap;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();

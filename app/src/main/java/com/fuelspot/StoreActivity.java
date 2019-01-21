@@ -36,12 +36,12 @@ import static com.fuelspot.MainActivity.userFSMoney;
 
 public class StoreActivity extends AppCompatActivity {
 
+    public static final int PURCHASE_PREMIUM = 13200;
+    public static final int PURCHASE_DOUBLE_RANGE = 63000;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     GridLayoutManager mLayoutManager;
     TextView textViewCurrentBalance;
-    public static final int PURCHASE_PREMIUM = 13200;
-    public static final int PURCHASE_DOUBLE_RANGE = 63000;
     ServiceConnection mServiceConn;
     IInAppBillingService mService;
     SharedPreferences prefs;

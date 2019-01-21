@@ -100,9 +100,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView text;
         RelativeLayout layout;
         ImageView background;
-        public TextView text;
         RelativeTimeTextView newsTime;
 
         ViewHolder(View itemView) {

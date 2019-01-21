@@ -94,11 +94,11 @@ public class FragmentMyStation extends Fragment {
     ImageView stationIcon;
     Button editStation, openPurchases, openComments, openCampaings;
     FusedLocationProviderClient mFusedLocationClient;
-    private GoogleMap googleMap;
     Location locLastKnown = new Location("");
     LocationRequest mLocationRequest;
     LocationCallback mLocationCallback;
     View rootView;
+    private GoogleMap googleMap;
 
     public static FragmentMyStation newInstance() {
         Bundle args = new Bundle();

@@ -173,9 +173,9 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
     int calendarYear, calendarMonth, calendarDay;
     VideoView background;
     FusedLocationProviderClient mFusedLocationClient;
-    private GoogleMap googleMap;
     Bitmap bitmap;
     RequestOptions options;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
