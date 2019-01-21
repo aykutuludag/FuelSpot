@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/tools"
+    android:id="@+id/feedbackLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="#ffffff"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textView36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:text="Eksik istasyon"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView36"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:padding="8dp" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_below="@id/spinner"
+        android:layout_centerHorizontal="true"
+        map:cameraTargetLat="39.925054"
+        map:cameraTargetLng="32.8347552"
+        map:cameraZoom="11.5" />
+
+    <TextView
+        android:id="@+id/textViewCoordinates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/map"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background=" #f0f0f0"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Koordinatlar"
+        android:textColor="#000"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/photoOfStation"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/textViewCoordinates"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/photo_placeholder" />
+
+    <Button
+        android:id="@+id/sendFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/photoOfStation"
+        android:layout_marginTop="16dp"
+        android:background="#FF6838"
+        android:text="SEND"
+        android:textColor="#f0f0f0" />
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:padding="2dp"
+        app:srcCompat="@drawable/cancel" />
+
+</RelativeLayout>

@@ -117,7 +117,7 @@ public class FragmentSettings extends Fragment {
 
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("SETTINGS");
+            t.setScreenName("Settings");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -274,7 +274,7 @@ public class FragmentSettings extends Fragment {
                                     totalVerified += obj.getInt("numOfVerifieds");
                                     totalStation += obj.getInt("numOfStations");
 
-                                    if (companyStationNumberList.get(i) >= 200) {
+                                    if (companyStationNumberList.get(i) >= 225) {
                                         entries.add(new PieEntry((float) companyStationNumberList.get(i), obj.getString("companyName")));
                                     } else {
                                         otherStations += companyStationNumberList.get(i);
@@ -437,7 +437,7 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-        getScreenshot = customView.findViewById(R.id.campaignPhoto);
+        getScreenshot = customView.findViewById(R.id.feedBackPhoto);
         Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
         getScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -502,7 +502,6 @@ public class FragmentSettings extends Fragment {
         });
 
         getScreenshot = customView.findViewById(R.id.campaignPhoto);
-        Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
         getScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -574,6 +573,7 @@ public class FragmentSettings extends Fragment {
                 if (bitmap != null) {
                     params.put("screenshot", getStringImage(bitmap));
                 }
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

@@ -404,32 +404,35 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         MapsInitializer.initialize(this);
 
         // Bottom navigation
-        if (savedInstanceState == null) {
-            FragNavController.Builder builder = FragNavController.newBuilder(null, getSupportFragmentManager(), R.id.mainContainer);
-            fragments.add(FragmentStations.newInstance());
-            fragments.add(FragmentNews.newInstance());
-            fragments.add(FragmentAutomobile.newInstance());
-            fragments.add(FragmentProfile.newInstance());
-            fragments.add(FragmentSettings.newInstance());
-            builder.rootFragments(fragments);
-            mFragNavController = builder.build();
+        FragNavController.Builder builder = FragNavController.newBuilder(null, getSupportFragmentManager(), R.id.mainContainer);
+        fragments.add(FragmentStations.newInstance());
+        fragments.add(FragmentNews.newInstance());
+        fragments.add(FragmentAutomobile.newInstance());
+        fragments.add(FragmentProfile.newInstance());
+        fragments.add(FragmentSettings.newInstance());
+        builder.rootFragments(fragments);
+        mFragNavController = builder.build();
 
-            bottomNavigation = findViewById(R.id.bottom_navigation);
-            AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
-            AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
-            AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
-            AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
-            AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
 
-            bottomNavigation.addItem(item1);
-            bottomNavigation.addItem(item2);
-            bottomNavigation.addItem(item3);
-            bottomNavigation.addItem(item4);
-            bottomNavigation.addItem(item5);
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
+        bottomNavigation.addItem(item5);
 
-            bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-            bottomNavigation.setOnTabSelectedListener(this);
-        }
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                return false;
+            }
+        });
 
         //In-App Services
         InAppBilling();
@@ -437,6 +440,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         // AppRater
         RateThisApp.onCreate(this);
         RateThisApp.showRateDialogIfNeeded(this);
+
+        if (savedInstanceState == null) {
+            mFragNavController.switchTab(FragNavController.TAB1);
+        }
     }
 
     private void InAppBilling() {

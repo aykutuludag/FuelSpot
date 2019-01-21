@@ -83,7 +83,7 @@ public class FragmentStations extends Fragment {
     static List<StationItem> shortStationList = new ArrayList<>();
     static ArrayList<Marker> markers = new ArrayList<>();
 
-    boolean isAllStationsListed, mapIsUpdating;
+    boolean isAllStationsListed;
 
     MapView mMapView;
     RecyclerView mRecyclerView;
@@ -151,18 +151,12 @@ public class FragmentStations extends Fragment {
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
                                 // <= 250m accuracy is sufficient for first load
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();
                                     prefs.edit().putString("lon", userlon).apply();
                                     getVariables(prefs);
-
-                                    if (fullStationList != null && fullStationList.size() == 0) {
-                                        if (!mapIsUpdating) {
-                                            updateMapObject();
-                                        }
-                                    }
 
                                     float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
@@ -170,9 +164,7 @@ public class FragmentStations extends Fragment {
                                         // User's position has been changed. Load the new map
                                         locLastKnown.setLatitude(Double.parseDouble(userlat));
                                         locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                        if (!mapIsUpdating) {
-                                            updateMapObject();
-                                        }
+                                        updateMapObject();
                                     } else {
                                         // User position changed a little. Just update distances
                                         if (fullStationList != null && fullStationList.size() > 0) {
@@ -303,13 +295,13 @@ public class FragmentStations extends Fragment {
                     googleMap.getUiSettings().setMapToolbarEnabled(false);
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.setTrafficEnabled(true);
+                    updateMapObject();
                 }
             });
         }
     }
 
     private void updateMapObject() {
-        mapIsUpdating = true;
         fullStationList.clear();
         mAdapter.notifyDataSetChanged();
 
@@ -387,8 +379,6 @@ public class FragmentStations extends Fragment {
                                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                                 googleMap.setInfoWindowAdapter(customInfoWindow);
                                 markers.get(0).showInfoWindow();
-
-                                mapIsUpdating = false;
                                 noStationError.setVisibility(View.GONE);
 
                                 // Create a fence
@@ -398,7 +388,6 @@ public class FragmentStations extends Fragment {
                                     }
                                 }
                             } catch (JSONException e) {
-                                mapIsUpdating = false;
                                 noStationError.setVisibility(View.VISIBLE);
                                 e.printStackTrace();
                             }
@@ -435,43 +424,26 @@ public class FragmentStations extends Fragment {
     void reTry() {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
         if (mapDefaultRange == 2500) {
-            mapIsUpdating = false;
-
             mapDefaultRange = 5000;
             mapDefaultZoom = 12f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            if (!mapIsUpdating) {
-                updateMapObject();
-            }
+            updateMapObject();
         } else if (mapDefaultRange == 5000) {
-            mapIsUpdating = false;
-
             mapDefaultRange = 10000;
             mapDefaultZoom = 11f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            if (!mapIsUpdating) {
-                updateMapObject();
-            }
+            updateMapObject();
         } else if (mapDefaultRange == 10000) {
-            mapIsUpdating = false;
-
             mapDefaultRange = 25000;
             mapDefaultZoom = 10f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            if (!mapIsUpdating) {
-                updateMapObject();
-            }
+            updateMapObject();
         } else if (mapDefaultRange == 25000) {
-            mapIsUpdating = false;
-
             mapDefaultRange = 50000;
             mapDefaultZoom = 8.75f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            if (!mapIsUpdating) {
-                updateMapObject();
-            }
+            updateMapObject();
         } else {
-            mapIsUpdating = false;
             Snackbar.make(getActivity().findViewById(android.R.id.content), "İstasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
         }
     }
@@ -673,6 +645,7 @@ public class FragmentStations extends Fragment {
                             googleMap.getUiSettings().setMapToolbarEnabled(false);
                             googleMap.setTrafficEnabled(true);
                             googleMap.getUiSettings().setZoomControlsEnabled(true);
+                            updateMapObject();
                         }
                     });
                 } else {

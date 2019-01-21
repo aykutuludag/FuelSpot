@@ -33,13 +33,13 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
         View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.popup_marker, null);
 
-        MarkerItem infoWindowData = (MarkerItem) marker.getTag();
-
         TextView sName = view.findViewById(R.id.station_name);
         CircleImageView sLogo = view.findViewById(R.id.station_logo);
         TextView priceOne = view.findViewById(R.id.priceGasoline);
         TextView priceTwo = view.findViewById(R.id.priceDiesel);
         TextView priceThree = view.findViewById(R.id.priceLPG);
+
+        MarkerItem infoWindowData = (MarkerItem) marker.getTag();
 
         sName.setText(infoWindowData.getStationName());
 

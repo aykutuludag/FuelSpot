@@ -70,7 +70,6 @@ public class FragmentProfile extends Fragment {
 
     RecyclerView mRecyclerView, mRecyclerView2;
     RecyclerView.Adapter mAdapter, mAdapter2;
-    TextView title;
     RequestOptions options;
     CircleImageView userProfileHolder;
     View headerView;
@@ -280,6 +279,8 @@ public class FragmentProfile extends Fragment {
     }
 
     void fetchBanking() {
+        userBankingList.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_BANKING),
                 new Response.Listener<String>() {
                     @Override

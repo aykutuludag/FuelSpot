@@ -25,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.NewsAdapter;
 import com.fuelspot.model.NewsItem;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -82,8 +83,8 @@ public class FragmentNews extends Fragment {
     SimpleDateFormat sdf;
 
     public static FragmentNews newInstance() {
-
         Bundle args = new Bundle();
+        args.putString("FRAGMENT", "News");
 
         FragmentNews fragment = new FragmentNews();
         fragment.setArguments(args);
@@ -112,7 +113,6 @@ public class FragmentNews extends Fragment {
             chart2 = rootView.findViewById(R.id.chartVolume);
             lastUpdatedVolume = rootView.findViewById(R.id.dummy001);
             sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
-
             // ÜLKE SEÇİMİ
             fetchNews("TR");
             fetchCountryFinance("TR");
@@ -197,11 +197,9 @@ public class FragmentNews extends Fragment {
                             try {
                                 JSONArray res = new JSONArray(response);
 
-                                String dummyLastText = "Son güncelleme: " + res.getJSONObject(res.length() - 1).getString("date");
-                                lastUpdatedAvgPrice.setText(dummyLastText);
-
-                                for (int i = 0; i < res.length(); i++) {
+                                for (int i = res.length() - 1; i >= 0; i--) {
                                     JSONObject obj = res.getJSONObject(i);
+
                                     if (obj.getDouble("gasolinePrice") != 0) {
                                         gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("gasolinePrice")));
                                     }
@@ -219,6 +217,9 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
+                                String dummyLastText = "Son güncelleme: " + res.getJSONObject(0).getString("date");
+                                lastUpdatedAvgPrice.setText(dummyLastText);
+
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
                                 if (gasolinePriceHistory.size() > 0) {
@@ -226,6 +227,8 @@ public class FragmentNews extends Fragment {
                                     dataSet.setDrawValues(false);
                                     dataSet.setColor(Color.BLACK);
                                     dataSet.setDrawCircles(false);
+                                    dataSet.setDrawFilled(true);
+                                    dataSet.setFillColor(Color.parseColor("#90000000"));
                                     dataSets.add(dataSet);
                                 }
 
@@ -234,6 +237,8 @@ public class FragmentNews extends Fragment {
                                     dataSet2.setDrawValues(false);
                                     dataSet2.setColor(Color.RED);
                                     dataSet2.setDrawCircles(false);
+                                    dataSet2.setDrawFilled(true);
+                                    dataSet2.setFillColor(Color.parseColor("#90FF0000"));
                                     dataSets.add(dataSet2);
                                 }
 
@@ -242,6 +247,8 @@ public class FragmentNews extends Fragment {
                                     dataSet3.setDrawValues(false);
                                     dataSet3.setColor(Color.BLUE);
                                     dataSet3.setDrawCircles(false);
+                                    dataSet3.setDrawFilled(true);
+                                    dataSet3.setFillColor(Color.parseColor("#900000FF"));
                                     dataSets.add(dataSet3);
                                 }
 
@@ -250,12 +257,15 @@ public class FragmentNews extends Fragment {
                                     dataSet4.setDrawValues(false);
                                     dataSet4.setColor(Color.GREEN);
                                     dataSet4.setDrawCircles(false);
+                                    dataSet4.setFillColor(Color.parseColor("#9000FF00"));
+                                    dataSet4.setDrawFilled(true);
                                     dataSets.add(dataSet4);
                                 }
 
                                 LineData lineData = new LineData(dataSets);
                                 chart.setData(lineData);
-                                chart.getAxisRight().setEnabled(false);
+                                chart.getXAxis().setAvoidFirstLastClipping(true);
+                                chart.getXAxis().setLabelCount(3, true);
                                 chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
                                 chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                                     @Override
@@ -267,11 +277,12 @@ public class FragmentNews extends Fragment {
                                     }
                                 });
                                 chart.getDescription().setText(currencySymbol + " / " + userUnit);
+                                chart.getDescription().setTextSize(12f);
+                                chart.getDescription().setTextColor(Color.WHITE);
+                                chart.setExtraRightOffset(10f);
+                                chart.animateX(1500, Easing.EasingOption.EaseInSine);
                                 chart.invalidate(); // refresh
-                            } catch (JSONException e) {
-                                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            } catch (ParseException e) {
+                            } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -310,15 +321,15 @@ public class FragmentNews extends Fragment {
                             try {
                                 JSONArray res = new JSONArray(response);
 
-                                String dummyLastText = "Son güncelleme: " + res.getJSONObject(res.length() - 1).getString("time");
-                                lastUpdatedVolume.setText(dummyLastText);
-
-                                for (int i = 0; i < res.length(); i++) {
+                                for (int i = res.length() - 1; i >= 0; i--) {
                                     JSONObject obj = res.getJSONObject(i);
                                     if (obj.getDouble("totalPrice") != 0) {
                                         purchaseHistoryOf.add(new Entry((float) sdf.parse(obj.getString("time")).getTime(), (float) obj.getDouble("totalPrice")));
                                     }
                                 }
+
+                                String dummyLastText = "Son güncelleme: " + res.getJSONObject(0).getString("time");
+                                lastUpdatedVolume.setText(dummyLastText);
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
@@ -327,14 +338,16 @@ public class FragmentNews extends Fragment {
                                     dataSet.setColor(Color.BLACK);
                                     dataSet.setDrawValues(false);
                                     dataSet.setDrawCircles(false);
+                                    dataSet.setFillColor(Color.parseColor("#90000000"));
+                                    dataSet.setDrawFilled(true);
                                     dataSets.add(dataSet);
                                 }
 
                                 LineData lineData = new LineData(dataSets);
                                 chart2.setData(lineData);
-                                chart2.getAxisRight().setEnabled(false);
+                                chart2.getXAxis().setAvoidFirstLastClipping(true);
+                                chart2.getXAxis().setLabelCount(3, true);
                                 chart2.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                                chart2.getDescription().setText(currencySymbol);
                                 chart2.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                                     @Override
                                     public String getFormattedValue(float value, AxisBase axis) {
@@ -344,9 +357,13 @@ public class FragmentNews extends Fragment {
                                         return formatter.format(date);
                                     }
                                 });
+                                chart2.getDescription().setText(currencySymbol);
+                                chart2.getDescription().setTextSize(12f);
+                                chart2.getDescription().setTextColor(Color.WHITE);
+                                chart2.setExtraRightOffset(10f);
+                                chart2.animateX(1500, Easing.EasingOption.EaseInSine);
                                 chart2.invalidate(); // refresh
                             } catch (JSONException e) {
-                                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -357,7 +374,7 @@ public class FragmentNews extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        volleyError.printStackTrace();
                     }
                 }) {
             @Override

@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="@string/tab_news"
@@ -31,22 +31,13 @@
                 android:id="@+id/newsView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title_News" />
-
-            <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/spin_kit"
-                style="@style/SpinKitView.Large.Circle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_below="@id/title_News"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                app:SpinKit_Color="@android:color/black" />
+                android:layout_margin="4dp" />
 
             <RelativeLayout
                 android:id="@+id/newsErrorLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/title_News"
                 android:visibility="gone">
 
@@ -67,21 +58,38 @@
 
             <TextView
                 android:id="@+id/title_stats"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_margin="4dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="FuelSpot Akaryakıt Endeksi"
+                android:text="FuelSpot Akaryakıt Piyasası"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <TextView
+                android:id="@+id/subtitle0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_stats"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:text="Fiyat endeksi"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chartAveragePrice"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_below="@id/title_stats"
-                android:layout_margin="8dp" />
+                android:layout_height="300dp"
+                android:layout_below="@id/subtitle0"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/dummy000"
@@ -93,12 +101,25 @@
                 android:padding="2dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
+            <TextView
+                android:id="@+id/subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dummy000"
+                android:layout_marginStart="4dp"
+                android:padding="4dp"
+                android:text="Hacim"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chartVolume"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_below="@id/dummy000"
-                android:layout_margin="8dp" />
+                android:layout_height="300dp"
+                android:layout_below="@id/subtitle1"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/dummy001"
@@ -110,5 +131,13 @@
                 android:padding="2dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
         </RelativeLayout>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:SpinKit_Color="@android:color/black" />
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
