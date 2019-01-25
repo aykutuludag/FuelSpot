@@ -68,6 +68,7 @@ import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
@@ -372,8 +373,12 @@ public class FragmentStations extends Fragment {
                                     addMarker(item);
                                 }
 
+                                mRecyclerView.setAdapter(mAdapter);
+
                                 if (fullStationList.size() > 5) {
                                     seeAllStations.setVisibility(View.VISIBLE);
+                                } else {
+                                    seeAllStations.setVisibility(View.GONE);
                                 }
 
                                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
@@ -382,11 +387,15 @@ public class FragmentStations extends Fragment {
                                 noStationError.setVisibility(View.GONE);
 
                                 // Create a fence
-                                if (!isSuperUser) {
+                                if (!isSuperUser && isGeofenceOpen) {
                                     if (userVehicles != null && userVehicles.length() > 0) {
                                         AlarmBuilder(getActivity());
                                     }
                                 }
+
+                                // Restart map values if changed
+                                mapDefaultRange = 2500;
+                                mapDefaultZoom = 13f;
                             } catch (JSONException e) {
                                 noStationError.setVisibility(View.VISIBLE);
                                 e.printStackTrace();
@@ -571,7 +580,9 @@ public class FragmentStations extends Fragment {
                 shortStationList.add(fullStationList.get(i));
             }
         }
+
         mAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mAdapter);
 
         markers.clear();
         if (googleMap != null) {

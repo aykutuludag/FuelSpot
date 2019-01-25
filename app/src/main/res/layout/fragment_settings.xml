@@ -138,11 +138,53 @@
 
         </RelativeLayout>
 
+
+        <RelativeLayout
+            android:id="@+id/settings_geofence"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_general"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_layout_white">
+
+            <TextView
+                android:id="@+id/titleGeofence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:text="Konum bildirimleri"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleGeofence"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="Konum bildirimleri" />
+
+            <TextView
+                android:id="@+id/textView37"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkBox"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:text="Konum bildirimlerini kapatırsanız FuelSpot benzinliğe girdiğinizi tespit edemez ve yakıt ekleyemezsiniz." />
+
+        </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/settings_tax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_general"
+            android:layout_below="@+id/settings_geofence"
             android:layout_margin="8dp"
             android:background="@drawable/round_layout_white">
 

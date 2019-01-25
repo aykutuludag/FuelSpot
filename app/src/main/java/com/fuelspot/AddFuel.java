@@ -53,6 +53,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
@@ -81,19 +83,23 @@ public class AddFuel extends AppCompatActivity {
     RequestOptions options;
 
     int chosenStationID;
-    String googleID, stationName, stationAddress, stationLoc;
+    String googleID, stationName, stationAddress, stationLoc, stationLogo;
     float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, tax1, tax2, taxTotal, totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
+    CircleImageView istasyonLogoHolder;
+    TextView istasyonNameHolder, istasyonIDHolder;
     RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     Button expandableButton1, expandableButton2;
     String fuelType, fuelType2;
-    TextView fuelType1Text, fuelType2Text, fuelGrandTotal;
+    TextView fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre;
     ImageView fuelType1Icon, fuelType2Icon;
-    EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitre, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
+    EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
     Bitmap bitmap;
     ImageView photoHolder;
     ScrollView scrollView;
+
+    int tempKM;
 
     public static float taxCalculator(int fuelType, float price) {
         float tax;
@@ -151,6 +157,10 @@ public class AddFuel extends AppCompatActivity {
 
         scrollView = findViewById(R.id.addfuel_layout1);
 
+        istasyonIDHolder = findViewById(R.id.stationIDHolder);
+        istasyonLogoHolder = findViewById(R.id.stationIconHolder);
+        istasyonNameHolder = findViewById(R.id.stationNameHolder);
+
         expandableLayoutYakit = findViewById(R.id.division2);
         expandableLayoutYakit2 = findViewById(R.id.division3);
         expandableButton1 = findViewById(R.id.expandableButtonYakit1);
@@ -190,6 +200,7 @@ public class AddFuel extends AppCompatActivity {
                                 stationName = obj.getString("name");
                                 stationAddress = obj.getString("vicinity");
                                 stationLoc = obj.getString("location");
+                                stationLogo = obj.getString("logoURL");
                                 gasolinePrice = (float) obj.getDouble("gasolinePrice");
                                 dieselPrice = (float) obj.getDouble("dieselPrice");
                                 LPGPrice = (float) obj.getDouble("lpgPrice");
@@ -227,7 +238,10 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void loadLayout() {
-        final int temp = kilometer;
+        istasyonIDHolder.setText("" + chosenStationID);
+        istasyonNameHolder.setText(stationName);
+        Glide.with(AddFuel.this).load(stationLogo).apply(options).into(istasyonLogoHolder);
+
         enterKilometer.setText(String.valueOf(kilometer));
         enterKilometer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -243,7 +257,7 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    kilometer = Integer.parseInt(s.toString());
+                    tempKM = Integer.parseInt(s.toString());
                 }
             }
         });
@@ -430,7 +444,7 @@ public class AddFuel extends AppCompatActivity {
                 if (isNetworkConnected(AddFuel.this)) {
                     if (totalPrice > 0) {
                         if (kilometer != 0) {
-                            if (temp < kilometer) {
+                            if (tempKM > kilometer) {
                                 addPurchase();
                             } else {
                                 Toast.makeText(AddFuel.this, "Aracınızın yeni kilometresi daha yüksek olmalı", Toast.LENGTH_LONG).show();
@@ -463,23 +477,21 @@ public class AddFuel extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(AddFuel.this, response, Toast.LENGTH_LONG).show();
-                        loading.dismiss();
-
+                        System.out.println("ANANIN AMI: " + response);
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(AddFuel.this, "Yakıt başarıyla eklendi...", Toast.LENGTH_LONG).show();
-                                    prefs.edit().putInt("Kilometer", kilometer).apply();
-                                    finish();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                Toast.makeText(AddFuel.this, "Yakıt başarıyla eklendi...", Toast.LENGTH_LONG).show();
+                                kilometer = tempKM;
+                                prefs.edit().putInt("Kilometer", kilometer).apply();
+                                finish();
+                            } else {
+                                Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                         }
+
+                        loading.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
@@ -499,7 +511,7 @@ public class AddFuel extends AppCompatActivity {
                 params.put("username", username);
                 params.put("vehicleID", String.valueOf(vehicleID));
                 params.put("plateNO", plateNo);
-                params.put("kilometer", String.valueOf(kilometer));
+                params.put("kilometer", String.valueOf(tempKM));
                 params.put("stationID", String.valueOf(chosenStationID));
                 params.put("stationNAME", stationName);
                 params.put("stationLOC", stationLoc);
@@ -615,7 +627,9 @@ public class AddFuel extends AppCompatActivity {
         bitmap = null;
         stationName = null;
         googleID = null;
+        tempKM = 0;
         stationLoc = null;
+        stationLogo = null;
         gasolinePrice = 0;
         dieselPrice = 0;
         electricityPrice = 0;

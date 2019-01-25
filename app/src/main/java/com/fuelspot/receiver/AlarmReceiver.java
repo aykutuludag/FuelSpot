@@ -180,6 +180,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     locationFence = LocationFence.in(lat, lon, 50, 10000L);
                                     AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
                                     registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
+
+                                    mapDefaultRange = 2500;
+                                    mapDefaultZoom = 13f;
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -250,60 +253,4 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         });
     }
-
-   /* protected void queryFence(final String fenceKey) {
-        Awareness.FenceApi.queryFences(client,
-                FenceQueryRequest.forFences(Collections.singletonList(fenceKey)))
-                .setResultCallback(new ResultCallback<FenceQueryResult>() {
-                    @Override
-                    public void onResult(@NonNull FenceQueryResult fenceQueryResult) {
-                        if (!fenceQueryResult.getStatus().isSuccess()) {
-                            Log.e(TAG, "Could not query fence: " + fenceKey);
-                            return;
-                        }
-                        FenceStateMap map = fenceQueryResult.getFenceStateMap();
-                        for (String fenceKey : map.getFenceKeys()) {
-                            FenceState fenceState = map.getFenceState(fenceKey);
-                            if (fenceState.getCurrentState() == 2) {
-                                sendNotification(fenceState.getFenceKey());
-                            }
-                        }
-                    }
-                });
-    }*/
-
-    /*private void sendNotification(String stationID) {
-        Intent intentLauncher = new Intent(mContext, AddFuel.class);
-        intentLauncher.putExtra("STATION_ID", Integer.parseInt(stationID));
-        notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mPendingIntent = PendingIntent.getActivity(mContext, 1, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelName = "Yakıt ekleme";
-            String channelDesc = "Siz istasyona girdiğinizde tetiklenir. Bildirim aracılığıyla yakıt ekleyebilirsiniz.";
-            NotificationChannel mChannel = new NotificationChannel(String.valueOf(0), channelName, NotificationManager.IMPORTANCE_HIGH);
-            mChannel.setDescription(channelDesc);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{500, 500, 500, 500});
-            notificationManager.createNotificationChannel(mChannel);
-
-            builder = new NotificationCompat.Builder(mContext, String.valueOf(0));
-        } else {
-            builder = new NotificationCompat.Builder(mContext);
-        }
-
-        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
-        builder.setContentTitle(mContext.getString(R.string.app_name))
-                .setContentText("Yakıt mı alıyorsun? Eklemek için hemen tıkla!")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setAutoCancel(true)
-                .setContentIntent(mPendingIntent)
-                .setLargeIcon(bm)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setVibrate(new long[]{500, 500, 500, 500});
-
-        // Send notification
-        Notification notification = builder.build();
-        notificationManager.notify(0, notification);
-    }*/
 }

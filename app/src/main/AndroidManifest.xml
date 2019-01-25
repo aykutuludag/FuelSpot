@@ -53,7 +53,6 @@
         <activity
             android:name=".AddFuel"
             android:label="Yakıt ekle"
-            android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".PurchaseDetails"
@@ -121,12 +120,14 @@
             android:parentActivityName=".superuser.AdminMainActivity" />
 
         <!-- AlarmReceiver -->
-        <receiver
-            android:name=".receiver.AlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
+        <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.FenceReceiver">
+            <intent-filter>
+                <action android:name="com.fuelspot.FENCE_RECEIVER_ACTION" />
             </intent-filter>
         </receiver>
 

@@ -134,7 +134,7 @@ public class StationDetails extends AppCompatActivity {
     NestedScrollView scrollView;
     ImageView errorStreetView, errorCampaign, errorComment;
     CircleImageView verifiedSection;
-    CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant;
+    CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot;
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
     RelativeLayout commentSection;
     Button seeAllComments;
@@ -213,6 +213,7 @@ public class StationDetails extends AppCompatActivity {
         imageViewTireRepair = findViewById(R.id.TireRepair);
         imageViewMechanic = findViewById(R.id.Mechanic);
         imageViewRestaurant = findViewById(R.id.Restaurant);
+        imageViewParkSpot = findViewById(R.id.ParkSpot);
         commentSection = findViewById(R.id.section_comment);
         errorComment = findViewById(R.id.errorNoComment);
         noCommentText = findViewById(R.id.noCommentText);
@@ -575,40 +576,54 @@ public class StationDetails extends AppCompatActivity {
         chart = findViewById(R.id.chart);
 
         // Facilities
-        if (facilitiesOfStation.contains("WC")) {
-            imageViewWC.setVisibility(View.VISIBLE);
-        } else {
-            imageViewWC.setVisibility(View.GONE);
-        }
+        // Facilities
+        try {
+            JSONArray facilitiesRes = new JSONArray(facilitiesOfStation);
+            JSONObject facilitiesObj = facilitiesRes.getJSONObject(0);
 
-        if (facilitiesOfStation.contains("Market")) {
-            imageViewMarket.setVisibility(View.VISIBLE);
-        } else {
-            imageViewMarket.setVisibility(View.GONE);
-        }
+            if (facilitiesObj.getInt("WC") == 1) {
+                imageViewWC.setAlpha(1.0f);
+            } else {
+                imageViewWC.setAlpha(0.5f);
+            }
 
-        if (facilitiesOfStation.contains("CarWash")) {
-            imageViewCarWash.setVisibility(View.VISIBLE);
-        } else {
-            imageViewCarWash.setVisibility(View.GONE);
-        }
+            if (facilitiesObj.getInt("Market") == 1) {
+                imageViewMarket.setAlpha(1.0f);
+            } else {
+                imageViewMarket.setAlpha(0.5f);
+            }
 
-        if (facilitiesOfStation.contains("TireRepair")) {
-            imageViewTireRepair.setVisibility(View.VISIBLE);
-        } else {
-            imageViewTireRepair.setVisibility(View.GONE);
-        }
+            if (facilitiesObj.getInt("CarWash") == 1) {
+                imageViewCarWash.setAlpha(1.0f);
+            } else {
+                imageViewCarWash.setAlpha(0.5f);
+            }
 
-        if (facilitiesOfStation.contains("Mechanic")) {
-            imageViewMechanic.setVisibility(View.VISIBLE);
-        } else {
-            imageViewMechanic.setVisibility(View.GONE);
-        }
+            if (facilitiesObj.getInt("TireRepair") == 1) {
+                imageViewTireRepair.setAlpha(1.0f);
+            } else {
+                imageViewTireRepair.setAlpha(0.5f);
+            }
 
-        if (facilitiesOfStation.contains("Restaurant")) {
-            imageViewRestaurant.setVisibility(View.VISIBLE);
-        } else {
-            imageViewRestaurant.setVisibility(View.GONE);
+            if (facilitiesObj.getInt("Mechanic") == 1) {
+                imageViewMechanic.setAlpha(1.0f);
+            } else {
+                imageViewMechanic.setAlpha(0.5f);
+            }
+
+            if (facilitiesObj.getInt("Restaurant") == 1) {
+                imageViewRestaurant.setAlpha(1.0f);
+            } else {
+                imageViewRestaurant.setAlpha(0.5f);
+            }
+
+            if (facilitiesObj.getInt("ParkSpot") == 1) {
+                imageViewParkSpot.setAlpha(1.0f);
+            } else {
+                imageViewParkSpot.setAlpha(0.5f);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         fetchStationFinance();

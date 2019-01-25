@@ -35,12 +35,67 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/expandableButtonKM"
+                android:id="@+id/expandableButtonStation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:clickable="false"
-                android:text="KİLOMETRE"
+                android:text="İSTASYON BİLGİLERİ"
+                android:textColor="#fff" />
+
+            <RelativeLayout
+                android:id="@+id/division0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/expandableButtonStation"
+                android:background="#EDEDED">
+
+                <TextView
+                    android:id="@+id/stationIDHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/stationIconHolder"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:src="@drawable/default_station"
+                    tools:ignore="RtlHardcoded" />
+
+                <TextView
+                    android:id="@+id/stationNameHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stationIconHolder"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/expandableButtonKM"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/division0"
+                android:background="@android:color/transparent"
+                android:clickable="false"
+                android:text="ARAÇ BİLGİLERİ"
                 android:textColor="#fff" />
 
             <RelativeLayout
@@ -76,7 +131,7 @@
                     android:background="#fff"
                     android:gravity="center"
                     android:inputType="number"
-                    android:padding="4dp"
+                    android:padding="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             </RelativeLayout>
@@ -175,15 +230,12 @@
                         android:text="TL"
                         app:layout_widthPercent="30%" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/editTextLiter"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPrice"
                         android:layout_marginTop="8dp"
-                        android:background="#fff"
-                        android:focusable="false"
                         android:gravity="center"
-                        android:inputType="none"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         app:layout_widthPercent="70%" />

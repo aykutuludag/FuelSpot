@@ -395,55 +395,88 @@
                         android:gravity="center"
                         android:padding="4dp">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/WC"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="2dp"
-                            android:src="@drawable/wc" />
+                        <android.support.percent.PercentRelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/Market"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="2dp"
-                            android:layout_toEndOf="@id/WC"
-                            android:src="@drawable/market" />
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/WC"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_alignParentStart="true"
+                                android:alpha="0.5"
+                                android:src="@drawable/wc"
+                                app:layout_marginEndPercent="0.5%"
+                                app:layout_marginStartPercent="0.5%"
+                                app:layout_widthPercent="12.75%" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/CarWash"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="2dp"
-                            android:layout_toEndOf="@id/Market"
-                            android:src="@drawable/carwash" />
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/Market"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_toEndOf="@id/WC"
+                                android:alpha="0.5"
+                                android:src="@drawable/market"
+                                app:layout_marginEndPercent="0.75%"
+                                app:layout_marginStartPercent="0.75%"
+                                app:layout_widthPercent="12.75%" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/TireRepair"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="2dp"
-                            android:layout_toEndOf="@id/CarWash"
-                            android:src="@drawable/tirerepair"
-                            android:visibility="gone" />
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/CarWash"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_toEndOf="@id/Market"
+                                android:alpha="0.5"
+                                android:src="@drawable/carwash"
+                                app:layout_marginEndPercent="0.75%"
+                                app:layout_marginStartPercent="0.75%"
+                                app:layout_widthPercent="12.75%" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/Mechanic"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="2dp"
-                            android:layout_toEndOf="@id/TireRepair"
-                            android:src="@drawable/mechanic"
-                            android:visibility="gone" />
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/TireRepair"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_toEndOf="@id/CarWash"
+                                android:alpha="0.5"
+                                android:src="@drawable/tirerepair"
+                                app:layout_marginEndPercent="0.75%"
+                                app:layout_marginStartPercent="0.75%"
+                                app:layout_widthPercent="13%" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/Restaurant"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="2dp"
-                            android:layout_toEndOf="@id/Mechanic"
-                            android:src="@drawable/restaurant"
-                            android:visibility="gone" />
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/Mechanic"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_toEndOf="@id/TireRepair"
+                                android:alpha="0.5"
+                                android:src="@drawable/mechanic"
+                                app:layout_marginEndPercent="0.75%"
+                                app:layout_marginStartPercent="0.75%"
+                                app:layout_widthPercent="12.75%" />
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/Restaurant"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_toEndOf="@id/Mechanic"
+                                android:alpha="0.5"
+                                android:src="@drawable/restaurant"
+                                app:layout_marginEndPercent="0.75%"
+                                app:layout_marginStartPercent="0.75%"
+                                app:layout_widthPercent="12.75%" />
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/ParkSpot"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_toEndOf="@id/Restaurant"
+                                android:alpha="0.5"
+                                android:src="@drawable/parkspot"
+                                app:layout_marginEndPercent="0.75%"
+                                app:layout_marginStartPercent="0.75%"
+                                app:layout_widthPercent="12.75%" />
+                        </android.support.percent.PercentRelativeLayout>
 
                     </RelativeLayout>
 
@@ -510,7 +543,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_margin="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/comments"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616" />

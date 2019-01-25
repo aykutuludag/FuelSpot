@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -70,6 +72,7 @@ import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
@@ -98,6 +101,8 @@ public class FragmentSettings extends Fragment {
     ArrayList<PieEntry> entries = new ArrayList<>();
     PieChart chart3;
     TextView textViewTotalNumber;
+
+    CheckBox geofenceCheckBox;
 
     int otherStations, totalVerified, totalStation;
 
@@ -138,6 +143,31 @@ public class FragmentSettings extends Fragment {
 
             unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
             unitSystemText.setText(userUnit);
+
+            geofenceCheckBox = rootView.findViewById(R.id.checkBox);
+            if (isGeofenceOpen) {
+                geofenceCheckBox.setChecked(true);
+                geofenceCheckBox.setText("Konum bildirimleri açık");
+            } else {
+                geofenceCheckBox.setChecked(false);
+                geofenceCheckBox.setText("Konum bildirimleri kapalı");
+            }
+            geofenceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        isGeofenceOpen = true;
+                        geofenceCheckBox.setChecked(true);
+                        geofenceCheckBox.setText("Konum bildirimleri açık");
+                    } else {
+                        isGeofenceOpen = false;
+                        geofenceCheckBox.setChecked(false);
+                        geofenceCheckBox.setText("Konum bildirimleri kapalı");
+                    }
+
+                    prefs.edit().putBoolean("Geofence", isGeofenceOpen).apply();
+                }
+            });
 
             textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
             textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
@@ -456,6 +486,54 @@ public class FragmentSettings extends Fragment {
             public void onClick(View v) {
                 sendFeedback();
             }
+
+            private void sendFeedback() {
+                //Showing the progress dialog
+                final ProgressDialog loading = ProgressDialog.show(getActivity(), "Loading...", "Please wait...", false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FEEDBACK),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String s) {
+                                loading.dismiss();
+                                if (isSuperUser) {
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
+                                    snackBar.show();
+                                } else {
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
+                                    snackBar.show();
+                                }
+                                mPopupWindow.dismiss();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Dismissing the progress dialog
+                                loading.dismiss();
+                                Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("username", MainActivity.username);
+                        params.put("message", feedbackMessage);
+                        if (bitmap != null) {
+                            params.put("screenshot", getStringImage(bitmap));
+                        }
+                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
         });
 
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
@@ -517,7 +595,11 @@ public class FragmentSettings extends Fragment {
         sendFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendFeedback();
+                sendReport();
+            }
+
+            private void sendReport() {
+                
             }
         });
 
@@ -536,53 +618,7 @@ public class FragmentSettings extends Fragment {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    private void sendFeedback() {
-        //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(getActivity(), "Loading...", "Please wait...", false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FEEDBACK),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        loading.dismiss();
-                        if (isSuperUser) {
-                            Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
-                            snackBar.show();
-                        } else {
-                            Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
-                            snackBar.show();
-                        }
-                        mPopupWindow.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Dismissing the progress dialog
-                        loading.dismiss();
-                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
 
-                //Adding parameters
-                params.put("username", MainActivity.username);
-                params.put("message", feedbackMessage);
-                if (bitmap != null) {
-                    params.put("screenshot", getStringImage(bitmap));
-                }
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
 
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

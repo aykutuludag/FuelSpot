@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int GOOGLE_LOGIN = 100;
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-    public static String FENCE_RECEIVER_ACTION = "com.fuelspotFENCE_RECEIVER_ACTION";
+    public static String FENCE_RECEIVER_ACTION = "com.fuelspot.FENCE_RECEIVER_ACTION";
     // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static String shortTimeFormat = "dd-MMM HH:mm";
     public static boolean premium, hasDoubleRange, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
-    public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, openCount, mapDefaultRange, adCount;
+    public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, mapDefaultRange, adCount;
     public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static List<Fragment> fragments = new ArrayList<>(5);
     SharedPreferences prefs;
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         mapDefaultRange = prefs.getInt("RANGE", 2500);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         userVehicles = prefs.getString("userVehicles", "");
         plateNo = prefs.getString("plateNo", "");
@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
         MapsInitializer.initialize(this);
 
         // Bottom navigation
-        FragNavController.Builder builder = FragNavController.newBuilder(null, getSupportFragmentManager(), R.id.mainContainer);
+        FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
         fragments.add(FragmentStations.newInstance());
         fragments.add(FragmentNews.newInstance());
         fragments.add(FragmentAutomobile.newInstance());
@@ -409,16 +409,20 @@ public class MainActivity extends AppCompatActivity {
         mFragNavController = builder.build();
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
 
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item1);
+
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
         bottomNavigation.addItem(item2);
+
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
         bottomNavigation.addItem(item3);
+
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
         bottomNavigation.addItem(item4);
+
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
         bottomNavigation.addItem(item5);
 
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
@@ -520,6 +524,9 @@ public class MainActivity extends AppCompatActivity {
                     mFragNavController.clearStack();
                     super.onBackPressed();
                     finish();
+
+                    // When you fixed the second time opening crash issue remove this
+                    android.os.Process.killProcess(android.os.Process.myPid());
                 }
 
                 this.doubleBackToExitPressedOnce = true;

@@ -55,7 +55,7 @@
     <string name="HundredDollarText">100 TL ile şunları alabilirsiniz:</string>
     <string name="facilities">Tesisler</string>
     <string name="campaigns">Kampanyalar</string>
-    <string name="comments">Son yorumlarınız</string>
+    <string name="comments">Son yorumlar</string>
 
     <!-- PurchaseDetails -->
     <string name="bill">FATURA</string>
