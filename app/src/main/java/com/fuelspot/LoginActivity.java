@@ -34,8 +34,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.fuelspot.superuser.AdminMainActivity;
-import com.fuelspot.superuser.AdminWelcome;
+import com.fuelspot.superuser.SuperMainActivity;
+import com.fuelspot.superuser.SuperWelcomeActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.Auth;
@@ -78,7 +78,6 @@ import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userUnit;
-import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -114,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        MainActivity.getVariables(prefs);
+        getVariables(prefs);
 
         //Layout objects
         signInButton = findViewById(R.id.buttonGoogle);
@@ -158,11 +157,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         doUHaveStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LoginActivity.this, AdminWelcome.class);
+                Intent i = new Intent(LoginActivity.this, SuperWelcomeActivity.class);
                 startActivity(i);
             }
         });
 
+        arrangeLayouts();
     }
 
     void Localization() {
@@ -172,8 +172,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (addresses.size() > 0) {
                 //Check the user if s/he trip another country and if s/he is, re-logged him
                 if (!userCountry.equals(addresses.get(0).getCountryCode())) {
-                    //User has changes his/her country. Fetch the tax rates/unit/currency.
-                    //Language will be automatically changed
+                    // User has changes his/her country. Fetch the tax rates/unit/currency. Need to re-login
                     isSigned = false;
                     prefs.edit().putBoolean("isSigned", false).apply();
 
@@ -243,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(LoginActivity.this, AdminMainActivity.class);
+                        Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
                         startActivity(i);
                         finish();
                     }
@@ -410,9 +409,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 userDisplayLanguage = obj.getString("language");
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                                userVehicles = obj.getString("vehicles");
-                                prefs.edit().putString("userVehicles", userVehicles).apply();
-
                                 getVariables(prefs);
 
                                 loading.dismiss();
@@ -480,7 +476,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             background.setVideoURI(uri);
             background.start();
         }
-        arrangeLayouts();
     }
 
     @Override

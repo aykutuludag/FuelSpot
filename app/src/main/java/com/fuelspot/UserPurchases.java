@@ -29,12 +29,6 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.fuelspot.FragmentAutomobile.purchaseKilometers;
-import static com.fuelspot.FragmentAutomobile.purchaseLiters;
-import static com.fuelspot.FragmentAutomobile.purchasePrices;
-import static com.fuelspot.FragmentAutomobile.purchaseTimes;
-import static com.fuelspot.FragmentAutomobile.purchaseUnitPrice;
-import static com.fuelspot.FragmentAutomobile.purchaseUnitPrice2;
 import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
 import static com.fuelspot.MainActivity.vehicleID;
 
@@ -97,14 +91,8 @@ public class UserPurchases extends AppCompatActivity {
 
     public void fetchPurchases() {
         vehiclePurchaseList.clear();
-        purchaseTimes.clear();
-        purchaseKilometers.clear();
-        purchasePrices.clear();
-        purchaseUnitPrice.clear();
-        purchaseUnitPrice2.clear();
-        purchaseLiters.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_PURCHASES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -130,14 +118,8 @@ public class UserPurchases extends AppCompatActivity {
                                     item.setFuelTax2((float) obj.getDouble("fuelTax2"));
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
+                                    item.setKilometer(obj.getInt("kilometer"));
                                     vehiclePurchaseList.add(item);
-
-                                    purchaseTimes.add(i, obj.getString("time"));
-                                    purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
-                                    purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
-                                    purchasePrices.add(i, obj.getDouble("totalPrice"));
-                                    purchaseKilometers.add(i, obj.getInt("kilometer"));
-                                    purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
 
                                     mAdapter = new PurchaseAdapter(UserPurchases.this, vehiclePurchaseList);
                                     mLayoutManager = new GridLayoutManager(UserPurchases.this, 1);

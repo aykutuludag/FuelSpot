@@ -30,6 +30,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+
 public class SuperPurchases extends AppCompatActivity {
 
     SwipeRefreshLayout swipeContainer;
@@ -138,7 +140,8 @@ public class SuperPurchases extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("stationID", String.valueOf(AdminMainActivity.superStationID));
+                params.put("stationID", String.valueOf(superStationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

@@ -61,6 +61,7 @@
         <activity
             android:name=".ProfileEditActivity"
             android:label="Profili düzenle"
+            android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".StationComments"
@@ -97,27 +98,36 @@
 
         <!-- SuperUser Class -->
         <activity
-            android:name=".superuser.AdminWelcome"
+            android:name=".superuser.SuperWelcomeActivity"
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".superuser.AdminMainActivity" />
+        <activity android:name=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperUpdateStation"
             android:label="@string/update_station"
-            android:parentActivityName=".superuser.AdminMainActivity"
+            android:parentActivityName=".superuser.SuperMainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".superuser.AddStation"
             android:label="@string/add_station"
-            android:parentActivityName=".superuser.AdminMainActivity" />
+            android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperPurchases"
             android:label="@string/purchases"
-            android:parentActivityName=".superuser.AdminMainActivity" />
+            android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperCampaings"
             android:label="@string/campaigns"
-            android:parentActivityName=".superuser.AdminMainActivity" />
+            android:parentActivityName=".superuser.SuperMainActivity" />
+        <activity
+            android:name=".superuser.SuperProfileEdit"
+            android:label="Profili düzenle"
+            android:parentActivityName=".superuser.SuperMainActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".superuser.SuperStoreActivity"
+            android:label="@string/store"
+            android:parentActivityName=".superuser.SuperMainActivity" />
 
         <!-- AlarmReceiver -->
         <receiver android:name=".receiver.AlarmReceiver">

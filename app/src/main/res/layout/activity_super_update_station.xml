@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_main"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".superuser.SuperUpdateStation">
@@ -32,70 +33,105 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/baseInfoLayout"
+                android:id="@+id/baseInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="#60ffffff">
+                android:background="@drawable/round_layout_white"
+                android:padding="4dp">
 
-                <EditText
-                    android:id="@+id/editTextStationName"
+                <TextView
+                    android:id="@+id/title_baseInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:ems="10"
-                    android:enabled="false"
-                    android:focusable="false"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:hint="STATION NAME"
-                    android:inputType="none"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                <EditText
-                    android:id="@+id/editTextStationAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/editTextStationName"
-                    android:layout_centerHorizontal="true"
-                    android:ems="10"
-                    android:enabled="false"
-                    android:focusable="false"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:hint="ADDRESS"
-                    android:inputType="none"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageViewStationLogo"
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
-                    android:layout_below="@id/editTextStationAddress"
-                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="İstasyon bilgileri"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/stationLogo"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_below="@+id/title_baseInfo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="4dp"
                     android:src="@drawable/default_station"
                     tools:ignore="RtlHardcoded" />
 
                 <TextView
-                    android:id="@+id/textViewOnayli"
+                    android:id="@+id/textViewStationID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imageViewStationLogo"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="4dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:padding="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <Spinner
+                    android:id="@+id/simpleSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stationLogo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/editTextStationAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/simpleSpinner"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/editTextStationLicense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextStationAddress"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/editTextOwner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editTextStationLicense"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <com.github.curioustechizen.ago.RelativeTimeTextView
                     android:id="@+id/stationLastUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageViewStationLogo"
+                    android:layout_below="@+id/editTextOwner"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:padding="4dp"
@@ -108,12 +144,13 @@
                 android:id="@+id/verifiedSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/baseInfoLayout"
+                android:layout_below="@+id/baseInfo"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="#fafafa"
+                android:background="@drawable/round_layout_white"
+                android:padding="4dp"
                 android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -126,7 +163,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:src="@drawable/verified" />
+                    android:src="@drawable/verified_station" />
 
                 <TextView
                     android:id="@+id/textView25"
@@ -135,7 +172,7 @@
                     android:layout_centerVertical="true"
                     android:layout_margin="4dp"
                     android:layout_toEndOf="@+id/verifiedStation"
-                    android:text="Bu istasyon FuelSpot tarafından onaylanmıştır." />
+                    android:text="@string/stationVerifiedText" />
 
             </RelativeLayout>
 
@@ -144,96 +181,149 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/verifiedSection"
-                android:layout_margin="8dp"
-                android:background="#60ffffff"
-                android:gravity="center">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white"
+                android:gravity="center"
+                android:padding="4dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/gasolineIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_margin="8dp"
-                    android:src="@drawable/gasoline"
-                    tools:ignore="RtlHardcoded" />
+                <TextView
+                    android:id="@+id/title_prices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="Fiyatlar"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-                <EditText
-                    android:id="@+id/editTextGasoline"
+                <RelativeLayout
+                    android:id="@+id/subPriceSec"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/gasolineIcon"
-                    android:layout_alignStart="@+id/gasolineIcon"
-                    android:layout_alignEnd="@id/gasolineIcon"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="7.00"
-                    android:inputType="numberDecimal"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:layout_below="@+id/title_prices"
+                    android:layout_centerHorizontal="true">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/dieselIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_margin="8dp"
-                    android:layout_toRightOf="@id/gasolineIcon"
-                    android:src="@drawable/diesel"
-                    tools:ignore="RtlHardcoded" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/gasolineIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:padding="8dp"
+                        android:src="@drawable/gasoline"
+                        tools:ignore="RtlHardcoded" />
 
-                <EditText
-                    android:id="@+id/editTextDiesel"
+                    <EditText
+                        android:id="@+id/editTextGasoline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gasolineIcon"
+                        android:layout_alignStart="@+id/gasolineIcon"
+                        android:layout_alignEnd="@id/gasolineIcon"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/dieselIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_toRightOf="@id/gasolineIcon"
+                        android:padding="8dp"
+                        android:src="@drawable/diesel"
+                        tools:ignore="RtlHardcoded" />
+
+                    <EditText
+                        android:id="@+id/editTextDiesel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/dieselIcon"
+                        android:layout_alignStart="@+id/dieselIcon"
+                        android:layout_alignEnd="@id/dieselIcon"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/lpgIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_toRightOf="@id/dieselIcon"
+                        android:padding="8dp"
+                        android:src="@drawable/lpg"
+                        tools:ignore="RtlHardcoded" />
+
+                    <EditText
+                        android:id="@+id/editTextLPG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lpgIcon"
+                        android:layout_alignStart="@+id/lpgIcon"
+                        android:layout_alignEnd="@id/lpgIcon"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/electricityIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_toRightOf="@id/lpgIcon"
+                        android:padding="8dp"
+                        android:src="@drawable/electricity"
+                        tools:ignore="RtlHardcoded" />
+
+                    <EditText
+                        android:id="@+id/editTextElectricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/electricityIcon"
+                        android:layout_alignStart="@+id/electricityIcon"
+                        android:layout_alignEnd="@id/electricityIcon"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/dummy0001"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/dieselIcon"
-                    android:layout_alignStart="@+id/dieselIcon"
-                    android:layout_alignEnd="@id/dieselIcon"
-                    android:ems="10"
+                    android:layout_below="@id/subPriceSec"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:hint="6.00"
-                    android:inputType="numberDecimal"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/lpgIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_margin="8dp"
-                    android:layout_toRightOf="@id/dieselIcon"
-                    android:src="@drawable/lpg"
-                    tools:ignore="RtlHardcoded" />
-
-                <EditText
-                    android:id="@+id/editTextLPG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/lpgIcon"
-                    android:layout_alignStart="@+id/lpgIcon"
-                    android:layout_alignEnd="@id/lpgIcon"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="5.00"
-                    android:inputType="numberDecimal"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/electricityIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_margin="8dp"
-                    android:layout_toRightOf="@id/lpgIcon"
-                    android:src="@drawable/electricity"
-                    tools:ignore="RtlHardcoded" />
-
-                <EditText
-                    android:id="@+id/editTextElectricity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/electricityIcon"
-                    android:layout_alignStart="@+id/electricityIcon"
-                    android:layout_alignEnd="@id/electricityIcon"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="4.00"
-                    android:inputType="numberDecimal"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:text="Not: Aynı ürün grubundan 2 farklı yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -242,19 +332,22 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/priceSec"
                 android:layout_margin="8dp"
-                android:background="#60000000">
+                android:background="@drawable/round_layout_white"
+                android:padding="4dp">
 
                 <TextView
                     android:id="@+id/title_facilities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="Tesisler"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse" />
+                    android:text="@string/facilities"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-                <RelativeLayout
+                <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_facilities"
@@ -262,64 +355,81 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/WC"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentStart="true"
                         android:alpha="0.5"
-                        android:src="@drawable/wc" />
+                        android:src="@drawable/wc"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Market"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
                         android:layout_toEndOf="@id/WC"
                         android:alpha="0.5"
-                        android:src="@drawable/market" />
+                        android:src="@drawable/market"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/CarWash"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
                         android:layout_toEndOf="@id/Market"
                         android:alpha="0.5"
-                        android:src="@drawable/carwash" />
+                        android:src="@drawable/carwash"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/TireRepair"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
                         android:layout_toEndOf="@id/CarWash"
                         android:alpha="0.5"
-                        android:src="@drawable/tirerepair" />
+                        android:src="@drawable/tirerepair"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Mechanic"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
                         android:layout_toEndOf="@id/TireRepair"
                         android:alpha="0.5"
-                        android:src="@drawable/mechanic" />
+                        android:src="@drawable/mechanic"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
 
-                </RelativeLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/Restaurant"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_toEndOf="@id/Mechanic"
+                        android:alpha="0.5"
+                        android:src="@drawable/restaurant"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ParkSpot"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_toEndOf="@id/Restaurant"
+                        android:alpha="0.5"
+                        android:src="@drawable/parkspot"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="13%" />
+                </android.support.percent.PercentRelativeLayout>
 
             </RelativeLayout>
 
@@ -332,7 +442,7 @@
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
                 android:fontFamily="@font/gotham_black"
-                android:text="Güncelle"
+                android:text="@string/update"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </RelativeLayout>

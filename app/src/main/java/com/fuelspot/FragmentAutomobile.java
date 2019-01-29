@@ -41,7 +41,6 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -60,19 +59,12 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.userVehicles;
+import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentAutomobile extends Fragment {
 
     public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
-
-    public static ArrayList<String> purchaseTimes = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice = new ArrayList<>();
-    public static ArrayList<Double> purchaseUnitPrice2 = new ArrayList<>();
-    public static ArrayList<Double> purchasePrices = new ArrayList<>();
-    public static ArrayList<Integer> purchaseKilometers = new ArrayList<>();
-    public static ArrayList<Double> purchaseLiters = new ArrayList<>();
     CircleImageView carPhotoHolder;
 
     RecyclerView mRecyclerView;
@@ -252,10 +244,10 @@ public class FragmentAutomobile extends Fragment {
 
         //Last updated
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
-        if (purchaseTimes.size() > 0) {
+        if (vehiclePurchaseList.size() > 0) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
+                Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
                 lastUpdated.setReferenceTime(date.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -277,14 +269,8 @@ public class FragmentAutomobile extends Fragment {
 
     public void fetchVehiclePurchases() {
         vehiclePurchaseList.clear();
-        purchaseTimes.clear();
-        purchaseKilometers.clear();
-        purchasePrices.clear();
-        purchaseUnitPrice.clear();
-        purchaseUnitPrice2.clear();
-        purchaseLiters.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_PURCHASES),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -298,6 +284,7 @@ public class FragmentAutomobile extends Fragment {
 
                             try {
                                 JSONArray res = new JSONArray(response);
+
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
 
@@ -319,6 +306,7 @@ public class FragmentAutomobile extends Fragment {
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));
                                     item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setKilometer(obj.getInt("kilometer"));
                                     vehiclePurchaseList.add(item);
 
                                     if (i < 3) {
@@ -326,13 +314,6 @@ public class FragmentAutomobile extends Fragment {
                                     } else {
                                         buttonSeeAllPurchases.setVisibility(View.VISIBLE);
                                     }
-
-                                    purchaseTimes.add(i, obj.getString("time"));
-                                    purchaseUnitPrice.add(i, obj.getDouble("fuelPrice"));
-                                    purchaseUnitPrice2.add(i, obj.getDouble("fuelPrice2"));
-                                    purchasePrices.add(i, obj.getDouble("totalPrice"));
-                                    purchaseKilometers.add(i, obj.getInt("kilometer"));
-                                    purchaseLiters.add(i, obj.getDouble("fuelLiter") + obj.getDouble("fuelLiter2"));
                                     mAdapter.notifyDataSetChanged();
                                 }
 
@@ -345,37 +326,35 @@ public class FragmentAutomobile extends Fragment {
                                     kilometerText.setText(kmHolder);
                                 }
 
-                                if (purchaseTimes.size() > 0) {
-                                    //BURADA TARİHE GÖRE GEÇMİŞTEN BUGÜNE SIRALIYORUZ
-                                    Collections.reverse(purchaseTimes);
-                                    Collections.reverse(purchasePrices);
-                                    Collections.reverse(purchaseKilometers);
+                                //Ortalama tüketim
+                                if (avgText != null) {
+                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
+                                    avgText.setText(avgDummy);
+                                }
 
-                                    //Ortalama maliyet
-                                    if (avgPrice != null) {
-                                        String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
-                                        avgPrice.setText(avgPriceDummy);
-                                    }
+                                // We're sync consumption values in here. Passive update mechanism
+                                if (averageCons != calculateAvgPrice()) {
+                                    updateVehicle();
+                                }
 
-                                    //Ortalama tüketim
-                                    if (avgText != null) {
-                                        String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
-                                        avgText.setText(avgDummy);
-                                    }
+                                //Ortalama maliyet
+                                if (avgPrice != null) {
+                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
+                                    avgPrice.setText(avgPriceDummy);
+                                }
 
-                                    //Ortalama emisyon
-                                    if (emission != null) {
-                                        String emissionHolder = calculateCarbonEmission() + " g/100km";
-                                        emission.setText(emissionHolder);
-                                    }
+                                //Ortalama emisyon
+                                if (emission != null) {
+                                    String emissionHolder = calculateCarbonEmission() + " g/100km";
+                                    emission.setText(emissionHolder);
+                                }
 
-                                    try {
-                                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                                        Date date = format.parse(purchaseTimes.get(purchaseTimes.size() - 1));
-                                        lastUpdated.setReferenceTime(date.getTime());
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                try {
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                    Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
+                                    lastUpdated.setReferenceTime(date.getTime());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
                             } catch (JSONException e) {
                                 userNoPurchaseLayout.setVisibility(View.VISIBLE);
@@ -418,10 +397,10 @@ public class FragmentAutomobile extends Fragment {
     public float calculateAverageCons() {
         float totalLiter = 0;
         float kilometerDifference = 0;
-        if (purchaseTimes.size() > 1) {
-            for (int i = 0; i < purchaseTimes.size(); i++) {
-                totalLiter += purchaseLiters.get(i);
-                kilometerDifference = purchaseKilometers.get(purchaseKilometers.size() - 1) - purchaseKilometers.get(0);
+        if (vehiclePurchaseList.size() > 1) {
+            for (int i = 0; i < vehiclePurchaseList.size(); i++) {
+                totalLiter += vehiclePurchaseList.get(i).getFuelLiter() + vehiclePurchaseList.get(i).getFuelLiter2();
+                kilometerDifference = vehiclePurchaseList.get(0).getKilometer() - vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getKilometer();
             }
             averageCons = (totalLiter / kilometerDifference) * 100f;
             prefs.edit().putFloat("averageConsumption", averageCons).apply();
@@ -434,10 +413,10 @@ public class FragmentAutomobile extends Fragment {
     public float calculateAvgPrice() {
         float totalPrice = 0;
         float kilometerDifference = 0;
-        if (purchaseTimes.size() > 1) {
-            for (int i = 0; i < purchaseTimes.size(); i++) {
-                totalPrice += purchasePrices.get(i);
-                kilometerDifference = purchaseKilometers.get(purchaseKilometers.size() - 1) - purchaseKilometers.get(0);
+        if (vehiclePurchaseList.size() > 1) {
+            for (int i = 0; i < vehiclePurchaseList.size(); i++) {
+                totalPrice += vehiclePurchaseList.get(i).getTotalPrice();
+                kilometerDifference = vehiclePurchaseList.get(0).getKilometer() - vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getKilometer();
             }
             averagePrice = (totalPrice / kilometerDifference) * 100f;
             prefs.edit().putFloat("averagePrice", averagePrice).apply();
@@ -514,12 +493,45 @@ public class FragmentAutomobile extends Fragment {
         return carbonEmission;
     }
 
+    private void updateVehicle() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Do nothing
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("avgCons", String.valueOf(averageCons));
+                params.put("carbonEmission", String.valueOf(carbonEmission));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
 
         if (headerView != null) {
-            if (userVehicles != null && userVehicles.length() > 0) {
+            if (userAutomobileList != null && userAutomobileList.size() > 0) {
                 noAracLayout.setVisibility(View.GONE);
                 regularLayout.setVisibility(View.VISIBLE);
                 loadVehicleProfile();

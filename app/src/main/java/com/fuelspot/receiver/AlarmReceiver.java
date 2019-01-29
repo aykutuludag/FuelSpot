@@ -141,7 +141,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void fetchStations() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_SEARCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_SEARCH_STATIONS),
                 new Response.Listener<String>() {
                     @SuppressLint("MissingPermission")
                     @Override
@@ -169,7 +169,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
-                                    item.setIsActive(obj.getInt("isActive"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
                                     item.setDistance((int) obj.getDouble("distance"));
                                     fullStationList.add(item);

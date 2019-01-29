@@ -21,11 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.fuelspot.Application;
@@ -49,16 +45,10 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
@@ -66,23 +56,17 @@ import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
-import static com.fuelspot.superuser.AdminMainActivity.isDeliveryAvailable;
-import static com.fuelspot.superuser.AdminMainActivity.isMobilePaymentAvailable;
-import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
-import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
-import static com.fuelspot.superuser.AdminMainActivity.superFacilities;
-import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
-import static com.fuelspot.superuser.AdminMainActivity.superLastUpdate;
-import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
-import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLocation;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationName;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
+import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLocation;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class FragmentMyStation extends Fragment {
 
@@ -211,6 +195,7 @@ public class FragmentMyStation extends Fragment {
                 public void onClick(View v) {
                     if (isStationVerified == 1) {
                         Intent i = new Intent(getActivity(), StationComments.class);
+                        i.putExtra("STATION_ID", superStationID);
                         startActivity(i);
                     } else {
                         Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
@@ -230,14 +215,12 @@ public class FragmentMyStation extends Fragment {
                     }
                 }
             });
-
-            checkLocationPermission();
         }
 
         return rootView;
     }
 
-    void checkLocationPermission() {
+    public void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
@@ -260,101 +243,9 @@ public class FragmentMyStation extends Fragment {
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.setTrafficEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
-
-                fetchSingleStation(superStationID);
+                loadStationDetails();
             }
         });
-    }
-
-    void fetchSingleStation(final int sID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-                                superStationID = obj.getInt("id");
-                                prefs.edit().putInt("SuperStationID", superStationID).apply();
-
-                                superStationName = obj.getString("name");
-                                prefs.edit().putString("SuperStationName", superStationName).apply();
-
-                                superStationAddress = obj.getString("vicinity");
-                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
-
-                                superStationCountry = obj.getString("country");
-                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
-
-                                superStationLocation = obj.getString("location");
-                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-                                superGoogleID = obj.getString("googleID");
-                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
-
-                                superFacilities = obj.getString("facilities");
-                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
-
-                                superStationLogo = obj.getString("logoURL");
-                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
-
-                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
-
-                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
-
-                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
-
-                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
-
-                                superLicenseNo = obj.getString("licenseNo");
-                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
-
-                                isStationVerified = obj.getInt("isVerified");
-                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
-
-                                isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
-                                prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
-
-                                isDeliveryAvailable = obj.getInt("isDeliveryAvailable");
-                                prefs.edit().putInt("isDeliveryAvailable", isDeliveryAvailable).apply();
-
-                                superLastUpdate = obj.getString("lastUpdated");
-                                prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
-
-                                loadStationDetails();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(sID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        queue.add(stringRequest);
     }
 
     void loadStationDetails() {
@@ -425,11 +316,26 @@ public class FragmentMyStation extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
     public void onResume() {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
         }
+
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        }
+
+        checkLocationPermission();
     }
 
     @Override
@@ -438,13 +344,30 @@ public class FragmentMyStation extends Fragment {
         if (mMapView != null) {
             mMapView.onPause();
         }
+
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (mMapView != null) {
             mMapView.onDestroy();
+        }
+
+        if (queue != null) {
+            queue.cancelAll(getActivity());
         }
     }
 

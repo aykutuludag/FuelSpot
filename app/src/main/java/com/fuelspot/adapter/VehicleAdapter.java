@@ -18,7 +18,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.AddAutomobile;
-import com.fuelspot.FragmentProfile;
 import com.fuelspot.R;
 import com.fuelspot.model.VehicleItem;
 
@@ -26,7 +25,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.FragmentProfile.userAutomobileList;
 import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
@@ -37,13 +35,11 @@ import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.userVehicles;
 import static com.fuelspot.MainActivity.vehicleID;
 
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHolder> {
     private List<VehicleItem> mItemList;
     private Context mContext;
-    private FragmentProfile fragment;
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -51,20 +47,19 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             VehicleAdapter.ViewHolder holder = (VehicleAdapter.ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
-            if (userAutomobileList.get(position).getID() == -999) {
+            if (mItemList.get(position).getID() == -999) {
                 Intent intent = new Intent(mContext, AddAutomobile.class);
                 mContext.startActivity(intent);
             } else {
-                changeVehicle(position);
+                changeVehicle(mItemList.get(position));
                 Snackbar.make(view, "ARAÇ SEÇİLDİ: " + plateNo, Snackbar.LENGTH_SHORT).show();
             }
         }
     };
 
-    public VehicleAdapter(Context context, List<VehicleItem> itemList, FragmentProfile fragment) {
+    public VehicleAdapter(Context context, List<VehicleItem> itemList) {
         this.mContext = context;
         this.mItemList = itemList;
-        this.fragment = fragment;
     }
 
     @NonNull
@@ -96,19 +91,17 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 .priority(Priority.HIGH);
         Glide.with(mContext).load(feedItem.getVehiclePhoto()).apply(options).into(viewHolder.carPhoto);
 
-        if (vehicleID == 0) {
-            if (userVehicles != null && userVehicles.length() > 0) {
-                // This is called after first automobile added. We're choosing added one automatically.
-                changeVehicle(0);
-            }
-        } else {
-            if (feedItem.getID() == vehicleID) {
-                viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#6000FF00"));
-            } else {
-                viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+        if (vehicleID == 0 || vehicleID == -999) {
+            if (feedItem.getID() != 0 && feedItem.getID() != -999) {
+                changeVehicle(feedItem);
             }
         }
 
+        if (feedItem.getID() == vehicleID) {
+            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#6000FF00"));
+        } else {
+            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
 
         // Handle click event on image click
         viewHolder.vehicleLayout.setOnClickListener(clickListener);
@@ -120,10 +113,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         return (null != mItemList ? mItemList.size() : 0);
     }
 
-    private void changeVehicle(int position) {
+    private void changeVehicle(VehicleItem item) {
         SharedPreferences prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-
-        VehicleItem item = userAutomobileList.get(position);
 
         vehicleID = item.getID();
         prefs.edit().putInt("vehicleID", vehicleID).apply();
@@ -155,8 +146,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         carbonEmission = item.getVehicleEmission();
         prefs.edit().putInt("carbonEmission", carbonEmission).apply();
 
-        fragment.parseUserVehicles();
-
         getVariables(prefs);
     }
 
@@ -167,7 +156,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
         ViewHolder(View itemView) {
             super(itemView);
-            vehicleLayout = itemView.findViewById(R.id.autumobile_background);
+            vehicleLayout = itemView.findViewById(R.id.automobile_background);
             carFullName = itemView.findViewById(R.id.carFullname);
             carPlateNo = itemView.findViewById(R.id.carPlate);
             carPhoto = itemView.findViewById(R.id.carPic);

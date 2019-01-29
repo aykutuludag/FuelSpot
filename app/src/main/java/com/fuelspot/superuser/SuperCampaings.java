@@ -55,7 +55,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.universalTimeFormat;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
 

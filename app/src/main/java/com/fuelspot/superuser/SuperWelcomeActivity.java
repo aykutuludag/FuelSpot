@@ -130,27 +130,24 @@ import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
-import static com.fuelspot.superuser.AdminMainActivity.isDeliveryAvailable;
-import static com.fuelspot.superuser.AdminMainActivity.isMobilePaymentAvailable;
-import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
-import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
-import static com.fuelspot.superuser.AdminMainActivity.superFacilities;
-import static com.fuelspot.superuser.AdminMainActivity.superGoogleID;
-import static com.fuelspot.superuser.AdminMainActivity.superLastUpdate;
-import static com.fuelspot.superuser.AdminMainActivity.superLicenseNo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
-import static com.fuelspot.superuser.AdminMainActivity.superStationCountry;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLocation;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationName;
-import static com.fuelspot.superuser.AdminMainActivity.userStations;
+import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
+import static com.fuelspot.superuser.SuperMainActivity.isMobilePaymentAvailable;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
+import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
+import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
+import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLocation;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
-public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     SharedPreferences prefs;
     RequestQueue requestQueue;
@@ -186,7 +183,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getSuperVariables(prefs);
-        requestQueue = Volley.newRequestQueue(AdminWelcome.this);
+        requestQueue = Volley.newRequestQueue(SuperWelcomeActivity.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
@@ -238,10 +235,34 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         /* LAYOUT 03 */
         continueButton = findViewById(R.id.button2);
         continueButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(AdminWelcome.this, new String[]
-                        {PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[0]}, REQUEST_ALL);
+                if (Build.VERSION.SDK_INT >= 23) {
+                    ActivityCompat.requestPermissions(SuperWelcomeActivity.this, new String[]{PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_ALL);
+                } else {
+                    FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(SuperWelcomeActivity.this);
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                userlat = String.valueOf(location.getLatitude());
+                                userlon = String.valueOf(location.getLongitude());
+                                prefs.edit().putString("lat", userlat).apply();
+                                prefs.edit().putString("lon", userlon).apply();
+                                Localization();
+                                getVariables(prefs);
+                            } else {
+                                LocationRequest mLocationRequest = new LocationRequest();
+                                mLocationRequest.setInterval(5000);
+                                mLocationRequest.setFastestInterval(1000);
+                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                            }
+                        }
+                    });
+                    fetchOwnedStations();
+                }
             }
         });
         /* LAYOUT 03 END */
@@ -304,7 +325,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             @Override
                             public void onCompleted(JSONObject me, GraphResponse response) {
                                 if (response.getError() != null) {
-                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                 } else {
                                     MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
                                     prefs.edit().putString("Name", MainActivity.name).apply();
@@ -331,19 +352,19 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
             @Override
             public void onCancel() {
-                Toast.makeText(AdminWelcome.this, getString(R.string.error_login_cancel), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_cancel), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void saveUserInfo() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, "Loading...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_CREATE),
                 new Response.Listener<String>() {
                     @Override
@@ -377,14 +398,11 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                                 userDisplayLanguage = obj.getString("language");
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                                userStations = obj.getString("stations");
-                                prefs.edit().putString("userStations", userStations).apply();
-
                                 getVariables(prefs);
                                 getSuperVariables(prefs);
 
                                 loading.dismiss();
-                                Toast.makeText(AdminWelcome.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
+                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -404,7 +422,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {
@@ -500,7 +518,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void fetchTaxRates() {
-        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
@@ -556,91 +574,46 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         requestQueue.add(stringRequest);
     }
 
-    void fetchStation(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+    void fetchOwnedStations() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
+                                if (res.length() > 0) {
+                                    isSigned = true;
+                                    prefs.edit().putBoolean("isSigned", isSigned).apply();
 
-                                superStationID = obj.getInt("id");
-                                prefs.edit().putInt("SuperStationID", superStationID).apply();
+                                    isSuperUser = true;
+                                    prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
-                                superStationName = obj.getString("name");
-                                prefs.edit().putString("SuperStationName", superStationName).apply();
-
-                                superStationAddress = obj.getString("vicinity");
-                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
-
-                                superStationCountry = obj.getString("country");
-                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
-
-                                superStationLocation = obj.getString("location");
-                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-                                superGoogleID = obj.getString("googleID");
-                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
-
-                                superFacilities = obj.getString("facilities");
-                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
-
-                                superStationLogo = obj.getString("logoURL");
-                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
-
-                                ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
-
-                                ownedDieselPrice = (float) obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
-
-                                ownedLPGPrice = (float) obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
-
-                                ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
-
-                                superLicenseNo = obj.getString("licenseNo");
-                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
-
-                                isStationVerified = obj.getInt("isVerified");
-                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
-
-                                isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
-                                prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
-
-                                isDeliveryAvailable = obj.getInt("isDeliveryAvailable");
-                                prefs.edit().putInt("isDeliveryAvailable", isDeliveryAvailable).apply();
-
-                                superLastUpdate = obj.getString("lastUpdated");
-                                prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
-
-                                isSigned = true;
-                                prefs.edit().putBoolean("isSigned", isSigned).apply();
-
-                                isSuperUser = true;
-                                prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
-
-                                getVariables(prefs);
-                                getSuperVariables(prefs);
-
-                                Toast.makeText(AdminWelcome.this, "FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(AdminWelcome.this, AdminMainActivity.class);
-                                startActivity(intent);
-                                finish();
+                                    Toast.makeText(SuperWelcomeActivity.this, "FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    welcome2.setVisibility(View.VISIBLE);
+                                    welcome1.setVisibility(View.GONE);
+                                    layout4();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                welcome2.setVisibility(View.VISIBLE);
+                                welcome1.setVisibility(View.GONE);
+                                layout4();
                             }
+                        } else {
+                            welcome2.setVisibility(View.VISIBLE);
+                            welcome1.setVisibility(View.GONE);
+                            layout4();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                        Toast.makeText(AdminWelcome.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -649,7 +622,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("stationID", String.valueOf(stationID));
+                params.put("superusername", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -738,10 +711,10 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyFilePickerPermission(AdminWelcome.this)) {
-                    ImagePicker.create(AdminWelcome.this).single().start();
+                if (MainActivity.verifyFilePickerPermission(SuperWelcomeActivity.this)) {
+                    ImagePicker.create(SuperWelcomeActivity.this).single().start();
                 } else {
-                    ActivityCompat.requestPermissions(AdminWelcome.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    ActivityCompat.requestPermissions(SuperWelcomeActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -789,7 +762,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         editTextBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePicker = new DatePickerDialog(AdminWelcome.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(SuperWelcomeActivity.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         birthday = pad(dayOfMonth) + "/" + pad(monthOfYear + 1) + "/" + year;
@@ -907,24 +880,24 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             if (superLicenseNo != null && superLicenseNo.length() > 0) {
                                 if (termsAndConditions.isChecked()) {
                                     if (isStationVerified == 0) {
-                                        updateSuperUser();
+                                        updateStation();
                                     } else {
-                                        Toast.makeText(AdminWelcome.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(SuperWelcomeActivity.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Toast.makeText(AdminWelcome.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(AdminWelcome.this, "Lütfen istasyon lisans numarasını giriniz", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SuperWelcomeActivity.this, "Lütfen istasyon lisans numarasını giriniz", Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(AdminWelcome.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SuperWelcomeActivity.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(AdminWelcome.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperWelcomeActivity.this, "Lütfen telefon numaranızı giriniz. Sizinle onay için iletişime geçeceğiz.", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(AdminWelcome.this, "Kayıt işlemini tamamlayabilmek için istasyonunuzda olmanız gerekmektedir", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SuperWelcomeActivity.this, "Kayıt işlemini tamamlayabilmek için istasyonunuzda olmanız gerekmektedir", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -998,7 +971,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATIONS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -1009,11 +982,6 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
 
                                 superStationID = obj.getInt("id");
                                 prefs.edit().putInt("SuperStationID", superStationID).apply();
-
-                                // For multi station
-                                userStations += superStationID + ";";
-                                prefs.edit().putString("userStations", userStations).apply();
-                                // For multi station
 
                                 superStationName = obj.getString("name");
                                 prefs.edit().putString("SuperStationName", superStationName).apply();
@@ -1075,7 +1043,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                                 superStationLogo = "";
                                 stationHint.setTextColor(Color.parseColor("#ff0000"));
                                 loadStationDetails();
-                                Toast.makeText(AdminWelcome.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SuperWelcomeActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         } else {
@@ -1102,7 +1070,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                         stationHint.setTextColor(Color.parseColor("#ff0000"));
                         loadStationDetails();
 
-                        Toast.makeText(AdminWelcome.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SuperWelcomeActivity.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                         volleyError.printStackTrace();
                     }
                 }) {
@@ -1130,69 +1098,29 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
         editTextStationLicense.setText(superLicenseNo);
     }
 
-    public void updateStation() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String res) {
-                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
-                        if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    // Register process ended redirect user to AdminMainActivity to wait verification process.
-                                    Toast.makeText(AdminWelcome.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
-                                    welcome2.setVisibility(View.GONE);
-                                    welcome3.setVisibility(View.VISIBLE);
-                                    layout5();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AdminWelcome.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
+    void updateStation() {
 
-                //Adding parameters
-                params.put("stationID", String.valueOf(superStationID));
-                params.put("licenseNo", superLicenseNo);
-                params.put("owner", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
+        updateSuperUser();
     }
 
     public void updateSuperUser() {
-        final ProgressDialog loading = ProgressDialog.show(AdminWelcome.this, "Loading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, "Loading...", "Please wait...", false, false);
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String res) {
-                        Toast.makeText(AdminWelcome.this, res, Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperWelcomeActivity.this, res, Toast.LENGTH_LONG).show();
                         if (res != null && res.length() > 0) {
                             switch (res) {
                                 case "Success":
-                                    updateStation();
+                                    Toast.makeText(SuperWelcomeActivity.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
+                                    welcome2.setVisibility(View.GONE);
+                                    welcome3.setVisibility(View.VISIBLE);
+                                    layout5();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(AdminWelcome.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                     break;
                             }
                             loading.dismiss();
@@ -1222,7 +1150,6 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 params.put("phoneNumber", userPhoneNumber);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-                params.put("stationIDs", userStations);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -1248,7 +1175,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(AdminWelcome.this, AdminMainActivity.class);
+                        Intent i = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
                         startActivity(i);
                         finish();
                     }
@@ -1281,9 +1208,9 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_ALL: {
-                if (ContextCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     //Request location updates:
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(AdminWelcome.this, new OnSuccessListener<Location>() {
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
@@ -1292,18 +1219,7 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                                 MainActivity.userlon = String.valueOf(location.getLongitude());
                                 prefs.edit().putString("lat", MainActivity.userlat).apply();
                                 prefs.edit().putString("lon", MainActivity.userlon).apply();
-
                                 Localization();
-
-                                if (userStations != null && userStations.length() > 0) {
-                                    // S/he already verified by us. Fetch station and if any of the stations are verified redirect to MainActivity
-                                    superStationID = Integer.parseInt(userStations.split(";")[0]);
-                                    fetchStation(superStationID);
-                                } else {
-                                    welcome2.setVisibility(View.VISIBLE);
-                                    welcome1.setVisibility(View.GONE);
-                                    layout4();
-                                }
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(5000);
@@ -1312,12 +1228,15 @@ public class AdminWelcome extends AppCompatActivity implements GoogleApiClient.O
                             }
                         }
                     });
+                    fetchOwnedStations();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
             case REQUEST_STORAGE: {
-                if (ActivityCompat.checkSelfPermission(AdminWelcome.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.create(AdminWelcome.this).single().start();
+                if (ActivityCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
+                    ImagePicker.create(SuperWelcomeActivity.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }

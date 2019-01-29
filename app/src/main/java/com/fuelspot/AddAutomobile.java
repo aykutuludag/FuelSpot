@@ -45,6 +45,7 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.automobile.Brands;
 import com.fuelspot.automobile.Models;
+import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -60,9 +61,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
+import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.photo;
-import static com.fuelspot.MainActivity.userVehicles;
+import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.MainActivity.vehicleID;
 
 public class AddAutomobile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -78,9 +90,10 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     Button addCarButton;
     EditText plateText;
     RequestOptions options;
+    String[] dummy;
 
     // Temp variables to add a vehicle
-    int dummyVehicleID, dummyKilometer = 0;
+    int dummyKilometer = 0;
     int dummyFuelPri = 0;
     int dummyFuelSec = -1;
     String dummyCarBrand = "Acura";
@@ -88,6 +101,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     String dummyPlateNo = "";
     TextWatcher mTextWatcher;
     SharedPreferences prefs;
+    ProgressDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +130,14 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         requestQueue = Volley.newRequestQueue(this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+
+        // ProgressDialogs
+        loading = new ProgressDialog(AddAutomobile.this);
+        loading.setTitle("Araç ekleniyor");
+        loading.setMessage("Lütfen bekleyiniz...");
+        loading.setIndeterminate(true);
+        loading.setCancelable(false);
+
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
         carPic.setOnClickListener(new View.OnClickListener() {
@@ -298,24 +320,28 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void addVehicle() {
-        //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AddAutomobile.this, "Loading...", "Please wait...", false, false);
+        loading.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-                                dummyVehicleID = obj.getInt("id");
-                                updateUser();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Toast.makeText(AddAutomobile.this, e.toString(), Toast.LENGTH_SHORT).show();
+                            switch (response) {
+                                case "plateNo exist":
+                                    loading.dismiss();
+                                    Toast.makeText(AddAutomobile.this, "Plaka daha önce eklenmiş...", Toast.LENGTH_LONG).show();
+                                    break;
+                                case "Success":
+                                    fetchAutomobiles();
+                                    Toast.makeText(AddAutomobile.this, "Araç eklendi: " + plateNo, Toast.LENGTH_LONG).show();
+                                    break;
+                                default:
+                                    loading.dismiss();
+                                    Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    break;
                             }
                         } else {
+                            loading.dismiss();
                             Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -356,32 +382,63 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         requestQueue.add(stringRequest);
     }
 
-    private void updateUser() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+    void fetchAutomobiles() {
+        userAutomobileList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    userVehicles += dummyVehicleID + ";";
-                                    prefs.edit().putString("userVehicles", userVehicles).apply();
-                                    Toast.makeText(AddAutomobile.this, "Araç eklendi...", Toast.LENGTH_LONG).show();
-                                    finish();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
-                                    break;
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    VehicleItem item = new VehicleItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setVehicleBrand(obj.getString("car_brand"));
+                                    item.setVehicleModel(obj.getString("car_model"));
+                                    item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                    item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                    item.setVehicleKilometer(obj.getInt("kilometer"));
+                                    item.setVehiclePhoto(obj.getString("carPhoto"));
+                                    item.setVehiclePlateNo(obj.getString("plateNo"));
+                                    item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                    item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                    userAutomobileList.add(item);
+
+                                    // If there is any selected auto, choose first one.
+                                    if (vehicleID == 0 || vehicleID == -999) {
+                                        if (item.getID() != 0 && item.getID() != -999) {
+                                            chooseVehicle(item);
+                                        }
+                                    }
+                                }
+
+                                VehicleItem item2 = new VehicleItem();
+                                item2.setID(-999);
+                                item2.setVehicleBrand("Add");
+                                item2.setVehicleModel("automobile");
+                                item2.setVehicleFuelPri(-1);
+                                item2.setVehicleFuelSec(-1);
+                                item2.setVehicleKilometer(0);
+                                item2.setVehiclePhoto("");
+                                item2.setVehiclePlateNo("");
+                                item2.setVehicleConsumption(0);
+                                item2.setVehicleEmission(0);
+                                userAutomobileList.add(item2);
+                                loading.dismiss();
+                                finish();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } else {
-                            Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(AddAutomobile.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        volleyError.printStackTrace();
                     }
                 }) {
             @Override
@@ -391,7 +448,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("vehicles", userVehicles);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -401,6 +457,40 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void chooseVehicle(VehicleItem item) {
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+        getVariables(prefs);
     }
 
     public String getStringImage(Bitmap bmp) {

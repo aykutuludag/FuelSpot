@@ -71,7 +71,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/round_layout_white"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/textView20"
@@ -85,11 +85,21 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                         android:textColor="#212121" />
 
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/errorImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView20"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:src="@drawable/error_nopurchase" />
+
                     <TextView
                         android:id="@+id/textView21"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/textView20"
+                        android:layout_below="@id/errorImage"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="center"
@@ -97,16 +107,6 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                         android:textColor="#424242"
                         android:textSize="12sp" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/errorImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView21"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:src="@drawable/error_nopurchase" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

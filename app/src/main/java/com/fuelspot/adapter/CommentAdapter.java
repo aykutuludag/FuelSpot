@@ -48,7 +48,7 @@ import java.util.Map;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private List<CommentItem> feedItemList;

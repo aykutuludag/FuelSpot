@@ -71,6 +71,7 @@ public class StationComments extends AppCompatActivity {
     Toolbar toolbar;
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1;
+    int istasyonID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,7 @@ public class StationComments extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
         snackbar = Snackbar.make(swipeContainer, "Henüz hiç yorum yazılmamış.", Snackbar.LENGTH_LONG);
 
         // FABs
@@ -112,7 +114,7 @@ public class StationComments extends AppCompatActivity {
 
         floatingActionButton1 = findViewById(R.id.fab1);
         if (isSuperUser) {
-            floatingActionButton1.setVisibility(View.GONE);
+            materialDesignFAM.setVisibility(View.GONE);
         } else {
             if (hasAlreadyCommented) {
                 floatingActionButton1.setLabelText("Yorumu güncelle");
@@ -127,7 +129,15 @@ public class StationComments extends AppCompatActivity {
             });
         }
 
-        loadComments();
+        istasyonID = getIntent().getIntExtra("STATION_ID", 0);
+        if (istasyonID != 0) {
+            // This means superuser came for FragmentMyStation
+            fetchStationComments();
+        } else {
+            // User came from StationDetails. Comments already fetched.
+            istasyonID = choosenStationID;
+            loadComments();
+        }
     }
 
     public void loadComments() {
@@ -295,7 +305,7 @@ public class StationComments extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("stationID", String.valueOf(choosenStationID));
+                params.put("stationID", String.valueOf(istasyonID));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

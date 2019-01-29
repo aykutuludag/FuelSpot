@@ -1,7 +1,6 @@
 package com.fuelspot.superuser;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -24,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.R;
+import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,20 +38,29 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.fuelspot.MainActivity.birthday;
-import static com.fuelspot.MainActivity.email;
-import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
-import static com.fuelspot.MainActivity.name;
-import static com.fuelspot.MainActivity.userCountry;
-import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.AdminMainActivity.getSuperVariables;
-import static com.fuelspot.superuser.AdminMainActivity.userStations;
+import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
+import static com.fuelspot.superuser.SuperMainActivity.isMobilePaymentAvailable;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
+import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
+import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
+import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
+import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
+import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLocation;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class AddStation extends AppCompatActivity {
 
@@ -300,7 +309,7 @@ public class AddStation extends AppCompatActivity {
 
     private void addStation() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATIONS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -381,13 +390,12 @@ public class AddStation extends AppCompatActivity {
                         if (res != null && res.length() > 0) {
                             switch (res) {
                                 case "Success":
-                                    // Register process ended redirect user to AdminMainActivity to wait verification process.
-                                    userStations += stationID + ";";
-                                    prefs.edit().putString("userStations", userStations).apply();
-                                    getSuperVariables(prefs);
-                                    updateSuperUser();
+                                    fetchOwnedStations();
                                     break;
                                 case "Fail":
+                                    Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
                                     Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                     break;
                             }
@@ -427,31 +435,63 @@ public class AddStation extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void updateSuperUser() {
-        final ProgressDialog loading = ProgressDialog.show(AddStation.this, "Loading...", "Please wait...", false, false);
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
+    void fetchOwnedStations() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String res) {
-                        if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    Toast.makeText(AddStation.this, "Tüm bilgileriniz kaydedildi. Onay için sizinle en kısa iletişime geçeceğiz.", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setCountryCode(obj.getString("country"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setLicenseNo(obj.getString("licenseNo"));
+                                    item.setOwner(obj.getString("owner"));
+                                    item.setPhotoURL(obj.getString("logoURL"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
+
+                                    //DISTANCE START
+                                    Location locLastKnow = new Location("");
+                                    locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                    locLastKnow.setLongitude(Double.parseDouble(userlon));
+
+                                    Location loc = new Location("");
+                                    String[] stationKonum = item.getLocation().split(";");
+                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                    float uzaklik = locLastKnow.distanceTo(loc);
+                                    item.setDistance((int) uzaklik);
+                                    //DISTANCE END
+                                    listOfOwnedStations.add(item);
+
+                                    if (superStationID == 0) {
+                                        // This is for the first open
+                                        chooseStation(item);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            loading.dismiss();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        loading.dismiss();
                     }
                 }) {
             @Override
@@ -460,15 +500,7 @@ public class AddStation extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("username", username);
-                params.put("name", name);
-                params.put("email", email);
-                params.put("gender", gender);
-                params.put("birthday", birthday);
-                params.put("phoneNumber", userPhoneNumber);
-                params.put("country", userCountry);
-                params.put("language", userDisplayLanguage);
-                params.put("stationIDs", userStations);
+                params.put("superusername", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -478,6 +510,58 @@ public class AddStation extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    void chooseStation(StationItem item) {
+        superStationID = item.getID();
+        prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+        superStationName = item.getStationName();
+        prefs.edit().putString("SuperStationName", superStationName).apply();
+
+        superStationAddress = item.getVicinity();
+        prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
+        superStationCountry = item.getCountryCode();
+        prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+        superStationLocation = item.getLocation();
+        prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+        superGoogleID = item.getGoogleMapID();
+        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+        superFacilities = item.getFacilities();
+        prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+
+        superStationLogo = item.getPhotoURL();
+        prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+        ownedGasolinePrice = item.getGasolinePrice();
+        prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+
+        ownedDieselPrice = item.getDieselPrice();
+        prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+
+        ownedLPGPrice = item.getLpgPrice();
+        prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+
+        ownedElectricityPrice = item.getElectricityPrice();
+        prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+        isStationVerified = item.getIsVerified();
+        prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+        isMobilePaymentAvailable = item.getHasSupportMobilePayment();
+        prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
+
+        superLastUpdate = item.getLastUpdated();
+        prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+        getSuperVariables(prefs);
     }
 
     @Override

@@ -19,6 +19,7 @@ public class PurchaseItem {
     private String billPhoto;
     private float bonus;
     private int isVerified;
+    private int kilometer;
 
     public int getID() {
         return ID;
@@ -154,5 +155,13 @@ public class PurchaseItem {
 
     public void setIsVerified(int isVerified) {
         this.isVerified = isVerified;
+    }
+
+    public int getKilometer() {
+        return kilometer;
+    }
+
+    public void setKilometer(int kilometer) {
+        this.kilometer = kilometer;
     }
 }

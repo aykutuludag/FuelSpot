@@ -1,7 +1,9 @@
 package com.fuelspot.superuser;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -13,6 +15,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -26,7 +30,13 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
+import com.fuelspot.adapter.CompanyAdapter;
+import com.fuelspot.model.CompanyItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,29 +47,36 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.superuser.AdminMainActivity.isStationVerified;
-import static com.fuelspot.superuser.AdminMainActivity.ownedDieselPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedElectricityPrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedGasolinePrice;
-import static com.fuelspot.superuser.AdminMainActivity.ownedLPGPrice;
-import static com.fuelspot.superuser.AdminMainActivity.superFacilities;
-import static com.fuelspot.superuser.AdminMainActivity.superLastUpdate;
-import static com.fuelspot.superuser.AdminMainActivity.superStationAddress;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
-import static com.fuelspot.superuser.AdminMainActivity.superStationLogo;
-import static com.fuelspot.superuser.AdminMainActivity.superStationName;
+import static com.fuelspot.FragmentSettings.companyList;
+import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
+import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
+import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
+import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class SuperUpdateStation extends AppCompatActivity {
 
-    EditText editTextStationName, editTextStationAddress, editTextGasoline, editTextDiesel, editTextLPG, editTextElectricity;
-    Button sendPricesButton;
+    TextView stationAddressHolder, stationLicenseHolder, textViewOwnerHolder, textViewStationIDHolder;
+    EditText gasolineHolder, dieselHolder, electricityHolder, lpgHolder;
+    Button buttonUpdateStation;
     RequestQueue requestQueue;
-    RelativeTimeTextView textViewLastUpdated;
-    CircleImageView imageViewStationLogo, imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic;
+    RelativeTimeTextView lastUpdateTimeText;
+    CircleImageView stationLogoHolder, imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot;
     RelativeLayout verifiedLayout;
     RequestOptions options;
+    Spinner spinner;
     Window window;
     Toolbar toolbar;
+    JSONObject facilitiesObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,36 +98,87 @@ public class SuperUpdateStation extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
-        editTextStationName = findViewById(R.id.editTextStationName);
-        editTextStationName.setText(superStationName);
+        stationLogoHolder = findViewById(R.id.stationLogo);
+        spinner = findViewById(R.id.simpleSpinner);
+        stationAddressHolder = findViewById(R.id.editTextStationAddress);
+        stationLicenseHolder = findViewById(R.id.editTextStationLicense);
+        textViewOwnerHolder = findViewById(R.id.editTextOwner);
+        textViewStationIDHolder = findViewById(R.id.textViewStationID);
+        lastUpdateTimeText = findViewById(R.id.stationLastUpdate);
+        verifiedLayout = findViewById(R.id.verifiedSection);
+        gasolineHolder = findViewById(R.id.editTextGasoline);
+        dieselHolder = findViewById(R.id.editTextDiesel);
+        lpgHolder = findViewById(R.id.editTextLPG);
+        electricityHolder = findViewById(R.id.editTextElectricity);
+        imageViewWC = findViewById(R.id.WC);
+        imageViewMarket = findViewById(R.id.Market);
+        imageViewCarWash = findViewById(R.id.CarWash);
+        imageViewTireRepair = findViewById(R.id.TireRepair);
+        imageViewMechanic = findViewById(R.id.Mechanic);
+        imageViewRestaurant = findViewById(R.id.Restaurant);
+        imageViewParkSpot = findViewById(R.id.ParkSpot);
+        buttonUpdateStation = findViewById(R.id.buttonUpdate);
+        buttonUpdateStation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateStation();
+            }
+        });
 
-        editTextStationAddress = findViewById(R.id.editTextStationAddress);
-        editTextStationAddress.setText(superStationAddress);
+        loadLayoutItems();
+    }
 
-        imageViewStationLogo = findViewById(R.id.imageViewStationLogo);
-        Glide.with(this).load(superStationLogo).apply(options).into(imageViewStationLogo);
+    void loadLayoutItems() {
+        if (companyList != null && companyList.size() > 0) {
+            CompanyAdapter customAdapter = new CompanyAdapter(SuperUpdateStation.this, companyList);
+            spinner.setEnabled(false);
+            spinner.setClickable(false);
+            spinner.setAdapter(customAdapter);
 
-        //Last updated
-        textViewLastUpdated = findViewById(R.id.stationLastUpdate);
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            Date date = format.parse(superLastUpdate);
-            textViewLastUpdated.setReferenceTime(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
+            for (int i = 0; i < companyList.size(); i++) {
+                if (companyList.get(i).getName().equals(superStationName)) {
+                    spinner.setSelection(i, true);
+                    break;
+                }
+            }
+        } else {
+            // Somehow companList didn't fetch at SuperMainActivity. Fetch it.
+            fetchCompanies();
         }
 
+        String dummyId = "" + superStationID;
+        textViewStationIDHolder.setText(dummyId);
+
+        // Layout items
+        stationAddressHolder.setText(superStationAddress);
+
+        stationLicenseHolder.setText(superLicenseNo);
+
+        textViewOwnerHolder.setText(name);
+
+        Glide.with(this).load(superStationLogo).apply(options).into(stationLogoHolder);
+
         // if stationVerified == 1, this section shows up!
-        verifiedLayout = findViewById(R.id.verifiedSection);
         if (isStationVerified == 1) {
             verifiedLayout.setVisibility(View.VISIBLE);
         } else {
             verifiedLayout.setVisibility(View.GONE);
         }
 
-        editTextGasoline = findViewById(R.id.editTextGasoline);
-        editTextGasoline.setText(String.valueOf(ownedGasolinePrice));
-        editTextGasoline.addTextChangedListener(new TextWatcher() {
+        if (superLastUpdate != null && superLastUpdate.length() > 0) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            try {
+                Date date = format.parse(superLastUpdate);
+                lastUpdateTimeText.setReferenceTime(date.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                lastUpdateTimeText.setText("Son güncelleme: ");
+            }
+        }
+
+        String dummyG = "" + ownedGasolinePrice;
+        gasolineHolder.setText(dummyG);
+        gasolineHolder.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -129,9 +197,9 @@ public class SuperUpdateStation extends AppCompatActivity {
             }
         });
 
-        editTextDiesel = findViewById(R.id.editTextDiesel);
-        editTextDiesel.setText(String.valueOf(ownedDieselPrice));
-        editTextDiesel.addTextChangedListener(new TextWatcher() {
+        String dummyD = "" + ownedDieselPrice;
+        dieselHolder.setText(dummyD);
+        dieselHolder.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -150,9 +218,9 @@ public class SuperUpdateStation extends AppCompatActivity {
             }
         });
 
-        editTextLPG = findViewById(R.id.editTextLPG);
-        editTextLPG.setText(String.valueOf(ownedLPGPrice));
-        editTextLPG.addTextChangedListener(new TextWatcher() {
+        String dummyL = "" + ownedLPGPrice;
+        lpgHolder.setText(dummyL);
+        lpgHolder.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -171,9 +239,9 @@ public class SuperUpdateStation extends AppCompatActivity {
             }
         });
 
-        editTextElectricity = findViewById(R.id.editTextElectricity);
-        editTextElectricity.setText(String.valueOf(ownedElectricityPrice));
-        editTextElectricity.addTextChangedListener(new TextWatcher() {
+        String dummyE = "" + ownedElectricityPrice;
+        electricityHolder.setText(dummyE);
+        electricityHolder.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -193,140 +261,259 @@ public class SuperUpdateStation extends AppCompatActivity {
         });
 
         // Facilities
-        imageViewWC = findViewById(R.id.WC);
-        imageViewWC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageViewWC.getAlpha() == 1.0f) {
-                    superFacilities = superFacilities.replace("WC;", "");
-                    imageViewWC.setAlpha(0.5f);
-                } else {
-                    superFacilities = superFacilities + "WC;";
-                    imageViewWC.setAlpha(1.0f);
-                }
-            }
-        });
+        try {
+            JSONArray facilitiesRes = new JSONArray(superFacilities);
+            facilitiesObj = facilitiesRes.getJSONObject(0);
 
-        imageViewMarket = findViewById(R.id.Market);
-        imageViewMarket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageViewMarket.getAlpha() == 1.0f) {
-                    superFacilities = superFacilities.replace("Market;", "");
-                    imageViewMarket.setAlpha(0.5f);
-                } else {
-                    superFacilities = superFacilities + "Market;";
-                    imageViewMarket.setAlpha(1.0f);
-                }
-            }
-        });
-
-        imageViewCarWash = findViewById(R.id.CarWash);
-        imageViewCarWash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageViewCarWash.getAlpha() == 1.0f) {
-                    superFacilities = superFacilities.replace("CarWash;", "");
-                    imageViewCarWash.setAlpha(0.5f);
-                } else {
-                    superFacilities = superFacilities + "CarWash;";
-                    imageViewCarWash.setAlpha(1.0f);
-                }
-            }
-        });
-
-        imageViewTireRepair = findViewById(R.id.TireRepair);
-        imageViewTireRepair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageViewTireRepair.getAlpha() == 1.0f) {
-                    superFacilities = superFacilities.replace("TireRepair;", "");
-                    imageViewTireRepair.setAlpha(0.5f);
-                } else {
-                    superFacilities = superFacilities + "TireRepair;";
-                    imageViewTireRepair.setAlpha(1.0f);
-                }
-            }
-        });
-
-        imageViewMechanic = findViewById(R.id.Mechanic);
-        imageViewMechanic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageViewMechanic.getAlpha() == 1.0f) {
-                    superFacilities = superFacilities.replace("Mechanic;", "");
-                    imageViewMechanic.setAlpha(0.5f);
-                } else {
-                    superFacilities = superFacilities + "Mechanic;";
-                    imageViewMechanic.setAlpha(1.0f);
-                }
-            }
-        });
-
-
-        // Facilities
-        if (superFacilities != null && superFacilities.length() > 0) {
-            if (superFacilities.contains("WC")) {
+            if (facilitiesObj.getInt("WC") == 1) {
                 imageViewWC.setAlpha(1.0f);
             } else {
                 imageViewWC.setAlpha(0.5f);
             }
 
-            if (superFacilities.contains("Market")) {
+            if (facilitiesObj.getInt("Market") == 1) {
                 imageViewMarket.setAlpha(1.0f);
             } else {
                 imageViewMarket.setAlpha(0.5f);
             }
 
-            if (superFacilities.contains("CarWash")) {
+            if (facilitiesObj.getInt("CarWash") == 1) {
                 imageViewCarWash.setAlpha(1.0f);
             } else {
                 imageViewCarWash.setAlpha(0.5f);
             }
 
-            if (superFacilities.contains("TireRepair")) {
+            if (facilitiesObj.getInt("TireRepair") == 1) {
                 imageViewTireRepair.setAlpha(1.0f);
             } else {
                 imageViewTireRepair.setAlpha(0.5f);
             }
 
-            if (superFacilities.contains("Mechanic")) {
+            if (facilitiesObj.getInt("Mechanic") == 1) {
                 imageViewMechanic.setAlpha(1.0f);
             } else {
                 imageViewMechanic.setAlpha(0.5f);
             }
+
+            if (facilitiesObj.getInt("Restaurant") == 1) {
+                imageViewRestaurant.setAlpha(1.0f);
+            } else {
+                imageViewRestaurant.setAlpha(0.5f);
+            }
+
+            if (facilitiesObj.getInt("ParkSpot") == 1) {
+                imageViewParkSpot.setAlpha(1.0f);
+            } else {
+                imageViewParkSpot.setAlpha(0.5f);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        sendPricesButton = findViewById(R.id.buttonUpdate);
-        sendPricesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendPrices();
-            }
-        });
+        if (facilitiesObj != null) {
+            imageViewWC.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("WC") == 1) {
+                            facilitiesObj.put("WC", "0");
+                            imageViewWC.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("WC", "1");
+                            imageViewWC.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            imageViewMarket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("Market") == 1) {
+                            facilitiesObj.put("Market", "0");
+                            imageViewMarket.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("Market", "1");
+                            imageViewMarket.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewCarWash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("CarWash") == 1) {
+                            facilitiesObj.put("CarWash", "0");
+                            imageViewCarWash.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("CarWash", "1");
+                            imageViewCarWash.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewTireRepair.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("TireRepair") == 1) {
+                            facilitiesObj.put("TireRepair", "0");
+                            imageViewTireRepair.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("TireRepair", "1");
+                            imageViewTireRepair.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewMechanic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("Mechanic") == 1) {
+                            facilitiesObj.put("Mechanic", "0");
+                            imageViewMechanic.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("Mechanic", "1");
+                            imageViewMechanic.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewRestaurant.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("Restaurant") == 1) {
+                            facilitiesObj.put("Restaurant", "0");
+                            imageViewRestaurant.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("Restaurant", "1");
+                            imageViewRestaurant.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewParkSpot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("ParkSpot") == 1) {
+                            facilitiesObj.put("ParkSpot", "0");
+                            imageViewParkSpot.setAlpha(0.5f);
+                        } else {
+                            facilitiesObj.put("ParkSpot", "1");
+                            imageViewParkSpot.setAlpha(1.0f);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
-    public void sendPrices() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+    void fetchCompanies() {
+        companyList.clear();
+
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String s) {
-                        switch (s) {
-                            case "Success":
-                                Toast.makeText(SuperUpdateStation.this, "İstasyon bilgileri güncellendi.", Toast.LENGTH_LONG).show();
-                                finish();
-                                break;
-                            case "Fail":
-                                Toast.makeText(SuperUpdateStation.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
-                                break;
-                        }
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
 
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CompanyItem item = new CompanyItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setName(obj.getString("companyName"));
+                                    item.setLogo(obj.getString("companyLogo"));
+                                    item.setWebsite(obj.getString("companyWebsite"));
+                                    item.setPhone(obj.getString("companyPhone"));
+                                    item.setAddress(obj.getString("companyAddress"));
+                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                    item.setNumOfStations(obj.getInt("numOfStations"));
+                                    companyList.add(item);
+                                }
+
+                                loadLayoutItems();
+                            } catch (JSONException e) {
+                                Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(SuperUpdateStation.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateStation() {
+        final ProgressDialog loading = ProgressDialog.show(SuperUpdateStation.this, "İstasyon güncelleniyor...", "Lütfen bekleyiniz...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            loading.dismiss();
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.stationUpdated), Toast.LENGTH_LONG).show();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.stationUpdateFail), Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        loading.dismiss();
+                        Toast.makeText(SuperUpdateStation.this, getString(R.string.stationUpdateFail), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -337,13 +524,14 @@ public class SuperUpdateStation extends AppCompatActivity {
                 //Adding parameters
                 params.put("stationID", String.valueOf(superStationID));
                 params.put("stationName", superStationName);
-                params.put("stationVicinity", superStationAddress);
-                params.put("facilities", superFacilities);
-                params.put("stationLogo", superStationLogo);
+                params.put("country", superStationCountry);
+                String dummy = "[" + String.valueOf(facilitiesObj) + "]";
+                params.put("facilities", dummy);
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

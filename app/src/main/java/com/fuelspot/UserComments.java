@@ -31,7 +31,7 @@ import java.util.Map;
 import static com.fuelspot.FragmentProfile.userCommentList;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.AdminMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class UserComments extends AppCompatActivity {
 
@@ -102,7 +102,7 @@ public class UserComments extends AppCompatActivity {
             whichParamater = "id";
             whichValue = String.valueOf(superStationID);
         } else {
-            whichApi = getString(R.string.API_FETCH_COMMENTS);
+            whichApi = getString(R.string.API_FETCH_USER_COMMENTS);
             whichParamater = "username";
             whichValue = username;
         }

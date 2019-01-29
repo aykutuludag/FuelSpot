@@ -47,8 +47,13 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.automobile.Brands;
 import com.fuelspot.automobile.Models;
+import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
@@ -65,10 +70,11 @@ import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.userVehicles;
+import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
@@ -89,6 +95,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     RequestQueue requestQueue;
     RequestOptions options;
     TextWatcher mTextWatcher;
+    String[] dummy;
+    ProgressDialog loadingUpdate, loadingDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +124,20 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(this);
         editor = prefs.edit();
-        MainActivity.getVariables(prefs);
+        getVariables(prefs);
+
+        // ProgressDialogs
+        loadingUpdate = new ProgressDialog(AutomobileEditActivity.this);
+        loadingUpdate.setTitle("Araç güncelleniyor");
+        loadingUpdate.setMessage("Lütfen bekleyiniz...");
+        loadingUpdate.setIndeterminate(true);
+        loadingUpdate.setCancelable(false);
+
+        loadingDelete = new ProgressDialog(AutomobileEditActivity.this);
+        loadingDelete.setTitle("Araç siliniyor");
+        loadingDelete.setMessage("Lütfen bekleyiniz...");
+        loadingDelete.setIndeterminate(true);
+        loadingDelete.setCancelable(false);
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
@@ -298,7 +319,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         plateText.setFilters(new InputFilter[]{filter});
         plateText.addTextChangedListener(mTextWatcher);
 
-        final int vehicleNumber = userVehicles.split(";").length;
+        final int vehicleNumber = userAutomobileList.size();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,22 +341,25 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     }
 
     private void updateVehicle() {
-        //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AutomobileEditActivity.this, "Updating automobile...", "Please wait...", false, true);
+        loadingUpdate.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        switch (response) {
-                            case "Success":
-                                loading.dismiss();
-                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                                finish();
-                                break;
-                            case "Fail":
-                                loading.dismiss();
-                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                                break;
+                        loadingUpdate.dismiss();
+
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(AutomobileEditActivity.this, "Araç güncellendi", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    break;
+                                case "Fail":
+                                    Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -343,7 +367,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
-                        loading.dismiss();
+                        loadingUpdate.dismiss();
                         Toast.makeText(AutomobileEditActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -376,27 +400,39 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         requestQueue.add(stringRequest);
     }
 
-    private void updateUser() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+    public void deleteVehicle() {
+        loadingDelete.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_DELETE_AUTOMOBILE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        switch (response) {
-                            case "Success":
-                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                                finish();
-                                break;
-                            case "Fail":
-                                Toast.makeText(AutomobileEditActivity.this, "Error", Toast.LENGTH_LONG).show();
-                                break;
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    //set VehicleID = 0 because user delete this car. Choose another one.
+                                    vehicleID = 0;
+                                    fetchAutomobiles();
+                                    break;
+                                case "Fail":
+                                    loadingDelete.dismiss();
+                                    Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    break;
+                                default:
+                                    loadingDelete.dismiss();
+                                    Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            loadingDelete.dismiss();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Toast.makeText(AutomobileEditActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(AutomobileEditActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                        loadingDelete.dismiss();
                     }
                 }) {
             @Override
@@ -406,7 +442,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("vehicles", userVehicles);
+                params.put("vehicleID", String.valueOf(vehicleID));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -418,27 +454,63 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         requestQueue.add(stringRequest);
     }
 
-    public void deleteVehicle() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, this.getString(R.string.API_DELETE_AUTOMOBILE),
+    void fetchAutomobiles() {
+        userAutomobileList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        switch (response) {
-                            case "Success":
-                                userVehicles = userVehicles.replaceAll(vehicleID + ";", "");
-                                prefs.edit().putString("userVehicles", userVehicles).apply();
-                                Toast.makeText(AutomobileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                                updateUser();
-                                break;
-                            case "Fail":
-                                break;
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    VehicleItem item = new VehicleItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setVehicleBrand(obj.getString("car_brand"));
+                                    item.setVehicleModel(obj.getString("car_model"));
+                                    item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                    item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                    item.setVehicleKilometer(obj.getInt("kilometer"));
+                                    item.setVehiclePhoto(obj.getString("carPhoto"));
+                                    item.setVehiclePlateNo(obj.getString("plateNo"));
+                                    item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                    item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                    userAutomobileList.add(item);
+
+                                    // If there is any selected auto, choose first one.
+                                    if (vehicleID == 0 || vehicleID == -999) {
+                                        chooseVehicle(item);
+                                    }
+                                }
+
+                                VehicleItem item2 = new VehicleItem();
+                                item2.setID(-999);
+                                item2.setVehicleBrand("Add");
+                                item2.setVehicleModel("automobile");
+                                item2.setVehicleFuelPri(-1);
+                                item2.setVehicleFuelSec(-1);
+                                item2.setVehicleKilometer(0);
+                                item2.setVehiclePhoto("");
+                                item2.setVehiclePlateNo("");
+                                item2.setVehicleConsumption(0);
+                                item2.setVehicleEmission(0);
+                                userAutomobileList.add(item2);
+
+                                loadingDelete.dismiss();
+                                Toast.makeText(AutomobileEditActivity.this, "Araç silindi...", Toast.LENGTH_LONG).show();
+                                finish();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
                     }
                 }) {
             @Override
@@ -447,7 +519,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("username", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -457,6 +529,40 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void chooseVehicle(VehicleItem item) {
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+        getVariables(prefs);
     }
 
     public String getStringImage(Bitmap bmp) {

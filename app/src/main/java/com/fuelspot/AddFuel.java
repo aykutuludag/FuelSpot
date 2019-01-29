@@ -68,7 +68,6 @@ import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.stationPhotoChooser;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -430,7 +429,7 @@ public class AddFuel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(AddFuel.this)) {
-                    ImagePicker.create(AddFuel.this).single().showCamera(true).start();
+                    ImagePicker.cameraOnly().start(AddFuel.this);
                 } else {
                     ActivityCompat.requestPermissions(AddFuel.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
@@ -515,7 +514,7 @@ public class AddFuel extends AppCompatActivity {
                 params.put("stationID", String.valueOf(chosenStationID));
                 params.put("stationNAME", stationName);
                 params.put("stationLOC", stationLoc);
-                params.put("stationICON", stationPhotoChooser(stationName));
+                params.put("stationICON", stationLogo);
                 params.put("fuelType", String.valueOf(fuelPri));
                 params.put("fuelPrice", String.valueOf(selectedUnitPrice));
                 params.put("fuelLiter", String.valueOf(buyedLiter));

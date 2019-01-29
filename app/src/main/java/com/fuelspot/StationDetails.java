@@ -110,7 +110,8 @@ public class StationDetails extends AppCompatActivity {
     public static int stars = 5;
     public static int stationDistance, choosenStationID, userCommentID, isStationVerified;
     public static float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
-    public static String lastUpdated, facilitiesOfStation, stationName, stationVicinity, stationLocation, iconURL, userComment;
+    public static String lastUpdated, stationName, stationVicinity, stationLocation, iconURL, userComment;
+    String facilitiesOfStation;
     public static boolean hasAlreadyCommented;
     public static List<CommentItem> stationCommentList = new ArrayList<>();
     public static List<CampaignItem> campaignList = new ArrayList<>();

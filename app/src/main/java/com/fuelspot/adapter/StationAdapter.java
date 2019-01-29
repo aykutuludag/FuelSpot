@@ -2,6 +2,7 @@ package com.fuelspot.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -27,12 +29,32 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
+import static com.fuelspot.superuser.SuperMainActivity.isMobilePaymentAvailable;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
+import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
+import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
+import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
+import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
+import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLocation;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
+import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
 
     private List<StationItem> feedItemList;
     private String whichScreen;
     private Context mContext;
+    private SharedPreferences prefs;
+
+
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -58,6 +80,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     mContext.startActivity(intent);
                     break;
                 case "SUPERUSER_STATIONS":
+                    changeSuperStation(feedItemList.get(position));
                     break;
             }
         }
@@ -67,6 +90,61 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         this.feedItemList = feedItemList;
         this.mContext = context;
         this.whichScreen = whichPage;
+
+        prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+    }
+
+    void changeSuperStation(StationItem item) {
+        superStationID = item.getID();
+        prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+        superStationName = item.getStationName();
+        prefs.edit().putString("SuperStationName", superStationName).apply();
+
+        superStationAddress = item.getVicinity();
+        prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
+        superStationCountry = item.getCountryCode();
+        prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+        superStationLocation = item.getLocation();
+        prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+        superGoogleID = item.getGoogleMapID();
+        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+        superFacilities = item.getFacilities();
+        prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+
+        superStationLogo = item.getPhotoURL();
+        prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+        ownedGasolinePrice = item.getGasolinePrice();
+        prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+
+        ownedDieselPrice = item.getDieselPrice();
+        prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+
+        ownedLPGPrice = item.getLpgPrice();
+        prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+
+        ownedElectricityPrice = item.getElectricityPrice();
+        prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+        isStationVerified = item.getIsVerified();
+        prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+        isMobilePaymentAvailable = item.getHasSupportMobilePayment();
+        prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
+
+        superLastUpdate = item.getLastUpdated();
+        prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+        getSuperVariables(prefs);
+        Toast.makeText(mContext, "İSTASYON SEÇİLDİ: " + superStationName, Toast.LENGTH_SHORT).show();
     }
 
     @NonNull
@@ -91,7 +169,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         // Setting stationName
         viewHolder.stationName.setText(feedItem.getStationName());
-        //viewHolder.vicinity.setText(feedItem.getVicinity());
 
         // Setting prices
         String gasolineHolder;

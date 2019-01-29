@@ -1,4 +1,4 @@
-package com.fuelspot;
+package com.fuelspot.superuser;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -46,6 +46,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.fuelspot.Application;
+import com.fuelspot.MainActivity;
+import com.fuelspot.R;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -75,7 +78,7 @@ import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.username;
 
-public class ProfileEditActivity extends AppCompatActivity {
+public class SuperProfileEdit extends AppCompatActivity {
 
     Toolbar toolbar;
     Window window;
@@ -94,7 +97,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_edit);
+        setContentView(R.layout.activity_super_profile_edit);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
@@ -117,7 +120,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();
 
-        requestQueue = Volley.newRequestQueue(ProfileEditActivity.this);
+        requestQueue = Volley.newRequestQueue(SuperProfileEdit.this);
 
         editName = findViewById(R.id.editFullName);
         editMail = findViewById(R.id.editTextMail);
@@ -182,10 +185,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.verifyFilePickerPermission(ProfileEditActivity.this)) {
-                    ImagePicker.create(ProfileEditActivity.this).single().start();
+                if (MainActivity.verifyFilePickerPermission(SuperProfileEdit.this)) {
+                    ImagePicker.create(SuperProfileEdit.this).single().start();
                 } else {
-                    ActivityCompat.requestPermissions(ProfileEditActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    ActivityCompat.requestPermissions(SuperProfileEdit.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -255,7 +258,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         editBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePicker = new DatePickerDialog(ProfileEditActivity.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(SuperProfileEdit.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         birthday = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
@@ -301,7 +304,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         logOutFromAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(ProfileEditActivity.this).create();
+                AlertDialog alertDialog = new AlertDialog.Builder(SuperProfileEdit.this).create();
                 alertDialog.setTitle("ÇIKIŞ YAP");
                 alertDialog.setMessage("Hesaptan çıkılacak ve bu cihaza kaydedilmiş veriler silinecek?");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
@@ -313,11 +316,11 @@ public class ProfileEditActivity extends AppCompatActivity {
                                     file.delete();
                                 }
 
-                                PackageManager packageManager = ProfileEditActivity.this.getPackageManager();
-                                Intent intent = packageManager.getLaunchIntentForPackage(ProfileEditActivity.this.getPackageName());
+                                PackageManager packageManager = SuperProfileEdit.this.getPackageManager();
+                                Intent intent = packageManager.getLaunchIntentForPackage(SuperProfileEdit.this.getPackageName());
                                 ComponentName componentName = intent.getComponent();
                                 Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-                                ProfileEditActivity.this.startActivity(mainIntent);
+                                SuperProfileEdit.this.startActivity(mainIntent);
                                 Runtime.getRuntime().exit(0);
                             }
                         });
@@ -327,7 +330,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     private void updateUserInfo() {
-        final ProgressDialog loading = ProgressDialog.show(ProfileEditActivity.this, "Updating profile...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(SuperProfileEdit.this, "Updating profile...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
                 new Response.Listener<String>() {
                     @Override
@@ -337,15 +340,15 @@ public class ProfileEditActivity extends AppCompatActivity {
                             switch (response) {
                                 case "Success":
                                     editor.apply();
-                                    Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperProfileEdit.this, response, Toast.LENGTH_LONG).show();
                                     finish();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperProfileEdit.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SuperProfileEdit.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -354,7 +357,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
                         loading.dismiss();
-                        Toast.makeText(ProfileEditActivity.this, "Something went wrong with our servers. Please try again later.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperProfileEdit.this, "Something went wrong with our servers. Please try again later.", Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -422,10 +425,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                     if (email.contains("@")) {
                         updateUserInfo();
                     } else {
-                        Toast.makeText(ProfileEditActivity.this, "Lütfen geçerli bir e-posta adresi giriniz", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperProfileEdit.this, "Lütfen geçerli bir e-posta adresi giriniz", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuperProfileEdit.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:
@@ -438,8 +441,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.create(ProfileEditActivity.this).single().start();
+                if (ActivityCompat.checkSelfPermission(SuperProfileEdit.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                    ImagePicker.create(SuperProfileEdit.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }

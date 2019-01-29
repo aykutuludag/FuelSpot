@@ -158,7 +158,7 @@ public class PurchaseDetails extends AppCompatActivity {
                     Toast.makeText(PurchaseDetails.this, "Onaylanmış siparişlerde değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
                 } else {
                     if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
-                        ImagePicker.create(PurchaseDetails.this).single().start();
+                        ImagePicker.cameraOnly().start(PurchaseDetails.this);
                     } else {
                         ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                     }
@@ -170,8 +170,13 @@ public class PurchaseDetails extends AppCompatActivity {
             circleImageViewStatus.setBackgroundResource(R.drawable.verified);
             textViewStatus.setText("Satın alma onaylandı! Bonus hesabınıza yansıtılmıştır.");
         } else {
-            circleImageViewStatus.setBackgroundResource(R.drawable.question);
-            textViewStatus.setText("Satın alma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+            if (billPhoto != null && billPhoto.length() > 0) {
+                circleImageViewStatus.setBackgroundResource(R.drawable.question);
+                textViewStatus.setText("Satın alma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+            } else {
+                circleImageViewStatus.setBackgroundResource(R.drawable.add_fuel);
+                textViewStatus.setText("Bonus kazanmak için fiş/fatura fotoğrafı ekle!");
+            }
         }
 
         Glide.with(this).load(iconURL).into(istasyonLogo);

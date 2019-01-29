@@ -1,6 +1,7 @@
 package com.fuelspot;
 
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,6 +32,8 @@ import java.util.Map;
 
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userFavorites;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 
 public class UserFavorites extends AppCompatActivity {
 
@@ -61,13 +64,11 @@ public class UserFavorites extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         mRecyclerView = findViewById(R.id.feedView);
         mLayoutManager = new GridLayoutManager(UserFavorites.this, 1);
-        mAdapter = new StationAdapter(UserFavorites.this, favoriteList, "NEARBY_STATIONS");
-
-        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     void parseUserFavorites() {
+        favoriteList.clear();
         if (userFavorites != null && userFavorites.length() > 0) {
             String[] favStationss = userFavorites.split(";");
 
@@ -87,6 +88,9 @@ public class UserFavorites extends AppCompatActivity {
             for (int i = 0; i < untilWhere; i++) {
                 fetchStation(Integer.parseInt(favStationss[i]));
             }
+
+            mAdapter = new StationAdapter(UserFavorites.this, favoriteList, "NEARBY_STATIONS");
+            mRecyclerView.setAdapter(mAdapter);
         } else {
             Toast.makeText(UserFavorites.this, "Henüz favorilerinize hiç istasyon eklememişsiniz.", Toast.LENGTH_SHORT).show();
         }
@@ -118,8 +122,20 @@ public class UserFavorites extends AppCompatActivity {
                             item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                             item.setIsVerified(obj.getInt("isVerified"));
                             item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
-                            item.setIsActive(obj.getInt("isActive"));
                             item.setLastUpdated(obj.getString("lastUpdated"));
+
+                            //DISTANCE START
+                            Location locLastKnow = new Location("");
+                            locLastKnow.setLatitude(Double.parseDouble(userlat));
+                            locLastKnow.setLongitude(Double.parseDouble(userlon));
+
+                            Location loc = new Location("");
+                            String[] stationKonum = item.getLocation().split(";");
+                            loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                            loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                            float uzaklik = locLastKnow.distanceTo(loc);
+                            item.setDistance((int) uzaklik);
+                            //DISTANCE END
 
                             favoriteList.add(item);
                             mAdapter.notifyDataSetChanged();

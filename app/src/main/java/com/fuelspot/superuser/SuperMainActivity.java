@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -36,28 +41,39 @@ import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
 import com.fuelspot.R;
+import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.FragmentSettings.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
+import static com.fuelspot.MainActivity.username;
 
-public class AdminMainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
+public class SuperMainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     // General variables for SuperUser
+    public static List<StationItem> listOfOwnedStations = new ArrayList<>();
+
     public static int isStationVerified, isMobilePaymentAvailable, isDeliveryAvailable, superStationID;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
-    public static String userStations, superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
+    public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
 
     boolean doubleBackToExitPressedOnce;
     RequestQueue queue;
@@ -72,9 +88,6 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
     Location locLastKnown;
 
     public static void getSuperVariables(SharedPreferences prefs) {
-        // General information
-        userStations = prefs.getString("userStations", "");
-
         // Station-specific information
         superStationID = prefs.getInt("SuperStationID", 0);
         superStationName = prefs.getString("SuperStationName", "");
@@ -162,6 +175,12 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
 
         //In-App Services
         InAppBilling();
+
+        // Fetch stations once for each session
+        fetchOwnedStations();
+
+        // Fetch companies once for each session
+        fetchCompanies();
     }
 
     private void InAppBilling() {
@@ -221,14 +240,14 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
                 listOfStation.add(item);
             }
 
-            ListAdapter adapter = new StationChangerAdapter(AdminMainActivity.this, listOfStation);
+            ListAdapter adapter = new StationChangerAdapter(SuperMainActivity.this, listOfStation);
             popupWindow.setAnchorView(parent);
             popupWindow.setAdapter(adapter);
             popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     if (listOfStation.get(i).getID() == -999) {
-                        Intent intent = new Intent(AdminMainActivity.this, AddStation.class);
+                        Intent intent = new Intent(SuperMainActivity.this, AddStation.class);
                         startActivity(intent);
                     } else {
                         changeStation(i);
@@ -240,9 +259,84 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }*/
 
-    /*void changeStation(int position) {
-        StationItem item = listOfStation.get(position);
+    void fetchOwnedStations() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
 
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setCountryCode(obj.getString("country"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setLicenseNo(obj.getString("licenseNo"));
+                                    item.setOwner(obj.getString("owner"));
+                                    item.setPhotoURL(obj.getString("logoURL"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
+
+                                    //DISTANCE START
+                                    Location locLastKnow = new Location("");
+                                    locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                    locLastKnow.setLongitude(Double.parseDouble(userlon));
+
+                                    Location loc = new Location("");
+                                    String[] stationKonum = item.getLocation().split(";");
+                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                    float uzaklik = locLastKnow.distanceTo(loc);
+                                    item.setDistance((int) uzaklik);
+                                    //DISTANCE END
+                                    listOfOwnedStations.add(item);
+
+                                    if (superStationID == 0) {
+                                        // This is for the first open
+                                        chooseStation(item);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("superusername", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
+    }
+
+    void chooseStation(StationItem item) {
         superStationID = item.getID();
         prefs.edit().putInt("SuperStationID", superStationID).apply();
 
@@ -289,16 +383,65 @@ public class AdminMainActivity extends AppCompatActivity implements AHBottomNavi
         prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
 
         superLastUpdate = item.getLastUpdated();
+        prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
 
         getSuperVariables(prefs);
+    }
 
-        FragmentMyStation frag = (FragmentMyStation) fragments.get(0);
-        if (frag != null) {
-            frag.checkLocationPermission();
-        }
+    void fetchCompanies() {
+        companyList.clear();
 
-        Snackbar.make(findViewById(R.id.pager), "İSTASYON SEÇİLDİ: " + superStationName, Snackbar.LENGTH_SHORT).show();
-    }*/
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CompanyItem item = new CompanyItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setName(obj.getString("companyName"));
+                                    item.setLogo(obj.getString("companyLogo"));
+                                    item.setWebsite(obj.getString("companyWebsite"));
+                                    item.setPhone(obj.getString("companyPhone"));
+                                    item.setAddress(obj.getString("companyAddress"));
+                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                    item.setNumOfStations(obj.getInt("numOfStations"));
+                                    companyList.add(item);
+                                }
+                            } catch (JSONException e) {
+                                Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

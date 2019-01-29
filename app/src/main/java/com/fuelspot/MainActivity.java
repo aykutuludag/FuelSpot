@@ -17,27 +17,45 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.fuelspot.model.CompanyItem;
+import com.fuelspot.model.VehicleItem;
 import com.fuelspot.receiver.AlarmReceiver;
 import com.google.android.gms.maps.MapsInitializer;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+
+import static com.fuelspot.FragmentSettings.companyList;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static List<VehicleItem> userAutomobileList = new ArrayList<>();
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
@@ -46,18 +64,16 @@ public class MainActivity extends AppCompatActivity {
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     public static String FENCE_RECEIVER_ACTION = "com.fuelspot.FENCE_RECEIVER_ACTION";
-    // Diameter of 50m circle
     public static int mapDefaultStationRange = 50;
-
     public static String universalTimeFormat = "yyyy-MM-dd HH:mm:ss";
     public static String shortTimeFormat = "dd-MMM HH:mm";
     public static boolean premium, hasDoubleRange, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, mapDefaultRange, adCount;
-    public static String userVehicles, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
-    public static List<Fragment> fragments = new ArrayList<>(5);
+    public static String userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
+
+    List<Fragment> fragments = new ArrayList<>(5);
     SharedPreferences prefs;
-    //In-App Billings
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     Window window;
@@ -65,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
     boolean doubleBackToExitPressedOnce;
     FragNavController mFragNavController;
     AHBottomNavigation bottomNavigation;
-    ListPopupWindow popupWindow;
-    // Static values END
+    RequestQueue queue;
+    String[] dummy;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -109,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         mapDefaultRange = prefs.getInt("RANGE", 2500);
         mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
-        userVehicles = prefs.getString("userVehicles", "");
         plateNo = prefs.getString("plateNo", "");
         vehicleID = prefs.getInt("vehicleID", 0);
         carbonEmission = prefs.getInt("carbonEmission", 0);
@@ -126,215 +141,13 @@ public class MainActivity extends AppCompatActivity {
     public static boolean verifyFilePickerPermission(Context context) {
         boolean hasStorage = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && (context.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) {
+            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
                 hasStorage = true;
             }
         } else {
             hasStorage = true;
         }
         return hasStorage;
-    }
-
-    // Updated on Dec 22, 2018
-    public static String stationPhotoChooser(String stationName) {
-        String photoURL;
-        switch (stationName) {
-            case "Akçagaz":
-                photoURL = "https://fuel-spot.com/station_icons/akcagaz.jpg";
-                break;
-            case "Akpet":
-                photoURL = "https://fuel-spot.com/station_icons/akpet.jpg";
-                break;
-            case "Alpet":
-                photoURL = "https://fuel-spot.com/station_icons/alpet.jpg";
-                break;
-            case "Anadolugaz":
-                photoURL = "https://fuel-spot.com/station_icons/anadolugaz.jpg";
-                break;
-            case "Antoil":
-                photoURL = "https://fuel-spot.com/station_icons/antoil.jpg";
-                break;
-            case "Aygaz":
-                photoURL = "https://fuel-spot.com/station_icons/aygaz.jpg";
-                break;
-            case "Aytemiz":
-                photoURL = "https://fuel-spot.com/station_icons/aytemiz.jpg";
-                break;
-            case "Best":
-                photoURL = "https://fuel-spot.com/station_icons/best.jpg";
-                break;
-            case "BP":
-                photoURL = "https://fuel-spot.com/station_icons/bp.jpg";
-                break;
-            case "Bpet":
-                photoURL = "https://fuel-spot.com/station_icons/bpet.jpg";
-                break;
-            case "Çekoil":
-                photoURL = "https://fuel-spot.com/station_icons/cekoil.jpg";
-                break;
-            case "Class":
-                photoURL = "https://fuel-spot.com/station_icons/class.jpg";
-                break;
-            case "Damla Petrol":
-                photoURL = "https://fuel-spot.com/station_icons/damla-petrol.jpg";
-                break;
-            case "Ecogaz":
-                photoURL = "https://fuel-spot.com/station_icons/ecogaz.jpg";
-                break;
-            case "Energy":
-                photoURL = "https://fuel-spot.com/station_icons/energy.jpg";
-                break;
-            case "Erk":
-                photoURL = "https://fuel-spot.com/station_icons/erk.jpg";
-                break;
-            case "Euroil":
-                photoURL = "https://fuel-spot.com/station_icons/euroil.jpg";
-                break;
-            case "Exengaz":
-                photoURL = "https://fuel-spot.com/station_icons/exengaz.jpg";
-                break;
-            case "GO":
-                photoURL = "https://fuel-spot.com/station_icons/go.jpg";
-                break;
-            case "Gulf":
-                photoURL = "https://fuel-spot.com/station_icons/gulf.jpg";
-                break;
-            case "Güneygaz":
-                photoURL = "https://fuel-spot.com/station_icons/guneygaz.jpg";
-                break;
-            case "Güvenal Gaz":
-                photoURL = "https://fuel-spot.com/station_icons/guvenalgaz.jpg";
-                break;
-            case "Habaş":
-                photoURL = "https://fuel-spot.com/station_icons/habas.jpg";
-                break;
-            case "Hisarpet":
-                photoURL = "https://fuel-spot.com/station_icons/hisarpet.jpg";
-                break;
-            case "İpragaz":
-            case "Ipragaz":
-                photoURL = "https://fuel-spot.com/station_icons/ipragaz.jpg";
-                break;
-            case "Jetpet":
-                photoURL = "https://fuel-spot.com/station_icons/jetpet.jpg";
-                break;
-            case "Kadoil":
-                photoURL = "https://fuel-spot.com/station_icons/kadoil.jpg";
-                break;
-            case "Kalegaz":
-                photoURL = "https://fuel-spot.com/station_icons/kalegaz.jpg";
-                break;
-            case "Kalepet":
-                photoURL = "https://fuel-spot.com/station_icons/kalepet.jpg";
-                break;
-            case "K-pet":
-            case "Kpet":
-                photoURL = "https://fuel-spot.com/station_icons/kpet.jpg";
-                break;
-            case "Ligoil":
-                photoURL = "https://fuel-spot.com/station_icons/ligoil.jpg";
-                break;
-            case "Lipetgaz":
-                photoURL = "https://fuel-spot.com/station_icons/lipetgaz.jpg";
-                break;
-            case "Lukoil":
-                photoURL = "https://fuel-spot.com/station_icons/lukoil.jpg";
-                break;
-            case "Memoil":
-                photoURL = "https://fuel-spot.com/station_icons/memoil.jpg";
-                break;
-            case "Milangaz":
-                photoURL = "https://fuel-spot.com/station_icons/milangaz.jpg";
-                break;
-            case "Mogaz":
-                photoURL = "https://fuel-spot.com/station_icons/mogaz.jpg";
-                break;
-            case "Moil":
-                photoURL = "https://fuel-spot.com/station_icons/moil.jpg";
-                break;
-            case "Mola":
-                photoURL = "https://fuel-spot.com/station_icons/mola.jpg";
-                break;
-            case "Onex":
-                photoURL = "https://fuel-spot.com/station_icons/opet.jpg";
-                break;
-            case "Opet":
-                photoURL = "https://fuel-spot.com/station_icons/opet.jpg";
-                break;
-            case "Pacific":
-                photoURL = "https://fuel-spot.com/station_icons/pacific.jpg";
-                break;
-            case "Parkoil":
-                photoURL = "https://fuel-spot.com/station_icons/parkoil.jpg";
-                break;
-            case "Petline":
-                photoURL = "https://fuel-spot.com/station_icons/petline.jpg";
-                break;
-            case "Petrol Ofisi":
-                photoURL = "https://fuel-spot.com/station_icons/petrol-ofisi.jpg";
-                break;
-            case "Petrotürk":
-                photoURL = "https://fuel-spot.com/station_icons/petroturk.jpg";
-                break;
-            case "Powerwax":
-                photoURL = "https://fuel-spot.com/station_icons/powerwax.jpg";
-                break;
-            case "Qplus":
-                photoURL = "https://fuel-spot.com/station_icons/qplus.jpg";
-                break;
-            case "Remoil":
-                photoURL = "https://fuel-spot.com/station_icons/remoil.jpg";
-                break;
-            case "Sanoil":
-                photoURL = "https://fuel-spot.com/station_icons/sanoil.jpg";
-                break;
-            case "Shell":
-                photoURL = "https://fuel-spot.com/station_icons/shell.jpg";
-                break;
-            case "S-Oil":
-                photoURL = "https://fuel-spot.com/station_icons/s-oil.jpg";
-                break;
-            case "Starpet":
-                photoURL = "https://fuel-spot.com/station_icons/starpet.jpg";
-                break;
-            case "Sunpet":
-                photoURL = "https://fuel-spot.com/station_icons/sunpet.jpg";
-                break;
-            case "Teco":
-                photoURL = "https://fuel-spot.com/station_icons/teco.jpg";
-                break;
-            case "Termo":
-                photoURL = "https://fuel-spot.com/station_icons/termo.jpg";
-                break;
-            case "Total":
-                photoURL = "https://fuel-spot.com/station_icons/total.jpg";
-                break;
-            case "Turkuaz":
-                photoURL = "https://fuel-spot.com/station_icons/turkuaz.jpg";
-                break;
-            case "Türkiş":
-                photoURL = "https://fuel-spot.com/station_icons/turkis.jpg";
-                break;
-            case "Türkiye Petrolleri":
-                photoURL = "https://fuel-spot.com/station_icons/turkiye-petrolleri.jpg";
-                break;
-            case "Türkoil":
-                photoURL = "https://fuel-spot.com/station_icons/turkoil.jpg";
-                break;
-            case "Türkpetrol":
-                photoURL = "https://fuel-spot.com/station_icons/turkpetrol.jpg";
-                break;
-            case "United":
-                photoURL = "https://fuel-spot.com/station_icons/united.jpg";
-                break;
-            case "Uspet":
-                photoURL = "https://fuel-spot.com/station_icons/uspet.jpg";
-                break;
-            default:
-                photoURL = "https://fuel-spot.com/default_icons/station.jpg";
-                break;
-        }
-        return photoURL;
     }
 
   /*  public static void AdMob(final Context mContext) {
@@ -395,7 +208,9 @@ public class MainActivity extends AppCompatActivity {
         // Some variables
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
-        popupWindow = new ListPopupWindow(MainActivity.this);
+        queue = Volley.newRequestQueue(this);
+
+        // Initializing GoogleMaps
         MapsInitializer.initialize(this);
 
         // Bottom navigation
@@ -444,6 +259,12 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mFragNavController.switchTab(FragNavController.TAB1);
         }
+
+        // Fetch user vehicles once for each session
+        fetchAutomobiles();
+
+        // Fetch companies once for each session
+        fetchCompanies();
     }
 
     private void InAppBilling() {
@@ -475,12 +296,174 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;
 
-            premium = ownedSkus.contains("premium");
+            premium = ownedSkus.contains("premium") || ownedSkus.contains("premium_super");
             prefs.edit().putBoolean("hasPremium", premium).apply();
 
-            hasDoubleRange = ownedSkus.contains("2x_range");
-            prefs.edit().putBoolean("hasDoubleRange", premium).apply();
+            hasDoubleRange = ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super");
+            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
         }
+    }
+
+    void fetchAutomobiles() {
+        userAutomobileList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    VehicleItem item = new VehicleItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setVehicleBrand(obj.getString("car_brand"));
+                                    item.setVehicleModel(obj.getString("car_model"));
+                                    item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                    item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                    item.setVehicleKilometer(obj.getInt("kilometer"));
+                                    item.setVehiclePhoto(obj.getString("carPhoto"));
+                                    item.setVehiclePlateNo(obj.getString("plateNo"));
+                                    item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                    item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                    userAutomobileList.add(item);
+
+                                    // If there is any selected auto, choose first one.
+                                    if (vehicleID == 0 || vehicleID == -999) {
+                                        chooseVehicle(item);
+                                    }
+                                }
+
+                                VehicleItem item2 = new VehicleItem();
+                                item2.setID(-999);
+                                item2.setVehicleBrand("Add");
+                                item2.setVehicleModel("automobile");
+                                item2.setVehicleFuelPri(-1);
+                                item2.setVehicleFuelSec(-1);
+                                item2.setVehicleKilometer(0);
+                                item2.setVehiclePhoto("");
+                                item2.setVehiclePlateNo("");
+                                item2.setVehicleConsumption(0);
+                                item2.setVehicleEmission(0);
+                                userAutomobileList.add(item2);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
+    }
+
+    private void chooseVehicle(VehicleItem item) {
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+        getVariables(prefs);
+    }
+
+    void fetchCompanies() {
+        companyList.clear();
+
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CompanyItem item = new CompanyItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setName(obj.getString("companyName"));
+                                    item.setLogo(obj.getString("companyLogo"));
+                                    item.setWebsite(obj.getString("companyWebsite"));
+                                    item.setPhone(obj.getString("companyPhone"));
+                                    item.setAddress(obj.getString("companyAddress"));
+                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                    item.setNumOfStations(obj.getInt("numOfStations"));
+                                    companyList.add(item);
+                                }
+                            } catch (JSONException e) {
+                                Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
     }
 
     public void coloredBars(int color1, int color2) {
@@ -509,8 +492,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (mServiceConn != null) {
             unbindService(mServiceConn);
+        }
+
+        if (queue != null) {
+            queue.cancelAll(this);
         }
     }
 
@@ -524,9 +512,6 @@ public class MainActivity extends AppCompatActivity {
                     mFragNavController.clearStack();
                     super.onBackPressed();
                     finish();
-
-                    // When you fixed the second time opening crash issue remove this
-                    android.os.Process.killProcess(android.os.Process.myPid());
                 }
 
                 this.doubleBackToExitPressedOnce = true;

@@ -73,7 +73,7 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
-import static com.fuelspot.MainActivity.userVehicles;
+import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
@@ -81,8 +81,8 @@ public class FragmentStations extends Fragment {
 
     // Station variables
     public static List<StationItem> fullStationList = new ArrayList<>();
-    static List<StationItem> shortStationList = new ArrayList<>();
-    static ArrayList<Marker> markers = new ArrayList<>();
+    List<StationItem> shortStationList = new ArrayList<>();
+    ArrayList<Marker> markers = new ArrayList<>();
 
     boolean isAllStationsListed;
 
@@ -102,8 +102,8 @@ public class FragmentStations extends Fragment {
     View rootView;
     RelativeLayout stationLayout, sortGasolineLayout, sortDieselLayout, sortLPGLayout, sortElectricityLayout, sortDistanceLayout;
     Window window;
-    private GoogleMap googleMap;
-    private FusedLocationProviderClient mFusedLocationClient;
+    GoogleMap googleMap;
+    FusedLocationProviderClient mFusedLocationClient;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -140,7 +140,7 @@ public class FragmentStations extends Fragment {
             locLastKnown.setLongitude(Double.parseDouble(userlon));
 
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(10000);
+            mLocationRequest.setInterval(5000);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationCallback = new LocationCallback() {
@@ -303,10 +303,12 @@ public class FragmentStations extends Fragment {
     }
 
     private void updateMapObject() {
+        shortStationList.clear();
         fullStationList.clear();
+        markers.clear();
+
         mAdapter.notifyDataSetChanged();
 
-        markers.clear();
         if (googleMap != null) {
             googleMap.clear();
 
@@ -326,12 +328,12 @@ public class FragmentStations extends Fragment {
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        fetchStations();
+        searchStations();
     }
 
-    private void fetchStations() {
+    private void searchStations() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATIONS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -358,7 +360,6 @@ public class FragmentStations extends Fragment {
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
-                                    item.setIsActive(obj.getInt("isActive"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
                                     item.setDistance((int) obj.getDouble("distance"));
                                     fullStationList.add(item);
@@ -388,7 +389,7 @@ public class FragmentStations extends Fragment {
 
                                 // Create a fence
                                 if (!isSuperUser && isGeofenceOpen) {
-                                    if (userVehicles != null && userVehicles.length() > 0) {
+                                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
                                         AlarmBuilder(getActivity());
                                     }
                                 }
@@ -667,10 +668,23 @@ public class FragmentStations extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
     public void onResume() {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+        }
+
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         }
     }
 
@@ -679,6 +693,18 @@ public class FragmentStations extends Fragment {
         super.onPause();
         if (mMapView != null) {
             mMapView.onPause();
+        }
+
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
         }
     }
 
@@ -690,20 +716,17 @@ public class FragmentStations extends Fragment {
             mMapView.onDestroy();
         }
 
-        if (mFusedLocationClient != null) {
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        }
-
         if (queue != null) {
             queue.cancelAll(getActivity());
         }
-    }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mMapView != null) {
-            mMapView.onSaveInstanceState(outState);
+        markers.clear();
+        fullStationList.clear();
+        shortStationList.clear();
+        rootView = null;
+
+        if (mRecyclerView != null) {
+            mRecyclerView.getRecycledViewPool().clear();
         }
     }
 

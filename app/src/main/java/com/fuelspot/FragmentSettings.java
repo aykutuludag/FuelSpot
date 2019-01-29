@@ -30,6 +30,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,9 @@ import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
@@ -78,15 +81,13 @@ import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
 
     public static List<CompanyItem> companyList = new ArrayList<>();
-    public static List<String> companyNameList = new ArrayList<>();
-    public static List<Integer> companyVerifiedNumberList = new ArrayList<>();
-    public static List<Integer> companyStationNumberList = new ArrayList<>();
     TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
     Button buttonTax, buttonEksikIstasyon, buttonBeta, buttonFeedback, buttonRate;
     SharedPreferences prefs;
@@ -101,7 +102,7 @@ public class FragmentSettings extends Fragment {
     ArrayList<PieEntry> entries = new ArrayList<>();
     PieChart chart3;
     TextView textViewTotalNumber;
-
+    RelativeLayout geofenceLayout;
     CheckBox geofenceCheckBox;
 
     int otherStations, totalVerified, totalStation;
@@ -144,30 +145,35 @@ public class FragmentSettings extends Fragment {
             unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
             unitSystemText.setText(userUnit);
 
-            geofenceCheckBox = rootView.findViewById(R.id.checkBox);
-            if (isGeofenceOpen) {
-                geofenceCheckBox.setChecked(true);
-                geofenceCheckBox.setText("Konum bildirimleri açık");
+            geofenceLayout = rootView.findViewById(R.id.settings_geofence);
+            if (isSuperUser) {
+                geofenceLayout.setVisibility(View.GONE);
             } else {
-                geofenceCheckBox.setChecked(false);
-                geofenceCheckBox.setText("Konum bildirimleri kapalı");
-            }
-            geofenceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        isGeofenceOpen = true;
-                        geofenceCheckBox.setChecked(true);
-                        geofenceCheckBox.setText("Konum bildirimleri açık");
-                    } else {
-                        isGeofenceOpen = false;
-                        geofenceCheckBox.setChecked(false);
-                        geofenceCheckBox.setText("Konum bildirimleri kapalı");
-                    }
-
-                    prefs.edit().putBoolean("Geofence", isGeofenceOpen).apply();
+                geofenceCheckBox = rootView.findViewById(R.id.checkBox);
+                if (isGeofenceOpen) {
+                    geofenceCheckBox.setChecked(true);
+                    geofenceCheckBox.setText("Konum bildirimleri açık");
+                } else {
+                    geofenceCheckBox.setChecked(false);
+                    geofenceCheckBox.setText("Konum bildirimleri kapalı");
                 }
-            });
+                geofenceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            isGeofenceOpen = true;
+                            geofenceCheckBox.setChecked(true);
+                            geofenceCheckBox.setText("Konum bildirimleri açık");
+                        } else {
+                            isGeofenceOpen = false;
+                            geofenceCheckBox.setChecked(false);
+                            geofenceCheckBox.setText("Konum bildirimleri kapalı");
+                        }
+
+                        prefs.edit().putBoolean("Geofence", isGeofenceOpen).apply();
+                    }
+                });
+            }
 
             textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
             textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
@@ -204,8 +210,6 @@ public class FragmentSettings extends Fragment {
             chart3.setHighlightPerTapEnabled(true);
             chart3.setEntryLabelColor(Color.BLACK);
             chart3.setEntryLabelTextSize(12f);
-
-            fetchCompanyStats();
 
             buttonEksikIstasyon = rootView.findViewById(R.id.button_missingStation);
             buttonEksikIstasyon.setOnClickListener(new View.OnClickListener() {
@@ -270,12 +274,74 @@ public class FragmentSettings extends Fragment {
                     customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
                 }
             });
+
+            parseCompanies();
         }
 
         return rootView;
     }
 
-    void fetchCompanyStats() {
+    void parseCompanies() {
+        if (companyList != null && companyList.size() > 0) {
+            for (int i = 0; i < companyList.size(); i++) {
+                totalVerified += companyList.get(i).getNumOfVerifieds();
+                totalStation += companyList.get(i).getNumOfStations();
+
+                if (companyList.get(i).getNumOfStations() >= 225) {
+                    entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
+                } else {
+                    otherStations += companyList.get(i).getNumOfStations();
+                }
+            }
+
+            textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
+
+            entries.add(new PieEntry((float) otherStations, "Diğer"));
+
+            PieDataSet dataSet = new PieDataSet(entries, "Akaryakıt dağıtım firmaları");
+            dataSet.setDrawIcons(false);
+
+            // add a lot of colors
+            ArrayList<Integer> colors = new ArrayList<>();
+
+            for (int c : ColorTemplate.VORDIPLOM_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.JOYFUL_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.COLORFUL_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.LIBERTY_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.PASTEL_COLORS)
+                colors.add(c);
+
+            colors.add(ColorTemplate.getHoloBlue());
+
+            dataSet.setColors(colors);
+            //dataSet.setSelectionShift(0f);
+
+            PieData data = new PieData(dataSet);
+            data.setValueTextSize(11f);
+            data.setValueTextColor(Color.BLACK);
+            chart3.setData(data);
+            chart3.highlightValues(null);
+            chart3.invalidate();
+        } else {
+            // Somehow companList didn't fetch at MainActivity or SuperMainActivity. Fetch it.
+            fetchCompanies();
+        }
+    }
+
+    void fetchCompanies() {
+        companyList.clear();
+        totalStation = 0;
+        totalVerified = 0;
+        otherStations = 0;
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
@@ -295,58 +361,9 @@ public class FragmentSettings extends Fragment {
                                     item.setAddress(obj.getString("companyAddress"));
                                     item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
                                     item.setNumOfStations(obj.getInt("numOfStations"));
-
-                                    companyNameList.add(obj.getString("companyName"));
-                                    companyVerifiedNumberList.add(obj.getInt("numOfVerifieds"));
-                                    companyStationNumberList.add(obj.getInt("numOfStations"));
                                     companyList.add(item);
-
-                                    totalVerified += obj.getInt("numOfVerifieds");
-                                    totalStation += obj.getInt("numOfStations");
-
-                                    if (companyStationNumberList.get(i) >= 225) {
-                                        entries.add(new PieEntry((float) companyStationNumberList.get(i), obj.getString("companyName")));
-                                    } else {
-                                        otherStations += companyStationNumberList.get(i);
-                                    }
                                 }
-
-                                textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
-
-                                entries.add(new PieEntry((float) otherStations, "Diğer"));
-
-                                PieDataSet dataSet = new PieDataSet(entries, "Akaryakıt dağıtım firmaları");
-                                dataSet.setDrawIcons(false);
-
-                                // add a lot of colors
-                                ArrayList<Integer> colors = new ArrayList<>();
-
-                                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.JOYFUL_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.COLORFUL_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.LIBERTY_COLORS)
-                                    colors.add(c);
-
-                                for (int c : ColorTemplate.PASTEL_COLORS)
-                                    colors.add(c);
-
-                                colors.add(ColorTemplate.getHoloBlue());
-
-                                dataSet.setColors(colors);
-                                //dataSet.setSelectionShift(0f);
-
-                                PieData data = new PieData(dataSet);
-                                data.setValueTextSize(11f);
-                                data.setValueTextColor(Color.BLACK);
-                                chart3.setData(data);
-                                chart3.highlightValues(null);
-                                chart3.invalidate();
+                                parseCompanies();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -468,7 +485,7 @@ public class FragmentSettings extends Fragment {
         });
 
         getScreenshot = customView.findViewById(R.id.feedBackPhoto);
-        Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
+        Glide.with(getActivity()).load(bitmap).apply(options).into(getScreenshot);
         getScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -476,6 +493,7 @@ public class FragmentSettings extends Fragment {
                     ImagePicker.create(getActivity()).single().start();
                 } else {
                     ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
                 }
             }
         });
@@ -519,7 +537,7 @@ public class FragmentSettings extends Fragment {
                         Map<String, String> params = new Hashtable<>();
 
                         //Adding parameters
-                        params.put("username", MainActivity.username);
+                        params.put("username", username);
                         params.put("message", feedbackMessage);
                         if (bitmap != null) {
                             params.put("screenshot", getStringImage(bitmap));
@@ -599,7 +617,7 @@ public class FragmentSettings extends Fragment {
             }
 
             private void sendReport() {
-                
+
             }
         });
 
@@ -618,8 +636,6 @@ public class FragmentSettings extends Fragment {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-
-
     public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
@@ -632,7 +648,7 @@ public class FragmentSettings extends Fragment {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.create(getActivity()).single().start();
+                    ImagePicker.create(this).single().start();
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }

@@ -18,7 +18,6 @@ public class StationItem {
     private float electricityPrice;
     private int isVerified;
     private int hasSupportMobilePayment;
-    private int isActive;
     private String lastUpdated;
     private int distance;
 
@@ -156,14 +155,6 @@ public class StationItem {
 
     public void setHasSupportMobilePayment(int hasSupportMobilePayment) {
         this.hasSupportMobilePayment = hasSupportMobilePayment;
-    }
-
-    public int getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
     }
 
     public String getLastUpdated() {
