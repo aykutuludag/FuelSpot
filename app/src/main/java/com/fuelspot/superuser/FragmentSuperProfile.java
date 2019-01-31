@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,18 +86,10 @@ public class FragmentSuperProfile extends Fragment {
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
-            mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
-            mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
-            mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setNestedScrollingEnabled(false);
-
 
             // Comments
             title = rootView.findViewById(R.id.titleComment);
-
-            loadProfile();
         }
 
         return rootView;
@@ -148,9 +139,18 @@ public class FragmentSuperProfile extends Fragment {
             }
         });
 
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
         mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setLayoutManager(mLayoutManager);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (headerView != null) {
+            loadProfile();
+        }
     }
 }

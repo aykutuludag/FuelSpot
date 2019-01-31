@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -108,6 +107,7 @@ public class FragmentProfile extends Fragment {
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
+            mRecyclerView.setNestedScrollingEnabled(false);
 
             // Comments
             userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
@@ -320,8 +320,6 @@ public class FragmentProfile extends Fragment {
         super.onResume();
         if (headerView != null) {
             loadProfile();
-        } else {
-            Toast.makeText(getActivity(), "Profil yüklenemedi.", Toast.LENGTH_SHORT).show();
         }
     }
 }

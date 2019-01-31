@@ -460,7 +460,7 @@ public class SuperUpdateStation extends AppCompatActivity {
                                     companyList.add(item);
                                 }
 
-                                loadLayoutItems();
+
                             } catch (JSONException e) {
                                 Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
                             }

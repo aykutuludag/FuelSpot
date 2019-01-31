@@ -102,6 +102,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     TextWatcher mTextWatcher;
     SharedPreferences prefs;
     ProgressDialog loading;
+    VehicleItem emptyItem = new VehicleItem();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +138,18 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         loading.setMessage("Lütfen bekleyiniz...");
         loading.setIndeterminate(true);
         loading.setCancelable(false);
+
+        // Empty vehicle
+        emptyItem.setID(-999);
+        emptyItem.setVehicleBrand("Add");
+        emptyItem.setVehicleModel("automobile");
+        emptyItem.setVehicleFuelPri(-1);
+        emptyItem.setVehicleFuelSec(-1);
+        emptyItem.setVehicleKilometer(0);
+        emptyItem.setVehiclePhoto("");
+        emptyItem.setVehiclePlateNo("");
+        emptyItem.setVehicleConsumption(0);
+        emptyItem.setVehicleEmission(0);
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
@@ -325,23 +338,21 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "plateNo exist":
-                                    loading.dismiss();
                                     Toast.makeText(AddAutomobile.this, "Plaka daha önce eklenmiş...", Toast.LENGTH_LONG).show();
                                     break;
                                 case "Success":
-                                    fetchAutomobiles();
                                     Toast.makeText(AddAutomobile.this, "Araç eklendi: " + plateNo, Toast.LENGTH_LONG).show();
+                                    fetchAutomobiles();
                                     break;
                                 default:
-                                    loading.dismiss();
                                     Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            loading.dismiss();
                             Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -414,31 +425,20 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                                         }
                                     }
                                 }
-
-                                VehicleItem item2 = new VehicleItem();
-                                item2.setID(-999);
-                                item2.setVehicleBrand("Add");
-                                item2.setVehicleModel("automobile");
-                                item2.setVehicleFuelPri(-1);
-                                item2.setVehicleFuelSec(-1);
-                                item2.setVehicleKilometer(0);
-                                item2.setVehiclePhoto("");
-                                item2.setVehiclePlateNo("");
-                                item2.setVehicleConsumption(0);
-                                item2.setVehicleEmission(0);
-                                userAutomobileList.add(item2);
-                                loading.dismiss();
-                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+
+                        userAutomobileList.add(emptyItem);
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
+                        userAutomobileList.add(emptyItem);
                     }
                 }) {
             @Override

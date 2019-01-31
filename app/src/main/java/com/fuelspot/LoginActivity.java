@@ -159,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, SuperWelcomeActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 

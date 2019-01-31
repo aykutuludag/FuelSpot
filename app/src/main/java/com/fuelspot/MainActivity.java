@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     FragNavController mFragNavController;
     AHBottomNavigation bottomNavigation;
     RequestQueue queue;
-    String[] dummy;
+    VehicleItem emptyItem = new VehicleItem();
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -260,6 +260,18 @@ public class MainActivity extends AppCompatActivity {
             mFragNavController.switchTab(FragNavController.TAB1);
         }
 
+        // Empty vehicle
+        emptyItem.setID(-999);
+        emptyItem.setVehicleBrand("Add");
+        emptyItem.setVehicleModel("automobile");
+        emptyItem.setVehicleFuelPri(-1);
+        emptyItem.setVehicleFuelSec(-1);
+        emptyItem.setVehicleKilometer(0);
+        emptyItem.setVehiclePhoto("");
+        emptyItem.setVehiclePlateNo("");
+        emptyItem.setVehicleConsumption(0);
+        emptyItem.setVehicleEmission(0);
+
         // Fetch user vehicles once for each session
         fetchAutomobiles();
 
@@ -334,29 +346,18 @@ public class MainActivity extends AppCompatActivity {
                                         chooseVehicle(item);
                                     }
                                 }
-
-                                VehicleItem item2 = new VehicleItem();
-                                item2.setID(-999);
-                                item2.setVehicleBrand("Add");
-                                item2.setVehicleModel("automobile");
-                                item2.setVehicleFuelPri(-1);
-                                item2.setVehicleFuelSec(-1);
-                                item2.setVehicleKilometer(0);
-                                item2.setVehiclePhoto("");
-                                item2.setVehiclePlateNo("");
-                                item2.setVehicleConsumption(0);
-                                item2.setVehicleEmission(0);
-                                userAutomobileList.add(item2);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+                        userAutomobileList.add(emptyItem);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
+                        userAutomobileList.add(emptyItem);
                     }
                 }) {
             @Override

@@ -15,13 +15,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -33,10 +28,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
@@ -56,8 +47,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import static com.fuelspot.FragmentSettings.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.hasDoubleRange;
@@ -71,7 +60,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     // General variables for SuperUser
     public static List<StationItem> listOfOwnedStations = new ArrayList<>();
 
-    public static int isStationVerified, isMobilePaymentAvailable, isDeliveryAvailable, superStationID;
+    public static int isStationVerified, superStationID;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
 
@@ -86,6 +75,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     AHBottomNavigation bottomNavigation;
     List<Fragment> fragments = new ArrayList<>(5);
     Location locLastKnown;
+    StationItem emptyItem = new StationItem();
 
     public static void getSuperVariables(SharedPreferences prefs) {
         // Station-specific information
@@ -103,15 +93,13 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         ownedElectricityPrice = prefs.getFloat("superElectricityPrice", 0);
         superLicenseNo = prefs.getString("SuperLicenseNo", "");
         isStationVerified = prefs.getInt("isStationVerified", 0);
-        isMobilePaymentAvailable = prefs.getInt("isMobilePaymentAvaiable", 0);
-        isDeliveryAvailable = prefs.getInt("isDeliveryAvailable", 0);
         superLastUpdate = prefs.getString("SuperLastUpdate", "");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_main);
+        setContentView(R.layout.activity_super_main);
 
         //Window
         window = this.getWindow();
@@ -168,6 +156,25 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         // Bottombar Settings
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setOnTabSelectedListener(this);
+
+        // EmptyStation
+        emptyItem.setID(-333);
+        emptyItem.setStationName("Yeni istasyon ekle");
+        emptyItem.setVicinity("");
+        emptyItem.setCountryCode("");
+        emptyItem.setLocation("");
+        emptyItem.setGoogleMapID("");
+        emptyItem.setFacilities("");
+        emptyItem.setLicenseNo("");
+        emptyItem.setOwner("");
+        emptyItem.setPhotoURL("");
+        emptyItem.setGasolinePrice(0);
+        emptyItem.setDieselPrice(0);
+        emptyItem.setLpgPrice(0);
+        emptyItem.setElectricityPrice(0);
+        emptyItem.setIsVerified(0);
+        emptyItem.setLastUpdated("");
+        emptyItem.setDistance(0);
 
         // AppRater
         RateThisApp.onCreate(this);
@@ -231,35 +238,8 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }
 
-    /*void openStationChoosePopup(View parent) {
-        if (listOfStation != null && listOfStation.size() > 0) {
-            if (listOfStation.get(listOfStation.size() - 1).getID() != -999) {
-                StationItem item = new StationItem();
-                item.setID(-999);
-                item.setVicinity(getString(R.string.add_station));
-                listOfStation.add(item);
-            }
-
-            ListAdapter adapter = new StationChangerAdapter(SuperMainActivity.this, listOfStation);
-            popupWindow.setAnchorView(parent);
-            popupWindow.setAdapter(adapter);
-            popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (listOfStation.get(i).getID() == -999) {
-                        Intent intent = new Intent(SuperMainActivity.this, AddStation.class);
-                        startActivity(intent);
-                    } else {
-                        changeStation(i);
-                    }
-                    popupWindow.dismiss();
-                }
-            });
-            popupWindow.show();
-        }
-    }*/
-
     void fetchOwnedStations() {
+        listOfOwnedStations.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
                 new Response.Listener<String>() {
                     @Override
@@ -277,6 +257,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
                                     item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));
                                     item.setPhotoURL(obj.getString("logoURL"));
@@ -285,7 +266,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                                     item.setIsVerified(obj.getInt("isVerified"));
-                                    item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
 
                                     //DISTANCE START
@@ -302,20 +282,24 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                     //DISTANCE END
                                     listOfOwnedStations.add(item);
 
-                                    if (superStationID == 0) {
-                                        // This is for the first open
-                                        chooseStation(item);
+                                    if (superStationID == 0 || superStationID == -333) {
+                                        if (item.getID() != 0 || item.getID() != -333) {
+                                            chooseStation(item);
+                                        }
                                     }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+                        listOfOwnedStations.add(emptyItem);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                        listOfOwnedStations.add(emptyItem);
                     }
                 }) {
             @Override
@@ -358,6 +342,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         superFacilities = item.getFacilities();
         prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
 
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
         superStationLogo = item.getPhotoURL();
         prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
 
@@ -373,14 +360,8 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         ownedElectricityPrice = item.getElectricityPrice();
         prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
 
-        superLicenseNo = item.getLicenseNo();
-        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
-
         isStationVerified = item.getIsVerified();
         prefs.edit().putInt("isStationVerified", isStationVerified).apply();
-
-        isMobilePaymentAvailable = item.getHasSupportMobilePayment();
-        prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
@@ -462,8 +443,16 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mServiceConn != null) {
+            unbindService(mServiceConn);
+        }
+
+        if (queue != null) {
+            queue.cancelAll(this);
+        }
     }
 
     @Override
@@ -482,75 +471,5 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
-    }
-
-    public class StationChangerAdapter extends BaseAdapter {
-        private LayoutInflater mLayoutInflater;
-        private List<StationItem> mItemList;
-        private Context mContext;
-
-        StationChangerAdapter(Context context, List<StationItem> itemList) {
-            mLayoutInflater = LayoutInflater.from(context);
-            mContext = context;
-            mItemList = itemList;
-        }
-
-        @Override
-        public int getCount() {
-            return mItemList.size();
-        }
-
-        @Override
-        public StationItem getItem(int i) {
-            return mItemList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.card_station_mini, null);
-                holder = new ViewHolder(convertView);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            String sName = getItem(position).getStationName();
-            holder.textViewStationName.setText(sName);
-
-            String sAddress = getItem(position).getVicinity();
-            holder.textViewStationAddress.setText(sAddress);
-
-            RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_station).error(R.drawable.default_station)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .priority(Priority.HIGH);
-            Glide.with(mContext).load(getItem(position).getPhotoURL()).apply(options).into(holder.stationLogo);
-
-            if (getItem(position).getID() == superStationID) {
-                holder.stationIsSelected.setVisibility(View.VISIBLE);
-            } else {
-                holder.stationIsSelected.setVisibility(View.INVISIBLE);
-            }
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            TextView textViewStationName, textViewStationAddress;
-            CircleImageView stationLogo, stationIsSelected;
-
-            ViewHolder(View view) {
-                textViewStationName = view.findViewById(R.id.station_name);
-                textViewStationAddress = view.findViewById(R.id.station_address);
-                stationLogo = view.findViewById(R.id.station_photo);
-                stationIsSelected = view.findViewById(R.id.stationIsSelected);
-            }
-        }
     }
 }

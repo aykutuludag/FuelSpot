@@ -215,8 +215,8 @@ public class FragmentMyStation extends Fragment {
                     }
                 }
             });
+            checkLocationPermission();
         }
-
         return rootView;
     }
 
@@ -249,8 +249,9 @@ public class FragmentMyStation extends Fragment {
     }
 
     void loadStationDetails() {
-        textName.setText(superStationName);
+        googleMap.clear();
 
+        textName.setText(superStationName);
         textVicinity.setText(superStationAddress);
 
         Location loc1 = new Location("");
@@ -334,8 +335,6 @@ public class FragmentMyStation extends Fragment {
         if (mFusedLocationClient != null) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         }
-
-        checkLocationPermission();
     }
 
     @Override

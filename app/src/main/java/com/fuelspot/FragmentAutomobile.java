@@ -142,13 +142,6 @@ public class FragmentAutomobile extends Fragment {
         kilometerText.setText(kmHolder);
 
         TextView textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
-        // Check if plateNo changed. plateNo changed means user switched automobile.
-        if (textViewPlaka.getText() != null && textViewPlaka.getText().length() > 0) {
-            if (textViewPlaka.getText() != plateNo) {
-                fetchVehiclePurchases();
-            }
-        }
-        // If switched, new vehicle purchases are fetching right now.
         textViewPlaka.setText(plateNo);
 
         //Marka-model
@@ -269,7 +262,6 @@ public class FragmentAutomobile extends Fragment {
 
     public void fetchVehiclePurchases() {
         vehiclePurchaseList.clear();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES),
                 new Response.Listener<String>() {
                     @Override
@@ -531,12 +523,19 @@ public class FragmentAutomobile extends Fragment {
         super.onResume();
 
         if (headerView != null) {
-            if (userAutomobileList != null && userAutomobileList.size() > 0) {
+            if (userAutomobileList != null && userAutomobileList.size() > 1) {
                 noAracLayout.setVisibility(View.GONE);
                 regularLayout.setVisibility(View.VISIBLE);
                 loadVehicleProfile();
             } else {
                 noAracLayout.setVisibility(View.VISIBLE);
+                noAracLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), AddAutomobile.class);
+                        startActivity(intent);
+                    }
+                });
                 regularLayout.setVisibility(View.GONE);
             }
         }

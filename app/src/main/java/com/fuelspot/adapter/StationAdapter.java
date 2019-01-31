@@ -3,6 +3,7 @@ package com.fuelspot.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
+import com.fuelspot.superuser.AddStation;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import java.text.ParseException;
@@ -30,7 +32,6 @@ import java.util.Locale;
 
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
-import static com.fuelspot.superuser.SuperMainActivity.isMobilePaymentAvailable;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
@@ -80,7 +81,12 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     mContext.startActivity(intent);
                     break;
                 case "SUPERUSER_STATIONS":
-                    changeSuperStation(feedItemList.get(position));
+                    if (feedItemList.get(position).getID() == -333) {
+                        Intent intent2 = new Intent(mContext, AddStation.class);
+                        mContext.startActivity(intent2);
+                    } else {
+                        changeSuperStation(feedItemList.get(position));
+                    }
                     break;
             }
         }
@@ -136,9 +142,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         isStationVerified = item.getIsVerified();
         prefs.edit().putInt("isStationVerified", isStationVerified).apply();
-
-        isMobilePaymentAvailable = item.getHasSupportMobilePayment();
-        prefs.edit().putInt("isMobilePaymentAvaiable", isMobilePaymentAvailable).apply();
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
@@ -208,17 +211,27 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.distance.setText(distance);
 
         //Last updated
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        try {
-            Date date = format.parse(feedItem.getLastUpdated());
-            viewHolder.lastUpdated.setReferenceTime(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (feedItem.getLastUpdated() != null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            try {
+                Date date = format.parse(feedItem.getLastUpdated());
+                viewHolder.lastUpdated.setReferenceTime(date.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);
         viewHolder.background.setTag(viewHolder);
+
+        if (whichScreen.equals("SUPERUSER_STATIONS")) {
+            if (feedItem.getID() == superStationID) {
+                viewHolder.background.setBackgroundColor(Color.parseColor("#00801e"));
+            } else {
+                viewHolder.background.setBackgroundColor(Color.parseColor("#ffffff"));
+            }
+        }
     }
 
     @Override

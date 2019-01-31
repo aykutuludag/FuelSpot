@@ -95,7 +95,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     RequestQueue requestQueue;
     RequestOptions options;
     TextWatcher mTextWatcher;
-    String[] dummy;
+    VehicleItem emptyItem = new VehicleItem();
     ProgressDialog loadingUpdate, loadingDelete;
 
     @Override
@@ -138,6 +138,18 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         loadingDelete.setMessage("Lütfen bekleyiniz...");
         loadingDelete.setIndeterminate(true);
         loadingDelete.setCancelable(false);
+
+        // Empty Item
+        emptyItem.setID(-999);
+        emptyItem.setVehicleBrand("Add");
+        emptyItem.setVehicleModel("automobile");
+        emptyItem.setVehicleFuelPri(-1);
+        emptyItem.setVehicleFuelSec(-1);
+        emptyItem.setVehicleKilometer(0);
+        emptyItem.setVehiclePhoto("");
+        emptyItem.setVehiclePlateNo("");
+        emptyItem.setVehicleConsumption(0);
+        emptyItem.setVehicleEmission(0);
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
@@ -324,7 +336,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (vehicleNumber > 1) {
+                if (vehicleNumber > 2) {
                     Snackbar.make(view, "Araç silinecek?", Snackbar.LENGTH_LONG)
                             .setAction("SİL", new View.OnClickListener() {
                                 @Override
@@ -406,33 +418,32 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loadingDelete.dismiss();
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
                                     //set VehicleID = 0 because user delete this car. Choose another one.
                                     vehicleID = 0;
+                                    Toast.makeText(AutomobileEditActivity.this, "Araç silindi...", Toast.LENGTH_LONG).show();
                                     fetchAutomobiles();
                                     break;
                                 case "Fail":
-                                    loadingDelete.dismiss();
                                     Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                                     break;
                                 default:
-                                    loadingDelete.dismiss();
                                     Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
                             Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
-                            loadingDelete.dismiss();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(AutomobileEditActivity.this, error.toString(), Toast.LENGTH_LONG).show();
                         loadingDelete.dismiss();
+                        Toast.makeText(AutomobileEditActivity.this, error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -484,33 +495,19 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                         chooseVehicle(item);
                                     }
                                 }
-
-                                VehicleItem item2 = new VehicleItem();
-                                item2.setID(-999);
-                                item2.setVehicleBrand("Add");
-                                item2.setVehicleModel("automobile");
-                                item2.setVehicleFuelPri(-1);
-                                item2.setVehicleFuelSec(-1);
-                                item2.setVehicleKilometer(0);
-                                item2.setVehiclePhoto("");
-                                item2.setVehiclePlateNo("");
-                                item2.setVehicleConsumption(0);
-                                item2.setVehicleEmission(0);
-                                userAutomobileList.add(item2);
-
-                                loadingDelete.dismiss();
-                                Toast.makeText(AutomobileEditActivity.this, "Araç silindi...", Toast.LENGTH_LONG).show();
-                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+                        userAutomobileList.add(emptyItem);
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
+                        userAutomobileList.add(emptyItem);
                     }
                 }) {
             @Override

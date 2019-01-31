@@ -17,7 +17,6 @@ public class StationItem {
     private float lpgPrice;
     private float electricityPrice;
     private int isVerified;
-    private int hasSupportMobilePayment;
     private String lastUpdated;
     private int distance;
 
@@ -147,14 +146,6 @@ public class StationItem {
 
     public void setIsVerified(int isVerified) {
         this.isVerified = isVerified;
-    }
-
-    public int getHasSupportMobilePayment() {
-        return hasSupportMobilePayment;
-    }
-
-    public void setHasSupportMobilePayment(int hasSupportMobilePayment) {
-        this.hasSupportMobilePayment = hasSupportMobilePayment;
     }
 
     public String getLastUpdated() {

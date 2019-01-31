@@ -130,11 +130,12 @@ public class FragmentStations extends Fragment {
             // Objects
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             queue = Volley.newRequestQueue(getActivity());
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
             // Activate map
             mMapView = rootView.findViewById(R.id.map);
             mMapView.onCreate(savedInstanceState);
+
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
             locLastKnown.setLatitude(Double.parseDouble(userlat));
             locLastKnown.setLongitude(Double.parseDouble(userlon));
@@ -151,7 +152,6 @@ public class FragmentStations extends Fragment {
                             super.onLocationResult(locationResult);
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
-                                // <= 250m accuracy is sufficient for first load
                                 if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
@@ -359,7 +359,6 @@ public class FragmentStations extends Fragment {
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                                     item.setIsVerified(obj.getInt("isVerified"));
-                                    item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
                                     item.setDistance((int) obj.getDouble("distance"));
                                     fullStationList.add(item);
@@ -389,7 +388,7 @@ public class FragmentStations extends Fragment {
 
                                 // Create a fence
                                 if (!isSuperUser && isGeofenceOpen) {
-                                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                                    if (userAutomobileList != null && userAutomobileList.size() > 1) {
                                         AlarmBuilder(getActivity());
                                     }
                                 }
@@ -399,7 +398,7 @@ public class FragmentStations extends Fragment {
                                 mapDefaultZoom = 13f;
                             } catch (JSONException e) {
                                 noStationError.setVisibility(View.VISIBLE);
-                                e.printStackTrace();
+                                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             reTry();
@@ -454,7 +453,7 @@ public class FragmentStations extends Fragment {
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
             updateMapObject();
         } else {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), "İstasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
         }
     }
 

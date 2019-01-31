@@ -117,6 +117,7 @@
     <string name="API_SEARCH_STATIONS" translatable="false">https://fuel-spot.com/api/station/search.php</string>
     <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station/fetch.php</string>
     <string name="API_FETCH_SUPERUSER_STATIONS" translatable="false">https://fuel-spot.com/api/station/fetch-superuser.php</string>
+    <string name="API_SUPERUSER_REGISTRATION" translatable="false">https://fuel-spot.com/api/station/superuser-registration.php</string>
 
     <!-- AUTOMOBILE APIs -->
     <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/add.php</string>
@@ -138,13 +139,13 @@
     <string name="API_DELETE_COMMENT" translatable="false">https://fuel-spot.com/api/comment/delete.php</string>
     <string name="API_FETCH_USER_COMMENTS" translatable="false">https://fuel-spot.com/api/comment/fetch.php</string> <!-- User's comments -->
     <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuel-spot.com/api/comment/fetch-station.php</string> <!-- Station's comments -->
-    <string name="API_ADD_ANSWER" translatable="false">https://fuel-spot.com/api/superuser/comment/answer/add.php</string>
-    <string name="API_DELETE_ANSWER" translatable="false">https://fuel-spot.com/api/superuser/comment/answer/delete.php</string>
+    <string name="API_ADD_ANSWER" translatable="false">https://fuel-spot.com/api/comment/answer/add.php</string>
+    <string name="API_DELETE_ANSWER" translatable="false">https://fuel-spot.com/api/comment/answer/delete.php</string>
 
     <!-- CAMPAIGNS APIs -->
-    <string name="API_CREATE_CAMPAING" translatable="false">https://fuel-spot.com/api/superuser/campaign/add.php</string>
-    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuel-spot.com/api/superuser/campaign/update.php</string>
-    <string name="API_DELETE_CAMPAING" translatable="false">https://fuel-spot.com/api/superuser/campaign/delete.php</string>
+    <string name="API_CREATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/add.php</string>
+    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/update.php</string>
+    <string name="API_DELETE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/delete.php</string>
     <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuel-spot.com/api/campaign/fetch.php</string>
 
     <!-- FINANCE APIs -->

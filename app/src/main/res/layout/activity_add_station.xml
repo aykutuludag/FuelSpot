@@ -54,7 +54,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:focusable="false"
                     android:gravity="center"
                     android:hint="İstasyon Adı"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -69,7 +68,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:focusable="false"
                     android:gravity="center"
                     android:hint="İstasyon Adresi"
                     android:inputType="textPostalAddress"
@@ -85,7 +83,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:focusable="false"
                     android:gravity="center"
                     android:hint="@string/license_hint"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />

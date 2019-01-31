@@ -121,7 +121,6 @@ public class UserFavorites extends AppCompatActivity {
                             item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                             item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
                             item.setIsVerified(obj.getInt("isVerified"));
-                            item.setHasSupportMobilePayment(obj.getInt("isMobilePaymentAvailable"));
                             item.setLastUpdated(obj.getString("lastUpdated"));
 
                             //DISTANCE START

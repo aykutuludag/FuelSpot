@@ -64,6 +64,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.fuelspot.LoginActivity;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.google.android.gms.auth.api.Auth;
@@ -131,7 +132,6 @@ import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
-import static com.fuelspot.superuser.SuperMainActivity.isMobilePaymentAvailable;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
@@ -173,11 +173,12 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     Bitmap bitmap;
     RequestOptions options;
     private GoogleMap googleMap;
+    ProgressDialog loading0, loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_welcome);
+        setContentView(R.layout.activity_super_welcome);
 
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -187,6 +188,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
+        // Initialize map
+        MapsInitializer.initialize(this.getApplicationContext());
+
         background = findViewById(R.id.animatedAdminBackground);
         promoLayout = findViewById(R.id.layout_promo);
         registerLayout = findViewById(R.id.registerLayout);
@@ -195,6 +199,19 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         welcome3 = findViewById(R.id.welcome3);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // ProgressDialogs
+        loading0 = new ProgressDialog(SuperWelcomeActivity.this);
+        loading0.setTitle("Giriş yapılıyor");
+        loading0.setMessage("Lütfen bekleyiniz...");
+        loading0.setIndeterminate(true);
+        loading0.setCancelable(false);
+
+        loading = new ProgressDialog(SuperWelcomeActivity.this);
+        loading.setTitle("Bilgileriniz kaydediliyor");
+        loading.setMessage("Lütfen bekleyiniz...");
+        loading.setIndeterminate(true);
+        loading.setCancelable(false);
 
         /* LAYOUT 01 */
         register = findViewById(R.id.buttonRegister);
@@ -261,7 +278,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             }
                         }
                     });
-                    fetchOwnedStations();
                 }
             }
         });
@@ -363,8 +379,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     }
 
     private void saveUserInfo() {
-        //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, "Loading...", "Please wait...", false, false);
+        loading0.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_CREATE),
                 new Response.Listener<String>() {
                     @Override
@@ -401,28 +416,26 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 getVariables(prefs);
                                 getSuperVariables(prefs);
 
-                                loading.dismiss();
                                 Toast.makeText(SuperWelcomeActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        registerLayout.setVisibility(View.GONE);
-                                        background.setVisibility(View.INVISIBLE);
-                                        welcome1.setVisibility(View.VISIBLE);
-                                    }
-                                }, 1500);
+                                registerLayout.setVisibility(View.GONE);
+                                background.setVisibility(View.INVISIBLE);
+                                welcome1.setVisibility(View.VISIBLE);
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Toast.makeText(SuperWelcomeActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                                prefs.edit().putBoolean("isSigned", false).apply();
                             }
+                        } else {
+                            Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
+                            prefs.edit().putBoolean("isSigned", false).apply();
                         }
+                        loading0.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Dismissing the progress dialog
-                        loading.dismiss();
-                        Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
+                        loading0.dismiss();
+                        Toast.makeText(SuperWelcomeActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {
@@ -509,6 +522,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         }
                         prefs.edit().putString("userUnit", userUnit).apply();
                         fetchTaxRates();
+                        fetchOwnedStations();
                     }
                 } catch (Exception e) {
                     // Do nothing
@@ -589,7 +603,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     isSuperUser = true;
                                     prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
-                                    Toast.makeText(SuperWelcomeActivity.this, "FuelSpot Business'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, "FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -599,7 +613,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     layout4();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
                                 welcome2.setVisibility(View.VISIBLE);
                                 welcome1.setVisibility(View.GONE);
                                 layout4();
@@ -614,6 +627,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        welcome2.setVisibility(View.VISIBLE);
+                        welcome1.setVisibility(View.GONE);
+                        layout4();
                     }
                 }) {
             @Override
@@ -869,7 +885,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
-
         finishRegistration = findViewById(R.id.finishRegistration);
         finishRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -880,7 +895,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             if (superLicenseNo != null && superLicenseNo.length() > 0) {
                                 if (termsAndConditions.isChecked()) {
                                     if (isStationVerified == 0) {
-                                        updateStation();
+                                        superUserRegistration();
                                     } else {
                                         Toast.makeText(SuperWelcomeActivity.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
                                     }
@@ -905,20 +920,19 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     }
 
     void loadMap() {
-        //Detect location and set on map
-        MapsInitializer.initialize(this.getApplicationContext());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                googleMap.getUiSettings().setScrollGesturesEnabled(false);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setAllGesturesEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.setTrafficEnabled(true);
+                updateMapObject();
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                     @Override
@@ -943,7 +957,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         }
                     }
                 });
-                updateMapObject();
             }
         });
     }
@@ -1023,16 +1036,12 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 isStationVerified = obj.getInt("isVerified");
                                 prefs.edit().putInt("isStationVerified", isStationVerified).apply();
 
-                                isMobilePaymentAvailable = obj.getInt("isMobilePaymentAvailable");
-                                prefs.edit().putInt("isMobilePaymentAvailable", isMobilePaymentAvailable).apply();
-
                                 if (isStationVerified == 1) {
                                     stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+                                    stationHint.setText("Bu istasyon daha önce onaylanmış.");
                                 } else {
                                     stationHint.setTextColor(Color.parseColor("#00801e"));
                                 }
-
                                 loadStationDetails();
                             } catch (JSONException e) {
                                 superStationName = "";
@@ -1044,7 +1053,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 stationHint.setTextColor(Color.parseColor("#ff0000"));
                                 loadStationDetails();
                                 Toast.makeText(SuperWelcomeActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
                             }
                         } else {
                             superStationName = "";
@@ -1071,7 +1079,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         loadStationDetails();
 
                         Toast.makeText(SuperWelcomeActivity.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
-                        volleyError.printStackTrace();
                     }
                 }) {
             @Override
@@ -1098,23 +1105,70 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         editTextStationLicense.setText(superLicenseNo);
     }
 
-    void updateStation() {
+    void superUserRegistration() {
+        loading.show();
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_REGISTRATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String res) {
+                        if (res != null && res.length() > 0) {
+                            switch (res) {
+                                case "Success":
+                                    updateSuperUser();
+                                    break;
+                                case "Fail":
+                                    loading.dismiss();
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    loading.dismiss();
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            loading.dismiss();
+                            Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(SuperWelcomeActivity.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
 
-        updateSuperUser();
+                //Adding parameters
+                params.put("stationID", String.valueOf(superStationID));
+                params.put("licenseNo", superLicenseNo);
+                params.put("owner", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     public void updateSuperUser() {
-        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, "Loading...", "Please wait...", false, false);
-        //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String res) {
-                        Toast.makeText(SuperWelcomeActivity.this, res, Toast.LENGTH_LONG).show();
+                        loading.dismiss();
                         if (res != null && res.length() > 0) {
                             switch (res) {
                                 case "Success":
-                                    Toast.makeText(SuperWelcomeActivity.this, "Tüm bilgileriniz kaydedildi.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a hoşgeldiniz...", Toast.LENGTH_SHORT).show();
                                     welcome2.setVisibility(View.GONE);
                                     welcome3.setVisibility(View.VISIBLE);
                                     layout5();
@@ -1122,8 +1176,12 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 case "Fail":
                                     Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                     break;
+                                default:
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                                    break;
                             }
-                            loading.dismiss();
+                        } else {
+                            Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -1131,6 +1189,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         loading.dismiss();
+                        Toast.makeText(SuperWelcomeActivity.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -1225,10 +1284,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                Toast.makeText(SuperWelcomeActivity.this, "Konum bilgisi çekilemedi. Tekrar deneniyor...", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-                    fetchOwnedStations();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
                 }
@@ -1310,6 +1369,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent i = new Intent(SuperWelcomeActivity.this, LoginActivity.class);
+        startActivity(i);
         finish();
     }
 }
