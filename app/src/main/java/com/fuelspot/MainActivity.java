@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     FragNavController mFragNavController;
     AHBottomNavigation bottomNavigation;
     RequestQueue queue;
-    VehicleItem emptyItem = new VehicleItem();
+
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -260,18 +260,6 @@ public class MainActivity extends AppCompatActivity {
             mFragNavController.switchTab(FragNavController.TAB1);
         }
 
-        // Empty vehicle
-        emptyItem.setID(-999);
-        emptyItem.setVehicleBrand("Add");
-        emptyItem.setVehicleModel("automobile");
-        emptyItem.setVehicleFuelPri(-1);
-        emptyItem.setVehicleFuelSec(-1);
-        emptyItem.setVehicleKilometer(0);
-        emptyItem.setVehiclePhoto("");
-        emptyItem.setVehiclePlateNo("");
-        emptyItem.setVehicleConsumption(0);
-        emptyItem.setVehicleEmission(0);
-
         // Fetch user vehicles once for each session
         fetchAutomobiles();
 
@@ -342,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                                     userAutomobileList.add(item);
 
                                     // If there is any selected auto, choose first one.
-                                    if (vehicleID == 0 || vehicleID == -999) {
+                                    if (vehicleID == 0) {
                                         chooseVehicle(item);
                                     }
                                 }
@@ -350,14 +338,12 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        userAutomobileList.add(emptyItem);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
-                        userAutomobileList.add(emptyItem);
                     }
                 }) {
             @Override

@@ -40,7 +40,6 @@ import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 public class FragmentSuperProfile extends Fragment {
 
     RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     TextView title;
     RequestOptions options;
@@ -49,6 +48,7 @@ public class FragmentSuperProfile extends Fragment {
     RequestQueue requestQueue;
     SharedPreferences prefs;
     View rootView;
+    Button addStationButton;
 
     public static FragmentSuperProfile newInstance() {
         Bundle args = new Bundle();
@@ -87,6 +87,15 @@ public class FragmentSuperProfile extends Fragment {
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
             mRecyclerView.setNestedScrollingEnabled(false);
+
+            addStationButton = rootView.findViewById(R.id.button_add_station);
+            addStationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), AddStation.class);
+                    startActivity(intent);
+                }
+            });
 
             // Comments
             title = rootView.findViewById(R.id.titleComment);

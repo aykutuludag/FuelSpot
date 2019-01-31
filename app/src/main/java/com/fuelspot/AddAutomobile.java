@@ -70,7 +70,6 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
-import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.username;
@@ -90,7 +89,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     Button addCarButton;
     EditText plateText;
     RequestOptions options;
-    String[] dummy;
 
     // Temp variables to add a vehicle
     int dummyKilometer = 0;
@@ -102,7 +100,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     TextWatcher mTextWatcher;
     SharedPreferences prefs;
     ProgressDialog loading;
-    VehicleItem emptyItem = new VehicleItem();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,18 +136,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         loading.setMessage("Lütfen bekleyiniz...");
         loading.setIndeterminate(true);
         loading.setCancelable(false);
-
-        // Empty vehicle
-        emptyItem.setID(-999);
-        emptyItem.setVehicleBrand("Add");
-        emptyItem.setVehicleModel("automobile");
-        emptyItem.setVehicleFuelPri(-1);
-        emptyItem.setVehicleFuelSec(-1);
-        emptyItem.setVehicleKilometer(0);
-        emptyItem.setVehiclePhoto("");
-        emptyItem.setVehiclePlateNo("");
-        emptyItem.setVehicleConsumption(0);
-        emptyItem.setVehicleEmission(0);
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
@@ -345,7 +331,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                                     Toast.makeText(AddAutomobile.this, "Plaka daha önce eklenmiş...", Toast.LENGTH_LONG).show();
                                     break;
                                 case "Success":
-                                    Toast.makeText(AddAutomobile.this, "Araç eklendi: " + plateNo, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddAutomobile.this, "Araç eklendi: " + dummyPlateNo, Toast.LENGTH_LONG).show();
                                     fetchAutomobiles();
                                     break;
                                 default:
@@ -419,18 +405,14 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                                     userAutomobileList.add(item);
 
                                     // If there is any selected auto, choose first one.
-                                    if (vehicleID == 0 || vehicleID == -999) {
-                                        if (item.getID() != 0 && item.getID() != -999) {
-                                            chooseVehicle(item);
-                                        }
+                                    if (vehicleID == 0) {
+                                        chooseVehicle(item);
                                     }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-
-                        userAutomobileList.add(emptyItem);
                         finish();
                     }
                 },
@@ -438,7 +420,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
-                        userAutomobileList.add(emptyItem);
                     }
                 }) {
             @Override
@@ -997,7 +978,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                photo = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + dummyPlateNo + ".jpg";
             }
         }
     }

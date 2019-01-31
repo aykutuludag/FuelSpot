@@ -94,7 +94,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         }
                     }
 
-                    if (text != null && text.length() > 0) {
+                    if (text != null) {
                         Snackbar.make(view, text, Snackbar.LENGTH_LONG)
                                 .setAction("Evet", new View.OnClickListener() {
                                     @Override

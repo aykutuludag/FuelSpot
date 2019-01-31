@@ -62,7 +62,6 @@ public class AddStation extends AppCompatActivity {
     GoogleMap googleMap;
     Button finishRegistration;
     SharedPreferences prefs;
-    StationItem emptyItem = new StationItem();
     int stationID, doesStationVerified;
     String googleID, stationName, stationAddress, stationCoordinates, stationCountry, licenseNo, stationLogo, stationFacilities;
     float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
@@ -86,25 +85,6 @@ public class AddStation extends AppCompatActivity {
         mMapView = findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
-
-        // EmptyStation
-        emptyItem.setID(-333);
-        emptyItem.setStationName("Yeni istasyon ekle");
-        emptyItem.setVicinity("");
-        emptyItem.setCountryCode("");
-        emptyItem.setLocation("");
-        emptyItem.setGoogleMapID("");
-        emptyItem.setFacilities("");
-        emptyItem.setLicenseNo("");
-        emptyItem.setOwner("");
-        emptyItem.setPhotoURL("");
-        emptyItem.setGasolinePrice(0);
-        emptyItem.setDieselPrice(0);
-        emptyItem.setLpgPrice(0);
-        emptyItem.setElectricityPrice(0);
-        emptyItem.setIsVerified(0);
-        emptyItem.setLastUpdated("");
-        emptyItem.setDistance(0);
 
         // ProgressDialogs
         loading = new ProgressDialog(AddStation.this);
@@ -464,9 +444,8 @@ public class AddStation extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-
+                        Toast.makeText(AddStation.this, "Bilgileriniz kaydedildi. Onay için sizinle en kısa sürede iletişime geçeceğiz.", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
-                        listOfOwnedStations.add(emptyItem);
                         finish();
                     }
                 },
@@ -474,7 +453,6 @@ public class AddStation extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         loading.dismiss();
-                        listOfOwnedStations.add(emptyItem);
                     }
                 }) {
             @Override

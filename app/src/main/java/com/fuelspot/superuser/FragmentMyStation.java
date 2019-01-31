@@ -195,7 +195,7 @@ public class FragmentMyStation extends Fragment {
                 public void onClick(View v) {
                     if (isStationVerified == 1) {
                         Intent i = new Intent(getActivity(), StationComments.class);
-                        i.putExtra("STATION_ID", superStationID);
+                        i.putExtra("ISTASYON_ID", superStationID);
                         startActivity(i);
                     } else {
                         Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
@@ -215,7 +215,6 @@ public class FragmentMyStation extends Fragment {
                     }
                 }
             });
-            checkLocationPermission();
         }
         return rootView;
     }
@@ -335,6 +334,8 @@ public class FragmentMyStation extends Fragment {
         if (mFusedLocationClient != null) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         }
+
+        checkLocationPermission();
     }
 
     @Override

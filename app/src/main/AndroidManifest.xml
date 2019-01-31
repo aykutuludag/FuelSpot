@@ -39,6 +39,19 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="fuel-spot.com"
+                    android:scheme="http" />
+                <data
+                    android:host="fuel-spot.com"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
         <activity
@@ -175,10 +188,10 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/g_api_key" />
+            android:value="@string/google_key" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/g_api_key" />
+            android:value="@string/google_key" />
 
         <!-- Firebase -->
         <service android:name=".service.MyFirebaseMessagingService">

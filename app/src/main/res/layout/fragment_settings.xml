@@ -22,9 +22,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:text="Genel ayarlar"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                android:layout_margin="8dp"
+                android:text="Ayarlar"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/userGen"
@@ -133,6 +133,15 @@
                     android:padding="4dp"
                     android:textColor="#000000" />
 
+                <TextView
+                    android:id="@+id/textViewVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewCountryName"
+                    android:layout_centerHorizontal="true"
+                    android:padding="4dp"
+                    android:text="@string/appVersion"
+                    android:textColor="#424242" />
             </android.support.percent.PercentRelativeLayout>
 
 
@@ -378,19 +387,10 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button_missingStation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textView04"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="Eksik istasyon bildir" />
-
-            <Button
                 android:id="@+id/button_feedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/button_missingStation"
+                android:layout_below="@id/textView04"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
                 android:text="FEEDBACK" />

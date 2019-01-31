@@ -21,7 +21,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
-import com.fuelspot.superuser.AddStation;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import java.text.ParseException;
@@ -81,12 +80,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     mContext.startActivity(intent);
                     break;
                 case "SUPERUSER_STATIONS":
-                    if (feedItemList.get(position).getID() == -333) {
-                        Intent intent2 = new Intent(mContext, AddStation.class);
-                        mContext.startActivity(intent2);
-                    } else {
-                        changeSuperStation(feedItemList.get(position));
-                    }
+                    changeSuperStation(feedItemList.get(position));
                     break;
             }
         }
@@ -100,7 +94,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
     }
 
-    void changeSuperStation(StationItem item) {
+    private void changeSuperStation(StationItem item) {
         superStationID = item.getID();
         prefs.edit().putInt("SuperStationID", superStationID).apply();
 
@@ -146,6 +140,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
 
+        notifyDataSetChanged();
         getSuperVariables(prefs);
         Toast.makeText(mContext, "İSTASYON SEÇİLDİ: " + superStationName, Toast.LENGTH_SHORT).show();
     }

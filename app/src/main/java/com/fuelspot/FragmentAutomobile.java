@@ -523,7 +523,7 @@ public class FragmentAutomobile extends Fragment {
         super.onResume();
 
         if (headerView != null) {
-            if (userAutomobileList != null && userAutomobileList.size() > 1) {
+            if (userAutomobileList != null && userAutomobileList.size() > 0) {
                 noAracLayout.setVisibility(View.GONE);
                 regularLayout.setVisibility(View.VISIBLE);
                 loadVehicleProfile();

@@ -388,7 +388,7 @@ public class FragmentStations extends Fragment {
 
                                 // Create a fence
                                 if (!isSuperUser && isGeofenceOpen) {
-                                    if (userAutomobileList != null && userAutomobileList.size() > 1) {
+                                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
                                         AlarmBuilder(getActivity());
                                     }
                                 }

@@ -18,7 +18,7 @@
             android:visibility="visible">
 
             <include
-                layout="@layout/card_automobile"
+                layout="@layout/header_automobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -52,7 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.Hashtable;
@@ -98,8 +97,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         //Load background and login layout
         background = findViewById(R.id.animatedBackground);
@@ -283,7 +280,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 prefs.edit().putString("Name", MainActivity.name).apply();
 
                 //USERNAME
-                String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                String tmp0 = name.toLowerCase();
+                String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                        .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
                 if (tmpusername.length() > 30) {
                     username = tmpusername.substring(0, 30);
                 } else {
@@ -341,7 +341,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         prefs.edit().putString("ProfilePhoto", photo).apply();
 
                         //USERNAME
-                        String tmpusername = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                        String tmp0 = name.toLowerCase();
+                        String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                                .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                        String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
                         if (tmpusername.length() > 30) {
                             username = tmpusername.substring(0, 30);
                         } else {
@@ -475,7 +478,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);
             }
             background.setVideoURI(uri);
-            background.start();
+            background.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                public void onPrepared(MediaPlayer mp) {
+                    background.start();
+                    mp.setLooping(true);
+                }
+            });
         }
     }
 

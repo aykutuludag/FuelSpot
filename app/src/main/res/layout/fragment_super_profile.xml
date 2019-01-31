@@ -12,7 +12,7 @@
         android:background="#EDEDED">
 
         <include
-            layout="@layout/card_super_profile"
+            layout="@layout/header_super_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -41,6 +41,18 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleStationsProfile"
                 android:background="@android:color/transparent" />
+
+            <Button
+                android:id="@+id/button_add_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stationViewAdmin"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/green_box"
+                android:fontFamily="@font/gotham_black"
+                android:text="İstasyon ekle" />
         </RelativeLayout>
 
     </RelativeLayout>

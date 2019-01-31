@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -89,7 +90,7 @@ public class FragmentSettings extends Fragment {
 
     public static List<CompanyItem> companyList = new ArrayList<>();
     TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
-    Button buttonTax, buttonEksikIstasyon, buttonBeta, buttonFeedback, buttonRate;
+    Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
     SharedPreferences prefs;
     String feedbackMessage;
     Bitmap bitmap;
@@ -144,6 +145,17 @@ public class FragmentSettings extends Fragment {
 
             unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
             unitSystemText.setText(userUnit);
+
+            TextView textViewVersion = rootView.findViewById(R.id.textViewVersion);
+            try {
+                PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+                String version = "v";
+                version += pInfo != null ? pInfo.versionName : null;
+                String aq = getActivity().getString(R.string.appVersion) + " " + version;
+                textViewVersion.setText(aq);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
 
             geofenceLayout = rootView.findViewById(R.id.settings_geofence);
             if (isSuperUser) {
@@ -210,14 +222,6 @@ public class FragmentSettings extends Fragment {
             chart3.setHighlightPerTapEnabled(true);
             chart3.setEntryLabelColor(Color.BLACK);
             chart3.setEntryLabelTextSize(12f);
-
-            buttonEksikIstasyon = rootView.findViewById(R.id.button_missingStation);
-            buttonEksikIstasyon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openMissingStationPopup(v);
-                }
-            });
 
             buttonBeta = rootView.findViewById(R.id.button_beta);
             buttonBeta.setOnClickListener(new View.OnClickListener() {
@@ -551,73 +555,6 @@ public class FragmentSettings extends Fragment {
 
                 //Adding request to the queue
                 requestQueue.add(stringRequest);
-            }
-        });
-
-        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
-        // Set a click listener for the popup window close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dismiss the popup window
-                mPopupWindow.dismiss();
-            }
-        });
-
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.update();
-        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-    }
-
-    void openMissingStationPopup(View view) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup_feedback, null);
-        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.setElevation(5.0f);
-        }
-
-        EditText getFeedback = customView.findViewById(R.id.editTextFeedback);
-        getFeedback.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    feedbackMessage = s.toString();
-                }
-            }
-        });
-
-        getScreenshot = customView.findViewById(R.id.campaignPhoto);
-        getScreenshot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (verifyFilePickerPermission(getActivity())) {
-                    ImagePicker.create(getActivity()).single().start();
-                } else {
-                    ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_STORAGE);
-                }
-            }
-        });
-
-        Button sendFeedback = customView.findViewById(R.id.sendFeedback);
-        sendFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendReport();
-            }
-
-            private void sendReport() {
-
             }
         });
 

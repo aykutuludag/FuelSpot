@@ -473,7 +473,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         userCountryName = addresses.get(0).getCountryName();
                         prefs.edit().putString("userCountryName", userCountryName).apply();
 
-                        userDisplayLanguage = Locale.getDefault().getLanguage();
+                        userDisplayLanguage = Locale.getDefault().getDisplayLanguage();
                         prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
                         Locale userLocale = new Locale(Locale.getDefault().getISO3Language(), addresses.get(0).getCountryCode());

@@ -70,6 +70,7 @@ public class FragmentProfile extends Fragment {
     RequestQueue requestQueue;
     SharedPreferences prefs;
     View rootView;
+    Button addAutomobile;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -108,6 +109,15 @@ public class FragmentProfile extends Fragment {
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
             mRecyclerView.setNestedScrollingEnabled(false);
+
+            addAutomobile = rootView.findViewById(R.id.button_add_vehicle);
+            addAutomobile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), AddAutomobile.class);
+                    startActivity(intent);
+                }
+            });
 
             // Comments
             userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
@@ -237,9 +247,9 @@ public class FragmentProfile extends Fragment {
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
         mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
+        mAdapter.notifyDataSetChanged();
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
 
         fetchComments();
     }

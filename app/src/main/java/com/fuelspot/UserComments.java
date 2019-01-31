@@ -99,7 +99,7 @@ public class UserComments extends AppCompatActivity {
         final String whichApi, whichParamater, whichValue;
         if (isSuperUser) {
             whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
-            whichParamater = "id";
+            whichParamater = "stationID";
             whichValue = String.valueOf(superStationID);
         } else {
             whichApi = getString(R.string.API_FETCH_USER_COMMENTS);
@@ -155,6 +155,7 @@ public class UserComments extends AppCompatActivity {
 
                 //Adding parameters
                 params.put(whichParamater, whichValue);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

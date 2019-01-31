@@ -42,6 +42,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -99,6 +100,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userFavorites;
@@ -129,7 +132,7 @@ public class StationDetails extends AppCompatActivity {
     Toolbar toolbar;
     Window window;
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2;
+    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
     NestedScrollView scrollView;
@@ -284,16 +287,36 @@ public class StationDetails extends AppCompatActivity {
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
 
-        floatingActionButton1 = findViewById(R.id.material_design_floating_action_menu_item2);
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton1 = findViewById(R.id.fab1);
+        if (isSuperUser) {
+            floatingActionButton1.setVisibility(View.GONE);
+        } else {
+            if (hasAlreadyCommented) {
+                floatingActionButton1.setLabelText("Yorumu güncelle");
+            } else {
+                floatingActionButton1.setLabelText("Yorum yaz");
+            }
+
+            floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    materialDesignFAM.close(true);
+                    addUpdateCommentPopup(v);
+                }
+            });
+        }
+
+        floatingActionButton2 = findViewById(R.id.fab2);
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                materialDesignFAM.close(true);
                 reportPrices(v);
             }
         });
 
-        floatingActionButton2 = findViewById(R.id.material_design_floating_action_menu_item3);
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton3 = findViewById(R.id.fab3);
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 materialDesignFAM.close(true);
@@ -486,12 +509,11 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
     void loadStationDetails() {
         webview.loadUrl("https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c");
         webview.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
-                webview.loadUrl("javascript:document.getElementById('tuv-immersive-top-bar').style.display = 'none'; void(0);");
+                // Do something
             }
         });
 
@@ -743,6 +765,12 @@ public class StationDetails extends AppCompatActivity {
 
                                 }
 
+                                if (hasAlreadyCommented) {
+                                    floatingActionButton1.setLabelText("Yorumu güncelle");
+                                } else {
+                                    floatingActionButton1.setLabelText("Yorum yaz");
+                                }
+
                                 // Calculate station score
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 stationScore = sumOfPoints / numOfComments;
@@ -792,6 +820,164 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    void addUpdateCommentPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_comment, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        TextView titlePopup = customView.findViewById(R.id.campaignPhoto);
+        if (hasAlreadyCommented) {
+            titlePopup.setText("Yorumunu güncelle");
+        } else {
+            titlePopup.setText("Yorum yaz");
+        }
+
+        EditText getComment = customView.findViewById(R.id.editTextComment);
+        if (userComment != null && userComment.length() > 0) {
+            getComment.setText(userComment);
+        }
+        getComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    userComment = s.toString();
+                }
+            }
+        });
+
+        final RatingBar ratingBar = customView.findViewById(R.id.ratingBar);
+        ratingBar.setRating(stars);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                stars = (int) rating;
+            }
+        });
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
+        sendAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userComment != null && userComment.length() > 0) {
+                    if (hasAlreadyCommented) {
+                        updateComment();
+                    } else {
+                        addComment();
+                    }
+                } else {
+                    Toast.makeText(StationDetails.this, "Lütfen yorumunuzu yazınız", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            private void addComment() {
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Yorumunuz ekleniyor", "Lütfen bekleyiniz...", true, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                loading.dismiss();
+                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                                hasAlreadyCommented = true;
+                                fetchStationComments();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("comment", userComment);
+                        params.put("stationID", String.valueOf(choosenStationID));
+                        params.put("username", username);
+                        params.put("stars", String.valueOf(stars));
+                        params.put("user_photo", photo);
+                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
+
+            private void updateComment() {
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Yorumunuz güncelleniyor...", "Lütfen bekleyiniz...", true, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                loading.dismiss();
+                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                                fetchStationComments();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //Showing toast
+                                loading.dismiss();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        //Creating parameters
+                        Map<String, String> params = new Hashtable<>();
+
+                        //Adding parameters
+                        params.put("commentID", String.valueOf(userCommentID));
+                        params.put("comment", userComment);
+                        params.put("stars", String.valueOf(stars));
+                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                        //returning parameters
+                        return params;
+                    }
+                };
+
+                //Adding request to the queue
+                requestQueue.add(stringRequest);
+            }
+        });
     }
 
     void reportStation(final View view) {
@@ -1107,7 +1293,7 @@ public class StationDetails extends AppCompatActivity {
         }
     }
 
-    void clearVaribles() {
+    void clearVariables() {
         stationDistance = 0;
         choosenStationID = 0;
         userCommentID = 0;
@@ -1146,7 +1332,7 @@ public class StationDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                clearVaribles();
+                clearVariables();
                 finish();
                 return true;
             case R.id.menu_fav:
@@ -1213,7 +1399,7 @@ public class StationDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        clearVaribles();
+        clearVariables();
         finish();
     }
 }

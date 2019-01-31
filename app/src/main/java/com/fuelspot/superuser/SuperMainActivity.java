@@ -50,6 +50,7 @@ import java.util.Map;
 import static com.fuelspot.FragmentSettings.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.hasDoubleRange;
+import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -75,7 +76,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     AHBottomNavigation bottomNavigation;
     List<Fragment> fragments = new ArrayList<>(5);
     Location locLastKnown;
-    StationItem emptyItem = new StationItem();
 
     public static void getSuperVariables(SharedPreferences prefs) {
         // Station-specific information
@@ -94,6 +94,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         superLicenseNo = prefs.getString("SuperLicenseNo", "");
         isStationVerified = prefs.getInt("isStationVerified", 0);
         superLastUpdate = prefs.getString("SuperLastUpdate", "");
+        isGeofenceOpen = prefs.getBoolean("Geofence", false);
     }
 
     @Override
@@ -156,25 +157,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         // Bottombar Settings
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setOnTabSelectedListener(this);
-
-        // EmptyStation
-        emptyItem.setID(-333);
-        emptyItem.setStationName("Yeni istasyon ekle");
-        emptyItem.setVicinity("");
-        emptyItem.setCountryCode("");
-        emptyItem.setLocation("");
-        emptyItem.setGoogleMapID("");
-        emptyItem.setFacilities("");
-        emptyItem.setLicenseNo("");
-        emptyItem.setOwner("");
-        emptyItem.setPhotoURL("");
-        emptyItem.setGasolinePrice(0);
-        emptyItem.setDieselPrice(0);
-        emptyItem.setLpgPrice(0);
-        emptyItem.setElectricityPrice(0);
-        emptyItem.setIsVerified(0);
-        emptyItem.setLastUpdated("");
-        emptyItem.setDistance(0);
 
         // AppRater
         RateThisApp.onCreate(this);
@@ -282,24 +264,20 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                     //DISTANCE END
                                     listOfOwnedStations.add(item);
 
-                                    if (superStationID == 0 || superStationID == -333) {
-                                        if (item.getID() != 0 || item.getID() != -333) {
-                                            chooseStation(item);
-                                        }
+                                    if (superStationID == 0) {
+                                        chooseStation(item);
                                     }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        listOfOwnedStations.add(emptyItem);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
-                        listOfOwnedStations.add(emptyItem);
                     }
                 }) {
             @Override

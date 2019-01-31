@@ -1,4 +1,74 @@
 <resources>
+    <!-- NON TRANSLATABLE PART BEGINS -->
+    <string name="app_name" translatable="false">FuelSpot</string>
+    <string name="google_key" translatable="false">AIzaSyAYL33WnxHUGcetc-pO-ZbcjqKw7PCmq_c</string>
+    <string name="fuelspot_api_key" translatable="false">Ph76g0MSZ2okeWQmShYDlXakjgjhbe</string>
+    <string name="facebook_app_id" translatable="false">380327342377274</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
+    <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
+    <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
+
+    <!-- USER APIs -->
+    <string name="API_CREATE_USER" translatable="false">https://fuel-spot.com/api/user/create.php</string>
+    <string name="API_UPDATE_USER" translatable="false">https://fuel-spot.com/api/user/update.php</string>
+    <string name="API_FETCH_USER" translatable="false">https://fuel-spot.com/api/user/fetch.php</string>
+
+    <!-- SUPERUSER APIs -->
+    <string name="API_SUPERUSER_CREATE" translatable="false">https://fuel-spot.com/api/superuser/create.php</string>
+    <string name="API_SUPERUSER_UPDATE" translatable="false">https://fuel-spot.com/api/superuser/update.php</string>
+    <string name="API_SUPERUSER_FETCH" translatable="false">https://fuel-spot.com/api/superuser/fetch.php</string>
+
+    <!-- STATION APIs -->
+    <string name="API_ADD_STATION" translatable="false">https://fuel-spot.com/api/station/add.php</string>
+    <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station/update.php</string>
+    <string name="API_SEARCH_STATIONS" translatable="false">https://fuel-spot.com/api/station/search.php</string>
+    <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station/fetch.php</string>
+    <string name="API_FETCH_SUPERUSER_STATIONS" translatable="false">https://fuel-spot.com/api/station/fetch-superuser.php</string>
+    <string name="API_SUPERUSER_REGISTRATION" translatable="false">https://fuel-spot.com/api/station/superuser-registration.php</string>
+
+    <!-- AUTOMOBILE APIs -->
+    <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/add.php</string>
+    <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/update.php</string>
+    <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/delete.php</string>
+    <string name="API_FETCH_USER_AUTOMOBILES" translatable="false">https://fuel-spot.com/api/automobile/fetch-user.php</string>
+    <string name="API_FETCH_AUTOMOBILE_MODELS" translatable="false">https://fuel-spot.com/api/automobile/fetch-models.php</string>
+
+    <!-- PURCHASE APIs -->
+    <string name="API_ADD_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/add.php</string>
+    <string name="API_UPDATE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/update.php</string> <!-- Only adding bill photo available -->
+    <string name="API_DELETE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/delete.php</string>
+    <string name="API_FETCH_AUTOMOBILE_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase/fetch-automobile.php</string> <!-- Vehicle's purchases -->
+    <string name="API_FETCH_STATION_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase/fetch-station.php</string> <!-- STATION's purchases -->
+
+    <!-- COMMENT-ANSWER APIs -->
+    <string name="API_ADD_COMMENT" translatable="false">https://fuel-spot.com/api/comment/add.php</string>
+    <string name="API_UPDATE_COMMENT" translatable="false">https://fuel-spot.com/api/comment/update.php</string>
+    <string name="API_DELETE_COMMENT" translatable="false">https://fuel-spot.com/api/comment/delete.php</string>
+    <string name="API_FETCH_USER_COMMENTS" translatable="false">https://fuel-spot.com/api/comment/fetch.php</string> <!-- User's comments -->
+    <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuel-spot.com/api/comment/fetch-station.php</string> <!-- Station's comments -->
+    <string name="API_ADD_ANSWER" translatable="false">https://fuel-spot.com/api/comment/answer/add.php</string>
+    <string name="API_DELETE_ANSWER" translatable="false">https://fuel-spot.com/api/comment/answer/delete.php</string>
+
+    <!-- CAMPAIGNS APIs -->
+    <string name="API_CREATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/add.php</string>
+    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/update.php</string>
+    <string name="API_DELETE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/delete.php</string>
+    <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuel-spot.com/api/campaign/fetch.php</string>
+
+    <!-- FINANCE APIs -->
+    <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuel-spot.com/api/finance/fetch-station-prices.php</string> <!-- STATION -->
+    <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuel-spot.com/api/finance/fetch-prices.php</string> <!-- COUNTRY -->
+    <string name="API_FETCH_COUNTRY_VOLUME" translatable="false">https://fuel-spot.com/api/finance/fetch-volume.php</string> <!-- COUNTRY -->
+
+    <!-- OTHER APIs -->
+    <string name="API_REPORT" translatable="false">https://fuel-spot.com/api/other/report.php</string>
+    <string name="API_TAX" translatable="false">https://fuel-spot.com/api/other/tax.php</string>
+    <string name="API_FEEDBACK" translatable="false">https://fuel-spot.com/api/other/feedback.php</string>
+    <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other/news.php</string>
+    <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other/company.php</string>
+    <string name="API_STREETVIEW" translatable="false">https://fuel-spot.com/api/other/streetview.php</string>
+    <string name="API_BANKING" translatable="false">https://fuel-spot.com/api/other/banking.php</string>
+    <!-- NON TRANSLATABLE PART END -->
 
     <!-- General-->
     <string name="save">Save</string>
@@ -92,80 +162,11 @@
     <string name="sort">Sort</string>
     <string name="priceHistory">Price history</string>
 
-    <!-- NON TRANSLATABLE PART BEGINS -->
-    <string name="app_name" translatable="false">FuelSpot</string>
-    <string name="facebook_app_id" translatable="false">380327342377274</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
-    <string name="g_api_key" translatable="false">AIzaSyAYL33WnxHUGcetc-pO-ZbcjqKw7PCmq_c</string>
-    <string name="fuelspot_api_key" translatable="false">Ph76g0MSZ2okeWQmShYDlXakjgjhbe</string>
-    <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
-    <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
-
-    <!-- USER APIs -->
-    <string name="API_CREATE_USER" translatable="false">https://fuel-spot.com/api/user/create.php</string>
-    <string name="API_UPDATE_USER" translatable="false">https://fuel-spot.com/api/user/update.php</string>
-    <string name="API_FETCH_USER" translatable="false">https://fuel-spot.com/api/user/fetch.php</string>
-
-    <!-- SUPERUSER APIs -->
-    <string name="API_SUPERUSER_CREATE" translatable="false">https://fuel-spot.com/api/superuser/create.php</string>
-    <string name="API_SUPERUSER_UPDATE" translatable="false">https://fuel-spot.com/api/superuser/update.php</string>
-    <string name="API_SUPERUSER_FETCH" translatable="false">https://fuel-spot.com/api/superuser/fetch.php</string>
-
-    <!-- STATION APIs -->
-    <string name="API_ADD_STATION" translatable="false">https://fuel-spot.com/api/station/add.php</string>
-    <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station/update.php</string>
-    <string name="API_SEARCH_STATIONS" translatable="false">https://fuel-spot.com/api/station/search.php</string>
-    <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station/fetch.php</string>
-    <string name="API_FETCH_SUPERUSER_STATIONS" translatable="false">https://fuel-spot.com/api/station/fetch-superuser.php</string>
-    <string name="API_SUPERUSER_REGISTRATION" translatable="false">https://fuel-spot.com/api/station/superuser-registration.php</string>
-
-    <!-- AUTOMOBILE APIs -->
-    <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/add.php</string>
-    <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/update.php</string>
-    <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/delete.php</string>
-    <string name="API_FETCH_USER_AUTOMOBILES" translatable="false">https://fuel-spot.com/api/automobile/fetch-user.php</string>
-    <string name="API_FETCH_AUTOMOBILE_MODELS" translatable="false">https://fuel-spot.com/api/automobile/fetch-models.php</string>
-
-    <!-- PURCHASE APIs -->
-    <string name="API_ADD_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/add.php</string>
-    <string name="API_UPDATE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/update.php</string> <!-- Only adding bill photo available -->
-    <string name="API_DELETE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/delete.php</string>
-    <string name="API_FETCH_AUTOMOBILE_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase/fetch-automobile.php</string> <!-- Vehicle's purchases -->
-    <string name="API_FETCH_STATION_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase/fetch-station.php</string> <!-- STATION's purchases -->
-
-    <!-- COMMENT-ANSWER APIs -->
-    <string name="API_ADD_COMMENT" translatable="false">https://fuel-spot.com/api/comment/add.php</string>
-    <string name="API_UPDATE_COMMENT" translatable="false">https://fuel-spot.com/api/comment/update.php</string>
-    <string name="API_DELETE_COMMENT" translatable="false">https://fuel-spot.com/api/comment/delete.php</string>
-    <string name="API_FETCH_USER_COMMENTS" translatable="false">https://fuel-spot.com/api/comment/fetch.php</string> <!-- User's comments -->
-    <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuel-spot.com/api/comment/fetch-station.php</string> <!-- Station's comments -->
-    <string name="API_ADD_ANSWER" translatable="false">https://fuel-spot.com/api/comment/answer/add.php</string>
-    <string name="API_DELETE_ANSWER" translatable="false">https://fuel-spot.com/api/comment/answer/delete.php</string>
-
-    <!-- CAMPAIGNS APIs -->
-    <string name="API_CREATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/add.php</string>
-    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/update.php</string>
-    <string name="API_DELETE_CAMPAING" translatable="false">https://fuel-spot.com/api/campaign/delete.php</string>
-    <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuel-spot.com/api/campaign/fetch.php</string>
-
-    <!-- FINANCE APIs -->
-    <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuel-spot.com/api/finance/fetch-station-prices.php</string> <!-- STATION -->
-    <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuel-spot.com/api/finance/fetch-prices.php</string> <!-- COUNTRY -->
-    <string name="API_FETCH_COUNTRY_VOLUME" translatable="false">https://fuel-spot.com/api/finance/fetch-volume.php</string> <!-- COUNTRY -->
-
-    <!-- OTHER APIs -->
-    <string name="API_REPORT" translatable="false">https://fuel-spot.com/api/other/report.php</string>
-    <string name="API_TAX" translatable="false">https://fuel-spot.com/api/other/tax.php</string>
-    <string name="API_FEEDBACK" translatable="false">https://fuel-spot.com/api/other/feedback.php</string>
-    <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other/news.php</string>
-    <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other/company.php</string>
-    <string name="API_STREETVIEW" translatable="false">https://fuel-spot.com/api/other/streetview.php</string>
-    <string name="API_BANKING" translatable="false">https://fuel-spot.com/api/other/banking.php</string>
-
     <string name="address">Address</string>
     <string name="licenseNO">License no</string>
     <string name="stationVerifiedText">This station has been verified by FuelSpot.</string>
     <string name="update">Update</string>
     <string name="stationUpdated">İstasyon bilgileri başarıyla güncellendi.</string>
     <string name="stationUpdateFail">Bir hata oluştu. Lütfen tekrar deneyiniz…</string>
+    <string name="appVersion">Application version:</string>
 </resources>

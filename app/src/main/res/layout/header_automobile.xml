@@ -102,11 +102,10 @@
 
         <TextView
             android:id="@+id/automobile_kilometer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_below="@id/fuelTypeSection"
-            android:layout_alignStart="@id/automobile_plateNo"
-            android:layout_alignEnd="@id/automobile_plateNo"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"

@@ -95,7 +95,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     RequestQueue requestQueue;
     RequestOptions options;
     TextWatcher mTextWatcher;
-    VehicleItem emptyItem = new VehicleItem();
     ProgressDialog loadingUpdate, loadingDelete;
 
     @Override
@@ -138,18 +137,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         loadingDelete.setMessage("Lütfen bekleyiniz...");
         loadingDelete.setIndeterminate(true);
         loadingDelete.setCancelable(false);
-
-        // Empty Item
-        emptyItem.setID(-999);
-        emptyItem.setVehicleBrand("Add");
-        emptyItem.setVehicleModel("automobile");
-        emptyItem.setVehicleFuelPri(-1);
-        emptyItem.setVehicleFuelSec(-1);
-        emptyItem.setVehicleKilometer(0);
-        emptyItem.setVehiclePhoto("");
-        emptyItem.setVehiclePlateNo("");
-        emptyItem.setVehicleConsumption(0);
-        emptyItem.setVehicleEmission(0);
 
         //CarPic
         carPic = findViewById(R.id.imageViewCar);
@@ -491,7 +478,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                     userAutomobileList.add(item);
 
                                     // If there is any selected auto, choose first one.
-                                    if (vehicleID == 0 || vehicleID == -999) {
+                                    if (vehicleID == 0) {
                                         chooseVehicle(item);
                                     }
                                 }
@@ -499,7 +486,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                 e.printStackTrace();
                             }
                         }
-                        userAutomobileList.add(emptyItem);
                         finish();
                     }
                 },
@@ -507,7 +493,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
-                        userAutomobileList.add(emptyItem);
                     }
                 }) {
             @Override

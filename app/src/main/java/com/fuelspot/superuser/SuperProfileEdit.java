@@ -83,7 +83,7 @@ public class SuperProfileEdit extends AppCompatActivity {
     Toolbar toolbar;
     Window window;
     CircleImageView userPic;
-    EditText editName, editMail, editTextPhone, editLocation, editBirthday;
+    EditText editName, editMail, editTextPhone, editBirthday;
     RadioGroup editGender;
     RadioButton bMale, bFemale, bOther;
     SharedPreferences prefs;
@@ -124,7 +124,6 @@ public class SuperProfileEdit extends AppCompatActivity {
 
         editName = findViewById(R.id.editFullName);
         editMail = findViewById(R.id.editTextMail);
-        editLocation = findViewById(R.id.editTextLocation);
         editBirthday = findViewById(R.id.editTextBirthday);
         editGender = findViewById(R.id.radioGroupGender);
         bMale = findViewById(R.id.genderMale);
@@ -189,28 +188,6 @@ public class SuperProfileEdit extends AppCompatActivity {
                     ImagePicker.create(SuperProfileEdit.this).single().start();
                 } else {
                     ActivityCompat.requestPermissions(SuperProfileEdit.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
-                }
-            }
-        });
-
-        //  Setting location and retrieving changes
-        editLocation.setText(location);
-        editLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    location = s.toString();
-                    editor.putString("Location", location);
                 }
             }
         });
