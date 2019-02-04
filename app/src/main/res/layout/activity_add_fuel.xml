@@ -290,7 +290,6 @@
                     android:layout_toEndOf="@+id/fuelType2"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="LPG"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <android.support.percent.PercentRelativeLayout

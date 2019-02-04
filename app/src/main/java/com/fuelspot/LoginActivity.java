@@ -481,7 +481,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             background.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
                     background.start();
-                    mp.setLooping(true);
                 }
             });
         }

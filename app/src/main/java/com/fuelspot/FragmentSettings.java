@@ -1,6 +1,7 @@
 package com.fuelspot;
 
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +19,13 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -93,6 +96,7 @@ public class FragmentSettings extends Fragment {
     Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
     SharedPreferences prefs;
     String feedbackMessage;
+    NestedScrollView scrollView;
     Bitmap bitmap;
     ImageView getScreenshot;
     PopupWindow mPopupWindow;
@@ -117,6 +121,7 @@ public class FragmentSettings extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -133,6 +138,8 @@ public class FragmentSettings extends Fragment {
             requestQueue = Volley.newRequestQueue(getActivity());
             options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+
+            scrollView = rootView.findViewById(R.id.nestedScrollViewSettings);
 
             countryText = rootView.findViewById(R.id.textViewCountryName);
             countryText.setText(userCountryName);
@@ -222,6 +229,13 @@ public class FragmentSettings extends Fragment {
             chart3.setHighlightPerTapEnabled(true);
             chart3.setEntryLabelColor(Color.BLACK);
             chart3.setEntryLabelTextSize(12f);
+            chart3.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             buttonBeta = rootView.findViewById(R.id.button_beta);
             buttonBeta.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +305,7 @@ public class FragmentSettings extends Fragment {
                 totalVerified += companyList.get(i).getNumOfVerifieds();
                 totalStation += companyList.get(i).getNumOfStations();
 
-                if (companyList.get(i).getNumOfStations() >= 225) {
+                if (companyList.get(i).getNumOfStations() >= 200) {
                     entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
                 } else {
                     otherStations += companyList.get(i).getNumOfStations();

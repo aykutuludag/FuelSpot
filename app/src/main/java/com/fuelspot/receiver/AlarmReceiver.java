@@ -219,11 +219,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
         if (mapDefaultRange == 2500) {
             mapDefaultRange = 5000;
-            mapDefaultZoom = 12f;
+            mapDefaultZoom = 12.5f;
             fetchStations();
         } else if (mapDefaultRange == 5000) {
             mapDefaultRange = 10000;
-            mapDefaultZoom = 11f;
+            mapDefaultZoom = 11.5f;
             fetchStations();
         } else if (mapDefaultRange == 10000) {
             mapDefaultRange = 25000;

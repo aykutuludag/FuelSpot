@@ -114,6 +114,7 @@ public class FragmentStations extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -130,6 +131,7 @@ public class FragmentStations extends Fragment {
             // Objects
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             queue = Volley.newRequestQueue(getActivity());
+            nScrollView = rootView.findViewById(R.id.nestedScrollView);
 
             // Activate map
             mMapView = rootView.findViewById(R.id.map);
@@ -193,7 +195,6 @@ public class FragmentStations extends Fragment {
                 }
             };
 
-            nScrollView = rootView.findViewById(R.id.nestedScrollView);
             noStationError = rootView.findViewById(R.id.errorPicture);
             stationLayout = rootView.findViewById(R.id.stationLayout);
 
@@ -294,8 +295,8 @@ public class FragmentStations extends Fragment {
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                     googleMap.getUiSettings().setAllGesturesEnabled(false);
                     googleMap.getUiSettings().setMapToolbarEnabled(false);
-                    googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.setTrafficEnabled(true);
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
                     updateMapObject();
                 }
             });
@@ -434,12 +435,12 @@ public class FragmentStations extends Fragment {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
         if (mapDefaultRange == 2500) {
             mapDefaultRange = 5000;
-            mapDefaultZoom = 12f;
+            mapDefaultZoom = 12.5f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
             updateMapObject();
         } else if (mapDefaultRange == 5000) {
             mapDefaultRange = 10000;
-            mapDefaultZoom = 11f;
+            mapDefaultZoom = 11.5f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
             updateMapObject();
         } else if (mapDefaultRange == 10000) {
@@ -449,7 +450,7 @@ public class FragmentStations extends Fragment {
             updateMapObject();
         } else if (mapDefaultRange == 25000) {
             mapDefaultRange = 50000;
-            mapDefaultZoom = 8.75f;
+            mapDefaultZoom = 8.5f;
             Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
             updateMapObject();
         } else {
@@ -652,7 +653,7 @@ public class FragmentStations extends Fragment {
                             googleMap.setMyLocationEnabled(true);
                             googleMap.getUiSettings().setCompassEnabled(true);
                             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                            googleMap.getUiSettings().setAllGesturesEnabled(true);
+                            googleMap.getUiSettings().setAllGesturesEnabled(false);
                             googleMap.getUiSettings().setMapToolbarEnabled(false);
                             googleMap.setTrafficEnabled(true);
                             googleMap.getUiSettings().setZoomControlsEnabled(true);

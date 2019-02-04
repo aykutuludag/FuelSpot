@@ -95,7 +95,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
@@ -300,7 +299,11 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 prefs.edit().putString("Name", MainActivity.name).apply();
 
                 //USERNAME
-                String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                //USERNAME
+                String tmp0 = name.toLowerCase();
+                String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                        .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
                 if (tmpusername.length() > 31) {
                     username = tmpusername.substring(0, 30);
                 } else {
@@ -353,7 +356,11 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     prefs.edit().putString("ProfilePhoto", photo).apply();
 
                                     //USERNAME
-                                    String tmpusername = Normalizer.normalize(MainActivity.name, Normalizer.Form.NFD).replaceAll("[^a-zA-Z]", "").replace(" ", "").toLowerCase();
+                                    //USERNAME
+                                    String tmp0 = name.toLowerCase();
+                                    String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                                            .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                                    String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
                                     if (tmpusername.length() > 21) {
                                         username = tmpusername.substring(0, 20);
                                     } else {

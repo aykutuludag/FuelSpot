@@ -14,12 +14,12 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="350dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             map:cameraTargetLat="39.925054"
             map:cameraTargetLng="32.8347552"
-            map:cameraZoom="11.5" />
+            map:cameraZoom="13" />
 
         <RelativeLayout
             android:id="@+id/stationLayout"

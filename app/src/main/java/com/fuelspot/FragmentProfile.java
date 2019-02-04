@@ -122,6 +122,7 @@ public class FragmentProfile extends Fragment {
             // Comments
             userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
             mRecyclerView2 = rootView.findViewById(R.id.commentView);
+            mRecyclerView2.setNestedScrollingEnabled(false);
 
             buttonSeeAllComments = rootView.findViewById(R.id.button_seeAllComments);
             buttonSeeAllComments.setOnClickListener(new View.OnClickListener() {

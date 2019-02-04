@@ -296,10 +296,27 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;
 
-            premium = ownedSkus.contains("premium") || ownedSkus.contains("premium_super");
+            if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
+                premium = true;
+                prefs.edit().putInt("RANGE", 5000).apply();
+                prefs.edit().putFloat("ZOOM", 12f).apply();
+            } else {
+                premium = false;
+                prefs.edit().putInt("RANGE", 2500).apply();
+                prefs.edit().putFloat("ZOOM", 13f).apply();
+            }
             prefs.edit().putBoolean("hasPremium", premium).apply();
 
-            hasDoubleRange = ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super");
+            if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                hasDoubleRange = true;
+                prefs.edit().putInt("RANGE", 5000).apply();
+                prefs.edit().putFloat("ZOOM", 12f).apply();
+
+            } else {
+                hasDoubleRange = false;
+                prefs.edit().putInt("RANGE", 2500).apply();
+                prefs.edit().putFloat("ZOOM", 13f).apply();
+            }
             prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
         }
     }

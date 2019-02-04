@@ -190,7 +190,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
             type2Layout = itemView.findViewById(R.id.typeLayout2);
             type2 = itemView.findViewById(R.id.type2);
-            type2Text = itemView.findViewById(R.id.fuelType2Text);
+            type2Text = itemView.findViewById(R.id.type2Text);
             amount2 = itemView.findViewById(R.id.amount2);
             price2 = itemView.findViewById(R.id.price2);
 

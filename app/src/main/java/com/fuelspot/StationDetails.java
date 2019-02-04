@@ -1,5 +1,6 @@
 package com.fuelspot;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -153,7 +155,9 @@ public class StationDetails extends AppCompatActivity {
     int reportRequest;
     String reportReason, reportDetails;
     SimpleDateFormat sdf;
+    boolean isStreetViewTouched;
 
+    @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,13 +193,19 @@ public class StationDetails extends AppCompatActivity {
             favorite = getResources().getDrawable(R.drawable.ic_fav);
         }
 
-        webview = findViewById(R.id.webView);
-        webview.getSettings().setJavaScriptEnabled(true);
-
         errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
         errorStreetView = findViewById(R.id.imageViewErrStreetView);
         scrollView = findViewById(R.id.scrollView);
+        webview = findViewById(R.id.webView);
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
@@ -280,9 +290,11 @@ public class StationDetails extends AppCompatActivity {
 
         // Campaigns
         mRecyclerView = findViewById(R.id.campaignView);
+        mRecyclerView.setNestedScrollingEnabled(false);
 
         // Comments
         mRecyclerView2 = findViewById(R.id.commentView);
+        mRecyclerView2.setNestedScrollingEnabled(false);
 
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
@@ -509,6 +521,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     void loadStationDetails() {
         webview.loadUrl("https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c");
         webview.setWebViewClient(new WebViewClient() {
@@ -597,6 +610,13 @@ public class StationDetails extends AppCompatActivity {
         }
 
         chart = findViewById(R.id.chart);
+        chart.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
 
         // Facilities
         // Facilities
@@ -1313,6 +1333,7 @@ public class StationDetails extends AppCompatActivity {
         iconURL = "";
         userComment = "";
         hasAlreadyCommented = false;
+        isStreetViewTouched = false;
         stationCommentList.clear();
         campaignList.clear();
         gasolinePriceHistory.clear();

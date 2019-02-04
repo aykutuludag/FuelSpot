@@ -1,5 +1,6 @@
 package com.fuelspot;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -7,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -69,6 +72,7 @@ public class FragmentNews extends Fragment {
     ArrayAdapter adapter;
     View rootView;
     RequestQueue requestQueue;
+    NestedScrollView scrollView;
 
     LineChart chart;
     List<Entry> gasolinePriceHistory = new ArrayList<>();
@@ -91,6 +95,7 @@ public class FragmentNews extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -104,13 +109,29 @@ public class FragmentNews extends Fragment {
 
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             requestQueue = Volley.newRequestQueue(getActivity());
+            scrollView = rootView.findViewById(R.id.newsInfoFragment);
             proggressBar = rootView.findViewById(R.id.spin_kit);
             proggressBar.setColor(Color.BLUE);
             mRecyclerView = rootView.findViewById(R.id.newsView);
+            mRecyclerView.setNestedScrollingEnabled(false);
             errorLayout = rootView.findViewById(R.id.newsErrorLayout);
             chart = rootView.findViewById(R.id.chartAveragePrice);
+            chart.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
             lastUpdatedAvgPrice = rootView.findViewById(R.id.dummy000);
             chart2 = rootView.findViewById(R.id.chartVolume);
+            chart2.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
             lastUpdatedVolume = rootView.findViewById(R.id.dummy001);
             sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
             // ÜLKE SEÇİMİ

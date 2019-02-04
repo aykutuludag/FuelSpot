@@ -82,7 +82,11 @@ public class StoreActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mService != null) {
                         try {
-                            buyPremium();
+                            if (!hasDoubleRange) {
+                                buyPremium();
+                            } else {
+                                Toast.makeText(StoreActivity.this, "Premium sürüm 2x menzil özelliğini de kapsamaktadır. Premium sürüme geçmeden önce lütfen 2x menzili iptal ediniz.", Toast.LENGTH_LONG).show();
+                            }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         } catch (IntentSender.SendIntentException e) {
@@ -102,7 +106,11 @@ public class StoreActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mService != null) {
                         try {
-                            buyDoubleRange();
+                            if (!premium) {
+                                buyDoubleRange();
+                            } else {
+                                Toast.makeText(StoreActivity.this, "Premium sürüm 2x menzil özelliğini de kapsamaktadır. Ayrıca 2x menzil satın almanıza gerek yoktur.", Toast.LENGTH_LONG).show();
+                            }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         } catch (IntentSender.SendIntentException e) {

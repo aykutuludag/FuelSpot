@@ -168,7 +168,7 @@
                         android:layout_height="20dp" />
 
                     <TextView
-                        android:id="@+id/type1Text2"
+                        android:id="@+id/type2Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/type2"
