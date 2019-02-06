@@ -14,9 +14,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="FİYATLARI BİLDİR"
+        android:text="@string/fab_report_price"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
@@ -27,7 +30,7 @@
         android:layout_margin="4dp"
         android:fontFamily="@font/gotham_book"
         android:gravity="center"
-        android:text="Bu istasyondaki güncel fiyatları biliyorsan bize bildirerek diğer insanların da öğrenmesine yardımcı olabilirsin. Bildirimin değerlendirme sonucu doğrulanırsa hesabına bonus yüklenecek." />
+        android:text="@string/send_report_desc" />
 
 
     <ImageView
@@ -54,10 +57,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView2"
         android:layout_alignBottom="@+id/editTextGasoline"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/editTextGasoline"
-        android:gravity="center"
-        android:text="TL" />
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -83,10 +85,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView3"
         android:layout_alignBottom="@+id/editTextDiesel"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/editTextGasoline"
-        android:gravity="center"
-        android:text="TL" />
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -112,10 +113,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView4"
         android:layout_alignBottom="@+id/editTextLPG"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/editTextGasoline"
-        android:gravity="center"
-        android:text="TL" />
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -141,10 +141,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView5"
         android:layout_alignBottom="@+id/editTextElectricity"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/editTextGasoline"
-        android:gravity="center"
-        android:text="TL" />
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/imageViewPricesPhoto"
@@ -162,7 +161,7 @@
         android:layout_below="@+id/imageViewPricesPhoto"
         android:layout_centerHorizontal="true"
         android:background="#FF6838"
-        android:text="GÖNDER"
+        android:text="@string/send_report"
         android:textColor="#f0f0f0" />
 
     <ImageView

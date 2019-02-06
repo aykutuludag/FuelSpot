@@ -7,14 +7,17 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/campaignPhoto"
+        android:id="@+id/dummyTextt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/gotham_bold"
-        android:text="CEVAPLA"
+        android:text="@string/add_answer"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#626262" />
 
@@ -22,14 +25,14 @@
         android:id="@+id/editTextAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/campaignPhoto"
+        android:layout_below="@+id/dummyTextt"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="Enter your answer..."
+        android:hint="@string/enter_answer"
         android:inputType="textMultiLine"
         android:padding="16dp" />
 
@@ -42,7 +45,7 @@
         android:layout_alignEnd="@+id/editTextAnswer"
         android:layout_marginTop="16dp"
         android:background="#FF6838"
-        android:text="GÖNDER"
+        android:text="@string/add_answer"
         android:textColor="#f0f0f0" />
 
     <ImageView

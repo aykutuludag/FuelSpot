@@ -101,7 +101,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".UserPurchases"
-            android:label="@string/purchases"
+            android:label="@string/user_purchases"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -126,7 +126,7 @@
             android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperPurchases"
-            android:label="@string/purchases"
+            android:label="@string/station_purchases"
             android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperCampaings"

@@ -134,6 +134,7 @@ public class FragmentNews extends Fragment {
             });
             lastUpdatedVolume = rootView.findViewById(R.id.dummy001);
             sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+
             // ÜLKE SEÇİMİ
             fetchNews("TR");
             fetchCountryFinance("TR");
@@ -175,11 +176,10 @@ public class FragmentNews extends Fragment {
                                 errorLayout.setVisibility(View.GONE);
                                 proggressBar.setVisibility(View.GONE);
                             } catch (JSONException e) {
-                                Toast.makeText(getActivity(), "Eksepsion: " + e.toString(), Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
                                 errorLayout();
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Empty response", Toast.LENGTH_SHORT).show();
                             errorLayout();
                         }
                     }
@@ -187,7 +187,7 @@ public class FragmentNews extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getActivity(), "Volley error: " + volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        volleyError.printStackTrace();
                         errorLayout();
                     }
                 }) {
@@ -238,7 +238,7 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
-                                String dummyLastText = "Son güncelleme: " + res.getJSONObject(0).getString("date");
+                                String dummyLastText = getActivity().getString(R.string.last_update) + " " + res.getJSONObject(0).getString("date");
                                 lastUpdatedAvgPrice.setText(dummyLastText);
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -349,13 +349,13 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
-                                String dummyLastText = "Son güncelleme: " + res.getJSONObject(0).getString("time");
+                                String dummyLastText = getActivity().getString(R.string.last_update) + " " + res.getJSONObject(0).getString("time");
                                 lastUpdatedVolume.setText(dummyLastText);
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
                                 if (purchaseHistoryOf.size() > 0) {
-                                    LineDataSet dataSet = new LineDataSet(purchaseHistoryOf, "Hacim: " + "(" + currencySymbol + ")"); // add entries to dataset
+                                    LineDataSet dataSet = new LineDataSet(purchaseHistoryOf, getString(R.string.volume) + " " + "(" + currencySymbol + ")"); // add entries to dataset
                                     dataSet.setColor(Color.BLACK);
                                     dataSet.setDrawValues(false);
                                     dataSet.setDrawCircles(false);
@@ -419,6 +419,6 @@ public class FragmentNews extends Fragment {
     void errorLayout() {
         errorLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
-        Snackbar.make(getActivity().findViewById(android.R.id.content), "Ülkenizle alakalı bir haber bulunamadı.", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.no_news), Snackbar.LENGTH_LONG).show();
     }
 }

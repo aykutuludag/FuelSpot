@@ -70,31 +70,107 @@
     <string name="API_BANKING" translatable="false">https://fuel-spot.com/api/other/banking.php</string>
     <!-- NON TRANSLATABLE PART END -->
 
-    <!-- General-->
-    <string name="save">Save</string>
-    <string name="exit">Touch again to exit the application.</string>
-    <string name="privacy">Privacy</string>
-    <string name="help">Help</string>
-    <string name="buy_premium_ads_title">Upgrade</string>
-    <string name="buy_premium_ads_content">Are you tired of the ads in the application? By switching to FuelSpot Premium, you can remove all ads in the application!</string>
-    <string name="buy_premium_ads_okay">BUY!</string>
-    <string name="buy_premium_ads_later">Later</string>
-    <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
-    <string name="unitSystem1">Litre</string>
-    <string name="unitSystem2">Galon</string>
-    <string name="unitSystem3">Imperial galon</string>
-    <string name="electricity_unit">kW</string>
-    <string name="license_hint">Station License No</string>
-    <string name="smth_go_wrong">Somethings go wrong! Please try again later…</string>
-    <string name="show_vehicles">Show vehicles</string>
-    <string name="show_stations">Show stations</string>
-    <string name="favorites">Favorites</string>
-    <string name="store">Store</string>
+    <!-- LoginActivity-->
+    <string name="loginWithGoogle">Login with Google</string>
+    <string name="loginWithFacebook">Login with Facebook</string>
+    <string name="loginWithSuperUser">Are you station owner?</string>
+    <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
+    <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
+    <string name="error_login_cancel">Login was canceled by user&#8230;</string>
+    <!-- LoginActivity-->
 
+    <!-- WelcomeActivity-->
+    <string name="welcome_fuelspot">Welcome to FuelSpot!</string>
+    <string name="welcome_fuelspot_long">FuelSpot is the platform which you can track gas prices, recent news in addition to vehicle track (average consumption, emission…) and many more!</string>
+    <string name="welcome_permission_text">Account created. We need some permission to nearest stations to you!</string>
+    <string name="button_continue">Continue</string>
+    <string name="do_you_have_car">Do you have a car?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="vehicle_brand">Brand</string>
+    <string name="vehicle_model">Model</string>
+    <string name="primary_fuel_type">Primary fuel type</string>
     <string name="gasoline">Gasoline</string>
     <string name="diesel">Diesel</string>
     <string name="lpg">LPG</string>
+    <string name="distance">Distance</string>
     <string name="electricity">Electricity</string>
+    <string name="secondary_fuel_type">Secondary fuel type</string>
+    <string name="secondary_fuel_type_desc">If you don\'t have secondary fuel system, leave this empty</string>
+    <string name="kilometer">Kilometer</string>
+    <string name="plate_no">Plate no</string>
+    <string name="fuel_symbols">Fuel symbols</string>
+    <string name="how_to_sort">By clicking symbols you can order station by your choice (price or distance).</string>
+    <string name="got_it">Got it!</string>
+    <string name="how_to_register_car">How to register my car?</string>
+    <string name="how_to_register_car_desc">You can add your vehicle clicking add new vehicle button on your profile. To earn bonus, don\'t forget to add your car!</string>
+    <string name="how_to_add_fuel">How to add fuel?</string>
+    <string name="how_to_add_fuel_desc">When you go to station, FuelSpot will detect it and send notification. Follow instruction and get your bonus!</string>
+    <string name="info_saved_welcome">Your info saved. Welcome to FuelSpot!</string>
+    <string name="enter_plate_no">Please enter your plate no</string>
+    <string name="plate_no_exist">This plate no has been added to system…</string>
+    <string name="vehicle_added">Automobile added</string>
+    <string name="error">An error occurred. Please try again later…</string>
+    <string name="location_fetching">Location info fetching…</string>
+    <string name="permission_denied">Permission denied&#8230;</string>
+    <!-- WelcomeActivity-->
+
+    <!-- MainActivity-->
+    <string name="tab_stations">Stations</string>
+    <string name="tab_news">Latest</string>
+    <string name="tab_vehicle">Vehicle</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_settings">Settings</string>
+    <string name="exit">Touch again to exit the application.</string>
+
+    <!-- FragmentStations-->
+    <string name="sort">Sort</string>
+    <string name="see_all">See all</string>
+    <string name="station_not_found_retry">Station not found. Retrying with range</string>
+    <string name="metre">metre</string>
+    <string name="no_station">We couldn\'t find any station within 50 kilometers range…</string>
+    <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
+    <!-- FragmentStations-->
+
+    <!-- FragmentNews-->
+    <string name="latest_news">Latest news</string>
+    <string name="fuelspot_fuel_index">FuelSpot Fuel Index</string>
+    <string name="price_index">Price index</string>
+    <string name="volume">Volume</string>
+    <string name="no_news">We couldn\'t find news about your country…</string>
+    <string name="last_update">Last update</string>
+    <!-- FragmentNews-->
+
+    <!-- FragmentAutomobile-->
+    <!-- FragmentAutomobile-->
+
+    <!-- FragmentProfile-->
+    <string name="favorites">Favorites</string>
+    <string name="store">Store</string>
+    <string name="help">Help</string>
+    <string name="automobiles">Automobiles</string>
+    <string name="add_vehicle">Add automobile</string>
+    <!-- FragmentProfile-->
+
+    <!-- FragmentSettings-->
+    <string name="appVersion">Application version:</string>
+    <!-- FragmentSettings-->
+    <!-- MainActivity-->
+
+    <!-- StationDetails-->
+    <string name="menu_go">Go to station</string>
+    <string name="menu_fav">Add favorites</string>
+    <string name="menu_share">Share station</string>>
+    <string name="fab_comment">Write comment</string>
+    <string name="fab_report">Report station</string>
+    <string name="fab_report_price">Report prices</string>
+    <string name="HundredDollarText">You can get followings by $100:</string>
+    <string name="facilities">Facilities</string>
+    <string name="campaigns">Campaigns</string>
+    <string name="comments">Comments</string>
+    <string name="priceHistory">Price history</string>
+    <string name="no_campaign_text">There is no campaigns for this station yet…</string>
+    <string name="no_comment_text">There is no reviews for this station yet…</string>
 
     <string-array name="report_reasons">
         <item>Station doesn\'t exist</item>
@@ -106,67 +182,108 @@
         <item>Other</item>
     </string-array>
 
-    <!-- LoginActivity -->
-    <string name="loginWithGoogle">Login with Google</string>
-    <string name="loginWithFacebook">Login with Facebook</string>
-    <string name="loginWithSuperUser">Are you station owner?</string>
-    <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
-    <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
-    <string name="error_login_cancel">Login was canceled by user&#8230;</string>
-    <string name="error_permission_cancel">Permission denied&#8230;</string>
+    <string name="send_report_desc">If you know the current prices for this station you can send us. We are investigating every report. When we approve the report, the prize will be reflected on the account.</string>
+    <string name="send_report">Send report</string>
 
-    <!-- BottomNavigation -->
-    <string name="tab_mystation">MyStation</string>
-    <string name="tab_stations">Stations</string>
-    <string name="tab_news">Latest</string>
-    <string name="tab_vehicle">Vehicle</string>
-    <string name="tab_profile">Profile</string>
-    <string name="tab_settings">Settings</string>
+    <string name="add_comment">Add comment</string>
+    <string name="add_answer">Add answer</string>
+    <string name="enter_answer">Enter your answer here…</string>
+    <string name="station_manager">Station manager</string>
+    <!-- StationDetails-->
 
-    <!-- AddFuel -->
-    <string name="add_fuel">Yakıt ekle</string>
-    <string name="last_answers">Son cevaplarınız</string>
+    <!-- StationComments-->
+    <!-- StationComments-->
 
-    <!-- SuperMainActivity -->
-    <string name="edit_prices">Edit prices</string>
-    <string name="pending_approval">Your account is in the approval process. We will contact you as soon as possible.</string>
+    <!-- AutomobileEdit-->
+    <string name="save">Save</string>
+    <!-- AutomobileEdit-->
 
-    <!-- StationDetails -->
-    <string name="menu_go">Go to station</string>
-    <string name="menu_fav">Add favorites</string>
-    <string name="menu_share">Share station</string>>
-    <string name="fab_comment">Write comment</string>
-    <string name="fab_report">Report station</string>
-    <string name="fab_report_price">Report prices</string>
-    <string name="HundredDollarText">You can get followings by $100:</string>
-    <string name="facilities">Facilities</string>
-    <string name="campaigns">Campaigns</string>
-    <string name="comments">Comments</string>
-    <string name="automobiles">Automobiles</string>
-    <string name="add_vehicle">Add automobile</string>
-    <string name="add_station">Add station</string>
-    <string name="update_station">Update station</string>
+    <!-- UserPurchases-->
+    <string name="user_purchases">Your purchases</string>
+    <!-- UserPurchases-->
 
-    <string name="bill">BILL</string>
-    <string name="purchases">Purchases</string>
-    <string name="promotions">Promotions</string>
+    <!-- PurchaseDetails-->
+    <!-- PurchaseDetails-->
 
-    <string name="kilometer">Kilometer</string>
-    <string name="banking">Banking activity</string>
-    <string name="fuelspot_money">FuelSpot Money</string>
+    <!-- PurchaseDetails-->
+    <!-- PurchaseDetails-->
 
-    <string name="see_all">See all</string>
-    <string name="station_id">STATION ID:</string>
-    <string name="report_close">Close</string>
-    <string name="report_open">Open</string>
-    <string name="sort">Sort</string>
-    <string name="priceHistory">Price history</string>
-
+    <!-- ProfileEdit-->
+    <string name="fullname">Full name</string>
+    <string name="email">E-mail</string>
+    <string name="phone">Phone</string>
     <string name="address">Address</string>
-    <string name="licenseNO">License no</string>
+    <string name="birthday">Birthday</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="log_out">Log out</string>
+    <!-- ProfileEdit-->
+
+    <!-- UserFavorites-->
+    <!-- UserFavorites-->
+
+    <!-- UserStore-->
+    <string name="premium_version">Premium version</string>
+    <!-- UserStore-->
+
+    <!-- UserComments-->
+    <!-- UserComments-->
+
+    <!-- AddFuel-->
+    <string name="station_info">Station info</string>
+    <string name="automobile_info">Automobile info</string>
+    <string name="total">Total</string>
+    <string name="add_bill_photo_desc">You can earn 1%% bonus by adding bill/receipt photo. Purchase will be inspected and after confirmation bonus will reflect to your account immediately.</string>
+    <string name="add_fuel">Add fuel</string>
+    <!-- AddFuel-->
+
+    <!-- SuperWelcome-->
+    <string name="license_no">License no</string>
+    <string name="terms_accepted_text">I have read and accept the Terms and Conditions.</string>
+    <string name="go_to_station_text">To complete registration process, you must be at your station. When you enter the station perimeter, this text will turn into green and station info will be fetched automatically.</string>
+    <!-- SuperWelcome-->
+
+    <!-- SuperMainActivity-->
+    <!-- FragmentMyStation-->
+    <string name="tab_mystation">MyStation</string>
+    <!-- FragmentMyStation-->
+
+    <!-- FragmentSuperProfile-->
+    <!-- FragmentSuperProfile-->
+    <!-- SuperMainActivity-->
+
+    <!-- SuperProfileEdit-->
+    <!-- SuperProfileEdit-->
+
+    <!-- SuperUpdateStation-->
+    <string name="prices">Fiyatlar</string>
     <string name="stationVerifiedText">This station has been verified by FuelSpot.</string>
-    <string name="update">Update</string>
-    <string name="stationUpdated">İstasyon bilgileri başarıyla güncellendi.</string>
-    <string name="stationUpdateFail">Bir hata oluştu. Lütfen tekrar deneyiniz…</string>
-    <string name="appVersion">Application version:</string>
+    <string name="update_station">Update station</string>
+    <string name="station_update_success">Station updated successfully…</string>
+    <string name="station_update_fail">An error occurred while updating station… Please try again later</string>
+    <string name="note_for_prices">If you have multiple fuels in the same type (Example: Diesel, Euro Diesel), enter the highest price</string>
+    <!-- SuperUpdateStation-->
+
+    <!-- SuperCampaigns-->
+    <!-- SuperCampaigns-->
+
+    <!-- SuperPurchases-->
+    <string name="station_purchases">Station purchases</string>
+    <!-- SuperPurchases-->
+
+    <!-- SuperStore-->
+    <!-- SuperStore-->
+
+    <!-- AddStation-->
+    <string name="add_station">Add station</string>
+    <!-- AddStation-->
+
+    <!-- Units-->
+    <string name="unitSystem1">Litre</string>
+    <string name="unitSystem2">Galon</string>
+    <string name="unitSystem3">Imperial galon</string>
+    <string name="electricity_unit" translatable="false">kWh</string>
+    <!-- Units-->
 </resources>

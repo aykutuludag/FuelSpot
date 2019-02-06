@@ -55,7 +55,6 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:hint="İstasyon Adı"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <EditText
@@ -84,7 +83,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:hint="@string/license_hint"
+                    android:hint="@string/license_no"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <TextView
@@ -109,12 +108,11 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/green_box"
                     android:fontFamily="@font/gotham_black"
-                    android:text="Devam"
+                    android:text="@string/add_station"
                     android:textAllCaps="false"
                     android:textColor="#212121" />
 
             </RelativeLayout>
-
         </RelativeLayout>
     </ScrollView>
 

@@ -89,7 +89,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/gotham_bold"
-                    android:text="MAĞAZA"
+                    android:text="@string/store"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <RelativeLayout
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:text="Premium sürüm"
+                        android:text="@string/premium_version"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                     <TextView

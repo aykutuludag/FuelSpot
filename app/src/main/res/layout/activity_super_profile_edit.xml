@@ -59,7 +59,7 @@
                 android:layout_toEndOf="@+id/dummyImage1"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Ad - Soyad"
+                android:text="@string/fullname"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -95,7 +95,7 @@
                 android:layout_toEndOf="@+id/dummyImage2"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="E-posta"
+                android:text="@string/email"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -131,7 +131,7 @@
                 android:layout_toEndOf="@+id/dummyImage3"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Telefon"
+                android:text="@string/phone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -171,7 +171,7 @@
                 android:layout_alignBottom="@+id/dummyImage4"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Doğum günü"
+                android:text="@string/birthday"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -206,7 +206,7 @@
                 android:layout_alignBottom="@+id/dummyImage5"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Cinsiyet"
+                android:text="@string/gender"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <RadioGroup
@@ -229,7 +229,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Erkek" />
+                    android:text="@string/male" />
 
                 <RadioButton
                     android:id="@+id/genderFemale"
@@ -238,7 +238,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Kadın" />
+                    android:text="@string/female" />
 
                 <RadioButton
                     android:id="@+id/genderOther"
@@ -247,7 +247,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Diğer" />
+                    android:text="@string/other" />
             </RadioGroup>
 
             <Button
@@ -258,7 +258,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
-                android:text="ÇIKIŞ YAP" />
+                android:text="@string/log_out" />
 
         </RelativeLayout>
     </ScrollView>

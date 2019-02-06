@@ -26,6 +26,7 @@
             android:layout_above="@+id/facebookButton"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
+            android:contentDescription="@string/loginWithGoogle"
             android:clickable="false"
             app:srcCompat="@drawable/button_google" />
 
@@ -65,6 +66,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/button_facebook"
             android:clickable="false"
+            android:contentDescription="@string/loginWithFacebook"
             android:visibility="visible"
             app:srcCompat="@drawable/button_facebook" />
 
@@ -102,6 +104,7 @@
             android:layout_marginBottom="48dp"
             android:background="@drawable/button_facebook"
             android:clickable="false"
+            android:contentDescription="@string/loginWithSuperUser"
             android:visibility="visible"
             app:srcCompat="@drawable/button_superuser" />
 

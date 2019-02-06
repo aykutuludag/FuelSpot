@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="YORUM EKLE"
+        android:text="@string/add_comment"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
 
@@ -45,7 +45,7 @@
         android:layout_alignEnd="@+id/editTextComment"
         android:layout_marginTop="16dp"
         android:background="#FF6838"
-        android:text="GÖNDER"
+        android:text="@string/add_comment"
         android:textColor="#f0f0f0" />
 
     <ImageView

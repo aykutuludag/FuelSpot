@@ -58,7 +58,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Marka"
+                    android:text="@string/vehicle_brand"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -81,7 +81,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Model"
+                    android:text="@string/vehicle_model"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -112,7 +112,7 @@
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Birincil yakıt tipi"
+                    android:text="@string/primary_fuel_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -134,7 +134,7 @@
                         android:checked="true"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Benzin"
+                        android:text="@string/gasoline"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -145,7 +145,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Dizel"
+                        android:text="@string/diesel"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -156,7 +156,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="LPG"
+                        android:text="@string/lpg"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -167,7 +167,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Elektrik"
+                        android:text="@string/electricity"
                         android:textColor="#757575" />
                 </RadioGroup>
 
@@ -180,7 +180,7 @@
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="İkincil yakıt tipi"
+                    android:text="@string/secondary_fuel_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -194,7 +194,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="center"
-                    android:text="Aracınızda ikincil bir yakıt sistemi yoksa burayı boş bırakınız"
+                    android:text="@string/secondary_fuel_type_desc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <RadioGroup
@@ -214,7 +214,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Benzin"
+                        android:text="@string/gasoline"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -225,7 +225,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Dizel"
+                        android:text="@string/diesel"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -236,7 +236,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="LPG"
+                        android:text="@string/lpg"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -247,7 +247,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
-                        android:text="Elektrik"
+                        android:text="@string/electricity"
                         android:textColor="#757575" />
                 </RadioGroup>
 
@@ -260,7 +260,7 @@
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Kilometre"
+                    android:text="@string/kilometer"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -287,9 +287,7 @@
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:inputType="textCapCharacters"
-                    android:text="Plaka"
-                    android:textAllCaps="true"
+                    android:text="@string/plate_no"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 
@@ -319,7 +317,7 @@
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
                 android:fontFamily="@font/gotham_black"
-                android:text="EKLE"
+                android:text="@string/add_vehicle"
                 android:textAllCaps="false"
                 android:textColor="#212121" />
         </RelativeLayout>

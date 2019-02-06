@@ -82,7 +82,7 @@ public class AddFuel extends AppCompatActivity {
     RequestOptions options;
 
     int chosenStationID;
-    String googleID, stationName, stationAddress, stationLoc, stationLogo;
+    String stationName, stationAddress, stationLoc, stationLogo;
     float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, tax1, tax2, taxTotal, totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
@@ -547,7 +547,7 @@ public class AddFuel extends AppCompatActivity {
 
         taxTotal = tax1 + tax2;
         totalPrice = entryPrice + entryPrice2;
-        String totalHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
+        String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
     }
 
@@ -576,7 +576,6 @@ public class AddFuel extends AppCompatActivity {
                 //Remove variables
                 bitmap = null;
                 stationName = null;
-                googleID = null;
                 stationLoc = null;
                 gasolinePrice = 0;
                 dieselPrice = 0;
@@ -597,7 +596,7 @@ public class AddFuel extends AppCompatActivity {
                     Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
                     ImagePicker.create(AddFuel.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -625,7 +624,6 @@ public class AddFuel extends AppCompatActivity {
         //Remove variables
         bitmap = null;
         stationName = null;
-        googleID = null;
         tempKM = 0;
         stationLoc = null;
         stationLogo = null;

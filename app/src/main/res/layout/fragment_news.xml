@@ -24,7 +24,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="@string/tab_news"
+                android:text="@string/latest_news"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <android.support.v7.widget.RecyclerView
@@ -46,6 +46,7 @@
                     android:layout_width="225dp"
                     android:layout_height="225dp"
                     android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/error"
                     app:srcCompat="@drawable/error_nonews" />
             </RelativeLayout>
         </RelativeLayout>
@@ -68,7 +69,7 @@
                 android:layout_marginBottom="4dp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="FuelSpot Akaryakıt Piyasası"
+                android:text="@string/fuelspot_fuel_index"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
@@ -78,7 +79,7 @@
                 android:layout_below="@id/title_stats"
                 android:layout_marginStart="4dp"
                 android:padding="4dp"
-                android:text="Fiyat endeksi"
+                android:text="@string/price_index"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <com.github.mikephil.charting.charts.LineChart
@@ -108,7 +109,7 @@
                 android:layout_below="@id/dummy000"
                 android:layout_marginStart="4dp"
                 android:padding="4dp"
-                android:text="Hacim"
+                android:text="@string/volume"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <com.github.mikephil.charting.charts.LineChart

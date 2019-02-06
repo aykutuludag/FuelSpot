@@ -127,7 +127,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         /* Google Sign-In */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PROFILE))
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .requestProfile()
                 .requestEmail()
                 .build();

@@ -402,7 +402,11 @@ public class FragmentStations extends Fragment {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            reTry();
+                            if (mapDefaultRange == 50000) {
+                                Toast.makeText(getActivity(), getActivity().getString(R.string.no_station), Toast.LENGTH_SHORT).show();
+                            } else {
+                                reTry();
+                            }
                         }
                     }
                 },
@@ -433,29 +437,28 @@ public class FragmentStations extends Fragment {
 
     void reTry() {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-        if (mapDefaultRange == 2500) {
-            mapDefaultRange = 5000;
-            mapDefaultZoom = 12.5f;
-            Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            updateMapObject();
-        } else if (mapDefaultRange == 5000) {
-            mapDefaultRange = 10000;
-            mapDefaultZoom = 11.5f;
-            Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            updateMapObject();
-        } else if (mapDefaultRange == 10000) {
-            mapDefaultRange = 25000;
-            mapDefaultZoom = 10f;
-            Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            updateMapObject();
-        } else if (mapDefaultRange == 25000) {
-            mapDefaultRange = 50000;
-            mapDefaultZoom = 8.5f;
-            Toast.makeText(getActivity(), "İstasyon bulunamadı. YENİ MENZİL: " + mapDefaultRange + " metre", Toast.LENGTH_SHORT).show();
-            updateMapObject();
-        } else {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), "Yakın çevrenizde istasyon bulunamadı...", Snackbar.LENGTH_LONG).show();
+
+        switch (mapDefaultRange) {
+            case 2500:
+                mapDefaultRange = 5000;
+                mapDefaultZoom = 12.5f;
+                break;
+            case 5000:
+                mapDefaultRange = 10000;
+                mapDefaultZoom = 11.5f;
+                break;
+            case 10000:
+                mapDefaultRange = 25000;
+                mapDefaultZoom = 10f;
+                break;
+            case 25000:
+                mapDefaultRange = 50000;
+                mapDefaultZoom = 8.5f;
+                break;
         }
+
+        Toast.makeText(getActivity(), getActivity().getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getActivity().getString(R.string.metre), Toast.LENGTH_SHORT).show();
+        updateMapObject();
     }
 
     private void sortBy(int position) {
@@ -661,7 +664,7 @@ public class FragmentStations extends Fragment {
                         }
                     });
                 } else {
-                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
             }
         }

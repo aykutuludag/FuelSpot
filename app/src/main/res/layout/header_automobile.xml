@@ -65,6 +65,7 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_margin="1dp"
+                android:contentDescription="@string/primary_fuel_type"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <ImageView
@@ -73,6 +74,7 @@
                 android:layout_height="18dp"
                 android:layout_below="@id/car_fuelType"
                 android:layout_marginTop="2dp"
+                android:contentDescription="@string/secondary_fuel_type"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:visibility="gone" />
 

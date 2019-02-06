@@ -959,7 +959,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 if (ActivityCompat.checkSelfPermission(AddAutomobile.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(AddAutomobile.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }

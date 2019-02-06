@@ -47,6 +47,7 @@
                 android:layout_alignTop="@+id/userPhoto"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/userPhoto"
+                android:contentDescription="@string/fullname"
                 app:srcCompat="@drawable/event_edit_title" />
 
             <TextView
@@ -58,7 +59,7 @@
                 android:layout_toEndOf="@+id/dummyImage1"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Ad - Soyad"
+                android:text="@string/fullname"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -82,6 +83,7 @@
                 android:layout_below="@+id/editFullName"
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/email"
                 app:srcCompat="@drawable/email" />
 
             <TextView
@@ -94,7 +96,7 @@
                 android:layout_toEndOf="@+id/dummyImage2"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="E-posta"
+                android:text="@string/email"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -118,7 +120,8 @@
                 android:layout_below="@+id/userPhoto"
                 android:layout_alignStart="@+id/userPhoto"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/email" />
+                android:contentDescription="@string/phone"
+                app:srcCompat="@drawable/phone" />
 
             <TextView
                 android:id="@+id/dummyText4"
@@ -130,7 +133,7 @@
                 android:layout_toEndOf="@+id/dummyImage3"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Telefon"
+                android:text="@string/phone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -158,6 +161,7 @@
                 android:layout_below="@+id/editTextPhone"
                 android:layout_alignStart="@+id/userPhoto"
                 android:layout_marginTop="10dp"
+                android:contentDescription="@string/address"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_location" />
 
@@ -171,7 +175,7 @@
                 android:layout_toEndOf="@+id/indicator_loc"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Adres"
+                android:text="@string/address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -192,6 +196,7 @@
                 android:layout_below="@+id/editTextLocation"
                 android:layout_alignStart="@+id/editTextLocation"
                 android:layout_marginTop="10dp"
+                android:contentDescription="@string/birthday"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_date" />
 
@@ -204,7 +209,7 @@
                 android:layout_alignBottom="@+id/dummyImage4"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Doğum günü"
+                android:text="@string/birthday"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <EditText
@@ -228,6 +233,7 @@
                 android:layout_alignStart="@+id/editTextBirthday"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitStart"
+                android:contentDescription="@string/gender"
                 app:srcCompat="@drawable/gender" />
 
             <TextView
@@ -239,7 +245,7 @@
                 android:layout_alignBottom="@+id/dummyImage5"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Cinsiyet"
+                android:text="@string/gender"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <RadioGroup
@@ -262,7 +268,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Erkek" />
+                    android:text="@string/male" />
 
                 <RadioButton
                     android:id="@+id/genderFemale"
@@ -271,7 +277,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Kadın" />
+                    android:text="@string/female" />
 
                 <RadioButton
                     android:id="@+id/genderOther"
@@ -280,7 +286,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Diğer" />
+                    android:text="@string/other" />
             </RadioGroup>
 
             <Button
@@ -291,7 +297,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
                 android:background="@drawable/green_box"
-                android:text="ÇIKIŞ YAP" />
+                android:text="@string/log_out" />
 
         </RelativeLayout>
     </ScrollView>

@@ -1391,7 +1391,7 @@ public class StationDetails extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(StationDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(StationDetails.this).single().start(reportRequest);
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
             }
         }

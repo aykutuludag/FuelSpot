@@ -18,11 +18,9 @@ import static com.fuelspot.MainActivity.currencySymbol;
 
 public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHolder> {
     private List<BankingItem> feedItemList;
-    private Context mContext;
 
     public BankingAdapter(Context context, List<BankingItem> feedItemList) {
         this.feedItemList = feedItemList;
-        this.mContext = context;
     }
 
     @NonNull

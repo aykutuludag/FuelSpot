@@ -21,7 +21,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="16dp"
             android:gravity="center"
-            android:text="FUELSPOT BUSINESS"
+            android:text="@string/welcome_fuelspot"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#fff"
             android:textStyle="bold" />
@@ -161,7 +161,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_black"
-            android:text="Devam"
+            android:text="@string/button_continue"
             android:textAllCaps="false"
             android:textColor="#212121" />
     </RelativeLayout>
@@ -270,7 +270,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="54dp"
             android:fontFamily="@font/gotham_black"
-            android:text="FuelSpot Business'a Hoşgeldiniz !"
+            android:text="@string/welcome_fuelspot"
             android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse" />
 
         <TextView
@@ -311,7 +311,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_black"
-            android:text="Devam"
+            android:text="@string/button_continue"
             android:textAllCaps="false"
             android:textColor="#212121" />
 
@@ -382,7 +382,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:hint="@string/license_hint"
+                    android:hint="@string/license_no"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <TextView
@@ -393,7 +393,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
                     android:gravity="center"
-                    android:text="Kayıt işlemini tamamlayabilmek için sahip olduğunuz istasyonda bulunmanız gerekmektedir. Konumunuz onayladığında bilgiler otomatik olarak doldurulacak ve bu yazı yeşil renge dönecektir."
+                    android:text="@string/go_to_station_text"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="#ff0000"
                     android:textSize="12sp" />
@@ -432,7 +432,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@+id/dummyImage1"
                     android:gravity="center"
-                    android:text="Ad - Soyad"
+                    android:text="@string/fullname"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <EditText
@@ -466,7 +466,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@+id/dummyImage2"
                     android:gravity="center"
-                    android:text="E-posta"
+                    android:text="@string/email"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <EditText
@@ -501,7 +501,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@+id/dummyImage3"
                     android:gravity="center"
-                    android:text="Telefon"
+                    android:text="@string/phone"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <EditText
@@ -536,7 +536,7 @@
                     android:layout_alignTop="@+id/dummyImage4"
                     android:layout_alignBottom="@+id/dummyImage4"
                     android:gravity="center"
-                    android:text="Doğum günü"
+                    android:text="@string/birthday"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <EditText
@@ -571,7 +571,7 @@
                     android:layout_alignTop="@+id/dummyImage5"
                     android:layout_alignBottom="@+id/dummyImage5"
                     android:gravity="center"
-                    android:text="Cinsiyet"
+                    android:text="@string/gender"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <RadioGroup
@@ -591,7 +591,7 @@
                         android:layout_marginEnd="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="1"
-                        android:text="Erkek" />
+                        android:text="@string/male" />
 
                     <RadioButton
                         android:id="@+id/genderFemale"
@@ -599,7 +599,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:text="Kadın" />
+                        android:text="@string/female" />
 
                     <RadioButton
                         android:id="@+id/genderOther"
@@ -607,7 +607,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:text="Diğer" />
+                        android:text="@string/other" />
                 </RadioGroup>
 
                 <CheckBox
@@ -618,7 +618,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
                     android:gravity="center"
-                    android:text="Şartlar ve Koşulları okudum, kabul ediyorum."
+                    android:text="@string/terms_accepted_text"
                     android:textSize="12sp" />
 
                 <Button
@@ -630,7 +630,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/green_box"
                     android:fontFamily="@font/gotham_black"
-                    android:text="Devam"
+                    android:text="@string/button_continue"
                     android:textAllCaps="false"
                     android:textColor="#212121" />
 
@@ -655,7 +655,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_black"
-            android:text="Devam"
+            android:text="@string/button_continue"
             android:textAllCaps="false"
             android:textColor="#212121" />
 

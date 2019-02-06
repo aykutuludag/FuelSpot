@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.fuelspot.AddFuel">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -40,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:clickable="false"
-                android:text="İSTASYON BİLGİLERİ"
+                android:text="@string/station_info"
                 android:textColor="#fff" />
 
             <RelativeLayout
@@ -72,8 +70,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="2dp"
-                    android:src="@drawable/default_station"
-                    tools:ignore="RtlHardcoded" />
+                    android:src="@drawable/default_station" />
 
                 <TextView
                     android:id="@+id/stationNameHolder"
@@ -86,6 +83,18 @@
                     android:gravity="center"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:id="@+id/stationAddressHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stationNameHolder"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
             </RelativeLayout>
 
             <Button
@@ -95,7 +104,7 @@
                 android:layout_below="@id/division0"
                 android:background="@android:color/transparent"
                 android:clickable="false"
-                android:text="ARAÇ BİLGİLERİ"
+                android:text="@string/automobile_info"
                 android:textColor="#fff" />
 
             <RelativeLayout
@@ -116,7 +125,7 @@
                     android:layout_marginBottom="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Kilometre"
+                    android:text="@string/kilometer"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <EditText
@@ -143,7 +152,7 @@
                 android:layout_below="@id/division1"
                 android:background="@android:color/transparent"
                 android:clickable="false"
-                android:text="1. yakıt"
+                android:text="@string/primary_fuel_type"
                 android:textColor="#fff" />
 
             <RelativeLayout
@@ -160,8 +169,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_margin="8dp"
                     android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:srcCompat="@drawable/gasoline" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
                     android:id="@+id/fuelType1Text"
@@ -172,7 +180,6 @@
                     android:layout_toEndOf="@+id/fuelType1"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Benzin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <android.support.percent.PercentRelativeLayout
@@ -204,7 +211,6 @@
                         android:layout_toEndOf="@+id/editTextPricePerLiter"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="TL / litre"
                         app:layout_widthPercent="30%" />
 
                     <EditText
@@ -227,7 +233,6 @@
                         android:layout_toEndOf="@+id/editTextPrice"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="TL"
                         app:layout_widthPercent="30%" />
 
                     <TextView
@@ -248,7 +253,6 @@
                         android:layout_toEndOf="@+id/editTextLiter"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="Litre"
                         app:layout_widthPercent="30%" />
                 </android.support.percent.PercentRelativeLayout>
 
@@ -261,7 +265,7 @@
                 android:layout_below="@+id/division2"
                 android:background="@android:color/transparent"
                 android:clickable="false"
-                android:text="2. yakıt"
+                android:text="@string/secondary_fuel_type"
                 android:textColor="#fff" />
 
             <RelativeLayout
@@ -276,10 +280,12 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:srcCompat="@drawable/lpg" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
                     android:id="@+id/fuelType2Text"
@@ -321,7 +327,6 @@
                         android:layout_toEndOf="@+id/editTextPricePerLiter2"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="TL / litre"
                         app:layout_widthPercent="30%" />
 
                     <EditText
@@ -344,7 +349,6 @@
                         android:layout_toEndOf="@+id/editTextPrice2"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="TL"
                         app:layout_widthPercent="30%" />
 
                     <EditText
@@ -368,7 +372,6 @@
                         android:layout_toEndOf="@+id/editTextLiter2"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="Litre"
                         app:layout_widthPercent="30%" />
                 </android.support.percent.PercentRelativeLayout>
 
@@ -388,10 +391,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:hint="TOTAL"
+                    android:text="@string/total"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242" />
@@ -413,7 +419,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="Bonus kazanmak için fiş/fatura fotoğrafı ekle! Fotoğrafı daha sonra da ekleyebilirsin."
+                    android:text="@string/add_bill_photo_desc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="#f1f1f1" />
 
@@ -438,21 +444,8 @@
                 android:background="@drawable/green_box"
                 android:clickable="false"
                 android:fontFamily="@font/gotham_black"
-                android:text="EKLE"
+                android:text="@string/add_fuel"
                 android:textColor="#212121" />
-
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/sendButton"
-                android:layout_alignTop="@id/sendButton"
-                android:layout_alignEnd="@id/sendButton"
-                android:layout_alignBottom="@id/sendButton"
-                android:fontFamily="@font/gotham_black"
-                android:gravity="center"
-                android:text="EKLE"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
         </RelativeLayout>
 

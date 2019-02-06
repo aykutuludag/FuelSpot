@@ -423,7 +423,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(PurchaseDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(PurchaseDetails.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
             }
             case REQUEST_LOCATION: {
@@ -432,7 +432,7 @@ public class PurchaseDetails extends AppCompatActivity {
                         loadMap();
                     }
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
             }
         }

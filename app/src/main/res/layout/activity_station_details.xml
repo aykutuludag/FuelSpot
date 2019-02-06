@@ -517,7 +517,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
-                        android:text="Bu istasyon henüz hiç kampanya eklememiş..."
+                        android:text="@string/no_campaign_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616"
                         android:visibility="gone" />
@@ -578,7 +578,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_margin="8dp"
                         android:gravity="center"
-                        android:text="Bu istasyon için henüz hiç yorum yazılmamış..."
+                        android:text="@string/no_comment_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616"
                         android:visibility="gone" />

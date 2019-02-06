@@ -1296,7 +1296,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         }
                     });
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -1304,7 +1304,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 if (ActivityCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[0]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(SuperWelcomeActivity.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }

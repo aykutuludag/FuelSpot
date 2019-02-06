@@ -421,7 +421,7 @@ public class SuperProfileEdit extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(SuperProfileEdit.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(SuperProfileEdit.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
             }
         }
@@ -437,7 +437,7 @@ public class SuperProfileEdit extends AppCompatActivity {
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(image.getPath()).apply(options).into(userPic);
-                photo = "https://fuel-spot.com/uploads/users/" + username + ".jpg";
+                photo = "https://fuel-spot.com/uploads/superusers/" + username + ".jpg";
                 editor.putString("ProfilePhoto", photo);
             }
         }

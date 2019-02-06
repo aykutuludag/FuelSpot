@@ -441,7 +441,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(ProfileEditActivity.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
             }
         }

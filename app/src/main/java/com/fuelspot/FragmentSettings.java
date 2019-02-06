@@ -601,7 +601,7 @@ public class FragmentSettings extends Fragment {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(this).single().start();
                 } else {
-                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }

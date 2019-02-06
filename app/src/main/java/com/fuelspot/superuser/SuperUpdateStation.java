@@ -500,10 +500,10 @@ public class SuperUpdateStation extends AppCompatActivity {
                             loading.dismiss();
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.stationUpdated), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_success), Toast.LENGTH_LONG).show();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.stationUpdateFail), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         }
@@ -513,7 +513,7 @@ public class SuperUpdateStation extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         loading.dismiss();
-                        Toast.makeText(SuperUpdateStation.this, getString(R.string.stationUpdateFail), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperUpdateStation.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override

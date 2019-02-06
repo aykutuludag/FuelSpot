@@ -52,7 +52,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/green_box"
                 android:fontFamily="@font/gotham_black"
-                android:text="İstasyon ekle" />
+                android:text="@string/add_station" />
         </RelativeLayout>
 
     </RelativeLayout>

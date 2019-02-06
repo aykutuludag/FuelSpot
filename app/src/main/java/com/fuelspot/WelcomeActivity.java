@@ -167,7 +167,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         userNoCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                Toast.makeText(WelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_LONG).show();
                 layout4.setVisibility(View.VISIBLE);
                 layout2.setVisibility(View.GONE);
             }
@@ -213,7 +213,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 if (plateNo != null && plateNo.length() > 0) {
                     addVehicle();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), "Lütfen plakanızı giriniz", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.enter_plate_no), Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -417,7 +417,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                             try {
                                 JSONArray res = new JSONArray(response);
                                 if (res.length() > 0) {
-                                    Toast.makeText(WelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(WelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_LONG).show();
                                     layout4.setVisibility(View.VISIBLE);
                                     layout1.setVisibility(View.GONE);
                                 } else {
@@ -654,26 +654,25 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "plateNo exist":
-                                    Toast.makeText(WelcomeActivity.this, "Plaka daha önce eklenmiş...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(WelcomeActivity.this, getString(R.string.plate_no_exist), Toast.LENGTH_LONG).show();
                                     break;
                                 case "Success":
                                     getVariables(prefs);
                                     layout4.setVisibility(View.VISIBLE);
                                     layout3.setVisibility(View.GONE);
 
-                                    loading.dismiss();
-                                    Toast.makeText(WelcomeActivity.this, "Araç eklendi: " + plateNo, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(WelcomeActivity.this, getString(R.string.vehicle_added) + " " + plateNo, Toast.LENGTH_LONG).show();
                                     break;
                                 default:
-                                    Toast.makeText(WelcomeActivity.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(WelcomeActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            loading.dismiss();
-                            Toast.makeText(WelcomeActivity.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(WelcomeActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -1197,13 +1196,13 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                Toast.makeText(WelcomeActivity.this, "Konum bilginiz çekiliyor.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
                     fetchAutomobiles();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -1211,7 +1210,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 if (ActivityCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     ImagePicker.create(WelcomeActivity.this).single().start();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_permission_cancel), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
