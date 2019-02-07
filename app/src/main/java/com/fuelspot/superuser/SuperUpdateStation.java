@@ -65,18 +65,31 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class SuperUpdateStation extends AppCompatActivity {
 
-    TextView stationAddressHolder, stationLicenseHolder, textViewOwnerHolder, textViewStationIDHolder;
-    EditText gasolineHolder, dieselHolder, electricityHolder, lpgHolder;
-    Button buttonUpdateStation;
-    RequestQueue requestQueue;
-    RelativeTimeTextView lastUpdateTimeText;
-    CircleImageView stationLogoHolder, imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot;
-    RelativeLayout verifiedLayout;
-    RequestOptions options;
-    Spinner spinner;
-    Window window;
-    Toolbar toolbar;
-    JSONObject facilitiesObj;
+    private TextView stationAddressHolder;
+    private TextView stationLicenseHolder;
+    private TextView textViewOwnerHolder;
+    private TextView textViewStationIDHolder;
+    private EditText gasolineHolder;
+    private EditText dieselHolder;
+    private EditText electricityHolder;
+    private EditText lpgHolder;
+    private Button buttonUpdateStation;
+    private RequestQueue requestQueue;
+    private RelativeTimeTextView lastUpdateTimeText;
+    private CircleImageView stationLogoHolder;
+    private CircleImageView imageViewWC;
+    private CircleImageView imageViewMarket;
+    private CircleImageView imageViewCarWash;
+    private CircleImageView imageViewTireRepair;
+    private CircleImageView imageViewMechanic;
+    private CircleImageView imageViewRestaurant;
+    private CircleImageView imageViewParkSpot;
+    private RelativeLayout verifiedLayout;
+    private RequestOptions options;
+    private Spinner spinner;
+    private Window window;
+    private Toolbar toolbar;
+    private JSONObject facilitiesObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +141,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         loadLayoutItems();
     }
 
-    void loadLayoutItems() {
+    private void loadLayoutItems() {
         if (companyList != null && companyList.size() > 0) {
             CompanyAdapter customAdapter = new CompanyAdapter(SuperUpdateStation.this, companyList);
             spinner.setEnabled(false);
@@ -433,7 +446,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         }
     }
 
-    void fetchCompanies() {
+    private void fetchCompanies() {
         companyList.clear();
 
         //Showing the progress dialog
@@ -542,7 +555,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

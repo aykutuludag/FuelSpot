@@ -34,14 +34,14 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperPurchases extends AppCompatActivity {
 
-    SwipeRefreshLayout swipeContainer;
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    List<PurchaseItem> feedsList;
-    Snackbar snackbar;
-    Window window;
-    Toolbar toolbar;
+    private SwipeRefreshLayout swipeContainer;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private List<PurchaseItem> feedsList;
+    private Snackbar snackbar;
+    private Window window;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +155,7 @@ public class SuperPurchases extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

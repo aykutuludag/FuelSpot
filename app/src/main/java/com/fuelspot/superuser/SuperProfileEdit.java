@@ -80,19 +80,26 @@ import static com.fuelspot.MainActivity.username;
 
 public class SuperProfileEdit extends AppCompatActivity {
 
-    Toolbar toolbar;
-    Window window;
-    CircleImageView userPic;
-    EditText editName, editMail, editTextPhone, editBirthday;
-    RadioGroup editGender;
-    RadioButton bMale, bFemale, bOther;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
-    int calendarYear, calendarMonth, calendarDay;
-    Bitmap bitmap;
-    RequestQueue requestQueue;
-    RequestOptions options;
-    Button logOutFromAccount;
+    private Toolbar toolbar;
+    private Window window;
+    private CircleImageView userPic;
+    private EditText editName;
+    private EditText editMail;
+    private EditText editTextPhone;
+    private EditText editBirthday;
+    private RadioGroup editGender;
+    private RadioButton bMale;
+    private RadioButton bFemale;
+    private RadioButton bOther;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+    private int calendarYear;
+    private int calendarMonth;
+    private int calendarDay;
+    private Bitmap bitmap;
+    private RequestQueue requestQueue;
+    private RequestOptions options;
+    private Button logOutFromAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -367,14 +374,14 @@ public class SuperProfileEdit extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

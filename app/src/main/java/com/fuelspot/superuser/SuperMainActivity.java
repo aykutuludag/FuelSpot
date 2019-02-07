@@ -65,17 +65,17 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
 
-    boolean doubleBackToExitPressedOnce;
-    RequestQueue queue;
-    Window window;
-    Toolbar toolbar;
-    SharedPreferences prefs;
-    IInAppBillingService mService;
-    ServiceConnection mServiceConn;
-    FragNavController mFragNavController;
-    AHBottomNavigation bottomNavigation;
-    List<Fragment> fragments = new ArrayList<>(5);
-    Location locLastKnown;
+    private boolean doubleBackToExitPressedOnce;
+    private RequestQueue queue;
+    private Window window;
+    private Toolbar toolbar;
+    private SharedPreferences prefs;
+    private IInAppBillingService mService;
+    private ServiceConnection mServiceConn;
+    private FragNavController mFragNavController;
+    private AHBottomNavigation bottomNavigation;
+    private List<Fragment> fragments = new ArrayList<>(5);
+    private Location locLastKnown;
 
     public static void getSuperVariables(SharedPreferences prefs) {
         // Station-specific information
@@ -143,10 +143,10 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation = findViewById(R.id.bottom_navigation);
         //Add tabs
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_mystation, R.drawable.tab_mystation, R.color.colorPrimaryDark);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.stationPage);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorPrimaryDark);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorPrimaryDark);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorPrimaryDark);
 
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
@@ -195,7 +195,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public void checkPremium() throws RemoteException {
+    private void checkPremium() throws RemoteException {
         Bundle ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
         if (ownedItems.getInt("RESPONSE_CODE") == 0) {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
@@ -209,7 +209,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -220,7 +220,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }
 
-    void fetchOwnedStations() {
+    private void fetchOwnedStations() {
         listOfOwnedStations.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
                 new Response.Listener<String>() {
@@ -298,7 +298,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         queue.add(stringRequest);
     }
 
-    void chooseStation(StationItem item) {
+    private void chooseStation(StationItem item) {
         superStationID = item.getID();
         prefs.edit().putInt("SuperStationID", superStationID).apply();
 
@@ -347,7 +347,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         getSuperVariables(prefs);
     }
 
-    void fetchCompanies() {
+    private void fetchCompanies() {
         companyList.clear();
 
         //Showing the progress dialog

@@ -37,13 +37,12 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class UserFavorites extends AppCompatActivity {
 
-    RequestQueue requestQueue;
-    GridLayoutManager mLayoutManager;
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    List<StationItem> favoriteList = new ArrayList<>();
-    Toolbar toolbar;
-    Window window;
+    private RequestQueue requestQueue;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private List<StationItem> favoriteList = new ArrayList<>();
+    private Toolbar toolbar;
+    private Window window;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +62,11 @@ public class UserFavorites extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(this);
         mRecyclerView = findViewById(R.id.feedView);
-        mLayoutManager = new GridLayoutManager(UserFavorites.this, 1);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(UserFavorites.this, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    void parseUserFavorites() {
+    private void parseUserFavorites() {
         favoriteList.clear();
         if (userFavorites != null && userFavorites.length() > 0) {
             String[] favStationss = userFavorites.split(";");
@@ -77,9 +76,9 @@ public class UserFavorites extends AppCompatActivity {
             if (premium) {
                 untilWhere = favStationss.length;
             } else {
-                if (favStationss.length >= 53) {
+                if (favStationss.length >= 3) {
                     untilWhere = 3;
-                    Toast.makeText(UserFavorites.this, "5'ten fazla favori istasyon izleyebilmek için premium sürüme geçebilirsiniz.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserFavorites.this, getString(R.string.less_than_3_favs), Toast.LENGTH_SHORT).show();
                 } else {
                     untilWhere = favStationss.length;
                 }
@@ -92,11 +91,11 @@ public class UserFavorites extends AppCompatActivity {
             mAdapter = new StationAdapter(UserFavorites.this, favoriteList, "NEARBY_STATIONS");
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            Toast.makeText(UserFavorites.this, "Henüz favorilerinize hiç istasyon eklememişsiniz.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserFavorites.this, getString(R.string.no_favorite_station), Toast.LENGTH_SHORT).show();
         }
     }
 
-    void fetchStation(final int stationID) {
+    private void fetchStation(final int stationID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
@@ -167,7 +166,7 @@ public class UserFavorites extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

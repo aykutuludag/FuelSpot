@@ -53,19 +53,32 @@ import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 
 public class AddStation extends AppCompatActivity {
 
-    Toolbar toolbar;
-    TextView stationHint;
-    EditText editTextStationName, editTextStationAddress, editTextStationLicense;
-    RequestQueue requestQueue;
-    MapView mMapView;
-    Circle circle;
-    GoogleMap googleMap;
-    Button finishRegistration;
-    SharedPreferences prefs;
-    int stationID, doesStationVerified;
-    String googleID, stationName, stationAddress, stationCoordinates, stationCountry, licenseNo, stationLogo, stationFacilities;
-    float gasolinePrice, dieselPrice, lpgPrice, electricityPrice;
-    ProgressDialog loading;
+    private Toolbar toolbar;
+    private TextView stationHint;
+    private EditText editTextStationName;
+    private EditText editTextStationAddress;
+    private EditText editTextStationLicense;
+    private RequestQueue requestQueue;
+    private MapView mMapView;
+    private Circle circle;
+    private GoogleMap googleMap;
+    private Button finishRegistration;
+    private SharedPreferences prefs;
+    private int stationID;
+    private int doesStationVerified;
+    private String googleID;
+    private String stationName;
+    private String stationAddress;
+    private String stationCoordinates;
+    private String stationCountry;
+    private String licenseNo;
+    private String stationLogo;
+    private String stationFacilities;
+    private float gasolinePrice;
+    private float dieselPrice;
+    private float lpgPrice;
+    private float electricityPrice;
+    private ProgressDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +197,7 @@ public class AddStation extends AppCompatActivity {
         loadMap();
     }
 
-    void loadMap() {
+    private void loadMap() {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
@@ -336,13 +349,13 @@ public class AddStation extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void loadStationDetails() {
+    private void loadStationDetails() {
         editTextStationName.setText(stationName);
         editTextStationAddress.setText(stationAddress);
         editTextStationLicense.setText(licenseNo);
     }
 
-    void superUserRegistration() {
+    private void superUserRegistration() {
         loading.show();
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_REGISTRATION),
@@ -396,7 +409,7 @@ public class AddStation extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void fetchOwnedStations() {
+    private void fetchOwnedStations() {
         listOfOwnedStations.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
                 new Response.Listener<String>() {

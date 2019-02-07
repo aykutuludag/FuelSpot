@@ -104,22 +104,42 @@ import static com.fuelspot.MainActivity.username;
 
 public class WelcomeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    RequestQueue requestQueue;
-    SharedPreferences prefs;
-    Button continueButton, userHasCar, userNoCar, saveCarButton, finishButton;
-    RelativeLayout layout1, layout2, layout4, layoutHow1, layoutHow2, layoutHow3;
-    ScrollView layout3;
-    Bitmap bitmap;
-    CircleImageView carPic;
-    Spinner spinner, spinner2;
-    RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
-    ArrayAdapter<String> adapter;
-    ArrayAdapter<String> adapter2;
-    boolean howto1, howto2, howto3;
-    RadioGroup radioGroup1, radioGroup2;
-    RequestOptions options;
-    TextWatcher mTextWatcher;
-    ProgressDialog loading;
+    private RequestQueue requestQueue;
+    private SharedPreferences prefs;
+    private Button continueButton;
+    private Button userHasCar;
+    private Button userNoCar;
+    private Button saveCarButton;
+    private Button finishButton;
+    private RelativeLayout layout1;
+    private RelativeLayout layout2;
+    private RelativeLayout layout4;
+    private RelativeLayout layoutHow1;
+    private RelativeLayout layoutHow2;
+    private RelativeLayout layoutHow3;
+    private ScrollView layout3;
+    private Bitmap bitmap;
+    private CircleImageView carPic;
+    private Spinner spinner;
+    private Spinner spinner2;
+    private RadioButton gasoline;
+    private RadioButton diesel;
+    private RadioButton lpg;
+    private RadioButton elec;
+    private RadioButton gasoline2;
+    private RadioButton diesel2;
+    private RadioButton lpg2;
+    private RadioButton elec2;
+    private ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter2;
+    private boolean howto1;
+    private boolean howto2;
+    private boolean howto3;
+    private RadioGroup radioGroup1;
+    private RadioGroup radioGroup2;
+    private RequestOptions options;
+    private TextWatcher mTextWatcher;
+    private ProgressDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,8 +157,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         // ProgressDialogs
         loading = new ProgressDialog(WelcomeActivity.this);
-        loading.setTitle("Araç ekleniyor");
-        loading.setMessage("Lütfen bekleyiniz...");
+        loading.setTitle(getString(R.string.registering_vehicle));
+        loading.setMessage(getString(R.string.please_wait));
         loading.setIndeterminate(true);
         loading.setCancelable(false);
 
@@ -198,6 +218,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -308,7 +329,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         fetchTaxRates();
                     }
                 } catch (Exception e) {
-                    // Do nothing
+                    e.printStackTrace();
                 }
             }
         }
@@ -356,7 +377,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-    public void fetchTaxRates() {
+    private void fetchTaxRates() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
@@ -409,7 +430,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-    void fetchAutomobiles() {
+    private void fetchAutomobiles() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
                 new Response.Listener<String>() {
                     @Override
@@ -463,7 +484,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         requestQueue.add(stringRequest);
     }
 
-    public void loadCarSelection() {
+    private void loadCarSelection() {
         //CarPic
         carPic = findViewById(R.id.imageViewCarHolder);
         RequestOptions options = new RequestOptions()
@@ -1236,7 +1257,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();

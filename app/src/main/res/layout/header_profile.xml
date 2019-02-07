@@ -12,6 +12,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"
         android:padding="4dp"
+        android:contentDescription="@string/edit"
         app:srcCompat="@drawable/edit" />
 
     <de.hdodenhof.circleimageview.CircleImageView

@@ -92,25 +92,37 @@ public class FragmentSettings extends Fragment {
 
 
     public static List<CompanyItem> companyList = new ArrayList<>();
-    TextView countryText, languageText, currencyText, unitSystemText, textViewGasolineTax, textViewDieselTax, textViewLPGTax, textViewElectricityTax;
-    Button buttonTax, buttonBeta, buttonFeedback, buttonRate;
-    SharedPreferences prefs;
-    String feedbackMessage;
-    NestedScrollView scrollView;
-    Bitmap bitmap;
-    ImageView getScreenshot;
-    PopupWindow mPopupWindow;
-    RequestOptions options;
+    private TextView countryText;
+    private TextView languageText;
+    private TextView currencyText;
+    private TextView unitSystemText;
+    private TextView textViewGasolineTax;
+    private TextView textViewDieselTax;
+    private TextView textViewLPGTax;
+    private TextView textViewElectricityTax;
+    private Button buttonTax;
+    private Button buttonBeta;
+    private Button buttonFeedback;
+    private Button buttonRate;
+    private SharedPreferences prefs;
+    private String feedbackMessage;
+    private NestedScrollView scrollView;
+    private Bitmap bitmap;
+    private ImageView getScreenshot;
+    private PopupWindow mPopupWindow;
+    private RequestOptions options;
     //Creating a Request Queue
-    RequestQueue requestQueue;
-    View rootView;
-    ArrayList<PieEntry> entries = new ArrayList<>();
-    PieChart chart3;
-    TextView textViewTotalNumber;
-    RelativeLayout geofenceLayout;
-    CheckBox geofenceCheckBox;
+    private RequestQueue requestQueue;
+    private View rootView;
+    private ArrayList<PieEntry> entries = new ArrayList<>();
+    private PieChart chart3;
+    private TextView textViewTotalNumber;
+    private RelativeLayout geofenceLayout;
+    private CheckBox geofenceCheckBox;
 
-    int otherStations, totalVerified, totalStation;
+    private int otherStations;
+    private int totalVerified;
+    private int totalStation;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -299,7 +311,7 @@ public class FragmentSettings extends Fragment {
         return rootView;
     }
 
-    void parseCompanies() {
+    private void parseCompanies() {
         if (companyList != null && companyList.size() > 0) {
             for (int i = 0; i < companyList.size(); i++) {
                 totalVerified += companyList.get(i).getNumOfVerifieds();
@@ -355,7 +367,7 @@ public class FragmentSettings extends Fragment {
         }
     }
 
-    void fetchCompanies() {
+    private void fetchCompanies() {
         companyList.clear();
         totalStation = 0;
         totalVerified = 0;
@@ -411,7 +423,7 @@ public class FragmentSettings extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    void updateTaxRates() {
+    private void updateTaxRates() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
@@ -478,7 +490,7 @@ public class FragmentSettings extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    void openFeedBackPopup(View view) {
+    private void openFeedBackPopup(View view) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_feedback, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -591,7 +603,7 @@ public class FragmentSettings extends Fragment {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();

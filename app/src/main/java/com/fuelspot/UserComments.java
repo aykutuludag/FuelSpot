@@ -35,13 +35,13 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class UserComments extends AppCompatActivity {
 
-    Window window;
-    Toolbar toolbar;
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    SwipeRefreshLayout swipeContainer;
-    RequestQueue requestQueue;
+    private Window window;
+    private Toolbar toolbar;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private SwipeRefreshLayout swipeContainer;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class UserComments extends AppCompatActivity {
         loadComments();
     }
 
-    public void loadComments() {
+    private void loadComments() {
         mAdapter = new CommentAdapter(UserComments.this, userCommentList, "USER_COMMENTS");
         mLayoutManager = new GridLayoutManager(UserComments.this, 1);
 
@@ -92,7 +92,7 @@ public class UserComments extends AppCompatActivity {
     }
 
     // Depends on user, it changes with user comments or station comments
-    public void fetchComments() {
+    private void fetchComments() {
         userCommentList.clear();
         mAdapter.notifyDataSetChanged();
 
@@ -166,7 +166,7 @@ public class UserComments extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

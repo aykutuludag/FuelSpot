@@ -20,11 +20,11 @@ import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 
 public class FenceReceiver extends BroadcastReceiver {
 
-    Context mContext;
-    NotificationCompat.Builder builder;
-    NotificationManager notificationManager;
-    PendingIntent mPendingIntent;
-    int currentStationID;
+    private Context mContext;
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private PendingIntent mPendingIntent;
+    private int currentStationID;
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -34,13 +34,13 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class UserPurchases extends AppCompatActivity {
 
-    Window window;
-    Toolbar toolbar;
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    SwipeRefreshLayout swipeContainer;
-    RequestQueue requestQueue;
+    private Window window;
+    private Toolbar toolbar;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private SwipeRefreshLayout swipeContainer;
+    private RequestQueue requestQueue;
 
 
     @Override
@@ -78,7 +78,7 @@ public class UserPurchases extends AppCompatActivity {
                 android.R.color.holo_red_light);
     }
 
-    public void loadPurchases() {
+    private void loadPurchases() {
         mAdapter = new PurchaseAdapter(UserPurchases.this, vehiclePurchaseList);
         mLayoutManager = new GridLayoutManager(UserPurchases.this, 1);
 
@@ -89,7 +89,7 @@ public class UserPurchases extends AppCompatActivity {
         swipeContainer.setRefreshing(false);
     }
 
-    public void fetchPurchases() {
+    private void fetchPurchases() {
         vehiclePurchaseList.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES),
@@ -162,7 +162,7 @@ public class UserPurchases extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

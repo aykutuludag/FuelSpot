@@ -70,18 +70,27 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class FragmentMyStation extends Fragment {
 
-    SharedPreferences prefs;
-    MapView mMapView;
-    RequestQueue queue;
-    TextView textName, textVicinity, textDistance, textGasoline, textDiesel, textLPG, textElectricity;
-    RelativeTimeTextView textLastUpdated;
-    ImageView stationIcon;
-    Button editStation, openPurchases, openComments, openCampaings;
-    FusedLocationProviderClient mFusedLocationClient;
-    Location locLastKnown = new Location("");
-    LocationRequest mLocationRequest;
-    LocationCallback mLocationCallback;
-    View rootView;
+    private SharedPreferences prefs;
+    private MapView mMapView;
+    private RequestQueue queue;
+    private TextView textName;
+    private TextView textVicinity;
+    private TextView textDistance;
+    private TextView textGasoline;
+    private TextView textDiesel;
+    private TextView textLPG;
+    private TextView textElectricity;
+    private RelativeTimeTextView textLastUpdated;
+    private ImageView stationIcon;
+    private Button editStation;
+    private Button openPurchases;
+    private Button openComments;
+    private Button openCampaings;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location locLastKnown = new Location("");
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
+    private View rootView;
     private GoogleMap googleMap;
 
     public static FragmentMyStation newInstance() {
@@ -219,7 +228,7 @@ public class FragmentMyStation extends Fragment {
         return rootView;
     }
 
-    public void checkLocationPermission() {
+    private void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
@@ -228,7 +237,7 @@ public class FragmentMyStation extends Fragment {
         }
     }
 
-    void loadMap() {
+    private void loadMap() {
         //Detect location and set on map
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
@@ -247,7 +256,7 @@ public class FragmentMyStation extends Fragment {
         });
     }
 
-    void loadStationDetails() {
+    private void loadStationDetails() {
         googleMap.clear();
 
         textName.setText(superStationName);

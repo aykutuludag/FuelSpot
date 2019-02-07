@@ -59,16 +59,19 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
 
-    RequestQueue requestQueue;
-    SimpleDateFormat sdf;
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    List<CampaignItem> feedsList = new ArrayList<>();
-
-    String campaignName, campaignDesc, campaignPhoto, sTime, eTime;
-    Bitmap bmp;
-    Window window;
-    Toolbar toolbar;
+    String campaignPhoto;
+    private RequestQueue requestQueue;
+    private SimpleDateFormat sdf;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private List<CampaignItem> feedsList = new ArrayList<>();
+    private String campaignName;
+    private String campaignDesc;
+    private String sTime;
+    private String eTime;
+    private Bitmap bmp;
+    private Window window;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +104,7 @@ public class SuperCampaings extends AppCompatActivity {
         fetchCampaigns();
     }
 
-    public void fetchCampaigns() {
+    private void fetchCampaigns() {
         feedsList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
                 new Response.Listener<String>() {
@@ -159,7 +162,7 @@ public class SuperCampaings extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void addCampaign(View view) {
+    private void addCampaign(View view) {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_add_campaign, null);
         final PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -354,7 +357,7 @@ public class SuperCampaings extends AppCompatActivity {
 
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -365,7 +368,7 @@ public class SuperCampaings extends AppCompatActivity {
         }
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();

@@ -288,7 +288,7 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/billTitle"
+                    android:id="@+id/billText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/single_purchase"
@@ -305,7 +305,7 @@
                     android:id="@+id/billPhoto"
                     android:layout_width="180dp"
                     android:layout_height="320dp"
-                    android:layout_below="@id/billTitle"
+                    android:layout_below="@id/billText"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:adjustViewBounds="true"

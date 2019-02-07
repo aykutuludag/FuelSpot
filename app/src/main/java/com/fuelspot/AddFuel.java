@@ -75,32 +75,63 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class AddFuel extends AppCompatActivity {
 
-    Window window;
-    Toolbar toolbar;
-    SharedPreferences prefs;
-    RequestQueue requestQueue;
-    RequestOptions options;
+    private Window window;
+    private Toolbar toolbar;
+    private SharedPreferences prefs;
+    private RequestQueue requestQueue;
+    private RequestOptions options;
 
-    int chosenStationID;
-    String stationName, stationAddress, stationLoc, stationLogo;
-    float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, tax1, tax2, taxTotal, totalPrice;
+    private int chosenStationID;
+    private String stationName;
+    private String stationAddress;
+    private String stationLoc;
+    private String stationLogo;
+    private float gasolinePrice;
+    private float dieselPrice;
+    private float LPGPrice;
+    private float electricityPrice;
+    private float selectedUnitPrice;
+    private float buyedLiter;
+    private float entryPrice;
+    private float selectedTaxRate;
+    private float selectedUnitPrice2;
+    private float buyedLiter2;
+    private float entryPrice2;
+    private float selectedTaxRate2;
+    private float tax1;
+    private float tax2;
+    private float taxTotal;
+    private float totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
-    CircleImageView istasyonLogoHolder;
-    TextView istasyonNameHolder, istasyonIDHolder;
-    RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
-    Button expandableButton1, expandableButton2;
-    String fuelType, fuelType2;
-    TextView fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre;
-    ImageView fuelType1Icon, fuelType2Icon;
-    EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitreFiyati2, textViewTotalFiyat2, textViewLitre2;
-    Bitmap bitmap;
-    ImageView photoHolder;
-    ScrollView scrollView;
+    private CircleImageView istasyonLogoHolder;
+    private TextView istasyonNameHolder;
+    private TextView istasyonIDHolder;
+    private RelativeLayout expandableLayoutYakit;
+    private RelativeLayout expandableLayoutYakit2;
+    private Button expandableButton1;
+    private Button expandableButton2;
+    private String fuelType;
+    private String fuelType2;
+    private TextView fuelType1Text;
+    private TextView fuelType2Text;
+    private TextView fuelGrandTotal;
+    private TextView textViewLitre;
+    private ImageView fuelType1Icon;
+    private ImageView fuelType2Icon;
+    private EditText enterKilometer;
+    private EditText textViewLitreFiyati;
+    private EditText textViewTotalFiyat;
+    private EditText textViewLitreFiyati2;
+    private EditText textViewTotalFiyat2;
+    private EditText textViewLitre2;
+    private Bitmap bitmap;
+    private ImageView photoHolder;
+    private ScrollView scrollView;
 
-    int tempKM;
+    private int tempKM;
 
-    public static float taxCalculator(int fuelType, float price) {
+    private static float taxCalculator(int fuelType, float price) {
         float tax;
         switch (fuelType) {
             case 0:
@@ -461,7 +492,7 @@ public class AddFuel extends AppCompatActivity {
         });
     }
 
-    public float howManyLiter(float priceForUnit, float totalPrice) {
+    private float howManyLiter(float priceForUnit, float totalPrice) {
         if (priceForUnit == 0) {
             return 0f;
         } else {
@@ -550,14 +581,14 @@ public class AddFuel extends AppCompatActivity {
         fuelGrandTotal.setText(totalHolder);
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

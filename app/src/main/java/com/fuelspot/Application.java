@@ -13,7 +13,7 @@ import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 
 public class Application extends MultiDexApplication {
 
-    String trackingId = "UA-120925005-4";
+    private String trackingId = "UA-120925005-4";
     private Tracker mTracker;
 
     @Override

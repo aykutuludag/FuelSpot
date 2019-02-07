@@ -1,0 +1,302 @@
+<resources>
+    <!-- LoginActivity-->
+    <string name="loginWithGoogle">Google\'la giriş yap</string>
+    <string name="loginWithFacebook">Facebook\'la giriş yap</string>
+    <string name="loginWithSuperUser">İstasyon sahibi misiniz?</string>
+    <string name="logging_in">Giriş başarılı</string>
+    <string name="login_successful">Giriş başarılı. Uygulamaya yönlendiriliyorsunuz&#8230;</string>
+    <string name="error_login_fail">Giriş yaparken bir hata oluştu. Lütfen tekrar deneyiniz&#8230;</string>
+    <string name="error_login_cancel">Giriş işlemi kullanıcı tarafından iptal edildi&#8230;</string>
+    <!-- LoginActivity-->
+
+    <!-- WelcomeActivity-->
+    <string name="welcome_fuelspot">FuelSpot\'a hoşgeldiniz!</string>
+    <string name="welcome_fuelspot_long">FuelSpot akaryakıt fiyatlarını, güncel gelişmeleri ve bunlara ek olarak araç takibini (yakıt tüketimi, emisyon…) ve çok daha fazlasını içeren bir platformdur.</string>
+    <string name="welcome_permission_text">Hesabınız oluşturuldu. Yakınınızdaki istasyonları gösterebilmek için bazı izinlere ihtiyaç duyuyoruz</string>
+    <string name="button_continue">Devam</string>
+    <string name="do_you_have_car">Arabanız var mı?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="vehicle_brand">Marka</string>
+    <string name="vehicle_model">Model</string>
+    <string name="primary_fuel_type">Birincil yakıt tipi</string>
+    <string name="gasoline">Benzin</string>
+    <string name="diesel">Dizel</string>
+    <string name="lpg">LPG</string>
+    <string name="distance">Mesafe</string>
+    <string name="electricity">Elektrik</string>
+    <string name="secondary_fuel_type">İkincil yakıt tipi</string>
+    <string name="secondary_fuel_type_desc">Eğer aracınız ikincil bir yakıt sistemine sahip değilse boş bırakın</string>
+    <string name="kilometer">Kilometre</string>
+    <string name="plate_no">Plaka</string>
+    <string name="fuel_symbols">Yakıt sembolleri</string>
+    <string name="how_to_sort">Sembollere tıklayarak seçiminize göre sıralayabilirsiniz (fiyat veya mesafe).</string>
+    <string name="got_it">Anladım!</string>
+    <string name="how_to_register_car">Nasıl araç eklerim?</string>
+    <string name="how_to_register_car_desc">Profil sayfasındaki araç ekle butonuna basarak araç eklereyek online araç takibine başlayabilirsiniz.</string>
+    <string name="how_to_add_fuel">Nasıl yakıt eklerim?</string>
+    <string name="how_to_add_fuel_desc">FuelSpot istasyona yakıt almaya gittiğinizde bunu tespit edip size bildirim gönderecektir. Bildirime tıklayarak yakıt ekleme yapabilrisiniz.</string>
+    <string name="info_saved_welcome">Bilgileriniz kaydedildi. FuelSpot\'a tekrardan hoşgeldiniz!</string>
+    <string name="enter_plate_no">Lütfen plakanızı giriniz</string>
+    <string name="plate_no_exist">Bu plaka daha önce sisteme kaydedilmiş…</string>
+    <string name="vehicle_added">Araç eklendi</string>
+    <string name="error">Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz…</string>
+    <string name="location_fetching">Konum bilgisi çekiliyor…</string>
+    <string name="permission_denied">İzin reddedildi&#8230;</string>
+    <!-- WelcomeActivity-->
+
+    <!-- MainActivity-->
+    <string name="tab_stations">İstasyonlar</string>
+    <string name="tab_news">Güncel</string>
+    <string name="tab_vehicle">Otomobil</string>
+    <string name="tab_profile">Profil</string>
+    <string name="tab_settings">Ayarlar</string>
+    <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
+
+    <!-- FragmentStations-->
+    <string name="sort">Sırala</string>
+    <string name="see_all">Hepsini gör</string>
+    <string name="station_not_found_retry">İstasyon bulunamadı. Yeni menzil</string>
+    <string name="metre">metre</string>
+    <string name="no_station">Yakın çevrede istasyon bulunamadı…</string>
+    <string name="error_no_location">Konumunuzu tespit edemedik. Lütfen konum ayarlarını kontrol ediniz</string>
+    <!-- FragmentStations-->
+
+    <!-- FragmentNews-->
+    <string name="latest_news">Son haberler</string>
+    <string name="fuelspot_fuel_index">FuelSpot Akaryakıt Endeksi</string>
+    <string name="price_index">Fiyat endeksi</string>
+    <string name="volume">Hacim</string>
+    <string name="no_news">Ülkeniz hakkında herhangi bir haber bulamadık…</string>
+    <string name="last_update">Son güncelleme</string>
+    <!-- FragmentNews-->
+
+    <!-- FragmentAutomobile-->
+    <string name="edit">Düzenle</string>
+    <string name="user_purchases">Yakıt alımlarınız</string>
+    <string name="no_purchase_user">Henüz hiç yakıt eklememişsiniz Yakıt alımlarınız ve detayları burada listelenecek…</string>
+    <string name="no_purchase_note">Not: Yakıt ekleme sisteminin sorunsuz çalışması için konum servislerinin açık olması gerekmektedir.</string>
+    <!-- FragmentAutomobile-->
+
+    <!-- FragmentProfile-->
+    <string name="favorites">Favoriler</string>
+    <string name="store">Mağaza</string>
+    <string name="help">Yardım</string>
+    <string name="automobiles">Otomobiller</string>
+    <string name="add_vehicle">Araç ekle</string>
+    <string name="no_comment_user">Henüz hiç yorum yazmamışsın. Yazdığın yorumlar ve gelen cevaplar burada görüntülenecek…</string>
+    <string name="automobile_selected">Araç seçildi</string>
+    <!-- FragmentProfile-->
+
+    <!-- FragmentSettings-->
+    <string name="settings">Ayarlar</string>
+    <string name="country">Ülke</string>
+    <string name="language">Dil</string>
+    <string name="currency">Para birimi</string>
+    <string name="units">Ölçü sistemi</string>
+    <string name="appVersion">Uygulama sürümü:</string>
+    <string name="updating_tax">Vergi oranları güncelleniyor</string>
+    <string name="update_tax_rates">Vergi oranlarını güncelle</string>
+    <string name="update_tax_success">Vergi oranları başarıyla güncellendi…</string>
+    <string name="stats">İstatistikler</string>
+    <string name="tax">Vergi</string>
+    <string name="location_notifications">Konum servisleri</string>
+    <string name="location_notification_on">Konum servisleri açık</string>
+    <string name="location_notification_off">Konum servisleri kapalı</string>
+    <string name="location_notifications_desc">Eğer konum servislerini kapatırsanız, yakıt ekleme sistemi çalışmayacaktır.</string>
+    <string name="registered_station_number">Kayıtlı istasyon sayısı</string>
+    <string name="privacy">Gizlilik</string>
+    <string name="enroll_beta">Beta testine katıl</string>
+    <string name="feedback">Geri-bildirim</string>
+    <string name="rate_app">FuelSpot\'ı puanla!</string>
+    <string name="terms_and_agreements">Şartlar &amp; Koşullar</string>
+    <string name="fuel_dist_comp">Akaryakıt dağıtım şirketleri</string>
+    <string name="add_message">Lütfen mesajınızı giriniz…</string>
+    <string name="send_feedback">Geri-bildirim gönder</string>
+    <string name="feedback_sending">Geri-bildirim gönderiliyor</string>
+    <string name="thanks_for_feedback">Geri bildiriminiz için teşekkür ederiz!</string>
+    <!-- FragmentSettings-->
+    <!-- MainActivity-->
+
+    <!-- StationDetails-->
+    <string name="menu_go">İstasyona git</string>
+    <string name="menu_fav">Favorilere ekle</string>
+    <string name="menu_share">İstasyonu paylaş</string>>
+    <string name="fab_comment">Yorum yaz</string>
+    <string name="fab_report">İstasyonu bildir</string>
+    <string name="fab_report_price">Fiyatları bildir</string>
+    <string name="HundredDollarText">100 ₺ ile şunları alabilirsin:</string>
+    <string name="facilities">Tesisler</string>
+    <string name="campaigns">Kampanyalar</string>
+    <string name="comments">Yorumlar</string>
+    <string name="priceHistory">Fiyat geçmişi</string>
+    <string name="no_campaign_text">Bu istasyon için henüz hiç kampanya eklenmemiş…</string>
+    <string name="no_comment_text">Bu istasyon için henüz hiç yorum yazılmamış…</string>
+
+    <string-array name="report_reasons">
+        <item>İstasyon mevcut değil</item>
+        <item>Mevcut bir yerin kopyası</item>
+        <item>Hatalı istasyon bilgileri</item>
+        <item>Hatalı tesis bilgileri</item>
+        <item>Hizmet ve kalite problemleri</item>
+        <item>Fiyatlar uygulamadakinden farklı!</item>
+        <item>Diğer</item>
+    </string-array>
+
+    <string name="send_report_desc">Eğer bu istasyondaki fiyatları biliyorsan bize gönderebilirsin. Gönderilen her bildirimi dikkatlice inceliyoruz. Bildiriminiz onaylandığında ödül hesabınıza anında yansıtılacaktır.</string>
+    <string name="send_report">Raporu gönder</string>
+    <string name="add_answer">Cevapla</string>
+    <string name="empty_comment">Lütfen yorumunuzu giriniz…</string>
+    <string name="station_manager">İstasyon Yetkilisi</string>
+    <string name="add_comment">Yorum ekle</string>
+    <string name="comment_adding">Yorumunuz ekleniyor</string>
+    <string name="add_comment_success">Yorum başarıyla eklendi</string>
+    <string name="comment_updating">Yorumunuz güncelleniyor</string>
+    <string name="update_comment">Yorumu güncelle</string>
+    <string name="comment_update_success">Yorum başarıyla güncellenddi</string>
+    <string name="sending_report">Rapor gönderiliyor</string>
+    <string name="report_send_success">Rapor başarıyla gönderildi. En kısa sürede incelenecektir.</string>
+    <string name="added_to_favs">Favorilere eklendi</string>
+    <string name="removed_from_favs">Favorilerden çıkarıldı</string>
+    <!-- StationDetails-->
+
+    <!-- StationComments-->
+    <string name="remove_answer">Cevabı sil?</string>
+    <string name="answer_it">Cevapla!</string>
+    <string name="remove_comment">Yorumu sil?</string>
+    <string name="empty_answer">Lütfen cevabınızı giriniz…</string>
+    <string name="answer_delete_success">Cevap başarıyla silindi</string>
+    <string name="comment_delete_success">Yorum başarıyla silindi</string>
+    <!-- StationComments-->
+
+    <!-- AutomobileEdit-->
+    <string name="save">Kaydet</string>
+    <string name="saved">Kaydedildi…</string>
+    <string name="vehicle_updating">Otomobil güncelleniyor</string>
+    <string name="vehicle_deleting">Otomobil silinyor</string>
+    <string name="remove_vehicle">Otomobili sil?</string>
+    <string name="delete">Sil</string>
+    <string name="at_least_2_vehicle">Araç silebilmek için en az 2 aracınız olmalıdır.</string>
+    <string name="vehicle_update_success">Araç başarıyla güncellenddi</string>
+    <string name="vehicle_delete_success">Araç silindi…</string>
+    <!-- AutomobileEdit-->
+
+    <!-- AddAutomobile-->
+    <string name="registering_vehicle">Araç kaydediliyor</string>
+    <string name="please_wait">Lütfen bekleyiniz…</string>
+    <!-- AddAutomobile-->
+
+    <!-- UserPurchases-->
+    <!-- UserPurchases-->
+
+    <!-- PurchaseDetails-->
+    <!-- PurchaseDetails-->
+
+    <!-- PurchaseDetails-->
+    <string name="purchase">Satınalma</string>
+    <string name="type">Tür</string>
+    <string name="amount">Miktar</string>
+    <string name="unit_price">Birim fiyat</string>
+    <string name="subtotal">Ara toplam</string>
+    <string name="total">Toplam</string>
+    <string name="bonus">Bonus</string>
+    <!-- PurchaseDetails-->
+
+    <!-- ProfileEdit-->
+    <string name="fullname">Ad-Soyad</string>
+    <string name="email">E-posta</string>
+    <string name="phone">Telefon</string>
+    <string name="address">Adres</string>
+    <string name="birthday">Doğum günü</string>
+    <string name="gender">Cinsiyet</string>
+    <string name="male">Erkek</string>
+    <string name="female">Kadın</string>
+    <string name="other">Diğer</string>
+    <string name="log_out">Çıkış yap</string>
+    <string name="profile_updating">Profiliniz güncelleniyor</string>
+    <string name="pick_your_birthday">Doğum gününüzü seçin</string>
+    <string name="set">Seç</string>
+    <string name="cancel">İptal</string>
+    <!-- ProfileEdit-->
+
+    <!-- UserFavorites-->
+    <string name="no_favorite_station">Favorilerinize hiç istasyon eklememişsiniz…</string>
+    <string name="less_than_3_favs">3\'ten fazla istasyonu aynı anda takip edebilmek için premium sürüme geç!</string>
+    <!-- UserFavorites-->
+
+    <!-- UserStore-->
+    <string name="banking_activities">Son hesap hareketleri</string>
+    <string name="banking_activities_desc">Burada FuelSpot üzerinde yapılan son hesap hareketlerinizi (bonus/ödüller ve satın almalar dahil, abonelikler hariç) görebilirsiniz. Aboneliklerinizi (2xRange &amp; Premium) Google Play uygulaması üzeirnden yönetebilirsiniz.</string>
+    <string name="current_balance">Mevcut bakiye</string>
+    <string name="premium_version">Premium sürüm</string>
+    <string name="premium_version_desc">2x-Menzil + Reklamsız + Sınırsız Favori İstasyon</string>
+    <string name="start_subscription">Üyeliği başlat</string>
+    <string name="double_range">2x-Menzil</string>
+    <string name="double_range_desc">Menzilinizi 2\'ye katlar! (5000 metre)</string>
+    <string name="buy">Buy</string>
+    <!-- UserStore-->
+
+    <!-- UserComments-->
+    <!-- UserComments-->
+
+    <!-- AddFuel-->
+    <string name="geofence_notification_title">Yakıt mı alıyorsun? Eklemek için hemen tıkla!</string>
+    <string name="station_info">İstasyon bilgileri</string>
+    <string name="automobile_info">Araç bilgileri</string>
+    <string name="add_bill_photo_desc">Fiş/Fatura fotoğrafı ekleyerek %1 bonus kazanabilirsin. Satın alma incelendikten ve onaylandıktan sonra bonus hemen hesabına yansıtılacaktır.</string>
+    <string name="add_fuel">Yakıt ekle</string>
+    <string name="low_kilometer">Aracınızın kilometresi önceki satın almaya göre daha yüksek olmalı</string>
+    <string name="empty_kilometer">Kilometre 0\'dan farklı olmalı</string>
+    <string name="empty_total_price">Lütfen ne kadar yakıt aldığınızı giriniz</string>
+    <string name="no_internet_connection">İnternet bağlantınızda bir sorun var. Lütfen kontrol ettikten sonra tekrar deneyiniz…</string>
+    <string name="adding_fuel">Yakıt ekleniyor…</string>
+    <string name="fuel_add_success">Yakıt başarıyla eklendi…</string>
+    <!-- AddFuel-->
+
+    <!-- SuperWelcome-->
+    <string name="license_no">EPDK Lisans No</string>
+    <string name="terms_accepted_text"><a href='https://fuel-spot.com/terms-and-conditions'>Şartlar ve Koşullar</a>\'ı okudum, kabul ediyorum.</string>
+    <string name="go_to_station_text">Kayıt işlemini tamamlayabilmek için istasyonunuzda olmalısınız. İstasyona menziline girdiğinizde (50 metre) bu yazı yeşile dönecek ve istasyon bilgiler otomatik olarak çekilecektir.</string>
+    <!-- SuperWelcome-->
+
+    <!-- SuperMainActivity-->
+    <string name="station_waiting_approval">Hesabınız onay sürecindedir. Temsilcilerimiz en kısa sürede sizinle iletişime geçecekler.</string>
+
+    <!-- FragmentMyStation-->
+    <string name="tab_mystation">MyStation</string>
+    <string name="station_update_desc">Buradan temel istasyon bilgilerini (fiyatlar, tesisler, adres…) düzenleyebilsin.</string>
+    <string name="comments_section_desc">İstasyonun için yazılan yorumları burada görebilir ve cevaplayabilirsin.</string>
+    <string name="campaign_section_desc">Geçmiş ve devam etmekte olan kampanyaları buradan yönetebilirsin</string>
+    <string name="purchases">Satın almalar</string>
+    <string name="purchase_section_desc">Buradan FuelSpot üzerinden gerçekleştirilen satın almaları görebilirsin</string>
+    <!-- FragmentMyStation-->
+
+    <!-- FragmentSuperProfile-->
+    <!-- FragmentSuperProfile-->
+    <!-- SuperMainActivity-->
+
+    <!-- SuperProfileEdit-->
+    <!-- SuperProfileEdit-->
+
+    <!-- SuperUpdateStation-->
+    <string name="prices">Fiyatlar</string>
+    <string name="stationVerifiedText">Bu istasyon FuelSpot tarafından onaylanmıştır.</string>
+    <string name="update_station">İstasyonu güncelle</string>
+    <string name="station_update_success">İstasyon başarıyla güncellendi…</string>
+    <string name="station_update_fail">İstayon güncellenirken bir hata oluştu… Lütfen tekrar deneyiniz.</string>
+    <string name="note_for_prices">Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
+    <!-- SuperUpdateStation-->
+
+    <!-- SuperCampaigns-->
+    <!-- SuperCampaigns-->
+
+    <!-- SuperPurchases-->
+    <!-- SuperPurchases-->
+
+    <!-- SuperStore-->
+    <!-- SuperStore-->
+
+    <!-- AddStation-->
+    <string name="add_station">İstasyon ekle</string>
+    <!-- AddStation-->
+</resources>

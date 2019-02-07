@@ -65,22 +65,30 @@ import static com.fuelspot.MainActivity.vehicleID;
 public class FragmentAutomobile extends Fragment {
 
     public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
-    CircleImageView carPhotoHolder;
+    private CircleImageView carPhotoHolder;
 
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
 
-    SharedPreferences prefs;
-    ImageView fuelTypeIndicator, fuelTypeIndicator2;
-    TextView kilometerText, fullname, fuelType, fuelType2, avgText, avgPrice, emission;
-    RelativeTimeTextView lastUpdated;
-    RelativeLayout userNoPurchaseLayout;
-    RequestQueue requestQueue;
-    View headerView;
-    Button buttonSeeAllPurchases;
-    View view;
-    RelativeLayout regularLayout, noAracLayout;
+    private SharedPreferences prefs;
+    private ImageView fuelTypeIndicator;
+    private ImageView fuelTypeIndicator2;
+    private TextView kilometerText;
+    private TextView fullname;
+    private TextView fuelType;
+    private TextView fuelType2;
+    private TextView avgText;
+    private TextView avgPrice;
+    private TextView emission;
+    private RelativeTimeTextView lastUpdated;
+    private RelativeLayout userNoPurchaseLayout;
+    private RequestQueue requestQueue;
+    private View headerView;
+    private Button buttonSeeAllPurchases;
+    private View view;
+    private RelativeLayout regularLayout;
+    private RelativeLayout noAracLayout;
 
     public static FragmentAutomobile newInstance() {
         Bundle args = new Bundle();
@@ -126,7 +134,7 @@ public class FragmentAutomobile extends Fragment {
         return view;
     }
 
-    public void loadVehicleProfile() {
+    private void loadVehicleProfile() {
         //ProfilePhoto
         carPhotoHolder = headerView.findViewById(R.id.carPicture);
         RequestOptions options = new RequestOptions()
@@ -260,7 +268,7 @@ public class FragmentAutomobile extends Fragment {
         fetchVehiclePurchases();
     }
 
-    public void fetchVehiclePurchases() {
+    private void fetchVehiclePurchases() {
         vehiclePurchaseList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES),
                 new Response.Listener<String>() {
@@ -386,7 +394,7 @@ public class FragmentAutomobile extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public float calculateAverageCons() {
+    private float calculateAverageCons() {
         float totalLiter = 0;
         float kilometerDifference = 0;
         if (vehiclePurchaseList.size() > 1) {
@@ -402,7 +410,7 @@ public class FragmentAutomobile extends Fragment {
         return averageCons;
     }
 
-    public float calculateAvgPrice() {
+    private float calculateAvgPrice() {
         float totalPrice = 0;
         float kilometerDifference = 0;
         if (vehiclePurchaseList.size() > 1) {
@@ -418,7 +426,7 @@ public class FragmentAutomobile extends Fragment {
         return averagePrice;
     }
 
-    public int calculateCarbonEmission() {
+    private int calculateCarbonEmission() {
         int emissionGasoline = 2392;
         int emissionDiesel = 2640;
         int emissionlpg = 1665;

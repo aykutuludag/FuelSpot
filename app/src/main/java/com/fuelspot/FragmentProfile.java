@@ -1,8 +1,6 @@
 package com.fuelspot;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,18 +57,19 @@ public class FragmentProfile extends Fragment {
     public static List<CommentItem> userCommentList = new ArrayList<>();
     public static List<BankingItem> userBankingList = new ArrayList<>();
 
-    RecyclerView mRecyclerView, mRecyclerView2;
-    RecyclerView.Adapter mAdapter, mAdapter2;
-    RequestOptions options;
-    CircleImageView userProfileHolder;
-    View headerView;
-    RelativeLayout userNoCommentLayout;
-    Button buttonSeeAllComments;
-    TextView textViewFMoney;
-    RequestQueue requestQueue;
-    SharedPreferences prefs;
-    View rootView;
-    Button addAutomobile;
+    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView2;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mAdapter2;
+    private RequestOptions options;
+    private CircleImageView userProfileHolder;
+    private View headerView;
+    private RelativeLayout userNoCommentLayout;
+    private Button buttonSeeAllComments;
+    private TextView textViewFMoney;
+    private RequestQueue requestQueue;
+    private View rootView;
+    private Button addAutomobile;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -94,7 +93,6 @@ public class FragmentProfile extends Fragment {
 
             headerView = rootView.findViewById(R.id.header_profile);
 
-            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             requestQueue = Volley.newRequestQueue(getActivity());
 
             ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
@@ -138,7 +136,7 @@ public class FragmentProfile extends Fragment {
         return rootView;
     }
 
-    void fetchBanking() {
+    private void fetchBanking() {
         userBankingList.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_BANKING),
@@ -199,7 +197,7 @@ public class FragmentProfile extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void loadProfile() {
+    private void loadProfile() {
         userProfileHolder = headerView.findViewById(R.id.profileImage);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
@@ -255,7 +253,7 @@ public class FragmentProfile extends Fragment {
         fetchComments();
     }
 
-    public void fetchComments() {
+    private void fetchComments() {
         userCommentList.clear();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_COMMENTS),

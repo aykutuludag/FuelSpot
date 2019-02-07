@@ -36,18 +36,22 @@ import static com.fuelspot.MainActivity.userFSMoney;
 
 public class StoreActivity extends AppCompatActivity {
 
-    public static final int PURCHASE_PREMIUM = 13200;
-    public static final int PURCHASE_DOUBLE_RANGE = 63000;
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    GridLayoutManager mLayoutManager;
-    TextView textViewCurrentBalance;
-    ServiceConnection mServiceConn;
-    IInAppBillingService mService;
-    SharedPreferences prefs;
-    Window window;
-    Toolbar toolbar;
-    Button buttonBuyPremium, buttonBuyDoubleRange, buttonAracKokusu, buttonLastikSpreyi, buttonBakimKiti;
+    private static final int PURCHASE_PREMIUM = 13200;
+    private static final int PURCHASE_DOUBLE_RANGE = 63000;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private GridLayoutManager mLayoutManager;
+    private TextView textViewCurrentBalance;
+    private ServiceConnection mServiceConn;
+    private IInAppBillingService mService;
+    private SharedPreferences prefs;
+    private Window window;
+    private Toolbar toolbar;
+    private Button buttonBuyPremium;
+    private Button buttonBuyDoubleRange;
+    private Button buttonAracKokusu;
+    private Button buttonLastikSpreyi;
+    private Button buttonBakimKiti;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +165,7 @@ public class StoreActivity extends AppCompatActivity {
         InAppBilling();
     }
 
-    void loadTransactions() {
+    private void loadTransactions() {
         if (userBankingList != null && userBankingList.size() > 0) {
             mAdapter = new BankingAdapter(StoreActivity.this, userBankingList);
             mLayoutManager = new GridLayoutManager(StoreActivity.this, 1);
@@ -191,7 +195,7 @@ public class StoreActivity extends AppCompatActivity {
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
+    private void buyPremium() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(StoreActivity.this,
                 "Premium sürüm reklamları kaldırır ve menzilinizi 2 katına çıkarır.", Toast.LENGTH_LONG)
                 .show();
@@ -203,7 +207,7 @@ public class StoreActivity extends AppCompatActivity {
                 0, 0);
     }
 
-    public void buyDoubleRange() throws RemoteException, IntentSender.SendIntentException {
+    private void buyDoubleRange() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(StoreActivity.this,
                 "Menzilinizi 2 kat artırır. 5000 metreye çapınızdaki bütün istasyonları görebilirsiniz", Toast.LENGTH_LONG)
                 .show();
@@ -258,7 +262,7 @@ public class StoreActivity extends AppCompatActivity {
         }
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

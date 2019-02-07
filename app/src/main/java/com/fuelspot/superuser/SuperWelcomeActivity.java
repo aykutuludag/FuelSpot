@@ -27,7 +27,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
@@ -148,30 +147,47 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    SharedPreferences prefs;
-    RequestQueue requestQueue;
+    private SharedPreferences prefs;
+    private RequestQueue requestQueue;
 
-    ScrollView welcome2;
-    RelativeLayout promoLayout, registerLayout, welcome1, welcome3;
-    Button register, continueButton, finishRegistration, finishHowTo;
-    MapView mMapView;
-    Circle circle;
-    GoogleApiClient mGoogleApiClient;
-    SignInButton signInButton;
-    CallbackManager callbackManager;
-    LoginButton loginButton;
-    TextView stationHint;
-    EditText editTextStationName, editTextStationAddress, editTextStationLicense, editTextFullName, editTextEmail, editTextPhone, editTextBirthday;
-    CircleImageView userPhoto;
-    CheckBox termsAndConditions;
-    RadioGroup editGender;
-    RadioButton bMale, bFemale, bOther;
-    int calendarYear, calendarMonth, calendarDay;
-    VideoView background;
-    FusedLocationProviderClient mFusedLocationClient;
-    Bitmap bitmap;
-    RequestOptions options;
-    ProgressDialog loading0, loading;
+    private ScrollView welcome2;
+    private RelativeLayout promoLayout;
+    private RelativeLayout registerLayout;
+    private RelativeLayout welcome1;
+    private RelativeLayout welcome3;
+    private Button register;
+    private Button continueButton;
+    private Button finishRegistration;
+    private Button finishHowTo;
+    private MapView mMapView;
+    private Circle circle;
+    private GoogleApiClient mGoogleApiClient;
+    private SignInButton signInButton;
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private TextView stationHint;
+    private EditText editTextStationName;
+    private EditText editTextStationAddress;
+    private EditText editTextStationLicense;
+    private EditText editTextFullName;
+    private EditText editTextEmail;
+    private EditText editTextPhone;
+    private EditText editTextBirthday;
+    private CircleImageView userPhoto;
+    private CheckBox termsAndConditions;
+    private RadioGroup editGender;
+    private RadioButton bMale;
+    private RadioButton bFemale;
+    private RadioButton bOther;
+    private int calendarYear;
+    private int calendarMonth;
+    private int calendarDay;
+    private VideoView background;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Bitmap bitmap;
+    private RequestOptions options;
+    private ProgressDialog loading0;
+    private ProgressDialog loading;
     private GoogleMap googleMap;
 
     @Override
@@ -201,14 +217,14 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         // ProgressDialogs
         loading0 = new ProgressDialog(SuperWelcomeActivity.this);
-        loading0.setTitle("Giriş yapılıyor");
-        loading0.setMessage("Lütfen bekleyiniz...");
+        loading0.setTitle(getString(R.string.logging_in));
+        loading0.setMessage(getString(R.string.please_wait));
         loading0.setIndeterminate(true);
         loading0.setCancelable(false);
 
         loading = new ProgressDialog(SuperWelcomeActivity.this);
-        loading.setTitle("Bilgileriniz kaydediliyor");
-        loading.setMessage("Lütfen bekleyiniz...");
+        loading.setTitle(getString(R.string.profile_updating));
+        loading.setMessage(getString(R.string.please_wait));
         loading.setIndeterminate(true);
         loading.setCancelable(false);
 
@@ -226,7 +242,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         /* LAYOUT 02 */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PROFILE))
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .requestProfile()
                 .requestEmail()
                 .build();
@@ -274,6 +289,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -532,14 +548,14 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         fetchOwnedStations();
                     }
                 } catch (Exception e) {
-                    // Do nothing
+                    e.printStackTrace();
                 }
             }
         }
     }
 
-    public void fetchTaxRates() {
-        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, "Vergi oranları çekiliyor", "Lütfen bekleyiniz...", false, false);
+    private void fetchTaxRates() {
+        final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, getString(R.string.updating_tax), getString(R.string.please_wait), false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
                 new Response.Listener<String>() {
                     @Override
@@ -572,6 +588,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.toString();
                         continueButton.setAlpha(1.0f);
                         continueButton.setClickable(true);
                         loading.dismiss();
@@ -595,7 +612,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         requestQueue.add(stringRequest);
     }
 
-    void fetchOwnedStations() {
+    private void fetchOwnedStations() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
                 new Response.Listener<String>() {
                     @Override
@@ -610,7 +627,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     isSuperUser = true;
                                     prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
-                                    Toast.makeText(SuperWelcomeActivity.this, "FuelSpot'a tekrardan hoşgeldiniz!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -620,6 +637,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     layout4();
                                 }
                             } catch (JSONException e) {
+                                e.printStackTrace();
                                 welcome2.setVisibility(View.VISIBLE);
                                 welcome1.setVisibility(View.GONE);
                                 layout4();
@@ -634,6 +652,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
                         welcome2.setVisibility(View.VISIBLE);
                         welcome1.setVisibility(View.GONE);
                         layout4();
@@ -794,9 +813,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 }, calendarYear, calendarMonth, calendarDay);
 
-                datePicker.setTitle("Bir tarih seçin");
-                datePicker.setButton(DatePickerDialog.BUTTON_POSITIVE, "Set", datePicker);
-                datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", datePicker);
+                datePicker.setTitle(getString(R.string.pick_your_birthday));
+                datePicker.setButton(DatePickerDialog.BUTTON_POSITIVE, getString(R.string.set), datePicker);
+                datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, getString(R.string.cancel), datePicker);
                 datePicker.show();
             }
 
@@ -887,8 +906,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         termsAndConditions = findViewById(R.id.checkBoxTerms);
         termsAndConditions.setText("");
-        termsAndConditions.setText(Html.fromHtml(
-                "Şartlar ve koşulları okudum, <a href='https://fuel-spot.com/terms-and-conditions'>kabul ediyorum.</a>"));
         termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -926,7 +943,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         /* LAYOUT 04 END */
     }
 
-    void loadMap() {
+    private void loadMap() {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
@@ -1106,13 +1123,13 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         requestQueue.add(stringRequest);
     }
 
-    void loadStationDetails() {
+    private void loadStationDetails() {
         editTextStationName.setText(superStationName);
         editTextStationAddress.setText(superStationAddress);
         editTextStationLicense.setText(superLicenseNo);
     }
 
-    void superUserRegistration() {
+    private void superUserRegistration() {
         loading.show();
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_REGISTRATION),
@@ -1166,7 +1183,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         requestQueue.add(stringRequest);
     }
 
-    public void updateSuperUser() {
+    private void updateSuperUser() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
@@ -1175,13 +1192,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         if (res != null && res.length() > 0) {
                             switch (res) {
                                 case "Success":
-                                    Toast.makeText(SuperWelcomeActivity.this, "Bilgileriniz kaydedildi. FuelSpot'a hoşgeldiniz...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_SHORT).show();
                                     welcome2.setVisibility(View.GONE);
                                     welcome3.setVisibility(View.VISIBLE);
                                     layout5();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
@@ -1227,7 +1241,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         requestQueue.add(stringRequest);
     }
 
-    void layout5() {
+    private void layout5() {
         isSigned = true;
         prefs.edit().putBoolean("isSigned", isSigned).apply();
 
@@ -1291,7 +1305,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 mLocationRequest.setInterval(5000);
                                 mLocationRequest.setFastestInterval(1000);
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                Toast.makeText(SuperWelcomeActivity.this, "Konum bilgisi çekilemedi. Tekrar deneniyor...", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -1318,7 +1332,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();

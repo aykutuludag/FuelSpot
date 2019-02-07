@@ -7,6 +7,7 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
+    <string name="copyright_text" translatable="false">FuelSpot 2019 - Made with ♥ in Ankara</string>
     <!-- Units-->
     <string name="unitSystem1" translatable="false">Litre</string>
     <string name="unitSystem2" translatable="false">Galon</string>
@@ -80,6 +81,7 @@
     <string name="loginWithGoogle">Login with Google</string>
     <string name="loginWithFacebook">Login with Facebook</string>
     <string name="loginWithSuperUser">Are you station owner?</string>
+    <string name="logging_in">Logging in</string>
     <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
     <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
     <string name="error_login_cancel">Login was canceled by user&#8230;</string>
@@ -112,7 +114,7 @@
     <string name="how_to_register_car_desc">You can add your vehicle clicking add new vehicle button on your profile. To earn bonus, don\'t forget to add your car!</string>
     <string name="how_to_add_fuel">How to add fuel?</string>
     <string name="how_to_add_fuel_desc">When you go to station, FuelSpot will detect it and send notification. Follow instruction and get your bonus!</string>
-    <string name="info_saved_welcome">Your info saved. Welcome to FuelSpot!</string>
+    <string name="info_saved_welcome">Your information was saved. Welcome to FuelSpot!</string>
     <string name="enter_plate_no">Please enter your plate no</string>
     <string name="plate_no_exist">This plate no has been added to system…</string>
     <string name="vehicle_added">Automobile added</string>
@@ -148,6 +150,7 @@
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
+    <string name="edit">Edit</string>
     <string name="user_purchases">Your purchases</string>
     <string name="no_purchase_user">You didn\'t purchase any fuel. Your purchases and details will be listed here…</string>
     <string name="no_purchase_note">Note: Location services should be open for working fuel adding system seamlessly.</string>
@@ -160,6 +163,7 @@
     <string name="automobiles">Automobiles</string>
     <string name="add_vehicle">Add automobile</string>
     <string name="no_comment_user">You didn\'t write any comment. Your comments and answers will be listed here…</string>
+    <string name="automobile_selected">Automobile selected</string>
     <!-- FragmentProfile-->
 
     <!-- FragmentSettings-->
@@ -167,23 +171,23 @@
     <string name="country">Country</string>
     <string name="language">Language</string>
     <string name="currency">Currency</string>
-    <string name="units">Units</string>
+    <string name="units">Unit system</string>
     <string name="appVersion">Application version:</string>
+    <string name="updating_tax">Updating tax rates</string>
     <string name="update_tax_rates">Update tax rates</string>
-    <string name="update_tax_success">Tax rates updated successfully...</string>
+    <string name="update_tax_success">Tax rates updated successfully…</string>
     <string name="stats">Stats</string>
     <string name="tax">Tax</string>
-    <string name="location_notifications">Location notifications</string>
+    <string name="location_notifications">Location services</string>
     <string name="location_notification_on">Location services on</string>
     <string name="location_notification_off">Location services off</string>
-    <string name="location_notifications_desc">If you off the location notifications, you won\'t able to add fuel</string>
+    <string name="location_notifications_desc">If you off the location services, you won\'t able to add fuel</string>
     <string name="registered_station_number">Registered station number</string>
     <string name="privacy">Privacy</string>
     <string name="enroll_beta">Enroll beta test</string>
     <string name="feedback">Feedback</string>
     <string name="rate_app">Rate FuelSpot!</string>
     <string name="terms_and_agreements">Terms &amp; Agreements</string>
-    <string name="copyright_text">FuelSpot 2019 - Made with ♥ in Ankara</string>
     <string name="fuel_dist_comp">Fuel distribution companies</string>
     <string name="add_message">Please add your message…</string>
     <string name="send_feedback">Send feedback</string>
@@ -219,16 +223,19 @@
 
     <string name="send_report_desc">If you know the current prices for this station you can send us. We are investigating every report. When we approve the report, the prize will be reflected on the account.</string>
     <string name="send_report">Send report</string>
-
-    <string name="add_comment">Add comment</string>
     <string name="add_answer">Add answer</string>
-    <string name="update_comment">Update comment</string>
     <string name="empty_comment">Please enter your comment…</string>
-    <string name="hint_enter_answer">Enter your answer here…</string>
     <string name="station_manager">Station manager</string>
-    <string name="comment_updating">Comment updating</string>
+    <string name="add_comment">Add comment</string>
     <string name="comment_adding">Comment adding</string>
     <string name="add_comment_success">Comment added successfully</string>
+    <string name="comment_updating">Comment updating</string>
+    <string name="update_comment">Update comment</string>
+    <string name="comment_update_success">Comment updated successfully</string>
+    <string name="sending_report">Report sending</string>
+    <string name="report_send_success">Report sent successfully. We will investigate it as soon as possible.</string>
+    <string name="added_to_favs">Added to favorites</string>
+    <string name="removed_from_favs">Removed from favorites</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -284,14 +291,20 @@
     <string name="female">Female</string>
     <string name="other">Other</string>
     <string name="log_out">Log out</string>
+    <string name="profile_updating">Updating profile</string>
+    <string name="pick_your_birthday">Pick your birthday</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
     <!-- ProfileEdit-->
 
     <!-- UserFavorites-->
+    <string name="no_favorite_station">You didn\'t add any station to favorites…</string>
+    <string name="less_than_3_favs">If you want to follow more than 3 stations, start premium membership…</string>
     <!-- UserFavorites-->
 
     <!-- UserStore-->
     <string name="banking_activities">Latest transactions</string>
-    <string name="banking_activities_desc">You can see your latest transactions (bonus/rewards and purchases, excluding subscriptions) on FuelSpot. If you want to manage your subscriptions (2xRange &amp; Premium), you can check them on Google Play application.</string>
+    <string name="banking_activities_desc">You can see your latest transactions (including bonus/rewards and purchases, excluding subscriptions) on FuelSpot. If you want to manage your subscriptions (2xRange &amp; Premium), you can check them on Google Play application.</string>
     <string name="current_balance">Current balance</string>
     <string name="premium_version">Premium version</string>
     <string name="premium_version_desc">2x-Range + No-Ads + Unlimited Favorite Station</string>
@@ -320,7 +333,7 @@
 
     <!-- SuperWelcome-->
     <string name="license_no">License no</string>
-    <string name="terms_accepted_text">I have read and accept the Terms and Conditions.</string>
+    <string name="terms_accepted_text">I have read and accept the <a href='https://fuel-spot.com/terms-and-conditions'>Terms and Conditions</a>.</string>
     <string name="go_to_station_text">To complete registration process, you must be at your station. When you enter the station perimeter, this text will turn into green and station info will be fetched automatically.</string>
     <!-- SuperWelcome-->
 

@@ -2,7 +2,6 @@ package com.fuelspot.receiver;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,15 +51,14 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    NotificationCompat.Builder builder;
-    NotificationManager notificationManager;
-    GoogleApiClient client;
-    PendingIntent mPendingIntent;
-    AwarenessFence locationFence, vehicleFence;
-    Context mContext;
-    LocationRequest mLocationRequest;
-    SharedPreferences prefs;
-    LocationCallback mLocationCallback;
+    private GoogleApiClient client;
+    private PendingIntent mPendingIntent;
+    private AwarenessFence locationFence;
+    private AwarenessFence vehicleFence;
+    private Context mContext;
+    private LocationRequest mLocationRequest;
+    private SharedPreferences prefs;
+    private LocationCallback mLocationCallback;
     private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
@@ -79,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    void scheduleAlarm() {
+    private void scheduleAlarm() {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         Intent myIntent = new Intent(mContext, AlarmReceiver.class);
@@ -92,7 +89,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     @SuppressLint("MissingPermission")
-    void createFences() {
+    private void createFences() {
         // Connect to Awareness API
         client = new GoogleApiClient.Builder(mContext)
                 .addApi(Awareness.API)
@@ -217,7 +214,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         requestQueue.add(stringRequest);
     }
 
-    void reTry() {
+    private void reTry() {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
         switch (mapDefaultRange) {
             case 2500:
@@ -240,7 +237,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         fetchStations();
     }
 
-    protected void registerFence(final String fenceKey, final AwarenessFence fence) {
+    private void registerFence(final String fenceKey, final AwarenessFence fence) {
         Intent intent = new Intent(FENCE_RECEIVER_ACTION);
         mPendingIntent = PendingIntent.getBroadcast(mContext, 13200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Awareness.FenceApi.updateFences(client, new FenceUpdateRequest.Builder().addFence(fenceKey, fence, mPendingIntent).build()).setResultCallback(new ResultCallback<Status>() {

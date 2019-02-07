@@ -70,22 +70,44 @@ import static com.fuelspot.MainActivity.username;
 
 public class PurchaseDetails extends AppCompatActivity {
 
-    RequestOptions options;
-    MapView mMapView;
-    GoogleMap googleMap;
-    int purchaseID, fuelType1, fuelType2, isPurchaseVerified;
-    String stationName, iconURL, stationLocation, billPhoto;
-    String purchaseTime;
-    float fuelPrice1, fuelLiter1, fuelTax1, fuelPrice2, fuelLiter2, fuelTax2, totalPrice;
+    private RequestOptions options;
+    private MapView mMapView;
+    private GoogleMap googleMap;
+    private int purchaseID;
+    private int fuelType1;
+    private int fuelType2;
+    private int isPurchaseVerified;
+    private String stationName;
+    private String iconURL;
+    private String stationLocation;
+    private String billPhoto;
+    private String purchaseTime;
+    private float fuelPrice1;
+    private float fuelLiter1;
+    private float fuelTax1;
+    private float fuelPrice2;
+    private float fuelLiter2;
+    private float fuelTax2;
+    private float totalPrice;
 
-    ImageView istasyonLogo, fatura, tur1, tur2;
-    TextView fiyat1, litre1, fiyat2, litre2, birimFiyat1, birimFiyat2, vergi, toplamfiyat;
-    RelativeTimeTextView tarih;
-    Bitmap bitmap;
-    CircleImageView circleImageViewStatus;
-    TextView textViewStatus;
-    Toolbar toolbar;
-    Window window;
+    private ImageView istasyonLogo;
+    private ImageView fatura;
+    private ImageView tur1;
+    private ImageView tur2;
+    private TextView fiyat1;
+    private TextView litre1;
+    private TextView fiyat2;
+    private TextView litre2;
+    private TextView birimFiyat1;
+    private TextView birimFiyat2;
+    private TextView vergi;
+    private TextView toplamfiyat;
+    private RelativeTimeTextView tarih;
+    private Bitmap bitmap;
+    private CircleImageView circleImageViewStatus;
+    private TextView textViewStatus;
+    private Toolbar toolbar;
+    private Window window;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,7 +285,7 @@ public class PurchaseDetails extends AppCompatActivity {
         checkLocationPermission();
     }
 
-    public void checkLocationPermission() {
+    private void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(PurchaseDetails.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PurchaseDetails.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(PurchaseDetails.this, new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
@@ -271,7 +293,7 @@ public class PurchaseDetails extends AppCompatActivity {
         }
     }
 
-    void loadMap() {
+    private void loadMap() {
         //Detect location and set on map
         MapsInitializer.initialize(this.getApplicationContext());
         mMapView.getMapAsync(new OnMapReadyCallback() {
@@ -388,23 +410,14 @@ public class PurchaseDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public String getStringImage(Bitmap bmp) {
-        Bitmap bmp2;
-        if (bmp.getWidth() > 720 || bmp.getHeight() > 1280) {
-            float aspectRatio = bmp.getWidth() / bmp.getHeight();
-            bmp2 = Bitmap.createScaledBitmap(bmp, (int) (720 * aspectRatio), (int) (1280 * aspectRatio), true);
-        } else {
-            bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
-        }
-
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
-
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

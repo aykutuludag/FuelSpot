@@ -112,47 +112,89 @@ import static com.fuelspot.MainActivity.username;
 public class StationDetails extends AppCompatActivity {
 
     public static int stars = 5;
-    public static int choosenStationID, userCommentID, isStationVerified;
-    public static float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
-    public static String lastUpdated, stationName, stationVicinity, stationLocation, iconURL, userComment;
+    public static int choosenStationID;
+    public static int userCommentID;
+    public static float numOfComments;
+    public static float sumOfPoints;
+    public static float stationScore;
+    public static String userComment;
     public static boolean hasAlreadyCommented;
     public static List<CommentItem> stationCommentList = new ArrayList<>();
-    public static List<CampaignItem> campaignList = new ArrayList<>();
-    String facilitiesOfStation;
-    CircleImageView stationIcon;
-    List<Entry> gasolinePriceHistory = new ArrayList<>();
-    List<Entry> dieselPriceHistory = new ArrayList<>();
-    List<Entry> lpgPriceHistory = new ArrayList<>();
-    List<Entry> elecPriceHistory = new ArrayList<>();
-    RelativeTimeTextView textLastUpdated;
+    private static int isStationVerified;
+    private static float gasolinePrice;
+    private static float dieselPrice;
+    private static float lpgPrice;
+    private static float electricityPrice;
+    private static String lastUpdated;
+    private static String stationName;
+    private static String stationVicinity;
+    private static String stationLocation;
+    private static String iconURL;
+    private static List<CampaignItem> campaignList = new ArrayList<>();
+    private String facilitiesOfStation;
+    private CircleImageView stationIcon;
+    private List<Entry> gasolinePriceHistory = new ArrayList<>();
+    private List<Entry> dieselPriceHistory = new ArrayList<>();
+    private List<Entry> lpgPriceHistory = new ArrayList<>();
+    private List<Entry> elecPriceHistory = new ArrayList<>();
+    private RelativeTimeTextView textLastUpdated;
 
-    TextView noCampaignText, noCommentText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, literSectionTitle, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewStationPoint;
-    RecyclerView mRecyclerView, mRecyclerView2;
-    RecyclerView.Adapter mAdapter, mAdapter2;
-    Toolbar toolbar;
-    Window window;
-    FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
-    PopupWindow mPopupWindow;
-    RequestQueue requestQueue;
-    NestedScrollView scrollView;
-    ImageView errorCampaign, errorComment;
-    CircleImageView verifiedSection;
-    CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot;
-    float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
-    RelativeLayout commentSection;
-    Button seeAllComments;
-    LineChart chart;
-    Bitmap bitmap;
-    ImageView reportStationPhoto;
-    ImageView reportPricePhoto;
-    RequestOptions options;
-    WebView webview;
-    SharedPreferences prefs;
-    Drawable favorite;
-    int reportRequest;
-    String reportReason, reportDetails;
-    SimpleDateFormat sdf;
+    private TextView noCampaignText;
+    private TextView noCommentText;
+    private TextView textStationID;
+    private TextView textName;
+    private TextView textVicinity;
+    private TextView textGasoline;
+    private TextView textDiesel;
+    private TextView textLPG;
+    private TextView textElectricity;
+    private TextView literSectionTitle;
+    private TextView textViewGasLt;
+    private TextView textViewDieselLt;
+    private TextView textViewLPGLt;
+    private TextView textViewElectricityLt;
+    private TextView textViewStationPoint;
+    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView2;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mAdapter2;
+    private Toolbar toolbar;
+    private Window window;
+    private FloatingActionMenu materialDesignFAM;
+    private FloatingActionButton floatingActionButton1;
+    private FloatingActionButton floatingActionButton2;
+    private FloatingActionButton floatingActionButton3;
+    private PopupWindow mPopupWindow;
+    private RequestQueue requestQueue;
+    private NestedScrollView scrollView;
+    private ImageView errorCampaign;
+    private ImageView errorComment;
+    private CircleImageView verifiedSection;
+    private CircleImageView imageViewWC;
+    private CircleImageView imageViewMarket;
+    private CircleImageView imageViewCarWash;
+    private CircleImageView imageViewTireRepair;
+    private CircleImageView imageViewMechanic;
+    private CircleImageView imageViewRestaurant;
+    private CircleImageView imageViewParkSpot;
+    private float howMuchGas;
+    private float howMuchDie;
+    private float howMuchLPG;
+    private float howMuchEle;
+    private RelativeLayout commentSection;
+    private Button seeAllComments;
+    private LineChart chart;
+    private Bitmap bitmap;
+    private ImageView reportStationPhoto;
+    private ImageView reportPricePhoto;
+    private RequestOptions options;
+    private WebView webview;
+    private SharedPreferences prefs;
+    private Drawable favorite;
+    private int reportRequest;
+    private String reportReason;
+    private String reportDetails;
+    private SimpleDateFormat sdf;
 
     @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
@@ -332,7 +374,7 @@ public class StationDetails extends AppCompatActivity {
         });
     }
 
-    void fetchStation(final int stationID) {
+    private void fetchStation(final int stationID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
                 new Response.Listener<String>() {
                     @Override
@@ -385,7 +427,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void fetchStationFinance() {
+    private void fetchStationFinance() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override
@@ -507,7 +549,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    void loadStationDetails() {
+    private void loadStationDetails() {
         webview.loadUrl("https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c");
         webview.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
@@ -659,7 +701,7 @@ public class StationDetails extends AppCompatActivity {
         fetchStationComments();
     }
 
-    void fetchCampaigns() {
+    private void fetchCampaigns() {
         campaignList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
                 new Response.Listener<String>() {
@@ -725,7 +767,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void fetchStationComments() {
+    private void fetchStationComments() {
         sumOfPoints = 0;
         numOfComments = 0;
         stationCommentList.clear();
@@ -771,15 +813,15 @@ public class StationDetails extends AppCompatActivity {
                                 }
 
                                 if (hasAlreadyCommented) {
-                                    floatingActionButton1.setLabelText("Yorumu güncelle");
+                                    floatingActionButton1.setLabelText(getString(R.string.update_comment));
                                 } else {
-                                    floatingActionButton1.setLabelText("Yorum yaz");
+                                    floatingActionButton1.setLabelText(getString(R.string.add_comment));
                                 }
 
                                 // Calculate station score
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 stationScore = sumOfPoints / numOfComments;
-                                textViewStationPoint.setText((int) numOfComments + " yorum" + " - " + df.format(stationScore));
+                                textViewStationPoint.setText((int) numOfComments + " " + getString(R.string.comments) + " - " + df.format(stationScore));
 
                                 // Display first three comments
                                 mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
@@ -790,13 +832,13 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView2.setLayoutManager(mLayoutManager);
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
-                                textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
+                                textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
                                 errorComment.setVisibility(View.VISIBLE);
                                 noCommentText.setVisibility(View.VISIBLE);
                             }
                         } else {
                             hasAlreadyCommented = false;
-                            textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
+                            textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
                             errorComment.setVisibility(View.VISIBLE);
                             noCommentText.setVisibility(View.VISIBLE);
                         }
@@ -827,7 +869,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    void addUpdateCommentPopup(View view) {
+    private void addUpdateCommentPopup(View view) {
         LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_comment, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -835,11 +877,11 @@ public class StationDetails extends AppCompatActivity {
             mPopupWindow.setElevation(5.0f);
         }
 
-        TextView titlePopup = customView.findViewById(R.id.campaignPhoto);
+        TextView titlePopup = customView.findViewById(R.id.popup_comment_title);
         if (hasAlreadyCommented) {
-            titlePopup.setText("Yorumunu güncelle");
+            titlePopup.setText(getString(R.string.update_comment));
         } else {
-            titlePopup.setText("Yorum yaz");
+            titlePopup.setText(getString(R.string.add_comment));
         }
 
         EditText getComment = customView.findViewById(R.id.editTextComment);
@@ -898,12 +940,12 @@ public class StationDetails extends AppCompatActivity {
                         addComment();
                     }
                 } else {
-                    Toast.makeText(StationDetails.this, "Lütfen yorumunuzu yazınız", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StationDetails.this, getString(R.string.empty_comment), Toast.LENGTH_SHORT).show();
                 }
             }
 
             private void addComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Yorumunuz ekleniyor", "Lütfen bekleyiniz...", true, false);
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.comment_adding), getString(R.string.please_wait), true, false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
                         new Response.Listener<String>() {
                             @Override
@@ -945,21 +987,33 @@ public class StationDetails extends AppCompatActivity {
             }
 
             private void updateComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Yorumunuz güncelleniyor...", "Lütfen bekleyiniz...", true, false);
+                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.comment_updating), getString(R.string.please_wait), true, false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 loading.dismiss();
-                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                                fetchStationComments();
+
+                                if (response != null && response.length() > 0) {
+                                    switch (response) {
+                                        case "Success":
+                                            Toast.makeText(StationDetails.this, getString(R.string.comment_update_success), Toast.LENGTH_SHORT).show();
+                                            mPopupWindow.dismiss();
+                                            fetchStationComments();
+                                            break;
+                                        default:
+                                            Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
+                                } else {
+                                    Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
+                                Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                                 loading.dismiss();
                             }
                         }) {
@@ -985,7 +1039,7 @@ public class StationDetails extends AppCompatActivity {
         });
     }
 
-    void reportStation(final View view) {
+    private void reportStation(final View view) {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_report, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1068,7 +1122,7 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    public void reportPrices(View view) {
+    private void reportPrices(View view) {
         final float[] benzinFiyat = new float[1];
         final float[] dizelFiyat = new float[1];
         final float[] LPGFiyat = new float[1];
@@ -1199,27 +1253,24 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void sendReporttoServer(final String kullaniciAdi, final int istasyonID, final String raporSebebi, final String raporDetayi, final String fiyatlar, final Bitmap bitmap) {
-        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, "Sending report...", "Please wait...", false, true);
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.sending_report), getString(R.string.sending_report), false, true);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_LONG).show();
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    loading.dismiss();
-                                    Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(StationDetails.this, getString(R.string.report_send_success), Toast.LENGTH_SHORT).show();
                                     mPopupWindow.dismiss();
                                     break;
-                                case "Fail":
-                                    loading.dismiss();
-                                    Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                                default:
+                                    Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
                                     break;
                             }
                         } else {
-                            loading.dismiss();
-                            Toast.makeText(StationDetails.this, "Error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -1259,7 +1310,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1269,7 +1320,7 @@ public class StationDetails extends AppCompatActivity {
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    void literCalculator() {
+    private void literCalculator() {
         if (gasolinePrice > 0) {
             howMuchGas = 100 / gasolinePrice;
         }
@@ -1287,7 +1338,7 @@ public class StationDetails extends AppCompatActivity {
         }
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -1298,7 +1349,7 @@ public class StationDetails extends AppCompatActivity {
         }
     }
 
-    void clearVariables() {
+    private void clearVariables() {
         choosenStationID = 0;
         userCommentID = 0;
         isStationVerified = 0;
@@ -1343,11 +1394,11 @@ public class StationDetails extends AppCompatActivity {
                 if (userFavorites.contains(choosenStationID + ";")) {
                     userFavorites = userFavorites.replace(choosenStationID + ";", "");
                     favorite.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
-                    Toast.makeText(StationDetails.this, "Favorilerinizden çıkartıldı.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StationDetails.this, getString(R.string.removed_from_favs), Toast.LENGTH_SHORT).show();
                 } else {
                     userFavorites += choosenStationID + ";";
                     favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);
-                    Toast.makeText(StationDetails.this, "Favorilerinize eklendi.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StationDetails.this, getString(R.string.added_to_favs), Toast.LENGTH_SHORT).show();
                 }
                 prefs.edit().putString("userFavorites", userFavorites).apply();
                 return true;

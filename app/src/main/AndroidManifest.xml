@@ -148,7 +148,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.FenceReceiver">
+        <receiver
+            android:name=".receiver.FenceReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.fuelspot.FENCE_RECEIVER_ACTION" />
             </intent-filter>
@@ -194,7 +196,9 @@
             android:value="@string/google_key" />
 
         <!-- Firebase -->
-        <service android:name=".service.MyFirebaseMessagingService">
+        <service
+            android:name=".service.MyFirebaseMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

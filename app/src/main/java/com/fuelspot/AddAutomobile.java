@@ -77,29 +77,37 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class AddAutomobile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    Bitmap bitmap;
-    CircleImageView carPic;
-    Spinner spinner, spinner2;
-    RadioButton gasoline, diesel, lpg, elec, gasoline2, diesel2, lpg2, elec2;
-    Window window;
-    Toolbar toolbar;
-    ArrayAdapter<String> adapter;
-    ArrayAdapter<String> adapter2;
-    RequestQueue requestQueue;
-    Button addCarButton;
-    EditText plateText;
-    RequestOptions options;
+    private Bitmap bitmap;
+    private CircleImageView carPic;
+    private Spinner spinner;
+    private Spinner spinner2;
+    private RadioButton gasoline;
+    private RadioButton diesel;
+    private RadioButton lpg;
+    private RadioButton elec;
+    private RadioButton gasoline2;
+    private RadioButton diesel2;
+    private RadioButton lpg2;
+    private RadioButton elec2;
+    private Window window;
+    private Toolbar toolbar;
+    private ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter2;
+    private RequestQueue requestQueue;
+    private Button addCarButton;
+    private EditText plateText;
+    private RequestOptions options;
 
     // Temp variables to add a vehicle
-    int dummyKilometer = 0;
-    int dummyFuelPri = 0;
-    int dummyFuelSec = -1;
-    String dummyCarBrand = "Acura";
-    String dummyCarModel = "RSX";
-    String dummyPlateNo = "";
-    TextWatcher mTextWatcher;
-    SharedPreferences prefs;
-    ProgressDialog loading;
+    private int dummyKilometer = 0;
+    private int dummyFuelPri = 0;
+    private int dummyFuelSec = -1;
+    private String dummyCarBrand = "Acura";
+    private String dummyCarModel = "RSX";
+    private String dummyPlateNo = "";
+    private TextWatcher mTextWatcher;
+    private SharedPreferences prefs;
+    private ProgressDialog loading;
 
 
     @Override
@@ -379,7 +387,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         requestQueue.add(stringRequest);
     }
 
-    void fetchAutomobiles() {
+    private void fetchAutomobiles() {
         userAutomobileList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
                 new Response.Listener<String>() {
@@ -474,14 +482,14 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         getVariables(prefs);
     }
 
-    public String getStringImage(Bitmap bmp) {
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

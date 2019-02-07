@@ -26,6 +26,7 @@
         android:layout_toEndOf="@+id/station_logo"
         android:padding="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:contentDescription="@string/gasoline"
         app:srcCompat="@drawable/gasoline" />
 
     <TextView
@@ -50,6 +51,7 @@
         android:gravity="center"
         android:padding="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:contentDescription="@string/diesel"
         app:srcCompat="@drawable/diesel" />
 
     <TextView
@@ -74,6 +76,7 @@
         android:layout_toEndOf="@+id/diesel"
         android:padding="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:contentDescription="@string/lpg"
         app:srcCompat="@drawable/lpg" />
 
     <TextView

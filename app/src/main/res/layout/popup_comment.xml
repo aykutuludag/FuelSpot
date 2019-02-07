@@ -8,7 +8,7 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/campaignPhoto"
+        android:id="@+id/popup_comment_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -31,7 +31,7 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/campaignPhoto"
+        android:layout_below="@+id/popup_comment_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:stepSize="1" />
@@ -55,6 +55,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="4dp"
+        android:contentDescription="@string/cancel"
         app:srcCompat="@drawable/cancel" />
 
 </RelativeLayout>

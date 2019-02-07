@@ -32,7 +32,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="@string/hint_enter_answer"
         android:inputType="textMultiLine"
         android:padding="16dp" />
 
@@ -54,5 +53,6 @@
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:contentDescription="@string/cancel"
         app:srcCompat="@drawable/cancel" />
 </RelativeLayout>

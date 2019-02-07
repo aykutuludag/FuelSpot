@@ -1,8 +1,6 @@
 package com.fuelspot.superuser;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,8 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -39,16 +35,13 @@ import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 
 public class FragmentSuperProfile extends Fragment {
 
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    TextView title;
-    RequestOptions options;
-    CircleImageView userProfileHolder;
-    View headerView;
-    RequestQueue requestQueue;
-    SharedPreferences prefs;
-    View rootView;
-    Button addStationButton;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RequestOptions options;
+    private CircleImageView userProfileHolder;
+    private View headerView;
+    private View rootView;
+    private Button addStationButton;
 
     public static FragmentSuperProfile newInstance() {
         Bundle args = new Bundle();
@@ -72,8 +65,6 @@ public class FragmentSuperProfile extends Fragment {
 
             headerView = rootView.findViewById(R.id.header_profile);
 
-            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-            requestQueue = Volley.newRequestQueue(getActivity());
 
             ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
             updateUser.setOnClickListener(new View.OnClickListener() {
@@ -96,15 +87,12 @@ public class FragmentSuperProfile extends Fragment {
                     startActivity(intent);
                 }
             });
-
-            // Comments
-            title = rootView.findViewById(R.id.titleComment);
         }
 
         return rootView;
     }
 
-    void loadProfile() {
+    private void loadProfile() {
         userProfileHolder = headerView.findViewById(R.id.profileImage);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)

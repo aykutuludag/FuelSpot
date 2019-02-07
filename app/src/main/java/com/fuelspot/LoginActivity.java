@@ -83,15 +83,13 @@ import static com.fuelspot.MainActivity.username;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    VideoView background;
-    RelativeLayout notLogged;
-    GoogleApiClient mGoogleApiClient;
-    SignInButton signInButton;
-    CallbackManager callbackManager;
-    LoginButton loginButton;
-    SharedPreferences prefs;
-    Handler handler = new Handler();
-    ImageView doUHaveStation;
+    private VideoView background;
+    private RelativeLayout notLogged;
+    private GoogleApiClient mGoogleApiClient;
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private SharedPreferences prefs;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         getVariables(prefs);
 
         //Layout objects
-        signInButton = findViewById(R.id.buttonGoogle);
+        SignInButton signInButton = findViewById(R.id.buttonGoogle);
         loginButton = findViewById(R.id.facebookButton);
 
         if (isSigned) {
@@ -149,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //END
 
         /*StationOwnerRegister */
-        doUHaveStation = findViewById(R.id.imageViewSuperUser);
+        ImageView doUHaveStation = findViewById(R.id.imageViewSuperUser);
         doUHaveStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         arrangeLayouts();
     }
 
-    void Localization() {
+    private void Localization() {
         Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
         try {
             List<Address> addresses = geo.getFromLocation(Double.parseDouble(userlat), Double.parseDouble(userlon), 1);
@@ -230,7 +228,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    void arrangeLayouts() {
+    private void arrangeLayouts() {
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
 
@@ -303,7 +301,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 if (isNetworkConnected(LoginActivity.this)) {
                     register();
                 } else {
-                    Snackbar.make(background, "İnternet bağlantınızda bir sorun bulunmakta.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
                 }
             } else {
                 Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
@@ -354,7 +352,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (isNetworkConnected(LoginActivity.this)) {
                             register();
                         } else {
-                            Snackbar.make(background, "İnternet bağlantınızda bir sorun bulunmakta.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }).executeAsync();
@@ -374,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void register() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Giriş yapılıyor", "Lütfen bekleyiniz...", false, true);
+        final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, getString(R.string.logging_in), getString(R.string.please_wait), false, true);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_USER),
                 new Response.Listener<String>() {
                     @Override
@@ -439,7 +437,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
                         loading.dismiss();
-                        Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(background, volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
                     }
                 }) {

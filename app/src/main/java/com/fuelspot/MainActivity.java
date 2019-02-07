@@ -67,19 +67,24 @@ public class MainActivity extends AppCompatActivity {
     public static String shortTimeFormat = "dd-MMM HH:mm";
     public static boolean premium, hasDoubleRange, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
-    public static int carbonEmission, vehicleID, fuelPri, fuelSec, kilometer, mapDefaultRange, adCount;
+    public static int carbonEmission;
+    public static int vehicleID;
+    public static int fuelPri;
+    public static int fuelSec;
+    public static int kilometer;
+    public static int mapDefaultRange;
     public static String userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
-
-    List<Fragment> fragments = new ArrayList<>(5);
-    SharedPreferences prefs;
-    IInAppBillingService mService;
-    ServiceConnection mServiceConn;
-    Window window;
-    Toolbar toolbar;
-    boolean doubleBackToExitPressedOnce;
-    FragNavController mFragNavController;
-    AHBottomNavigation bottomNavigation;
-    RequestQueue queue;
+    private static int adCount;
+    private List<Fragment> fragments = new ArrayList<>(5);
+    private SharedPreferences prefs;
+    private IInAppBillingService mService;
+    private ServiceConnection mServiceConn;
+    private Window window;
+    private Toolbar toolbar;
+    private boolean doubleBackToExitPressedOnce;
+    private FragNavController mFragNavController;
+    private AHBottomNavigation bottomNavigation;
+    private RequestQueue queue;
 
 
     public static int getIndexOf(String[] strings, String item) {
@@ -226,16 +231,16 @@ public class MainActivity extends AppCompatActivity {
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item1);
 
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.newsPage);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.tab_news, R.drawable.tab_news, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item2);
 
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.purchasePage);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.tab_vehicle, R.drawable.tab_vehicle, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item3);
 
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.commentPage);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.tab_profile, R.drawable.tab_profile, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item4);
 
-        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.addOrEditPage);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item5);
 
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
@@ -288,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public void checkPremium() throws RemoteException {
+    private void checkPremium() throws RemoteException {
         Bundle ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
         if (ownedItems.getInt("RESPONSE_CODE") == 0) {
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
@@ -319,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void fetchAutomobiles() {
+    private void fetchAutomobiles() {
         userAutomobileList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
                 new Response.Listener<String>() {
@@ -413,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
         getVariables(prefs);
     }
 
-    void fetchCompanies() {
+    private void fetchCompanies() {
         companyList.clear();
 
         //Showing the progress dialog
@@ -468,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

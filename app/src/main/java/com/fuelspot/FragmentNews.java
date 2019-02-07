@@ -62,29 +62,29 @@ import static com.fuelspot.MainActivity.userUnit;
 
 public class FragmentNews extends Fragment {
 
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    List<NewsItem> feedsList = new ArrayList<>();
-    RelativeLayout errorLayout;
-    SharedPreferences prefs;
-    SpinKitView proggressBar;
     ArrayAdapter adapter;
-    View rootView;
-    RequestQueue requestQueue;
-    NestedScrollView scrollView;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private List<NewsItem> feedsList = new ArrayList<>();
+    private RelativeLayout errorLayout;
+    private SharedPreferences prefs;
+    private SpinKitView proggressBar;
+    private View rootView;
+    private RequestQueue requestQueue;
+    private NestedScrollView scrollView;
 
-    LineChart chart;
-    List<Entry> gasolinePriceHistory = new ArrayList<>();
-    List<Entry> dieselPriceHistory = new ArrayList<>();
-    List<Entry> lpgPriceHistory = new ArrayList<>();
-    List<Entry> elecPriceHistory = new ArrayList<>();
-    TextView lastUpdatedAvgPrice;
+    private LineChart chart;
+    private List<Entry> gasolinePriceHistory = new ArrayList<>();
+    private List<Entry> dieselPriceHistory = new ArrayList<>();
+    private List<Entry> lpgPriceHistory = new ArrayList<>();
+    private List<Entry> elecPriceHistory = new ArrayList<>();
+    private TextView lastUpdatedAvgPrice;
 
-    LineChart chart2;
-    List<Entry> purchaseHistoryOf = new ArrayList<>();
-    TextView lastUpdatedVolume;
-    SimpleDateFormat sdf;
+    private LineChart chart2;
+    private List<Entry> purchaseHistoryOf = new ArrayList<>();
+    private TextView lastUpdatedVolume;
+    private SimpleDateFormat sdf;
 
     public static FragmentNews newInstance() {
         Bundle args = new Bundle();
@@ -416,7 +416,7 @@ public class FragmentNews extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    void errorLayout() {
+    private void errorLayout() {
         errorLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
         Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.no_news), Snackbar.LENGTH_LONG).show();

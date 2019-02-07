@@ -46,7 +46,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             int position = holder.getAdapterPosition();
 
             changeVehicle(mItemList.get(position));
-            Snackbar.make(view, "ARAÇ SEÇİLDİ: " + plateNo, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, mContext.getString(R.string.automobile_selected) + ": " + plateNo, Snackbar.LENGTH_SHORT).show();
         }
     };
 

@@ -28,14 +28,15 @@ import static com.fuelspot.MainActivity.premium;
 
 public class SuperStoreActivity extends AppCompatActivity {
 
-    public static final int PURCHASE_PREMIUM = 132;
-    public static final int PURCHASE_DOUBLE_RANGE = 63;
-    ServiceConnection mServiceConn;
-    IInAppBillingService mService;
-    SharedPreferences prefs;
-    Window window;
-    Toolbar toolbar;
-    Button buttonBuyPremium, buttonBuyDoubleRange;
+    private static final int PURCHASE_PREMIUM = 132;
+    private static final int PURCHASE_DOUBLE_RANGE = 63;
+    private ServiceConnection mServiceConn;
+    private IInAppBillingService mService;
+    private SharedPreferences prefs;
+    private Window window;
+    private Toolbar toolbar;
+    private Button buttonBuyPremium;
+    private Button buttonBuyDoubleRange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +118,7 @@ public class SuperStoreActivity extends AppCompatActivity {
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public void buyPremium() throws RemoteException, IntentSender.SendIntentException {
+    private void buyPremium() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(SuperStoreActivity.this,
                 "Premium sürüm reklamları kaldırır ve menzilinizi 2 katına çıkarır.", Toast.LENGTH_LONG)
                 .show();
@@ -129,7 +130,7 @@ public class SuperStoreActivity extends AppCompatActivity {
                 0, 0);
     }
 
-    public void buyDoubleRange() throws RemoteException, IntentSender.SendIntentException {
+    private void buyDoubleRange() throws RemoteException, IntentSender.SendIntentException {
         Toast.makeText(SuperStoreActivity.this,
                 "Menzilinizi 2 kat artırır. 5000 metreye çapınızdaki bütün istasyonları görebilirsiniz", Toast.LENGTH_LONG)
                 .show();
@@ -184,7 +185,7 @@ public class SuperStoreActivity extends AppCompatActivity {
         }
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

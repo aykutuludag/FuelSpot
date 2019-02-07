@@ -188,6 +188,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
             android:clickable="false"
+            android:contentDescription="@string/loginWithGoogle"
             app:srcCompat="@drawable/button_google" />
 
         <TextView
@@ -227,6 +228,7 @@
             android:background="@drawable/button_facebook"
             android:clickable="false"
             android:visibility="visible"
+            android:contentDescription="@string/loginWithFacebook"
             app:srcCompat="@drawable/button_facebook" />
 
         <TextView
@@ -419,6 +421,7 @@
                     android:layout_below="@id/userPhoto"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:contentDescription="@string/fullname"
                     app:srcCompat="@drawable/event_edit_title" />
 
                 <TextView
@@ -452,6 +455,7 @@
                     android:layout_below="@+id/editFullName"
                     android:layout_alignStart="@+id/editFullName"
                     android:layout_marginTop="8dp"
+                    android:contentDescription="@string/email"
                     app:srcCompat="@drawable/email" />
 
                 <TextView
@@ -487,7 +491,8 @@
                     android:layout_below="@+id/editTextMail"
                     android:layout_alignStart="@+id/editFullName"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/email" />
+                    android:contentDescription="@string/phone"
+                    app:srcCompat="@drawable/phone" />
 
                 <TextView
                     android:id="@+id/dummyText4"
@@ -523,6 +528,7 @@
                     android:layout_alignStart="@+id/dummyImage3"
                     android:layout_marginTop="8dp"
                     android:scaleType="fitStart"
+                    android:contentDescription="@string/birthday"
                     app:srcCompat="@drawable/event_edit_date" />
 
                 <TextView

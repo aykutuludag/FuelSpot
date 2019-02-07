@@ -60,18 +60,18 @@ import static com.fuelspot.StationDetails.userCommentID;
 
 public class StationComments extends AppCompatActivity {
 
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    SwipeRefreshLayout swipeContainer;
-    RequestQueue requestQueue;
-    PopupWindow mPopupWindow;
-    Snackbar snackbar;
-    Window window;
-    Toolbar toolbar;
-    FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1;
-    int istasyonID;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private SwipeRefreshLayout swipeContainer;
+    private RequestQueue requestQueue;
+    private PopupWindow mPopupWindow;
+    private Snackbar snackbar;
+    private Window window;
+    private Toolbar toolbar;
+    private FloatingActionMenu materialDesignFAM;
+    private FloatingActionButton floatingActionButton1;
+    private int istasyonID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +140,7 @@ public class StationComments extends AppCompatActivity {
         }
     }
 
-    public void loadComments() {
+    private void loadComments() {
         if (stationCommentList != null && stationCommentList.size() > 0) {
             mAdapter = new CommentAdapter(StationComments.this, stationCommentList, "STATION_COMMENTS");
             mLayoutManager = new GridLayoutManager(StationComments.this, 1);
@@ -155,7 +155,7 @@ public class StationComments extends AppCompatActivity {
         }
     }
 
-    void addUpdateCommentPopup(View view) {
+    private void addUpdateCommentPopup(View view) {
         LayoutInflater inflater = (LayoutInflater) StationComments.this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_comment, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -403,7 +403,7 @@ public class StationComments extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void coloredBars(int color1, int color2) {
+    private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

@@ -12,13 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -81,29 +79,30 @@ public class FragmentStations extends Fragment {
 
     // Station variables
     public static List<StationItem> fullStationList = new ArrayList<>();
-    List<StationItem> shortStationList = new ArrayList<>();
-    ArrayList<Marker> markers = new ArrayList<>();
-
-    boolean isAllStationsListed;
-
-    MapView mMapView;
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    RequestQueue queue;
-    SharedPreferences prefs;
-    Circle circle;
-    ImageView noStationError;
-    LocationRequest mLocationRequest;
-    LocationCallback mLocationCallback;
-    Location locLastKnown = new Location("");
-    NestedScrollView nScrollView;
-    Button seeAllStations;
-    View rootView;
-    RelativeLayout stationLayout, sortGasolineLayout, sortDieselLayout, sortLPGLayout, sortElectricityLayout, sortDistanceLayout;
-    Window window;
-    GoogleMap googleMap;
-    FusedLocationProviderClient mFusedLocationClient;
+    private List<StationItem> shortStationList = new ArrayList<>();
+    private ArrayList<Marker> markers = new ArrayList<>();
+    private boolean isAllStationsListed;
+    private MapView mMapView;
+    private RecyclerView mRecyclerView;
+    private GridLayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private RequestQueue queue;
+    private SharedPreferences prefs;
+    private Circle circle;
+    private ImageView noStationError;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
+    private Location locLastKnown = new Location("");
+    private Button seeAllStations;
+    private View rootView;
+    private RelativeLayout stationLayout;
+    private RelativeLayout sortGasolineLayout;
+    private RelativeLayout sortDieselLayout;
+    private RelativeLayout sortLPGLayout;
+    private RelativeLayout sortElectricityLayout;
+    private RelativeLayout sortDistanceLayout;
+    private GoogleMap googleMap;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -131,7 +130,6 @@ public class FragmentStations extends Fragment {
             // Objects
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             queue = Volley.newRequestQueue(getActivity());
-            nScrollView = rootView.findViewById(R.id.nestedScrollView);
 
             // Activate map
             mMapView = rootView.findViewById(R.id.map);
@@ -280,7 +278,7 @@ public class FragmentStations extends Fragment {
         return rootView;
     }
 
-    public void checkLocationPermission() {
+    private void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
@@ -435,7 +433,7 @@ public class FragmentStations extends Fragment {
         queue.add(stringRequest);
     }
 
-    void reTry() {
+    private void reTry() {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
 
         switch (mapDefaultRange) {

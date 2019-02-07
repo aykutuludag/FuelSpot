@@ -48,6 +48,7 @@
                 android:layout_alignTop="@+id/userPhoto"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/userPhoto"
+                android:contentDescription="@string/fullname"
                 app:srcCompat="@drawable/event_edit_title" />
 
             <TextView
@@ -83,6 +84,7 @@
                 android:layout_below="@+id/editFullName"
                 android:layout_alignStart="@+id/editFullName"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/email"
                 app:srcCompat="@drawable/email" />
 
             <TextView
@@ -119,7 +121,8 @@
                 android:layout_below="@+id/userPhoto"
                 android:layout_alignStart="@+id/userPhoto"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/email" />
+                android:contentDescription="@string/phone"
+                app:srcCompat="@drawable/phone" />
 
             <TextView
                 android:id="@+id/dummyText4"
@@ -159,6 +162,7 @@
                 android:layout_below="@+id/editTextPhone"
                 android:layout_alignStart="@+id/editTextPhone"
                 android:layout_marginTop="10dp"
+                android:contentDescription="@string/birthday"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/event_edit_date" />
 
@@ -194,6 +198,7 @@
                 android:layout_below="@+id/editTextBirthday"
                 android:layout_alignStart="@+id/editTextBirthday"
                 android:layout_marginTop="10dp"
+                android:contentDescription="@string/gender"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/gender" />
 

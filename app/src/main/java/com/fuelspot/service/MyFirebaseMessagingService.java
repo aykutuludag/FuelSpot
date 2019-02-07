@@ -20,11 +20,11 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    SharedPreferences prefs;
-    boolean alarm;
-    NotificationCompat.Builder builder;
-    NotificationManager notificationManager;
-    PendingIntent pIntent;
+    private SharedPreferences prefs;
+    private boolean alarm;
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private PendingIntent pIntent;
 
     @Override
     public void onNewToken(String token) {
