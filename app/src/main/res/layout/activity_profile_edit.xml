@@ -232,8 +232,8 @@
                 android:layout_below="@+id/editTextBirthday"
                 android:layout_alignStart="@+id/editTextBirthday"
                 android:layout_marginTop="10dp"
-                android:scaleType="fitStart"
                 android:contentDescription="@string/gender"
+                android:scaleType="fitStart"
                 app:srcCompat="@drawable/gender" />
 
             <TextView

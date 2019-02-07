@@ -171,7 +171,7 @@ public class FragmentMyStation extends Fragment {
                         Intent i = new Intent(getActivity(), SuperUpdateStation.class);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -184,7 +184,7 @@ public class FragmentMyStation extends Fragment {
                         Intent i = new Intent(getActivity(), SuperPurchases.class);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -198,7 +198,7 @@ public class FragmentMyStation extends Fragment {
                         i.putExtra("ISTASYON_ID", superStationID);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -211,7 +211,7 @@ public class FragmentMyStation extends Fragment {
                         Intent i = new Intent(getActivity(), SuperCampaings.class);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), "Hesabınız onay sürecindedir. En kısa zamanda bir temsilcimiz sizinle iletişime geçecektir.", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });

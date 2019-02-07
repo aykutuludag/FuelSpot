@@ -126,7 +126,7 @@
             android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperPurchases"
-            android:label="@string/station_purchases"
+            android:label="@string/purchases"
             android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperCampaings"

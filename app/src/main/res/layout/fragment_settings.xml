@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nestedScrollViewSettings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/nestedScrollViewSettings"
     android:background="#EAEAEA"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp"
-                android:text="Ayarlar"
+                android:text="@string/settings"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <android.support.percent.PercentRelativeLayout
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Ülke"
+                    android:text="@string/country"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
@@ -53,7 +53,7 @@
                     android:layout_toEndOf="@id/dummy001"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Dil"
+                    android:text="@string/language"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
@@ -68,7 +68,7 @@
                     android:layout_toEndOf="@id/dummy002"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Para birimi"
+                    android:text="@string/currency"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
@@ -83,7 +83,7 @@
                     android:layout_toEndOf="@id/dummy003"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Ölçü sistemi"
+                    android:text="@string/units"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
@@ -164,7 +164,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
-                android:text="Konum bildirimleri"
+                android:text="@string/location_notifications"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <CheckBox
@@ -174,7 +174,7 @@
                 android:layout_below="@id/titleGeofence"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="Konum bildirimleri" />
+                android:text="@string/location_notifications" />
 
             <TextView
                 android:id="@+id/textView37"
@@ -186,7 +186,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
                 android:gravity="center"
-                android:text="Konum bildirimlerini kapatırsanız FuelSpot benzinliğe girdiğinizi tespit edemez ve yakıt ekleyemezsiniz." />
+                android:text="@string/location_notifications_desc" />
 
         </RelativeLayout>
 
@@ -205,7 +205,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
-                android:text="Vergi"
+                android:text="@string/tax"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <android.support.percent.PercentRelativeLayout
@@ -218,6 +218,7 @@
                     android:id="@+id/gasoline"
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
+                    android:contentDescription="@string/gasoline"
                     android:padding="5dp"
                     android:src="@drawable/gasoline"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -233,7 +234,6 @@
                     android:layout_alignEnd="@+id/gasoline"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="53 %"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#6D6D6D"
                     android:textSize="12sp"
@@ -244,6 +244,7 @@
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/gasoline"
+                    android:contentDescription="@string/diesel"
                     android:gravity="center"
                     android:padding="5dp"
                     android:src="@drawable/diesel"
@@ -260,7 +261,6 @@
                     android:layout_toEndOf="@+id/priceGasoline"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="51 %"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#6D6D6D"
                     android:textSize="12sp"
@@ -271,6 +271,7 @@
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/diesel"
+                    android:contentDescription="@string/lpg"
                     android:padding="5dp"
                     android:src="@drawable/lpg"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -286,7 +287,6 @@
                     android:layout_toEndOf="@+id/priceDiesel"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="45 %"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#6D6D6D"
                     android:textSize="12sp"
@@ -297,6 +297,7 @@
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/lpg"
+                    android:contentDescription="@string/electricity"
                     android:padding="5dp"
                     android:src="@drawable/electricity"
                     app:layout_widthPercent="25%" />
@@ -310,7 +311,6 @@
                     android:layout_toEndOf="@+id/priceLPG"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="30 %"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#6D6D6D"
                     android:textSize="12sp"
@@ -324,7 +324,7 @@
                 android:layout_below="@+id/single_tax"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp"
-                android:text="VERGİ ORANLARINI GÜNCELLE" />
+                android:text="@string/update_tax_rates" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -343,7 +343,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="İstatistikler"
+                android:text="@string/stats"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <com.github.mikephil.charting.charts.PieChart
@@ -363,7 +363,7 @@
                 android:layout_below="@id/chart3"
                 android:layout_centerHorizontal="true"
                 android:padding="2dp"
-                android:text="Kayıtlı istasyon sayısı: "
+                android:text="@string/registered_station_number"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#000" />
         </RelativeLayout>
@@ -382,7 +382,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp"
-                android:text="Diğer"
+                android:text="@string/other"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121"
                 android:textStyle="bold" />
@@ -394,7 +394,7 @@
                 android:layout_below="@id/textView04"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="FEEDBACK" />
+                android:text="@string/feedback" />
 
             <Button
                 android:id="@+id/button_beta"
@@ -403,7 +403,7 @@
                 android:layout_below="@+id/button_feedback"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="BETA TESTİNE KATIL" />
+                android:text="@string/enroll_beta" />
 
             <Button
                 android:id="@+id/button_rate"
@@ -412,7 +412,7 @@
                 android:layout_below="@+id/button_beta"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="Uygulamayı puanla" />
+                android:text="@string/rate_app" />
 
             <TextView
                 android:id="@+id/textView34"
@@ -421,7 +421,7 @@
                 android:layout_below="@+id/button_rate"
                 android:layout_margin="8dp"
                 android:padding="4dp"
-                android:text="Şartlar &amp; Koşullar"
+                android:text="@string/terms_and_agreements"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#000000" />
 
@@ -433,7 +433,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
                 android:padding="4dp"
-                android:text="Gizlilik"
+                android:text="@string/privacy"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#000000" />
         </RelativeLayout>
@@ -448,7 +448,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="FuelSpot 2019 - Made with ♥ in Ankara"
+            android:text="@string/copyright_text"
             android:textColor="#212121" />
 
     </RelativeLayout>

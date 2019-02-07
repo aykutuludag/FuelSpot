@@ -266,25 +266,25 @@ public class AddFuel extends AppCompatActivity {
             case 0:
                 selectedUnitPrice = gasolinePrice;
                 selectedTaxRate = TAX_GASOLINE;
-                fuelType = "Benzin";
+                fuelType = getString(R.string.gasoline);
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
                 break;
             case 1:
                 selectedUnitPrice = dieselPrice;
                 selectedTaxRate = TAX_DIESEL;
-                fuelType = "Dizel";
+                fuelType = getString(R.string.diesel);
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
                 break;
             case 2:
                 selectedUnitPrice = LPGPrice;
                 selectedTaxRate = TAX_LPG;
-                fuelType = "LPG";
+                fuelType = getString(R.string.lpg);
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
                 break;
             case 3:
                 selectedUnitPrice = electricityPrice;
                 selectedTaxRate = TAX_ELECTRICITY;
-                fuelType = "Elektrik";
+                fuelType = getString(R.string.electricity);
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
                 break;
             default:
@@ -301,25 +301,25 @@ public class AddFuel extends AppCompatActivity {
             case 0:
                 selectedUnitPrice2 = gasolinePrice;
                 selectedTaxRate2 = TAX_GASOLINE;
-                fuelType2 = "Benzin";
+                fuelType2 = getString(R.string.gasoline);
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
                 break;
             case 1:
                 selectedUnitPrice2 = dieselPrice;
                 selectedTaxRate2 = TAX_DIESEL;
-                fuelType2 = "Dizel";
+                fuelType2 = getString(R.string.diesel);
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
                 break;
             case 2:
                 selectedUnitPrice2 = LPGPrice;
                 selectedTaxRate2 = TAX_LPG;
-                fuelType2 = "LPG";
+                fuelType2 = getString(R.string.lpg);
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
                 break;
             case 3:
                 selectedUnitPrice2 = electricityPrice;
                 selectedTaxRate2 = TAX_ELECTRICITY;
-                fuelType2 = "Elektrik";
+                fuelType2 = getString(R.string.electricity);
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
                 break;
             default:
@@ -446,16 +446,16 @@ public class AddFuel extends AppCompatActivity {
                             if (tempKM > kilometer) {
                                 addPurchase();
                             } else {
-                                Toast.makeText(AddFuel.this, "Aracınızın yeni kilometresi daha yüksek olmalı", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddFuel.this, getString(R.string.low_kilometer), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(AddFuel.this, "Lütfen aracın kilometresini giriniz", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddFuel.this, getString(R.string.empty_kilometer), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(AddFuel.this, "Lütfen ne kadar yakıt aldığınızı giriniz", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddFuel.this, getString(R.string.empty_total_price), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(AddFuel.this, "İnternet bağlantınızda bir sorun var!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddFuel.this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -471,23 +471,22 @@ public class AddFuel extends AppCompatActivity {
 
     private void addPurchase() {
         //Showing the progress dialog
-        final ProgressDialog loading = ProgressDialog.show(AddFuel.this, "Yakıt ekleniyor...", "Lütfen bekleyiniz...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(AddFuel.this, getString(R.string.adding_fuel), getString(R.string.please_wait), false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_PURCHASE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("ANANIN AMI: " + response);
                         if (response != null && response.length() > 0) {
                             if (response.equals("Success")) {
-                                Toast.makeText(AddFuel.this, "Yakıt başarıyla eklendi...", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddFuel.this, getString(R.string.fuel_add_success), Toast.LENGTH_LONG).show();
                                 kilometer = tempKM;
                                 prefs.edit().putInt("Kilometer", kilometer).apply();
                                 finish();
                             } else {
-                                Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddFuel.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddFuel.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
 
                         loading.dismiss();
@@ -498,7 +497,7 @@ public class AddFuel extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         loading.dismiss();
                         volleyError.printStackTrace();
-                        Toast.makeText(AddFuel.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddFuel.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -593,7 +592,7 @@ public class AddFuel extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AddFuel.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(AddFuel.this, "Settings saved...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFuel.this, getString(R.string.saved), Toast.LENGTH_SHORT).show();
                     ImagePicker.create(AddFuel.this).single().start();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();

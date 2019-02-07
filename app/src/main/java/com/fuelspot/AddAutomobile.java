@@ -132,8 +132,8 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         // ProgressDialogs
         loading = new ProgressDialog(AddAutomobile.this);
-        loading.setTitle("Araç ekleniyor");
-        loading.setMessage("Lütfen bekleyiniz...");
+        loading.setTitle(getString(R.string.registering_vehicle));
+        loading.setMessage(getString(R.string.please_wait));
         loading.setIndeterminate(true);
         loading.setCancelable(false);
 
@@ -311,7 +311,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 if (plateText.getText().length() > 0) {
                     addVehicle();
                 } else {
-                    Snackbar.make(v, "Lütfen plakanızı giriniz", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, getString(R.string.enter_plate_no), Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -328,18 +328,18 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "plateNo exist":
-                                    Toast.makeText(AddAutomobile.this, "Plaka daha önce eklenmiş...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddAutomobile.this, getString(R.string.plate_no_exist), Toast.LENGTH_LONG).show();
                                     break;
                                 case "Success":
-                                    Toast.makeText(AddAutomobile.this, "Araç eklendi: " + dummyPlateNo, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddAutomobile.this, getString(R.string.vehicle_added) + ": " + dummyPlateNo, Toast.LENGTH_LONG).show();
                                     fetchAutomobiles();
                                     break;
                                 default:
-                                    Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddAutomobile.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(AddAutomobile.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddAutomobile.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },

@@ -161,7 +161,6 @@ public class UserComments extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(UserComments.this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);

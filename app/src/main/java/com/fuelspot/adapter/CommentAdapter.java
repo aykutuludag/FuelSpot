@@ -80,15 +80,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     if (isSuperUser) {
                         if (answer != null && answer.length() > 0) {
                             // Delete answer
-                            text = "Cevabı sil?";
+                            text = mContext.getString(R.string.remove_answer);
                         } else {
                             // Add answer
-                            text = "Cevapla";
+                            text = mContext.getString(R.string.answer_it);
                         }
                     } else {
                         if (username.equals(commentUserName)) {
                             // Delete comment
-                            text = "Yorumu sil";
+                            text = mContext.getString(R.string.remove_comment);
                         } else {
                             text = null;
                         }
@@ -96,7 +96,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                     if (text != null) {
                         Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                                .setAction("Evet", new View.OnClickListener() {
+                                .setAction(mContext.getString(R.string.yes), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         if (isSuperUser) {
@@ -116,7 +116,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                                                         if (answer != null && answer.length() > 0) {
                                                             addAnswer(commentID, answer);
                                                         } else {
-                                                            Toast.makeText(mContext, "Lütfen cevap giriniz.", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(mContext, mContext.getString(R.string.empty_answer), Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
                                                 });
@@ -189,24 +189,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, mContext.getString(R.string.comment_delete_success), Toast.LENGTH_LONG).show();
                                     if (mContext instanceof StationComments) {
                                         ((StationComments) mContext).fetchStationComments();
                                     }
                                     break;
-                                case "Fail":
-                                    Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                                default:
+                                    Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -238,24 +238,23 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             switch (response) {
                                 case "Success":
                                     mPopupWindow.dismiss();
-                                    Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
                                     if (mContext instanceof StationComments) {
                                         ((StationComments) mContext).fetchStationComments();
                                     }
                                     break;
-                                case "Fail":
-                                    Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                                default:
+                                    Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Toast.makeText(mContext, error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -288,24 +287,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, mContext.getString(R.string.answer_delete_success), Toast.LENGTH_LONG).show();
                                     if (mContext instanceof StationComments) {
                                         ((StationComments) mContext).fetchStationComments();
                                     }
                                     break;
-                                case "Fail":
-                                    Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                                default:
+                                    Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(mContext, "Fail", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
+                        Toast.makeText(mContext, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override

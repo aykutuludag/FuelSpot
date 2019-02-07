@@ -54,12 +54,11 @@ import static com.fuelspot.FragmentSettings.companyList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static List<VehicleItem> userAutomobileList = new ArrayList<>();
-
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
     public static final int REQUEST_ALL = 2;
     public static final int GOOGLE_LOGIN = 100;
+    public static List<VehicleItem> userAutomobileList = new ArrayList<>();
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     public static String FENCE_RECEIVER_ACTION = "com.fuelspot.FENCE_RECEIVER_ACTION";

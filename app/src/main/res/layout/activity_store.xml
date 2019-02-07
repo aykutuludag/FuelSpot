@@ -43,7 +43,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/gotham_bold"
-                    android:text="Hesap hareketleri"
+                    android:text="@string/banking_activities"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_below="@id/textView0"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="Burada hesabınızdaki son hareketleri (bonus, ödül, satın almalar) görebilirsiniz."
+                    android:text="@string/banking_activities_desc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
@@ -64,7 +64,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
                     android:gravity="center"
-                    android:text="Mevcut bakiye: "
+                    android:text="@string/current_balance"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <android.support.v7.widget.RecyclerView
@@ -120,7 +120,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="4dp"
-                        android:text="2x menzile ek olarak uygulamadaki reklamları kaldırır. Ayrıca istediğiniz kadar istasyonu favorilere ekleyebilirsiniz." />
+                        android:text="@string/premium_version_desc" />
 
                     <Button
                         android:id="@+id/buttonPurchasePremium"
@@ -129,7 +129,7 @@
                         android:layout_below="@id/textView39"
                         android:layout_centerHorizontal="true"
                         android:background="@drawable/green_box"
-                        android:text="Üyeliği başlat" />
+                        android:text="@string/start_subscription" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -148,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:text="2x menzil"
+                        android:text="@string/double_range"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                     <TextView
@@ -160,7 +160,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="4dp"
-                        android:text="Menzilinizi 2 katına çıkarır." />
+                        android:text="@string/double_range_desc" />
 
                     <Button
                         android:id="@+id/buttonPurchaseRange"
@@ -169,7 +169,7 @@
                         android:layout_below="@id/textView399"
                         android:layout_centerHorizontal="true"
                         android:background="@drawable/green_box"
-                        android:text="Üyeliği başlat" />
+                        android:text="@string/start_subscription" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -213,7 +213,7 @@
                         android:layout_marginEnd="4dp"
                         android:layout_marginBottom="4dp"
                         android:background="@drawable/round_layout_white"
-                        android:text="SATIN AL: 4.99 ₺" />
+                        android:text="@string/buy" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -257,7 +257,7 @@
                         android:layout_marginEnd="4dp"
                         android:layout_marginBottom="4dp"
                         android:background="@drawable/round_layout_white"
-                        android:text="SATIN AL: 29.9 ₺" />
+                        android:text="@string/buy" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -301,7 +301,7 @@
                         android:layout_marginEnd="4dp"
                         android:layout_marginBottom="4dp"
                         android:background="@drawable/round_layout_white"
-                        android:text="SATIN AL: 49.9 ₺" />
+                        android:text="@string/buy" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

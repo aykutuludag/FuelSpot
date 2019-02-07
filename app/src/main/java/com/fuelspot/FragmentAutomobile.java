@@ -138,7 +138,7 @@ public class FragmentAutomobile extends Fragment {
         Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
         kilometerText = headerView.findViewById(R.id.automobile_kilometer);
-        String kmHolder = kilometer + " km";
+        String kmHolder = kilometer + " " + getActivity().getString(R.string.kilometer);
         kilometerText.setText(kmHolder);
 
         TextView textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
@@ -183,28 +183,28 @@ public class FragmentAutomobile extends Fragment {
         String fuelText2;
         switch (MainActivity.fuelSec) {
             case 0:
-                fuelText2 = "gasoline";
+                fuelText2 = getString(R.string.gasoline);
                 fuelTypeIndicator2.setImageResource(R.drawable.gasoline);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 1:
-                fuelText2 = "diesel";
+                fuelText2 = getString(R.string.diesel);
                 fuelTypeIndicator2.setImageResource(R.drawable.diesel);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                fuelText2 = "lpg";
+                fuelText2 = getString(R.string.lpg);
                 fuelTypeIndicator2.setImageResource(R.drawable.lpg);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 3:
-                fuelText2 = "electric";
+                fuelText2 = getString(R.string.electricity);
                 fuelTypeIndicator2.setImageResource(R.drawable.electricity);
 
                 fuelType2.setVisibility(View.VISIBLE);

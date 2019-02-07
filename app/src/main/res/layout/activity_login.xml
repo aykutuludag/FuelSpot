@@ -26,8 +26,8 @@
             android:layout_above="@+id/facebookButton"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
-            android:contentDescription="@string/loginWithGoogle"
             android:clickable="false"
+            android:contentDescription="@string/loginWithGoogle"
             app:srcCompat="@drawable/button_google" />
 
         <TextView

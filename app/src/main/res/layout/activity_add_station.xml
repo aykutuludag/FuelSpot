@@ -27,92 +27,85 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
+            android:id="@+id/section_stationInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#f0f0f0">
 
-            <RelativeLayout
-                android:id="@+id/section_stationInfo"
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp" />
+
+            <EditText
+                android:id="@+id/superStationName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f0f0f0">
+                android:layout_below="@id/mapView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/mapView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp" />
+            <EditText
+                android:id="@+id/superStationAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/superStationName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:inputType="textPostalAddress"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-                <EditText
-                    android:id="@+id/superStationName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/mapView"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            <EditText
+                android:id="@+id/editTextLicense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/superStationAddress"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:hint="@string/license_no"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-                <EditText
-                    android:id="@+id/superStationAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/superStationName"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:hint="İstasyon Adresi"
-                    android:inputType="textPostalAddress"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            <TextView
+                android:id="@+id/stationHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/editTextLicense"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:text="@string/go_to_station_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                android:textColor="#ff0000"
+                android:textSize="12sp" />
 
-                <EditText
-                    android:id="@+id/editTextLicense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/superStationAddress"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:hint="@string/license_no"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                <TextView
-                    android:id="@+id/stationHint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/editTextLicense"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:text="Kayıt işlemini tamamlayabilmek için sahip olduğunuz istasyonda bulunmanız gerekmektedir. Konumunuz onayladığında bilgiler otomatik olarak doldurulacak ve bu yazı yeşil renge dönecektir."
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                    android:textColor="#ff0000"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/finishRegistration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/stationHint"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_black"
-                    android:text="@string/add_station"
-                    android:textAllCaps="false"
-                    android:textColor="#212121" />
-
-            </RelativeLayout>
+            <Button
+                android:id="@+id/finishRegistration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stationHint"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/green_box"
+                android:fontFamily="@font/gotham_black"
+                android:text="@string/add_station"
+                android:textAllCaps="false"
+                android:textColor="#212121" />
         </RelativeLayout>
     </ScrollView>
 

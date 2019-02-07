@@ -42,13 +42,6 @@
                     android:id="@+id/webView"
                     android:layout_width="match_parent"
                     android:layout_height="350dp" />
-
-                <ImageView
-                    android:id="@+id/imageViewErrStreetView"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:src="@drawable/error_general"
-                    android:visibility="gone" />
             </RelativeLayout>
 
 
@@ -612,7 +605,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_comment"
-            fab:fab_label="Yorum yaz"
+            fab:fab_label="@string/fab_comment"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton

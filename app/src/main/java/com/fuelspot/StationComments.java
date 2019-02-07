@@ -107,7 +107,7 @@ public class StationComments extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        snackbar = Snackbar.make(swipeContainer, "Henüz hiç yorum yazılmamış.", Snackbar.LENGTH_LONG);
+        snackbar = Snackbar.make(swipeContainer, getString(R.string.no_comment_text), Snackbar.LENGTH_LONG);
 
         // FABs
         materialDesignFAM = findViewById(R.id.fab_menu);
@@ -117,9 +117,9 @@ public class StationComments extends AppCompatActivity {
             materialDesignFAM.setVisibility(View.GONE);
         } else {
             if (hasAlreadyCommented) {
-                floatingActionButton1.setLabelText("Yorumu güncelle");
+                floatingActionButton1.setLabelText(getString(R.string.update_comment));
             } else {
-                floatingActionButton1.setLabelText("Yorum yaz");
+                floatingActionButton1.setLabelText(getString(R.string.add_comment));
             }
             floatingActionButton1.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -165,9 +165,9 @@ public class StationComments extends AppCompatActivity {
 
         TextView titlePopup = customView.findViewById(R.id.campaignPhoto);
         if (hasAlreadyCommented) {
-            titlePopup.setText("Yorumu güncelle");
+            titlePopup.setText(getString(R.string.update_comment));
         } else {
-            titlePopup.setText("Yorum yaz");
+            titlePopup.setText(getString(R.string.add_comment));
         }
 
         Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
@@ -181,12 +181,12 @@ public class StationComments extends AppCompatActivity {
                         addComment();
                     }
                 } else {
-                    Toast.makeText(StationComments.this, "Lütfen yorumunuzu yazınız", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StationComments.this, getString(R.string.empty_comment), Toast.LENGTH_SHORT).show();
                 }
             }
 
             private void updateComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationComments.this, "Updating comment...", "Please wait...", false, false);
+                final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.comment_updating), getString(R.string.please_wait), false, false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
                         new Response.Listener<String>() {
                             @Override
@@ -225,16 +225,30 @@ public class StationComments extends AppCompatActivity {
             }
 
             private void addComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationComments.this, "Adding comment...", "Please wait...", false, false);
+                final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.comment_adding), getString(R.string.please_wait), false, false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 loading.dismiss();
-                                Toast.makeText(StationComments.this, response, Toast.LENGTH_SHORT).show();
                                 mPopupWindow.dismiss();
-                                hasAlreadyCommented = true;
-                                fetchStationComments();
+
+                                if (response != null && response.length() > 0) {
+                                    switch (response) {
+                                        case "Success":
+                                            Toast.makeText(StationComments.this, getString(R.string.add_comment_success), Toast.LENGTH_SHORT).show();
+                                            hasAlreadyCommented = true;
+                                            fetchStationComments();
+                                            break;
+                                        default:
+                                            Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                            hasAlreadyCommented = false;
+                                            break;
+                                    }
+                                } else {
+                                    Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                    hasAlreadyCommented = false;
+                                }
                             }
                         },
                         new Response.ErrorListener() {
@@ -242,6 +256,7 @@ public class StationComments extends AppCompatActivity {
                             public void onErrorResponse(VolleyError volleyError) {
                                 //Showing toast
                                 loading.dismiss();
+                                Toast.makeText(StationComments.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                             }
                         }) {
                     @Override

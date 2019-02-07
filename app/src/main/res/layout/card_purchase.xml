@@ -71,7 +71,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/stationInfo"
                     android:gravity="center"
-                    android:text="Tür"
+                    android:text="@string/type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     app:layout_marginPercent="1%"
                     app:layout_widthPercent="20%" />
@@ -83,7 +83,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/title_type"
                     android:gravity="center"
-                    android:text="Miktar"
+                    android:text="@string/amount"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     app:layout_marginPercent="1%"
                     card_view:layout_widthPercent="20%" />
@@ -94,7 +94,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/title_amount"
                     android:gravity="center"
-                    android:text="Tutar"
+                    android:text="@string/subtotal"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     app:layout_marginPercent="1%"
                     app:layout_widthPercent="20%" />
@@ -111,7 +111,8 @@
                     <ImageView
                         android:id="@+id/type1"
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:contentDescription="@string/type" />
 
                     <TextView
                         android:id="@+id/type1Text"
@@ -165,7 +166,8 @@
                     <ImageView
                         android:id="@+id/type2"
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:contentDescription="@string/type" />
 
                     <TextView
                         android:id="@+id/type2Text"
@@ -217,7 +219,7 @@
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/gotham_bold"
                     android:gravity="center"
-                    android:text="BONUS : "
+                    android:text="@string/bonus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textColor="#00801e" />
 
@@ -233,10 +235,9 @@
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_bold"
                     android:gravity="center"
-                    android:text="TOPLAM : "
+                    android:text="@string/total"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textColor="#424242" />
-
             </android.support.percent.PercentRelativeLayout>
 
         </RelativeLayout>

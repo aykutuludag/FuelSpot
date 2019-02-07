@@ -68,6 +68,7 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/ownedStationName"
+                android:contentDescription="@string/gasoline"
                 android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -92,6 +93,7 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/gasoline"
+                android:contentDescription="@string/diesel"
                 android:gravity="center"
                 android:padding="4dp"
                 android:src="@drawable/diesel"
@@ -117,6 +119,7 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/diesel"
+                android:contentDescription="@string/lpg"
                 android:padding="4dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -141,6 +144,7 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/lpg"
+                android:contentDescription="@string/electricity"
                 android:padding="4dp"
                 android:src="@drawable/electricity"
                 app:layout_widthPercent="14.5%" />
@@ -164,6 +168,7 @@
                 android:layout_height="32dp"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/electricity"
+                android:contentDescription="@string/distance"
                 android:padding="4dp"
                 android:src="@drawable/distance"
                 app:layout_widthPercent="14.5%" />
@@ -209,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="İstasyon bilgilerini/fiyatlarını buradan güncelleyebilirsiniz." />
+                android:text="@string/station_update_desc" />
 
             <Button
                 android:id="@+id/buttonEditStation"
@@ -223,7 +228,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/green_box"
-                android:text="İstasyonu düzenle" />
+                android:text="@string/update_station" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -238,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="İstasyonunuz için yazılan yorumlara buradan ulaşabilir ve cevap yazabilirsiniz." />
+                android:text="@string/comments_section_desc" />
 
             <Button
                 android:id="@+id/buttonComments"
@@ -252,7 +257,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/green_box"
-                android:text="YORUMLAR" />
+                android:text="@string/comments" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -268,7 +273,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="İstasyonunuzdaki mevcut kampanyaları buradan düzenleyebilirsiniz." />
+                android:text="@string/campaign_section_desc" />
 
             <Button
                 android:id="@+id/buttonCampaings"
@@ -278,7 +283,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp"
                 android:background="@drawable/green_box"
-                android:text="KAMPANYALAR" />
+                android:text="@string/campaigns" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -294,7 +299,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="Uygulama üzerinden yapılan satın almaları buradan görebilirsiniz." />
+                android:text="@string/purchase_section_desc" />
 
             <Button
                 android:id="@+id/buttonPurchases"
@@ -308,7 +313,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/green_box"
-                android:text="SATIN ALMALAR" />
+                android:text="@string/purchases" />
         </RelativeLayout>
 
     </RelativeLayout>

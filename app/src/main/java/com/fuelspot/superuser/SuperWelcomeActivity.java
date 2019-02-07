@@ -171,8 +171,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     FusedLocationProviderClient mFusedLocationClient;
     Bitmap bitmap;
     RequestOptions options;
-    private GoogleMap googleMap;
     ProgressDialog loading0, loading;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

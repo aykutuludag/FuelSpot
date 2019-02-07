@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -113,14 +112,13 @@ import static com.fuelspot.MainActivity.username;
 public class StationDetails extends AppCompatActivity {
 
     public static int stars = 5;
-    public static int stationDistance, choosenStationID, userCommentID, isStationVerified;
+    public static int choosenStationID, userCommentID, isStationVerified;
     public static float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, numOfComments, sumOfPoints, stationScore;
     public static String lastUpdated, stationName, stationVicinity, stationLocation, iconURL, userComment;
-    String facilitiesOfStation;
     public static boolean hasAlreadyCommented;
     public static List<CommentItem> stationCommentList = new ArrayList<>();
     public static List<CampaignItem> campaignList = new ArrayList<>();
-
+    String facilitiesOfStation;
     CircleImageView stationIcon;
     List<Entry> gasolinePriceHistory = new ArrayList<>();
     List<Entry> dieselPriceHistory = new ArrayList<>();
@@ -138,7 +136,7 @@ public class StationDetails extends AppCompatActivity {
     PopupWindow mPopupWindow;
     RequestQueue requestQueue;
     NestedScrollView scrollView;
-    ImageView errorStreetView, errorCampaign, errorComment;
+    ImageView errorCampaign, errorComment;
     CircleImageView verifiedSection;
     CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot;
     float howMuchGas, howMuchDie, howMuchLPG, howMuchEle;
@@ -155,7 +153,6 @@ public class StationDetails extends AppCompatActivity {
     int reportRequest;
     String reportReason, reportDetails;
     SimpleDateFormat sdf;
-    boolean isStreetViewTouched;
 
     @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
@@ -195,7 +192,6 @@ public class StationDetails extends AppCompatActivity {
 
         errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
-        errorStreetView = findViewById(R.id.imageViewErrStreetView);
         scrollView = findViewById(R.id.scrollView);
         webview = findViewById(R.id.webView);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -268,7 +264,6 @@ public class StationDetails extends AppCompatActivity {
             //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
             stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
             stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-            stationDistance = getIntent().getIntExtra("STATION_DISTANCE", 0);
             gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
             dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
             lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
@@ -350,16 +345,6 @@ public class StationDetails extends AppCompatActivity {
                             getSupportActionBar().setTitle(stationName);
                             stationVicinity = obj.getString("vicinity");
                             stationLocation = obj.getString("location");
-                            //DISTANCE START
-                            Location loc1 = new Location("");
-                            loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
-                            loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
-                            Location loc2 = new Location("");
-                            String[] stationPoint = stationLocation.split(";");
-                            loc2.setLatitude(Double.parseDouble(stationPoint[0]));
-                            loc2.setLongitude(Double.parseDouble(stationPoint[1]));
-                            stationDistance = (int) loc1.distanceTo(loc2);
-                            //DISTANCE END
 
                             facilitiesOfStation = obj.getString("facilities");
                             gasolinePrice = (float) obj.getDouble("gasolinePrice");
@@ -1314,7 +1299,6 @@ public class StationDetails extends AppCompatActivity {
     }
 
     void clearVariables() {
-        stationDistance = 0;
         choosenStationID = 0;
         userCommentID = 0;
         isStationVerified = 0;
@@ -1333,7 +1317,6 @@ public class StationDetails extends AppCompatActivity {
         iconURL = "";
         userComment = "";
         hasAlreadyCommented = false;
-        isStreetViewTouched = false;
         stationCommentList.clear();
         campaignList.clear();
         gasolinePriceHistory.clear();

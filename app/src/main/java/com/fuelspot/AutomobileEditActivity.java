@@ -127,14 +127,14 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
         // ProgressDialogs
         loadingUpdate = new ProgressDialog(AutomobileEditActivity.this);
-        loadingUpdate.setTitle("Araç güncelleniyor");
-        loadingUpdate.setMessage("Lütfen bekleyiniz...");
+        loadingUpdate.setTitle(getString(R.string.vehicle_updating));
+        loadingUpdate.setMessage(getString(R.string.please_wait));
         loadingUpdate.setIndeterminate(true);
         loadingUpdate.setCancelable(false);
 
         loadingDelete = new ProgressDialog(AutomobileEditActivity.this);
-        loadingDelete.setTitle("Araç siliniyor");
-        loadingDelete.setMessage("Lütfen bekleyiniz...");
+        loadingDelete.setTitle(getString(R.string.vehicle_deleting));
+        loadingDelete.setMessage(getString(R.string.please_wait));
         loadingDelete.setIndeterminate(true);
         loadingDelete.setCancelable(false);
 
@@ -323,16 +323,16 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (vehicleNumber > 2) {
-                    Snackbar.make(view, "Araç silinecek?", Snackbar.LENGTH_LONG)
-                            .setAction("SİL", new View.OnClickListener() {
+                if (vehicleNumber > 1) {
+                    Snackbar.make(view, getString(R.string.remove_vehicle), Snackbar.LENGTH_LONG)
+                            .setAction(getString(R.string.delete), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     deleteVehicle();
                                 }
                             }).show();
                 } else {
-                    Snackbar.make(view, "Araç silebilmek için en az 2 aracınız olmalıdır.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, getString(R.string.at_least_2_vehicle), Snackbar.LENGTH_LONG).show();
                 }
 
             }
@@ -350,15 +350,15 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(AutomobileEditActivity.this, "Araç güncellendi", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_update_success), Toast.LENGTH_LONG).show();
                                     finish();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu. Lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -411,18 +411,15 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                 case "Success":
                                     //set VehicleID = 0 because user delete this car. Choose another one.
                                     vehicleID = 0;
-                                    Toast.makeText(AutomobileEditActivity.this, "Araç silindi...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_delete_success), Toast.LENGTH_LONG).show();
                                     fetchAutomobiles();
                                     break;
-                                case "Fail":
-                                    Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
-                                    break;
                                 default:
-                                    Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(AutomobileEditActivity.this, "Bir hata oluştu lütfen tekrar deneyiniz...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -1045,7 +1042,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 if (isNetworkConnected(AutomobileEditActivity.this)) {
                     updateVehicle();
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content), "Internet bağlantısında bir sorun var", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.no_internet_connection), Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             default:

@@ -77,8 +77,8 @@ public class UserFavorites extends AppCompatActivity {
             if (premium) {
                 untilWhere = favStationss.length;
             } else {
-                if (favStationss.length >= 5) {
-                    untilWhere = 5;
+                if (favStationss.length >= 53) {
+                    untilWhere = 3;
                     Toast.makeText(UserFavorites.this, "5'ten fazla favori istasyon izleyebilmek için premium sürüme geçebilirsiniz.", Toast.LENGTH_SHORT).show();
                 } else {
                     untilWhere = favStationss.length;

@@ -186,7 +186,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 e.printStackTrace();
                             }
                         } else {
-                            reTry();
+                            if (mapDefaultRange != 50000) {
+                                reTry();
+                            }
                         }
                     }
                 },
@@ -217,23 +219,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void reTry() {
         // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-        if (mapDefaultRange == 2500) {
-            mapDefaultRange = 5000;
-            mapDefaultZoom = 12.5f;
-            fetchStations();
-        } else if (mapDefaultRange == 5000) {
-            mapDefaultRange = 10000;
-            mapDefaultZoom = 11.5f;
-            fetchStations();
-        } else if (mapDefaultRange == 10000) {
-            mapDefaultRange = 25000;
-            mapDefaultZoom = 10f;
-            fetchStations();
-        } else if (mapDefaultRange == 25000) {
-            mapDefaultRange = 50000;
-            mapDefaultZoom = 8.75f;
-            fetchStations();
+        switch (mapDefaultRange) {
+            case 2500:
+                mapDefaultRange = 5000;
+                mapDefaultZoom = 12.5f;
+                break;
+            case 5000:
+                mapDefaultRange = 10000;
+                mapDefaultZoom = 11.5f;
+                break;
+            case 10000:
+                mapDefaultRange = 25000;
+                mapDefaultZoom = 10f;
+                break;
+            case 25000:
+                mapDefaultRange = 50000;
+                mapDefaultZoom = 8.5f;
+                break;
         }
+        fetchStations();
     }
 
     protected void registerFence(final String fenceKey, final AwarenessFence fence) {
@@ -244,7 +248,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
                     System.out.println("Fence was successfully registered.");
-                    // queryFence(fenceKey);
                 } else {
                     System.out.println("Fence could not be registered: " + status);
                 }

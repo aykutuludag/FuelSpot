@@ -50,7 +50,7 @@ public class FenceReceiver extends BroadcastReceiver {
         mPendingIntent = PendingIntent.getActivity(mContext, 13200, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelName = "Yakıt ekleme";
+            String channelName = mContext.getString(R.string.add_fuel);
             String channelDesc = "Siz istasyona girdiğinizde tetiklenir. Bildirim aracılığıyla yakıt ekleyebilirsiniz.";
             NotificationChannel mChannel = new NotificationChannel(String.valueOf(0), channelName, NotificationManager.IMPORTANCE_HIGH);
             mChannel.setDescription(channelDesc);
@@ -65,7 +65,7 @@ public class FenceReceiver extends BroadcastReceiver {
 
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
         builder.setContentTitle(mContext.getString(R.string.app_name))
-                .setContentText("Yakıt mı alıyorsun? Eklemek için hemen tıkla!")
+                .setContentText(mContext.getString(R.string.geofence_notification_title))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
                 .setContentIntent(mPendingIntent)

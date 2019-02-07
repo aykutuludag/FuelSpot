@@ -171,10 +171,10 @@ public class FragmentSettings extends Fragment {
                 geofenceCheckBox = rootView.findViewById(R.id.checkBox);
                 if (isGeofenceOpen) {
                     geofenceCheckBox.setChecked(true);
-                    geofenceCheckBox.setText("Konum bildirimleri açık");
+                    geofenceCheckBox.setText(getActivity().getString(R.string.location_notification_on));
                 } else {
                     geofenceCheckBox.setChecked(false);
-                    geofenceCheckBox.setText("Konum bildirimleri kapalı");
+                    geofenceCheckBox.setText(getActivity().getString(R.string.location_notification_off));
                 }
                 geofenceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -182,11 +182,11 @@ public class FragmentSettings extends Fragment {
                         if (isChecked) {
                             isGeofenceOpen = true;
                             geofenceCheckBox.setChecked(true);
-                            geofenceCheckBox.setText("Konum bildirimleri açık");
+                            geofenceCheckBox.setText(getActivity().getString(R.string.location_notification_on));
                         } else {
                             isGeofenceOpen = false;
                             geofenceCheckBox.setChecked(false);
-                            geofenceCheckBox.setText("Konum bildirimleri kapalı");
+                            geofenceCheckBox.setText(getActivity().getString(R.string.location_notification_off));
                         }
 
                         prefs.edit().putBoolean("Geofence", isGeofenceOpen).apply();
@@ -312,11 +312,12 @@ public class FragmentSettings extends Fragment {
                 }
             }
 
-            textViewTotalNumber.setText("Kayıtlı istasyon sayısı: " + totalStation);
+            String dummy = getActivity().getString(R.string.registered_station_number) + ": " + totalStation;
+            textViewTotalNumber.setText(dummy);
 
-            entries.add(new PieEntry((float) otherStations, "Diğer"));
+            entries.add(new PieEntry((float) otherStations, getActivity().getString(R.string.other)));
 
-            PieDataSet dataSet = new PieDataSet(entries, "Akaryakıt dağıtım firmaları");
+            PieDataSet dataSet = new PieDataSet(entries, getActivity().getString(R.string.fuel_dist_comp));
             dataSet.setDrawIcons(false);
 
             // add a lot of colors
@@ -439,21 +440,24 @@ public class FragmentSettings extends Fragment {
                                 MainActivity.getVariables(prefs);
 
                                 if (isSuperUser) {
-                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), "Vergi oranları güncellendi.", Snackbar.LENGTH_LONG);
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.update_tax_success), Snackbar.LENGTH_LONG);
                                     snackBar.show();
                                 } else {
-                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Vergi oranları güncellendi.", Snackbar.LENGTH_LONG);
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.update_tax_success), Snackbar.LENGTH_LONG);
                                     snackBar.show();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Toast.makeText(getActivity(), getActivity().getString(R.string.error), Snackbar.LENGTH_LONG).show();
                             }
+                        } else {
+                            Toast.makeText(getActivity(), getActivity().getString(R.string.error), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getActivity(), volleyError.toString(), Snackbar.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -525,17 +529,17 @@ public class FragmentSettings extends Fragment {
 
             private void sendFeedback() {
                 //Showing the progress dialog
-                final ProgressDialog loading = ProgressDialog.show(getActivity(), "Loading...", "Please wait...", false, false);
+                final ProgressDialog loading = ProgressDialog.show(getActivity(), getActivity().getString(R.string.feedback_sending), getActivity().getString(R.string.please_wait), false, false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FEEDBACK),
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String s) {
                                 loading.dismiss();
                                 if (isSuperUser) {
-                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.thanks_for_feedback), Snackbar.LENGTH_LONG);
                                     snackBar.show();
                                 } else {
-                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), "Geri bildiriminiz için teşekkür ederiz!", Snackbar.LENGTH_LONG);
+                                    Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.thanks_for_feedback), Snackbar.LENGTH_LONG);
                                     snackBar.show();
                                 }
                                 mPopupWindow.dismiss();
