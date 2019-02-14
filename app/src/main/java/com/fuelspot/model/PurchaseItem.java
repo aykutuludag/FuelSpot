@@ -6,6 +6,7 @@ public class PurchaseItem {
     private String stationName;
     private String stationIcon;
     private String stationLocation;
+    private String plateNo;
     private String purchaseTime;
     private int fuelType1;
     private float fuelPrice1;
@@ -51,6 +52,14 @@ public class PurchaseItem {
 
     public void setStationLocation(String stationLocation) {
         this.stationLocation = stationLocation;
+    }
+
+    public String getPlateNo() {
+        return plateNo;
+    }
+
+    public void setPlateNo(String plateNo) {
+        this.plateNo = plateNo;
     }
 
     public String getPurchaseTime() {

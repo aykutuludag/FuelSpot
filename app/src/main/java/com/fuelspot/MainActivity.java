@@ -52,7 +52,7 @@ import java.util.Map;
 
 import static com.fuelspot.FragmentSettings.companyList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     public static int kilometer;
     public static int mapDefaultRange;
     public static String userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
-    private static int adCount;
+    public static int adCount;
     private List<Fragment> fragments = new ArrayList<>(5);
     private SharedPreferences prefs;
     private IInAppBillingService mService;
@@ -105,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
         username = prefs.getString("UserName", "");
         carBrand = prefs.getString("carBrand", "Acura");
         carModel = prefs.getString("carModel", "RSX");
-        fuelPri = prefs.getInt("FuelPrimary", 0);
+        fuelPri = prefs.getInt("FuelPrimary", -1);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
-        userlat = prefs.getString("lat", "39.925054");
-        userlon = prefs.getString("lon", "32.8347552");
+        userlat = prefs.getString("lat", "39.92505");
+        userlon = prefs.getString("lon", "32.83476");
         premium = prefs.getBoolean("hasPremium", false);
         hasDoubleRange = prefs.getBoolean("hasDoubleRange", false);
         isSigned = prefs.getBoolean("isSigned", false);
@@ -244,13 +244,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.addItem(item5);
 
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                mFragNavController.switchTab(position);
-                return true;
-            }
-        });
+        bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
         InAppBilling();
@@ -561,5 +555,18 @@ public class MainActivity extends AppCompatActivity {
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
+    }
+
+    /**
+     * Called when a tab has been selected (clicked)
+     *
+     * @param position    int: Position of the selected tab
+     * @param wasSelected boolean: true if the tab was already selected
+     * @return boolean: true for updating the tab UI, false otherwise
+     */
+    @Override
+    public boolean onTabSelected(int position, boolean wasSelected) {
+        mFragNavController.switchTab(position);
+        return true;
     }
 }

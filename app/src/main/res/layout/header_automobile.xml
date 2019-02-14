@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_vehicle"
     android:layout_width="match_parent"
-    android:layout_height="285dp">
+    android:layout_height="270dp"
+    android:layout_margin="4dp">
 
     <ImageView
         android:id="@+id/updateCarInfo"
@@ -11,9 +11,12 @@
         android:layout_height="32dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="8dp"
-        android:padding="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:contentDescription="@string/edit"
+        android:padding="4dp"
         android:src="@drawable/edit" />
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -22,7 +25,11 @@
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/default_automobile" />
 
     <TextView
@@ -31,41 +38,54 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/carPicture"
         android:layout_centerHorizontal="true"
-        android:layout_margin="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-    <android.support.percent.PercentRelativeLayout
+    <RelativeLayout
         android:id="@+id/automobile_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/carFullname">
+        android:layout_below="@id/carFullname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#f5f5f5"
+        android:padding="1dp">
 
         <TextView
             android:id="@+id/automobile_plateNo"
-            android:layout_height="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/fuelTypeSection"
             android:gravity="center"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121"
-            app:layout_marginStartPercent="15%"
-            app:layout_widthPercent="25%" />
+            android:textColor="#212121" />
 
         <RelativeLayout
             android:id="@+id/fuelTypeSection"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/automobile_plateNo"
-            android:layout_alignStart="@id/automobile_plateNo"
-            android:layout_alignEnd="@id/automobile_plateNo"
-            android:layout_marginTop="8dp"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/car_fuelType"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_margin="1dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:contentDescription="@string/primary_fuel_type"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -107,55 +127,75 @@
             android:id="@+id/automobile_kilometer"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_below="@id/fuelTypeSection"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toEndOf="@id/fuelTypeSection"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/automobile_stats_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/automobile_info_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#f5f5f5"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/automobile_priceCons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/automobile_consumption"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />
 
         <TextView
             android:id="@+id/automobile_consumption"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121"
-            app:layout_marginEndPercent="10%"
-            app:layout_widthPercent="30%" />
-
-        <TextView
-            android:id="@+id/automobile_priceCons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/automobile_consumption"
-            android:layout_alignStart="@id/automobile_consumption"
-            android:layout_alignEnd="@id/automobile_consumption"
-            android:layout_marginTop="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />
 
         <TextView
             android:id="@+id/automobile_emission"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/automobile_priceCons"
-            android:layout_alignStart="@id/automobile_consumption"
-            android:layout_alignEnd="@id/automobile_consumption"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toEndOf="@id/automobile_consumption"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />
-
-    </android.support.percent.PercentRelativeLayout>
+    </RelativeLayout>
 
     <com.github.curioustechizen.ago.RelativeTimeTextView
         android:id="@+id/car_lastUpdated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+        android:layout_below="@+id/automobile_stats_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:padding="1dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 </RelativeLayout>

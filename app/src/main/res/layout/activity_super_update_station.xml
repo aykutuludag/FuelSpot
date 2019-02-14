@@ -42,95 +42,80 @@
 
                 <TextView
                     android:id="@+id/title_baseInfo"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="4dp"
                     android:gravity="center"
                     android:text="@string/station_info"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/stationLogo"
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
-                    android:layout_below="@+id/title_baseInfo"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="4dp"
-                    android:src="@drawable/default_station"
-                    tools:ignore="RtlHardcoded" />
+                <TextView
+                    android:id="@+id/textView40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_baseInfo"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/fuelspot_station_id"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <TextView
                     android:id="@+id/textViewStationID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:layout_alignTop="@id/textView40"
+                    android:layout_alignBottom="@id/textView40"
+                    android:layout_toEndOf="@id/textView40"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <Spinner
                     android:id="@+id/simpleSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/stationLogo"
+                    android:layout_below="@id/textView40"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center" />
 
                 <TextView
-                    android:id="@+id/editTextStationAddress"
+                    android:id="@+id/editTextStationLicense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/simpleSpinner"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-                <TextView
-                    android:id="@+id/editTextStationLicense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/editTextStationAddress"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                <TextView
-                    android:id="@+id/editTextOwner"
+                <EditText
+                    android:id="@+id/editTextStationAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/editTextStationLicense"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
+                    android:inputType="textPostalAddress"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <com.github.curioustechizen.ago.RelativeTimeTextView
                     android:id="@+id/stationLastUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/editTextOwner"
+                    android:layout_below="@+id/editTextStationAddress"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"

@@ -56,6 +56,7 @@
     <!-- FragmentStations-->
     <string name="sort">Sırala</string>
     <string name="see_all">Hepsini gör</string>
+    <string name="show_less">Daha az göster</string>
     <string name="station_not_found_retry">İstasyon bulunamadı. Yeni menzil</string>
     <string name="metre">metre</string>
     <string name="no_station">Yakın çevrede istasyon bulunamadı…</string>
@@ -170,6 +171,7 @@
     <!-- StationComments-->
 
     <!-- AutomobileEdit-->
+    <string name="edit_automobile">Otomobili güncelle</string>
     <string name="save">Kaydet</string>
     <string name="saved">Kaydedildi…</string>
     <string name="vehicle_updating">Otomobil güncelleniyor</string>
@@ -203,6 +205,7 @@
     <!-- PurchaseDetails-->
 
     <!-- ProfileEdit-->
+    <string name="edit_profile">Profili düzenle</string>
     <string name="fullname">Ad-Soyad</string>
     <string name="email">E-posta</string>
     <string name="phone">Telefon</string>
@@ -285,9 +288,23 @@
     <string name="station_update_success">İstasyon başarıyla güncellendi…</string>
     <string name="station_update_fail">İstayon güncellenirken bir hata oluştu… Lütfen tekrar deneyiniz.</string>
     <string name="note_for_prices">Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
+    <string name="station_updating">İstasyon güncelleniyor</string>
+    <string name="fuelspot_station_id">Fuelspot ID:</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
+    <string name="add_campaign">Kampanya ekle</string>
+    <string name="campaign_name">Kampanya adı</string>
+    <string name="campaign_desc">Kampanya detayları</string>
+    <string name="start_time">Başlangıç</string>
+    <string name="end_time">Bitiş</string>
+    <string name="campaign_photo">Kampanya görseli</string>
+    <string name="campaign_adding">Kampanya ekleniyor</string>
+    <string name="campaign_added">Kampanya başarıyla eklendi</string>
+    <string name="empty_campaign_name">Lütfen kampanya adını giriniz</string>
+    <string name="empty_campaign_desc">Lütfen kampanya detayını giriniz</string>
+    <string name="empty_campaign_start">Lütfen kampanya başlangıç gün ve saatini seçiniz</string>
+    <string name="empty_campaign_end">Lütfen kampanya bitiş gün ve saatini seçiniz</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperPurchases-->

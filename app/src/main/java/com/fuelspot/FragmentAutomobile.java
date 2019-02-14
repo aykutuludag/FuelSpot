@@ -55,10 +55,12 @@ import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
+import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.vehicleID;
 
@@ -294,6 +296,7 @@ public class FragmentAutomobile extends Fragment {
                                     item.setStationName(obj.getString("stationName"));
                                     item.setStationIcon(obj.getString("stationIcon"));
                                     item.setStationLocation(obj.getString("stationLocation"));
+                                    item.setPlateNo(obj.getString("plateNo"));
                                     item.setFuelType(obj.getInt("fuelType"));
                                     item.setFuelPrice((float) obj.getDouble("fuelPrice"));
                                     item.setFuelLiter((float) obj.getDouble("fuelLiter"));
@@ -322,13 +325,13 @@ public class FragmentAutomobile extends Fragment {
 
                                 //update kilometer
                                 if (kilometerText != null) {
-                                    String kmHolder = kilometer + " " + "km";
+                                    String kmHolder = kilometer + " " + getString(R.string.kilometer);
                                     kilometerText.setText(kmHolder);
                                 }
 
                                 //Ortalama tüketim
                                 if (avgText != null) {
-                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
+                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt" + getString(R.string.per_100km);
                                     avgText.setText(avgDummy);
                                 }
 
@@ -339,18 +342,18 @@ public class FragmentAutomobile extends Fragment {
 
                                 //Ortalama maliyet
                                 if (avgPrice != null) {
-                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
+                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " " + currencySymbol + getString(R.string.per_100km);
                                     avgPrice.setText(avgPriceDummy);
                                 }
 
                                 //Ortalama emisyon
                                 if (emission != null) {
-                                    String emissionHolder = calculateCarbonEmission() + " g/100km";
+                                    String emissionHolder = calculateCarbonEmission() + " g" + getString(R.string.per_100km);
                                     emission.setText(emissionHolder);
                                 }
 
                                 try {
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                    SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
                                     Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
                                     lastUpdated.setReferenceTime(date.getTime());
                                 } catch (ParseException e) {

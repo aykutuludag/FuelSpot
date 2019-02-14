@@ -64,7 +64,6 @@ import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
-import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 
@@ -80,6 +79,7 @@ public class PurchaseDetails extends AppCompatActivity {
     private String stationName;
     private String iconURL;
     private String stationLocation;
+    private String plakaNo;
     private String billPhoto;
     private String purchaseTime;
     private float fuelPrice1;
@@ -151,6 +151,7 @@ public class PurchaseDetails extends AppCompatActivity {
         fuelTax1 = getIntent().getFloatExtra("FUEL_TAX_1", 0);
         fuelTax2 = getIntent().getFloatExtra("FUEL_TAX_2", 0);
         totalPrice = getIntent().getFloatExtra("TOTAL_PRICE", 0);
+        plakaNo = getIntent().getStringExtra("PLATE_NO");
         isPurchaseVerified = getIntent().getIntExtra("IS_PURCHASE_VERIFIED", 0);
 
         istasyonLogo = findViewById(R.id.imageViewStationLogo);
@@ -396,7 +397,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 //Adding parameters
                 params.put("purchaseID", String.valueOf(purchaseID));
                 params.put("username", username);
-                params.put("plateNO", plateNo);
+                params.put("plateNO", plakaNo);
                 params.put("billPhoto", getStringImage(bitmap));
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 

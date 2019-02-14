@@ -111,6 +111,13 @@ import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
 
+    public static List<CommentItem> stationCommentList = new ArrayList<>();
+    private static List<CampaignItem> campaignList = new ArrayList<>();
+    private List<Entry> gasolinePriceHistory = new ArrayList<>();
+    private List<Entry> dieselPriceHistory = new ArrayList<>();
+    private List<Entry> lpgPriceHistory = new ArrayList<>();
+    private List<Entry> elecPriceHistory = new ArrayList<>();
+
     public static int stars = 5;
     public static int choosenStationID;
     public static int userCommentID;
@@ -119,7 +126,6 @@ public class StationDetails extends AppCompatActivity {
     public static float stationScore;
     public static String userComment;
     public static boolean hasAlreadyCommented;
-    public static List<CommentItem> stationCommentList = new ArrayList<>();
     private static int isStationVerified;
     private static float gasolinePrice;
     private static float dieselPrice;
@@ -130,13 +136,10 @@ public class StationDetails extends AppCompatActivity {
     private static String stationVicinity;
     private static String stationLocation;
     private static String iconURL;
-    private static List<CampaignItem> campaignList = new ArrayList<>();
+
     private String facilitiesOfStation;
     private CircleImageView stationIcon;
-    private List<Entry> gasolinePriceHistory = new ArrayList<>();
-    private List<Entry> dieselPriceHistory = new ArrayList<>();
-    private List<Entry> lpgPriceHistory = new ArrayList<>();
-    private List<Entry> elecPriceHistory = new ArrayList<>();
+
     private RelativeTimeTextView textLastUpdated;
 
     private TextView noCampaignText;
@@ -428,6 +431,11 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void fetchStationFinance() {
+        gasolinePriceHistory.clear();
+        dieselPriceHistory.clear();
+        lpgPriceHistory.clear();
+        elecPriceHistory.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
                 new Response.Listener<String>() {
                     @Override

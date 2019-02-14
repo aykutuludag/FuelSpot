@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fuelspot.FragmentSettings.companyList;
+import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
@@ -201,11 +202,28 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
             ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
             assert ownedSkus != null;
 
-            premium = ownedSkus.contains("premium");
+            if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
+                premium = true;
+                prefs.edit().putInt("RANGE", 5000).apply();
+                prefs.edit().putFloat("ZOOM", 12f).apply();
+            } else {
+                premium = false;
+                prefs.edit().putInt("RANGE", 2500).apply();
+                prefs.edit().putFloat("ZOOM", 13f).apply();
+            }
             prefs.edit().putBoolean("hasPremium", premium).apply();
 
-            hasDoubleRange = ownedSkus.contains("2x_range");
-            prefs.edit().putBoolean("hasDoubleRange", premium).apply();
+            if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                hasDoubleRange = true;
+                prefs.edit().putInt("RANGE", 5000).apply();
+                prefs.edit().putFloat("ZOOM", 12f).apply();
+
+            } else {
+                hasDoubleRange = false;
+                prefs.edit().putInt("RANGE", 2500).apply();
+                prefs.edit().putFloat("ZOOM", 13f).apply();
+            }
+            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
         }
     }
 
@@ -435,19 +453,55 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
+        // FragmentHome OnBackPressed
+        if (fragments.get(0) != null) {
+            if (fragments.get(0).isVisible()) {
+                if (doubleBackToExitPressedOnce) {
+                    adCount = 0;
+                    mFragNavController.clearStack();
+                    super.onBackPressed();
+                    finish();
+                }
 
-        new Handler().postDelayed(new Runnable() {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
             }
-        }, 2000);
+        }
+
+        if (fragments.get(1) != null) {
+            if (fragments.get(1).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
+
+        if (fragments.get(2) != null) {
+            if (fragments.get(2).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
+
+        if (fragments.get(3) != null) {
+            if (fragments.get(3).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
+
+        if (fragments.get(4) != null) {
+            if (fragments.get(4).isVisible()) {
+                bottomNavigation.setCurrentItem(0);
+                mFragNavController.switchTab(FragNavController.TAB1);
+            }
+        }
     }
 }

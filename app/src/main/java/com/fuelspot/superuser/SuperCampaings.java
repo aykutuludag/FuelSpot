@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
@@ -128,7 +129,7 @@ public class SuperCampaings extends AppCompatActivity {
                                 mAdapter = new CampaignAdapter(SuperCampaings.this, feedsList);
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
-                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(SuperCampaings.this, 2);
+                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(SuperCampaings.this, 1);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 mRecyclerView.setVisibility(View.VISIBLE);
                             } catch (JSONException e) {
@@ -151,7 +152,8 @@ public class SuperCampaings extends AppCompatActivity {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
                 //Adding parameters
-                params.put("id", String.valueOf(superStationID));
+                params.put("stationID", String.valueOf(superStationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -277,46 +279,53 @@ public class SuperCampaings extends AppCompatActivity {
                     if (campaignDesc != null && campaignDesc.length() > 0) {
                         if (sTime != null && sTime.length() > 0) {
                             if (eTime != null && eTime.length() > 0) {
-                                sendCampaignToServer();
+                                if (isNetworkConnected(SuperCampaings.this)) {
+                                    sendCampaignToServer();
+                                } else {
+                                    Toast.makeText(SuperCampaings.this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                                }
                             } else {
-                                Toast.makeText(SuperCampaings.this, "Lütfen bitiş zamanını seçiniz.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SuperCampaings.this, getString(R.string.empty_campaign_end), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(SuperCampaings.this, "Lütfen başlangıç zamanını seçiniz.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SuperCampaings.this, getString(R.string.empty_campaign_start), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(SuperCampaings.this, "Lütfen kampanya açıklaması yazınız.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SuperCampaings.this, getString(R.string.empty_campaign_desc), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(SuperCampaings.this, "Lütfen kampanya adını giriniz", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SuperCampaings.this, getString(R.string.empty_campaign_name), Toast.LENGTH_LONG).show();
                 }
             }
 
             private void sendCampaignToServer() {
-                final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, "Sending report...", "Please wait...", false, false);
+                final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, getString(R.string.campaign_adding), getString(R.string.please_wait), false, false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_CAMPAING),
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                switch (response) {
-                                    case "Success":
-                                        Toast.makeText(SuperCampaings.this, "Kampanya eklendi...", Toast.LENGTH_LONG).show();
-                                        mPopupWindow.dismiss();
-                                        fetchCampaigns();
-                                        break;
-                                    case "Fail":
-                                        break;
-                                }
                                 loading.dismiss();
-                                Toast.makeText(SuperCampaings.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
+                                if (response != null && response.length() > 0) {
+                                    switch (response) {
+                                        case "Success":
+                                            Toast.makeText(SuperCampaings.this, getString(R.string.campaign_added), Toast.LENGTH_LONG).show();
+                                            mPopupWindow.dismiss();
+                                            fetchCampaigns();
+                                            break;
+                                        case "Fail":
+                                            Toast.makeText(SuperCampaings.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
+                                } else {
+                                    Toast.makeText(SuperCampaings.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
                                 loading.dismiss();
+                                Toast.makeText(SuperCampaings.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                             }
                         }) {
                     @Override
@@ -333,6 +342,7 @@ public class SuperCampaings extends AppCompatActivity {
                         }
                         params.put("campaignStart", sTime);
                         params.put("campaignEnd", eTime);
+                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                         //returning parameters
                         return params;

@@ -302,6 +302,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     register();
                 } else {
                     Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                    prefs.edit().putBoolean("isSigned", false).apply();
                 }
             } else {
                 Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
@@ -353,6 +354,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             register();
                         } else {
                             Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                            prefs.edit().putBoolean("isSigned", false).apply();
                         }
                     }
                 }).executeAsync();
@@ -366,6 +368,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onError(FacebookException error) {
                 Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                prefs.edit().putBoolean("isSigned", false).apply();
             }
         });
     }
@@ -429,6 +432,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
                                 prefs.edit().putBoolean("isSigned", false).apply();
                             }
+                        } else {
+                            Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                            prefs.edit().putBoolean("isSigned", false).apply();
                         }
                     }
                 },

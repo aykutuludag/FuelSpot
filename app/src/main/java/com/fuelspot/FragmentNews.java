@@ -1,8 +1,6 @@
 package com.fuelspot;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,13 +59,11 @@ import static com.fuelspot.MainActivity.userUnit;
 
 public class FragmentNews extends Fragment {
 
-    ArrayAdapter adapter;
     private RecyclerView mRecyclerView;
     private GridLayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private List<NewsItem> feedsList = new ArrayList<>();
     private RelativeLayout errorLayout;
-    private SharedPreferences prefs;
     private SpinKitView proggressBar;
     private View rootView;
     private RequestQueue requestQueue;
@@ -107,7 +102,6 @@ public class FragmentNews extends Fragment {
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
-            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             requestQueue = Volley.newRequestQueue(getActivity());
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             proggressBar = rootView.findViewById(R.id.spin_kit);

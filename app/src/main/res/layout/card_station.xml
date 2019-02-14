@@ -61,6 +61,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
+                android:contentDescription="@string/gasoline"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -87,6 +88,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
+                android:contentDescription="@string/diesel"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -112,6 +114,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
+                android:contentDescription="@string/lpg"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -136,6 +139,7 @@
                 android:src="@drawable/electricity"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
+                android:contentDescription="@string/electricity"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -160,6 +164,7 @@
                 android:src="@drawable/distance"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
+                android:contentDescription="@string/distance"
                 card_view:layout_widthPercent="14%" />
 
             <TextView

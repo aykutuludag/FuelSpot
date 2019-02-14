@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
+import com.fuelspot.adapter.CompanyAdapter;
+import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +47,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static com.fuelspot.FragmentSettings.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
@@ -55,7 +60,7 @@ public class AddStation extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView stationHint;
-    private EditText editTextStationName;
+    private Spinner spinner;
     private EditText editTextStationAddress;
     private EditText editTextStationLicense;
     private RequestQueue requestQueue;
@@ -111,26 +116,7 @@ public class AddStation extends AppCompatActivity {
 
         stationHint = findViewById(R.id.stationHint);
 
-        editTextStationName = findViewById(R.id.superStationName);
-        editTextStationName.setText(stationName);
-        editTextStationName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    stationName = s.toString();
-                }
-            }
-        });
+        spinner = findViewById(R.id.simpleSpinner);
 
         editTextStationAddress = findViewById(R.id.superStationAddress);
         editTextStationAddress.setText(stationAddress);
@@ -350,9 +336,82 @@ public class AddStation extends AppCompatActivity {
     }
 
     private void loadStationDetails() {
-        editTextStationName.setText(stationName);
+        if (companyList != null && companyList.size() > 0) {
+            CompanyAdapter customAdapter = new CompanyAdapter(AddStation.this, companyList);
+            spinner.setEnabled(false);
+            spinner.setClickable(false);
+            spinner.setAdapter(customAdapter);
+
+            for (int i = 0; i < companyList.size(); i++) {
+                if (companyList.get(i).getName().equals(stationName)) {
+                    spinner.setSelection(i, true);
+                    break;
+                }
+            }
+        } else {
+            // Somehow companList didn't fetch at SuperMainActivity. Fetch it.
+            fetchCompanies();
+        }
+
         editTextStationAddress.setText(stationAddress);
         editTextStationLicense.setText(licenseNo);
+    }
+
+    private void fetchCompanies() {
+        companyList.clear();
+
+        //Showing the progress dialog
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CompanyItem item = new CompanyItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setName(obj.getString("companyName"));
+                                    item.setLogo(obj.getString("companyLogo"));
+                                    item.setWebsite(obj.getString("companyWebsite"));
+                                    item.setPhone(obj.getString("companyPhone"));
+                                    item.setAddress(obj.getString("companyAddress"));
+                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                    item.setNumOfStations(obj.getInt("numOfStations"));
+                                    companyList.add(item);
+                                }
+
+
+                            } catch (JSONException e) {
+                                Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     private void superUserRegistration() {

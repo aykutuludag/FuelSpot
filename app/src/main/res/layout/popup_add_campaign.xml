@@ -14,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/gotham_bold"
-        android:text="KAMPANYA ADI"
+        android:text="@string/campaign_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <EditText
@@ -22,11 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView26"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-        android:textColor="#fff" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
     <TextView
         android:id="@+id/textView27"
@@ -38,7 +39,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/gotham_bold"
-        android:text="KAMPANYA DETAYI"
+        android:text="@string/campaign_desc"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <EditText
@@ -46,10 +47,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView27"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
-        android:inputType="textMultiLine"
-        android:textColor="#fff" />
+        android:inputType="textMultiLine" />
 
     <RelativeLayout
         android:id="@+id/timeLayout"
@@ -65,7 +67,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:fontFamily="@font/gotham_bold"
-            android:text="BAŞLANGIÇ"
+            android:text="@string/start_time"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText
@@ -96,7 +98,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:fontFamily="@font/gotham_bold"
-            android:text="BİTİŞ"
+            android:text="@string/end_time"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText
@@ -123,16 +125,18 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/gotham_bold"
-        android:text="KAMPANYA RESMİ"
+        android:text="@string/campaign_photo"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <ImageView
         android:id="@+id/imageViewCampaignPhoto"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
         android:layout_below="@+id/textView25"
         android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:srcCompat="@drawable/default_campaign" />
 
     <Button
@@ -141,7 +145,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageViewCampaignPhoto"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/green_box"
         android:fontFamily="@font/gotham_bold"
-        android:text="TAMAMLA" />
+        android:text="@string/add_campaign" />
 </RelativeLayout>

@@ -42,7 +42,6 @@ public class UserPurchases extends AppCompatActivity {
     private SwipeRefreshLayout swipeContainer;
     private RequestQueue requestQueue;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

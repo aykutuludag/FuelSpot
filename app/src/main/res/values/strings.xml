@@ -26,7 +26,6 @@
     <string name="API_SUPERUSER_FETCH" translatable="false">https://fuel-spot.com/api/superuser/fetch.php</string>
 
     <!-- STATION APIs -->
-    <string name="API_ADD_STATION" translatable="false">https://fuel-spot.com/api/station/add.php</string>
     <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station/update.php</string>
     <string name="API_SEARCH_STATIONS" translatable="false">https://fuel-spot.com/api/station/search.php</string>
     <string name="API_FETCH_STATION" translatable="false">https://fuel-spot.com/api/station/fetch.php</string>
@@ -134,6 +133,7 @@
     <!-- FragmentStations-->
     <string name="sort">Sort</string>
     <string name="see_all">See all</string>
+    <string name="show_less">Show less</string>
     <string name="station_not_found_retry">Station not found. Retrying with range</string>
     <string name="metre">metre</string>
     <string name="no_station">We couldn\'t find any station within 50 kilometers range…</string>
@@ -150,6 +150,7 @@
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
+    <string name="per_100km" translatable="false">/100 km</string>
     <string name="edit">Edit</string>
     <string name="user_purchases">Your purchases</string>
     <string name="no_purchase_user">You didn\'t purchase any fuel. Your purchases and details will be listed here…</string>
@@ -248,6 +249,7 @@
     <!-- StationComments-->
 
     <!-- AutomobileEdit-->
+    <string name="edit_automobile">Edit automobile</string>
     <string name="save">Save</string>
     <string name="saved">Saved…</string>
     <string name="vehicle_updating">Automobile updating</string>
@@ -281,6 +283,7 @@
     <!-- PurchaseDetails-->
 
     <!-- ProfileEdit-->
+    <string name="edit_profile">Edit profile</string>
     <string name="fullname">Full name</string>
     <string name="email">E-mail</string>
     <string name="phone">Phone</string>
@@ -363,9 +366,23 @@
     <string name="station_update_success">Station updated successfully…</string>
     <string name="station_update_fail">An error occurred while updating station… Please try again later</string>
     <string name="note_for_prices">If you have multiple fuels in the same type (Example: Diesel, Euro Diesel), enter the highest price</string>
+    <string name="station_updating">Station updating</string>
+    <string name="fuelspot_station_id">Fuelspot ID:</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
+    <string name="add_campaign">Add campaign</string>
+    <string name="campaign_name">Campaign name</string>
+    <string name="campaign_desc">Campaign details</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+    <string name="campaign_photo">Campaign photo</string>
+    <string name="campaign_adding">Campaign adding</string>
+    <string name="campaign_added">Campaign added successfully</string>
+    <string name="empty_campaign_name">Please enter campaign name</string>
+    <string name="empty_campaign_desc">Please enter campaign description</string>
+    <string name="empty_campaign_start">Please select campaign start date and time</string>
+    <string name="empty_campaign_end">Please select campaign end date and time</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperPurchases-->

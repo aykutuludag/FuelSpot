@@ -58,7 +58,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     @NonNull
     @Override
     public VehicleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_automobile_mini, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_automobile, viewGroup, false);
         return new VehicleAdapter.ViewHolder(v);
     }
 

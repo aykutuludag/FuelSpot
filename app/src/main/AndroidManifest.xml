@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.fuelspot"
-    tools:targetApi="p">
+    package="com.fuelspot">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -11,19 +10,17 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission
-        android:name="android.permission.VIBRATE"
-        android:requiredFeature="false" />
 
     <application
         android:name=".Application"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:launchMode="singleTop"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -56,24 +53,23 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".AutomobileEditActivity"
-            android:label="Otomobil"
+            android:label="@string/edit_automobile"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".StationDetails"
-            android:label="İstasyon detayı"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddFuel"
-            android:label="Yakıt ekle"
+            android:label="@string/add_fuel"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".PurchaseDetails"
-            android:label="Satınalma detayı"
+            android:label="@string/purchase"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileEditActivity"
-            android:label="Profili düzenle"
+            android:label="@string/edit_profile"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -134,7 +130,7 @@
             android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
             android:name=".superuser.SuperProfileEdit"
-            android:label="Profili düzenle"
+            android:label="@string/edit_profile"
             android:parentActivityName=".superuser.SuperMainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity

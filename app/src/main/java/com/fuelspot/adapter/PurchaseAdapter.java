@@ -53,6 +53,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             intent.putExtra("TOTAL_PRICE", feedItemList.get(position).getTotalPrice());
             intent.putExtra("BILL_PHOTO", feedItemList.get(position).getBillPhoto());
             intent.putExtra("IS_PURCHASE_VERIFIED", feedItemList.get(position).getIsVerified());
+            intent.putExtra("PLATE_NO", feedItemList.get(position).getPlateNo());
+
             mContext.startActivity(intent);
         }
     };
@@ -171,7 +173,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout backgroundClick, type1Layout, type2Layout;
+        RelativeLayout backgroundClick, type2Layout;
         TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text, bonusText;
         ImageView stationLogo, type1, type2;
         RelativeTimeTextView purchaseTime;
@@ -182,7 +184,6 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             stationLogo = itemView.findViewById(R.id.imageViewStationLogo);
             stationName = itemView.findViewById(R.id.station_name);
 
-            type1Layout = itemView.findViewById(R.id.typeLayout);
             type1 = itemView.findViewById(R.id.type1);
             type1Text = itemView.findViewById(R.id.type1Text);
             amount1 = itemView.findViewById(R.id.amount1);

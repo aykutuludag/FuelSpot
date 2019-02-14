@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.universalTimeFormat;
 
 public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHolder> {
     private List<CampaignItem> mItemList;
@@ -44,8 +46,8 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
                 mPopupWindow.setElevation(5.0f);
             }
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat dtformat = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+            SimpleDateFormat shortFormat = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
 
             ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
             Glide.with(mContext).load(mItemList.get(position).getCampaignPhoto()).into(imgPopup);
@@ -58,8 +60,8 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
 
             TextView startTime = customView.findViewById(R.id.startTime);
             try {
-                Date date = format.parse(mItemList.get(position).getCampaignStart());
-                startTime.setText(format2.format(date));
+                Date date = dtformat.parse(mItemList.get(position).getCampaignStart());
+                startTime.setText(shortFormat.format(date));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -67,8 +69,8 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
 
             TextView endTime = customView.findViewById(R.id.endTime);
             try {
-                Date date = format.parse(mItemList.get(position).getCampaignEnd());
-                endTime.setText(format2.format(date));
+                Date date = dtformat.parse(mItemList.get(position).getCampaignEnd());
+                endTime.setText(shortFormat.format(date));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

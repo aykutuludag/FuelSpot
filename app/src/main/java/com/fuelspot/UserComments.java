@@ -29,9 +29,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import static com.fuelspot.FragmentProfile.userCommentList;
-import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class UserComments extends AppCompatActivity {
 
@@ -76,8 +74,6 @@ public class UserComments extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        loadComments();
     }
 
     private void loadComments() {
@@ -96,18 +92,7 @@ public class UserComments extends AppCompatActivity {
         userCommentList.clear();
         mAdapter.notifyDataSetChanged();
 
-        final String whichApi, whichParamater, whichValue;
-        if (isSuperUser) {
-            whichApi = getString(R.string.API_FETCH_STATION_COMMENTS);
-            whichParamater = "stationID";
-            whichValue = String.valueOf(superStationID);
-        } else {
-            whichApi = getString(R.string.API_FETCH_USER_COMMENTS);
-            whichParamater = "username";
-            whichValue = username;
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, whichApi,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -154,7 +139,7 @@ public class UserComments extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put(whichParamater, whichValue);
+                params.put("username", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

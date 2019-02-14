@@ -8,8 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#EDEDED">
+        android:layout_height="wrap_content">
 
         <include
             layout="@layout/header_profile"
@@ -19,7 +18,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="285dp">
+            android:layout_marginTop="272dp"
+            android:background="@drawable/round_layout">
 
             <RelativeLayout
                 android:id="@+id/automobiles_layout"
@@ -64,8 +64,7 @@
                 android:id="@+id/commentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/automobiles_layout"
-                android:background="@drawable/round_layout">
+                android:layout_below="@id/automobiles_layout">
 
                 <TextView
                     android:id="@+id/titleComment"

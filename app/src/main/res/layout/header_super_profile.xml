@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_profile"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:layout_height="250dp"
+    android:layout_margin="4dp">
 
     <ImageView
         android:id="@+id/updateUserInfo"
@@ -11,8 +12,8 @@
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"
-        android:padding="4dp"
         android:contentDescription="@string/edit"
+        android:padding="4dp"
         app:srcCompat="@drawable/edit" />
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -42,8 +43,7 @@
         android:id="@+id/buttonBars"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/userUsername"
-        android:padding="4dp">
+        android:layout_below="@id/userUsername">
 
         <Button
             android:id="@+id/button_fav"

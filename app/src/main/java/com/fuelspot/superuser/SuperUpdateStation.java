@@ -25,7 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -48,7 +47,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.FragmentSettings.companyList;
-import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
@@ -60,14 +59,12 @@ import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
 import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
-import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class SuperUpdateStation extends AppCompatActivity {
 
-    private TextView stationAddressHolder;
+    private EditText stationAddressHolder;
     private TextView stationLicenseHolder;
-    private TextView textViewOwnerHolder;
     private TextView textViewStationIDHolder;
     private EditText gasolineHolder;
     private EditText dieselHolder;
@@ -76,7 +73,6 @@ public class SuperUpdateStation extends AppCompatActivity {
     private Button buttonUpdateStation;
     private RequestQueue requestQueue;
     private RelativeTimeTextView lastUpdateTimeText;
-    private CircleImageView stationLogoHolder;
     private CircleImageView imageViewWC;
     private CircleImageView imageViewMarket;
     private CircleImageView imageViewCarWash;
@@ -111,11 +107,9 @@ public class SuperUpdateStation extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
-        stationLogoHolder = findViewById(R.id.stationLogo);
         spinner = findViewById(R.id.simpleSpinner);
         stationAddressHolder = findViewById(R.id.editTextStationAddress);
         stationLicenseHolder = findViewById(R.id.editTextStationLicense);
-        textViewOwnerHolder = findViewById(R.id.editTextOwner);
         textViewStationIDHolder = findViewById(R.id.textViewStationID);
         lastUpdateTimeText = findViewById(R.id.stationLastUpdate);
         verifiedLayout = findViewById(R.id.verifiedSection);
@@ -164,12 +158,26 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         // Layout items
         stationAddressHolder.setText(superStationAddress);
+        stationAddressHolder.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    superStationAddress = s.toString();
+                }
+            }
+        });
 
         stationLicenseHolder.setText(superLicenseNo);
-
-        textViewOwnerHolder.setText(name);
-
-        Glide.with(this).load(superStationLogo).apply(options).into(stationLogoHolder);
 
         // if stationVerified == 1, this section shows up!
         if (isStationVerified == 1) {
@@ -179,13 +187,13 @@ public class SuperUpdateStation extends AppCompatActivity {
         }
 
         if (superLastUpdate != null && superLastUpdate.length() > 0) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
             try {
                 Date date = format.parse(superLastUpdate);
                 lastUpdateTimeText.setReferenceTime(date.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
-                lastUpdateTimeText.setText("Son güncelleme: ");
+                lastUpdateTimeText.setText(getString(R.string.last_update));
             }
         }
 
@@ -504,21 +512,27 @@ public class SuperUpdateStation extends AppCompatActivity {
     }
 
     private void updateStation() {
-        final ProgressDialog loading = ProgressDialog.show(SuperUpdateStation.this, "İstasyon güncelleniyor...", "Lütfen bekleyiniz...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(SuperUpdateStation.this, getString(R.string.station_updating), getString(R.string.please_wait), false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_STATION),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            loading.dismiss();
                             switch (response) {
                                 case "Success":
                                     Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_success), Toast.LENGTH_LONG).show();
+                                    finish();
                                     break;
                                 case "Fail":
                                     Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
                                     break;
+                                default:
+                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
+                                    break;
                             }
+                        } else {
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -538,6 +552,7 @@ public class SuperUpdateStation extends AppCompatActivity {
                 params.put("stationID", String.valueOf(superStationID));
                 params.put("stationName", superStationName);
                 params.put("country", superStationCountry);
+                params.put("address", superStationAddress);
                 String dummy = "[" + String.valueOf(facilitiesObj) + "]";
                 params.put("facilities", dummy);
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));

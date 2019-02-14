@@ -4,8 +4,7 @@
     xmlns:map="http://schemas.android.com/tools"
     android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#EAEAEA">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
                 android:text="@string/tab_stations"
@@ -56,7 +54,7 @@
                 <RelativeLayout
                     android:id="@+id/sortGasoline"
                     android:layout_height="wrap_content"
-                    android:alpha="0.5"
+                    android:alpha="0.33"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="21%"
                     app:layout_widthPercent="14%">
@@ -89,7 +87,7 @@
                     android:id="@+id/sortDiesel"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/sortGasoline"
-                    android:alpha="0.5"
+                    android:alpha="0.33"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
                     app:layout_widthPercent="14%">
@@ -122,7 +120,7 @@
                     android:id="@+id/sortLPG"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/sortDiesel"
-                    android:alpha="0.5"
+                    android:alpha="0.33"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
                     app:layout_widthPercent="14%">
@@ -155,7 +153,7 @@
                     android:id="@+id/sortElectric"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/sortLPG"
-                    android:alpha="0.5"
+                    android:alpha="0.33"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
                     app:layout_widthPercent="14%">
@@ -188,7 +186,7 @@
                     android:id="@+id/sortDistance"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/sortElectric"
-                    android:alpha="1.0"
+                    android:alpha="0.33"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
                     app:layout_widthPercent="14%">

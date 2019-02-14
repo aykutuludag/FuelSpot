@@ -102,9 +102,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             for (int i = 0; i < fullStationList.size(); i++) {
                 double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
                 double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
-                locationFence = LocationFence.in(stationLat, stationLon, 50, 10000L);
+                locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
                 AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
+                registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
             }
         } else {
             mLocationRequest = new LocationRequest();
@@ -172,9 +172,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     // Add fence
                                     double lat = Double.parseDouble(item.getLocation().split(";")[0]);
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
-                                    locationFence = LocationFence.in(lat, lon, 50, 10000L);
+                                    locationFence = LocationFence.in(lat, lon, 50, 15000L);
                                     AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                                    registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
+                                    registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
 
                                     mapDefaultRange = 2500;
                                     mapDefaultZoom = 13f;

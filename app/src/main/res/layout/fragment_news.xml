@@ -14,7 +14,8 @@
         <RelativeLayout
             android:id="@+id/layout_news"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_layout">
 
             <TextView
                 android:id="@+id/title_News"
@@ -55,7 +56,9 @@
             android:id="@+id/statsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_news">
+            android:layout_below="@+id/layout_news"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/round_layout">
 
             <TextView
                 android:id="@+id/title_stats"
