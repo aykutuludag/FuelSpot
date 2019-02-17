@@ -360,8 +360,13 @@ public class FragmentStations extends Fragment {
                                     }
 
                                     // Sort by primary fuel
-                                    whichOrder = fuelPri;
-                                    sortBy(whichOrder);
+                                    if (!isSuperUser) {
+                                        whichOrder = fuelPri;
+                                        sortBy(whichOrder);
+                                    } else {
+                                        whichOrder = 4;
+                                        sortBy(whichOrder);
+                                    }
 
                                     // Create a fence
                                     if (!isSuperUser && isGeofenceOpen) {
@@ -436,16 +441,12 @@ public class FragmentStations extends Fragment {
                 Collections.sort(fullStationList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
                         if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() == 0) {
-                            // 0TL, 0TL
+                            return 0;
+                        } else if (obj1.getGasolinePrice() == 0) {
                             return 1;
-                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
-                            // 0 TL, 5 TL
-                            return 1;
-                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
-                            // 5TL, 0TL
+                        } else if (obj2.getGasolinePrice() == 0) {
                             return -1;
                         } else {
-                            // 3.85 TL, 3.97 TL
                             return Float.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
                         }
                     }
@@ -461,16 +462,12 @@ public class FragmentStations extends Fragment {
                 Collections.sort(fullStationList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
                         if (obj1.getDieselPrice() == 0 && obj2.getDieselPrice() == 0) {
-                            // 0TL, 0TL
+                            return 0;
+                        } else if (obj1.getDieselPrice() == 0) {
                             return 1;
-                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
-                            // 0 TL, 5 TL
-                            return 1;
-                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
-                            // 5TL, 0TL
+                        } else if (obj2.getDieselPrice() == 0) {
                             return -1;
                         } else {
-                            // 3.85 TL, 3.97 TL
                             return Float.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
                         }
                     }
@@ -486,16 +483,12 @@ public class FragmentStations extends Fragment {
                 Collections.sort(fullStationList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
                         if (obj1.getLpgPrice() == 0 && obj2.getLpgPrice() == 0) {
-                            // 0TL, 0TL
+                            return 0;
+                        } else if (obj1.getLpgPrice() == 0) {
                             return 1;
-                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
-                            // 0 TL, 5 TL
-                            return 1;
-                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
-                            // 5TL, 0TL
+                        } else if (obj2.getLpgPrice() == 0) {
                             return -1;
                         } else {
-                            // 3.85 TL, 3.97 TL
                             return Float.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
                         }
                     }
@@ -511,16 +504,12 @@ public class FragmentStations extends Fragment {
                 Collections.sort(fullStationList, new Comparator<StationItem>() {
                     public int compare(StationItem obj1, StationItem obj2) {
                         if (obj1.getElectricityPrice() == 0 && obj2.getElectricityPrice() == 0) {
-                            // 0TL, 0TL
+                            return 0;
+                        } else if (obj1.getElectricityPrice() == 0) {
                             return 1;
-                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
-                            // 0 TL, 5 TL
-                            return 1;
-                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
-                            // 5TL, 0TL
+                        } else if (obj2.getElectricityPrice() == 0) {
                             return -1;
                         } else {
-                            // 3.85 TL, 3.97 TL
                             return Float.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
                         }
                     }
