@@ -341,34 +341,10 @@
                 </android.support.percent.PercentRelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/statsSection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/single_station">
-
-                    <TextView
-                        android:id="@+id/title_stats"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_margin="4dp"
-                        android:gravity="center"
-                        android:text="@string/priceHistory"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#161616" />
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/chart"
-                        android:layout_width="match_parent"
-                        android:layout_height="225dp"
-                        android:layout_below="@id/title_stats" />
-                </RelativeLayout>
-
-                <RelativeLayout
                     android:id="@+id/facilitiesSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/statsSection">
+                    android:layout_below="@id/single_station">
 
                     <TextView
                         android:id="@+id/title_facilities"
@@ -590,6 +566,30 @@
                         android:contentDescription="@string/no_comment_text"
                         app:srcCompat="@drawable/error_nocomment" />
 
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/statsSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/commentSection">
+
+                    <TextView
+                        android:id="@+id/title_stats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:text="@string/priceHistory"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#161616" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="225dp"
+                        android:layout_below="@id/title_stats" />
                 </RelativeLayout>
 
             </RelativeLayout>

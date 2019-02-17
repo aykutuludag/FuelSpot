@@ -148,7 +148,7 @@ public class FragmentAutomobile extends Fragment {
         Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
         kilometerText = headerView.findViewById(R.id.automobile_kilometer);
-        String kmHolder = kilometer + " " + getActivity().getString(R.string.kilometer);
+        String kmHolder = kilometer + " " + getString(R.string.kilometer);
         kilometerText.setText(kmHolder);
 
         TextView textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);

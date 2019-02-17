@@ -65,7 +65,7 @@ import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.fuelPri;
-import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -79,7 +79,6 @@ import static com.fuelspot.MainActivity.userlon;
 public class FragmentStations extends Fragment {
 
     // Station variables
-    public static List<StationItem> fullStationList = new ArrayList<>();
     private List<StationItem> shortStationList = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
     private boolean isAllStationsListed;
@@ -101,6 +100,8 @@ public class FragmentStations extends Fragment {
     private RelativeLayout sortDistanceLayout;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    int whichOrder;
+    boolean isMapUpdating;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -111,7 +112,6 @@ public class FragmentStations extends Fragment {
         return fragment;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -155,38 +155,37 @@ public class FragmentStations extends Fragment {
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();
                                     prefs.edit().putString("lon", userlon).apply();
-                                    getVariables(prefs);
 
                                     float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                    if (distanceInMeter >= (mapDefaultRange / 2)) {
+                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
                                         // User's position has been changed. Load the new map
                                         locLastKnown.setLatitude(Double.parseDouble(userlat));
                                         locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                        updateMap();
+                                        if (!isMapUpdating) {
+                                            updateMap();
+                                        }
                                     } else {
                                         // User position changed a little. Just update distances
-                                        if (fullStationList != null && fullStationList.size() > 0) {
-                                            for (int i = 0; i < fullStationList.size(); i++) {
-                                                String[] stationLocation = fullStationList.get(i).getLocation().split(";");
-                                                double stationLat = Double.parseDouble(stationLocation[0]);
-                                                double stationLon = Double.parseDouble(stationLocation[1]);
+                                        for (int i = 0; i < fullStationList.size(); i++) {
+                                            String[] stationLocation = fullStationList.get(i).getLocation().split(";");
+                                            double stationLat = Double.parseDouble(stationLocation[0]);
+                                            double stationLon = Double.parseDouble(stationLocation[1]);
 
-                                                Location locStation = new Location("");
-                                                locStation.setLatitude(stationLat);
-                                                locStation.setLongitude(stationLon);
+                                            Location locStation = new Location("");
+                                            locStation.setLatitude(stationLat);
+                                            locStation.setLongitude(stationLon);
 
-                                                float newDistance = locCurrent.distanceTo(locStation);
-                                                fullStationList.get(i).setDistance((int) newDistance);
-                                            }
-                                            mAdapter.notifyDataSetChanged();
+                                            float newDistance = locCurrent.distanceTo(locStation);
+                                            fullStationList.get(i).setDistance((int) newDistance);
                                         }
+                                        mAdapter.notifyDataSetChanged();
                                     }
                                 } else {
                                     Toast.makeText(getActivity(), getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getActivity().getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                             }
                         }
                     }
@@ -202,31 +201,36 @@ public class FragmentStations extends Fragment {
             sortGasolineLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sortBy(0);
+                    whichOrder = 0;
+                    sortBy(whichOrder);
                 }
             });
             sortDieselLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sortBy(1);
+                    whichOrder = 1;
+                    sortBy(whichOrder);
                 }
             });
             sortLPGLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sortBy(2);
+                    whichOrder = 2;
+                    sortBy(whichOrder);
                 }
             });
             sortElectricityLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sortBy(3);
+                    whichOrder = 3;
+                    sortBy(whichOrder);
                 }
             });
             sortDistanceLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sortBy(4);
+                    whichOrder = 4;
+                    sortBy(whichOrder);
                 }
             });
 
@@ -240,7 +244,7 @@ public class FragmentStations extends Fragment {
                 @Override
                 public void onClick(View v) {
                     isAllStationsListed = !isAllStationsListed;
-                    sortBy(4);
+                    sortBy(whichOrder);
                 }
             });
 
@@ -267,13 +271,13 @@ public class FragmentStations extends Fragment {
                     googleMap.getUiSettings().setMapToolbarEnabled(false);
                     googleMap.setTrafficEnabled(true);
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
-                    updateMap();
                 }
             });
         }
     }
 
-    private void updateMap() {
+    void updateMap() {
+        isMapUpdating = true;
         shortStationList.clear();
         fullStationList.clear();
         markers.clear();
@@ -282,6 +286,7 @@ public class FragmentStations extends Fragment {
         seeAllStations.setText(getString(R.string.see_all));
         seeAllStations.setVisibility(View.GONE);
         noStationError.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
 
         if (googleMap != null) {
             googleMap.clear();
@@ -293,6 +298,9 @@ public class FragmentStations extends Fragment {
                     .fillColor(0x220000FF)
                     .strokeColor(Color.parseColor("#FF5635")));
 
+            MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
+            googleMap.setInfoWindowAdapter(customInfoWindow);
+
             // For zooming automatically to the location of the marker
             LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
             CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
@@ -302,16 +310,17 @@ public class FragmentStations extends Fragment {
         if (isNetworkConnected(getActivity())) {
             searchStations();
         } else {
+            isMapUpdating = false;
             Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
         }
     }
 
     private void searchStations() {
-        //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATIONS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        isMapUpdating = false;
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -339,34 +348,56 @@ public class FragmentStations extends Fragment {
                                     fullStationList.add(item);
                                 }
 
-                                if (fullStationList.size() > 5) {
-                                    seeAllStations.setVisibility(View.VISIBLE);
-                                } else {
-                                    seeAllStations.setVisibility(View.GONE);
-                                }
+                                if (fullStationList.size() > 0) {
+                                    Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
+                                    // Stations fetched. Visible recyclerview
+                                    mRecyclerView.setVisibility(View.VISIBLE);
 
-                                // Sort by primary fuel
-                                sortBy(fuelPri);
+                                    if (fullStationList.size() > 5) {
+                                        seeAllStations.setVisibility(View.VISIBLE);
+                                    } else {
+                                        seeAllStations.setVisibility(View.GONE);
+                                    }
 
-                                // Create a fence
-                                if (!isSuperUser && isGeofenceOpen) {
-                                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
-                                        AlarmBuilder(getActivity());
+                                    // Sort by primary fuel
+                                    whichOrder = fuelPri;
+                                    sortBy(whichOrder);
+
+                                    // Create a fence
+                                    if (!isSuperUser && isGeofenceOpen) {
+                                        if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                                            AlarmBuilder(getActivity());
+                                        }
                                     }
                                 }
-
-                                // Restart map values if changed
-                                mapDefaultRange = 2500;
-                                mapDefaultZoom = 13f;
                             } catch (JSONException e) {
                                 noStationError.setVisibility(View.VISIBLE);
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            if (mapDefaultRange != 50000) {
-                                reTry();
+                            if (mapDefaultRange == 2500) {
+                                mapDefaultRange = 5000;
+                                mapDefaultZoom = 12f;
+                                Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                updateMap();
+                            } else if (mapDefaultRange == 5000) {
+                                mapDefaultRange = 10000;
+                                mapDefaultZoom = 11.25f;
+                                Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                updateMap();
+                            } else if (mapDefaultRange == 10000) {
+                                mapDefaultRange = 25000;
+                                mapDefaultZoom = 10f;
+                                Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                updateMap();
+                            } else if (mapDefaultRange == 25000) {
+                                mapDefaultRange = 50000;
+                                mapDefaultZoom = 8.75f;
+                                Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                updateMap();
                             } else {
-                                Toast.makeText(getActivity(), getActivity().getString(R.string.no_station), Toast.LENGTH_SHORT).show();
+                                // no station within 50km
+                                Toast.makeText(getActivity(), getString(R.string.no_station), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -374,6 +405,7 @@ public class FragmentStations extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        isMapUpdating = false;
                         noStationError.setVisibility(View.VISIBLE);
                         volleyError.printStackTrace();
                     }
@@ -396,32 +428,6 @@ public class FragmentStations extends Fragment {
         queue.add(stringRequest);
     }
 
-    private void reTry() {
-        // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-
-        switch (mapDefaultRange) {
-            case 2500:
-                mapDefaultRange = 5000;
-                mapDefaultZoom = 12.5f;
-                break;
-            case 5000:
-                mapDefaultRange = 10000;
-                mapDefaultZoom = 11.5f;
-                break;
-            case 10000:
-                mapDefaultRange = 25000;
-                mapDefaultZoom = 10f;
-                break;
-            case 25000:
-                mapDefaultRange = 50000;
-                mapDefaultZoom = 8.5f;
-                break;
-        }
-
-        Toast.makeText(getActivity(), getActivity().getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getActivity().getString(R.string.metre), Toast.LENGTH_SHORT).show();
-        updateMap();
-    }
-
     private void sortBy(int position) {
         shortStationList.clear();
 
@@ -432,10 +438,10 @@ public class FragmentStations extends Fragment {
                         if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() == 0) {
                             // 0TL, 0TL
                             return 1;
-                        } else if (obj1.getGasolinePrice() == 0) {
+                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
                             // 0 TL, 5 TL
                             return 1;
-                        } else if (obj2.getGasolinePrice() == 0) {
+                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
                             // 5TL, 0TL
                             return -1;
                         } else {
@@ -457,10 +463,10 @@ public class FragmentStations extends Fragment {
                         if (obj1.getDieselPrice() == 0 && obj2.getDieselPrice() == 0) {
                             // 0TL, 0TL
                             return 1;
-                        } else if (obj1.getDieselPrice() == 0) {
+                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
                             // 0 TL, 5 TL
                             return 1;
-                        } else if (obj2.getDieselPrice() == 0) {
+                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
                             // 5TL, 0TL
                             return -1;
                         } else {
@@ -482,10 +488,10 @@ public class FragmentStations extends Fragment {
                         if (obj1.getLpgPrice() == 0 && obj2.getLpgPrice() == 0) {
                             // 0TL, 0TL
                             return 1;
-                        } else if (obj1.getLpgPrice() == 0) {
+                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
                             // 0 TL, 5 TL
                             return 1;
-                        } else if (obj2.getLpgPrice() == 0) {
+                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
                             // 5TL, 0TL
                             return -1;
                         } else {
@@ -507,10 +513,10 @@ public class FragmentStations extends Fragment {
                         if (obj1.getElectricityPrice() == 0 && obj2.getElectricityPrice() == 0) {
                             // 0TL, 0TL
                             return 1;
-                        } else if (obj1.getElectricityPrice() == 0) {
+                        } else if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() != 0) {
                             // 0 TL, 5 TL
                             return 1;
-                        } else if (obj2.getElectricityPrice() == 0) {
+                        } else if (obj2.getGasolinePrice() == 0 && obj1.getGasolinePrice() != 0) {
                             // 5TL, 0TL
                             return -1;
                         } else {
@@ -539,21 +545,35 @@ public class FragmentStations extends Fragment {
                 sortElectricityLayout.setAlpha(0.33f);
                 sortDistanceLayout.setAlpha(1.0f);
                 break;
-            default:
-                Collections.sort(fullStationList, new Comparator<StationItem>() {
-                    public int compare(StationItem obj1, StationItem obj2) {
-                        return Float.compare(obj1.getDistance(), obj2.getDistance());
-                    }
-                });
-
-                sortGasolineLayout.setAlpha(0.33f);
-                sortDieselLayout.setAlpha(0.33f);
-                sortLPGLayout.setAlpha(0.33f);
-                sortElectricityLayout.setAlpha(0.33f);
-                sortDistanceLayout.setAlpha(1.0f);
-                break;
         }
 
+        if (isAllStationsListed) {
+            mAdapter = new StationAdapter(getActivity(), fullStationList, "NEARBY_STATIONS");
+            seeAllStations.setText(getString(R.string.show_less));
+        } else {
+            int untilWhere;
+            if (fullStationList.size() < 5) {
+                untilWhere = fullStationList.size();
+            } else {
+                untilWhere = 5;
+            }
+
+            for (int i = 0; i < untilWhere; i++) {
+                shortStationList.add(fullStationList.get(i));
+            }
+            mAdapter = new StationAdapter(getActivity(), shortStationList, "NEARBY_STATIONS");
+            seeAllStations.setText(getString(R.string.see_all));
+        }
+
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+        // Create markers
+        markers.clear();
+        addMarkers();
+    }
+
+    private void addMarkers() {
         if (googleMap != null) {
             googleMap.clear();
 
@@ -563,35 +583,24 @@ public class FragmentStations extends Fragment {
                     .radius(mapDefaultRange)
                     .fillColor(0x220000FF)
                     .strokeColor(Color.parseColor("#FF5635")));
-
-            MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
-            googleMap.setInfoWindowAdapter(customInfoWindow);
         }
 
         if (isAllStationsListed) {
             for (int i = 0; i < fullStationList.size(); i++) {
                 addMarker(fullStationList.get(i));
             }
-            mAdapter = new StationAdapter(getActivity(), fullStationList, "NEARBY_STATIONS");
-            seeAllStations.setText(getString(R.string.show_less));
         } else {
             int untilWhere;
-            if (fullStationList.size() >= 5) {
-                untilWhere = 5;
-            } else {
+            if (fullStationList.size() < 5) {
                 untilWhere = fullStationList.size();
+            } else {
+                untilWhere = 5;
             }
 
             for (int i = 0; i < untilWhere; i++) {
-                shortStationList.add(fullStationList.get(i));
                 addMarker(fullStationList.get(i));
             }
-            mAdapter = new StationAdapter(getActivity(), shortStationList, "NEARBY_STATIONS");
-            seeAllStations.setText(getString(R.string.see_all));
         }
-
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
         markers.get(0).showInfoWindow();
     }
 
@@ -638,7 +647,6 @@ public class FragmentStations extends Fragment {
                             googleMap.getUiSettings().setMapToolbarEnabled(false);
                             googleMap.setTrafficEnabled(true);
                             googleMap.getUiSettings().setZoomControlsEnabled(true);
-                            updateMap();
                         }
                     });
                 } else {
@@ -695,19 +703,6 @@ public class FragmentStations extends Fragment {
 
         if (mMapView != null) {
             mMapView.onDestroy();
-        }
-
-        if (queue != null) {
-            queue.cancelAll(getActivity());
-        }
-
-        markers.clear();
-        fullStationList.clear();
-        shortStationList.clear();
-        rootView = null;
-
-        if (mRecyclerView != null) {
-            mRecyclerView.getRecycledViewPool().clear();
         }
     }
 

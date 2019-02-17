@@ -87,7 +87,6 @@ public class FragmentMyStation extends Fragment {
     private RelativeTimeTextView textLastUpdated;
     private ImageView stationIcon;
     private Button editStation;
-    private Button openPurchases;
     private Button openComments;
     private Button openCampaings;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -184,20 +183,7 @@ public class FragmentMyStation extends Fragment {
                         Intent i = new Intent(getActivity(), SuperUpdateStation.class);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
-                    }
-                }
-            });
-
-            openPurchases = rootView.findViewById(R.id.buttonPurchases);
-            openPurchases.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isStationVerified == 1) {
-                        Intent i = new Intent(getActivity(), SuperPurchases.class);
-                        startActivity(i);
-                    } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -211,7 +197,7 @@ public class FragmentMyStation extends Fragment {
                         i.putExtra("ISTASYON_ID", superStationID);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
@@ -224,7 +210,7 @@ public class FragmentMyStation extends Fragment {
                         Intent i = new Intent(getActivity(), SuperCampaings.class);
                         startActivity(i);
                     } else {
-                        Snackbar.make(getActivity().findViewById(R.id.pager), getActivity().getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(getActivity().findViewById(R.id.pager), getString(R.string.station_waiting_approval), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });

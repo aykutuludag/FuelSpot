@@ -286,35 +286,5 @@
                 android:text="@string/campaigns" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/purchase_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/campaign_section"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="@string/purchase_section_desc" />
-
-            <Button
-                android:id="@+id/buttonPurchases"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView11"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/green_box"
-                android:text="@string/purchases" />
-        </RelativeLayout>
-
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

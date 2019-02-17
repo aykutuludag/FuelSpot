@@ -445,10 +445,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         if (mServiceConn != null) {
             unbindService(mServiceConn);
         }
-
-        if (queue != null) {
-            queue.cancelAll(this);
-        }
     }
 
     @Override

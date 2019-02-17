@@ -121,10 +121,6 @@
             android:label="@string/add_station"
             android:parentActivityName=".superuser.SuperMainActivity" />
         <activity
-            android:name=".superuser.SuperPurchases"
-            android:label="@string/purchases"
-            android:parentActivityName=".superuser.SuperMainActivity" />
-        <activity
             android:name=".superuser.SuperCampaings"
             android:label="@string/campaigns"
             android:parentActivityName=".superuser.SuperMainActivity" />

@@ -40,12 +40,11 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.fuelspot.FragmentStations.fullStationList;
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
+import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
-import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
@@ -56,9 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private AwarenessFence locationFence;
     private AwarenessFence vehicleFence;
     private Context mContext;
-    private LocationRequest mLocationRequest;
     private SharedPreferences prefs;
-    private LocationCallback mLocationCallback;
     private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
@@ -71,7 +68,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             // If phone restarted, this section detects that and reschedule alarm
             scheduleAlarm();
         } else {
-            // Every 15 mins, re-create fences.
+            // Every 30 mins, re-create fences.
             createFences();
         }
     }
@@ -84,7 +81,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, mPendingIntent);
         }
     }
 
@@ -104,14 +101,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
                 locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
                 AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
+                registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
             }
         } else {
-            mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(15 * 60 * 1000);
+            LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(30 * 60 * 1000);
             mLocationRequest.setFastestInterval(1000);
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            mLocationCallback = new LocationCallback() {
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationCallback mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
                     if (mContext != null && locationResult != null) {
@@ -119,7 +116,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                             super.onLocationResult(locationResult);
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();
@@ -174,17 +171,24 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
                                     locationFence = LocationFence.in(lat, lon, 50, 15000L);
                                     AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                                    registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
-
-                                    mapDefaultRange = 2500;
-                                    mapDefaultZoom = 13f;
+                                    registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            if (mapDefaultRange != 50000) {
-                                reTry();
+                            if (mapDefaultRange == 2500) {
+                                mapDefaultRange = 5000;
+                                fetchStations();
+                            } else if (mapDefaultRange == 5000) {
+                                mapDefaultRange = 10000;
+                                fetchStations();
+                            } else if (mapDefaultRange == 10000) {
+                                mapDefaultRange = 25000;
+                                fetchStations();
+                            } else if (mapDefaultRange == 25000) {
+                                mapDefaultRange = 50000;
+                                fetchStations();
                             }
                         }
                     }
@@ -212,29 +216,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Adding request to the queue
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
-    }
-
-    private void reTry() {
-        // Maybe s/he is in the countryside. Increase mapDefaultRange, decrease mapDefaultZoom
-        switch (mapDefaultRange) {
-            case 2500:
-                mapDefaultRange = 5000;
-                mapDefaultZoom = 12.5f;
-                break;
-            case 5000:
-                mapDefaultRange = 10000;
-                mapDefaultZoom = 11.5f;
-                break;
-            case 10000:
-                mapDefaultRange = 25000;
-                mapDefaultZoom = 10f;
-                break;
-            case 25000:
-                mapDefaultRange = 50000;
-                mapDefaultZoom = 8.5f;
-                break;
-        }
-        fetchStations();
     }
 
     private void registerFence(final String fenceKey, final AwarenessFence fence) {

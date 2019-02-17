@@ -54,13 +54,14 @@
     <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
 
     <!-- FragmentStations-->
-    <string name="sort">Sırala</string>
     <string name="see_all">Hepsini gör</string>
     <string name="show_less">Daha az göster</string>
     <string name="station_not_found_retry">İstasyon bulunamadı. Yeni menzil</string>
     <string name="metre">metre</string>
     <string name="no_station">Yakın çevrede istasyon bulunamadı…</string>
     <string name="error_no_location">Konumunuzu tespit edemedik. Lütfen konum ayarlarını kontrol ediniz</string>
+    <string name="station_found_pretext">Yakın çevrende</string>
+    <string name="station_found_aftertext">istasyon bulduk.</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->
@@ -270,8 +271,6 @@
     <string name="station_update_desc">Buradan temel istasyon bilgilerini (fiyatlar, tesisler, adres…) düzenleyebilsin.</string>
     <string name="comments_section_desc">İstasyonun için yazılan yorumları burada görebilir ve cevaplayabilirsin.</string>
     <string name="campaign_section_desc">Geçmiş ve devam etmekte olan kampanyaları buradan yönetebilirsin</string>
-    <string name="purchases">Satın almalar</string>
-    <string name="purchase_section_desc">Buradan FuelSpot üzerinden gerçekleştirilen satın almaları görebilirsin</string>
     <!-- FragmentMyStation-->
 
     <!-- FragmentSuperProfile-->
@@ -306,9 +305,6 @@
     <string name="empty_campaign_start">Lütfen kampanya başlangıç gün ve saatini seçiniz</string>
     <string name="empty_campaign_end">Lütfen kampanya bitiş gün ve saatini seçiniz</string>
     <!-- SuperCampaigns-->
-
-    <!-- SuperPurchases-->
-    <!-- SuperPurchases-->
 
     <!-- SuperStore-->
     <!-- SuperStore-->

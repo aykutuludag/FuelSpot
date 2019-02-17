@@ -69,6 +69,7 @@ import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.adapter.CompanyAdapter;
 import com.fuelspot.model.CompanyItem;
+import com.fuelspot.model.StationItem;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -135,12 +136,14 @@ import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
 import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
+import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
 import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
@@ -624,7 +627,45 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-                                if (res.length() > 0) {
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setCountryCode(obj.getString("country"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setFacilities(obj.getString("facilities"));
+                                    item.setLicenseNo(obj.getString("licenseNo"));
+                                    item.setOwner(obj.getString("owner"));
+                                    item.setPhotoURL(obj.getString("logoURL"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
+
+                                    //DISTANCE START
+                                    Location locLastKnow = new Location("");
+                                    locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                    locLastKnow.setLongitude(Double.parseDouble(userlon));
+
+                                    Location loc = new Location("");
+                                    String[] stationKonum = item.getLocation().split(";");
+                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                    float uzaklik = locLastKnow.distanceTo(loc);
+                                    item.setDistance((int) uzaklik);
+                                    //DISTANCE END
+                                    listOfOwnedStations.add(item);
+
+                                    if (superStationID == 0) {
+                                        chooseStation(item);
+                                    }
+
                                     isSigned = true;
                                     prefs.edit().putBoolean("isSigned", isSigned).apply();
 
@@ -632,13 +673,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
                                     Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_LONG).show();
+
                                     Intent intent = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
                                     startActivity(intent);
                                     finish();
-                                } else {
-                                    welcome2.setVisibility(View.VISIBLE);
-                                    welcome1.setVisibility(View.GONE);
-                                    layout4();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -678,6 +716,55 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void chooseStation(StationItem item) {
+        superStationID = item.getID();
+        prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+        superStationName = item.getStationName();
+        prefs.edit().putString("SuperStationName", superStationName).apply();
+
+        superStationAddress = item.getVicinity();
+        prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
+        superStationCountry = item.getCountryCode();
+        prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+        superStationLocation = item.getLocation();
+        prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+        superGoogleID = item.getGoogleMapID();
+        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+        superFacilities = item.getFacilities();
+        prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+        superStationLogo = item.getPhotoURL();
+        prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+        ownedGasolinePrice = item.getGasolinePrice();
+        prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+
+        ownedDieselPrice = item.getDieselPrice();
+        prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+
+        ownedLPGPrice = item.getLpgPrice();
+        prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+
+        ownedElectricityPrice = item.getElectricityPrice();
+        prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        isStationVerified = item.getIsVerified();
+        prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+        superLastUpdate = item.getLastUpdated();
+        prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+        getSuperVariables(prefs);
     }
 
     private void layout4() {

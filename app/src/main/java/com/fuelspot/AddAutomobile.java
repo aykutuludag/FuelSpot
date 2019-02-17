@@ -79,22 +79,10 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
     private Bitmap bitmap;
     private CircleImageView carPic;
-    private Spinner spinner;
     private Spinner spinner2;
-    private RadioButton gasoline;
-    private RadioButton diesel;
-    private RadioButton lpg;
-    private RadioButton elec;
-    private RadioButton gasoline2;
-    private RadioButton diesel2;
-    private RadioButton lpg2;
-    private RadioButton elec2;
     private Window window;
     private Toolbar toolbar;
-    private ArrayAdapter<String> adapter;
-    private ArrayAdapter<String> adapter2;
     private RequestQueue requestQueue;
-    private Button addCarButton;
     private EditText plateText;
     private RequestOptions options;
 
@@ -105,7 +93,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
     private String dummyCarBrand = "Acura";
     private String dummyCarModel = "RSX";
     private String dummyPlateNo = "";
-    private TextWatcher mTextWatcher;
     private SharedPreferences prefs;
     private ProgressDialog loading;
 
@@ -159,8 +146,8 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         });
 
         //MARKA SEÇİMİ
-        spinner = findViewById(R.id.spinner_brands);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Brands.CAR_MANUFACTURERS);
+        Spinner spinner = findViewById(R.id.spinner_brands);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Brands.CAR_MANUFACTURERS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
@@ -169,14 +156,14 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         spinner2 = findViewById(R.id.spinner_models);
 
         // FUEL SECTION START
-        gasoline = findViewById(R.id.gasoline);
-        diesel = findViewById(R.id.diesel);
-        lpg = findViewById(R.id.lpg);
-        elec = findViewById(R.id.electricity);
-        gasoline2 = findViewById(R.id.gasoline2);
-        diesel2 = findViewById(R.id.diesel2);
-        lpg2 = findViewById(R.id.lpg2);
-        elec2 = findViewById(R.id.electricity2);
+        RadioButton gasoline = findViewById(R.id.gasoline);
+        RadioButton diesel = findViewById(R.id.diesel);
+        RadioButton lpg = findViewById(R.id.lpg);
+        RadioButton elec = findViewById(R.id.electricity);
+        RadioButton gasoline2 = findViewById(R.id.gasoline2);
+        RadioButton diesel2 = findViewById(R.id.diesel2);
+        RadioButton lpg2 = findViewById(R.id.lpg2);
+        RadioButton elec2 = findViewById(R.id.electricity2);
         final RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         final RadioGroup radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
 
@@ -278,7 +265,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         //PlakaNO
         plateText = findViewById(R.id.editText_plate);
         plateText.setText(dummyPlateNo);
-        mTextWatcher = new TextWatcher() {
+        TextWatcher mTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -312,7 +299,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         plateText.setFilters(new InputFilter[]{filter});
         plateText.addTextChangedListener(mTextWatcher);
 
-        addCarButton = findViewById(R.id.button4);
+        Button addCarButton = findViewById(R.id.button4);
         addCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -507,7 +494,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
             case R.id.spinner_brands:
                 switch (position) {
                     case 0:
-                        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
+                        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
                         spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, dummyCarModel), true);

@@ -98,9 +98,6 @@ public class AddFuel extends AppCompatActivity {
     private float buyedLiter2;
     private float entryPrice2;
     private float selectedTaxRate2;
-    private float tax1;
-    private float tax2;
-    private float taxTotal;
     private float totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
@@ -572,10 +569,10 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateTaxandGrandTotal() {
-        tax1 = taxCalculator(fuelPri, entryPrice);
-        tax2 = taxCalculator(fuelSec, entryPrice2);
+        float tax1 = taxCalculator(fuelPri, entryPrice);
+        float tax2 = taxCalculator(fuelSec, entryPrice2);
 
-        taxTotal = tax1 + tax2;
+        float taxTotal = tax1 + tax2;
         totalPrice = entryPrice + entryPrice2;
         String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);

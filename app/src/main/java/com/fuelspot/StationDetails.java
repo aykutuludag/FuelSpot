@@ -68,7 +68,6 @@ import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -90,6 +89,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -262,6 +262,14 @@ public class StationDetails extends AppCompatActivity {
         textViewDieselLt = findViewById(R.id.howMuchDiesel);
         textViewLPGLt = findViewById(R.id.howMuchLPG);
         textViewElectricityLt = findViewById(R.id.howMuchElectricity);
+        chart = findViewById(R.id.chart);
+        chart.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         imageViewWC = findViewById(R.id.WC);
         imageViewMarket = findViewById(R.id.Market);
         imageViewCarWash = findViewById(R.id.CarWash);
@@ -444,7 +452,7 @@ public class StationDetails extends AppCompatActivity {
                             try {
                                 JSONArray res = new JSONArray(response);
 
-                                for (int i = res.length() - 1; i >= 0; i--) {
+                                for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
 
                                     if (obj.getDouble("gasolinePrice") != 0) {
@@ -467,6 +475,7 @@ public class StationDetails extends AppCompatActivity {
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
                                 if (gasolinePriceHistory.size() > 0) {
+                                    Collections.reverse(gasolinePriceHistory);
                                     LineDataSet dataSet = new LineDataSet(gasolinePriceHistory, getString(R.string.gasoline)); // add entries to dataset
                                     dataSet.setDrawValues(false);
                                     dataSet.setColor(Color.BLACK);
@@ -477,6 +486,7 @@ public class StationDetails extends AppCompatActivity {
                                 }
 
                                 if (dieselPriceHistory.size() > 0) {
+                                    Collections.reverse(dieselPriceHistory);
                                     LineDataSet dataSet2 = new LineDataSet(dieselPriceHistory, getString(R.string.diesel)); // add entries to dataset
                                     dataSet2.setDrawValues(false);
                                     dataSet2.setColor(Color.RED);
@@ -487,6 +497,7 @@ public class StationDetails extends AppCompatActivity {
                                 }
 
                                 if (lpgPriceHistory.size() > 0) {
+                                    Collections.reverse(lpgPriceHistory);
                                     LineDataSet dataSet3 = new LineDataSet(lpgPriceHistory, getString(R.string.lpg)); // add entries to dataset
                                     dataSet3.setDrawValues(false);
                                     dataSet3.setColor(Color.BLUE);
@@ -497,6 +508,7 @@ public class StationDetails extends AppCompatActivity {
                                 }
 
                                 if (elecPriceHistory.size() > 0) {
+                                    Collections.reverse(elecPriceHistory);
                                     LineDataSet dataSet4 = new LineDataSet(elecPriceHistory, getString(R.string.electricity)); // add entries to dataset
                                     dataSet4.setDrawValues(false);
                                     dataSet4.setColor(Color.GREEN);
@@ -506,26 +518,27 @@ public class StationDetails extends AppCompatActivity {
                                     dataSets.add(dataSet4);
                                 }
 
-                                LineData lineData = new LineData(dataSets);
-                                chart.setData(lineData);
-                                chart.getXAxis().setAvoidFirstLastClipping(true);
-                                chart.getXAxis().setLabelCount(3, true);
-                                chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                                chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-                                    @Override
-                                    public String getFormattedValue(float value, AxisBase axis) {
-                                        DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                                        Date date = new Date();
-                                        date.setTime((long) value);
-                                        return formatter.format(date);
-                                    }
-                                });
-                                chart.getDescription().setText(currencySymbol + " / " + userUnit);
-                                chart.getDescription().setTextSize(12f);
-                                chart.getDescription().setTextColor(Color.WHITE);
-                                chart.setExtraRightOffset(10f);
-                                chart.animateX(1500, Easing.EasingOption.EaseInSine);
-                                chart.invalidate(); // refresh
+                                if (dataSets.size() > 0) {
+                                    LineData lineData = new LineData(dataSets);
+                                    chart.setData(lineData);
+                                    chart.getXAxis().setAvoidFirstLastClipping(true);
+                                    chart.getXAxis().setLabelCount(3, true);
+                                    chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+                                    chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+                                        @Override
+                                        public String getFormattedValue(float value, AxisBase axis) {
+                                            DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+                                            Date date = new Date();
+                                            date.setTime((long) value);
+                                            return formatter.format(date);
+                                        }
+                                    });
+                                    chart.getDescription().setText(currencySymbol + " / " + userUnit);
+                                    chart.getDescription().setTextSize(12f);
+                                    chart.getDescription().setTextColor(Color.WHITE);
+                                    chart.setExtraRightOffset(10f);
+                                    chart.invalidate(); // refresh
+                                }
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }
@@ -643,15 +656,6 @@ public class StationDetails extends AppCompatActivity {
             String electricityHolder = String.format(Locale.getDefault(), "%.1f", howMuchEle) + " " + getString(R.string.electricity_unit);
             textViewElectricityLt.setText(electricityHolder);
         }
-
-        chart = findViewById(R.id.chart);
-        chart.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                scrollView.requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
 
         // Facilities
         // Facilities
@@ -886,10 +890,28 @@ public class StationDetails extends AppCompatActivity {
         }
 
         TextView titlePopup = customView.findViewById(R.id.popup_comment_title);
+        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
+        sendAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userComment != null && userComment.length() > 0) {
+                    if (hasAlreadyCommented) {
+                        updateComment();
+                    } else {
+                        addComment();
+                    }
+                } else {
+                    Toast.makeText(StationDetails.this, getString(R.string.empty_comment), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         if (hasAlreadyCommented) {
             titlePopup.setText(getString(R.string.update_comment));
+            sendAnswer.setText(getString(R.string.update_comment));
         } else {
             titlePopup.setText(getString(R.string.add_comment));
+            sendAnswer.setText(getString(R.string.add_comment));
         }
 
         EditText getComment = customView.findViewById(R.id.editTextComment);
@@ -936,115 +958,99 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.setFocusable(true);
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
 
-        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
-        sendAnswer.setOnClickListener(new View.OnClickListener() {
+    private void addComment() {
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.comment_adding), getString(R.string.please_wait), true, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loading.dismiss();
+                        Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
+                        mPopupWindow.dismiss();
+                        hasAlreadyCommented = true;
+                        fetchStationComments();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        loading.dismiss();
+                    }
+                }) {
             @Override
-            public void onClick(View v) {
-                if (userComment != null && userComment.length() > 0) {
-                    if (hasAlreadyCommented) {
-                        updateComment();
-                    } else {
-                        addComment();
-                    }
-                } else {
-                    Toast.makeText(StationDetails.this, getString(R.string.empty_comment), Toast.LENGTH_SHORT).show();
-                }
-            }
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
 
-            private void addComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.comment_adding), getString(R.string.please_wait), true, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                Toast.makeText(StationDetails.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                                hasAlreadyCommented = true;
-                                fetchStationComments();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                            }
-                        }) {
+                //Adding parameters
+                params.put("comment", userComment);
+                params.put("stationID", String.valueOf(choosenStationID));
+                params.put("username", username);
+                params.put("stars", String.valueOf(stars));
+                params.put("user_photo", photo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void updateComment() {
+        final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.comment_updating), getString(R.string.please_wait), true, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
+                new Response.Listener<String>() {
                     @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
+                    public void onResponse(String response) {
+                        loading.dismiss();
 
-                        //Adding parameters
-                        params.put("comment", userComment);
-                        params.put("stationID", String.valueOf(choosenStationID));
-                        params.put("username", username);
-                        params.put("stars", String.valueOf(stars));
-                        params.put("user_photo", photo);
-                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
-            }
-
-            private void updateComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.comment_updating), getString(R.string.please_wait), true, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-
-                                if (response != null && response.length() > 0) {
-                                    switch (response) {
-                                        case "Success":
-                                            Toast.makeText(StationDetails.this, getString(R.string.comment_update_success), Toast.LENGTH_SHORT).show();
-                                            mPopupWindow.dismiss();
-                                            fetchStationComments();
-                                            break;
-                                        default:
-                                            Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                            break;
-                                    }
-                                } else {
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(StationDetails.this, getString(R.string.comment_update_success), Toast.LENGTH_SHORT).show();
+                                    mPopupWindow.dismiss();
+                                    fetchStationComments();
+                                    break;
+                                default:
                                     Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                }
+                                    break;
                             }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
-                                loading.dismiss();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("commentID", String.valueOf(userCommentID));
-                        params.put("comment", userComment);
-                        params.put("stars", String.valueOf(stars));
-                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                        //returning parameters
-                        return params;
+                        } else {
+                            Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                };
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
 
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
+                //Adding parameters
+                params.put("commentID", String.valueOf(userCommentID));
+                params.put("comment", userComment);
+                params.put("stars", String.valueOf(stars));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
             }
-        });
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     private void reportStation(final View view) {
@@ -1462,6 +1468,8 @@ public class StationDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        webview.destroy();
+        requestQueue.cancelAll(this);
         clearVariables();
         finish();
     }

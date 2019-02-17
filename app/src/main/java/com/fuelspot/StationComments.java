@@ -163,14 +163,15 @@ public class StationComments extends AppCompatActivity {
             mPopupWindow.setElevation(5.0f);
         }
 
-        TextView titlePopup = customView.findViewById(R.id.campaignPhoto);
+        TextView titlePopup = customView.findViewById(R.id.popup_comment_title);
+        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
         if (hasAlreadyCommented) {
             titlePopup.setText(getString(R.string.update_comment));
+            sendAnswer.setText(getString(R.string.update_comment));
         } else {
             titlePopup.setText(getString(R.string.add_comment));
+            sendAnswer.setText(getString(R.string.add_comment));
         }
-
-        Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
         sendAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,102 +184,6 @@ public class StationComments extends AppCompatActivity {
                 } else {
                     Toast.makeText(StationComments.this, getString(R.string.empty_comment), Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            private void updateComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.comment_updating), getString(R.string.please_wait), false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                Toast.makeText(StationComments.this, response, Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                                fetchStationComments();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("commentID", String.valueOf(userCommentID));
-                        params.put("comment", userComment);
-                        params.put("stars", String.valueOf(stars));
-                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
-            }
-
-            private void addComment() {
-                final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.comment_adding), getString(R.string.please_wait), false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                loading.dismiss();
-                                mPopupWindow.dismiss();
-
-                                if (response != null && response.length() > 0) {
-                                    switch (response) {
-                                        case "Success":
-                                            Toast.makeText(StationComments.this, getString(R.string.add_comment_success), Toast.LENGTH_SHORT).show();
-                                            hasAlreadyCommented = true;
-                                            fetchStationComments();
-                                            break;
-                                        default:
-                                            Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                            hasAlreadyCommented = false;
-                                            break;
-                                    }
-                                } else {
-                                    Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                    hasAlreadyCommented = false;
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                //Showing toast
-                                loading.dismiss();
-                                Toast.makeText(StationComments.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        //Creating parameters
-                        Map<String, String> params = new Hashtable<>();
-
-                        //Adding parameters
-                        params.put("comment", userComment);
-                        params.put("stationID", String.valueOf(choosenStationID));
-                        params.put("username", username);
-                        params.put("stars", String.valueOf(stars));
-                        params.put("user_photo", photo);
-                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                        //returning parameters
-                        return params;
-                    }
-                };
-
-                //Adding request to the queue
-                requestQueue.add(stringRequest);
             }
         });
 
@@ -326,6 +231,102 @@ public class StationComments extends AppCompatActivity {
         mPopupWindow.setFocusable(true);
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+    }
+
+    private void updateComment() {
+        final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.comment_updating), getString(R.string.please_wait), false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_COMMENT),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loading.dismiss();
+                        Toast.makeText(StationComments.this, response, Toast.LENGTH_SHORT).show();
+                        mPopupWindow.dismiss();
+                        fetchStationComments();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        loading.dismiss();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("commentID", String.valueOf(userCommentID));
+                params.put("comment", userComment);
+                params.put("stars", String.valueOf(stars));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void addComment() {
+        final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.comment_adding), getString(R.string.please_wait), false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ADD_COMMENT),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loading.dismiss();
+                        mPopupWindow.dismiss();
+
+                        if (response != null && response.length() > 0) {
+                            switch (response) {
+                                case "Success":
+                                    Toast.makeText(StationComments.this, getString(R.string.add_comment_success), Toast.LENGTH_SHORT).show();
+                                    hasAlreadyCommented = true;
+                                    fetchStationComments();
+                                    break;
+                                default:
+                                    Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                    hasAlreadyCommented = false;
+                                    break;
+                            }
+                        } else {
+                            Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                            hasAlreadyCommented = false;
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        loading.dismiss();
+                        Toast.makeText(StationComments.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("comment", userComment);
+                params.put("stationID", String.valueOf(choosenStationID));
+                params.put("username", username);
+                params.put("stars", String.valueOf(stars));
+                params.put("user_photo", photo);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     public void fetchStationComments() {

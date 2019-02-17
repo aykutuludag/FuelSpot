@@ -18,12 +18,10 @@
     <!-- USER APIs -->
     <string name="API_CREATE_USER" translatable="false">https://fuel-spot.com/api/user/create.php</string>
     <string name="API_UPDATE_USER" translatable="false">https://fuel-spot.com/api/user/update.php</string>
-    <string name="API_FETCH_USER" translatable="false">https://fuel-spot.com/api/user/fetch.php</string>
 
     <!-- SUPERUSER APIs -->
     <string name="API_SUPERUSER_CREATE" translatable="false">https://fuel-spot.com/api/superuser/create.php</string>
     <string name="API_SUPERUSER_UPDATE" translatable="false">https://fuel-spot.com/api/superuser/update.php</string>
-    <string name="API_SUPERUSER_FETCH" translatable="false">https://fuel-spot.com/api/superuser/fetch.php</string>
 
     <!-- STATION APIs -->
     <string name="API_UPDATE_STATION" translatable="false">https://fuel-spot.com/api/station/update.php</string>
@@ -37,14 +35,12 @@
     <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/update.php</string>
     <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuel-spot.com/api/automobile/delete.php</string>
     <string name="API_FETCH_USER_AUTOMOBILES" translatable="false">https://fuel-spot.com/api/automobile/fetch-user.php</string>
-    <string name="API_FETCH_AUTOMOBILE_MODELS" translatable="false">https://fuel-spot.com/api/automobile/fetch-models.php</string>
 
     <!-- PURCHASE APIs -->
     <string name="API_ADD_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/add.php</string>
     <string name="API_UPDATE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/update.php</string> <!-- Only adding bill photo available -->
     <string name="API_DELETE_PURCHASE" translatable="false">https://fuel-spot.com/api/purchase/delete.php</string>
     <string name="API_FETCH_AUTOMOBILE_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase/fetch-automobile.php</string> <!-- Vehicle's purchases -->
-    <string name="API_FETCH_STATION_PURCHASES" translatable="false">https://fuel-spot.com/api/purchase/fetch-station.php</string> <!-- STATION's purchases -->
 
     <!-- COMMENT-ANSWER APIs -->
     <string name="API_ADD_COMMENT" translatable="false">https://fuel-spot.com/api/comment/add.php</string>
@@ -72,7 +68,6 @@
     <string name="API_FEEDBACK" translatable="false">https://fuel-spot.com/api/other/feedback.php</string>
     <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other/news.php</string>
     <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other/company.php</string>
-    <string name="API_STREETVIEW" translatable="false">https://fuel-spot.com/api/other/streetview.php</string>
     <string name="API_BANKING" translatable="false">https://fuel-spot.com/api/other/banking.php</string>
     <!-- NON TRANSLATABLE PART END -->
 
@@ -131,9 +126,10 @@
     <string name="exit">Touch again to exit the application.</string>
 
     <!-- FragmentStations-->
-    <string name="sort">Sort</string>
     <string name="see_all">See all</string>
     <string name="show_less">Show less</string>
+    <string name="station_found_pretext">We found</string>
+    <string name="station_found_aftertext">station(s) nearby.</string>
     <string name="station_not_found_retry">Station not found. Retrying with range</string>
     <string name="metre">metre</string>
     <string name="no_station">We couldn\'t find any station within 50 kilometers range…</string>
@@ -348,8 +344,6 @@
     <string name="station_update_desc">You can manage base station info (prices, facilities, address…) in here.</string>
     <string name="comments_section_desc">You can see reviews for station by users and reply them in here.</string>
     <string name="campaign_section_desc">You can manage ongoing and past campaigns in here.</string>
-    <string name="purchases">Purchases</string>
-    <string name="purchase_section_desc">You can see purchases which performad over Fuelspot in here.</string>
     <!-- FragmentMyStation-->
 
     <!-- FragmentSuperProfile-->
@@ -384,9 +378,6 @@
     <string name="empty_campaign_start">Please select campaign start date and time</string>
     <string name="empty_campaign_end">Please select campaign end date and time</string>
     <!-- SuperCampaigns-->
-
-    <!-- SuperPurchases-->
-    <!-- SuperPurchases-->
 
     <!-- SuperStore-->
     <!-- SuperStore-->

@@ -232,7 +232,7 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
-                                String dummyLastText = getActivity().getString(R.string.last_update) + " " + res.getJSONObject(0).getString("date");
+                                String dummyLastText = getString(R.string.last_update) + " " + res.getJSONObject(0).getString("date");
                                 lastUpdatedAvgPrice.setText(dummyLastText);
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -343,7 +343,7 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
-                                String dummyLastText = getActivity().getString(R.string.last_update) + " " + res.getJSONObject(0).getString("time");
+                                String dummyLastText = getString(R.string.last_update) + " " + res.getJSONObject(0).getString("time");
                                 lastUpdatedVolume.setText(dummyLastText);
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();

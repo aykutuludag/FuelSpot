@@ -34,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.fuelspot.model.CompanyItem;
+import com.fuelspot.model.StationItem;
 import com.fuelspot.model.VehicleItem;
 import com.fuelspot.receiver.AlarmReceiver;
 import com.google.android.gms.maps.MapsInitializer;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static final int REQUEST_LOCATION = 1;
     public static final int REQUEST_ALL = 2;
     public static final int GOOGLE_LOGIN = 100;
+    public static List<StationItem> fullStationList = new ArrayList<>();
     public static List<VehicleItem> userAutomobileList = new ArrayList<>();
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         mapDefaultRange = prefs.getInt("RANGE", 2500);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         plateNo = prefs.getString("plateNo", "");
         vehicleID = prefs.getInt("vehicleID", 0);
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
         }
     }
 
@@ -509,6 +511,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (fragments.get(0) != null) {
             if (fragments.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
+                    fullStationList.clear();
                     adCount = 0;
                     mFragNavController.clearStack();
                     super.onBackPressed();
@@ -557,13 +560,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
-    /**
-     * Called when a tab has been selected (clicked)
-     *
-     * @param position    int: Position of the selected tab
-     * @param wasSelected boolean: true if the tab was already selected
-     * @return boolean: true for updating the tab UI, false otherwise
-     */
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
         mFragNavController.switchTab(position);
