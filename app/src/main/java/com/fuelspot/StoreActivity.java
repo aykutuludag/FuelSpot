@@ -52,6 +52,7 @@ public class StoreActivity extends AppCompatActivity {
     private Button buttonAracKokusu;
     private Button buttonLastikSpreyi;
     private Button buttonBakimKiti;
+    int itemNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,9 +131,10 @@ public class StoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userFSMoney >= 4.99f) {
-                    Toast.makeText(StoreActivity.this, "I didn't wrote these code yet", Toast.LENGTH_LONG).show();
+                    itemNo = 1;
+                    buyRealItem(itemNo);
                 } else {
-                    Toast.makeText(StoreActivity.this, "Bakiyeniz yetersiz", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -142,9 +144,10 @@ public class StoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userFSMoney >= 29.9f) {
-                    Toast.makeText(StoreActivity.this, "I didn't wrote these code yet", Toast.LENGTH_LONG).show();
+                    itemNo = 2;
+                    buyRealItem(itemNo);
                 } else {
-                    Toast.makeText(StoreActivity.this, "Bakiyeniz yetersiz", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -154,9 +157,10 @@ public class StoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userFSMoney >= 49.9f) {
-                    Toast.makeText(StoreActivity.this, "I didn't wrote these code yet", Toast.LENGTH_LONG).show();
+                    itemNo = 3;
+                    buyRealItem(itemNo);
                 } else {
-                    Toast.makeText(StoreActivity.this, "Bakiyeniz yetersiz", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -196,9 +200,7 @@ public class StoreActivity extends AppCompatActivity {
     }
 
     private void buyPremium() throws RemoteException, IntentSender.SendIntentException {
-        Toast.makeText(StoreActivity.this,
-                "Premium sürüm reklamları kaldırır ve menzilinizi 2 katına çıkarır.", Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(StoreActivity.this, getString(R.string.premium_version_desc), Toast.LENGTH_LONG).show();
         Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium", "subs",
                 "dfgfddfgdfgasd/sdfsffgdgfgjkjk/ajyUFbAyw93xVnDkeTZFdhdSdJ8M");
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
@@ -208,9 +210,7 @@ public class StoreActivity extends AppCompatActivity {
     }
 
     private void buyDoubleRange() throws RemoteException, IntentSender.SendIntentException {
-        Toast.makeText(StoreActivity.this,
-                "Menzilinizi 2 kat artırır. 5000 metreye çapınızdaki bütün istasyonları görebilirsiniz", Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(StoreActivity.this, getString(R.string.double_range_desc), Toast.LENGTH_LONG).show();
         Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "2x_range", "subs",
                 "dfkjk/ajyUFbAyw93xVnDkeTZFdhdSdJ8M");
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
@@ -219,13 +219,21 @@ public class StoreActivity extends AppCompatActivity {
                 0, 0);
     }
 
+    private void buyRealItem(int id) {
+        //POPUP
+        //SCREEN 1 - ITEM
+        //SCREEN 2 - RECEIVER
+        //SCREEN 3 - PROMPT
+        //SCREEN 4 - SUCCESS - FAIL
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PURCHASE_PREMIUM:
                 if (resultCode == RESULT_OK) {
-                    Toast.makeText(StoreActivity.this, "Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.premium_successful), Toast.LENGTH_LONG).show();
                     premium = true;
                     prefs.edit().putBoolean("hasPremium", premium).apply();
                     prefs.edit().putInt("RANGE", 5000).apply();
@@ -237,13 +245,13 @@ public class StoreActivity extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    Toast.makeText(StoreActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasPremium", false).apply();
                 }
                 break;
             case PURCHASE_DOUBLE_RANGE:
                 if (resultCode == RESULT_OK) {
-                    Toast.makeText(StoreActivity.this, "Satın alma başarılı. Menziliniz artırılıyor, teşekkürler!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.double_range_successful), Toast.LENGTH_LONG).show();
                     hasDoubleRange = true;
                     prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
                     prefs.edit().putInt("RANGE", 5000).apply();
@@ -255,7 +263,7 @@ public class StoreActivity extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    Toast.makeText(StoreActivity.this, "Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
                     prefs.edit().putBoolean("hasDoubleRange", false).apply();
                 }
                 break;

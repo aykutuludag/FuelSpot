@@ -311,6 +311,11 @@
     <string name="double_range">2x-Range</string>
     <string name="double_range_desc">It doubles your range. (5000 meters)</string>
     <string name="buy">Buy</string>
+    <string name="insufficient_balance">Your balance is insufficient</string>
+    <string name="active">Active</string>
+    <string name="premium_successful">Purchase successful. You\'re switching to the premium version, thanks!</string>
+    <string name="double_range_successful">Purchase successful. Your range is increasing, thanks!</string>
+    <string name="purchase_failed">Purchase failed. Please try again later.</string>
     <!-- UserStore-->
 
     <!-- UserComments-->
@@ -318,6 +323,7 @@
 
     <!-- AddFuel-->
     <string name="geofence_notification_title">Are you purchasing fuel? Click here to add it!</string>
+    <string name="station_info_loading">Station info loading…</string>
     <string name="station_info">Station info</string>
     <string name="automobile_info">Automobile info</string>
     <string name="add_bill_photo_desc">You can earn 1%% bonus by adding bill/receipt photo. Purchase will be inspected and after confirmation bonus will reflect to your account immediately.</string>
@@ -328,6 +334,7 @@
     <string name="no_internet_connection">There is a problem with your internet connection. Please check it and try again later…</string>
     <string name="adding_fuel">Adding fuel…</string>
     <string name="fuel_add_success">Fuel added successfully…</string>
+    <string name="the_money_you_pay">The money you pay</string>
     <!-- AddFuel-->
 
     <!-- SuperWelcome-->

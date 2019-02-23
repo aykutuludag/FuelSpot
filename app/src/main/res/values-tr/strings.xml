@@ -230,7 +230,7 @@
 
     <!-- UserStore-->
     <string name="banking_activities">Son hesap hareketleri</string>
-    <string name="banking_activities_desc">Burada FuelSpot üzerinde yapılan son hesap hareketlerinizi (bonus/ödüller ve satın almalar dahil, abonelikler hariç) görebilirsiniz. Aboneliklerinizi (2xRange &amp; Premium) Google Play uygulaması üzeirnden yönetebilirsiniz.</string>
+    <string name="banking_activities_desc">Burada FuelSpot üzerinde yapılan son hesap hareketlerinizi (bonus/ödüller ve satın almalar dahil, abonelikler hariç) görebilirsiniz. Aboneliklerinizi (2xRange &amp; Premium) Google Play uygulaması üzerinden yönetebilirsiniz.</string>
     <string name="current_balance">Mevcut bakiye</string>
     <string name="premium_version">Premium sürüm</string>
     <string name="premium_version_desc">2x-Menzil + Reklamsız + Sınırsız Favori İstasyon</string>
@@ -238,6 +238,11 @@
     <string name="double_range">2x-Menzil</string>
     <string name="double_range_desc">Menzilinizi 2\'ye katlar! (5000 metre)</string>
     <string name="buy">Buy</string>
+    <string name="insufficient_balance">Hesap bakiyeniz yetersiz</string>
+    <string name="active">Aktif</string>
+    <string name="premium_successful">Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!</string>
+    <string name="double_range_successful">Satın alma başarılı. Menziliniz artırılıyor, teşekkürler!</string>
+    <string name="purchase_failed">Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.</string>
     <!-- UserStore-->
 
     <!-- UserComments-->
@@ -245,6 +250,7 @@
 
     <!-- AddFuel-->
     <string name="geofence_notification_title">Yakıt mı alıyorsun? Eklemek için hemen tıkla!</string>
+    <string name="station_info_loading">İstasyon bilgileri yükleniyor…</string>
     <string name="station_info">İstasyon bilgileri</string>
     <string name="automobile_info">Araç bilgileri</string>
     <string name="add_bill_photo_desc">Fiş/Fatura fotoğrafı ekleyerek %1 bonus kazanabilirsin. Satın alma incelendikten ve onaylandıktan sonra bonus hemen hesabına yansıtılacaktır.</string>
@@ -255,6 +261,7 @@
     <string name="no_internet_connection">İnternet bağlantınızda bir sorun var. Lütfen kontrol ettikten sonra tekrar deneyiniz…</string>
     <string name="adding_fuel">Yakıt ekleniyor…</string>
     <string name="fuel_add_success">Yakıt başarıyla eklendi…</string>
+    <string name="the_money_you_pay">Ödediğiniz para</string>
     <!-- AddFuel-->
 
     <!-- SuperWelcome-->

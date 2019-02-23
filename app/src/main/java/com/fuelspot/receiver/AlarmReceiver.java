@@ -62,6 +62,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         mContext = context;
         prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        getVariables(prefs);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
 
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
@@ -95,42 +96,52 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         vehicleFence = DetectedActivityFence.during(DetectedActivityFence.IN_VEHICLE);
 
-        if (fullStationList != null && fullStationList.size() > 0) {
-            for (int i = 0; i < fullStationList.size(); i++) {
-                double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
-                double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
-                locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
-                AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
-            }
-        } else {
-            LocationRequest mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(30 * 60 * 1000);
-            mLocationRequest.setFastestInterval(1000);
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            LocationCallback mLocationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    if (mContext != null && locationResult != null) {
-                        synchronized (mContext) {
-                            super.onLocationResult(locationResult);
-                            Location locCurrent = locationResult.getLastLocation();
-                            if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
-                                    userlat = String.valueOf(locCurrent.getLatitude());
-                                    userlon = String.valueOf(locCurrent.getLongitude());
-                                    prefs.edit().putString("lat", userlat).apply();
-                                    prefs.edit().putString("lon", userlon).apply();
-                                    getVariables(prefs);
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(15 * 60 * 1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationCallback mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (mContext != null && locationResult != null) {
+                    synchronized (mContext) {
+                        super.onLocationResult(locationResult);
+                        Location locCurrent = locationResult.getLastLocation();
+                        if (locCurrent != null) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
+                                Location locLastKnown = new Location("");
+                                locLastKnown.setLatitude(Double.parseDouble(userlat));
+                                locLastKnown.setLongitude(Double.parseDouble(userlon));
+
+                                userlat = String.valueOf(locCurrent.getLatitude());
+                                userlon = String.valueOf(locCurrent.getLongitude());
+                                prefs.edit().putString("lat", userlat).apply();
+                                prefs.edit().putString("lon", userlon).apply();
+
+                                float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+
+                                if (fullStationList != null) {
+                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
+                                        // User's position has been changed. Load new stations
+                                        fetchStations();
+                                    } else {
+                                        for (int i = 0; i < fullStationList.size(); i++) {
+                                            double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
+                                            double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
+                                            locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
+                                            AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
+                                            registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
+                                        }
+                                    }
+                                } else {
                                     fetchStations();
                                 }
                             }
                         }
                     }
                 }
-            };
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-        }
+            }
+        };
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
     }
 
     private void fetchStations() {
@@ -164,14 +175,13 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
                                     item.setDistance((int) obj.getDouble("distance"));
-                                    fullStationList.add(item);
 
                                     // Add fence
                                     double lat = Double.parseDouble(item.getLocation().split(";")[0]);
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
                                     locationFence = LocationFence.in(lat, lon, 50, 15000L);
                                     AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                                    registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
+                                    registerFence(String.valueOf(item.getID()), locationFence);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

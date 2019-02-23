@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -117,13 +118,19 @@ public class FragmentStations extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
+            // Keep screen on
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
             // Analytics
-            if (getActivity() != null) {
-                Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-                t.setScreenName("İstasyonlar");
-                t.enableAdvertisingIdCollection(true);
-                t.send(new HitBuilders.ScreenViewBuilder().build());
-            }
+            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
+            t.setScreenName("İstasyonlar");
+            t.enableAdvertisingIdCollection(true);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
+
+            // Clear objects
+            shortStationList.clear();
+            fullStationList.clear();
+            markers.clear();
 
             // Objects
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
@@ -140,7 +147,6 @@ public class FragmentStations extends Fragment {
 
             mLocationRequest = new LocationRequest();
             mLocationRequest.setInterval(5000);
-            mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationCallback = new LocationCallback() {
                 @Override
@@ -238,6 +244,7 @@ public class FragmentStations extends Fragment {
             GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerView.removeAllViews();
 
             seeAllStations = rootView.findViewById(R.id.button_seeAllStations);
             seeAllStations.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +258,7 @@ public class FragmentStations extends Fragment {
             // Start the load map
             checkLocationPermission();
         }
+
         return rootView;
     }
 
@@ -271,24 +279,28 @@ public class FragmentStations extends Fragment {
                     googleMap.getUiSettings().setMapToolbarEnabled(false);
                     googleMap.setTrafficEnabled(true);
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+                    MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
+                    googleMap.setInfoWindowAdapter(customInfoWindow);
                 }
             });
         }
     }
 
     void updateMap() {
-        isMapUpdating = true;
-        shortStationList.clear();
-        fullStationList.clear();
-        markers.clear();
-
-        isAllStationsListed = false;
-        seeAllStations.setText(getString(R.string.see_all));
-        seeAllStations.setVisibility(View.GONE);
-        noStationError.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.GONE);
-
         if (googleMap != null) {
+            isMapUpdating = true;
+
+            isAllStationsListed = false;
+            seeAllStations.setText(getString(R.string.see_all));
+            seeAllStations.setVisibility(View.GONE);
+            noStationError.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
+
+            // Clear objects
+            shortStationList.clear();
+            fullStationList.clear();
+            markers.clear();
             googleMap.clear();
 
             //Draw a circle with radius of mapDefaultRange
@@ -298,17 +310,17 @@ public class FragmentStations extends Fragment {
                     .fillColor(0x220000FF)
                     .strokeColor(Color.parseColor("#FF5635")));
 
-            MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
-            googleMap.setInfoWindowAdapter(customInfoWindow);
-
             // For zooming automatically to the location of the marker
             LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
             CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
 
-        if (isNetworkConnected(getActivity())) {
-            searchStations();
+            if (isNetworkConnected(getActivity())) {
+                searchStations();
+            } else {
+                isMapUpdating = false;
+                Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+            }
         } else {
             isMapUpdating = false;
             Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
@@ -434,8 +446,6 @@ public class FragmentStations extends Fragment {
     }
 
     private void sortBy(int position) {
-        shortStationList.clear();
-
         switch (position) {
             case 0:
                 Collections.sort(fullStationList, new Comparator<StationItem>() {
@@ -536,10 +546,16 @@ public class FragmentStations extends Fragment {
                 break;
         }
 
-        if (isAllStationsListed) {
-            mAdapter = new StationAdapter(getActivity(), fullStationList, "NEARBY_STATIONS");
-            seeAllStations.setText(getString(R.string.show_less));
-        } else {
+        // Clear variables
+        googleMap.clear();
+        markers.clear();
+        shortStationList.clear();
+
+        googleMap.addCircle(new CircleOptions().center(new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon)))
+                .radius(mapDefaultRange)
+                .fillColor(0x220000FF).strokeColor(Color.parseColor("#FF5635")));
+
+        if (!isAllStationsListed) {
             int untilWhere;
             if (fullStationList.size() < 5) {
                 untilWhere = fullStationList.size();
@@ -552,28 +568,17 @@ public class FragmentStations extends Fragment {
             }
             mAdapter = new StationAdapter(getActivity(), shortStationList, "NEARBY_STATIONS");
             seeAllStations.setText(getString(R.string.see_all));
+        } else {
+            mAdapter = new StationAdapter(getActivity(), fullStationList, "NEARBY_STATIONS");
+            seeAllStations.setText(getString(R.string.show_less));
         }
 
-        mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
-        // Create markers
-        markers.clear();
+        mRecyclerView.setAdapter(mAdapter);
         addMarkers();
     }
 
     private void addMarkers() {
-        if (googleMap != null) {
-            googleMap.clear();
-
-            //Draw a circle with radius of mapDefaultRange
-            googleMap.addCircle(new CircleOptions()
-                    .center(new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon)))
-                    .radius(mapDefaultRange)
-                    .fillColor(0x220000FF)
-                    .strokeColor(Color.parseColor("#FF5635")));
-        }
-
         if (isAllStationsListed) {
             for (int i = 0; i < fullStationList.size(); i++) {
                 addMarker(fullStationList.get(i));

@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -105,6 +106,9 @@ public class FragmentAutomobile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_automobile, container, false);
+
+            // Keep screen off
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
@@ -301,10 +305,12 @@ public class FragmentAutomobile extends Fragment {
                                     item.setFuelPrice((float) obj.getDouble("fuelPrice"));
                                     item.setFuelLiter((float) obj.getDouble("fuelLiter"));
                                     item.setFuelTax((float) obj.getDouble("fuelTax"));
+                                    item.setSubTotal((float) obj.getDouble("subTotal"));
                                     item.setFuelType2(obj.getInt("fuelType2"));
                                     item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
                                     item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
                                     item.setFuelTax2((float) obj.getDouble("fuelTax2"));
+                                    item.setSubTotal2((float) obj.getDouble("subTotal2"));
                                     item.setBonus((float) obj.getDouble("bonus"));
                                     item.setTotalPrice((float) obj.getDouble("totalPrice"));
                                     item.setBillPhoto(obj.getString("billPhoto"));

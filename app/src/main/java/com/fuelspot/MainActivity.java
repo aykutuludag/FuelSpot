@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
         }
     }
 
@@ -511,7 +511,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (fragments.get(0) != null) {
             if (fragments.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
-                    fullStationList.clear();
                     adCount = 0;
                     mFragNavController.clearStack();
                     super.onBackPressed();

@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.fuelspot.AddFuel;
 import com.fuelspot.R;
 import com.fuelspot.model.VehicleItem;
 
@@ -47,6 +48,10 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
             changeVehicle(mItemList.get(position));
             Snackbar.make(view, mContext.getString(R.string.automobile_selected) + ": " + plateNo, Snackbar.LENGTH_SHORT).show();
+
+            if (mContext.getClass().getSimpleName().equals("AddFuel")) {
+                ((AddFuel) mContext).loadLayout();
+            }
         }
     };
 

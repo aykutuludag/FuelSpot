@@ -100,8 +100,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         viewHolder.amount1.setText(feedItem.getFuelLiter() + " " + userUnit);
 
         // PRICE 1
-        int priceOne = (int) (feedItem.getFuelPrice() * feedItem.getFuelLiter());
-        String priceHolder = priceOne + " " + currencySymbol;
+        String priceHolder = String.format(Locale.getDefault(), "%.2f", feedItem.getSubTotal()) + " " + currencySymbol;
         viewHolder.price1.setText(priceHolder);
 
         // If user didn't purchased second type of fuel just hide these textViews
@@ -130,8 +129,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             viewHolder.amount2.setText(feedItem.getFuelLiter2() + " " + userUnit);
 
             // PRICE 2
-            int priceTwo = (int) (feedItem.getFuelPrice2() * feedItem.getFuelLiter2());
-            String priceHolder2 = priceTwo + " " + currencySymbol;
+            String priceHolder2 = String.format(Locale.getDefault(), "%.2f", feedItem.getSubTotal2()) + " " + currencySymbol;
             viewHolder.price2.setText(priceHolder2);
         } else {
             viewHolder.type2Layout.setVisibility(View.GONE);

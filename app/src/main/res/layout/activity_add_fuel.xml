@@ -114,13 +114,20 @@
                 android:layout_below="@id/expandableButtonKM"
                 android:background="#EDEDED">
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/automobileView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
+                    android:background="@android:color/transparent" />
+
                 <TextView
                     android:id="@+id/kilometerTEXT"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_below="@+id/automobileView"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:fontFamily="@font/gotham_black"
@@ -168,8 +175,8 @@
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_margin="8dp"
-                    android:padding="4dp"
                     android:contentDescription="@string/type"
+                    android:padding="4dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
@@ -199,6 +206,7 @@
                         android:layout_alignParentTop="true"
                         android:background="#fff"
                         android:gravity="center"
+                        android:hint="@string/unit_price"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -222,6 +230,7 @@
                         android:background="#fff"
                         android:gravity="center"
                         android:inputType="numberDecimal"
+                        android:hint="@string/the_money_you_pay"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         app:layout_widthPercent="70%" />
@@ -237,7 +246,7 @@
                         app:layout_widthPercent="30%" />
 
                     <TextView
-                        android:id="@+id/editTextLiter"
+                        android:id="@+id/textViewHowManyLitre"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPrice"
                         android:layout_marginTop="8dp"
@@ -249,9 +258,9 @@
                     <TextView
                         android:id="@+id/textViewLiter"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/editTextLiter"
-                        android:layout_alignBottom="@+id/editTextLiter"
-                        android:layout_toEndOf="@+id/editTextLiter"
+                        android:layout_alignTop="@+id/textViewHowManyLitre"
+                        android:layout_alignBottom="@+id/textViewHowManyLitre"
+                        android:layout_toEndOf="@+id/textViewHowManyLitre"
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
                         app:layout_widthPercent="30%" />
@@ -285,8 +294,8 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:padding="4dp"
                     android:contentDescription="@string/type"
+                    android:padding="4dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
@@ -316,6 +325,7 @@
                         android:layout_alignParentTop="true"
                         android:background="#fff"
                         android:gravity="center"
+                        android:hint="@string/unit_price"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -338,6 +348,7 @@
                         android:layout_marginTop="8dp"
                         android:background="#fff"
                         android:gravity="center"
+                        android:hint="@string/the_money_you_pay"
                         android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -450,7 +461,6 @@
                 android:textColor="#212121" />
 
         </RelativeLayout>
-
     </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

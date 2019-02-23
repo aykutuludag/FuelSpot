@@ -13,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,6 +43,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.fuelspot.adapter.VehicleAdapter;
+import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -61,13 +65,20 @@ import static com.fuelspot.MainActivity.TAX_DIESEL;
 import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -102,6 +113,7 @@ public class AddFuel extends AppCompatActivity {
 
     /* LAYOUT 1 ÖĞELER */
     private CircleImageView istasyonLogoHolder;
+    ProgressDialog stationFetching;
     private TextView istasyonNameHolder;
     private TextView istasyonIDHolder;
     private RelativeLayout expandableLayoutYakit;
@@ -125,8 +137,11 @@ public class AddFuel extends AppCompatActivity {
     private Bitmap bitmap;
     private ImageView photoHolder;
     private ScrollView scrollView;
-
+    GridLayoutManager mLayoutManager;
     private int tempKM;
+    private TextView textViewUnitPrice, textViewCurrency, textViewUnit, textViewUnitPrice2, textViewCurrency2, textViewUnit2;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
 
     private static float taxCalculator(int fuelType, float price) {
         float tax;
@@ -180,6 +195,14 @@ public class AddFuel extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
 
+        // ProgressDialogs
+        stationFetching = new ProgressDialog(AddFuel.this);
+        stationFetching.setTitle(getString(R.string.station_info_loading));
+        stationFetching.setMessage(getString(R.string.please_wait));
+        stationFetching.setIndeterminate(true);
+        stationFetching.setCancelable(false);
+        stationFetching.show();
+
         chosenStationID = getIntent().getIntExtra("STATION_ID", 0);
 
         scrollView = findViewById(R.id.addfuel_layout1);
@@ -195,11 +218,26 @@ public class AddFuel extends AppCompatActivity {
 
         enterKilometer = findViewById(R.id.editTextKilometer);
 
+        textViewUnitPrice = findViewById(R.id.textViewUnit);
+        textViewUnitPrice2 = findViewById(R.id.textViewUnit2);
+        textViewUnitPrice.setText(currencySymbol + " / " + userUnit);
+        textViewUnitPrice2.setText(currencySymbol + " / " + userUnit);
+
+        textViewCurrency = findViewById(R.id.textViewCurrency);
+        textViewCurrency2 = findViewById(R.id.textViewCurrency2);
+        textViewCurrency.setText(currencySymbol);
+        textViewCurrency2.setText(currencySymbol);
+
+        textViewUnit = findViewById(R.id.textViewLiter);
+        textViewUnit2 = findViewById(R.id.textViewLiter2);
+        textViewUnit.setText(userUnit);
+        textViewUnit2.setText(userUnit);
+
         fuelType1Icon = findViewById(R.id.fuelType1);
         fuelType1Text = findViewById(R.id.fuelType1Text);
         textViewLitreFiyati = findViewById(R.id.editTextPricePerLiter);
         textViewTotalFiyat = findViewById(R.id.editTextPrice);
-        textViewLitre = findViewById(R.id.editTextLiter);
+        textViewLitre = findViewById(R.id.textViewHowManyLitre);
 
         fuelType2Icon = findViewById(R.id.fuelType2);
         fuelType2Text = findViewById(R.id.fuelType2Text);
@@ -211,6 +249,20 @@ public class AddFuel extends AppCompatActivity {
 
         // Check whether user is at station or not
         fetchSingleStation();
+
+        // Get user automobiles
+        mRecyclerView = findViewById(R.id.automobileView);
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mLayoutManager = new GridLayoutManager(AddFuel.this, 1);
+
+        if (userAutomobileList != null && userAutomobileList.size() > 0) {
+            mAdapter = new VehicleAdapter(AddFuel.this, userAutomobileList);
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            fetchAutomobiles();
+        }
     }
 
     private void fetchSingleStation() {
@@ -219,6 +271,7 @@ public class AddFuel extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        stationFetching.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -236,14 +289,18 @@ public class AddFuel extends AppCompatActivity {
                                 scrollView.setAlpha(1.0f);
                                 loadLayout();
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Toast.makeText(AddFuel.this, e.toString(), Toast.LENGTH_LONG).show();
                             }
+                        } else {
+                            Toast.makeText(AddFuel.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        stationFetching.dismiss();
+                        Toast.makeText(AddFuel.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -264,30 +321,111 @@ public class AddFuel extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void loadLayout() {
+    private void fetchAutomobiles() {
+        userAutomobileList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    VehicleItem item = new VehicleItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setVehicleBrand(obj.getString("car_brand"));
+                                    item.setVehicleModel(obj.getString("car_model"));
+                                    item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                    item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                    item.setVehicleKilometer(obj.getInt("kilometer"));
+                                    item.setVehiclePhoto(obj.getString("carPhoto"));
+                                    item.setVehiclePlateNo(obj.getString("plateNo"));
+                                    item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                    item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                    userAutomobileList.add(item);
+
+                                    // If there is any selected auto, choose first one.
+                                    if (vehicleID == 0) {
+                                        chooseVehicle(item);
+                                    }
+                                }
+
+                                mAdapter = new VehicleAdapter(AddFuel.this, userAutomobileList);
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView.setLayoutManager(mLayoutManager);
+                                mRecyclerView.setAdapter(mAdapter);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void chooseVehicle(VehicleItem item) {
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+
+        getVariables(prefs);
+    }
+
+    public void loadLayout() {
         istasyonIDHolder.setText("" + chosenStationID);
         istasyonNameHolder.setText(stationName);
         Glide.with(AddFuel.this).load(stationLogo).apply(options).into(istasyonLogoHolder);
 
-        enterKilometer.setText(String.valueOf(kilometer));
-        enterKilometer.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    tempKM = Integer.parseInt(s.toString());
-                }
-            }
-        });
+        updateVehicleLayout();
 
         //1. YAKIT TİPİ
         switch (fuelPri) {
@@ -296,24 +434,36 @@ public class AddFuel extends AppCompatActivity {
                 selectedTaxRate = TAX_GASOLINE;
                 fuelType = getString(R.string.gasoline);
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
+
+                expandableLayoutYakit.setVisibility(View.VISIBLE);
+                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 selectedUnitPrice = dieselPrice;
                 selectedTaxRate = TAX_DIESEL;
                 fuelType = getString(R.string.diesel);
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
+
+                expandableLayoutYakit.setVisibility(View.VISIBLE);
+                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 selectedUnitPrice = LPGPrice;
                 selectedTaxRate = TAX_LPG;
                 fuelType = getString(R.string.lpg);
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
+
+                expandableLayoutYakit.setVisibility(View.VISIBLE);
+                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 selectedUnitPrice = electricityPrice;
                 selectedTaxRate = TAX_ELECTRICITY;
                 fuelType = getString(R.string.electricity);
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
+
+                expandableLayoutYakit.setVisibility(View.VISIBLE);
+                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             default:
                 expandableLayoutYakit.setVisibility(View.GONE);
@@ -331,24 +481,36 @@ public class AddFuel extends AppCompatActivity {
                 selectedTaxRate2 = TAX_GASOLINE;
                 fuelType2 = getString(R.string.gasoline);
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
+
+                expandableLayoutYakit2.setVisibility(View.VISIBLE);
+                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 selectedUnitPrice2 = dieselPrice;
                 selectedTaxRate2 = TAX_DIESEL;
                 fuelType2 = getString(R.string.diesel);
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
+
+                expandableLayoutYakit2.setVisibility(View.VISIBLE);
+                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 selectedUnitPrice2 = LPGPrice;
                 selectedTaxRate2 = TAX_LPG;
                 fuelType2 = getString(R.string.lpg);
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
+
+                expandableLayoutYakit2.setVisibility(View.VISIBLE);
+                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 selectedUnitPrice2 = electricityPrice;
                 selectedTaxRate2 = TAX_ELECTRICITY;
                 fuelType2 = getString(R.string.electricity);
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
+
+                expandableLayoutYakit2.setVisibility(View.VISIBLE);
+                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             default:
                 expandableLayoutYakit2.setVisibility(View.GONE);
@@ -489,6 +651,28 @@ public class AddFuel extends AppCompatActivity {
         });
     }
 
+    private void updateVehicleLayout() {
+        enterKilometer.setText(String.valueOf(kilometer));
+        enterKilometer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    tempKM = Integer.parseInt(s.toString());
+                }
+            }
+        });
+    }
+
     private float howManyLiter(float priceForUnit, float totalPrice) {
         if (priceForUnit == 0) {
             return 0f;
@@ -546,10 +730,12 @@ public class AddFuel extends AppCompatActivity {
                 params.put("fuelPrice", String.valueOf(selectedUnitPrice));
                 params.put("fuelLiter", String.valueOf(buyedLiter));
                 params.put("fuelTax", String.valueOf(selectedTaxRate));
+                params.put("subTotal", String.valueOf(entryPrice));
                 params.put("fuelType2", String.valueOf(fuelSec));
                 params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
                 params.put("fuelLiter2", String.valueOf(buyedLiter2));
                 params.put("fuelTax2", String.valueOf(selectedTaxRate2));
+                params.put("subTotal2", String.valueOf(entryPrice2));
                 params.put("totalPrice", String.valueOf(totalPrice));
                 params.put("country", userCountry);
                 params.put("unit", String.valueOf(userUnit));
