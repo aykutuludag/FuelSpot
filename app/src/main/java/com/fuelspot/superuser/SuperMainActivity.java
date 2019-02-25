@@ -47,8 +47,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import static com.fuelspot.FragmentSettings.companyList;
 import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.isGeofenceOpen;

@@ -32,7 +32,7 @@
             android:layout_height="wrap_content">
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
-                android:id="@+id/news_published"
+                android:id="@+id/newsPublished"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -44,7 +44,7 @@
                 android:id="@+id/txt_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/news_published"
+                android:layout_below="@id/newsPublished"
                 android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 

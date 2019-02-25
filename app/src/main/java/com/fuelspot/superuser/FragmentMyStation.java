@@ -237,10 +237,9 @@ public class FragmentMyStation extends Fragment {
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setAllGesturesEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
-                googleMap.setTrafficEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.setTrafficEnabled(true);
                 loadStationDetails();
             }
         });

@@ -63,6 +63,7 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.CommentAdapter;
+import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
@@ -538,6 +539,8 @@ public class StationDetails extends AppCompatActivity {
                                     chart.getDescription().setTextColor(Color.WHITE);
                                     chart.setExtraRightOffset(10f);
                                     chart.invalidate(); // refresh
+                                    GraphMarkerAdapter mv = new GraphMarkerAdapter(StationDetails.this, R.layout.popup_graph_marker, dataSets);
+                                    chart.setMarker(mv);
                                 }
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
@@ -830,6 +833,8 @@ public class StationDetails extends AppCompatActivity {
                                     floatingActionButton1.setLabelText(getString(R.string.add_comment));
                                 }
 
+                                errorComment.setVisibility(View.GONE);
+
                                 // Calculate station score
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 stationScore = sumOfPoints / numOfComments;
@@ -860,7 +865,9 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
-                        textViewStationPoint.setText(0 + " yorum" + " - " + 0.0);
+                        textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
+                        errorComment.setVisibility(View.VISIBLE);
+                        noCommentText.setVisibility(View.VISIBLE);
                     }
                 }) {
             @Override

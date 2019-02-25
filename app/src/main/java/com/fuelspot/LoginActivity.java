@@ -232,6 +232,30 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
 
+            // Maybe she came from firebase notification. Redirect with url
+            String link2 = getIntent().getExtras().getString("URL");
+            if (link2 != null && link2.length() > 0) {
+                // Temporary only getting fuelspot.com
+                link2 = link2.replace("fuelspot.com", "fuel-spot.com");
+
+                final Intent intent;
+                if (isSuperUser) {
+                    intent = new Intent(LoginActivity.this, SuperMainActivity.class);
+                } else {
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                }
+
+                intent.putExtra("URL", link2);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 2000);
+                return;
+            }
+
             //Check user is regular or superUser
             if (isSuperUser) {
                 handler.postDelayed(new Runnable() {

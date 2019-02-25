@@ -25,7 +25,6 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -51,12 +50,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.fuelspot.model.CompanyItem;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -65,9 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -80,6 +71,7 @@ import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.userCountry;
@@ -91,8 +83,6 @@ import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
-
-    public static List<CompanyItem> companyList = new ArrayList<>();
     private TextView countryText;
     private TextView languageText;
     private TextView currencyText;
@@ -115,15 +105,11 @@ public class FragmentSettings extends Fragment {
     //Creating a Request Queue
     private RequestQueue requestQueue;
     private View rootView;
-    private ArrayList<PieEntry> entries = new ArrayList<>();
-    private PieChart chart3;
-    private TextView textViewTotalNumber;
+
+
     private RelativeLayout geofenceLayout;
     private CheckBox geofenceCheckBox;
 
-    private int otherStations;
-    private int totalVerified;
-    private int totalStation;
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -230,29 +216,6 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
-
-            chart3 = rootView.findViewById(R.id.chart3);
-            chart3.getDescription().setEnabled(false);
-            chart3.setDragDecelerationFrictionCoef(0.95f);
-            chart3.setDrawHoleEnabled(false);
-            chart3.getLegend().setEnabled(false);
-            chart3.setTransparentCircleColor(Color.BLACK);
-            chart3.setTransparentCircleAlpha(110);
-            chart3.setTransparentCircleRadius(61f);
-            chart3.setUsePercentValues(false);
-            chart3.setRotationEnabled(true);
-            chart3.setHighlightPerTapEnabled(true);
-            chart3.setEntryLabelColor(Color.BLACK);
-            chart3.setEntryLabelTextSize(12f);
-            chart3.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
-
             buttonBeta = rootView.findViewById(R.id.button_beta);
             buttonBeta.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -308,123 +271,9 @@ public class FragmentSettings extends Fragment {
                     customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
                 }
             });
-
-            parseCompanies();
         }
 
         return rootView;
-    }
-
-    private void parseCompanies() {
-        if (companyList != null && companyList.size() > 0) {
-            for (int i = 0; i < companyList.size(); i++) {
-                totalVerified += companyList.get(i).getNumOfVerifieds();
-                totalStation += companyList.get(i).getNumOfStations();
-
-                if (companyList.get(i).getNumOfStations() >= 250) {
-                    entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
-                } else {
-                    otherStations += companyList.get(i).getNumOfStations();
-                }
-            }
-
-            String dummy = getString(R.string.registered_station_number) + ": " + totalStation;
-            textViewTotalNumber.setText(dummy);
-
-            entries.add(new PieEntry((float) otherStations, getString(R.string.other)));
-
-            PieDataSet dataSet = new PieDataSet(entries, getString(R.string.fuel_dist_comp));
-            dataSet.setDrawIcons(false);
-
-            // add a lot of colors
-            ArrayList<Integer> colors = new ArrayList<>();
-
-            for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                colors.add(c);
-
-            for (int c : ColorTemplate.JOYFUL_COLORS)
-                colors.add(c);
-
-            for (int c : ColorTemplate.COLORFUL_COLORS)
-                colors.add(c);
-
-            for (int c : ColorTemplate.LIBERTY_COLORS)
-                colors.add(c);
-
-            for (int c : ColorTemplate.PASTEL_COLORS)
-                colors.add(c);
-
-            colors.add(ColorTemplate.getHoloBlue());
-
-            dataSet.setColors(colors);
-            //dataSet.setSelectionShift(0f);
-
-            PieData data = new PieData(dataSet);
-            data.setValueTextSize(11f);
-            data.setValueTextColor(Color.BLACK);
-            chart3.setData(data);
-            chart3.highlightValues(null);
-            chart3.invalidate();
-        } else {
-            // Somehow companList didn't fetch at MainActivity or SuperMainActivity. Fetch it.
-            fetchCompanies();
-        }
-    }
-
-    private void fetchCompanies() {
-        companyList.clear();
-        totalStation = 0;
-        totalVerified = 0;
-        otherStations = 0;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    CompanyItem item = new CompanyItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setName(obj.getString("companyName"));
-                                    item.setLogo(obj.getString("companyLogo"));
-                                    item.setWebsite(obj.getString("companyWebsite"));
-                                    item.setPhone(obj.getString("companyPhone"));
-                                    item.setAddress(obj.getString("companyAddress"));
-                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                    item.setNumOfStations(obj.getInt("numOfStations"));
-                                    companyList.add(item);
-                                }
-                                parseCompanies();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
     }
 
     private void updateTaxRates() {
@@ -453,7 +302,7 @@ public class FragmentSettings extends Fragment {
                                 prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
                                 textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
 
-                                MainActivity.getVariables(prefs);
+                                getVariables(prefs);
 
                                 if (isSuperUser) {
                                     Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), getString(R.string.update_tax_success), Snackbar.LENGTH_LONG);

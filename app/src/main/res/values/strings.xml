@@ -67,6 +67,7 @@
     <string name="API_TAX" translatable="false">https://fuel-spot.com/api/other/tax.php</string>
     <string name="API_FEEDBACK" translatable="false">https://fuel-spot.com/api/other/feedback.php</string>
     <string name="API_NEWS" translatable="false">https://fuel-spot.com/api/other/news.php</string>
+    <string name="API_NEWS_SINGLE" translatable="false">https://fuel-spot.com/api/other/news-single.php</string>
     <string name="API_COMPANY" translatable="false">https://fuel-spot.com/api/other/company.php</string>
     <string name="API_BANKING" translatable="false">https://fuel-spot.com/api/other/banking.php</string>
     <!-- NON TRANSLATABLE PART END -->
@@ -138,11 +139,11 @@
 
     <!-- FragmentNews-->
     <string name="latest_news">Latest news</string>
-    <string name="fuelspot_fuel_index">FuelSpot Fuel Index</string>
     <string name="price_index">Price index</string>
-    <string name="volume">Volume</string>
+    <string name="fuel_distrubition_companies">Fuel distrubition companies</string>
     <string name="no_news">We couldn\'t find news about your country…</string>
     <string name="last_update">Last update</string>
+    <string name="registered_station_number">Registered station number</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
@@ -179,7 +180,6 @@
     <string name="location_notification_on">Location services on</string>
     <string name="location_notification_off">Location services off</string>
     <string name="location_notifications_desc">If you off the location services, you won\'t able to add fuel</string>
-    <string name="registered_station_number">Registered station number</string>
     <string name="privacy">Privacy</string>
     <string name="enroll_beta">Enroll beta test</string>
     <string name="feedback">Feedback</string>
@@ -320,6 +320,10 @@
 
     <!-- UserComments-->
     <!-- UserComments-->
+
+    <!-- NewsDetail-->
+    <string name="share">Share</string>
+    <!-- NewsDetail-->
 
     <!-- AddFuel-->
     <string name="geofence_notification_title">Are you purchasing fuel? Click here to add it!</string>

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -103,6 +104,7 @@ public class FragmentStations extends Fragment {
     private FusedLocationProviderClient mFusedLocationClient;
     int whichOrder;
     boolean isMapUpdating;
+    NestedScrollView scrollView;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -113,6 +115,7 @@ public class FragmentStations extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -135,6 +138,7 @@ public class FragmentStations extends Fragment {
             // Objects
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             queue = Volley.newRequestQueue(getActivity());
+            scrollView = rootView.findViewById(R.id.nestedScrollView);
 
             // Activate map
             mMapView = rootView.findViewById(R.id.map);
@@ -275,10 +279,17 @@ public class FragmentStations extends Fragment {
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setCompassEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                    googleMap.getUiSettings().setAllGesturesEnabled(false);
                     googleMap.getUiSettings().setMapToolbarEnabled(false);
-                    googleMap.setTrafficEnabled(true);
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.setTrafficEnabled(true);
+                    googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                        @Override
+                        public void onCameraMoveStarted(int i) {
+                            if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                                scrollView.requestDisallowInterceptTouchEvent(true);
+                            }
+                        }
+                    });
 
                     MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                     googleMap.setInfoWindowAdapter(customInfoWindow);
@@ -637,10 +648,9 @@ public class FragmentStations extends Fragment {
                             googleMap.setMyLocationEnabled(true);
                             googleMap.getUiSettings().setCompassEnabled(true);
                             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                            googleMap.getUiSettings().setAllGesturesEnabled(false);
                             googleMap.getUiSettings().setMapToolbarEnabled(false);
-                            googleMap.setTrafficEnabled(true);
                             googleMap.getUiSettings().setZoomControlsEnabled(true);
+                            googleMap.setTrafficEnabled(true);
                         }
                     });
                 } else {

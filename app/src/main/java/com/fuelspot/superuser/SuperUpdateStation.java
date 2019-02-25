@@ -46,7 +46,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.FragmentSettings.companyList;
+import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;

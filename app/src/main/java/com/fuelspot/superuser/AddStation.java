@@ -47,7 +47,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.fuelspot.FragmentSettings.companyList;
+import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
@@ -192,7 +192,6 @@ public class AddStation extends AppCompatActivity {
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                googleMap.getUiSettings().setAllGesturesEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.setTrafficEnabled(true);

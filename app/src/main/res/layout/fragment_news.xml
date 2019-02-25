@@ -15,6 +15,7 @@
             android:id="@+id/layout_news"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:background="@drawable/round_layout">
 
             <TextView
@@ -57,22 +58,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_news"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/round_layout">
 
             <TextView
                 android:id="@+id/title_stats"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_margin="4dp"
                 android:gravity="center"
                 android:padding="4dp"
-                android:text="@string/fuelspot_fuel_index"
+                android:text="@string/stats"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
@@ -112,11 +112,11 @@
                 android:layout_below="@id/dummy000"
                 android:layout_marginStart="4dp"
                 android:padding="4dp"
-                android:text="@string/volume"
+                android:text="@string/fuel_distrubition_companies"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/chartVolume"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chart3"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_below="@id/subtitle1"
@@ -126,14 +126,15 @@
                 android:layout_marginBottom="4dp" />
 
             <TextView
-                android:id="@+id/dummy001"
+                android:id="@+id/textViewtoplamSayi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/chartVolume"
+                android:layout_below="@id/chart3"
                 android:layout_centerHorizontal="true"
-                android:gravity="center"
                 android:padding="2dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:text="@string/registered_station_number"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#000" />
         </RelativeLayout>
 
         <com.github.ybq.android.spinkit.SpinKitView

@@ -66,11 +66,11 @@
 
     <!-- FragmentNews-->
     <string name="latest_news">Son haberler</string>
-    <string name="fuelspot_fuel_index">FuelSpot Akaryakıt Endeksi</string>
     <string name="price_index">Fiyat endeksi</string>
-    <string name="volume">Hacim</string>
+    <string name="fuel_distrubition_companies">Akaryakıt dağıtım şirketleri</string>
     <string name="no_news">Ülkeniz hakkında herhangi bir haber bulamadık…</string>
     <string name="last_update">Son güncelleme</string>
+    <string name="registered_station_number">Kayıtlı istasyon sayısı</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
@@ -106,7 +106,6 @@
     <string name="location_notification_on">Konum servisleri açık</string>
     <string name="location_notification_off">Konum servisleri kapalı</string>
     <string name="location_notifications_desc">Eğer konum servislerini kapatırsanız, yakıt ekleme sistemi çalışmayacaktır.</string>
-    <string name="registered_station_number">Kayıtlı istasyon sayısı</string>
     <string name="privacy">Gizlilik</string>
     <string name="enroll_beta">Beta testine katıl</string>
     <string name="feedback">Geri-bildirim</string>
@@ -247,6 +246,10 @@
 
     <!-- UserComments-->
     <!-- UserComments-->
+
+    <!-- NewsDetail-->
+    <string name="share">Paylaş</string>
+    <!-- NewsDetail-->
 
     <!-- AddFuel-->
     <string name="geofence_notification_title">Yakıt mı alıyorsun? Eklemek için hemen tıkla!</string>

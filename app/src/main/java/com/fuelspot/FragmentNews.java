@@ -24,17 +24,24 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
+import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.NewsItem;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -53,6 +60,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.universalTimeFormat;
@@ -69,7 +77,9 @@ public class FragmentNews extends Fragment {
     private View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
+    private SimpleDateFormat sdf;
 
+    // Price Index
     private LineChart chart;
     private List<Entry> gasolinePriceHistory = new ArrayList<>();
     private List<Entry> dieselPriceHistory = new ArrayList<>();
@@ -77,10 +87,13 @@ public class FragmentNews extends Fragment {
     private List<Entry> elecPriceHistory = new ArrayList<>();
     private TextView lastUpdatedAvgPrice;
 
-    private LineChart chart2;
-    private List<Entry> purchaseHistoryOf = new ArrayList<>();
-    private TextView lastUpdatedVolume;
-    private SimpleDateFormat sdf;
+    // Companies
+    private PieChart chart3;
+    private TextView textViewTotalNumber;
+    private ArrayList<PieEntry> entries = new ArrayList<>();
+    private int otherStations;
+    private int totalVerified;
+    private int totalStation;
 
     public static FragmentNews newInstance() {
         Bundle args = new Bundle();
@@ -107,13 +120,34 @@ public class FragmentNews extends Fragment {
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
             requestQueue = Volley.newRequestQueue(getActivity());
+            sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             proggressBar = rootView.findViewById(R.id.spin_kit);
             proggressBar.setColor(Color.BLUE);
             mRecyclerView = rootView.findViewById(R.id.newsView);
             mRecyclerView.setNestedScrollingEnabled(false);
             errorLayout = rootView.findViewById(R.id.newsErrorLayout);
+
             chart = rootView.findViewById(R.id.chartAveragePrice);
+            chart.getXAxis().setAvoidFirstLastClipping(true);
+            chart.getXAxis().setLabelCount(3, true);
+            chart.getAxisRight().setGranularity(0.5f);
+            chart.getAxisLeft().setGranularity(0.5f);
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getDescription().setText(currencySymbol + " / " + userUnit);
+            chart.getDescription().setTextSize(12f);
+            chart.getDescription().setTextColor(Color.WHITE);
+            chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+                    Date date = new Date();
+                    date.setTime((long) value);
+                    return formatter.format(date);
+                }
+            });
+            chart.animateX(1000, Easing.EasingOption.EaseInSine);
+            chart.setExtraRightOffset(10f);
             chart.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -121,22 +155,36 @@ public class FragmentNews extends Fragment {
                     return false;
                 }
             });
+
             lastUpdatedAvgPrice = rootView.findViewById(R.id.dummy000);
-            chart2 = rootView.findViewById(R.id.chartVolume);
-            chart2.setOnTouchListener(new View.OnTouchListener() {
+
+            chart3 = rootView.findViewById(R.id.chart3);
+            chart3.getDescription().setEnabled(false);
+            chart3.setDragDecelerationFrictionCoef(0.95f);
+            chart3.setDrawHoleEnabled(false);
+            chart3.getLegend().setEnabled(false);
+            chart3.setTransparentCircleColor(Color.BLACK);
+            chart3.setTransparentCircleAlpha(110);
+            chart3.setTransparentCircleRadius(61f);
+            chart3.setUsePercentValues(false);
+            chart3.setRotationEnabled(true);
+            chart3.setHighlightPerTapEnabled(true);
+            chart3.setEntryLabelColor(Color.BLACK);
+            chart3.setEntryLabelTextSize(12f);
+            chart3.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     scrollView.requestDisallowInterceptTouchEvent(true);
                     return false;
                 }
             });
-            lastUpdatedVolume = rootView.findViewById(R.id.dummy001);
-            sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+
+            textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
 
             // ÜLKE SEÇİMİ
             fetchNews("TR");
             fetchCountryFinance("TR");
-            fetchVolume("TR");
+            parseCompanies();
         }
         return rootView;
     }
@@ -283,24 +331,9 @@ public class FragmentNews extends Fragment {
 
                                 LineData lineData = new LineData(dataSets);
                                 chart.setData(lineData);
-                                chart.getXAxis().setAvoidFirstLastClipping(true);
-                                chart.getXAxis().setLabelCount(3, true);
-                                chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                                chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-                                    @Override
-                                    public String getFormattedValue(float value, AxisBase axis) {
-                                        DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                                        Date date = new Date();
-                                        date.setTime((long) value);
-                                        return formatter.format(date);
-                                    }
-                                });
-                                chart.getDescription().setText(currencySymbol + " / " + userUnit);
-                                chart.getDescription().setTextSize(12f);
-                                chart.getDescription().setTextColor(Color.WHITE);
-                                chart.setExtraRightOffset(10f);
-                                chart.animateX(1500, Easing.EasingOption.EaseInSine);
                                 chart.invalidate(); // refresh
+                                GraphMarkerAdapter mv = new GraphMarkerAdapter(getActivity(), R.layout.popup_graph_marker, dataSets);
+                                chart.setMarker(mv);
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }
@@ -331,60 +364,91 @@ public class FragmentNews extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    private void fetchVolume(final String tempCountryCode) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COUNTRY_VOLUME),
+    private void parseCompanies() {
+        if (companyList != null && companyList.size() > 0) {
+            for (int i = 0; i < companyList.size(); i++) {
+                totalVerified += companyList.get(i).getNumOfVerifieds();
+                totalStation += companyList.get(i).getNumOfStations();
+
+                if (companyList.get(i).getNumOfStations() >= 250) {
+                    entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
+                } else {
+                    otherStations += companyList.get(i).getNumOfStations();
+                }
+            }
+
+            String dummy = getString(R.string.registered_station_number) + ": " + totalStation;
+            textViewTotalNumber.setText(dummy);
+
+            entries.add(new PieEntry((float) otherStations, getString(R.string.other)));
+
+            PieDataSet dataSet = new PieDataSet(entries, getString(R.string.fuel_dist_comp));
+            dataSet.setDrawIcons(false);
+
+            // add a lot of colors
+            ArrayList<Integer> colors = new ArrayList<>();
+
+            for (int c : ColorTemplate.VORDIPLOM_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.JOYFUL_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.COLORFUL_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.LIBERTY_COLORS)
+                colors.add(c);
+
+            for (int c : ColorTemplate.PASTEL_COLORS)
+                colors.add(c);
+
+            colors.add(ColorTemplate.getHoloBlue());
+
+            dataSet.setColors(colors);
+            //dataSet.setSelectionShift(0f);
+
+            PieData data = new PieData(dataSet);
+            data.setValueTextSize(11f);
+            data.setValueTextColor(Color.BLACK);
+            chart3.setData(data);
+            chart3.highlightValues(null);
+            chart3.invalidate();
+        } else {
+            // Somehow companList didn't fetch at MainActivity or SuperMainActivity. Fetch it.
+            fetchCompanies();
+        }
+    }
+
+    private void fetchCompanies() {
+        companyList.clear();
+        totalStation = 0;
+        totalVerified = 0;
+        otherStations = 0;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
-
-                                for (int i = res.length() - 1; i >= 0; i--) {
+                                for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
-                                    if (obj.getDouble("totalPrice") != 0) {
-                                        purchaseHistoryOf.add(new Entry((float) sdf.parse(obj.getString("time")).getTime(), (float) obj.getDouble("totalPrice")));
-                                    }
+
+                                    CompanyItem item = new CompanyItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setName(obj.getString("companyName"));
+                                    item.setLogo(obj.getString("companyLogo"));
+                                    item.setWebsite(obj.getString("companyWebsite"));
+                                    item.setPhone(obj.getString("companyPhone"));
+                                    item.setAddress(obj.getString("companyAddress"));
+                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                    item.setNumOfStations(obj.getInt("numOfStations"));
+                                    companyList.add(item);
                                 }
-
-                                String dummyLastText = getString(R.string.last_update) + " " + res.getJSONObject(0).getString("time");
-                                lastUpdatedVolume.setText(dummyLastText);
-
-                                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-
-                                if (purchaseHistoryOf.size() > 0) {
-                                    LineDataSet dataSet = new LineDataSet(purchaseHistoryOf, getString(R.string.volume) + " " + "(" + currencySymbol + ")"); // add entries to dataset
-                                    dataSet.setColor(Color.BLACK);
-                                    dataSet.setDrawValues(false);
-                                    dataSet.setDrawCircles(false);
-                                    dataSet.setFillColor(Color.parseColor("#90000000"));
-                                    dataSet.setDrawFilled(true);
-                                    dataSets.add(dataSet);
-                                }
-
-                                LineData lineData = new LineData(dataSets);
-                                chart2.setData(lineData);
-                                chart2.getXAxis().setAvoidFirstLastClipping(true);
-                                chart2.getXAxis().setLabelCount(3, true);
-                                chart2.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                                chart2.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-                                    @Override
-                                    public String getFormattedValue(float value, AxisBase axis) {
-                                        DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                                        Date date = new Date();
-                                        date.setTime((long) value);
-                                        return formatter.format(date);
-                                    }
-                                });
-                                chart2.getDescription().setText(currencySymbol);
-                                chart2.getDescription().setTextSize(12f);
-                                chart2.getDescription().setTextColor(Color.WHITE);
-                                chart2.setExtraRightOffset(10f);
-                                chart2.animateX(1500, Easing.EasingOption.EaseInSine);
-                                chart2.invalidate(); // refresh
+                                parseCompanies();
                             } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -393,7 +457,6 @@ public class FragmentNews extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
                     }
                 }) {
             @Override
@@ -402,7 +465,6 @@ public class FragmentNews extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("country", tempCountryCode);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

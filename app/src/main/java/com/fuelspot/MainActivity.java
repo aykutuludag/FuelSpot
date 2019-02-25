@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -51,22 +50,26 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import static com.fuelspot.FragmentSettings.companyList;
-
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
     public static final int REQUEST_ALL = 2;
     public static final int GOOGLE_LOGIN = 100;
+
     public static List<StationItem> fullStationList = new ArrayList<>();
     public static List<VehicleItem> userAutomobileList = new ArrayList<>();
+    public static List<CompanyItem> companyList = new ArrayList<>();
+
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
     public static String FENCE_RECEIVER_ACTION = "com.fuelspot.FENCE_RECEIVER_ACTION";
     public static int mapDefaultStationRange = 50;
+
     public static String universalTimeFormat = "yyyy-MM-dd HH:mm:ss";
     public static String shortTimeFormat = "dd-MMM HH:mm";
+
     public static boolean premium, hasDoubleRange, isSigned, isSuperUser, isGeofenceOpen;
     public static float averageCons, userFSMoney, averagePrice, mapDefaultZoom, TAX_GASOLINE, TAX_DIESEL, TAX_LPG, TAX_ELECTRICITY;
     public static int carbonEmission;
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int mapDefaultRange;
     public static String userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static int adCount;
+
     private List<Fragment> fragments = new ArrayList<>(5);
     private SharedPreferences prefs;
     private IInAppBillingService mService;
@@ -87,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private FragNavController mFragNavController;
     private AHBottomNavigation bottomNavigation;
     private RequestQueue queue;
-
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -264,6 +267,46 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         // Fetch companies once for each session
         fetchCompanies();
+
+        if (savedInstanceState == null) {
+            // AppDeepLinking
+            String link = getIntent().getDataString();
+            if (link != null && link.length() > 0) {
+                // Temporary only getting fuelspot.com
+                link = link.replace("fuelspot.com", "fuel-spot.com");
+
+                if (link.contains("fuel-spot.com/news")) {
+                    Intent intent = new Intent(MainActivity.this, NewsDetail.class);
+                    intent.putExtra("URL", link);
+                    startActivity(intent);
+                } else if (link.contains("fuel-spot.com/stations")) {
+                    Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
+                    intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuel-spot.com/stations?id=", "")));
+                    startActivity(intent2);
+                } else {
+                    // Do nothing for now
+                }
+            }
+
+            // Firebase Cloud Messaging
+            String link2 = getIntent().getExtras().getString("URL");
+            if (link2 != null && link2.length() > 0) {
+                // Temporary only getting fuelspot.com
+                link2 = link2.replace("fuelspot.com", "fuel-spot.com");
+
+                if (link2.contains("fuel-spot.com/news")) {
+                    Intent intent = new Intent(MainActivity.this, NewsDetail.class);
+                    intent.putExtra("URL", link2);
+                    startActivity(intent);
+                } else if (link2.contains("fuel-spot.com/stations")) {
+                    Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
+                    intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuel-spot.com/stations?id=", "")));
+                    startActivity(intent2);
+                } else {
+                    // Do nothing for now
+                }
+            }
+        }
     }
 
     private void InAppBilling() {
