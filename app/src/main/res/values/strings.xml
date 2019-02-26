@@ -7,6 +7,7 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
+    <string name="banner_admob" translatable="false">ca-app-pub-6610790679720108/6457702530</string>
     <string name="copyright_text" translatable="false">FuelSpot 2019 - Made with ♥ in Ankara</string>
     <!-- Units-->
     <string name="unitSystem1" translatable="false">Litre</string>
@@ -60,7 +61,6 @@
     <!-- FINANCE APIs -->
     <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuel-spot.com/api/finance/fetch-station-prices.php</string> <!-- STATION -->
     <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuel-spot.com/api/finance/fetch-prices.php</string> <!-- COUNTRY -->
-    <string name="API_FETCH_COUNTRY_VOLUME" translatable="false">https://fuel-spot.com/api/finance/fetch-volume.php</string> <!-- COUNTRY -->
 
     <!-- OTHER APIs -->
     <string name="API_REPORT" translatable="false">https://fuel-spot.com/api/other/report.php</string>
@@ -233,6 +233,13 @@
     <string name="report_send_success">Report sent successfully. We will investigate it as soon as possible.</string>
     <string name="added_to_favs">Added to favorites</string>
     <string name="removed_from_favs">Removed from favorites</string>
+    <string name="wc">WC</string>
+    <string name="market">Market</string>
+    <string name="carwash">Car wash</string>
+    <string name="tire_store">Tire store</string>
+    <string name="mechanic">Mechanic</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="parkspot">Park spot</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -323,6 +330,7 @@
 
     <!-- NewsDetail-->
     <string name="share">Share</string>
+    <string name="source">Source</string>
     <!-- NewsDetail-->
 
     <!-- AddFuel-->

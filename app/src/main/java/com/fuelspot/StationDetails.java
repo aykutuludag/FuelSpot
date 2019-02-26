@@ -271,13 +271,71 @@ public class StationDetails extends AppCompatActivity {
                 return false;
             }
         });
+        chart.getXAxis().setAvoidFirstLastClipping(true);
+        chart.getXAxis().setLabelCount(3, true);
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+                Date date = new Date();
+                date.setTime((long) value);
+                return formatter.format(date);
+            }
+        });
+        chart.getDescription().setText(currencySymbol + " / " + userUnit);
+        chart.getDescription().setTextSize(13f);
+        chart.getDescription().setTextColor(Color.WHITE);
+        chart.setExtraRightOffset(10f);
         imageViewWC = findViewById(R.id.WC);
+        imageViewWC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.wc), Toast.LENGTH_SHORT).show();
+            }
+        });
         imageViewMarket = findViewById(R.id.Market);
+        imageViewMarket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.market), Toast.LENGTH_SHORT).show();
+            }
+        });
         imageViewCarWash = findViewById(R.id.CarWash);
+        imageViewCarWash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.carwash), Toast.LENGTH_SHORT).show();
+            }
+        });
         imageViewTireRepair = findViewById(R.id.TireRepair);
+        imageViewTireRepair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.tire_store), Toast.LENGTH_SHORT).show();
+            }
+        });
         imageViewMechanic = findViewById(R.id.Mechanic);
+        imageViewMechanic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.mechanic), Toast.LENGTH_SHORT).show();
+            }
+        });
         imageViewRestaurant = findViewById(R.id.Restaurant);
+        imageViewRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.restaurant), Toast.LENGTH_SHORT).show();
+            }
+        });
         imageViewParkSpot = findViewById(R.id.ParkSpot);
+        imageViewParkSpot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.parkspot), Toast.LENGTH_SHORT).show();
+            }
+        });
         commentSection = findViewById(R.id.section_comment);
         errorComment = findViewById(R.id.errorNoComment);
         noCommentText = findViewById(R.id.noCommentText);
@@ -522,22 +580,6 @@ public class StationDetails extends AppCompatActivity {
                                 if (dataSets.size() > 0) {
                                     LineData lineData = new LineData(dataSets);
                                     chart.setData(lineData);
-                                    chart.getXAxis().setAvoidFirstLastClipping(true);
-                                    chart.getXAxis().setLabelCount(3, true);
-                                    chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                                    chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-                                        @Override
-                                        public String getFormattedValue(float value, AxisBase axis) {
-                                            DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                                            Date date = new Date();
-                                            date.setTime((long) value);
-                                            return formatter.format(date);
-                                        }
-                                    });
-                                    chart.getDescription().setText(currencySymbol + " / " + userUnit);
-                                    chart.getDescription().setTextSize(12f);
-                                    chart.getDescription().setTextColor(Color.WHITE);
-                                    chart.setExtraRightOffset(10f);
                                     chart.invalidate(); // refresh
                                     GraphMarkerAdapter mv = new GraphMarkerAdapter(StationDetails.this, R.layout.popup_graph_marker, dataSets);
                                     chart.setMarker(mv);

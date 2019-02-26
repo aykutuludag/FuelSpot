@@ -391,7 +391,7 @@ public class FragmentAutomobile extends Fragment {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("plateNo", plateNo);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

@@ -3,11 +3,14 @@ package com.fuelspot;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,11 +43,11 @@ import java.util.Map;
 
 public class NewsDetail extends AppCompatActivity {
 
-    String coverPhoto, title, content, url, publishDate;
+    String coverPhoto, title, content, url, sourceURL, publishDate;
     Window window;
     ActionBar actionBar;
     ImageView imageViewCover;
-    TextView textViewTitle, textViewBody;
+    TextView textViewTitle, textViewBody, textViewSourceURL;
     RelativeTimeTextView textViewPublished;
     private RequestOptions options;
     private RequestQueue requestQueue;
@@ -61,11 +64,12 @@ public class NewsDetail extends AppCompatActivity {
         actionBar = this.getSupportActionBar();
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
 
         requestQueue = Volley.newRequestQueue(this);
 
         //Color statusbar and actionbar
-        coloredBars(Color.argb(50, 0, 0, 0), Color.TRANSPARENT);
+        coloredBars(Color.argb(60, 0, 0, 0), Color.argb(60, 0, 0, 0));
 
         // Get Intents
         Bundle extras = getIntent().getExtras();
@@ -73,6 +77,7 @@ public class NewsDetail extends AppCompatActivity {
         title = extras.getString("TITLE");
         content = extras.getString("CONTENT");
         url = extras.getString("URL");
+        sourceURL = extras.getString("SOURCE_URL");
         publishDate = extras.getString("PUBLISH_DATE");
 
         // Analytics
@@ -85,6 +90,7 @@ public class NewsDetail extends AppCompatActivity {
         textViewTitle = findViewById(R.id.newsTitle);
         textViewBody = findViewById(R.id.newsContent);
         textViewPublished = findViewById(R.id.newsPublished);
+        textViewSourceURL = findViewById(R.id.newsSource);
 
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_news).error(R.drawable.default_news)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
@@ -159,6 +165,19 @@ public class NewsDetail extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        textViewSourceURL.setText(sourceURL);
+        textViewSourceURL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#212121"));
+                customTabsIntent.launchUrl(NewsDetail.this, Uri.parse(sourceURL));
+            }
+        });
     }
 
     public void share() {

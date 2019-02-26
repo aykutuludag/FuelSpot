@@ -15,15 +15,19 @@
             android:id="@+id/layout_news"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_layout">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/round_layout2">
 
             <TextView
                 android:id="@+id/title_News"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="@string/latest_news"
@@ -62,7 +66,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/round_layout">
+            android:background="@drawable/round_layout2">
 
             <TextView
                 android:id="@+id/title_stats"
@@ -81,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title_stats"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
                 android:padding="4dp"
                 android:text="@string/price_index"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -102,7 +107,6 @@
                 android:layout_below="@id/chartAveragePrice"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:padding="2dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <TextView
@@ -111,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/dummy000"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
                 android:padding="4dp"
                 android:text="@string/fuel_distrubition_companies"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -131,7 +136,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chart3"
                 android:layout_centerHorizontal="true"
-                android:padding="2dp"
                 android:text="@string/registered_station_number"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#000" />

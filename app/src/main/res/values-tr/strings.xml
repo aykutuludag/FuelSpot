@@ -159,6 +159,13 @@
     <string name="report_send_success">Rapor başarıyla gönderildi. En kısa sürede incelenecektir.</string>
     <string name="added_to_favs">Favorilere eklendi</string>
     <string name="removed_from_favs">Favorilerden çıkarıldı</string>
+    <string name="wc">Tuvalet</string>
+    <string name="market">Market</string>
+    <string name="carwash">Araç yıkama</string>
+    <string name="tire_store">Lastikçi</string>
+    <string name="mechanic">Tamirci</string>
+    <string name="restaurant">Restoran</string>
+    <string name="parkspot">Park yeri</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -249,6 +256,7 @@
 
     <!-- NewsDetail-->
     <string name="share">Paylaş</string>
+    <string name="source">Kaynak</string>
     <!-- NewsDetail-->
 
     <!-- AddFuel-->

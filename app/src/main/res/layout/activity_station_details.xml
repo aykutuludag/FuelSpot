@@ -63,8 +63,8 @@
                         android:id="@+id/station_ID"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
@@ -74,8 +74,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/station_photo"
-                        android:layout_width="125dp"
-                        android:layout_height="125dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
                         app:srcCompat="@drawable/default_station" />
@@ -352,116 +352,115 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/baseInfoLayout"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/round_layout_white"
-                    android:padding="8dp">
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/title_facilities"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
                         android:gravity="center"
                         android:text="@string/facilities"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616" />
 
-                    <RelativeLayout
+
+                    <android.support.percent.PercentRelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/title_facilities"
                         android:layout_centerHorizontal="true"
-                        android:layout_margin="8dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
                         android:background="@drawable/round_layout_white"
                         android:elevation="4dp"
-                        android:gravity="center"
-                        android:padding="4dp">
+                        android:gravity="center">
 
-                        <android.support.percent.PercentRelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/WC"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentStart="true"
+                            android:alpha="0.5"
+                            android:src="@drawable/wc"
+                            app:layout_marginEndPercent="0.5%"
+                            app:layout_marginStartPercent="0.5%"
+                            app:layout_widthPercent="12.75%" />
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/WC"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_alignParentStart="true"
-                                android:alpha="0.5"
-                                android:src="@drawable/wc"
-                                app:layout_marginEndPercent="0.5%"
-                                app:layout_marginStartPercent="0.5%"
-                                app:layout_widthPercent="12.75%" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/Market"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_toEndOf="@id/WC"
+                            android:alpha="0.5"
+                            android:src="@drawable/market"
+                            app:layout_marginEndPercent="0.75%"
+                            app:layout_marginStartPercent="0.75%"
+                            app:layout_widthPercent="12.75%" />
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/Market"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_toEndOf="@id/WC"
-                                android:alpha="0.5"
-                                android:src="@drawable/market"
-                                app:layout_marginEndPercent="0.75%"
-                                app:layout_marginStartPercent="0.75%"
-                                app:layout_widthPercent="12.75%" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/CarWash"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_toEndOf="@id/Market"
+                            android:alpha="0.5"
+                            android:src="@drawable/carwash"
+                            app:layout_marginEndPercent="0.75%"
+                            app:layout_marginStartPercent="0.75%"
+                            app:layout_widthPercent="12.75%" />
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/CarWash"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_toEndOf="@id/Market"
-                                android:alpha="0.5"
-                                android:src="@drawable/carwash"
-                                app:layout_marginEndPercent="0.75%"
-                                app:layout_marginStartPercent="0.75%"
-                                app:layout_widthPercent="12.75%" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/TireRepair"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_toEndOf="@id/CarWash"
+                            android:alpha="0.5"
+                            android:src="@drawable/tirerepair"
+                            app:layout_marginEndPercent="0.75%"
+                            app:layout_marginStartPercent="0.75%"
+                            app:layout_widthPercent="13%" />
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/TireRepair"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_toEndOf="@id/CarWash"
-                                android:alpha="0.5"
-                                android:src="@drawable/tirerepair"
-                                app:layout_marginEndPercent="0.75%"
-                                app:layout_marginStartPercent="0.75%"
-                                app:layout_widthPercent="13%" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/Mechanic"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_toEndOf="@id/TireRepair"
+                            android:alpha="0.5"
+                            android:src="@drawable/mechanic"
+                            app:layout_marginEndPercent="0.75%"
+                            app:layout_marginStartPercent="0.75%"
+                            app:layout_widthPercent="12.75%" />
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/Mechanic"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_toEndOf="@id/TireRepair"
-                                android:alpha="0.5"
-                                android:src="@drawable/mechanic"
-                                app:layout_marginEndPercent="0.75%"
-                                app:layout_marginStartPercent="0.75%"
-                                app:layout_widthPercent="12.75%" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/Restaurant"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_toEndOf="@id/Mechanic"
+                            android:alpha="0.5"
+                            android:src="@drawable/restaurant"
+                            app:layout_marginEndPercent="0.75%"
+                            app:layout_marginStartPercent="0.75%"
+                            app:layout_widthPercent="12.75%" />
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/Restaurant"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_toEndOf="@id/Mechanic"
-                                android:alpha="0.5"
-                                android:src="@drawable/restaurant"
-                                app:layout_marginEndPercent="0.75%"
-                                app:layout_marginStartPercent="0.75%"
-                                app:layout_widthPercent="12.75%" />
-
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/ParkSpot"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:layout_toEndOf="@id/Restaurant"
-                                android:alpha="0.5"
-                                android:src="@drawable/parkspot"
-                                app:layout_marginEndPercent="0.75%"
-                                app:layout_marginStartPercent="0.75%"
-                                app:layout_widthPercent="12.75%" />
-                        </android.support.percent.PercentRelativeLayout>
-
-                    </RelativeLayout>
-
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ParkSpot"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_toEndOf="@id/Restaurant"
+                            android:alpha="0.5"
+                            android:src="@drawable/parkspot"
+                            app:layout_marginEndPercent="0.75%"
+                            app:layout_marginStartPercent="0.75%"
+                            app:layout_widthPercent="12.75%" />
+                    </android.support.percent.PercentRelativeLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -469,19 +468,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/facilitiesSection"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/round_layout_white"
-                    android:padding="8dp">
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/title_campaigns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp"
                         android:text="@string/campaigns"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616" />
@@ -491,6 +489,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/title_campaigns"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
                         android:background="@android:color/transparent"
                         android:visibility="visible" />
 
@@ -525,9 +525,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/campaignSection"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/round_layout_white"
-                    android:padding="8dp">
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/title_comments"
@@ -542,7 +545,9 @@
                         android:id="@+id/commentView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/title_comments" />
+                        android:layout_below="@+id/title_comments"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
 
                     <Button
                         android:id="@+id/button_seeAllComments"
@@ -587,10 +592,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/commentSection"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/round_layout_white"
-                    android:padding="8dp">
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/title_stats"
@@ -606,7 +613,9 @@
                         android:id="@+id/chart"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
-                        android:layout_below="@id/title_stats" />
+                        android:layout_below="@id/title_stats"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
                 </RelativeLayout>
 
             </RelativeLayout>

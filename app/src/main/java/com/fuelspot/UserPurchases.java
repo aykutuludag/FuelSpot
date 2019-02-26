@@ -30,7 +30,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
-import static com.fuelspot.MainActivity.vehicleID;
+import static com.fuelspot.MainActivity.plateNo;
 
 public class UserPurchases extends AppCompatActivity {
 
@@ -149,7 +149,7 @@ public class UserPurchases extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
-                params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("plateNo", plateNo);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

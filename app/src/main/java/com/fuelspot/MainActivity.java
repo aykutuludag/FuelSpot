@@ -256,11 +256,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         // AppRater
         RateThisApp.onCreate(this);
-        RateThisApp.showRateDialogIfNeeded(this);
-
-        if (savedInstanceState == null) {
-            mFragNavController.switchTab(FragNavController.TAB1);
-        }
+        RateThisApp.Config config = new RateThisApp.Config(3, 5);
+        RateThisApp.init(config);
 
         // Fetch user vehicles once for each session
         fetchAutomobiles();
@@ -269,6 +266,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         fetchCompanies();
 
         if (savedInstanceState == null) {
+            mFragNavController.switchTab(FragNavController.TAB1);
+
             // AppDeepLinking
             String link = getIntent().getDataString();
             if (link != null && link.length() > 0) {
@@ -283,6 +282,18 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                     Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
                     intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuel-spot.com/stations?id=", "")));
                     startActivity(intent2);
+                } else if (link.contains("https://fuel-spot.com/terms-and-conditions")) {
+                    Toast.makeText(MainActivity.this, "Şartlar ve koşullar", Toast.LENGTH_LONG).show();
+                    // Popup
+                } else if (link.contains("https://fuel-spot.com/privacy")) {
+                    Toast.makeText(MainActivity.this, "Gizlilik", Toast.LENGTH_LONG).show();
+                    // Popup
+                } else if (link.contains("https://fuel-spot.com/help")) {
+                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                    startActivity(intent);
+                } else if (link.contains("https://fuel-spot.com/help-for-superuser")) {
+                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                    startActivity(intent);
                 } else {
                     // Do nothing for now
                 }
@@ -302,6 +313,18 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                     Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
                     intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuel-spot.com/stations?id=", "")));
                     startActivity(intent2);
+                } else if (link2.contains("https://fuel-spot.com/terms-and-conditions")) {
+                    Toast.makeText(MainActivity.this, "Şartlar ve koşullar", Toast.LENGTH_LONG).show();
+                    // Popup
+                } else if (link2.contains("https://fuel-spot.com/privacy")) {
+                    Toast.makeText(MainActivity.this, "Gizlilik", Toast.LENGTH_LONG).show();
+                    // Popup
+                } else if (link2.contains("https://fuel-spot.com/help")) {
+                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                    startActivity(intent);
+                } else if (link2.contains("https://fuel-spot.com/help-for-superuser")) {
+                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                    startActivity(intent);
                 } else {
                     // Do nothing for now
                 }

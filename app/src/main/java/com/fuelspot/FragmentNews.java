@@ -209,6 +209,7 @@ public class FragmentNews extends Fragment {
                                     item.setCountry(obj.getString("country"));
                                     item.setTags(obj.getString("tags"));
                                     item.setURL(obj.getString("url"));
+                                    item.setSourceURL(obj.getString("sourceURL"));
                                     item.setPublishDate(obj.getString("releaseDate"));
                                     feedsList.add(item);
                                 }

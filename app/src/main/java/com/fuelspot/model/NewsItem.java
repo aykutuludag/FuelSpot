@@ -9,6 +9,7 @@ public class NewsItem {
     private String country;
     private String tags;
     private String url;
+    private String sourceUrl;
     private String publishDate;
 
     public Integer getID() {
@@ -65,6 +66,14 @@ public class NewsItem {
 
     public void setURL(String url) {
         this.url = url;
+    }
+
+    public String getSourceURL() {
+        return sourceUrl;
+    }
+
+    public void setSourceURL(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 
     public String getPublishDate() {

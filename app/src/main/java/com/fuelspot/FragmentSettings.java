@@ -246,6 +246,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
+            // BU İKİSİ POPUP İÇİNDE WEBVİEW OLACAK
             TextView openTerms = rootView.findViewById(R.id.textView34);
             openTerms.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,11 +1,8 @@
 package com.fuelspot;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -229,12 +226,8 @@ public class FragmentProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                CustomTabsIntent customTabsIntent = builder.build();
-                builder.enableUrlBarHiding();
-                builder.setShowTitle(true);
-                builder.setToolbarColor(Color.parseColor("#212121"));
-                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/help"));
+                Intent intent = new Intent(getActivity(), HelpActivity.class);
+                startActivity(intent);
             }
         });
 

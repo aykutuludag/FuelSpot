@@ -88,6 +88,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         intent.putExtra("TITLE", feedItem.getTitle());
         intent.putExtra("CONTENT", feedItem.getContent());
         intent.putExtra("URL", feedItem.getURL());
+        intent.putExtra("SOURCE_URL", feedItem.getSourceURL());
         intent.putExtra("PUBLISH_DATE", feedItem.getPublishDate());
         mContext.startActivity(intent);
     }

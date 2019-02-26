@@ -19,9 +19,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context mContext;
+    RequestOptions options;
 
     public MarkerAdapter(Context ctx) {
         mContext = ctx;
+        options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.default_station)
+                .error(R.drawable.default_station)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
     }
 
     @Override
@@ -43,17 +50,25 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
         sName.setText(infoWindowData.getStationName());
 
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.default_station)
-                .error(R.drawable.default_station)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
         Glide.with(mContext).load(infoWindowData.getPhotoURL()).apply(options).into(sLogo);
 
-        priceOne.setText("" + infoWindowData.getGasolinePrice());
-        priceTwo.setText("" + infoWindowData.getDieselPrice());
-        priceThree.setText("" + infoWindowData.getLpgPrice());
+        if (infoWindowData.getGasolinePrice() != 0) {
+            priceOne.setText(String.valueOf(infoWindowData.getGasolinePrice()));
+        } else {
+            priceOne.setText("-");
+        }
+
+        if (infoWindowData.getDieselPrice() != 0) {
+            priceTwo.setText(String.valueOf(infoWindowData.getDieselPrice()));
+        } else {
+            priceTwo.setText("-");
+        }
+
+        if (infoWindowData.getLpgPrice() != 0) {
+            priceThree.setText(String.valueOf(infoWindowData.getLpgPrice()));
+        } else {
+            priceThree.setText("-");
+        }
 
         return view;
     }

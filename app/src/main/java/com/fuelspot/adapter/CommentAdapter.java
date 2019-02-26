@@ -400,7 +400,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             super(itemView);
             card = itemView.findViewById(R.id.single_comment);
             commentHolder = itemView.findViewById(R.id.comment);
-            username = itemView.findViewById(R.id.textViewReportReason);
+            username = itemView.findViewById(R.id.textViewusername);
             time = itemView.findViewById(R.id.time);
             profilePic = itemView.findViewById(R.id.imageViewStationLogo);
             rating = itemView.findViewById(R.id.ratingBar);
