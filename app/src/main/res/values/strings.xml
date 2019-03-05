@@ -197,7 +197,6 @@
     <string name="menu_go">Go to station</string>
     <string name="menu_fav">Add favorites</string>
     <string name="menu_share">Share station</string>>
-    <string name="fab_comment">Write comment</string>
     <string name="fab_report">Report station</string>
     <string name="fab_report_price">Report prices</string>
     <string name="HundredDollarText">You can get followings by $100:</string>
@@ -207,6 +206,7 @@
     <string name="priceHistory">Price history</string>
     <string name="no_campaign_text">There is no campaigns for this station yet…</string>
     <string name="no_comment_text">There is no reviews for this station yet…</string>
+    <string name="last_ads_info">You have viewed last advertisement. You won\'t see more advertisement on this session.</string>
 
     <string-array name="report_reasons">
         <item>Station doesn\'t exist</item>
@@ -219,13 +219,14 @@
     </string-array>
 
     <string name="send_report_desc">If you know the current prices for this station you can send us. We are investigating every report. When we approve the report, the prize will be reflected on the account.</string>
+    <string name="enter_prices">Please enter prices…</string>
     <string name="send_report">Send report</string>
     <string name="add_answer">Add answer</string>
     <string name="empty_comment">Please enter your comment…</string>
     <string name="station_manager">Station manager</string>
-    <string name="add_comment">Add comment</string>
+    <string name="add_comment">Write review</string>
     <string name="comment_adding">Comment adding</string>
-    <string name="add_comment_success">Comment added successfully</string>
+    <string name="add_comment_success">Review added successfully</string>
     <string name="comment_updating">Comment updating</string>
     <string name="update_comment">Update comment</string>
     <string name="comment_update_success">Comment updated successfully</string>
@@ -240,6 +241,7 @@
     <string name="mechanic">Mechanic</string>
     <string name="restaurant">Restaurant</string>
     <string name="parkspot">Park spot</string>
+    <string name="atm">ATM</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -249,6 +251,7 @@
     <string name="empty_answer">Please enter your answer…</string>
     <string name="answer_delete_success">Answer deleted successfully</string>
     <string name="comment_delete_success">Comment deleted successfully</string>
+    <string name="loading_comments">Loading comments</string>
     <!-- StationComments-->
 
     <!-- AutomobileEdit-->
@@ -380,7 +383,8 @@
     <string name="station_update_fail">An error occurred while updating station… Please try again later</string>
     <string name="note_for_prices">If you have multiple fuels in the same type (Example: Diesel, Euro Diesel), enter the highest price</string>
     <string name="station_updating">Station updating</string>
-    <string name="fuelspot_station_id">Fuelspot ID:</string>
+    <string name="fuelspot_station_id">FuelSpot ID:</string>
+    <string name="license_no_with_colon">License NO:</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
@@ -396,6 +400,7 @@
     <string name="empty_campaign_desc">Please enter campaign description</string>
     <string name="empty_campaign_start">Please select campaign start date and time</string>
     <string name="empty_campaign_end">Please select campaign end date and time</string>
+    <string name="loading_campaigns">Loading campaigns</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperStore-->

@@ -1,7 +1,10 @@
 package com.fuelspot.superuser;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +34,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.adapter.CompanyAdapter;
 import com.fuelspot.model.CompanyItem;
+import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.json.JSONArray;
@@ -48,17 +52,25 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.universalTimeFormat;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
+import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
+import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
+import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
 import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLocation;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class SuperUpdateStation extends AppCompatActivity {
@@ -73,18 +85,13 @@ public class SuperUpdateStation extends AppCompatActivity {
     private Button buttonUpdateStation;
     private RequestQueue requestQueue;
     private RelativeTimeTextView lastUpdateTimeText;
-    private CircleImageView imageViewWC;
-    private CircleImageView imageViewMarket;
-    private CircleImageView imageViewCarWash;
-    private CircleImageView imageViewTireRepair;
-    private CircleImageView imageViewMechanic;
-    private CircleImageView imageViewRestaurant;
-    private CircleImageView imageViewParkSpot;
+    SharedPreferences prefs;
     private RelativeLayout verifiedLayout;
     private RequestOptions options;
     private Spinner spinner;
     private Window window;
     private Toolbar toolbar;
+    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM;
     private JSONObject facilitiesObj;
 
     @Override
@@ -102,6 +109,7 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         coloredBars(Color.BLACK, Color.parseColor("#212121"));
 
+        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(SuperUpdateStation.this);
         options = new RequestOptions().centerCrop().error(R.drawable.default_station).error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -117,6 +125,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         dieselHolder = findViewById(R.id.editTextDiesel);
         lpgHolder = findViewById(R.id.editTextLPG);
         electricityHolder = findViewById(R.id.editTextElectricity);
+
         imageViewWC = findViewById(R.id.WC);
         imageViewMarket = findViewById(R.id.Market);
         imageViewCarWash = findViewById(R.id.CarWash);
@@ -124,6 +133,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         imageViewMechanic = findViewById(R.id.Mechanic);
         imageViewRestaurant = findViewById(R.id.Restaurant);
         imageViewParkSpot = findViewById(R.id.ParkSpot);
+        imageViewATM = findViewById(R.id.ATM);
         buttonUpdateStation = findViewById(R.id.buttonUpdate);
         buttonUpdateStation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,43 +299,49 @@ public class SuperUpdateStation extends AppCompatActivity {
             if (facilitiesObj.getInt("WC") == 1) {
                 imageViewWC.setAlpha(1.0f);
             } else {
-                imageViewWC.setAlpha(0.5f);
+                imageViewWC.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("Market") == 1) {
                 imageViewMarket.setAlpha(1.0f);
             } else {
-                imageViewMarket.setAlpha(0.5f);
+                imageViewMarket.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("CarWash") == 1) {
                 imageViewCarWash.setAlpha(1.0f);
             } else {
-                imageViewCarWash.setAlpha(0.5f);
+                imageViewCarWash.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("TireRepair") == 1) {
                 imageViewTireRepair.setAlpha(1.0f);
             } else {
-                imageViewTireRepair.setAlpha(0.5f);
+                imageViewTireRepair.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("Mechanic") == 1) {
                 imageViewMechanic.setAlpha(1.0f);
             } else {
-                imageViewMechanic.setAlpha(0.5f);
+                imageViewMechanic.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("Restaurant") == 1) {
                 imageViewRestaurant.setAlpha(1.0f);
             } else {
-                imageViewRestaurant.setAlpha(0.5f);
+                imageViewRestaurant.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("ParkSpot") == 1) {
                 imageViewParkSpot.setAlpha(1.0f);
             } else {
-                imageViewParkSpot.setAlpha(0.5f);
+                imageViewParkSpot.setAlpha(0.25f);
+            }
+
+            if (facilitiesObj.getInt("ATM") == 1) {
+                imageViewATM.setAlpha(1.0f);
+            } else {
+                imageViewATM.setAlpha(0.25f);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -338,10 +354,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("WC") == 1) {
                             facilitiesObj.put("WC", "0");
-                            imageViewWC.setAlpha(0.5f);
+                            imageViewWC.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("WC", "1");
                             imageViewWC.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.wc), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -356,10 +373,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("Market") == 1) {
                             facilitiesObj.put("Market", "0");
-                            imageViewMarket.setAlpha(0.5f);
+                            imageViewMarket.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("Market", "1");
                             imageViewMarket.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.market), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -373,10 +391,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("CarWash") == 1) {
                             facilitiesObj.put("CarWash", "0");
-                            imageViewCarWash.setAlpha(0.5f);
+                            imageViewCarWash.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("CarWash", "1");
                             imageViewCarWash.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.carwash), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -390,10 +409,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("TireRepair") == 1) {
                             facilitiesObj.put("TireRepair", "0");
-                            imageViewTireRepair.setAlpha(0.5f);
+                            imageViewTireRepair.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("TireRepair", "1");
                             imageViewTireRepair.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.tire_store), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -407,10 +427,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("Mechanic") == 1) {
                             facilitiesObj.put("Mechanic", "0");
-                            imageViewMechanic.setAlpha(0.5f);
+                            imageViewMechanic.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("Mechanic", "1");
                             imageViewMechanic.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.mechanic), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -424,10 +445,11 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("Restaurant") == 1) {
                             facilitiesObj.put("Restaurant", "0");
-                            imageViewRestaurant.setAlpha(0.5f);
+                            imageViewRestaurant.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("Restaurant", "1");
                             imageViewRestaurant.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.restaurant), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -441,10 +463,29 @@ public class SuperUpdateStation extends AppCompatActivity {
                     try {
                         if (facilitiesObj.getInt("ParkSpot") == 1) {
                             facilitiesObj.put("ParkSpot", "0");
-                            imageViewParkSpot.setAlpha(0.5f);
+                            imageViewParkSpot.setAlpha(0.25f);
                         } else {
                             facilitiesObj.put("ParkSpot", "1");
                             imageViewParkSpot.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.parkspot), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewATM.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("ATM") == 1) {
+                            facilitiesObj.put("ATM", "0");
+                            imageViewATM.setAlpha(0.25f);
+                        } else {
+                            facilitiesObj.put("ATM", "1");
+                            imageViewATM.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.atm), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -480,8 +521,6 @@ public class SuperUpdateStation extends AppCompatActivity {
                                     item.setNumOfStations(obj.getInt("numOfStations"));
                                     companyList.add(item);
                                 }
-
-
                             } catch (JSONException e) {
                                 Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
                             }
@@ -521,8 +560,7 @@ public class SuperUpdateStation extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_success), Toast.LENGTH_LONG).show();
-                                    finish();
+                                    fetchOwnedStations();
                                     break;
                                 case "Fail":
                                     Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
@@ -568,6 +606,138 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void fetchOwnedStations() {
+        listOfOwnedStations.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setCountryCode(obj.getString("country"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setGoogleMapID(obj.getString("googleID"));
+                                    item.setFacilities(obj.getString("facilities"));
+                                    item.setLicenseNo(obj.getString("licenseNo"));
+                                    item.setOwner(obj.getString("owner"));
+                                    item.setPhotoURL(obj.getString("logoURL"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
+
+                                    //DISTANCE START
+                                    Location locLastKnow = new Location("");
+                                    locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                    locLastKnow.setLongitude(Double.parseDouble(userlon));
+
+                                    Location loc = new Location("");
+                                    String[] stationKonum = item.getLocation().split(";");
+                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                    float uzaklik = locLastKnow.distanceTo(loc);
+                                    item.setDistance((int) uzaklik);
+                                    //DISTANCE END
+                                    listOfOwnedStations.add(item);
+
+                                    // In this way, we assure server-local is sync
+                                    if (superStationID == item.getID()) {
+                                        chooseStation(item);
+                                    }
+                                }
+
+                                // Station info update&sync finished
+                                Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_success), Toast.LENGTH_LONG).show();
+                                finish();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("superusername", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void chooseStation(StationItem item) {
+        superStationID = item.getID();
+        prefs.edit().putInt("SuperStationID", superStationID).apply();
+
+        superStationName = item.getStationName();
+        prefs.edit().putString("SuperStationName", superStationName).apply();
+
+        superStationAddress = item.getVicinity();
+        prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+
+        superStationCountry = item.getCountryCode();
+        prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+
+        superStationLocation = item.getLocation();
+        prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+
+        superGoogleID = item.getGoogleMapID();
+        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+
+        superFacilities = item.getFacilities();
+        prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+
+        superLicenseNo = item.getLicenseNo();
+        prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+
+        superStationLogo = item.getPhotoURL();
+        prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+
+        ownedGasolinePrice = item.getGasolinePrice();
+        prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+
+        ownedDieselPrice = item.getDieselPrice();
+        prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+
+        ownedLPGPrice = item.getLpgPrice();
+        prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+
+        ownedElectricityPrice = item.getElectricityPrice();
+        prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        isStationVerified = item.getIsVerified();
+        prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+
+        superLastUpdate = item.getLastUpdated();
+        prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+        getSuperVariables(prefs);
     }
 
     private void coloredBars(int color1, int color2) {

@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
@@ -77,7 +79,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
                     intent.putExtra("IS_VERIFIED", feedItemList.get(position).getIsVerified());
                     intent.putExtra("STATION_FACILITIES", feedItemList.get(position).getFacilities());
-                    mContext.startActivity(intent);
+                    showAds(intent);
                     break;
                 case "SUPERUSER_STATIONS":
                     changeSuperStation(feedItemList.get(position));
@@ -143,6 +145,24 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         notifyDataSetChanged();
         getSuperVariables(prefs);
         Toast.makeText(mContext, "İSTASYON SEÇİLDİ: " + superStationName, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showAds(Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            //Facebook ads doesnt loaded he will see AdMob
+            mContext.startActivity(intent);
+            admobInterstitial.show();
+            adCount++;
+            admobInterstitial = null;
+        } else {
+            // Ads doesn't loaded.
+            mContext.startActivity(intent);
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(mContext, mContext.getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
+        }
     }
 
     @NonNull
@@ -222,7 +242,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         if (whichScreen.equals("SUPERUSER_STATIONS")) {
             if (feedItem.getID() == superStationID) {
-                viewHolder.background.setBackgroundColor(Color.parseColor("#00801e"));
+                viewHolder.background.setBackgroundColor(Color.parseColor("#7CFC00"));
             } else {
                 viewHolder.background.setBackgroundColor(Color.parseColor("#ffffff"));
             }

@@ -115,7 +115,6 @@ public class FragmentStations extends Fragment {
         return fragment;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -290,6 +289,11 @@ public class FragmentStations extends Fragment {
                             }
                         }
                     });
+
+                    // For zooming automatically to the location of the marker
+                    LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
+                    googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                     MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                     googleMap.setInfoWindowAdapter(customInfoWindow);
@@ -554,6 +558,10 @@ public class FragmentStations extends Fragment {
                 sortLPGLayout.setAlpha(0.33f);
                 sortElectricityLayout.setAlpha(0.33f);
                 sortDistanceLayout.setAlpha(1.0f);
+                break;
+            default:
+                whichOrder = 4;
+                sortBy(whichOrder);
                 break;
         }
 

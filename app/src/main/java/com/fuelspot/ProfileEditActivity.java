@@ -1,5 +1,6 @@
 package com.fuelspot;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -315,7 +316,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
+                                @SuppressLint("SdCardPath") File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
                                 File[] listFiles = sharedPreferenceFile.listFiles();
                                 for (File file : listFiles) {
                                     file.delete();

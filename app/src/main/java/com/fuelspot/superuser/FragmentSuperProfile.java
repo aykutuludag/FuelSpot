@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,9 +19,9 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.Application;
-import com.fuelspot.HelpActivity;
 import com.fuelspot.R;
 import com.fuelspot.UserFavorites;
+import com.fuelspot.WebViewActivity;
 import com.fuelspot.adapter.StationAdapter;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -54,6 +55,9 @@ public class FragmentSuperProfile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_super_profile, container, false);
+
+            // Keep screen off
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
@@ -116,7 +120,8 @@ public class FragmentSuperProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HelpActivity.class);
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("URL", "https://fuel-spot.com/help-for-superuser");
                 startActivity(intent);
             }
         });

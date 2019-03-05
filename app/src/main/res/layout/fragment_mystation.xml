@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/myStationScroll"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -12,22 +13,19 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="350dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            map:cameraTargetLat="39.925054"
-            map:cameraTargetLng="32.8347552" />
+            map:cameraTargetLat="39.92505"
+            map:cameraTargetLng="32.83476"
+            map:cameraZoom="13"
+            map:uiTiltGestures="false" />
 
         <android.support.percent.PercentRelativeLayout
             android:id="@+id/single_station"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mapView"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="#ffffff">
+            android:layout_below="@id/mapView">
 
             <ImageView
                 android:id="@+id/imageViewStationLogo"

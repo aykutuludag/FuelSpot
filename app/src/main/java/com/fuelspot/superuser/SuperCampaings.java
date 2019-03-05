@@ -106,11 +106,13 @@ public class SuperCampaings extends AppCompatActivity {
     }
 
     private void fetchCampaigns() {
+        final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, getString(R.string.loading_campaigns), getString(R.string.please_wait), false, false);
         feedsList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -144,6 +146,7 @@ public class SuperCampaings extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        loading.dismiss();
                         mRecyclerView.setVisibility(View.GONE);
                     }
                 }) {

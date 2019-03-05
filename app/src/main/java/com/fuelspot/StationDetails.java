@@ -43,6 +43,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -77,6 +78,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -104,6 +106,7 @@ import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userFavorites;
@@ -174,13 +177,7 @@ public class StationDetails extends AppCompatActivity {
     private ImageView errorCampaign;
     private ImageView errorComment;
     private CircleImageView verifiedSection;
-    private CircleImageView imageViewWC;
-    private CircleImageView imageViewMarket;
-    private CircleImageView imageViewCarWash;
-    private CircleImageView imageViewTireRepair;
-    private CircleImageView imageViewMechanic;
-    private CircleImageView imageViewRestaurant;
-    private CircleImageView imageViewParkSpot;
+    ProgressBar progressBar;
     private float howMuchGas;
     private float howMuchDie;
     private float howMuchLPG;
@@ -199,6 +196,7 @@ public class StationDetails extends AppCompatActivity {
     private String reportReason;
     private String reportDetails;
     private SimpleDateFormat sdf;
+    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM;
 
     @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
@@ -236,11 +234,20 @@ public class StationDetails extends AppCompatActivity {
             favorite = getResources().getDrawable(R.drawable.ic_fav);
         }
 
+        AdView mAdView = findViewById(R.id.adView);
+        if (!premium) {
+          /*  AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+            mAdView.loadAd(adRequest);*/
+        } else {
+            mAdView.setVisibility(View.GONE);
+        }
+
         errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
         scrollView = findViewById(R.id.scrollView);
         webview = findViewById(R.id.webView);
         webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
         webview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -248,6 +255,7 @@ public class StationDetails extends AppCompatActivity {
                 return false;
             }
         });
+        progressBar = findViewById(R.id.progressBar);
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
@@ -334,6 +342,13 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(StationDetails.this, getString(R.string.parkspot), Toast.LENGTH_SHORT).show();
+            }
+        });
+        imageViewATM = findViewById(R.id.ATM);
+        imageViewATM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.atm), Toast.LENGTH_SHORT).show();
             }
         });
         commentSection = findViewById(R.id.section_comment);
@@ -614,12 +629,18 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void loadStationDetails() {
-        webview.loadUrl("https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c");
+        final String dummyUrl = "https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c";
+        webview.loadUrl(dummyUrl);
         webview.setWebViewClient(new WebViewClient() {
+            @Override
             public void onPageFinished(WebView view, String url) {
-                // Do something
+                super.onPageFinished(view, url);
+                if (!dummyUrl.equals(url)) {
+                    progressBar.setVisibility(View.GONE);
+                    view.setVisibility(View.VISIBLE);
+                    view.loadUrl("javascript:document.getElementsByClassName('immersive')[0].style.visibility='hidden';");
+                }
             }
         });
 
@@ -711,43 +732,49 @@ public class StationDetails extends AppCompatActivity {
             if (facilitiesObj.getInt("WC") == 1) {
                 imageViewWC.setAlpha(1.0f);
             } else {
-                imageViewWC.setAlpha(0.5f);
+                imageViewWC.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("Market") == 1) {
                 imageViewMarket.setAlpha(1.0f);
             } else {
-                imageViewMarket.setAlpha(0.5f);
+                imageViewMarket.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("CarWash") == 1) {
                 imageViewCarWash.setAlpha(1.0f);
             } else {
-                imageViewCarWash.setAlpha(0.5f);
+                imageViewCarWash.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("TireRepair") == 1) {
                 imageViewTireRepair.setAlpha(1.0f);
             } else {
-                imageViewTireRepair.setAlpha(0.5f);
+                imageViewTireRepair.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("Mechanic") == 1) {
                 imageViewMechanic.setAlpha(1.0f);
             } else {
-                imageViewMechanic.setAlpha(0.5f);
+                imageViewMechanic.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("Restaurant") == 1) {
                 imageViewRestaurant.setAlpha(1.0f);
             } else {
-                imageViewRestaurant.setAlpha(0.5f);
+                imageViewRestaurant.setAlpha(0.25f);
             }
 
             if (facilitiesObj.getInt("ParkSpot") == 1) {
                 imageViewParkSpot.setAlpha(1.0f);
             } else {
-                imageViewParkSpot.setAlpha(0.5f);
+                imageViewParkSpot.setAlpha(0.25f);
+            }
+
+            if (facilitiesObj.getInt("ATM") == 1) {
+                imageViewATM.setAlpha(1.0f);
+            } else {
+                imageViewATM.setAlpha(0.25f);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1296,8 +1323,13 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
-                sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], null, pricesArray[0], bitmap);
+                if (benzinFiyat[0] != 0 || dizelFiyat[0] != 0 || LPGFiyat[0] != 0 || ElektrikFiyat[0] != 0) {
+                    pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
+
+                    sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], null, pricesArray[0], bitmap);
+                } else {
+                    Toast.makeText(StationDetails.this, getString(R.string.enter_prices), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -1468,7 +1500,7 @@ public class StationDetails extends AppCompatActivity {
             case R.id.menu_share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "https://fuel-spot.com/stations?id=" + choosenStationID);
+                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "https://fuel-spot.com/stations/" + choosenStationID);
                 startActivity(Intent.createChooser(intent, getString(R.string.menu_share)));
                 return true;
             case R.id.menu_go:

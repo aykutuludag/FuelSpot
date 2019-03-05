@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.fuelspot.receiver.FenceReceiver;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
@@ -13,7 +14,6 @@ import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 
 public class Application extends MultiDexApplication {
 
-    private String trackingId = "UA-120925005-4";
     private Tracker mTracker;
 
     @Override
@@ -21,6 +21,7 @@ public class Application extends MultiDexApplication {
         super.onCreate();
         // Register broadcast receiver for fences.
         registerReceiver(new FenceReceiver(), new IntentFilter(FENCE_RECEIVER_ACTION));
+        MobileAds.initialize(this, getString(R.string.admobAppId));
     }
 
     @Override
@@ -32,7 +33,7 @@ public class Application extends MultiDexApplication {
     synchronized public Tracker getDefaultTracker() {
         if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            mTracker = analytics.newTracker(trackingId);
+            mTracker = analytics.newTracker("UA-120925005-4");
         }
         return mTracker;
     }

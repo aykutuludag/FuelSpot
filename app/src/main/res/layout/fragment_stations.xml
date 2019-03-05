@@ -16,9 +16,10 @@
             android:layout_height="350dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            map:cameraTargetLat="39.925054"
-            map:cameraTargetLng="32.8347552"
-            map:cameraZoom="13" />
+            map:cameraTargetLat="39.92505"
+            map:cameraTargetLng="32.83476"
+            map:cameraZoom="13"
+            map:uiTiltGestures="false" />
 
         <RelativeLayout
             android:id="@+id/stationLayout"

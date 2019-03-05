@@ -69,7 +69,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             // If phone restarted, this section detects that and reschedule alarm
             scheduleAlarm();
         } else {
-            // Every 30 mins, re-create fences.
+            // Every xx mins, re-create fences.
             createFences();
         }
     }

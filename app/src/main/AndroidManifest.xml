@@ -17,7 +17,6 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:launchMode="singleTop"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
@@ -37,7 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -74,88 +75,105 @@
             android:name=".AutomobileEditActivity"
             android:label="@string/edit_automobile"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".StationDetails"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddFuel"
             android:label="@string/add_fuel"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".PurchaseDetails"
             android:label="@string/purchase"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProfileEditActivity"
             android:label="@string/edit_profile"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".StationComments"
-            android:label="@string/comments" />
+            android:label="@string/comments"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".WelcomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".AddAutomobile"
             android:label="@string/add_vehicle"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UserFavorites"
-            android:label="@string/favorites" />
+            android:label="@string/favorites"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".StoreActivity"
             android:label="@string/store"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserComments"
             android:label="@string/comments"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".HelpActivity"
-            android:label="@string/help" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NewsDetail"
+            android:screenOrientation="portrait"
             android:theme="@style/ContentTheme" />
         <activity
             android:name=".UserPurchases"
             android:label="@string/user_purchases"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fuelspot.MainActivity" />
-        </activity> <!-- SuperUser Class -->
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".WebViewActivity" />
+
+        <!-- SuperUser Class -->
         <activity
             android:name=".superuser.SuperWelcomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/FullScreen"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".superuser.SuperMainActivity" />
+        <activity
+            android:name=".superuser.SuperMainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".superuser.SuperUpdateStation"
             android:label="@string/update_station"
             android:parentActivityName=".superuser.SuperMainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".superuser.AddStation"
             android:label="@string/add_station"
-            android:parentActivityName=".superuser.SuperMainActivity" />
+            android:parentActivityName=".superuser.SuperMainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".superuser.SuperCampaings"
             android:label="@string/campaigns"
-            android:parentActivityName=".superuser.SuperMainActivity" />
+            android:parentActivityName=".superuser.SuperMainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".superuser.SuperProfileEdit"
             android:label="@string/edit_profile"
             android:parentActivityName=".superuser.SuperMainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".superuser.SuperStoreActivity"
             android:label="@string/store"
-            android:parentActivityName=".superuser.SuperMainActivity" /> <!-- AlarmReceiver -->
+            android:parentActivityName=".superuser.SuperMainActivity"
+            android:screenOrientation="portrait" /> <!-- AlarmReceiver -->
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

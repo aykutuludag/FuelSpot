@@ -14,9 +14,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,6 +59,7 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -95,6 +98,7 @@ public class FragmentMyStation extends Fragment {
     private LocationCallback mLocationCallback;
     private View rootView;
     private GoogleMap googleMap;
+    NestedScrollView scrollView;
 
     public static FragmentMyStation newInstance() {
         Bundle args = new Bundle();
@@ -110,6 +114,9 @@ public class FragmentMyStation extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_mystation, container, false);
 
+            // Keep screen on
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
             t.setScreenName("MyStation");
@@ -120,6 +127,7 @@ public class FragmentMyStation extends Fragment {
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             queue = Volley.newRequestQueue(getActivity());
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            scrollView = rootView.findViewById(R.id.myStationScroll);
 
             //Map
             locLastKnown.setLatitude(Double.parseDouble(userlat));
@@ -240,6 +248,23 @@ public class FragmentMyStation extends Fragment {
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.setTrafficEnabled(true);
+                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                    @Override
+                    public void onCameraMoveStarted(int i) {
+                        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                            scrollView.requestDisallowInterceptTouchEvent(true);
+                        }
+                    }
+                });
+
+                // For zooming automatically to the location of the marker
+                LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
+                googleMap.setInfoWindowAdapter(customInfoWindow);
+
                 loadStationDetails();
             }
         });

@@ -1,7 +1,10 @@
 package com.fuelspot;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -24,6 +27,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
 import com.fuelspot.model.CompanyItem;
@@ -43,6 +49,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -62,6 +69,7 @@ import java.util.Map;
 
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userUnit;
@@ -118,6 +126,14 @@ public class FragmentNews extends Fragment {
             t.setScreenName("Haberler");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
+
+            AdView mAdView = rootView.findViewById(R.id.adView);
+            if (!premium) {
+               /* AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+                mAdView.loadAd(adRequest);*/
+            } else {
+                mAdView.setVisibility(View.GONE);
+            }
 
             requestQueue = Volley.newRequestQueue(getActivity());
             sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
@@ -378,13 +394,9 @@ public class FragmentNews extends Fragment {
                 }
             }
 
-            String dummy = getString(R.string.registered_station_number) + ": " + totalStation;
-            textViewTotalNumber.setText(dummy);
-
             entries.add(new PieEntry((float) otherStations, getString(R.string.other)));
 
             PieDataSet dataSet = new PieDataSet(entries, getString(R.string.fuel_dist_comp));
-            dataSet.setDrawIcons(false);
 
             // add a lot of colors
             ArrayList<Integer> colors = new ArrayList<>();
@@ -415,10 +427,30 @@ public class FragmentNews extends Fragment {
             chart3.setData(data);
             chart3.highlightValues(null);
             chart3.invalidate();
+
+            String dummy = getString(R.string.registered_station_number) + ": " + totalStation;
+            textViewTotalNumber.setText(dummy);
         } else {
             // Somehow companList didn't fetch at MainActivity or SuperMainActivity. Fetch it.
             fetchCompanies();
         }
+    }
+
+    public Drawable getDrawableOfLogo(CompanyItem item) {
+        final Drawable[] drawable = new Drawable[1];
+
+        Glide.with(getActivity())
+                .asBitmap()
+                .load(item.getLogo())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        drawable[0] = new BitmapDrawable(getActivity().getResources(), resource);
+
+                    }
+                });
+
+        return drawable[0];
     }
 
     private void fetchCompanies() {

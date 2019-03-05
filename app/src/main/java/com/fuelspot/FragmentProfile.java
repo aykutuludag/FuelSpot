@@ -226,7 +226,8 @@ public class FragmentProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HelpActivity.class);
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("URL", "https://fuel-spot.com/help");
                 startActivity(intent);
             }
         });

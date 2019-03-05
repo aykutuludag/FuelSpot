@@ -123,7 +123,6 @@
     <string name="menu_go">İstasyona git</string>
     <string name="menu_fav">Favorilere ekle</string>
     <string name="menu_share">İstasyonu paylaş</string>>
-    <string name="fab_comment">Yorum yaz</string>
     <string name="fab_report">İstasyonu bildir</string>
     <string name="fab_report_price">Fiyatları bildir</string>
     <string name="HundredDollarText">100 ₺ ile şunları alabilirsin:</string>
@@ -133,6 +132,7 @@
     <string name="priceHistory">Fiyat geçmişi</string>
     <string name="no_campaign_text">Bu istasyon için henüz hiç kampanya eklenmemiş…</string>
     <string name="no_comment_text">Bu istasyon için henüz hiç yorum yazılmamış…</string>
+    <string name="last_ads_info">Son reklamı görüntülediniz. Bu oturumda daha fazla reklam görmeyeceksiniz.</string>
 
     <string-array name="report_reasons">
         <item>İstasyon mevcut değil</item>
@@ -145,11 +145,12 @@
     </string-array>
 
     <string name="send_report_desc">Eğer bu istasyondaki fiyatları biliyorsan bize gönderebilirsin. Gönderilen her bildirimi dikkatlice inceliyoruz. Bildiriminiz onaylandığında ödül hesabınıza anında yansıtılacaktır.</string>
+    <string name="enter_prices">Lütfen fiyatları giriniz…</string>
     <string name="send_report">Raporu gönder</string>
     <string name="add_answer">Cevapla</string>
     <string name="empty_comment">Lütfen yorumunuzu giriniz…</string>
     <string name="station_manager">İstasyon Yetkilisi</string>
-    <string name="add_comment">Yorum ekle</string>
+    <string name="add_comment">Yorum yaz</string>
     <string name="comment_adding">Yorumunuz ekleniyor</string>
     <string name="add_comment_success">Yorum başarıyla eklendi</string>
     <string name="comment_updating">Yorumunuz güncelleniyor</string>
@@ -166,6 +167,7 @@
     <string name="mechanic">Tamirci</string>
     <string name="restaurant">Restoran</string>
     <string name="parkspot">Park yeri</string>
+    <string name="atm">ATM</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -175,6 +177,7 @@
     <string name="empty_answer">Lütfen cevabınızı giriniz…</string>
     <string name="answer_delete_success">Cevap başarıyla silindi</string>
     <string name="comment_delete_success">Yorum başarıyla silindi</string>
+    <string name="loading_comments">Yorumlar yükleniyor</string>
     <!-- StationComments-->
 
     <!-- AutomobileEdit-->
@@ -276,7 +279,7 @@
     <!-- AddFuel-->
 
     <!-- SuperWelcome-->
-    <string name="license_no">EPDK Lisans No</string>
+    <string name="license_no">Lisans NO</string>
     <string name="terms_accepted_text"><a href='https://fuel-spot.com/terms-and-conditions'>Şartlar ve Koşullar</a>\'ı okudum, kabul ediyorum.</string>
     <string name="go_to_station_text">Kayıt işlemini tamamlayabilmek için istasyonunuzda olmalısınız. İstasyona menziline girdiğinizde (50 metre) bu yazı yeşile dönecek ve istasyon bilgiler otomatik olarak çekilecektir.</string>
     <!-- SuperWelcome-->
@@ -306,7 +309,8 @@
     <string name="station_update_fail">İstayon güncellenirken bir hata oluştu… Lütfen tekrar deneyiniz.</string>
     <string name="note_for_prices">Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
     <string name="station_updating">İstasyon güncelleniyor</string>
-    <string name="fuelspot_station_id">Fuelspot ID:</string>
+    <string name="fuelspot_station_id">FuelSpot ID:</string>
+    <string name="license_no_with_colon">License NO:</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
@@ -322,6 +326,7 @@
     <string name="empty_campaign_desc">Lütfen kampanya detayını giriniz</string>
     <string name="empty_campaign_start">Lütfen kampanya başlangıç gün ve saatini seçiniz</string>
     <string name="empty_campaign_end">Lütfen kampanya bitiş gün ve saatini seçiniz</string>
+    <string name="loading_campaigns">Kampanyalar yükleniyor</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperStore-->

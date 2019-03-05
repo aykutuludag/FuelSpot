@@ -31,7 +31,11 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
+import com.fuelspot.LoginActivity;
+import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
+import com.fuelspot.StationDetails;
+import com.fuelspot.WebViewActivity;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.MapsInitializer;
@@ -52,6 +56,7 @@ import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
+import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -171,6 +176,86 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         // Fetch companies once for each session
         fetchCompanies();
+
+        if (savedInstanceState == null) {
+            if (isSigned) {
+                mFragNavController.switchTab(FragNavController.TAB1);
+
+                // AppDeepLinking
+                String link = getIntent().getDataString();
+                if (link != null && link.length() > 0) {
+                    // Temporary only getting fuelspot.com
+                    link = link.replace("fuelspot.com", "fuel-spot.com");
+
+                    if (link.contains("fuel-spot.com/news")) {
+                        Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
+                        intent.putExtra("URL", link);
+                        startActivity(intent);
+                    } else if (link.contains("fuel-spot.com/stations")) {
+                        Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
+                        intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuel-spot.com/stations/", "")));
+                        startActivity(intent2);
+                    } else if (link.contains("https://fuel-spot.com/terms-and-conditions")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/terms-and-conditions");
+                        startActivity(intent);
+                    } else if (link.contains("https://fuel-spot.com/privacy")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/privacy");
+                        startActivity(intent);
+                    } else if (link.contains("https://fuel-spot.com/help")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/help");
+                        startActivity(intent);
+                    } else if (link.contains("https://fuel-spot.com/help-for-superuser")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/help-for-superuser");
+                        startActivity(intent);
+                    } else {
+                        // Do nothing for now
+                    }
+                }
+
+                // Firebase Cloud Messaging
+                String link2 = getIntent().getExtras().getString("URL");
+                if (link2 != null && link2.length() > 0) {
+                    // Temporary only getting fuelspot.com
+                    link2 = link2.replace("fuelspot.com", "fuel-spot.com");
+
+                    if (link2.contains("fuel-spot.com/news")) {
+                        Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
+                        intent.putExtra("URL", link2);
+                        startActivity(intent);
+                    } else if (link2.contains("fuel-spot.com/stations")) {
+                        Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
+                        intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuel-spot.com/stations/", "")));
+                        startActivity(intent2);
+                    } else if (link2.contains("https://fuel-spot.com/terms-and-conditions")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/terms-and-conditions");
+                        startActivity(intent);
+                    } else if (link2.contains("https://fuel-spot.com/privacy")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/privacy");
+                        startActivity(intent);
+                    } else if (link2.contains("https://fuel-spot.com/help")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/help");
+                        startActivity(intent);
+                    } else if (link2.contains("https://fuel-spot.com/help-for-superuser")) {
+                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
+                        intent.putExtra("URL", "https://fuel-spot.com/help-for-superuser");
+                        startActivity(intent);
+                    } else {
+                        // Do nothing for now
+                    }
+                }
+            } else {
+                Intent intent = new Intent(SuperMainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 
     private void InAppBilling() {

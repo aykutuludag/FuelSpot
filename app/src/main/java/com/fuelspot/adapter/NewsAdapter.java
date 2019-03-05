@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -25,6 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
@@ -90,7 +94,25 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         intent.putExtra("URL", feedItem.getURL());
         intent.putExtra("SOURCE_URL", feedItem.getSourceURL());
         intent.putExtra("PUBLISH_DATE", feedItem.getPublishDate());
-        mContext.startActivity(intent);
+        showAds(intent);
+    }
+
+    private void showAds(Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            //Facebook ads doesnt loaded he will see AdMob
+            mContext.startActivity(intent);
+            admobInterstitial.show();
+            adCount++;
+            admobInterstitial = null;
+        } else {
+            // Ads doesn't loaded.
+            mContext.startActivity(intent);
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(mContext, mContext.getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
+        }
     }
 
     @Override

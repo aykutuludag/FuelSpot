@@ -69,7 +69,7 @@ public class NewsDetail extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
 
         //Color statusbar and actionbar
-        coloredBars(Color.argb(60, 0, 0, 0), Color.argb(60, 0, 0, 0));
+        coloredBars(Color.argb(45, 0, 0, 0), Color.argb(45, 0, 0, 0));
 
         // Get Intents
         Bundle extras = getIntent().getExtras();
@@ -111,11 +111,11 @@ public class NewsDetail extends AppCompatActivity {
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
-
-                                coverPhoto = obj.getString("photo");
                                 title = obj.getString("title");
                                 content = obj.getString("content");
+                                coverPhoto = obj.getString("photo");
                                 url = obj.getString("url");
+                                sourceURL = obj.getString("sourceURL");
                                 publishDate = obj.getString("releaseDate");
                                 loadNews();
                             } catch (JSONException e) {

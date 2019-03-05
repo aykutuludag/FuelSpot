@@ -36,9 +36,8 @@
                 android:id="@+id/baseInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/round_layout_white"
-                android:padding="4dp">
+                android:layout_margin="12dp"
+                android:background="@drawable/round_layout_white">
 
                 <TextView
                     android:id="@+id/title_baseInfo"
@@ -46,37 +45,19 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:gravity="center"
                     android:text="@string/station_info"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-                <TextView
-                    android:id="@+id/textView40"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/title_baseInfo"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/fuelspot_station_id"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                <TextView
-                    android:id="@+id/textViewStationID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/textView40"
-                    android:layout_alignBottom="@id/textView40"
-                    android:layout_toEndOf="@id/textView40"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <Spinner
                     android:id="@+id/simpleSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textView40"
+                    android:layout_below="@id/title_baseInfo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
@@ -85,44 +66,76 @@
                     android:gravity="center" />
 
                 <TextView
-                    android:id="@+id/editTextStationLicense"
-                    android:layout_width="match_parent"
+                    android:id="@+id/textView40"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/simpleSpinner"
+                    android:layout_below="@id/simpleSpinner"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:padding="2dp"
+                    android:text="@string/fuelspot_station_id"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <TextView
+                    android:id="@+id/textViewStationID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/textView40"
+                    android:layout_alignBottom="@id/textView40"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/textView40"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:id="@+id/textView41"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView40"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:padding="2dp"
+                    android:text="@string/license_no_with_colon"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <TextView
+                    android:id="@+id/editTextStationLicense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/textView41"
+                    android:layout_alignBottom="@id/textView41"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/textView41"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:id="@+id/textView42"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView41"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:text="@string/address"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <EditText
                     android:id="@+id/editTextStationAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/editTextStationLicense"
-                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/textView42"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:inputType="textPostalAddress"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                <com.github.curioustechizen.ago.RelativeTimeTextView
-                    android:id="@+id/stationLastUpdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/editTextStationAddress"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/gotham_book"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp" />
-
+                    android:inputType="textMultiLine|textPostalAddress"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -130,12 +143,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/baseInfo"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_margin="12dp"
                 android:background="@drawable/round_layout_white"
-                android:padding="4dp"
                 android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -166,38 +175,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/verifiedSection"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_margin="12dp"
                 android:background="@drawable/round_layout_white"
-                android:gravity="center"
-                android:padding="4dp">
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/title_prices"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:gravity="center"
                     android:text="@string/prices"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <RelativeLayout
                     android:id="@+id/subPriceSec"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/title_prices"
-                    android:layout_centerHorizontal="true">
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/gasolineIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="4dp"
@@ -215,6 +226,7 @@
                         android:layout_alignEnd="@id/gasolineIcon"
                         android:ems="10"
                         android:gravity="center"
+                        android:hint="@string/gasoline"
                         android:inputType="numberDecimal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -240,6 +252,7 @@
                         android:layout_alignEnd="@id/dieselIcon"
                         android:ems="10"
                         android:gravity="center"
+                        android:hint="@string/diesel"
                         android:inputType="numberDecimal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -265,6 +278,7 @@
                         android:layout_alignEnd="@id/lpgIcon"
                         android:ems="10"
                         android:gravity="center"
+                        android:hint="@string/lpg"
                         android:inputType="numberDecimal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -290,6 +304,7 @@
                         android:layout_alignEnd="@id/electricityIcon"
                         android:ems="10"
                         android:gravity="center"
+                        android:hint="@string/electricity"
                         android:inputType="numberDecimal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -309,6 +324,39 @@
                     android:text="@string/note_for_prices"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textSize="12sp" />
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dummy0001"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/textView422"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="@string/last_update"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <com.github.curioustechizen.ago.RelativeTimeTextView
+                        android:id="@+id/stationLastUpdate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/textView422"
+                        android:layout_alignBottom="@id/textView422"
+                        android:layout_marginStart="4dp"
+                        android:layout_toEndOf="@id/textView422"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#212121" />
+                </RelativeLayout>
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -316,9 +364,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/priceSec"
-                android:layout_margin="8dp"
-                android:background="@drawable/round_layout_white"
-                android:padding="4dp">
+                android:layout_margin="12dp"
+                android:background="@drawable/round_layout_white">
 
                 <TextView
                     android:id="@+id/title_facilities"
@@ -330,12 +377,13 @@
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/facilities"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_facilities"
+                    android:layout_margin="4dp"
                     android:gravity="center">
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -343,77 +391,88 @@
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_alignParentStart="true"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/wc"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Market"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_toEndOf="@id/WC"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/market"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/CarWash"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_toEndOf="@id/Market"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/carwash"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/TireRepair"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_toEndOf="@id/CarWash"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/tirerepair"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Mechanic"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_toEndOf="@id/TireRepair"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/mechanic"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Restaurant"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_toEndOf="@id/Mechanic"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/restaurant"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/ParkSpot"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_toEndOf="@id/Restaurant"
-                        android:alpha="0.5"
+                        android:alpha="0.25"
                         android:src="@drawable/parkspot"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="13%" />
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ATM"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_toEndOf="@id/ParkSpot"
+                        android:alpha="0.25"
+                        android:src="@drawable/atm"
+                        app:layout_marginEndPercent="0.25%"
+                        app:layout_marginStartPercent="0.25%"
+                        app:layout_widthPercent="12%" />
                 </android.support.percent.PercentRelativeLayout>
 
             </RelativeLayout>
@@ -424,7 +483,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/facilitiesSection"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="16dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/green_box"
                 android:fontFamily="@font/gotham_black"
                 android:text="@string/update_station"

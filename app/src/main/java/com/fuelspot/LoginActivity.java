@@ -157,6 +157,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
+        if (!premium) {
+            // AdMob(this);
+        }
+
         arrangeLayouts();
     }
 
@@ -340,48 +344,56 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void facebookLogin() {
         callbackManager = CallbackManager.Factory.create();
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
         loginButton.setReadPermissions();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject me, GraphResponse response) {
-                        System.out.println(response.toString());
-                        name = me.optString("name");
-                        prefs.edit().putString("Name", name).apply();
+                        System.out.println(response);
+                        try {
+                            name = me.optString("name");
+                            prefs.edit().putString("Name", name).apply();
 
-                        email = me.optString("email");
-                        prefs.edit().putString("Email", email).apply();
+                            //USERNAME
+                            String tmp0 = name.toLowerCase();
+                            String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                                    .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                            String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
+                            if (tmpusername.length() > 30) {
+                                username = tmpusername.substring(0, 30);
+                            } else {
+                                username = tmpusername;
+                            }
+                            prefs.edit().putString("UserName", username).apply();
+                            //USERNAME
 
-                        photo = me.optString("picture");
+                            email = me.getString("email");
+                            prefs.edit().putString("Email", email).apply();
 
-                                /*if (me.has("picture")) {
-                                    photo = me.getJSONObject("picture").getJSONObject("data").getString("url");
-                                }*/
-                        prefs.edit().putString("ProfilePhoto", photo).apply();
+                            String id = me.getString("id");
+                            photo = "https://graph.facebook.com/" + id + "/picture?type=normal";
+                            prefs.edit().putString("ProfilePhoto", photo).apply();
 
-                        //USERNAME
-                        String tmp0 = name.toLowerCase();
-                        String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
-                                .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
-                        String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
-                        if (tmpusername.length() > 30) {
-                            username = tmpusername.substring(0, 30);
-                        } else {
-                            username = tmpusername;
-                        }
-                        prefs.edit().putString("UserName", username).apply();
-
-                        if (isNetworkConnected(LoginActivity.this)) {
-                            register();
-                        } else {
-                            Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                            if (isNetworkConnected(LoginActivity.this)) {
+                                register();
+                            } else {
+                                Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                                prefs.edit().putBoolean("isSigned", false).apply();
+                            }
+                        } catch (JSONException e) {
+                            Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
                             prefs.edit().putBoolean("isSigned", false).apply();
                         }
                     }
-                }).executeAsync();
+                });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
@@ -404,9 +416,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println(response);
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
-                                loading.dismiss();
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
@@ -439,7 +452,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 getVariables(prefs);
 
-                                loading.dismiss();
                                 Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 notLogged.setVisibility(View.GONE);
                                 new Handler().postDelayed(new Runnable() {
@@ -452,7 +464,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 }, 2000);
                             } catch (JSONException e) {
                                 //Dismissing the progress dialog
-                                loading.dismiss();
                                 Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
                                 prefs.edit().putBoolean("isSigned", false).apply();
                             }

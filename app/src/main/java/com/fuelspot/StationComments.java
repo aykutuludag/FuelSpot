@@ -330,11 +330,13 @@ public class StationComments extends AppCompatActivity {
     }
 
     public void fetchStationComments() {
+        final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.loading_comments), getString(R.string.please_wait), false, false);
         stationCommentList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -381,6 +383,7 @@ public class StationComments extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        loading.dismiss();
                         mRecyclerView.setVisibility(View.GONE);
                         swipeContainer.setRefreshing(false);
                         snackbar.show();

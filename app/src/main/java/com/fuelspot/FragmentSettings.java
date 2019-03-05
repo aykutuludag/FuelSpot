@@ -251,12 +251,9 @@ public class FragmentSettings extends Fragment {
             openTerms.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/terms-and-conditions"));
+                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                    intent.putExtra("URL", "https://fuel-spot.com/terms-and-conditions");
+                    startActivity(intent);
                 }
             });
 
@@ -264,12 +261,9 @@ public class FragmentSettings extends Fragment {
             openPrivacy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#212121"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuel-spot.com/privacy"));
+                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                    intent.putExtra("URL", "https://fuel-spot.com/privacy");
+                    startActivity(intent);
                 }
             });
         }
