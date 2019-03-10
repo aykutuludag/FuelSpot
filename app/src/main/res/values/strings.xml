@@ -127,6 +127,8 @@
     <string name="exit">Touch again to exit the application.</string>
 
     <!-- FragmentStations-->
+    <string name="menu_filter">Filter</string>
+    <string name="apply">Apply</string>
     <string name="see_all">See all</string>
     <string name="show_less">Show less</string>
     <string name="station_found_pretext">We found</string>

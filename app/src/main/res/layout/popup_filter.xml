@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_layout_white"
+    android:gravity="center"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="4dp"
+        android:contentDescription="@string/cancel"
+        android:padding="2dp"
+        app:srcCompat="@drawable/cancel" />
+
+    <TextView
+        android:id="@+id/textViewx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/gotham_bold"
+        android:gravity="center"
+        android:text="@string/menu_filter"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:id="@+id/textView47"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewx"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/gotham_bold"
+        android:gravity="center"
+        android:text="İstasyondaki tesislere göre filtreleme yaparak aradığını çok daha kolay bulabilirsin!" />
+
+    <RelativeLayout
+        android:id="@+id/checkBoxLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView47">
+
+        <RelativeLayout
+            android:id="@+id/inner1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="2dp"
+                android:text="@string/wc" />
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox2"
+                android:padding="2dp"
+                android:text="@string/market" />
+
+            <CheckBox
+                android:id="@+id/checkBox4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox3"
+                android:padding="2dp"
+                android:text="@string/carwash" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inner2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inner1"
+            android:layout_centerHorizontal="true">
+
+            <CheckBox
+                android:id="@+id/checkBox5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="2dp"
+                android:text="@string/tire_store" />
+
+            <CheckBox
+                android:id="@+id/checkBox6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox5"
+                android:padding="2dp"
+                android:text="@string/mechanic" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inner3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inner2"
+            android:layout_centerHorizontal="true">
+
+            <CheckBox
+                android:id="@+id/checkBox7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="2dp"
+                android:text="@string/restaurant" />
+
+            <CheckBox
+                android:id="@+id/checkBox8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox7"
+                android:padding="2dp"
+                android:text="@string/parkspot" />
+
+            <CheckBox
+                android:id="@+id/checkBox9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox8"
+                android:padding="2dp"
+                android:text="@string/atm" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inner3"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="4dp"
+            android:text="Bütün istasyonları görüntülemek için filtreleri kaldır" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkBoxLayout"
+        android:layout_margin="16dp"
+        android:background="#FF6838"
+        android:text="@string/apply"
+        android:textColor="#f1f1f1" />
+
+</RelativeLayout>

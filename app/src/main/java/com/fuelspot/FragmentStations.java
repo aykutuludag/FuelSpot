@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -15,12 +16,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -63,6 +68,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
@@ -105,6 +111,7 @@ public class FragmentStations extends Fragment {
     int whichOrder;
     boolean isMapUpdating;
     NestedScrollView scrollView;
+    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -270,41 +277,61 @@ public class FragmentStations extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-            mMapView.getMapAsync(new OnMapReadyCallback() {
-                @SuppressLint("MissingPermission")
-                @Override
-                public void onMapReady(GoogleMap mMap) {
-                    googleMap = mMap;
-                    googleMap.setMyLocationEnabled(true);
-                    googleMap.getUiSettings().setCompassEnabled(true);
-                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                    googleMap.getUiSettings().setMapToolbarEnabled(false);
-                    googleMap.getUiSettings().setZoomControlsEnabled(true);
-                    googleMap.setTrafficEnabled(true);
-                    googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-                        @Override
-                        public void onCameraMoveStarted(int i) {
-                            if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                                scrollView.requestDisallowInterceptTouchEvent(true);
-                            }
-                        }
-                    });
-
-                    // For zooming automatically to the location of the marker
-                    LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
-                    googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
-                    googleMap.setInfoWindowAdapter(customInfoWindow);
-                }
-            });
+            loadMap();
         }
+    }
+
+    void loadMap() {
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setCompassEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.setTrafficEnabled(true);
+                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                    @Override
+                    public void onCameraMoveStarted(int i) {
+                        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                            scrollView.requestDisallowInterceptTouchEvent(true);
+                        }
+                    }
+                });
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
+                // For zooming automatically to the location of the marker
+                LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
+                googleMap.setInfoWindowAdapter(customInfoWindow);
+            }
+        });
     }
 
     void updateMap() {
         if (googleMap != null) {
             isMapUpdating = true;
+
+            // Clear filters
+            filterByWC = false;
+            filterByMarket = false;
+            filterByCarWash = false;
+            filterByTireStore = false;
+            filterByMechanic = false;
+            filterByRestaurant = false;
+            filterByParkSpot = false;
+            filterByATM = false;
 
             isAllStationsListed = false;
             seeAllStations.setText(getString(R.string.see_all));
@@ -461,6 +488,11 @@ public class FragmentStations extends Fragment {
     }
 
     private void sortBy(int position) {
+        // User is at filter mode. just do nothing for now.
+        if (filterByWC || filterByMarket || filterByTireStore || filterByMechanic || filterByRestaurant || filterByParkSpot || filterByATM) {
+            return;
+        }
+
         switch (position) {
             case 0:
                 Collections.sort(fullStationList, new Comparator<StationItem>() {
@@ -642,25 +674,176 @@ public class FragmentStations extends Fragment {
         markers.add(m);
     }
 
+    public void filterPopup() {
+        CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8;
+
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_filter, null);
+        final PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        checkBox1 = customView.findViewById(R.id.checkBox2);
+        checkBox1.setChecked(filterByWC);
+        checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByWC = isChecked;
+            }
+        });
+
+        checkBox2 = customView.findViewById(R.id.checkBox3);
+        checkBox2.setChecked(filterByMarket);
+        checkBox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByMarket = isChecked;
+            }
+        });
+
+        checkBox3 = customView.findViewById(R.id.checkBox4);
+        checkBox3.setChecked(filterByCarWash);
+        checkBox3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByCarWash = isChecked;
+            }
+        });
+
+        checkBox4 = customView.findViewById(R.id.checkBox5);
+        checkBox4.setChecked(filterByTireStore);
+        checkBox4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByTireStore = isChecked;
+            }
+        });
+
+        checkBox5 = customView.findViewById(R.id.checkBox6);
+        checkBox5.setChecked(filterByMechanic);
+        checkBox5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByMechanic = isChecked;
+            }
+        });
+
+        checkBox6 = customView.findViewById(R.id.checkBox7);
+        checkBox6.setChecked(filterByRestaurant);
+        checkBox6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByRestaurant = isChecked;
+            }
+        });
+
+        checkBox7 = customView.findViewById(R.id.checkBox8);
+        checkBox7.setChecked(filterByParkSpot);
+        checkBox7.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByParkSpot = isChecked;
+            }
+        });
+
+        checkBox8 = customView.findViewById(R.id.checkBox9);
+        checkBox8.setChecked(filterByATM);
+        checkBox8.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByATM = isChecked;
+            }
+        });
+
+        Button filterButton = customView.findViewById(R.id.button8);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterStations();
+                mPopupWindow.dismiss();
+            }
+        });
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(customView, Gravity.CENTER, 0, 0);
+    }
+
+    void filterStations() {
+        // If there is no filter, just order by distance
+        if (!filterByWC && !filterByMarket && !filterByTireStore && !filterByMechanic && !filterByRestaurant && !filterByParkSpot && !filterByATM) {
+            seeAllStations.setVisibility(View.VISIBLE);
+            whichOrder = 4;
+            sortBy(whichOrder);
+            return;
+        }
+
+        // Clear variables
+        googleMap.clear();
+        markers.clear();
+        shortStationList.clear();
+
+        googleMap.addCircle(new CircleOptions().center(new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon)))
+                .radius(mapDefaultRange)
+                .fillColor(0x220000FF).strokeColor(Color.parseColor("#FF5635")));
+
+        for (int i = 0; i < fullStationList.size(); i++) {
+            try {
+                JSONArray facilitiesRes = new JSONArray(fullStationList.get(i).getFacilities());
+                JSONObject facilitiesObj = facilitiesRes.getJSONObject(0);
+
+                if (filterByWC && facilitiesObj.getInt("WC") == 0) {
+                    continue;
+                } else if (filterByMarket && facilitiesObj.getInt("Market") == 0) {
+                    continue;
+                } else if (filterByCarWash && facilitiesObj.getInt("CarWash") == 0) {
+                    continue;
+                } else if (filterByTireStore && facilitiesObj.getInt("TireRepair") == 0) {
+                    continue;
+                } else if (filterByMechanic && facilitiesObj.getInt("Mechanic") == 0) {
+                    continue;
+                } else if (filterByRestaurant && facilitiesObj.getInt("Restaurant") == 0) {
+                    continue;
+                } else if (filterByParkSpot && facilitiesObj.getInt("ParkSpot") == 0) {
+                    continue;
+                } else if (filterByATM && facilitiesObj.getInt("ATM") == 0) {
+                    continue;
+                }
+                shortStationList.add(fullStationList.get(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + shortStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
+        mAdapter = new StationAdapter(getActivity(), shortStationList, "NEARBY_STATIONS");
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mAdapter);
+        seeAllStations.setVisibility(View.GONE);
+
+        for (int i = 0; i < shortStationList.size(); i++) {
+            addMarker(shortStationList.get(i));
+            markers.get(0).showInfoWindow();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
                     mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-                    mMapView.getMapAsync(new OnMapReadyCallback() {
-                        @SuppressLint("MissingPermission")
-                        @Override
-                        public void onMapReady(GoogleMap mMap) {
-                            googleMap = mMap;
-                            googleMap.setMyLocationEnabled(true);
-                            googleMap.getUiSettings().setCompassEnabled(true);
-                            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                            googleMap.getUiSettings().setMapToolbarEnabled(false);
-                            googleMap.getUiSettings().setZoomControlsEnabled(true);
-                            googleMap.setTrafficEnabled(true);
-                        }
-                    });
+                    loadMap();
                 } else {
                     Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }

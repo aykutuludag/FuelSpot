@@ -19,6 +19,8 @@ import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -589,6 +591,24 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         Fragment fragment = mFragNavController.getCurrentFrag();
         if (fragment != null && fragment.isVisible()) {
             fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter_stations:
+                FragmentStations fragment = (FragmentStations) fragments.get(0);
+                fragment.filterPopup();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

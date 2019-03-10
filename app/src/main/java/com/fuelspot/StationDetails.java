@@ -724,7 +724,6 @@ public class StationDetails extends AppCompatActivity {
         }
 
         // Facilities
-        // Facilities
         try {
             JSONArray facilitiesRes = new JSONArray(facilitiesOfStation);
             JSONObject facilitiesObj = facilitiesRes.getJSONObject(0);

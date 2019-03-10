@@ -54,6 +54,8 @@
     <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
 
     <!-- FragmentStations-->
+    <string name="menu_filter">Filtrele</string>
+    <string name="apply">Uygula</string>
     <string name="see_all">Hepsini gör</string>
     <string name="show_less">Daha az göster</string>
     <string name="station_not_found_retry">İstasyon bulunamadı. Yeni menzil</string>
