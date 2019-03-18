@@ -35,12 +35,8 @@ import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 public class FragmentSuperProfile extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RequestOptions options;
-    private CircleImageView userProfileHolder;
     private View headerView;
     private View rootView;
-    private Button addStationButton;
 
     public static FragmentSuperProfile newInstance() {
         Bundle args = new Bundle();
@@ -81,7 +77,7 @@ public class FragmentSuperProfile extends Fragment {
             mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
             mRecyclerView.setNestedScrollingEnabled(false);
 
-            addStationButton = rootView.findViewById(R.id.button_add_station);
+            Button addStationButton = rootView.findViewById(R.id.button_add_station);
             addStationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -95,8 +91,8 @@ public class FragmentSuperProfile extends Fragment {
     }
 
     private void loadProfile() {
-        userProfileHolder = headerView.findViewById(R.id.profileImage);
-        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
+        CircleImageView userProfileHolder = headerView.findViewById(R.id.profileImage);
+        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
@@ -121,7 +117,7 @@ public class FragmentSuperProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("URL", "https://fuel-spot.com/help-for-superuser");
+                intent.putExtra("URL", "https://fuelspot.com.tr/help-for-superuser");
                 startActivity(intent);
             }
         });
@@ -136,7 +132,7 @@ public class FragmentSuperProfile extends Fragment {
         });
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-        mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
+        RecyclerView.Adapter mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

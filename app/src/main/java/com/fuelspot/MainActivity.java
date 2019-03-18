@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private AHBottomNavigation bottomNavigation;
     private RequestQueue queue;
     public static InterstitialAd admobInterstitial;
+    public MenuItem filterButton;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -170,11 +171,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
         admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
         admobInterstitial.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
-
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
@@ -290,31 +286,31 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 String link = getIntent().getDataString();
                 if (link != null && link.length() > 0) {
                     // Temporary only getting fuelspot.com
-                    link = link.replace("fuelspot.com", "fuel-spot.com");
+                    link = link.replace("fuelspot.com", "fuelspot.com.tr");
 
-                    if (link.contains("fuel-spot.com/news")) {
+                    if (link.contains("fuelspot.com.tr/news")) {
                         Intent intent = new Intent(MainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link);
                         startActivity(intent);
                     } else if (link.contains("fuel-spot.com/stations")) {
                         Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
-                        intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuel-spot.com/stations/", "")));
+                        intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
-                    } else if (link.contains("https://fuel-spot.com/terms-and-conditions")) {
+                    } else if (link.contains("https://fuelspot.com.tr/terms-and-conditions")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/terms-and-conditions");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/terms-and-conditions");
                         startActivity(intent);
-                    } else if (link.contains("https://fuel-spot.com/privacy")) {
+                    } else if (link.contains("https://fuelspot.com.tr/privacy")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/privacy");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/privacy");
                         startActivity(intent);
-                    } else if (link.contains("https://fuel-spot.com/help")) {
+                    } else if (link.contains("https://fuelspot.com.tr/help")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/help");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/help");
                         startActivity(intent);
-                    } else if (link.contains("https://fuel-spot.com/help-for-superuser")) {
+                    } else if (link.contains("https://fuelspot.com.tr/help-for-superuser")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/help-for-superuser");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/help-for-superuser");
                         startActivity(intent);
                     } else {
                         // Do nothing for now
@@ -333,23 +329,23 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                         startActivity(intent);
                     } else if (link2.contains("fuel-spot.com/stations")) {
                         Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
-                        intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuel-spot.com/stations/", "")));
+                        intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
-                    } else if (link2.contains("https://fuel-spot.com/terms-and-conditions")) {
+                    } else if (link2.contains("https://fuelspot.com.tr/terms-and-conditions")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/terms-and-conditions");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/terms-and-conditions");
                         startActivity(intent);
-                    } else if (link2.contains("https://fuel-spot.com/privacy")) {
+                    } else if (link2.contains("https://fuelspot.com.tr/privacy")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/privacy");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/privacy");
                         startActivity(intent);
-                    } else if (link2.contains("https://fuel-spot.com/help")) {
+                    } else if (link2.contains("https://fuelspot.com.tr/help")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/help");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/help");
                         startActivity(intent);
-                    } else if (link2.contains("https://fuel-spot.com/help-for-superuser")) {
+                    } else if (link2.contains("https://fuelspot.com.tr/help-for-superuser")) {
                         Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuel-spot.com/help-for-superuser");
+                        intent.putExtra("URL", "https://fuelspot.com.tr/help-for-superuser");
                         startActivity(intent);
                     } else {
                         // Do nothing for now
@@ -597,6 +593,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_filter, menu);
+        filterButton = menu.findItem(R.id.filter_stations);
         return true;
     }
 
@@ -681,6 +678,13 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
+        if (filterButton != null) {
+            if (position == 0) {
+                filterButton.setVisible(true);
+            } else {
+                filterButton.setVisible(false);
+            }
+        }
         mFragNavController.switchTab(position);
         return true;
     }

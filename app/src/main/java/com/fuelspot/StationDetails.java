@@ -169,8 +169,6 @@ public class StationDetails extends AppCompatActivity {
     private Window window;
     private FloatingActionMenu materialDesignFAM;
     private FloatingActionButton floatingActionButton1;
-    private FloatingActionButton floatingActionButton2;
-    private FloatingActionButton floatingActionButton3;
     private PopupWindow mPopupWindow;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
@@ -182,7 +180,6 @@ public class StationDetails extends AppCompatActivity {
     private float howMuchDie;
     private float howMuchLPG;
     private float howMuchEle;
-    private RelativeLayout commentSection;
     private Button seeAllComments;
     private LineChart chart;
     private Bitmap bitmap;
@@ -351,7 +348,7 @@ public class StationDetails extends AppCompatActivity {
                 Toast.makeText(StationDetails.this, getString(R.string.atm), Toast.LENGTH_SHORT).show();
             }
         });
-        commentSection = findViewById(R.id.section_comment);
+        RelativeLayout commentSection = findViewById(R.id.section_comment);
         errorComment = findViewById(R.id.errorNoComment);
         noCommentText = findViewById(R.id.noCommentText);
         commentSection.setOnClickListener(new View.OnClickListener() {
@@ -440,7 +437,7 @@ public class StationDetails extends AppCompatActivity {
             });
         }
 
-        floatingActionButton2 = findViewById(R.id.fab2);
+        FloatingActionButton floatingActionButton2 = findViewById(R.id.fab2);
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -449,7 +446,7 @@ public class StationDetails extends AppCompatActivity {
             }
         });
 
-        floatingActionButton3 = findViewById(R.id.fab3);
+        FloatingActionButton floatingActionButton3 = findViewById(R.id.fab3);
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1499,7 +1496,7 @@ public class StationDetails extends AppCompatActivity {
             case R.id.menu_share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "https://fuel-spot.com/stations/" + choosenStationID);
+                intent.putExtra(Intent.EXTRA_TEXT, stationName + " on FuelSpot: " + "https://fuelspot.com.tr/stations/" + choosenStationID);
                 startActivity(Intent.createChooser(intent, getString(R.string.menu_share)));
                 return true;
             case R.id.menu_go:

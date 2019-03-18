@@ -100,6 +100,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Hashtable;
@@ -162,30 +163,17 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private RelativeLayout registerLayout;
     private RelativeLayout welcome1;
     private RelativeLayout welcome3;
-    private Button register;
     private Button continueButton;
-    private Button finishRegistration;
-    private Button finishHowTo;
     private MapView mMapView;
     private Circle circle;
     private GoogleApiClient mGoogleApiClient;
-    private SignInButton signInButton;
-    private CallbackManager callbackManager;
-    private LoginButton loginButton;
     private TextView stationHint;
     private Spinner spinner;
     private EditText editTextStationAddress;
     private EditText editTextStationLicense;
-    private EditText editTextFullName;
-    private EditText editTextEmail;
-    private EditText editTextPhone;
     private EditText editTextBirthday;
     private CircleImageView userPhoto;
     private CheckBox termsAndConditions;
-    private RadioGroup editGender;
-    private RadioButton bMale;
-    private RadioButton bFemale;
-    private RadioButton bOther;
     private int calendarYear;
     private int calendarMonth;
     private int calendarDay;
@@ -236,7 +224,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         loading.setCancelable(false);
 
         /* LAYOUT 01 */
-        register = findViewById(R.id.buttonRegister);
+        Button register = findViewById(R.id.buttonRegister);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,7 +246,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        signInButton = findViewById(R.id.googleButton);
+        SignInButton signInButton = findViewById(R.id.googleButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -356,8 +344,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     }
 
     private void facebookLogin() {
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = findViewById(R.id.facebookButton);
+        CallbackManager callbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = findViewById(R.id.facebookButton);
         loginButton.setReadPermissions("email");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -832,7 +820,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
-        editTextFullName = findViewById(R.id.editFullName);
+        EditText editTextFullName = findViewById(R.id.editFullName);
         editTextFullName.setText(name);
         editTextFullName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -860,17 +848,19 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 Date birthDateasDate = sdf.parse(birthday);
-                calendarYear = birthDateasDate.getYear() + 1900;
-                calendarMonth = birthDateasDate.getMonth() + 1;
-                calendarDay = birthDateasDate.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(birthDateasDate);
+                calendarYear = cal.get(Calendar.YEAR);
+                calendarMonth = cal.get(Calendar.MONTH);
+                calendarDay = cal.get(Calendar.DAY_OF_WEEK);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         } else {
-            Date birthDateasDate = new Date();
-            calendarYear = birthDateasDate.getYear() + 1900;
-            calendarMonth = birthDateasDate.getMonth() + 1;
-            calendarDay = birthDateasDate.getDate();
+            Calendar cal = Calendar.getInstance();
+            calendarYear = cal.get(Calendar.YEAR);
+            calendarMonth = cal.get(Calendar.MONTH);
+            calendarDay = cal.get(Calendar.DAY_OF_WEEK);
         }
         editTextBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -901,7 +891,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
-        editTextPhone = findViewById(R.id.editTextPhone);
+        EditText editTextPhone = findViewById(R.id.editTextPhone);
         editTextPhone.setText(userPhoneNumber);
         editTextPhone.addTextChangedListener(new TextWatcher() {
             @Override
@@ -923,7 +913,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
-        editTextEmail = findViewById(R.id.editTextMail);
+        EditText editTextEmail = findViewById(R.id.editTextMail);
         editTextEmail.setText(email);
         editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
@@ -946,10 +936,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         });
 
         //  Set gender and retrieve changes
-        editGender = findViewById(R.id.radioGroupGender);
-        bMale = findViewById(R.id.genderMale);
-        bFemale = findViewById(R.id.genderFemale);
-        bOther = findViewById(R.id.genderOther);
+        RadioGroup editGender = findViewById(R.id.radioGroupGender);
+        RadioButton bMale = findViewById(R.id.genderMale);
+        RadioButton bFemale = findViewById(R.id.genderFemale);
+        RadioButton bOther = findViewById(R.id.genderOther);
         switch (gender) {
             case "male":
                 bMale.setChecked(true);
@@ -980,7 +970,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
-        finishRegistration = findViewById(R.id.finishRegistration);
+        Button finishRegistration = findViewById(R.id.finishRegistration);
         finishRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1391,7 +1381,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         isSuperUser = true;
         prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
 
-        finishHowTo = findViewById(R.id.continueToMainMenu);
+        Button finishHowTo = findViewById(R.id.continueToMainMenu);
         finishHowTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1421,7 +1411,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(userPhoto);
-                photo = "https://fuel-spot.com/uploads/superusers/" + username + ".jpg";
+                photo = "https://fuelspot.com.tr/uploads/superusers/" + username + ".jpg";
                 prefs.edit().putString("ProfilePhoto", photo).apply();
             }
         }

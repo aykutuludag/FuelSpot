@@ -68,19 +68,13 @@ import static com.fuelspot.MainActivity.vehicleID;
 public class FragmentAutomobile extends Fragment {
 
     public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
-    private CircleImageView carPhotoHolder;
 
     private RecyclerView mRecyclerView;
     private GridLayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
 
     private SharedPreferences prefs;
-    private ImageView fuelTypeIndicator;
-    private ImageView fuelTypeIndicator2;
     private TextView kilometerText;
-    private TextView fullname;
-    private TextView fuelType;
-    private TextView fuelType2;
     private TextView avgText;
     private TextView avgPrice;
     private TextView emission;
@@ -142,7 +136,7 @@ public class FragmentAutomobile extends Fragment {
 
     private void loadVehicleProfile() {
         //ProfilePhoto
-        carPhotoHolder = headerView.findViewById(R.id.carPicture);
+        CircleImageView carPhotoHolder = headerView.findViewById(R.id.carPicture);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.default_automobile)
@@ -159,13 +153,13 @@ public class FragmentAutomobile extends Fragment {
         textViewPlaka.setText(plateNo);
 
         //Marka-model
-        fullname = headerView.findViewById(R.id.carFullname);
+        TextView fullname = headerView.findViewById(R.id.carFullname);
         String fullad = carBrand + " " + carModel;
         fullname.setText(fullad);
 
         //Yakıt tipi başlangıç
-        fuelType = headerView.findViewById(R.id.car_fuelTypeText);
-        fuelTypeIndicator = headerView.findViewById(R.id.car_fuelType);
+        TextView fuelType = headerView.findViewById(R.id.car_fuelTypeText);
+        ImageView fuelTypeIndicator = headerView.findViewById(R.id.car_fuelType);
         String fuelText;
 
         switch (fuelPri) {
@@ -192,8 +186,8 @@ public class FragmentAutomobile extends Fragment {
         }
         fuelType.setText(fuelText);
 
-        fuelType2 = headerView.findViewById(R.id.car_fuelTypeText2);
-        fuelTypeIndicator2 = headerView.findViewById(R.id.car_fuelType2);
+        TextView fuelType2 = headerView.findViewById(R.id.car_fuelTypeText2);
+        ImageView fuelTypeIndicator2 = headerView.findViewById(R.id.car_fuelType2);
         String fuelText2;
         switch (MainActivity.fuelSec) {
             case 0:

@@ -30,13 +30,10 @@ public class SuperStoreActivity extends AppCompatActivity {
 
     private static final int PURCHASE_PREMIUM = 132;
     private static final int PURCHASE_DOUBLE_RANGE = 63;
-    private ServiceConnection mServiceConn;
     private IInAppBillingService mService;
     private SharedPreferences prefs;
     private Window window;
     private Toolbar toolbar;
-    private Button buttonBuyPremium;
-    private Button buttonBuyDoubleRange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class SuperStoreActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
-        buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
+        Button buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
         if (premium) {
             buttonBuyPremium.setText(getString(R.string.active));
         } else {
@@ -77,7 +74,7 @@ public class SuperStoreActivity extends AppCompatActivity {
             });
         }
 
-        buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
+        Button buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
         if (hasDoubleRange) {
             buttonBuyDoubleRange.setText(getString(R.string.active));
         } else {
@@ -101,7 +98,7 @@ public class SuperStoreActivity extends AppCompatActivity {
     }
 
     private void InAppBilling() {
-        mServiceConn = new ServiceConnection() {
+        ServiceConnection mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mService = null;

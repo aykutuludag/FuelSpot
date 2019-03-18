@@ -58,7 +58,6 @@ import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 
 public class AddStation extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private TextView stationHint;
     private Spinner spinner;
     private EditText editTextStationAddress;
@@ -67,7 +66,6 @@ public class AddStation extends AppCompatActivity {
     private MapView mMapView;
     private Circle circle;
     private GoogleMap googleMap;
-    private Button finishRegistration;
     private SharedPreferences prefs;
     private int stationID;
     private int doesStationVerified;
@@ -90,7 +88,7 @@ public class AddStation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_station);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -160,7 +158,7 @@ public class AddStation extends AppCompatActivity {
             }
         });
 
-        finishRegistration = findViewById(R.id.finishRegistration);
+        Button finishRegistration = findViewById(R.id.finishRegistration);
         finishRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

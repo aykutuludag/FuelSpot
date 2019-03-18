@@ -139,7 +139,6 @@ public class AddFuel extends AppCompatActivity {
     private ScrollView scrollView;
     GridLayoutManager mLayoutManager;
     private int tempKM;
-    private TextView textViewUnitPrice, textViewCurrency, textViewUnit, textViewUnitPrice2, textViewCurrency2, textViewUnit2;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -218,18 +217,18 @@ public class AddFuel extends AppCompatActivity {
 
         enterKilometer = findViewById(R.id.editTextKilometer);
 
-        textViewUnitPrice = findViewById(R.id.textViewUnit);
-        textViewUnitPrice2 = findViewById(R.id.textViewUnit2);
+        TextView textViewUnitPrice = findViewById(R.id.textViewUnit);
+        TextView textViewUnitPrice2 = findViewById(R.id.textViewUnit2);
         textViewUnitPrice.setText(currencySymbol + " / " + userUnit);
         textViewUnitPrice2.setText(currencySymbol + " / " + userUnit);
 
-        textViewCurrency = findViewById(R.id.textViewCurrency);
-        textViewCurrency2 = findViewById(R.id.textViewCurrency2);
+        TextView textViewCurrency = findViewById(R.id.textViewCurrency);
+        TextView textViewCurrency2 = findViewById(R.id.textViewCurrency2);
         textViewCurrency.setText(currencySymbol);
         textViewCurrency2.setText(currencySymbol);
 
-        textViewUnit = findViewById(R.id.textViewLiter);
-        textViewUnit2 = findViewById(R.id.textViewLiter2);
+        TextView textViewUnit = findViewById(R.id.textViewLiter);
+        TextView textViewUnit2 = findViewById(R.id.textViewLiter2);
         textViewUnit.setText(userUnit);
         textViewUnit2.setText(userUnit);
 

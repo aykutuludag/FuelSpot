@@ -57,17 +57,13 @@ public class FragmentProfile extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.Adapter mAdapter2;
-    private RequestOptions options;
-    private CircleImageView userProfileHolder;
     private View headerView;
     private RelativeLayout userNoCommentLayout;
     private Button buttonSeeAllComments;
     private TextView textViewFMoney;
     private RequestQueue requestQueue;
     private View rootView;
-    private Button addAutomobile;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -109,7 +105,7 @@ public class FragmentProfile extends Fragment {
             mRecyclerView = rootView.findViewById(R.id.automobileView);
             mRecyclerView.setNestedScrollingEnabled(false);
 
-            addAutomobile = rootView.findViewById(R.id.button_add_vehicle);
+            Button addAutomobile = rootView.findViewById(R.id.button_add_vehicle);
             addAutomobile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -199,8 +195,8 @@ public class FragmentProfile extends Fragment {
     }
 
     private void loadProfile() {
-        userProfileHolder = headerView.findViewById(R.id.profileImage);
-        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
+        CircleImageView userProfileHolder = headerView.findViewById(R.id.profileImage);
+        RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH);
@@ -227,7 +223,7 @@ public class FragmentProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("URL", "https://fuel-spot.com/help");
+                intent.putExtra("URL", "https://fuelspot.com.tr/help");
                 startActivity(intent);
             }
         });
@@ -243,7 +239,7 @@ public class FragmentProfile extends Fragment {
 
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-        mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
+        RecyclerView.Adapter mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

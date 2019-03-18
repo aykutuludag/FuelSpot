@@ -20,7 +20,6 @@ import com.google.firebase.messaging.RemoteMessage;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private NotificationCompat.Builder builder;
-    private NotificationManager notificationManager;
     private PendingIntent pIntent;
     String title, newsURL;
     Intent intent;
@@ -54,7 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelName = "Other notifications";

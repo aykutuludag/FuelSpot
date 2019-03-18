@@ -89,9 +89,6 @@ public class FragmentMyStation extends Fragment {
     private TextView textElectricity;
     private RelativeTimeTextView textLastUpdated;
     private ImageView stationIcon;
-    private Button editStation;
-    private Button openComments;
-    private Button openCampaings;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locLastKnown = new Location("");
     private LocationRequest mLocationRequest;
@@ -183,7 +180,7 @@ public class FragmentMyStation extends Fragment {
             stationIcon = rootView.findViewById(R.id.imageViewStationLogo);
 
             //Buttons
-            editStation = rootView.findViewById(R.id.buttonEditStation);
+            Button editStation = rootView.findViewById(R.id.buttonEditStation);
             editStation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -196,7 +193,7 @@ public class FragmentMyStation extends Fragment {
                 }
             });
 
-            openComments = rootView.findViewById(R.id.buttonComments);
+            Button openComments = rootView.findViewById(R.id.buttonComments);
             openComments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -210,7 +207,7 @@ public class FragmentMyStation extends Fragment {
                 }
             });
 
-            openCampaings = rootView.findViewById(R.id.buttonCampaings);
+            Button openCampaings = rootView.findViewById(R.id.buttonCampaings);
             openCampaings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

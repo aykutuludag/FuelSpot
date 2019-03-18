@@ -61,8 +61,6 @@ import static com.fuelspot.StationDetails.userCommentID;
 public class StationComments extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private GridLayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
     private SwipeRefreshLayout swipeContainer;
     private RequestQueue requestQueue;
     private PopupWindow mPopupWindow;
@@ -70,7 +68,6 @@ public class StationComments extends AppCompatActivity {
     private Window window;
     private Toolbar toolbar;
     private FloatingActionMenu materialDesignFAM;
-    private FloatingActionButton floatingActionButton1;
     private int istasyonID;
 
     @Override
@@ -112,7 +109,7 @@ public class StationComments extends AppCompatActivity {
         // FABs
         materialDesignFAM = findViewById(R.id.fab_menu);
 
-        floatingActionButton1 = findViewById(R.id.fab1);
+        FloatingActionButton floatingActionButton1 = findViewById(R.id.fab1);
         if (isSuperUser) {
             materialDesignFAM.setVisibility(View.GONE);
         } else {
@@ -142,8 +139,8 @@ public class StationComments extends AppCompatActivity {
 
     private void loadComments() {
         if (stationCommentList != null && stationCommentList.size() > 0) {
-            mAdapter = new CommentAdapter(StationComments.this, stationCommentList, "STATION_COMMENTS");
-            mLayoutManager = new GridLayoutManager(StationComments.this, 1);
+            RecyclerView.Adapter mAdapter = new CommentAdapter(StationComments.this, stationCommentList, "STATION_COMMENTS");
+            GridLayoutManager mLayoutManager = new GridLayoutManager(StationComments.this, 1);
 
             mAdapter.notifyDataSetChanged();
             mRecyclerView.setVisibility(View.VISIBLE);

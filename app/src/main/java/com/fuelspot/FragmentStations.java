@@ -127,6 +127,7 @@ public class FragmentStations extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
+
             // Keep screen on
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

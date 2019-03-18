@@ -21,9 +21,6 @@ import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 public class FenceReceiver extends BroadcastReceiver {
 
     private Context mContext;
-    private NotificationCompat.Builder builder;
-    private NotificationManager notificationManager;
-    private PendingIntent mPendingIntent;
     private int currentStationID;
 
     @Override
@@ -46,9 +43,10 @@ public class FenceReceiver extends BroadcastReceiver {
     private void sendNotification(String stationID) {
         Intent intentLauncher = new Intent(mContext, AddFuel.class);
         intentLauncher.putExtra("STATION_ID", Integer.parseInt(stationID));
-        notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mPendingIntent = PendingIntent.getActivity(mContext, 13200, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, 13200, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
 
+        NotificationCompat.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelName = mContext.getString(R.string.add_fuel);
             String channelDesc = "Siz istasyona girdiğinizde tetiklenir. Bildirim aracılığıyla yakıt ekleyebilirsiniz.";

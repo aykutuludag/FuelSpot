@@ -28,9 +28,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.adapter.CompanyAdapter;
 import com.fuelspot.model.CompanyItem;
@@ -82,12 +79,10 @@ public class SuperUpdateStation extends AppCompatActivity {
     private EditText dieselHolder;
     private EditText electricityHolder;
     private EditText lpgHolder;
-    private Button buttonUpdateStation;
     private RequestQueue requestQueue;
     private RelativeTimeTextView lastUpdateTimeText;
     SharedPreferences prefs;
     private RelativeLayout verifiedLayout;
-    private RequestOptions options;
     private Spinner spinner;
     private Window window;
     private Toolbar toolbar;
@@ -111,9 +106,6 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(SuperUpdateStation.this);
-        options = new RequestOptions().centerCrop().error(R.drawable.default_station).error(R.drawable.default_station)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
 
         spinner = findViewById(R.id.simpleSpinner);
         stationAddressHolder = findViewById(R.id.editTextStationAddress);
@@ -134,7 +126,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         imageViewRestaurant = findViewById(R.id.Restaurant);
         imageViewParkSpot = findViewById(R.id.ParkSpot);
         imageViewATM = findViewById(R.id.ATM);
-        buttonUpdateStation = findViewById(R.id.buttonUpdate);
+        Button buttonUpdateStation = findViewById(R.id.buttonUpdate);
         buttonUpdateStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

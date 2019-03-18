@@ -282,7 +282,7 @@
 
     <!-- SuperWelcome-->
     <string name="license_no">Lisans NO</string>
-    <string name="terms_accepted_text"><a href='https://fuel-spot.com/terms-and-conditions'>Şartlar ve Koşullar</a>\'ı okudum, kabul ediyorum.</string>
+    <string name="terms_accepted_text"><a href='https://fuelspot.com.tr/terms-and-conditions'>Şartlar ve Koşullar</a>\'ı okudum, kabul ediyorum.</string>
     <string name="go_to_station_text">Kayıt işlemini tamamlayabilmek için istasyonunuzda olmalısınız. İstasyona menziline girdiğinizde (50 metre) bu yazı yeşile dönecek ve istasyon bilgiler otomatik olarak çekilecektir.</string>
     <!-- SuperWelcome-->
 

@@ -106,11 +106,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
     private RequestQueue requestQueue;
     private SharedPreferences prefs;
-    private Button continueButton;
-    private Button userHasCar;
-    private Button userNoCar;
-    private Button saveCarButton;
-    private Button finishButton;
     private RelativeLayout layout1;
     private RelativeLayout layout2;
     private RelativeLayout layout4;
@@ -120,25 +115,11 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     private ScrollView layout3;
     private Bitmap bitmap;
     private CircleImageView carPic;
-    private Spinner spinner;
     private Spinner spinner2;
-    private RadioButton gasoline;
-    private RadioButton diesel;
-    private RadioButton lpg;
-    private RadioButton elec;
-    private RadioButton gasoline2;
-    private RadioButton diesel2;
-    private RadioButton lpg2;
-    private RadioButton elec2;
-    private ArrayAdapter<String> adapter;
-    private ArrayAdapter<String> adapter2;
     private boolean howto1;
     private boolean howto2;
-    private boolean howto3;
-    private RadioGroup radioGroup1;
     private RadioGroup radioGroup2;
     private RequestOptions options;
-    private TextWatcher mTextWatcher;
     private ProgressDialog loading;
 
     @Override
@@ -174,7 +155,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
-        userHasCar = findViewById(R.id.button6);
+        Button userHasCar = findViewById(R.id.button6);
         userHasCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +164,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 layout2.setVisibility(View.GONE);
             }
         });
-        userNoCar = findViewById(R.id.button7);
+        Button userNoCar = findViewById(R.id.button7);
         userNoCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,7 +174,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        continueButton = findViewById(R.id.buttonContinue);
+        Button continueButton = findViewById(R.id.buttonContinue);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("MissingPermission")
             @Override
@@ -227,7 +208,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        saveCarButton = findViewById(R.id.button4);
+        Button saveCarButton = findViewById(R.id.button4);
         saveCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,7 +220,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        finishButton = findViewById(R.id.button3);
+        Button finishButton = findViewById(R.id.button3);
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -253,7 +234,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     layoutHow2.setVisibility(View.INVISIBLE);
                 } else {
                     //Registration finished
-                    howto3 = true;
                     isSigned = true;
                     prefs.edit().putBoolean("isSigned", isSigned).apply();
                     Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
@@ -506,8 +486,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         });
 
         //MARKA SEÇİMİ
-        spinner = findViewById(R.id.spinner_brands);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Brands.CAR_MANUFACTURERS);
+        Spinner spinner = findViewById(R.id.spinner_brands);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Brands.CAR_MANUFACTURERS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
@@ -517,16 +497,16 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         spinner2 = findViewById(R.id.spinner_models);
 
         //Yakıt seçenekleri
-        radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
-        gasoline = findViewById(R.id.gasoline);
-        diesel = findViewById(R.id.diesel);
-        lpg = findViewById(R.id.lpg);
-        elec = findViewById(R.id.electricity);
+        RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
+        RadioButton gasoline = findViewById(R.id.gasoline);
+        RadioButton diesel = findViewById(R.id.diesel);
+        RadioButton lpg = findViewById(R.id.lpg);
+        RadioButton elec = findViewById(R.id.electricity);
         radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
-        gasoline2 = findViewById(R.id.gasoline2);
-        diesel2 = findViewById(R.id.diesel2);
-        lpg2 = findViewById(R.id.lpg2);
-        elec2 = findViewById(R.id.electricity2);
+        RadioButton gasoline2 = findViewById(R.id.gasoline2);
+        RadioButton diesel2 = findViewById(R.id.diesel2);
+        RadioButton lpg2 = findViewById(R.id.lpg2);
+        RadioButton elec2 = findViewById(R.id.electricity2);
 
         switch (fuelPri) {
             case 0:
@@ -634,7 +614,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         //PlakaNO
         final EditText plateText = findViewById(R.id.editText_plate);
         plateText.setText(plateNo);
-        mTextWatcher = new TextWatcher() {
+        TextWatcher mTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -739,7 +719,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             case R.id.spinner_brands:
                 switch (position) {
                     case 0:
-                        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
+                        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
                         spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, carModel), true);
@@ -1251,7 +1231,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                carPhoto = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                carPhoto = "https://fuelspot.com.tr/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
                 prefs.edit().putString("CarPhoto", carPhoto).apply();
             }
         }

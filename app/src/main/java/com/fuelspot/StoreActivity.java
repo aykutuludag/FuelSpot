@@ -39,19 +39,10 @@ public class StoreActivity extends AppCompatActivity {
     private static final int PURCHASE_PREMIUM = 13200;
     private static final int PURCHASE_DOUBLE_RANGE = 63000;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private GridLayoutManager mLayoutManager;
-    private TextView textViewCurrentBalance;
-    private ServiceConnection mServiceConn;
     private IInAppBillingService mService;
     private SharedPreferences prefs;
     private Window window;
     private Toolbar toolbar;
-    private Button buttonBuyPremium;
-    private Button buttonBuyDoubleRange;
-    private Button buttonAracKokusu;
-    private Button buttonLastikSpreyi;
-    private Button buttonBakimKiti;
     int itemNo;
 
     @Override
@@ -73,12 +64,12 @@ public class StoreActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
-        textViewCurrentBalance = findViewById(R.id.textViewCurrentBalance);
+        TextView textViewCurrentBalance = findViewById(R.id.textViewCurrentBalance);
         String holder = "MEVCUT BAKİYE: " + String.format(Locale.getDefault(), "%.2f", userFSMoney) + " " + currencySymbol;
         textViewCurrentBalance.setText(holder);
 
         mRecyclerView = findViewById(R.id.bankingView);
-        buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
+        Button buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
         if (premium) {
             buttonBuyPremium.setText("Aktif");
         } else {
@@ -102,7 +93,7 @@ public class StoreActivity extends AppCompatActivity {
             });
         }
 
-        buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
+        Button buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
         if (hasDoubleRange) {
             buttonBuyDoubleRange.setText("Aktif");
         } else {
@@ -126,7 +117,7 @@ public class StoreActivity extends AppCompatActivity {
             });
         }
 
-        buttonAracKokusu = findViewById(R.id.button_item1);
+        Button buttonAracKokusu = findViewById(R.id.button_item1);
         buttonAracKokusu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,7 +130,7 @@ public class StoreActivity extends AppCompatActivity {
             }
         });
 
-        buttonLastikSpreyi = findViewById(R.id.button_item2);
+        Button buttonLastikSpreyi = findViewById(R.id.button_item2);
         buttonLastikSpreyi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +143,7 @@ public class StoreActivity extends AppCompatActivity {
             }
         });
 
-        buttonBakimKiti = findViewById(R.id.button_item3);
+        Button buttonBakimKiti = findViewById(R.id.button_item3);
         buttonBakimKiti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,8 +162,8 @@ public class StoreActivity extends AppCompatActivity {
 
     private void loadTransactions() {
         if (userBankingList != null && userBankingList.size() > 0) {
-            mAdapter = new BankingAdapter(StoreActivity.this, userBankingList);
-            mLayoutManager = new GridLayoutManager(StoreActivity.this, 1);
+            RecyclerView.Adapter mAdapter = new BankingAdapter(StoreActivity.this, userBankingList);
+            GridLayoutManager mLayoutManager = new GridLayoutManager(StoreActivity.this, 1);
 
             mAdapter.notifyDataSetChanged();
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -182,7 +173,7 @@ public class StoreActivity extends AppCompatActivity {
     }
 
     private void InAppBilling() {
-        mServiceConn = new ServiceConnection() {
+        ServiceConnection mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mService = null;

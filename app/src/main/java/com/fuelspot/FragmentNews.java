@@ -444,7 +444,7 @@ public class FragmentNews extends Fragment {
                 .load(item.getLogo())
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                         drawable[0] = new BitmapDrawable(getActivity().getResources(), resource);
 
                     }

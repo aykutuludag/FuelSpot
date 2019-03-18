@@ -54,6 +54,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -81,16 +82,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Window window;
     private CircleImageView userPic;
-    private EditText editName;
-    private EditText editMail;
-    private EditText editTextPhone;
-    private EditText editLocation;
     private EditText editBirthday;
-    private RadioGroup editGender;
-    private RadioButton bMale;
-    private RadioButton bFemale;
-    private RadioButton bOther;
-    private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private int calendarYear;
     private int calendarMonth;
@@ -98,7 +90,6 @@ public class ProfileEditActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private RequestQueue requestQueue;
     private RequestOptions options;
-    private Button logOutFromAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,19 +114,19 @@ public class ProfileEditActivity extends AppCompatActivity {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();
 
         requestQueue = Volley.newRequestQueue(ProfileEditActivity.this);
 
-        editName = findViewById(R.id.editFullName);
-        editMail = findViewById(R.id.editTextMail);
-        editLocation = findViewById(R.id.editTextLocation);
+        EditText editName = findViewById(R.id.editFullName);
+        EditText editMail = findViewById(R.id.editTextMail);
+        EditText editLocation = findViewById(R.id.editTextLocation);
         editBirthday = findViewById(R.id.editTextBirthday);
-        editGender = findViewById(R.id.radioGroupGender);
-        bMale = findViewById(R.id.genderMale);
-        bFemale = findViewById(R.id.genderFemale);
-        bOther = findViewById(R.id.genderOther);
+        RadioGroup editGender = findViewById(R.id.radioGroupGender);
+        RadioButton bMale = findViewById(R.id.genderMale);
+        RadioButton bFemale = findViewById(R.id.genderFemale);
+        RadioButton bOther = findViewById(R.id.genderOther);
 
         // Setting name
         editName.setText(name);
@@ -221,7 +212,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        editTextPhone = findViewById(R.id.editTextPhone);
+        EditText editTextPhone = findViewById(R.id.editTextPhone);
         editTextPhone.setText(userPhoneNumber);
         editTextPhone.addTextChangedListener(new TextWatcher() {
             @Override
@@ -249,17 +240,19 @@ public class ProfileEditActivity extends AppCompatActivity {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 Date birthDateasDate = sdf.parse(birthday);
-                calendarYear = birthDateasDate.getYear() + 1900;
-                calendarMonth = birthDateasDate.getMonth() + 1;
-                calendarDay = birthDateasDate.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(birthDateasDate);
+                calendarYear = cal.get(Calendar.YEAR);
+                calendarMonth = cal.get(Calendar.MONTH);
+                calendarDay = cal.get(Calendar.DAY_OF_WEEK);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         } else {
-            Date birthDateasDate = new Date();
-            calendarYear = birthDateasDate.getYear() + 1900;
-            calendarMonth = birthDateasDate.getMonth() + 1;
-            calendarDay = birthDateasDate.getDate();
+            Calendar cal = Calendar.getInstance();
+            calendarYear = cal.get(Calendar.YEAR);
+            calendarMonth = cal.get(Calendar.MONTH);
+            calendarDay = cal.get(Calendar.DAY_OF_WEEK);
         }
         editBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,7 +299,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        logOutFromAccount = findViewById(R.id.button5);
+        Button logOutFromAccount = findViewById(R.id.button5);
         logOutFromAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -466,7 +459,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(image.getPath()).apply(options).into(userPic);
-                photo = "https://fuel-spot.com/uploads/users/" + username + ".jpg";
+                photo = "https://fuelspot.com.tr/uploads/users/" + username + ".jpg";
                 editor.putString("ProfilePhoto", photo);
             }
         }

@@ -84,25 +84,12 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
     private Bitmap bitmap;
     private CircleImageView carPic;
-    private Spinner spinner;
     private Spinner spinner2;
-    private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
-    private RadioButton gasoline;
-    private RadioButton diesel;
-    private RadioButton lpg;
-    private RadioButton elec;
-    private RadioButton gasoline2;
-    private RadioButton diesel2;
-    private RadioButton lpg2;
-    private RadioButton elec2;
     private Window window;
     private Toolbar toolbar;
-    private ArrayAdapter<String> adapter;
-    private ArrayAdapter<String> adapter2;
     private RequestQueue requestQueue;
     private RequestOptions options;
-    private TextWatcher mTextWatcher;
     private ProgressDialog loadingUpdate;
     private ProgressDialog loadingDelete;
 
@@ -129,7 +116,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         window = this.getWindow();
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
-        prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(this);
         editor = prefs.edit();
         getVariables(prefs);
@@ -164,8 +151,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         });
 
         //MARKA SEÇİMİ
-        spinner = findViewById(R.id.spinner_brands);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Brands.CAR_MANUFACTURERS);
+        Spinner spinner = findViewById(R.id.spinner_brands);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Brands.CAR_MANUFACTURERS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setOnItemSelectedListener(this);
         spinner.setAdapter(adapter);
@@ -175,14 +162,14 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         spinner2 = findViewById(R.id.spinner_models);
 
         //Yakıt seçenekleri
-        gasoline = findViewById(R.id.gasoline);
-        diesel = findViewById(R.id.diesel);
-        lpg = findViewById(R.id.lpg);
-        elec = findViewById(R.id.electricity);
-        gasoline2 = findViewById(R.id.gasoline2);
-        diesel2 = findViewById(R.id.diesel2);
-        lpg2 = findViewById(R.id.lpg2);
-        elec2 = findViewById(R.id.electricity2);
+        RadioButton gasoline = findViewById(R.id.gasoline);
+        RadioButton diesel = findViewById(R.id.diesel);
+        RadioButton lpg = findViewById(R.id.lpg);
+        RadioButton elec = findViewById(R.id.electricity);
+        RadioButton gasoline2 = findViewById(R.id.gasoline2);
+        RadioButton diesel2 = findViewById(R.id.diesel2);
+        RadioButton lpg2 = findViewById(R.id.lpg2);
+        RadioButton elec2 = findViewById(R.id.electricity2);
         RadioGroup radioGroup1 = findViewById(R.id.radioGroup_fuelPrimary);
         final RadioGroup radioGroup2 = findViewById(R.id.radioGroup_fuelSecondary);
 
@@ -292,7 +279,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         //PlakaNO
         final EditText plateText = findViewById(R.id.editText_plate);
         plateText.setText(plateNo);
-        mTextWatcher = new TextWatcher() {
+        TextWatcher mTextWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -309,7 +296,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     // Normalize
                     plateNo = s.toString().replaceAll(" ", "");
                     plateNo = plateNo.toUpperCase();
-                    prefs.edit().putString("plateNo", plateNo).apply();
+                    editor.putString("plateNo", plateNo);
                 }
             }
         };
@@ -521,36 +508,36 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
     private void chooseVehicle(VehicleItem item) {
         vehicleID = item.getID();
-        prefs.edit().putInt("vehicleID", vehicleID).apply();
+        editor.putInt("vehicleID", vehicleID);
 
         carBrand = item.getVehicleBrand();
-        prefs.edit().putString("carBrand", carBrand).apply();
+        editor.putString("carBrand", carBrand);
 
         carModel = item.getVehicleModel();
-        prefs.edit().putString("carModel", carModel).apply();
+        editor.putString("carModel", carModel);
 
         fuelPri = item.getVehicleFuelPri();
-        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+        editor.putInt("FuelPrimary", fuelPri);
 
         fuelSec = item.getVehicleFuelSec();
-        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+        editor.putInt("FuelSecondary", fuelSec);
 
         kilometer = item.getVehicleKilometer();
-        prefs.edit().putInt("Kilometer", kilometer).apply();
+        editor.putInt("Kilometer", kilometer);
 
         carPhoto = item.getVehiclePhoto();
-        prefs.edit().putString("CarPhoto", carPhoto).apply();
+        editor.putString("CarPhoto", carPhoto);
 
         plateNo = item.getVehiclePlateNo();
-        prefs.edit().putString("plateNo", plateNo).apply();
+        editor.putString("plateNo", plateNo);
 
         averageCons = item.getVehicleConsumption();
-        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+        editor.putFloat("averageConsumption", averageCons);
 
         carbonEmission = item.getVehicleEmission();
-        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
+        editor.putInt("carbonEmission", carbonEmission);
 
-        getVariables(prefs);
+        editor.apply();
     }
 
     private String getStringImage(Bitmap bmp) {
@@ -578,7 +565,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             case R.id.spinner_brands:
                 switch (position) {
                     case 0:
-                        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
+                        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Models.acura_models);
                         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner2.setAdapter(adapter2);
                         spinner2.setSelection(MainActivity.getIndexOf(Models.acura_models, MainActivity.carModel), true);
@@ -1084,8 +1071,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(bitmap).apply(options).into(carPic);
-                carPhoto = "https://fuel-spot.com/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
-                prefs.edit().putString("CarPhoto", carPhoto).apply();
+                carPhoto = "https://fuelspot.com.tr/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                editor.putString("CarPhoto", carPhoto);
             }
         }
     }

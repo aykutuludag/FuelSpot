@@ -19,7 +19,6 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -83,21 +82,12 @@ import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
-    private TextView countryText;
-    private TextView languageText;
-    private TextView currencyText;
-    private TextView unitSystemText;
     private TextView textViewGasolineTax;
     private TextView textViewDieselTax;
     private TextView textViewLPGTax;
     private TextView textViewElectricityTax;
-    private Button buttonTax;
-    private Button buttonBeta;
-    private Button buttonFeedback;
-    private Button buttonRate;
     private SharedPreferences prefs;
     private String feedbackMessage;
-    private NestedScrollView scrollView;
     private Bitmap bitmap;
     private ImageView getScreenshot;
     private PopupWindow mPopupWindow;
@@ -105,11 +95,7 @@ public class FragmentSettings extends Fragment {
     //Creating a Request Queue
     private RequestQueue requestQueue;
     private View rootView;
-
-
-    private RelativeLayout geofenceLayout;
     private CheckBox geofenceCheckBox;
-
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -141,18 +127,16 @@ public class FragmentSettings extends Fragment {
             options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
 
-            scrollView = rootView.findViewById(R.id.nestedScrollViewSettings);
-
-            countryText = rootView.findViewById(R.id.textViewCountryName);
+            TextView countryText = rootView.findViewById(R.id.textViewCountryName);
             countryText.setText(userCountryName);
 
-            languageText = rootView.findViewById(R.id.textViewLanguage);
+            TextView languageText = rootView.findViewById(R.id.textViewLanguage);
             languageText.setText(userDisplayLanguage);
 
-            currencyText = rootView.findViewById(R.id.textViewCurrency);
+            TextView currencyText = rootView.findViewById(R.id.textViewCurrency);
             currencyText.setText(currencyCode);
 
-            unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
+            TextView unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
             unitSystemText.setText(userUnit);
 
             TextView textViewVersion = rootView.findViewById(R.id.textViewVersion);
@@ -166,7 +150,7 @@ public class FragmentSettings extends Fragment {
                 e.printStackTrace();
             }
 
-            geofenceLayout = rootView.findViewById(R.id.settings_geofence);
+            RelativeLayout geofenceLayout = rootView.findViewById(R.id.settings_geofence);
             if (isSuperUser) {
                 geofenceLayout.setVisibility(View.GONE);
             } else {
@@ -208,7 +192,7 @@ public class FragmentSettings extends Fragment {
             textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
             textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
 
-            buttonTax = rootView.findViewById(R.id.button_tax);
+            Button buttonTax = rootView.findViewById(R.id.button_tax);
             buttonTax.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -216,7 +200,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            buttonBeta = rootView.findViewById(R.id.button_beta);
+            Button buttonBeta = rootView.findViewById(R.id.button_beta);
             buttonBeta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -229,7 +213,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            buttonFeedback = rootView.findViewById(R.id.button_feedback);
+            Button buttonFeedback = rootView.findViewById(R.id.button_feedback);
             buttonFeedback.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,7 +221,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            buttonRate = rootView.findViewById(R.id.button_rate);
+            Button buttonRate = rootView.findViewById(R.id.button_rate);
             buttonRate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -252,7 +236,7 @@ public class FragmentSettings extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                    intent.putExtra("URL", "https://fuel-spot.com/terms-and-conditions");
+                    intent.putExtra("URL", "https://fuelspot.com.tr/terms-and-conditions");
                     startActivity(intent);
                 }
             });
@@ -262,7 +246,7 @@ public class FragmentSettings extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                    intent.putExtra("URL", "https://fuel-spot.com/privacy");
+                    intent.putExtra("URL", "https://fuelspot.com.tr/privacy");
                     startActivity(intent);
                 }
             });
