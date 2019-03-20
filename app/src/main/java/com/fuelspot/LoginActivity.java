@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             String link2 = getIntent().getExtras().getString("URL");
             if (link2 != null && link2.length() > 0) {
                 // Temporary only getting fuelspot.com
-                link2 = link2.replace("fuelspot.com", "fuel-spot.com");
+                link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
 
                 final Intent intent;
                 if (isSuperUser) {

@@ -15,6 +15,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -81,6 +83,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     private FragNavController mFragNavController;
     private AHBottomNavigation bottomNavigation;
     private List<Fragment> fragments = new ArrayList<>(5);
+    public MenuItem filterButton;
 
     public static void getSuperVariables(SharedPreferences prefs) {
         // Station-specific information
@@ -179,13 +182,13 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                 String link = getIntent().getDataString();
                 if (link != null && link.length() > 0) {
                     // Temporary only getting fuelspot.com
-                    link = link.replace("fuelspot.com", "fuel-spot.com");
+                    link = link.replace("fuelspot.com", "fuelspot.com.tr");
 
-                    if (link.contains("fuel-spot.com/news")) {
+                    if (link.contains("fuelspot.com.tr/news")) {
                         Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link);
                         startActivity(intent);
-                    } else if (link.contains("fuel-spot.com/stations")) {
+                    } else if (link.contains("fuelspot.com.tr/stations")) {
                         Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
                         intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
@@ -214,13 +217,13 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                 String link2 = getIntent().getExtras().getString("URL");
                 if (link2 != null && link2.length() > 0) {
                     // Temporary only getting fuelspot.com
-                    link2 = link2.replace("fuelspot.com", "fuel-spot.com");
+                    link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
 
-                    if (link2.contains("fuel-spot.com/news")) {
+                    if (link2.contains("fuelspot.com.tr/news")) {
                         Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link2);
                         startActivity(intent);
-                    } else if (link2.contains("fuel-spot.com/stations")) {
+                    } else if (link2.contains("fuelspot.com.tr/stations")) {
                         Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
                         intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
@@ -512,7 +515,34 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        filterButton = menu.findItem(R.id.filter_stations);
+        filterButton.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter_stations:
+                FragmentStations fragment = (FragmentStations) fragments.get(2);
+                fragment.filterPopup();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
+        if (filterButton != null) {
+            if (position == 2) {
+                filterButton.setVisible(true);
+            } else {
+                filterButton.setVisible(false);
+            }
+        }
         mFragNavController.switchTab(position);
         return true;
     }

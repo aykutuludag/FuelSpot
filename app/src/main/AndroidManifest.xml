@@ -45,6 +45,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- fuelspot.com.tr -->
                 <data
                     android:host="fuelspot.com.tr"
                     android:scheme="http" />
@@ -57,6 +58,8 @@
                 <data
                     android:host="www.fuelspot.com.tr"
                     android:scheme="https" />
+
+                <!-- fuelspot.com -->
                 <data
                     android:host="fuelspot.com"
                     android:scheme="http" />
@@ -173,7 +176,9 @@
             android:name=".superuser.SuperStoreActivity"
             android:label="@string/store"
             android:parentActivityName=".superuser.SuperMainActivity"
-            android:screenOrientation="portrait" /> <!-- AlarmReceiver -->
+            android:screenOrientation="portrait" />
+
+        <!-- AlarmReceiver -->
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -185,10 +190,14 @@
             <intent-filter>
                 <action android:name="com.fuelspot.FENCE_RECEIVER_ACTION" />
             </intent-filter>
-        </receiver> <!-- AdMob -->
+        </receiver>
+
+        <!-- AdMob -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admobAppId" /> <!-- Facebook -->
+            android:value="@string/admobAppId" />
+
+        <!-- Facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -208,7 +217,9 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity> <!-- Google Maps && PlaceAutoComplete && Awareness -->
+        </activity>
+
+        <!-- Google Maps && PlaceAutoComplete && Awareness -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -217,7 +228,9 @@
             android:value="@string/google_key" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/google_key" /> <!-- Firebase -->
+            android:value="@string/google_key" />
+
+        <!-- Firebase -->
         <service
             android:name=".service.MyFirebaseMessagingService"
             android:exported="false">
@@ -231,7 +244,9 @@
             android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" /> <!-- FileProvider -->
+            android:resource="@color/colorAccent" />
+
+        <!-- FileProvider -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

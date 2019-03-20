@@ -147,8 +147,6 @@ public class FragmentNews extends Fragment {
             chart = rootView.findViewById(R.id.chartAveragePrice);
             chart.getXAxis().setAvoidFirstLastClipping(true);
             chart.getXAxis().setLabelCount(3, true);
-            chart.getAxisRight().setGranularity(0.5f);
-            chart.getAxisLeft().setGranularity(0.5f);
             chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             chart.getDescription().setText(currencySymbol + " / " + userUnit);
             chart.getDescription().setTextSize(12f);
@@ -163,7 +161,7 @@ public class FragmentNews extends Fragment {
                 }
             });
             chart.animateX(1000, Easing.EasingOption.EaseInSine);
-            chart.setExtraRightOffset(10f);
+            chart.setExtraRightOffset(16f);
             chart.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

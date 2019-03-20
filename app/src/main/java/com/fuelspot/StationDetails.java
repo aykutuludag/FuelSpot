@@ -190,8 +190,6 @@ public class StationDetails extends AppCompatActivity {
     private SharedPreferences prefs;
     private Drawable favorite;
     private int reportRequest;
-    private String reportReason;
-    private String reportDetails;
     private SimpleDateFormat sdf;
     private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM;
 
@@ -899,6 +897,7 @@ public class StationDetails extends AppCompatActivity {
                                 }
 
                                 errorComment.setVisibility(View.GONE);
+                                noCommentText.setVisibility(View.GONE);
 
                                 // Calculate station score
                                 DecimalFormat df = new DecimalFormat("#.##");
@@ -1126,6 +1125,11 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void reportStation(final View view) {
+        // Clear image
+        bitmap = null;
+
+        final String[] reportReason = new String[1];
+        final String[] reportDetails = new String[1];
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_report, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1141,13 +1145,13 @@ public class StationDetails extends AppCompatActivity {
                     mPopupWindow.dismiss();
                     reportPrices(view);
                 } else {
-                    reportReason = position + " - " + spinner.getItemAtPosition(position);
+                    reportReason[0] = (String) spinner.getItemAtPosition(position);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                reportReason = 0 + " - " + spinner.getItemAtPosition(0);
+                reportReason[0] = (String) spinner.getItemAtPosition(0);
             }
         });
 
@@ -1166,7 +1170,7 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    reportDetails = s.toString();
+                    reportDetails[0] = s.toString();
                 }
             }
         });
@@ -1188,10 +1192,12 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendReporttoServer(username, choosenStationID, reportReason, reportDetails, null, bitmap);
+                if (reportDetails[0] != null && reportDetails[0].length() > 0) {
+                    sendReporttoServer(username, choosenStationID, reportReason[0], reportDetails[0], "", bitmap);
+                } else {
+                    Toast.makeText(StationDetails.this, "Lütfen mesajınızı giriniz", Toast.LENGTH_LONG).show();
+                }
             }
-
-
         });
 
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
@@ -1209,6 +1215,9 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void reportPrices(View view) {
+        // Clear image
+        bitmap = null;
+
         final float[] benzinFiyat = new float[1];
         final float[] dizelFiyat = new float[1];
         final float[] LPGFiyat = new float[1];
@@ -1321,8 +1330,11 @@ public class StationDetails extends AppCompatActivity {
             public void onClick(View v) {
                 if (benzinFiyat[0] != 0 || dizelFiyat[0] != 0 || LPGFiyat[0] != 0 || ElektrikFiyat[0] != 0) {
                     pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
-
-                    sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], null, pricesArray[0], bitmap);
+                    if (bitmap != null) {
+                        sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", pricesArray[0], bitmap);
+                    } else {
+                        Toast.makeText(StationDetails.this, "Raporunuzun değerlendirmeye alınabilmesi için lütfen fiyat tabelası/fiş-fatura vs gibi kanıtlayıcı bir görsel ekleyiniz.", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(StationDetails.this, getString(R.string.enter_prices), Toast.LENGTH_LONG).show();
                 }
@@ -1381,6 +1393,7 @@ public class StationDetails extends AppCompatActivity {
                 params.put("username", kullaniciAdi);
                 params.put("stationID", String.valueOf(istasyonID));
                 params.put("report", raporSebebi);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
                 if (raporDetayi != null && raporDetayi.length() > 0) {
                     params.put("details", raporDetayi);
                 }
@@ -1390,7 +1403,6 @@ public class StationDetails extends AppCompatActivity {
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
                 }
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1402,11 +1414,8 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private String getStringImage(Bitmap bmp) {
-        Bitmap bmp2 = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), true);
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp2.compress(Bitmap.CompressFormat.JPEG, 65, baos);
-
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }

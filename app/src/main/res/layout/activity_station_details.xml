@@ -673,7 +673,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
                         android:layout_below="@id/title_stats"
+                        android:layout_marginStart="4dp"
                         android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
                         android:layout_marginBottom="4dp" />
                 </RelativeLayout>
 
@@ -688,7 +690,7 @@
         android:layout_marginBottom="16dp"
         app:layout_anchor="@+id/scrollView"
         app:layout_anchorGravity="right|bottom"
-        app:menu_colorNormal="#99000000">
+        app:menu_colorNormal="#000000">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab1"

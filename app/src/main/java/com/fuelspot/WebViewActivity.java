@@ -35,7 +35,7 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
         //Color statusbar and actionbar
-        coloredBars(Color.argb(60, 0, 0, 0), Color.argb(60, 0, 0, 0));
+        coloredBars(Color.argb(30, 0, 0, 0), Color.argb(0, 0, 0, 0));
 
         // Get Intents
         Bundle extras = getIntent().getExtras();
@@ -46,7 +46,7 @@ public class WebViewActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains("fuel-spot.com")) {
+                if (url.contains("fuelspot.com.tr")) {
                     return true;
                 } else {
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();

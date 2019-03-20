@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                         Intent intent = new Intent(MainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link);
                         startActivity(intent);
-                    } else if (link.contains("fuel-spot.com/stations")) {
+                    } else if (link.contains("fuelspot.com.tr/stations")) {
                         Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
                         intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
@@ -321,13 +321,13 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 String link2 = getIntent().getExtras().getString("URL");
                 if (link2 != null && link2.length() > 0) {
                     // Temporary only getting fuelspot.com
-                    link2 = link2.replace("fuelspot.com", "fuel-spot.com");
+                    link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
 
-                    if (link2.contains("fuel-spot.com/news")) {
+                    if (link2.contains("fuelspot.com.tr/news")) {
                         Intent intent = new Intent(MainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link2);
                         startActivity(intent);
-                    } else if (link2.contains("fuel-spot.com/stations")) {
+                    } else if (link2.contains("fuelspot.com.tr/stations")) {
                         Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
                         intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
