@@ -58,7 +58,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="@string/vehicle_brand"
+                    android:text="@string/brand"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 

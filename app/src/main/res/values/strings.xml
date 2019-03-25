@@ -89,8 +89,8 @@
     <string name="button_continue">Continue</string>
     <string name="do_you_have_car">Do you have a car?</string>
     <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="vehicle_brand">Brand</string>
+    <string name="no_later">No / I will add it later</string>
+    <string name="brand">Brand</string>
     <string name="vehicle_model">Model</string>
     <string name="primary_fuel_type">Primary fuel type</string>
     <string name="gasoline">Gasoline</string>
@@ -184,6 +184,7 @@
     <string name="location_notifications_desc">If you off the location services, you won\'t able to add fuel</string>
     <string name="privacy">Privacy</string>
     <string name="enroll_beta">Enroll beta test</string>
+    <string name="report_missing_station">Report missing station</string>
     <string name="feedback">Feedback</string>
     <string name="rate_app">Rate FuelSpot!</string>
     <string name="terms_and_agreements">Terms &amp; Agreements</string>
@@ -383,10 +384,12 @@
     <string name="update_station">Update station</string>
     <string name="station_update_success">Station updated successfully…</string>
     <string name="station_update_fail">An error occurred while updating station… Please try again later</string>
-    <string name="note_for_prices">If you have multiple fuels in the same type (Example: Diesel, Euro Diesel), enter the highest price</string>
+    <string name="note_for_prices">IMPORTANT: If you have multiple fuels in the same type (Example: Diesel, Euro Diesel), enter the highest price</string>
     <string name="station_updating">Station updating</string>
     <string name="fuelspot_station_id">FuelSpot ID:</string>
     <string name="license_no_with_colon">License NO:</string>
+    <string name="streetview">StreetView</string>
+    <string name="download_streetview">Download Google StreetView</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
@@ -410,5 +413,9 @@
 
     <!-- AddStation-->
     <string name="add_station">Add station</string>
+    <!-- AddStation-->
+
+    <!-- ReportMissingStation-->
+    <string name="title_activity_report_missing_station">Missing station</string>
     <!-- AddStation-->
 </resources>

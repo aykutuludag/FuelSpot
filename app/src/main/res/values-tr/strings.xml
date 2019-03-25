@@ -16,8 +16,8 @@
     <string name="button_continue">Devam</string>
     <string name="do_you_have_car">Arabanız var mı?</string>
     <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
-    <string name="vehicle_brand">Marka</string>
+    <string name="no_later">Hayır / Daha sonra ekleyeceğim</string>
+    <string name="brand">Marka</string>
     <string name="vehicle_model">Model</string>
     <string name="primary_fuel_type">Birincil yakıt tipi</string>
     <string name="gasoline">Benzin</string>
@@ -110,6 +110,7 @@
     <string name="location_notifications_desc">Eğer konum servislerini kapatırsanız, yakıt ekleme sistemi çalışmayacaktır.</string>
     <string name="privacy">Gizlilik</string>
     <string name="enroll_beta">Beta testine katıl</string>
+    <string name="report_missing_station">Eksik istasyon bildir</string>
     <string name="feedback">Geri-bildirim</string>
     <string name="rate_app">FuelSpot\'ı puanla!</string>
     <string name="terms_and_agreements">Şartlar &amp; Koşullar</string>
@@ -309,10 +310,12 @@
     <string name="update_station">İstasyonu güncelle</string>
     <string name="station_update_success">İstasyon başarıyla güncellendi…</string>
     <string name="station_update_fail">İstayon güncellenirken bir hata oluştu… Lütfen tekrar deneyiniz.</string>
-    <string name="note_for_prices">Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
+    <string name="note_for_prices">ÖNEMLİ: Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
     <string name="station_updating">İstasyon güncelleniyor</string>
     <string name="fuelspot_station_id">FuelSpot ID:</string>
     <string name="license_no_with_colon">License NO:</string>
+    <string name="streetview">Sokak Görünümü</string>
+    <string name="download_streetview">Google StreetView\'ı indir</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
@@ -336,5 +339,9 @@
 
     <!-- AddStation-->
     <string name="add_station">İstasyon ekle</string>
+    <!-- AddStation-->
+
+    <!-- ReportMissingStation-->
+    <string name="title_activity_report_missing_station">Eksik istasyon</string>
     <!-- AddStation-->
 </resources>

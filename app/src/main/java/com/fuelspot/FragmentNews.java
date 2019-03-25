@@ -385,7 +385,7 @@ public class FragmentNews extends Fragment {
                 totalVerified += companyList.get(i).getNumOfVerifieds();
                 totalStation += companyList.get(i).getNumOfStations();
 
-                if (companyList.get(i).getNumOfStations() >= 250) {
+                if (companyList.get(i).getNumOfStations() >= 300) {
                     entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
                 } else {
                     otherStations += companyList.get(i).getNumOfStations();

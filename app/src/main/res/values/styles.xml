@@ -41,4 +41,9 @@
         <item name="windowActionBarOverlay">true</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_menu_back</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

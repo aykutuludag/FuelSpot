@@ -213,6 +213,15 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
+            Button buttonMissingStation = rootView.findViewById(R.id.button_missing_station);
+            buttonMissingStation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ReportMissingStation.class);
+                    startActivity(intent);
+                }
+            });
+
             Button buttonFeedback = rootView.findViewById(R.id.button_feedback);
             buttonFeedback.setOnClickListener(new View.OnClickListener() {
                 @Override

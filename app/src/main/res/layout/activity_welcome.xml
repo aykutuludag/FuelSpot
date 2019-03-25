@@ -115,7 +115,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="#ff0000"
-            android:text="@string/no"
+            android:text="@string/no_later"
             android:textColor="#f1f1f1" />
     </RelativeLayout>
 
@@ -157,7 +157,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="@string/vehicle_brand"
+                    android:text="@string/brand"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#555555" />
 

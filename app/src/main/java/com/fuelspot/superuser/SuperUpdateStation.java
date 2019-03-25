@@ -2,9 +2,11 @@ package com.fuelspot.superuser;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -126,6 +128,16 @@ public class SuperUpdateStation extends AppCompatActivity {
         imageViewRestaurant = findViewById(R.id.Restaurant);
         imageViewParkSpot = findViewById(R.id.ParkSpot);
         imageViewATM = findViewById(R.id.ATM);
+
+        Button streetViewApp = findViewById(R.id.buttonDownloadStreetView);
+        streetViewApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.street"));
+                startActivity(intent);
+            }
+        });
+
         Button buttonUpdateStation = findViewById(R.id.buttonUpdate);
         buttonUpdateStation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -512,6 +524,18 @@ public class SuperUpdateStation extends AppCompatActivity {
                                     item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
                                     item.setNumOfStations(obj.getInt("numOfStations"));
                                     companyList.add(item);
+                                }
+
+                                CompanyAdapter customAdapter = new CompanyAdapter(SuperUpdateStation.this, companyList);
+                                spinner.setEnabled(false);
+                                spinner.setClickable(false);
+                                spinner.setAdapter(customAdapter);
+
+                                for (int i = 0; i < companyList.size(); i++) {
+                                    if (companyList.get(i).getName().equals(superStationName)) {
+                                        spinner.setSelection(i, true);
+                                        break;
+                                    }
                                 }
                             } catch (JSONException e) {
                                 Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();

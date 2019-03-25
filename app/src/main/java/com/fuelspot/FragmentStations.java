@@ -72,7 +72,6 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
-import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -414,14 +413,9 @@ public class FragmentStations extends Fragment {
                                         seeAllStations.setVisibility(View.GONE);
                                     }
 
-                                    // Sort by primary fuel
-                                    if (!isSuperUser) {
-                                        whichOrder = fuelPri;
-                                        sortBy(whichOrder);
-                                    } else {
-                                        whichOrder = 4;
-                                        sortBy(whichOrder);
-                                    }
+                                    // Sort by distnce
+                                    whichOrder = 4;
+                                    sortBy(whichOrder);
 
                                     // Create a fence
                                     if (!isSuperUser && isGeofenceOpen) {
