@@ -37,7 +37,6 @@ import com.fuelspot.model.NewsItem;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -45,7 +44,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -151,16 +150,16 @@ public class FragmentNews extends Fragment {
             chart.getDescription().setText(currencySymbol + " / " + userUnit);
             chart.getDescription().setTextSize(12f);
             chart.getDescription().setTextColor(Color.WHITE);
-            chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            chart.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+                public String getFormattedValue(float value) {
                     DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
                     Date date = new Date();
                     date.setTime((long) value);
                     return formatter.format(date);
                 }
             });
-            chart.animateX(1000, Easing.EasingOption.EaseInSine);
+            chart.animateX(1000, Easing.EaseInElastic);
             chart.setExtraRightOffset(16f);
             chart.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -178,8 +177,8 @@ public class FragmentNews extends Fragment {
             chart3.setDrawHoleEnabled(false);
             chart3.getLegend().setEnabled(false);
             chart3.setTransparentCircleColor(Color.BLACK);
-            chart3.setTransparentCircleAlpha(110);
-            chart3.setTransparentCircleRadius(61f);
+            chart3.setTransparentCircleAlpha(120);
+            chart3.setTransparentCircleRadius(60f);
             chart3.setUsePercentValues(false);
             chart3.setRotationEnabled(true);
             chart3.setHighlightPerTapEnabled(true);
@@ -346,9 +345,9 @@ public class FragmentNews extends Fragment {
 
                                 LineData lineData = new LineData(dataSets);
                                 chart.setData(lineData);
-                                chart.invalidate(); // refresh
                                 GraphMarkerAdapter mv = new GraphMarkerAdapter(getActivity(), R.layout.popup_graph_marker, dataSets);
                                 chart.setMarker(mv);
+                                chart.invalidate(); // refresh
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }

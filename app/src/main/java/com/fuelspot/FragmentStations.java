@@ -110,7 +110,7 @@ public class FragmentStations extends Fragment {
     int whichOrder;
     boolean isMapUpdating;
     NestedScrollView scrollView;
-    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM;
+    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -332,6 +332,7 @@ public class FragmentStations extends Fragment {
             filterByRestaurant = false;
             filterByParkSpot = false;
             filterByATM = false;
+            filterByMotel = false;
 
             isAllStationsListed = false;
             seeAllStations.setText(getString(R.string.see_all));
@@ -484,7 +485,7 @@ public class FragmentStations extends Fragment {
 
     private void sortBy(int position) {
         // User is at filter mode. just do nothing for now.
-        if (filterByWC || filterByMarket || filterByTireStore || filterByMechanic || filterByRestaurant || filterByParkSpot || filterByATM) {
+        if (filterByWC || filterByMarket || filterByTireStore || filterByMechanic || filterByRestaurant || filterByParkSpot || filterByATM || filterByMotel) {
             return;
         }
 
@@ -670,7 +671,7 @@ public class FragmentStations extends Fragment {
     }
 
     public void filterPopup() {
-        CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8;
+        CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9;
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_filter, null);
@@ -751,6 +752,15 @@ public class FragmentStations extends Fragment {
             }
         });
 
+        checkBox9 = customView.findViewById(R.id.checkBox10);
+        checkBox9.setChecked(filterByMotel);
+        checkBox9.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByMotel = isChecked;
+            }
+        });
+
         Button filterButton = customView.findViewById(R.id.button8);
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -776,7 +786,7 @@ public class FragmentStations extends Fragment {
 
     void filterStations() {
         // If there is no filter, just order by distance
-        if (!filterByWC && !filterByMarket && !filterByTireStore && !filterByMechanic && !filterByRestaurant && !filterByParkSpot && !filterByATM) {
+        if (!filterByWC && !filterByMarket && !filterByTireStore && !filterByMechanic && !filterByRestaurant && !filterByParkSpot && !filterByATM && !filterByMotel) {
             seeAllStations.setVisibility(View.VISIBLE);
             whichOrder = 4;
             sortBy(whichOrder);
@@ -812,6 +822,8 @@ public class FragmentStations extends Fragment {
                 } else if (filterByParkSpot && facilitiesObj.getInt("ParkSpot") == 0) {
                     continue;
                 } else if (filterByATM && facilitiesObj.getInt("ATM") == 0) {
+                    continue;
+                } else if (filterByMotel && facilitiesObj.getInt("Motel") == 0) {
                     continue;
                 }
                 shortStationList.add(fullStationList.get(i));

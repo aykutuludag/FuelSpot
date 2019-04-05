@@ -71,12 +71,11 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
@@ -111,6 +110,8 @@ import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 
 public class StationDetails extends AppCompatActivity {
@@ -191,7 +192,7 @@ public class StationDetails extends AppCompatActivity {
     private Drawable favorite;
     private int reportRequest;
     private SimpleDateFormat sdf;
-    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM;
+    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel;
 
     @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
@@ -277,9 +278,9 @@ public class StationDetails extends AppCompatActivity {
         chart.getXAxis().setAvoidFirstLastClipping(true);
         chart.getXAxis().setLabelCount(3, true);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+        chart.getXAxis().setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getFormattedValue(float value) {
                 DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
                 Date date = new Date();
                 date.setTime((long) value);
@@ -344,6 +345,13 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(StationDetails.this, getString(R.string.atm), Toast.LENGTH_SHORT).show();
+            }
+        });
+        imageViewMotel = findViewById(R.id.Motel);
+        imageViewMotel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.motel), Toast.LENGTH_SHORT).show();
             }
         });
         RelativeLayout commentSection = findViewById(R.id.section_comment);
@@ -769,6 +777,12 @@ public class StationDetails extends AppCompatActivity {
                 imageViewATM.setAlpha(1.0f);
             } else {
                 imageViewATM.setAlpha(0.25f);
+            }
+
+            if (facilitiesObj.getInt("Motel") == 1) {
+                imageViewMotel.setAlpha(1.0f);
+            } else {
+                imageViewMotel.setAlpha(0.25f);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1509,7 +1523,9 @@ public class StationDetails extends AppCompatActivity {
                 startActivity(Intent.createChooser(intent, getString(R.string.menu_share)));
                 return true;
             case R.id.menu_go:
-                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
+                String uri = "https://www.google.com/maps/dir/?api=1&origin=" + userlat + "," + userlon + "&destination=" +
+                        stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&travelmode=driving";
+                Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(intent2);
                 return true;
             default:

@@ -10,6 +10,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,21 +22,20 @@ import static com.fuelspot.MainActivity.shortTimeFormat;
 public class GraphMarkerAdapter extends MarkerView {
 
     ArrayList<ILineDataSet> dataSets;
-    List<Entry> benzinDegerler, dizelDegerler, lpgDegerler;
+    List<Entry> benzinDegerler, dizelDegerler, lpgDegerler, elektrikDegerler;
     private SimpleDateFormat sdf = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-    private TextView textViewGasoline;
-    private TextView textViewDiesel;
-    private TextView textViewLPG;
-    private TextView textViewTime;
+    DecimalFormat df = new DecimalFormat("#.##");
+    private TextView textViewGasoline, textViewDiesel, textViewLPG, textViewElectricity, textViewTime;
     private MPPointF mOffset;
 
     public GraphMarkerAdapter(Context context, int layoutResource, ArrayList<ILineDataSet> dSets) {
         super(context, layoutResource);
         dataSets = dSets;
 
-        textViewGasoline = findViewById(R.id.priceGasoline);
-        textViewDiesel = findViewById(R.id.priceDiesel);
-        textViewLPG = findViewById(R.id.priceLPG);
+        textViewGasoline = findViewById(R.id.fiyatBenzin);
+        textViewDiesel = findViewById(R.id.fiyatDizel);
+        textViewLPG = findViewById(R.id.fiyatLPG);
+        textViewElectricity = findViewById(R.id.fiyatElektrik);
         textViewTime = findViewById(R.id.textTime);
     }
 
@@ -64,28 +64,35 @@ public class GraphMarkerAdapter extends MarkerView {
             } else if (i == 2) {
                 lpgDegerler = dataSets.get(2).getEntriesForXValue(e.getX());
             } else {
-                // This is electricity (i=3) we're just ignore it for now.
-                return;
+                elektrikDegerler = dataSets.get(3).getEntriesForXValue(e.getX());
             }
         }
 
         if (benzinDegerler != null && benzinDegerler.size() > 0) {
-            textViewGasoline.setText(String.format(Locale.getDefault(), "%.2f", benzinDegerler.get(0).getY()));
+            textViewGasoline.setText(df.format(benzinDegerler.get(0).getY()));
         } else {
             textViewGasoline.setText("-");
         }
 
         if (dizelDegerler != null && dizelDegerler.size() > 0) {
-            textViewDiesel.setText(String.format(Locale.getDefault(), "%.2f", dizelDegerler.get(0).getY()));
+            textViewDiesel.setText(df.format(dizelDegerler.get(0).getY()));
         } else {
             textViewDiesel.setText("-");
         }
 
         if (lpgDegerler != null && lpgDegerler.size() > 0) {
-            textViewLPG.setText(String.format(Locale.getDefault(), "%.2f", lpgDegerler.get(0).getY()));
+            textViewLPG.setText(df.format(lpgDegerler.get(0).getY()));
         } else {
             textViewLPG.setText("-");
         }
+
+        if (elektrikDegerler != null && elektrikDegerler.size() > 0) {
+            textViewElectricity.setText(df.format(elektrikDegerler.get(0).getY()));
+        } else {
+            textViewElectricity.setText("-");
+        }
+
+        super.refreshContent(e, highlight);
     }
 
     @Override

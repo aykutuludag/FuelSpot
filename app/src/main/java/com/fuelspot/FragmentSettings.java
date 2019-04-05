@@ -57,6 +57,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -274,21 +275,27 @@ public class FragmentSettings extends Fragment {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
 
+                                DecimalFormat df = new DecimalFormat("##.#");
+
                                 TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
                                 prefs.edit().putFloat("taxGasoline", TAX_GASOLINE).apply();
-                                textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
+                                String dummy0 = "% " + df.format(TAX_GASOLINE * 100f);
+                                textViewGasolineTax.setText(dummy0);
 
                                 TAX_DIESEL = (float) obj.getDouble("dieselTax");
                                 prefs.edit().putFloat("taxDiesel", TAX_DIESEL).apply();
-                                textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
+                                String dummy1 = "% " + df.format(TAX_DIESEL * 100f);
+                                textViewDieselTax.setText(dummy1);
 
                                 TAX_LPG = (float) obj.getDouble("LPGTax");
                                 prefs.edit().putFloat("taxLPG", TAX_LPG).apply();
-                                textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
+                                String dummy2 = "% " + df.format(TAX_LPG * 100f);
+                                textViewLPGTax.setText(dummy2);
 
                                 TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
                                 prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
-                                textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
+                                String dummy3 = "% " + df.format(TAX_ELECTRICITY * 100f);
+                                textViewElectricityTax.setText(dummy3);
 
                                 getVariables(prefs);
 

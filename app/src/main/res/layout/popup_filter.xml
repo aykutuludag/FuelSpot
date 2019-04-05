@@ -106,6 +106,15 @@
                 android:padding="2dp"
                 android:text="@string/mechanic" />
 
+            <CheckBox
+                android:id="@+id/checkBox7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox6"
+                android:padding="2dp"
+                android:text="@string/restaurant" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -116,19 +125,10 @@
             android:layout_centerHorizontal="true">
 
             <CheckBox
-                android:id="@+id/checkBox7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:padding="2dp"
-                android:text="@string/restaurant" />
-
-            <CheckBox
                 android:id="@+id/checkBox8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:layout_toEndOf="@id/checkBox7"
                 android:padding="2dp"
                 android:text="@string/parkspot" />
 
@@ -140,6 +140,15 @@
                 android:layout_toEndOf="@id/checkBox8"
                 android:padding="2dp"
                 android:text="@string/atm" />
+
+            <CheckBox
+                android:id="@+id/checkBox10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@id/checkBox9"
+                android:padding="2dp"
+                android:text="@string/motel" />
         </RelativeLayout>
 
         <TextView
