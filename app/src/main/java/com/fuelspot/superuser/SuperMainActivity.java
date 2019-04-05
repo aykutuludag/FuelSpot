@@ -443,8 +443,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
-
-        getSuperVariables(prefs);
     }
 
     private void fetchCompanies() {

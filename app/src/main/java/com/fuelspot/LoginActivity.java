@@ -450,8 +450,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 userDisplayLanguage = obj.getString("language");
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                                getVariables(prefs);
-
                                 Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 notLogged.setVisibility(View.GONE);
                                 new Handler().postDelayed(new Runnable() {

@@ -403,7 +403,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/section_stationInfo"
-                android:background="@drawable/background_main">
+                android:background="@drawable/round_layout">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/userPhoto"
@@ -526,8 +526,8 @@
                     android:layout_below="@+id/editTextPhone"
                     android:layout_alignStart="@+id/dummyImage3"
                     android:layout_marginTop="8dp"
-                    android:scaleType="fitStart"
                     android:contentDescription="@string/birthday"
+                    android:scaleType="fitStart"
                     app:srcCompat="@drawable/event_edit_date" />
 
                 <TextView

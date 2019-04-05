@@ -336,15 +336,12 @@ public class ProfileEditActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    editor.apply();
-                                    Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
-                                    finish();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                editor.apply();
+                                Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
@@ -371,6 +368,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                 params.put("phoneNumber", userPhoneNumber);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "");
                 }
                 params.put("gender", gender);
                 params.put("birthday", birthday);

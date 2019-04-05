@@ -1410,12 +1410,18 @@ public class StationDetails extends AppCompatActivity {
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
                 if (raporDetayi != null && raporDetayi.length() > 0) {
                     params.put("details", raporDetayi);
+                } else {
+                    params.put("details", "");
                 }
                 if (fiyatlar != null && fiyatlar.length() > 0) {
                     params.put("prices", fiyatlar);
+                } else {
+                    params.put("prices", "");
                 }
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "");
                 }
 
                 //returning parameters

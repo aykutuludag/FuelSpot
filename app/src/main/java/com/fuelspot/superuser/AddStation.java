@@ -48,12 +48,10 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.companyList;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 
 public class AddStation extends AppCompatActivity {
@@ -95,7 +93,6 @@ public class AddStation extends AppCompatActivity {
         }
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        getSuperVariables(prefs);
         requestQueue = Volley.newRequestQueue(this);
 
         mMapView = findViewById(R.id.mapView);
@@ -213,7 +210,6 @@ public class AddStation extends AppCompatActivity {
                             MainActivity.userlon = String.valueOf(arg0.getLongitude());
                             prefs.edit().putString("lat", MainActivity.userlat).apply();
                             prefs.edit().putString("lon", MainActivity.userlon).apply();
-                            getVariables(prefs);
                             updateMapObject();
                         }
                     }

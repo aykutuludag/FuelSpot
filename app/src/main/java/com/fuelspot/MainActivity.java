@@ -508,8 +508,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         carbonEmission = item.getVehicleEmission();
         prefs.edit().putInt("carbonEmission", carbonEmission).apply();
-
-        getVariables(prefs);
     }
 
     private void fetchCompanies() {

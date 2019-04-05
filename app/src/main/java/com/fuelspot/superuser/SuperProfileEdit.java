@@ -310,21 +310,18 @@ public class SuperProfileEdit extends AppCompatActivity {
 
     private void updateUserInfo() {
         final ProgressDialog loading = ProgressDialog.show(SuperProfileEdit.this, getString(R.string.profile_updating), getString(R.string.please_wait), false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    editor.apply();
-                                    Toast.makeText(SuperProfileEdit.this, response, Toast.LENGTH_LONG).show();
-                                    finish();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(SuperProfileEdit.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                editor.apply();
+                                Toast.makeText(SuperProfileEdit.this, response, Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(SuperProfileEdit.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(SuperProfileEdit.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
@@ -351,6 +348,8 @@ public class SuperProfileEdit extends AppCompatActivity {
                 params.put("phoneNumber", userPhoneNumber);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "");
                 }
                 params.put("gender", gender);
                 params.put("birthday", birthday);

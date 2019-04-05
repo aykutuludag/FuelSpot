@@ -31,7 +31,6 @@ import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.vehicleID;
@@ -143,7 +142,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         prefs.edit().putInt("carbonEmission", carbonEmission).apply();
 
         notifyDataSetChanged();
-        getVariables(prefs);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

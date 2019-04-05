@@ -415,8 +415,6 @@ public class AddFuel extends AppCompatActivity {
 
         carbonEmission = item.getVehicleEmission();
         prefs.edit().putInt("carbonEmission", carbonEmission).apply();
-
-        getVariables(prefs);
     }
 
     public void loadLayout() {
@@ -741,6 +739,8 @@ public class AddFuel extends AppCompatActivity {
                 params.put("currency", String.valueOf(currencyCode));
                 if (bitmap != null) {
                     params.put("billPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("billPhoto", "");
                 }
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
                 //returning parameters

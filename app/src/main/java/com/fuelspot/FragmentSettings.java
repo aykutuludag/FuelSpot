@@ -71,7 +71,6 @@ import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.userCountry;
@@ -297,8 +296,6 @@ public class FragmentSettings extends Fragment {
                                 String dummy3 = "% " + df.format(TAX_ELECTRICITY * 100f);
                                 textViewElectricityTax.setText(dummy3);
 
-                                getVariables(prefs);
-
                                 if (isSuperUser) {
                                     Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.pager), getString(R.string.update_tax_success), Snackbar.LENGTH_LONG);
                                     snackBar.show();
@@ -423,6 +420,8 @@ public class FragmentSettings extends Fragment {
                         params.put("message", feedbackMessage);
                         if (bitmap != null) {
                             params.put("screenshot", getStringImage(bitmap));
+                        } else {
+                            params.put("screenshot", "");
                         }
                         params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 

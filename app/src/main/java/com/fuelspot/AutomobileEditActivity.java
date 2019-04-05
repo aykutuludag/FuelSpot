@@ -70,7 +70,6 @@ import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
@@ -117,9 +116,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
 
         SharedPreferences prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        requestQueue = Volley.newRequestQueue(this);
         editor = prefs.edit();
-        getVariables(prefs);
+        requestQueue = Volley.newRequestQueue(this);
 
         // ProgressDialogs
         loadingUpdate = new ProgressDialog(AutomobileEditActivity.this);
@@ -342,16 +340,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     @Override
                     public void onResponse(String response) {
                         loadingUpdate.dismiss();
-
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_update_success), Toast.LENGTH_LONG).show();
-                                    finish();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                editor.apply();
+                                Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_update_success), Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
@@ -373,6 +368,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
                 //Adding parameters
                 params.put("vehicleID", String.valueOf(vehicleID));
+                params.put("username", username);
                 params.put("carBrand", carBrand);
                 params.put("carModel", carModel);
                 params.put("fuelPri", String.valueOf(fuelPri));
@@ -380,6 +376,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 params.put("kilometer", String.valueOf(kilometer));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("carPhoto", "");
                 }
                 params.put("plate", plateNo);
                 params.put("avgCons", String.valueOf(averageCons));

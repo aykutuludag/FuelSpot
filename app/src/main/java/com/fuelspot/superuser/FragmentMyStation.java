@@ -27,7 +27,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.fuelspot.Application;
-import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
 import com.fuelspot.adapter.MarkerAdapter;
@@ -147,7 +146,6 @@ public class FragmentMyStation extends Fragment {
                                 userlon = String.valueOf(locCurrent.getLongitude());
                                 prefs.edit().putString("lat", userlat).apply();
                                 prefs.edit().putString("lon", userlon).apply();
-                                MainActivity.getVariables(prefs);
 
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 

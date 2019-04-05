@@ -373,7 +373,11 @@ public class PurchaseDetails extends AppCompatActivity {
                 params.put("purchaseID", String.valueOf(purchaseID));
                 params.put("username", username);
                 params.put("plateNO", plakaNo);
-                params.put("billPhoto", getStringImage(bitmap));
+                if (bitmap != null) {
+                    params.put("billPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("billPhoto", "");
+                }
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

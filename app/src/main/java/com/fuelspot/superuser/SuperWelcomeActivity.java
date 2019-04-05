@@ -121,7 +121,6 @@ import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
@@ -278,7 +277,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 prefs.edit().putString("lat", userlat).apply();
                                 prefs.edit().putString("lon", userlon).apply();
                                 Localization();
-                                getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(5000);
@@ -431,9 +429,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 userDisplayLanguage = obj.getString("language");
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
-                                getVariables(prefs);
-                                getSuperVariables(prefs);
-
                                 Toast.makeText(SuperWelcomeActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 registerLayout.setVisibility(View.GONE);
                                 background.setVisibility(View.INVISIBLE);
@@ -571,8 +566,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
                                 MainActivity.TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
                                 prefs.edit().putFloat("taxElectricity", MainActivity.TAX_ELECTRICITY).apply();
-
-                                getVariables(prefs);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -751,8 +744,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
-
-        getSuperVariables(prefs);
     }
 
     private void layout4() {
@@ -1036,7 +1027,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             MainActivity.userlon = String.valueOf(arg0.getLongitude());
                             prefs.edit().putString("lat", MainActivity.userlat).apply();
                             prefs.edit().putString("lon", MainActivity.userlon).apply();
-                            getVariables(prefs);
                             updateMapObject();
                         }
                     }
@@ -1270,18 +1260,11 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     @Override
                     public void onResponse(String res) {
                         if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    updateSuperUser();
-                                    break;
-                                case "Fail":
-                                    loading.dismiss();
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
-                                default:
-                                    loading.dismiss();
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
+                            if (res.equals("Success")) {
+                                updateSuperUser();
+                            } else {
+                                loading.dismiss();
+                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             loading.dismiss();
@@ -1323,16 +1306,13 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     public void onResponse(String res) {
                         loading.dismiss();
                         if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_SHORT).show();
-                                    welcome2.setVisibility(View.GONE);
-                                    welcome3.setVisibility(View.VISIBLE);
-                                    layout5();
-                                    break;
-                                default:
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
+                            if (res.equals("Success")) {
+                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_SHORT).show();
+                                welcome2.setVisibility(View.GONE);
+                                welcome3.setVisibility(View.VISIBLE);
+                                layout5();
+                            } else {
+                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
@@ -1357,6 +1337,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("email", email);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "");
                 }
                 params.put("gender", gender);
                 params.put("birthday", birthday);

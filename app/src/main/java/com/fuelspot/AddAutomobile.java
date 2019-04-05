@@ -68,7 +68,6 @@ import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userAutomobileList;
@@ -361,6 +360,8 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 params.put("fuelSec", String.valueOf(dummyFuelSec));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("carPhoto", "");
                 }
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
@@ -465,8 +466,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         carbonEmission = item.getVehicleEmission();
         prefs.edit().putInt("carbonEmission", carbonEmission).apply();
-
-        getVariables(prefs);
     }
 
     private String getStringImage(Bitmap bmp) {

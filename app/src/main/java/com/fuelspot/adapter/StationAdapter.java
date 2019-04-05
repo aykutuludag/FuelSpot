@@ -32,7 +32,6 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
@@ -143,7 +142,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
 
         notifyDataSetChanged();
-        getSuperVariables(prefs);
         Toast.makeText(mContext, "İSTASYON SEÇİLDİ: " + superStationName, Toast.LENGTH_SHORT).show();
     }
 

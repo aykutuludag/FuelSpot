@@ -193,7 +193,7 @@
     <string name="remove_vehicle">Otomobili sil?</string>
     <string name="delete">Sil</string>
     <string name="at_least_2_vehicle">Araç silebilmek için en az 2 aracınız olmalıdır.</string>
-    <string name="vehicle_update_success">Araç başarıyla güncellenddi</string>
+    <string name="vehicle_update_success">Araç başarıyla güncellendi…</string>
     <string name="vehicle_delete_success">Araç silindi…</string>
     <!-- AutomobileEdit-->
 

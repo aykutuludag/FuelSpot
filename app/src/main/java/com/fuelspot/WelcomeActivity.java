@@ -87,7 +87,6 @@ import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.gender;
-import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
@@ -193,7 +192,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 prefs.edit().putString("lat", userlat).apply();
                                 prefs.edit().putString("lon", userlon).apply();
                                 Localization();
-                                getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(5000);
@@ -340,6 +338,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("phoneNumber", userPhoneNumber);
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "");
                 }
                 params.put("gender", gender);
                 params.put("birthday", birthday);
@@ -378,8 +378,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
                                 TAX_ELECTRICITY = (float) obj.getDouble("electricityTax");
                                 prefs.edit().putFloat("taxElectricity", TAX_ELECTRICITY).apply();
-
-                                getVariables(prefs);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -663,7 +661,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                     Toast.makeText(WelcomeActivity.this, getString(R.string.plate_no_exist), Toast.LENGTH_LONG).show();
                                     break;
                                 case "Success":
-                                    getVariables(prefs);
                                     layout4.setVisibility(View.VISIBLE);
                                     layout3.setVisibility(View.GONE);
 
@@ -700,6 +697,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("fuelSec", String.valueOf(fuelSec));
                 if (bitmap != null) {
                     params.put("carPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("carPhoto", "");
                 }
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
@@ -1192,7 +1191,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 prefs.edit().putString("lat", userlat).apply();
                                 prefs.edit().putString("lon", userlon).apply();
                                 Localization();
-                                getVariables(prefs);
                             } else {
                                 LocationRequest mLocationRequest = new LocationRequest();
                                 mLocationRequest.setInterval(5000);

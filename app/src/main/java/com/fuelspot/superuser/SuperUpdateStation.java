@@ -54,7 +54,6 @@ import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
-import static com.fuelspot.superuser.SuperMainActivity.getSuperVariables;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
@@ -752,8 +751,6 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
-
-        getSuperVariables(prefs);
     }
 
     private void coloredBars(int color1, int color2) {
