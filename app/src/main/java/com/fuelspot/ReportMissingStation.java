@@ -140,14 +140,12 @@ public class ReportMissingStation extends AppCompatActivity {
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(ReportMissingStation.this, getString(R.string.report_send_success), Toast.LENGTH_SHORT).show();
-                                    finish();
-                                    break;
-                                default:
-                                    Toast.makeText(ReportMissingStation.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                Toast.makeText(ReportMissingStation.this, getString(R.string.report_send_success), Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(ReportMissingStation.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+
                             }
                         } else {
                             Toast.makeText(ReportMissingStation.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
@@ -171,6 +169,8 @@ public class ReportMissingStation extends AppCompatActivity {
                 params.put("stationID", String.valueOf(-1));
                 params.put("report", report);
                 params.put("details", reportDetails);
+                params.put("photo", "");
+                params.put("prices", "");
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
@@ -221,6 +221,12 @@ public class ReportMissingStation extends AppCompatActivity {
                 LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                LatLng dmmy = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
+                dummyLocation = String.format(Locale.getDefault(), "%.5f", dmmy.latitude) + ";" + String.format(Locale.getDefault(), "%.5f", dmmy.longitude);
+                MarkerOptions mOptions = new MarkerOptions().position(dmmy).title("İstasyon").snippet(dummyLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
+                Marker m = googleMap.addMarker(mOptions);
+                m.showInfoWindow();
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override

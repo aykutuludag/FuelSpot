@@ -30,7 +30,7 @@ import com.fuelspot.Application;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
 import com.fuelspot.adapter.MarkerAdapter;
-import com.fuelspot.model.MarkerItem;
+import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -62,13 +62,18 @@ import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
+import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
+import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
+import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
+import static com.fuelspot.superuser.SuperMainActivity.superStationCountry;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 import static com.fuelspot.superuser.SuperMainActivity.superStationLocation;
 import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
@@ -95,6 +100,7 @@ public class FragmentMyStation extends Fragment {
     private View rootView;
     private GoogleMap googleMap;
     NestedScrollView scrollView;
+    float distanceInMeters;
 
     public static FragmentMyStation newInstance() {
         Bundle args = new Bundle();
@@ -277,7 +283,7 @@ public class FragmentMyStation extends Fragment {
         Location loc2 = new Location("");
         loc2.setLatitude(Double.parseDouble(superStationLocation.split(";")[0]));
         loc2.setLongitude(Double.parseDouble(superStationLocation.split(";")[1]));
-        float distanceInMeters = loc1.distanceTo(loc2);
+        distanceInMeters = loc1.distanceTo(loc2);
         textDistance.setText((int) distanceInMeters + " m");
 
         prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
@@ -322,13 +328,24 @@ public class FragmentMyStation extends Fragment {
 
     private void addMarker() {
         // Add marker
-        MarkerItem info = new MarkerItem();
+        StationItem info = new StationItem();
         info.setID(superStationID);
         info.setStationName(superStationName);
+        info.setVicinity(superStationAddress);
+        info.setCountryCode(superStationCountry);
+        info.setLocation(superStationLocation);
+        info.setGoogleMapID(superGoogleID);
+        info.setFacilities(superFacilities);
+        info.setLicenseNo(superLicenseNo);
+        info.setOwner(username);
         info.setPhotoURL(superStationLogo);
         info.setGasolinePrice(ownedGasolinePrice);
         info.setDieselPrice(ownedDieselPrice);
         info.setLpgPrice(ownedLPGPrice);
+        info.setElectricityPrice(ownedElectricityPrice);
+        info.setIsVerified(isStationVerified);
+        info.setLastUpdated(superLastUpdate);
+        info.setDistance((int) distanceInMeters);
 
         String[] stationKonum = superStationLocation.split(";");
         LatLng sydney = new LatLng(Double.parseDouble(stationKonum[0]), Double.parseDouble(stationKonum[1]));

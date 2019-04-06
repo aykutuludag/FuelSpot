@@ -96,6 +96,7 @@ public class FragmentSettings extends Fragment {
     private RequestQueue requestQueue;
     private View rootView;
     private CheckBox geofenceCheckBox;
+    DecimalFormat df = new DecimalFormat("##.#");
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -181,16 +182,20 @@ public class FragmentSettings extends Fragment {
             }
 
             textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
-            textViewGasolineTax.setText("% " + (int) (TAX_GASOLINE * 100f));
+            String dummy0 = "% " + df.format(TAX_GASOLINE * 100f);
+            textViewGasolineTax.setText(dummy0);
 
             textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
-            textViewDieselTax.setText("% " + (int) (TAX_DIESEL * 100f));
+            String dummy1 = "% " + df.format(TAX_DIESEL * 100f);
+            textViewDieselTax.setText(dummy1);
 
             textViewLPGTax = rootView.findViewById(R.id.priceLPG);
-            textViewLPGTax.setText("% " + (int) (TAX_LPG * 100f));
+            String dummy2 = "% " + df.format(TAX_LPG * 100f);
+            textViewLPGTax.setText(dummy2);
 
             textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
-            textViewElectricityTax.setText("% " + (int) (TAX_ELECTRICITY * 100f));
+            String dummy3 = "% " + df.format(TAX_ELECTRICITY * 100f);
+            textViewElectricityTax.setText(dummy3);
 
             Button buttonTax = rootView.findViewById(R.id.button_tax);
             buttonTax.setOnClickListener(new View.OnClickListener() {
@@ -273,8 +278,6 @@ public class FragmentSettings extends Fragment {
                             try {
                                 JSONArray res = new JSONArray(response);
                                 JSONObject obj = res.getJSONObject(0);
-
-                                DecimalFormat df = new DecimalFormat("##.#");
 
                                 TAX_GASOLINE = (float) obj.getDouble("gasolineTax");
                                 prefs.edit().putFloat("taxGasoline", TAX_GASOLINE).apply();

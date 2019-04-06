@@ -3,6 +3,7 @@ package com.fuelspot;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -37,7 +38,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.adapter.StationAdapter;
-import com.fuelspot.model.MarkerItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -72,6 +72,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -315,6 +317,13 @@ public class FragmentStations extends Fragment {
 
                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                 googleMap.setInfoWindowAdapter(customInfoWindow);
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        StationItem infoWindowData = (StationItem) marker.getTag();
+                        openStation(infoWindowData);
+                    }
+                });
             }
         });
     }
@@ -647,14 +656,6 @@ public class FragmentStations extends Fragment {
 
     private void addMarker(final StationItem sItem) {
         // Add marker
-        MarkerItem info = new MarkerItem();
-        info.setID(sItem.getID());
-        info.setStationName(sItem.getStationName());
-        info.setPhotoURL(sItem.getPhotoURL());
-        info.setGasolinePrice(sItem.getGasolinePrice());
-        info.setDieselPrice(sItem.getDieselPrice());
-        info.setLpgPrice(sItem.getLpgPrice());
-
         String[] stationKonum = sItem.getLocation().split(";");
         LatLng sydney = new LatLng(Double.parseDouble(stationKonum[0]), Double.parseDouble(stationKonum[1]));
 
@@ -666,7 +667,7 @@ public class FragmentStations extends Fragment {
 
         }
         Marker m = googleMap.addMarker(mOptions);
-        m.setTag(info);
+        m.setTag(sItem);
         markers.add(m);
     }
 
@@ -841,6 +842,42 @@ public class FragmentStations extends Fragment {
         for (int i = 0; i < shortStationList.size(); i++) {
             addMarker(shortStationList.get(i));
             markers.get(0).showInfoWindow();
+        }
+    }
+
+    private void openStation(StationItem feedItemList) {
+        Intent intent = new Intent(getActivity(), StationDetails.class);
+        intent.putExtra("STATION_ID", feedItemList.getID());
+        intent.putExtra("STATION_NAME", feedItemList.getStationName());
+        intent.putExtra("STATION_VICINITY", feedItemList.getVicinity());
+        intent.putExtra("STATION_LOCATION", feedItemList.getLocation());
+        intent.putExtra("STATION_DISTANCE", feedItemList.getDistance());
+        intent.putExtra("STATION_LASTUPDATED", feedItemList.getLastUpdated());
+        intent.putExtra("STATION_GASOLINE", feedItemList.getGasolinePrice());
+        intent.putExtra("STATION_DIESEL", feedItemList.getDieselPrice());
+        intent.putExtra("STATION_LPG", feedItemList.getLpgPrice());
+        intent.putExtra("STATION_ELECTRIC", feedItemList.getElectricityPrice());
+        intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
+        intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
+        intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
+        showAds(intent);
+    }
+
+    private void showAds(Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            //Facebook ads doesnt loaded he will see AdMob
+            startActivity(intent);
+            admobInterstitial.show();
+            adCount++;
+            admobInterstitial = null;
+        } else {
+            // Ads doesn't loaded.
+            startActivity(intent);
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(getActivity(), getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
         }
     }
 

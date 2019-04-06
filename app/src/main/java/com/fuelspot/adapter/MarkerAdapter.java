@@ -10,7 +10,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
-import com.fuelspot.model.MarkerItem;
+import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
@@ -19,7 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context mContext;
-    RequestOptions options;
+    private RequestOptions options;
 
     public MarkerAdapter(Context ctx) {
         mContext = ctx;
@@ -37,39 +37,39 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
     @Override
-    public View getInfoContents(Marker marker) {
+    public View getInfoContents(final Marker marker) {
         View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.popup_marker, null);
+        final StationItem infoWindowData = (StationItem) marker.getTag();
 
-        TextView sName = view.findViewById(R.id.station_name);
-        CircleImageView sLogo = view.findViewById(R.id.station_logo);
-        TextView priceOne = view.findViewById(R.id.priceGasoline);
-        TextView priceTwo = view.findViewById(R.id.priceDiesel);
-        TextView priceThree = view.findViewById(R.id.priceLPG);
+        if (infoWindowData != null) {
+            TextView sName = view.findViewById(R.id.station_name);
+            CircleImageView sLogo = view.findViewById(R.id.station_logo);
+            TextView priceOne = view.findViewById(R.id.priceGasoline);
+            TextView priceTwo = view.findViewById(R.id.priceDiesel);
+            TextView priceThree = view.findViewById(R.id.priceLPG);
 
-        MarkerItem infoWindowData = (MarkerItem) marker.getTag();
+            sName.setText(infoWindowData.getStationName());
 
-        sName.setText(infoWindowData.getStationName());
+            Glide.with(mContext).load(infoWindowData.getPhotoURL()).apply(options).into(sLogo);
 
-        Glide.with(mContext).load(infoWindowData.getPhotoURL()).apply(options).into(sLogo);
+            if (infoWindowData.getGasolinePrice() != 0) {
+                priceOne.setText(String.valueOf(infoWindowData.getGasolinePrice()));
+            } else {
+                priceOne.setText("-");
+            }
 
-        if (infoWindowData.getGasolinePrice() != 0) {
-            priceOne.setText(String.valueOf(infoWindowData.getGasolinePrice()));
-        } else {
-            priceOne.setText("-");
+            if (infoWindowData.getDieselPrice() != 0) {
+                priceTwo.setText(String.valueOf(infoWindowData.getDieselPrice()));
+            } else {
+                priceTwo.setText("-");
+            }
+
+            if (infoWindowData.getLpgPrice() != 0) {
+                priceThree.setText(String.valueOf(infoWindowData.getLpgPrice()));
+            } else {
+                priceThree.setText("-");
+            }
         }
-
-        if (infoWindowData.getDieselPrice() != 0) {
-            priceTwo.setText(String.valueOf(infoWindowData.getDieselPrice()));
-        } else {
-            priceTwo.setText("-");
-        }
-
-        if (infoWindowData.getLpgPrice() != 0) {
-            priceThree.setText(String.valueOf(infoWindowData.getLpgPrice()));
-        } else {
-            priceThree.setText("-");
-        }
-
         return view;
     }
 }

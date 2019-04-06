@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background_marker"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/round_layout_white"
     android:gravity="center"
     android:padding="2dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/station_logo"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="4dp" />
+    <RelativeLayout
+        android:id="@+id/marker_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/station_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/station_logo"
-        android:layout_alignStart="@id/station_logo"
-        android:layout_alignEnd="@id/station_logo"
-        android:layout_marginTop="2dp"
-        android:fontFamily="@font/gotham_black"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="#212121" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/station_logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/default_station" />
+
+        <TextView
+            android:id="@+id/station_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/station_logo"
+            android:layout_alignStart="@id/station_logo"
+            android:layout_alignEnd="@id/station_logo"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/gotham_black"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/station_logo">
+        android:layout_toEndOf="@+id/marker_layout">
 
         <ImageView
             android:id="@+id/gasoline"
@@ -106,7 +115,6 @@
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />
-
     </RelativeLayout>
 
 </RelativeLayout>
