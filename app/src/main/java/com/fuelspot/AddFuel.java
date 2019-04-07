@@ -38,7 +38,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -191,8 +190,8 @@ public class AddFuel extends AppCompatActivity {
         //Creating a Request Queue
         requestQueue = Volley.newRequestQueue(AddFuel.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        ;
 
         // ProgressDialogs
         stationFetching = new ProgressDialog(AddFuel.this);

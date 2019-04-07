@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.NewsDetail;
@@ -71,8 +70,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .centerCrop()
                 .placeholder(R.drawable.default_news)
                 .error(R.drawable.default_news)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(mContext).load(feedItem.getPhoto()).apply(options).into(viewHolder.background);
 
         // Handle click event on both title and image click

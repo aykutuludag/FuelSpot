@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -371,11 +372,11 @@ public class FragmentStations extends Fragment {
                 searchStations();
             } else {
                 isMapUpdating = false;
-                Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         } else {
             isMapUpdating = false;
-            Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -412,28 +413,26 @@ public class FragmentStations extends Fragment {
                                     fullStationList.add(item);
                                 }
 
-                                if (fullStationList.size() > 0) {
-                                    Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
-                                    // Stations fetched. Visible recyclerview
-                                    mRecyclerView.setVisibility(View.VISIBLE);
+                                Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
+                                // Stations fetched. Visible recyclerview
+                                mRecyclerView.setVisibility(View.VISIBLE);
 
-                                    if (fullStationList.size() > 5) {
-                                        seeAllStations.setVisibility(View.VISIBLE);
-                                    } else {
-                                        seeAllStations.setVisibility(View.GONE);
-                                    }
+                                if (fullStationList.size() > 5) {
+                                    seeAllStations.setVisibility(View.VISIBLE);
+                                } else {
+                                    seeAllStations.setVisibility(View.GONE);
+                                }
 
-                                    // Sort by distnce
-                                    whichOrder = 4;
-                                    sortBy(whichOrder);
-
-                                    // Create a fence
-                                    if (!isSuperUser && isGeofenceOpen) {
-                                        if (userAutomobileList != null && userAutomobileList.size() > 0) {
-                                            AlarmBuilder(getActivity());
-                                        }
+                                // Create a fence
+                                if (!isSuperUser && isGeofenceOpen) {
+                                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                                        AlarmBuilder(getActivity());
                                     }
                                 }
+
+                                // Sort by distnce
+                                whichOrder = 4;
+                                sortBy(whichOrder);
                             } catch (JSONException e) {
                                 noStationError.setVisibility(View.VISIBLE);
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
@@ -631,7 +630,14 @@ public class FragmentStations extends Fragment {
 
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
-        addMarkers();
+
+        // We are waiting for loading logos
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                addMarkers();
+            }
+        }, 500);
     }
 
     private void addMarkers() {

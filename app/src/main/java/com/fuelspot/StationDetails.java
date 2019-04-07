@@ -57,7 +57,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -384,7 +383,7 @@ public class StationDetails extends AppCompatActivity {
         // if stationVerified == 1, this section shows up!
         verifiedSection = findViewById(R.id.verifiedStation);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_station).error(R.drawable.default_station)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         // Nerden gelirse gelsin stationID boş olamaz.
         choosenStationID = getIntent().getIntExtra("STATION_ID", 0);

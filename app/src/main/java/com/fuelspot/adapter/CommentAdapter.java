@@ -28,7 +28,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
@@ -356,8 +355,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 .centerCrop()
                 .placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
 
         viewHolder.rating.setRating(feedItem.getRating());

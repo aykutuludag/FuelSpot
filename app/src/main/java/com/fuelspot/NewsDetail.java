@@ -23,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -93,7 +92,7 @@ public class NewsDetail extends AppCompatActivity {
         textViewSourceURL = findViewById(R.id.newsSource);
 
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_news).error(R.drawable.default_news)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         if (title != null && title.length() > 0) {
             loadNews();

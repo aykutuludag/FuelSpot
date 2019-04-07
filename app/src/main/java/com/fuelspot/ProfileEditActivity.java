@@ -42,9 +42,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.analytics.HitBuilders;
@@ -177,7 +177,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         //UserPhoto
         userPic = findViewById(R.id.userPhoto);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
         Glide.with(this).load(photo).apply(options).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override

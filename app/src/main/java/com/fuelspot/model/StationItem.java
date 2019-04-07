@@ -1,5 +1,7 @@
 package com.fuelspot.model;
 
+import android.graphics.drawable.Drawable;
+
 public class StationItem {
 
     private int ID;
@@ -19,6 +21,7 @@ public class StationItem {
     private int isVerified;
     private String lastUpdated;
     private int distance;
+    private Drawable stationLogoDrawable;
 
     public int getID() {
         return ID;
@@ -154,5 +157,13 @@ public class StationItem {
 
     public void setLastUpdated(String lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public Drawable getStationLogoDrawable() {
+        return stationLogoDrawable;
+    }
+
+    public void setStationLogoDrawable(Drawable stationLogoDrawable) {
+        this.stationLogoDrawable = stationLogoDrawable;
     }
 }

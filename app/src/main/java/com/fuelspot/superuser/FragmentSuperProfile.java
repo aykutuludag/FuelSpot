@@ -1,8 +1,11 @@
 package com.fuelspot.superuser;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.fuelspot.Application;
 import com.fuelspot.R;
 import com.fuelspot.UserFavorites;
-import com.fuelspot.WebViewActivity;
 import com.fuelspot.adapter.StationAdapter;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -63,7 +65,6 @@ public class FragmentSuperProfile extends Fragment {
 
             headerView = rootView.findViewById(R.id.header_profile);
 
-
             ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
             updateUser.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,8 +95,8 @@ public class FragmentSuperProfile extends Fragment {
         CircleImageView userProfileHolder = headerView.findViewById(R.id.profileImage);
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
         if (getActivity() != null && userProfileHolder != null) {
             Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
         }
@@ -116,9 +117,13 @@ public class FragmentSuperProfile extends Fragment {
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("URL", "https://fuelspot.com.tr/help-for-superuser");
-                startActivity(intent);
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.enableUrlBarHiding();
+                builder.setShowTitle(true);
+                builder.setToolbarColor(Color.parseColor("#FF7439"));
+                customTabsIntent.intent.setPackage("com.android.chrome");
+                customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/help-for-superuser"));
             }
         });
 

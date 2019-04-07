@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
@@ -109,8 +108,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
         viewHolder.campaignTitle.setText(feedItem.getCampaignName());
 
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(mContext).load(feedItem.getCampaignPhoto()).apply(options).into(viewHolder.campaignPhoto);
 
         // Handle click event on image click

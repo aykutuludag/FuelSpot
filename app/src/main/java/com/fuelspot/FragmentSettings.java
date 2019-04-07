@@ -44,7 +44,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -97,6 +96,7 @@ public class FragmentSettings extends Fragment {
     private View rootView;
     private CheckBox geofenceCheckBox;
     DecimalFormat df = new DecimalFormat("##.#");
+    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -126,7 +126,11 @@ public class FragmentSettings extends Fragment {
 
             requestQueue = Volley.newRequestQueue(getActivity());
             options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
+            builder.enableUrlBarHiding();
+            builder.setShowTitle(true);
+            builder.setToolbarColor(Color.parseColor("#FF7439"));
 
             TextView countryText = rootView.findViewById(R.id.textViewCountryName);
             countryText.setText(userCountryName);
@@ -249,9 +253,9 @@ public class FragmentSettings extends Fragment {
             openTerms.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                    intent.putExtra("URL", "https://fuelspot.com.tr/terms-and-conditions");
-                    startActivity(intent);
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.intent.setPackage("com.android.chrome");
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/terms-and-conditions"));
                 }
             });
 
@@ -259,9 +263,9 @@ public class FragmentSettings extends Fragment {
             openPrivacy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                    intent.putExtra("URL", "https://fuelspot.com.tr/privacy");
-                    startActivity(intent);
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.intent.setPackage("com.android.chrome");
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/privacy"));
                 }
             });
         }

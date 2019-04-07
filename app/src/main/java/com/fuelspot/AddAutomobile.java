@@ -38,7 +38,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -122,7 +121,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         // ProgressDialogs
         loading = new ProgressDialog(AddAutomobile.this);

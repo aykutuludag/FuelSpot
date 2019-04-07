@@ -300,25 +300,36 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null) {
-                //NAME
-                MainActivity.name = acct.getDisplayName();
-                prefs.edit().putString("Name", MainActivity.name).apply();
-
-                //USERNAME
-                String tmp0 = name.toLowerCase();
-                String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
-                        .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
-                String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
-                if (tmpusername.length() > 30) {
-                    username = tmpusername.substring(0, 30);
-                } else {
-                    username = tmpusername;
-                }
-                prefs.edit().putString("UserName", username).apply();
-
                 //EMAİL
                 email = acct.getEmail();
                 prefs.edit().putString("Email", email).apply();
+
+                //NAME
+                name = acct.getDisplayName();
+                if (name != null) {
+                    if (name.contains("@")) {
+                        name = name.split("@")[0];
+                    }
+                    prefs.edit().putString("Name", name).apply();
+
+                    //USERNAME
+                    String tmp0 = name.toLowerCase();
+                    String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                            .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                    String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
+                    if (tmpusername.length() > 30) {
+                        username = tmpusername.substring(0, 30);
+                    } else {
+                        username = tmpusername;
+                    }
+                    prefs.edit().putString("UserName", username).apply();
+                } else {
+                    name = email.split("@")[0];
+                    username = name;
+
+                    prefs.edit().putString("Name", name).apply();
+                    prefs.edit().putString("UserName", username).apply();
+                }
 
                 //PHOTO
                 if (acct.getPhotoUrl() != null && acct.getPhotoUrl().toString().length() > 0) {
@@ -352,26 +363,33 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject me, GraphResponse response) {
-                        System.out.println(response);
                         try {
-                            name = me.optString("name");
-                            prefs.edit().putString("Name", name).apply();
-
-                            //USERNAME
-                            String tmp0 = name.toLowerCase();
-                            String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
-                                    .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
-                            String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
-                            if (tmpusername.length() > 30) {
-                                username = tmpusername.substring(0, 30);
-                            } else {
-                                username = tmpusername;
-                            }
-                            prefs.edit().putString("UserName", username).apply();
-                            //USERNAME
-
                             email = me.getString("email");
                             prefs.edit().putString("Email", email).apply();
+
+                            name = me.optString("name");
+                            if (name != null) {
+                                prefs.edit().putString("Name", name).apply();
+
+                                //USERNAME
+                                String tmp0 = name.toLowerCase();
+                                String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                                        .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                                String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
+                                if (tmpusername.length() > 30) {
+                                    username = tmpusername.substring(0, 30);
+                                } else {
+                                    username = tmpusername;
+                                }
+                                prefs.edit().putString("UserName", username).apply();
+                                //USERNAME
+                            } else {
+                                name = email.split("@")[0];
+                                username = name;
+
+                                prefs.edit().putString("Name", name).apply();
+                                prefs.edit().putString("UserName", username).apply();
+                            }
 
                             String id = me.getString("id");
                             photo = "https://graph.facebook.com/" + id + "/picture?type=normal";
@@ -416,7 +434,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println(response);
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
@@ -425,6 +442,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 name = obj.getString("name");
                                 prefs.edit().putString("Name", name).apply();
+
+                                username = obj.getString("username");
+                                prefs.edit().putString("UserName", username).apply();
 
                                 email = obj.getString("email");
                                 prefs.edit().putString("Email", email).apply();

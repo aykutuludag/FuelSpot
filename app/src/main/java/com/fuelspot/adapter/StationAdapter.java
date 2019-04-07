@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
@@ -54,7 +59,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     private String whichScreen;
     private Context mContext;
     private SharedPreferences prefs;
-
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -172,16 +176,26 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        StationItem feedItem = feedItemList.get(i);
+        final StationItem feedItem = feedItemList.get(i);
 
         //Station Icon
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.photo_placeholder)
                 .error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
-        Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).into(viewHolder.stationPic);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                feedItem.setStationLogoDrawable(resource);
+                return false;
+            }
+        }).into(viewHolder.stationPic);
 
         // Setting stationName
         viewHolder.stationName.setText(feedItem.getStationName());

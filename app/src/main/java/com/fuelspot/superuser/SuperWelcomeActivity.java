@@ -52,7 +52,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -195,7 +194,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         getSuperVariables(prefs);
         requestQueue = Volley.newRequestQueue(SuperWelcomeActivity.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         // Initialize map
         MapsInitializer.initialize(this.getApplicationContext());

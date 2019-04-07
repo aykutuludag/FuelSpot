@@ -30,9 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -146,8 +146,8 @@ public class PurchaseDetails extends AppCompatActivity {
         tarih = findViewById(R.id.purchaseTime);
 
         options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.HIGH);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
         Glide.with(this).load(billPhoto).apply(options).into(fatura);
         fatura.setOnClickListener(new View.OnClickListener() {
             @Override
