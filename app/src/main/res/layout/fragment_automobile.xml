@@ -1,128 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_vehicle"
+    android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/layout_automobile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/userRegularLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <include
-                layout="@layout/header_automobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <RelativeLayout
-                android:id="@+id/containerPurchases"
+                android:id="@+id/userRegularLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="270dp"
-                android:background="@drawable/round_layout"
-                android:elevation="8dp">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/purchaseTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:text="@string/user_purchases"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="#000000" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/purchaseView"
+                <include
+                    layout="@layout/header_automobile"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/purchaseTitle" />
-
-                <Button
-                    android:id="@+id/button_seeAllPurchases"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/purchaseView"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_black"
-                    android:text="@string/see_all"
-                    android:visibility="invisible" />
+                    android:layout_height="wrap_content" />
 
                 <RelativeLayout
-                    android:id="@+id/noPurchaseLayout"
+                    android:id="@+id/containerPurchases"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/purchaseTitle"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/round_layout_white"
-                    android:visibility="gone">
+                    android:layout_marginTop="270dp"
+                    android:background="@drawable/round_layout"
+                    android:elevation="8dp">
 
                     <TextView
-                        android:id="@+id/textView20"
+                        android:id="@+id/purchaseTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_margin="8dp"
+                        android:fontFamily="@font/gotham_black"
                         android:gravity="center"
-                        android:text="@string/no_purchase_user"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                        android:textColor="#212121" />
+                        android:text="@string/user_purchases"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="#000000" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/errorImage"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/purchaseView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/purchaseTitle" />
+
+                    <Button
+                        android:id="@+id/button_seeAllPurchases"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView20"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:src="@drawable/error_nopurchase" />
+                        android:layout_below="@id/purchaseView"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/green_box"
+                        android:fontFamily="@font/gotham_black"
+                        android:text="@string/see_all"
+                        android:visibility="invisible" />
 
-                    <TextView
-                        android:id="@+id/textView21"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/noPurchaseLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/errorImage"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="center"
-                        android:text="@string/no_purchase_note"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                        android:textColor="#424242"
-                        android:textSize="12sp" />
+                        android:layout_below="@id/purchaseTitle"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/round_layout_white"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/textView20"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="@string/no_purchase_user"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                            android:textColor="#212121" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/errorImage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView20"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:src="@drawable/error_nopurchase" />
+
+                        <TextView
+                            android:id="@+id/textView21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/errorImage"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="@string/no_purchase_note"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                            android:textColor="#424242"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/userNoCarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageView"
+            <RelativeLayout
+                android:id="@+id/userNoCarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/dummy"
-                android:contentDescription="@string/add_vehicle" />
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/dummy"
+                    android:contentDescription="@string/add_vehicle" />
+            </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
@@ -239,7 +240,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         //Last updated
         if (feedItem.getLastUpdated() != null) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             try {
                 Date date = format.parse(feedItem.getLastUpdated());
                 viewHolder.lastUpdated.setReferenceTime(date.getTime());

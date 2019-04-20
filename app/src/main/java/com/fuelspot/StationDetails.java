@@ -101,12 +101,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userlat;
@@ -212,7 +212,7 @@ public class StationDetails extends AppCompatActivity {
         }
 
         //Dynamic bar colors
-        coloredBars(Color.RED, Color.TRANSPARENT);
+        coloredBars(Color.RED, Color.parseColor("#F1F1F1"));
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -221,7 +221,7 @@ public class StationDetails extends AppCompatActivity {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-        sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+        sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             favorite = ContextCompat.getDrawable(this, R.drawable.ic_fav);
@@ -636,12 +636,11 @@ public class StationDetails extends AppCompatActivity {
         webview.loadUrl(dummyUrl);
         webview.setWebViewClient(new WebViewClient() {
             @Override
-            public void onPageFinished(WebView view, String url) {
+            public void onPageFinished(final WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (!dummyUrl.equals(url)) {
+                if (url.contains("https://www.google.com/maps/@")) {
                     progressBar.setVisibility(View.GONE);
                     view.setVisibility(View.VISIBLE);
-                    view.loadUrl("javascript:document.getElementsByClassName('immersive')[0].style.visibility='hidden';");
                 }
             }
         });
@@ -676,7 +675,7 @@ public class StationDetails extends AppCompatActivity {
         }
 
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             Date date = format.parse(lastUpdated);
             textLastUpdated.setReferenceTime(date.getTime());
         } catch (ParseException e) {
@@ -1342,7 +1341,7 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (benzinFiyat[0] != 0 || dizelFiyat[0] != 0 || LPGFiyat[0] != 0 || ElektrikFiyat[0] != 0) {
-                    pricesArray[0] = "REPORT: { gasoline = " + benzinFiyat[0] + " diesel = " + dizelFiyat[0] + " lpg = " + LPGFiyat[0] + " electricity = " + ElektrikFiyat[0] + " }";
+                    pricesArray[0] = "PRICES: { gasoline= " + benzinFiyat[0] + ", diesel= " + dizelFiyat[0] + ", lpg= " + LPGFiyat[0] + ", electricity= " + ElektrikFiyat[0] + " }";
                     if (bitmap != null) {
                         sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", pricesArray[0], bitmap);
                     } else {

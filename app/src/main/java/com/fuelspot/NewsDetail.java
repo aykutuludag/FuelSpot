@@ -40,6 +40,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
+
 public class NewsDetail extends AppCompatActivity {
 
     String coverPhoto, title, content, url, sourceURL, publishDate;
@@ -156,7 +158,7 @@ public class NewsDetail extends AppCompatActivity {
         textViewBody.setText(content);
 
         if (publishDate != null && publishDate.length() > 0) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             try {
                 Date date = sdf.parse(publishDate);
                 textViewPublished.setReferenceTime(date.getTime());

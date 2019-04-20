@@ -227,8 +227,8 @@
             android:layout_marginBottom="48dp"
             android:background="@drawable/button_facebook"
             android:clickable="false"
-            android:visibility="visible"
             android:contentDescription="@string/loginWithFacebook"
+            android:visibility="visible"
             app:srcCompat="@drawable/button_facebook" />
 
         <TextView
@@ -619,9 +619,13 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/radioGroupGender"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/terms_accepted_text"
+                    android:textColor="#212121"
                     android:textSize="12sp" />
 
                 <Button
@@ -644,8 +648,8 @@
     <RelativeLayout
         android:id="@+id/welcome3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/howtoyakit"
+        android:layout_height="match_parent"
+        android:background="@drawable/howtostation"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -655,7 +659,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_black"
             android:text="@string/button_continue"

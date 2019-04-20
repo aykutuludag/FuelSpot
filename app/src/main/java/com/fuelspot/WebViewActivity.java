@@ -47,6 +47,7 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains("fuelspot.com.tr")) {
+                    webView.loadUrl(url);
                     return true;
                 } else {
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();

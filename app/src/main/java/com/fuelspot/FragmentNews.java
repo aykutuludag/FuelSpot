@@ -1,15 +1,13 @@
 package com.fuelspot;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,9 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
 import com.fuelspot.model.CompanyItem;
@@ -66,11 +61,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.UniversalTimeFormat;
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userUnit;
 
 public class FragmentNews extends Fragment {
@@ -84,7 +80,8 @@ public class FragmentNews extends Fragment {
     private View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
-    private SimpleDateFormat sdf;
+    private SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
+    private SimpleDateFormat sdf2 = new SimpleDateFormat(UniversalTimeFormat, Locale.getDefault());
 
     // Price Index
     private LineChart chart;
@@ -101,6 +98,7 @@ public class FragmentNews extends Fragment {
     private int otherStations;
     private int totalVerified;
     private int totalStation;
+    private SwipeRefreshLayout swipeContainer;
 
     public static FragmentNews newInstance() {
         Bundle args = new Bundle();
@@ -135,7 +133,6 @@ public class FragmentNews extends Fragment {
             }
 
             requestQueue = Volley.newRequestQueue(getActivity());
-            sdf = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             proggressBar = rootView.findViewById(R.id.spin_kit);
             proggressBar.setColor(Color.BLUE);
@@ -194,6 +191,23 @@ public class FragmentNews extends Fragment {
 
             textViewTotalNumber = rootView.findViewById(R.id.textViewtoplamSayi);
 
+            swipeContainer = rootView.findViewById(R.id.swipeContainer);
+            // Setup refresh listener which triggers new data loading
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    // ÜLKE SEÇİMİ
+                    fetchNews("TR");
+                    fetchCountryFinance("TR");
+                    parseCompanies();
+                }
+            });
+            // Configure the refreshing colors
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+
             // ÜLKE SEÇİMİ
             fetchNews("TR");
             fetchCountryFinance("TR");
@@ -208,6 +222,7 @@ public class FragmentNews extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        swipeContainer.setRefreshing(false);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -247,6 +262,7 @@ public class FragmentNews extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        swipeContainer.setRefreshing(false);
                         volleyError.printStackTrace();
                         errorLayout();
                     }
@@ -298,7 +314,7 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
-                                String dummyLastText = getString(R.string.last_update) + " " + res.getJSONObject(0).getString("date");
+                                String dummyLastText = getString(R.string.last_update) + " " + sdf2.format(sdf.parse(res.getJSONObject(0).getString("date")));
                                 lastUpdatedAvgPrice.setText(dummyLastText);
 
                                 ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -431,23 +447,6 @@ public class FragmentNews extends Fragment {
             // Somehow companList didn't fetch at MainActivity or SuperMainActivity. Fetch it.
             fetchCompanies();
         }
-    }
-
-    public Drawable getDrawableOfLogo(CompanyItem item) {
-        final Drawable[] drawable = new Drawable[1];
-
-        Glide.with(getActivity())
-                .asBitmap()
-                .load(item.getLogo())
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
-                        drawable[0] = new BitmapDrawable(getActivity().getResources(), resource);
-
-                    }
-                });
-
-        return drawable[0];
     }
 
     private void fetchCompanies() {

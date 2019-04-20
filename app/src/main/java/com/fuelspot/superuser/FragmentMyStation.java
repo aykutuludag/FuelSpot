@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -26,6 +29,12 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.fuelspot.Application;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
@@ -57,9 +66,8 @@ import java.util.Locale;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
-import static com.fuelspot.MainActivity.mapDefaultZoom;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -101,10 +109,12 @@ public class FragmentMyStation extends Fragment {
     private GoogleMap googleMap;
     NestedScrollView scrollView;
     float distanceInMeters;
+    StationItem info = new StationItem();
+    LatLng sydney;
 
     public static FragmentMyStation newInstance() {
         Bundle args = new Bundle();
-        args.putString("FRAGMENT", "OwnedStation");
+        args.putString("FRAGMENT", "MyStation");
 
         FragmentMyStation fragment = new FragmentMyStation();
         fragment.setArguments(args);
@@ -223,6 +233,8 @@ public class FragmentMyStation extends Fragment {
                     }
                 }
             });
+
+            checkLocationPermission();
         }
         return rootView;
     }
@@ -257,32 +269,46 @@ public class FragmentMyStation extends Fragment {
                         }
                     }
                 });
-
-                // For zooming automatically to the location of the marker
-                LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
-                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                 googleMap.setInfoWindowAdapter(customInfoWindow);
-
                 loadStationDetails();
             }
         });
     }
 
     private void loadStationDetails() {
-        googleMap.clear();
+        //Station Icon
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.photo_placeholder)
+                .error(R.drawable.photo_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        Glide.with(getActivity()).load(info.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
 
-        textName.setText(superStationName);
-        textVicinity.setText(superStationAddress);
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                info.setStationLogoDrawable(resource);
+                return false;
+            }
+        }).into(stationIcon);
+
+        String[] locationHolder = superStationLocation.split(";");
+        sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
 
         Location loc1 = new Location("");
         loc1.setLatitude(Double.parseDouble(userlat));
         loc1.setLongitude(Double.parseDouble(userlon));
+
         Location loc2 = new Location("");
-        loc2.setLatitude(Double.parseDouble(superStationLocation.split(";")[0]));
-        loc2.setLongitude(Double.parseDouble(superStationLocation.split(";")[1]));
+        loc2.setLatitude(sydney.latitude);
+        loc2.setLongitude(sydney.longitude);
+
+        textName.setText(superStationName);
+        textVicinity.setText(superStationAddress);
         distanceInMeters = loc1.distanceTo(loc2);
         textDistance.setText((int) distanceInMeters + " m");
 
@@ -300,35 +326,13 @@ public class FragmentMyStation extends Fragment {
 
         //Last updated
         try {
-            SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             Date date = format.parse(superLastUpdate);
             textLastUpdated.setReferenceTime(date.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        Glide.with(getActivity()).load(superStationLogo).into(stationIcon);
-
-        // Zoom-in camera
-        String[] locationHolder = superStationLocation.split(";");
-        LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
-
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17f).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
-                (cameraPosition));
-        googleMap.addCircle(new CircleOptions()
-                .center(sydney)
-                .radius(mapDefaultStationRange)
-                .fillColor(0x220000FF)
-                .strokeColor(Color.parseColor("#FF5635")));
-
-        // Add marker
-        addMarker();
-    }
-
-    private void addMarker() {
-        // Add marker
-        StationItem info = new StationItem();
         info.setID(superStationID);
         info.setStationName(superStationName);
         info.setVicinity(superStationAddress);
@@ -347,21 +351,36 @@ public class FragmentMyStation extends Fragment {
         info.setLastUpdated(superLastUpdate);
         info.setDistance((int) distanceInMeters);
 
-        String[] stationKonum = superStationLocation.split(";");
-        LatLng sydney = new LatLng(Double.parseDouble(stationKonum[0]), Double.parseDouble(stationKonum[1]));
+        // Zoom-in camera
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17f).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.addCircle(new CircleOptions()
+                .center(sydney)
+                .radius(mapDefaultStationRange)
+                .fillColor(0x220000FF)
+                .strokeColor(Color.parseColor("#FF5635")));
 
+        // We are waiting for loading logos
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                addMarker();
+            }
+        }, 750);
+    }
+
+    private void addMarker() {
+        Marker m;
         if (isStationVerified == 1) {
             MarkerOptions mOptions = new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
-            Marker m = googleMap.addMarker(mOptions);
+            m = googleMap.addMarker(mOptions);
             m.setTag(info);
         } else {
             MarkerOptions mOptions = new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
-            Marker m = googleMap.addMarker(mOptions);
+            m = googleMap.addMarker(mOptions);
             m.setTag(info);
         }
-
-        MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
-        googleMap.setInfoWindowAdapter(customInfoWindow);
+        m.showInfoWindow();
     }
 
     @Override
@@ -397,8 +416,6 @@ public class FragmentMyStation extends Fragment {
         if (mFusedLocationClient != null) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         }
-
-        checkLocationPermission();
     }
 
     @Override

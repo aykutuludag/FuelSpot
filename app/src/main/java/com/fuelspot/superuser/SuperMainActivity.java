@@ -7,10 +7,12 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +39,6 @@ import com.fuelspot.LoginActivity;
 import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
-import com.fuelspot.WebViewActivity;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.MapsInitializer;
@@ -84,6 +85,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     private AHBottomNavigation bottomNavigation;
     private List<Fragment> fragments = new ArrayList<>(5);
     public MenuItem filterButton;
+    CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
 
     public static void getSuperVariables(SharedPreferences prefs) {
         // Station-specific information
@@ -181,9 +183,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                 // AppDeepLinking
                 String link = getIntent().getDataString();
                 if (link != null && link.length() > 0) {
-                    // Temporary only getting fuelspot.com
-                    link = link.replace("fuelspot.com", "fuelspot.com.tr");
-
                     if (link.contains("fuelspot.com.tr/news")) {
                         Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link);
@@ -192,33 +191,28 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                         Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
                         intent2.putExtra("STATION_ID", Integer.parseInt(link.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
-                    } else if (link.contains("https://fuelspot.com.tr/terms-and-conditions")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/terms-and-conditions");
-                        startActivity(intent);
-                    } else if (link.contains("https://fuelspot.com.tr/privacy")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/privacy");
-                        startActivity(intent);
-                    } else if (link.contains("https://fuelspot.com.tr/help")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/help");
-                        startActivity(intent);
-                    } else if (link.contains("https://fuelspot.com.tr/help-for-superuser")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/help-for-superuser");
-                        startActivity(intent);
-                    } else {
-                        // Do nothing for now
+                    } else if (link.contains("fuelspot.com.tr/terms-and-conditions")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/terms-and-conditions"));
+                    } else if (link.contains("fuelspot.com.tr/privacy")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/privacy"));
+                    } else if (link.contains("fuelspot.com.tr/help")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/help"));
+                    } else if (link.contains("fuelspot.com.tr/help-for-superuser")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/help-for-superuser"));
                     }
                 }
 
                 // Firebase Cloud Messaging
                 String link2 = getIntent().getExtras().getString("URL");
                 if (link2 != null && link2.length() > 0) {
-                    // Temporary only getting fuelspot.com
-                    link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
-
                     if (link2.contains("fuelspot.com.tr/news")) {
                         Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
                         intent.putExtra("URL", link2);
@@ -227,24 +221,22 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                         Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
                         intent2.putExtra("STATION_ID", Integer.parseInt(link2.replace("https://fuelspot.com.tr/stations/", "")));
                         startActivity(intent2);
-                    } else if (link2.contains("https://fuelspot.com.tr/terms-and-conditions")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/terms-and-conditions");
-                        startActivity(intent);
-                    } else if (link2.contains("https://fuelspot.com.tr/privacy")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/privacy");
-                        startActivity(intent);
-                    } else if (link2.contains("https://fuelspot.com.tr/help")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/help");
-                        startActivity(intent);
-                    } else if (link2.contains("https://fuelspot.com.tr/help-for-superuser")) {
-                        Intent intent = new Intent(SuperMainActivity.this, WebViewActivity.class);
-                        intent.putExtra("URL", "https://fuelspot.com.tr/help-for-superuser");
-                        startActivity(intent);
-                    } else {
-                        // Do nothing for now
+                    } else if (link2.contains("fuelspot.com.tr/terms-and-conditions")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/terms-and-conditions"));
+                    } else if (link2.contains("fuelspot.com.tr/privacy")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/privacy"));
+                    } else if (link2.contains("fuelspot.com.tr/help")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/help"));
+                    } else if (link2.contains("fuelspot.com.tr/help-for-superuser")) {
+                        CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                        customTabsIntent.intent.setPackage("com.android.chrome");
+                        customTabsIntent.launchUrl(SuperMainActivity.this, Uri.parse("https://fuelspot.com.tr/help-for-superuser"));
                     }
                 }
             } else {

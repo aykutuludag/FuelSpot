@@ -45,6 +45,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
@@ -77,6 +78,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     answer = feedItemList.get(position).getAnswer();
 
                     if (isSuperUser) {
+                        //burayı düzelt istasyon sahibi bütün yorumları cevaplayabiliyor.
                         if (answer != null && answer.length() > 0) {
                             // Delete answer
                             text = mContext.getString(R.string.remove_answer);
@@ -339,7 +341,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         viewHolder.username.setText(feedItem.getUsername());
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
         Date date = new Date();
         try {
             date = format.parse(feedItem.getTime());

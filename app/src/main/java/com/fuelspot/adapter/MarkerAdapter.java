@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,16 +15,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context mContext;
-    private RequestOptions options;
 
     public MarkerAdapter(Context ctx) {
         mContext = ctx;
-        options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.default_station)
-                .error(R.drawable.default_station)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-        ;
     }
 
     @Override

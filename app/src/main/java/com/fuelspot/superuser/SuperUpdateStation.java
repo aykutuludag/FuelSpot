@@ -49,8 +49,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.companyList;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -200,7 +200,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         }
 
         if (superLastUpdate != null && superLastUpdate.length() > 0) {
-            SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             try {
                 Date date = format.parse(superLastUpdate);
                 lastUpdateTimeText.setReferenceTime(date.getTime());

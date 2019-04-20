@@ -34,7 +34,7 @@
 # MPAndroidChart
 -keep class com.github.mikephil.charting.** { *; }
 
-# Firebase Craslists
+# Firebase Crashlists
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception

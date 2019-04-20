@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class FragmentProfile extends Fragment {
     private TextView textViewFMoney;
     private RequestQueue requestQueue;
     private View rootView;
+    private SwipeRefreshLayout swipeContainer;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -131,7 +133,21 @@ public class FragmentProfile extends Fragment {
                 }
             });
 
-            fetchBanking();
+            swipeContainer = rootView.findViewById(R.id.swipeContainer);
+            // Setup refresh listener which triggers new data loading
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    loadProfile();
+                }
+            });
+            // Configure the refreshing colors
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+
+            loadProfile();
         }
         return rootView;
     }
@@ -190,6 +206,8 @@ public class FragmentProfile extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+        swipeContainer.setRefreshing(false);
+        fetchBanking();
         fetchComments();
     }
 
@@ -323,13 +341,5 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (headerView != null) {
-            loadProfile();
-        }
     }
 }

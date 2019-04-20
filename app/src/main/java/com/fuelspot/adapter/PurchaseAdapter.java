@@ -23,8 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userUnit;
 
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHolder> {
@@ -147,7 +147,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         // PurchaseTime
         try {
-            SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             Date date = format.parse(feedItem.getPurchaseTime());
             viewHolder.purchaseTime.setReferenceTime(date.getTime());
         } catch (ParseException e) {

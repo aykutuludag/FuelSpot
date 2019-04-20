@@ -44,6 +44,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.Application;
@@ -178,7 +179,7 @@ public class SuperProfileEdit extends AppCompatActivity {
         //UserPhoto
         userPic = findViewById(R.id.userPhoto);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
         Glide.with(this).load(photo).apply(options).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override

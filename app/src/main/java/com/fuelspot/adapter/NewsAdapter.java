@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 
@@ -57,7 +58,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         // NewsTime
         if (feedItem.getPublishDate() != null && feedItem.getPublishDate().length() > 0) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             try {
                 Date date = sdf.parse(feedItem.getPublishDate());
                 viewHolder.newsTime.setReferenceTime(date.getTime());

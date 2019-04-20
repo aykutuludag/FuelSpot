@@ -1,134 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_profile"
+    android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/layout_profile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include
-            layout="@layout/header_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="288dp"
-            android:background="@drawable/round_layout">
+            android:layout_height="match_parent">
+
+            <include
+                layout="@layout/header_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <RelativeLayout
-                android:id="@+id/automobiles_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/titleAutomobiles"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/automobiles"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                    android:textColor="#212121" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/automobileView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/titleAutomobiles"
-                    android:background="@android:color/transparent" />
-
-                <Button
-                    android:id="@+id/button_add_vehicle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/automobileView"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_black"
-                    android:text="@string/add_vehicle" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/commentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/automobiles_layout">
-
-                <TextView
-                    android:id="@+id/titleComment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/comments"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                    android:textColor="#212121" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/commentView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/titleComment" />
-
-                <Button
-                    android:id="@+id/button_seeAllComments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/commentView"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_black"
-                    android:text="@string/see_all"
-                    android:visibility="invisible" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="290dp"
+                android:background="@drawable/round_layout">
 
                 <RelativeLayout
-                    android:id="@+id/noCommentLayout"
+                    android:id="@+id/automobiles_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/titleComment"
-                    android:visibility="gone">
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView20"
+                        android:id="@+id/titleAutomobiles"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:gravity="center"
-                        android:text="@string/no_comment_user"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/automobiles"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                         android:textColor="#212121" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/errorPhoto"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/automobileView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/titleAutomobiles"
+                        android:background="@android:color/transparent" />
+
+                    <Button
+                        android:id="@+id/button_add_vehicle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/textView20"
+                        android:layout_below="@id/automobileView"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/green_box"
+                        android:fontFamily="@font/gotham_black"
+                        android:text="@string/add_vehicle" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/commentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/automobiles_layout">
+
+                    <TextView
+                        android:id="@+id/titleComment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_margin="8dp"
-                        android:src="@drawable/error_nocomment" />
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/comments"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                        android:textColor="#212121" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/commentView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/titleComment" />
+
+                    <Button
+                        android:id="@+id/button_seeAllComments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/commentView"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/green_box"
+                        android:fontFamily="@font/gotham_black"
+                        android:text="@string/see_all"
+                        android:visibility="invisible" />
+
+                    <RelativeLayout
+                        android:id="@+id/noCommentLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/titleComment"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/textView20"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center"
+                            android:text="@string/no_comment_user"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                            android:textColor="#212121" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/errorPhoto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textView20"
+                            android:layout_centerHorizontal="true"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/error_nocomment" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>
+
         </RelativeLayout>
 
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

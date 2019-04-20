@@ -1,161 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/newsInfoFragment"
+    android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <RelativeLayout
-        android:id="@+id/layoutOuter"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/newsInfoFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/layout_news"
+            android:id="@+id/layoutOuter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/round_layout2">
-
-            <TextView
-                android:id="@+id/title_News"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:gravity="center"
-                android:padding="4dp"
-                android:text="@string/latest_news"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/newsView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_News"
-                android:layout_margin="4dp" />
+            android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/newsErrorLayout"
+                android:id="@+id/layout_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title_News"
-                android:visibility="gone">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout2">
 
-                <ImageView
-                    android:id="@+id/errorPhoto"
-                    android:layout_width="225dp"
-                    android:layout_height="225dp"
+                <TextView
+                    android:id="@+id/title_News"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:contentDescription="@string/error"
-                    app:srcCompat="@drawable/error_nonews" />
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="@string/latest_news"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/newsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_News"
+                    android:layout_margin="4dp" />
+
+                <RelativeLayout
+                    android:id="@+id/newsErrorLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_News"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/errorPhoto"
+                        android:layout_width="225dp"
+                        android:layout_height="225dp"
+                        android:layout_centerHorizontal="true"
+                        android:contentDescription="@string/error"
+                        app:srcCompat="@drawable/error_nonews" />
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
 
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/layout_news"
-            android:layout_centerHorizontal="true"
-            ads:adSize="MEDIUM_RECTANGLE"
-            ads:adUnitId="@string/banner_admob" />
-
-        <RelativeLayout
-            android:id="@+id/statsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/adView"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/round_layout2">
-
-            <TextView
-                android:id="@+id/title_stats"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:padding="4dp"
-                android:text="@string/stats"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <TextView
-                android:id="@+id/subtitle0"
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title_stats"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:padding="4dp"
-                android:text="@string/price_index"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/chartAveragePrice"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_below="@id/subtitle0"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp" />
-
-            <TextView
-                android:id="@+id/dummy000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chartAveragePrice"
+                android:layout_below="@id/layout_news"
                 android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                ads:adSize="MEDIUM_RECTANGLE"
+                ads:adUnitId="@string/banner_admob" />
 
-            <TextView
-                android:id="@+id/subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/dummy000"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:padding="4dp"
-                android:text="@string/fuel_distrubition_companies"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart3"
+            <RelativeLayout
+                android:id="@+id/statsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_below="@id/subtitle1"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/adView"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout2">
 
-            <TextView
-                android:id="@+id/textViewtoplamSayi"
+                <TextView
+                    android:id="@+id/title_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="@string/stats"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/subtitle0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_stats"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:padding="4dp"
+                    android:text="@string/price_index"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chartAveragePrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_below="@id/subtitle0"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/dummy000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chartAveragePrice"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <TextView
+                    android:id="@+id/subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dummy000"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:padding="4dp"
+                    android:text="@string/fuel_distrubition_companies"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart3"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_below="@id/subtitle1"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/textViewtoplamSayi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chart3"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/registered_station_number"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#000" />
+            </RelativeLayout>
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Large.Circle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/chart3"
-                android:layout_centerHorizontal="true"
-                android:text="@string/registered_station_number"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000" />
+                android:layout_centerInParent="true"
+                app:SpinKit_Color="@android:color/black" />
         </RelativeLayout>
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.Circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:SpinKit_Color="@android:color/black" />
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

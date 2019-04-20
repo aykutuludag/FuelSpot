@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.averageCons;
 import static com.fuelspot.MainActivity.averagePrice;
 import static com.fuelspot.MainActivity.carBrand;
@@ -61,7 +63,6 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.vehicleID;
 
@@ -86,6 +87,7 @@ public class FragmentAutomobile extends Fragment {
     private View view;
     private RelativeLayout regularLayout;
     private RelativeLayout noAracLayout;
+    private SwipeRefreshLayout swipeContainer;
 
     public static FragmentAutomobile newInstance() {
         Bundle args = new Bundle();
@@ -129,8 +131,51 @@ public class FragmentAutomobile extends Fragment {
                     startActivity(intent);
                 }
             });
-        }
 
+            swipeContainer = view.findViewById(R.id.swipeContainer);
+            // Setup refresh listener which triggers new data loading
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                        noAracLayout.setVisibility(View.GONE);
+                        regularLayout.setVisibility(View.VISIBLE);
+                        loadVehicleProfile();
+                    } else {
+                        noAracLayout.setVisibility(View.VISIBLE);
+                        noAracLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getActivity(), AddAutomobile.class);
+                                startActivity(intent);
+                            }
+                        });
+                        regularLayout.setVisibility(View.GONE);
+                    }
+                }
+            });
+            // Configure the refreshing colors
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+
+            if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                noAracLayout.setVisibility(View.GONE);
+                regularLayout.setVisibility(View.VISIBLE);
+                loadVehicleProfile();
+            } else {
+                noAracLayout.setVisibility(View.VISIBLE);
+                noAracLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), AddAutomobile.class);
+                        startActivity(intent);
+                    }
+                });
+                regularLayout.setVisibility(View.GONE);
+            }
+        }
         return view;
     }
 
@@ -247,7 +292,7 @@ public class FragmentAutomobile extends Fragment {
         lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
         if (vehiclePurchaseList.size() > 0) {
             try {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
                 Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
                 lastUpdated.setReferenceTime(date.getTime());
             } catch (ParseException e) {
@@ -265,6 +310,7 @@ public class FragmentAutomobile extends Fragment {
             }
         });
 
+        swipeContainer.setRefreshing(false);
         fetchVehiclePurchases();
     }
 
@@ -353,7 +399,7 @@ public class FragmentAutomobile extends Fragment {
                                 }
 
                                 try {
-                                    SimpleDateFormat format = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+                                    SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
                                     Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
                                     lastUpdated.setReferenceTime(date.getTime());
                                 } catch (ParseException e) {
@@ -527,28 +573,5 @@ public class FragmentAutomobile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (headerView != null) {
-            if (userAutomobileList != null && userAutomobileList.size() > 0) {
-                noAracLayout.setVisibility(View.GONE);
-                regularLayout.setVisibility(View.VISIBLE);
-                loadVehicleProfile();
-            } else {
-                noAracLayout.setVisibility(View.VISIBLE);
-                noAracLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), AddAutomobile.class);
-                        startActivity(intent);
-                    }
-                });
-                regularLayout.setVisibility(View.GONE);
-            }
-        }
     }
 }

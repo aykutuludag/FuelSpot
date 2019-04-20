@@ -333,6 +333,7 @@ public class StationComments extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        swipeContainer.setRefreshing(false);
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {

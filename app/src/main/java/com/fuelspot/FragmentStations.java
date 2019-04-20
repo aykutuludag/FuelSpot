@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -114,6 +115,7 @@ public class FragmentStations extends Fragment {
     boolean isMapUpdating;
     NestedScrollView scrollView;
     boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
+    private SwipeRefreshLayout swipeContainer;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -268,6 +270,20 @@ public class FragmentStations extends Fragment {
                 }
             });
 
+            swipeContainer = rootView.findViewById(R.id.swipeContainer);
+            // Setup refresh listener which triggers new data loading
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    updateMap();
+                }
+            });
+            // Configure the refreshing colors
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+
             // Start the load map
             checkLocationPermission();
         }
@@ -385,6 +401,7 @@ public class FragmentStations extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        swipeContainer.setRefreshing(false);
                         isMapUpdating = false;
                         if (response != null && response.length() > 0) {
                             try {
@@ -468,6 +485,7 @@ public class FragmentStations extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        swipeContainer.setRefreshing(false);
                         isMapUpdating = false;
                         noStationError.setVisibility(View.VISIBLE);
                         volleyError.printStackTrace();
@@ -637,7 +655,7 @@ public class FragmentStations extends Fragment {
             public void run() {
                 addMarkers();
             }
-        }, 500);
+        }, 750);
     }
 
     private void addMarkers() {

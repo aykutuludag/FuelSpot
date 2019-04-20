@@ -75,6 +75,7 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
+import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userAutomobileList;
@@ -180,6 +181,10 @@ public class AddFuel extends AppCompatActivity {
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
+
+        if (isSuperUser) {
+            finish();
+        }
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();

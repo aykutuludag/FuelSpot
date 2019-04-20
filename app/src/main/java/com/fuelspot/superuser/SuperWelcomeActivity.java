@@ -120,6 +120,7 @@ import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
@@ -302,34 +303,49 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null) {
-                //NAME
-                MainActivity.name = acct.getDisplayName();
-                prefs.edit().putString("Name", MainActivity.name).apply();
-
-                //USERNAME
-                //USERNAME
-                String tmp0 = name.toLowerCase();
-                String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
-                        .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
-                String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
-                if (tmpusername.length() > 31) {
-                    username = tmpusername.substring(0, 30);
-                } else {
-                    username = tmpusername;
-                }
-                prefs.edit().putString("UserName", username).apply();
-
                 //EMAİL
                 email = acct.getEmail();
                 prefs.edit().putString("Email", email).apply();
 
+                //NAME
+                name = acct.getDisplayName();
+                if (name != null) {
+                    if (name.contains("@")) {
+                        name = name.split("@")[0];
+                    }
+                    prefs.edit().putString("Name", name).apply();
+
+                    //USERNAME
+                    String tmp0 = name.toLowerCase();
+                    String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                            .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                    String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
+                    if (tmpusername.length() > 30) {
+                        username = tmpusername.substring(0, 30);
+                    } else {
+                        username = tmpusername;
+                    }
+                    prefs.edit().putString("UserName", username).apply();
+                } else {
+                    name = email.split("@")[0];
+                    username = name;
+
+                    prefs.edit().putString("Name", name).apply();
+                    prefs.edit().putString("UserName", username).apply();
+                }
+
                 //PHOTO
-                if (acct.getPhotoUrl() != null) {
+                if (acct.getPhotoUrl() != null && acct.getPhotoUrl().toString().length() > 0) {
                     photo = acct.getPhotoUrl().toString();
                     prefs.edit().putString("ProfilePhoto", photo).apply();
                 }
 
-                saveUserInfo();
+                if (isNetworkConnected(SuperWelcomeActivity.this)) {
+                    saveUserInfo();
+                } else {
+                    Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                    prefs.edit().putBoolean("isSigned", false).apply();
+                }
             } else {
                 Toast.makeText(this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                 prefs.edit().putBoolean("isSigned", false).apply();
@@ -347,48 +363,69 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject me, GraphResponse response) {
-                                if (response.getError() != null) {
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject me, GraphResponse response) {
+                        try {
+                            email = me.getString("email");
+                            prefs.edit().putString("Email", email).apply();
+
+                            name = me.optString("name");
+                            if (name != null) {
+                                prefs.edit().putString("Name", name).apply();
+
+                                //USERNAME
+                                String tmp0 = name.toLowerCase();
+                                String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
+                                        .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
+                                String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
+                                if (tmpusername.length() > 30) {
+                                    username = tmpusername.substring(0, 30);
                                 } else {
-                                    MainActivity.name = me.optString("first_name") + " " + me.optString("last_name");
-                                    prefs.edit().putString("Name", MainActivity.name).apply();
-
-                                    email = me.optString("email");
-                                    prefs.edit().putString("Email", email).apply();
-
-                                    photo = me.optString("profile_pic");
-                                    prefs.edit().putString("ProfilePhoto", photo).apply();
-
-                                    //USERNAME
-                                    //USERNAME
-                                    String tmp0 = name.toLowerCase();
-                                    String tmp1 = tmp0.replace("ç", "c").replace("ğ", "g").replace("ı", "i")
-                                            .replace("ö", "o").replace("ş", "s").replace("ü", "u").replace(" ", "");
-                                    String tmpusername = tmp1.replaceAll("[^a-zA-Z0-9]", "");
-                                    if (tmpusername.length() > 21) {
-                                        username = tmpusername.substring(0, 20);
-                                    } else {
-                                        username = tmpusername;
-                                    }
-                                    prefs.edit().putString("UserName", username).apply();
-                                    saveUserInfo();
+                                    username = tmpusername;
                                 }
+                                prefs.edit().putString("UserName", username).apply();
+                                //USERNAME
+                            } else {
+                                name = email.split("@")[0];
+                                username = name;
+
+                                prefs.edit().putString("Name", name).apply();
+                                prefs.edit().putString("UserName", username).apply();
                             }
-                        }).executeAsync();
+
+                            String id = me.getString("id");
+                            photo = "https://graph.facebook.com/" + id + "/picture?type=normal";
+                            prefs.edit().putString("ProfilePhoto", photo).apply();
+
+                            if (isNetworkConnected(SuperWelcomeActivity.this)) {
+                                saveUserInfo();
+                            } else {
+                                Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                                prefs.edit().putBoolean("isSigned", false).apply();
+                            }
+                        } catch (JSONException e) {
+                            Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
+                            prefs.edit().putBoolean("isSigned", false).apply();
+                        }
+                    }
+                });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_cancel), Toast.LENGTH_SHORT).show();
+                // Do nothing
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
+                Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                prefs.edit().putBoolean("isSigned", false).apply();
             }
         });
     }

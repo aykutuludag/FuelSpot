@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.shortTimeFormat;
-import static com.fuelspot.MainActivity.universalTimeFormat;
 
 public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHolder> {
     private List<CampaignItem> mItemList;
@@ -45,7 +45,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
                 mPopupWindow.setElevation(5.0f);
             }
 
-            SimpleDateFormat dtformat = new SimpleDateFormat(universalTimeFormat, Locale.getDefault());
+            SimpleDateFormat dtformat = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
             SimpleDateFormat shortFormat = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
 
             ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);

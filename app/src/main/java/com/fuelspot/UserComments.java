@@ -96,6 +96,7 @@ public class UserComments extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        swipeContainer.setRefreshing(false);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -130,6 +131,7 @@ public class UserComments extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        swipeContainer.setRefreshing(false);
                         error.printStackTrace();
                     }
                 }) {

@@ -57,7 +57,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:padding="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
