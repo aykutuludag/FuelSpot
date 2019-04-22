@@ -857,7 +857,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void fetchStationComments() {
+    public void fetchStationComments() {
         sumOfPoints = 0;
         numOfComments = 0;
         stationCommentList.clear();
@@ -899,7 +899,6 @@ public class StationDetails extends AppCompatActivity {
 
                                     sumOfPoints += obj.getInt("stars");
                                     numOfComments++;
-
                                 }
 
                                 if (hasAlreadyCommented) {

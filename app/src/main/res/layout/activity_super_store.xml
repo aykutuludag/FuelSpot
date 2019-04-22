@@ -43,10 +43,50 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <RelativeLayout
-                android:id="@+id/premium_layout"
+                android:id="@+id/double_range_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView1"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/round_layout">
+
+                <TextView
+                    android:id="@+id/textView388"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/double_range"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                <TextView
+                    android:id="@+id/textView399"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView388"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/double_range_desc" />
+
+                <Button
+                    android:id="@+id/buttonPurchaseRange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView399"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/green_box"
+                    android:text="@string/start_subscription" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/premium_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/double_range_layout"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
@@ -82,45 +122,6 @@
                     android:text="@string/start_subscription" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/double_range_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/premium_layout"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/round_layout">
-
-                <TextView
-                    android:id="@+id/textView388"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/double_range"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                <TextView
-                    android:id="@+id/textView399"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView388"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="@string/double_range_desc" />
-
-                <Button
-                    android:id="@+id/buttonPurchaseRange"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView399"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/green_box"
-                    android:text="@string/start_subscription" />
-            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 

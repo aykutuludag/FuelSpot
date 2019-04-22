@@ -76,6 +76,7 @@ public class FragmentAutomobile extends Fragment {
 
     private SharedPreferences prefs;
     private TextView kilometerText;
+    TextView textViewPlaka;
     private TextView avgText;
     private TextView avgPrice;
     private TextView emission;
@@ -194,7 +195,7 @@ public class FragmentAutomobile extends Fragment {
         String kmHolder = kilometer + " " + getString(R.string.kilometer);
         kilometerText.setText(kmHolder);
 
-        TextView textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
+        textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
         textViewPlaka.setText(plateNo);
 
         //Marka-model
@@ -573,5 +574,15 @@ public class FragmentAutomobile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (textViewPlaka != null) {
+            if (!plateNo.equals(textViewPlaka.getText().toString())) {
+                loadVehicleProfile();
+            }
+        }
     }
 }

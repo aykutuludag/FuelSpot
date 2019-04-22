@@ -473,12 +473,12 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                     if (vehicleID == 0) {
                                         chooseVehicle(item);
                                     }
+                                    finish();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        finish();
                     }
                 },
                 new Response.ErrorListener() {

@@ -199,7 +199,6 @@ public class FragmentNews extends Fragment {
                     // ÜLKE SEÇİMİ
                     fetchNews("TR");
                     fetchCountryFinance("TR");
-                    parseCompanies();
                 }
             });
             // Configure the refreshing colors
@@ -286,6 +285,11 @@ public class FragmentNews extends Fragment {
     }
 
     private void fetchCountryFinance(final String tempCountryCode) {
+        gasolinePriceHistory.clear();
+        dieselPriceHistory.clear();
+        lpgPriceHistory.clear();
+        elecPriceHistory.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COUNTRY_PRICES),
                 new Response.Listener<String>() {
                     @Override

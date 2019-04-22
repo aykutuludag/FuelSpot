@@ -1,59 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_profile"
+    android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/layout_super_profile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#EDEDED">
-
-        <include
-            layout="@layout/header_super_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/stations_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="258dp">
+            android:background="#EDEDED">
 
-            <TextView
-                android:id="@+id/titleStationsProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/tab_stations"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                android:textColor="#212121" />
+            <include
+                layout="@layout/header_super_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/stationViewAdmin"
+            <RelativeLayout
+                android:id="@+id/stations_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/titleStationsProfile"
-                android:background="@android:color/transparent" />
+                android:layout_marginTop="258dp">
 
-            <Button
-                android:id="@+id/button_add_station"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/stationViewAdmin"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/green_box"
-                android:fontFamily="@font/gotham_black"
-                android:text="@string/add_station" />
+                <TextView
+                    android:id="@+id/titleStationsProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/tab_stations"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                    android:textColor="#212121" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/stationViewAdmin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titleStationsProfile"
+                    android:background="@android:color/transparent" />
+
+                <Button
+                    android:id="@+id/button_add_station"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stationViewAdmin"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/add_station" />
+            </RelativeLayout>
         </RelativeLayout>
-
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +112,7 @@ public class FragmentMyStation extends Fragment {
     float distanceInMeters;
     StationItem info = new StationItem();
     LatLng sydney;
+    private SwipeRefreshLayout swipeContainer;
 
     public static FragmentMyStation newInstance() {
         Bundle args = new Bundle();
@@ -234,6 +236,20 @@ public class FragmentMyStation extends Fragment {
                 }
             });
 
+            swipeContainer = rootView.findViewById(R.id.swipeContainer);
+            // Setup refresh listener which triggers new data loading
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    loadMap();
+                }
+            });
+            // Configure the refreshing colors
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+
             checkLocationPermission();
         }
         return rootView;
@@ -277,13 +293,15 @@ public class FragmentMyStation extends Fragment {
     }
 
     private void loadStationDetails() {
+        googleMap.clear();
+
         //Station Icon
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.photo_placeholder)
                 .error(R.drawable.photo_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(getActivity()).load(info.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
+        Glide.with(getActivity()).load(superStationLogo).apply(options).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;
@@ -367,6 +385,7 @@ public class FragmentMyStation extends Fragment {
                 addMarker();
             }
         }, 750);
+        swipeContainer.setRefreshing(false);
     }
 
     private void addMarker() {
@@ -415,6 +434,10 @@ public class FragmentMyStation extends Fragment {
 
         if (mFusedLocationClient != null) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        }
+
+        if (!superStationName.equals(textName.getText().toString())) {
+            loadMap();
         }
     }
 

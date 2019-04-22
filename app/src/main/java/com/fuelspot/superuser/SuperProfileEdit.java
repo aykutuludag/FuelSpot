@@ -76,7 +76,6 @@ import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
-import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.username;
 
@@ -356,7 +355,6 @@ public class SuperProfileEdit extends AppCompatActivity {
                 params.put("location", location);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-                params.put("favStations", userFavorites);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

@@ -48,6 +48,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
@@ -65,7 +66,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             CommentAdapter.ViewHolder holder = (CommentAdapter.ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
 
-            String text;
             switch (whichScreen) {
                 case "USER_COMMENTS":
                     Intent intent = new Intent(mContext, StationDetails.class);
@@ -73,25 +73,30 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     mContext.startActivity(intent);
                     break;
                 case "STATION_COMMENTS":
+                    String text = null;
                     commentID = feedItemList.get(position).getID();
                     commentUserName = feedItemList.get(position).getUsername();
                     answer = feedItemList.get(position).getAnswer();
 
                     if (isSuperUser) {
-                        //burayı düzelt istasyon sahibi bütün yorumları cevaplayabiliyor.
-                        if (answer != null && answer.length() > 0) {
-                            // Delete answer
-                            text = mContext.getString(R.string.remove_answer);
-                        } else {
-                            // Add answer
-                            text = mContext.getString(R.string.answer_it);
+                        for (int i = 0; i < listOfOwnedStations.size(); i++) {
+                            if (listOfOwnedStations.get(i).getID() == feedItemList.get(position).getStationID()) {
+                                if (listOfOwnedStations.get(i).getIsVerified() == 1) {
+                                    if (answer != null && answer.length() > 0) {
+                                        // Delete answer
+                                        text = mContext.getString(R.string.remove_answer);
+                                    } else {
+                                        // Add answer
+                                        text = mContext.getString(R.string.answer_it);
+                                    }
+                                    break;
+                                }
+                            }
                         }
                     } else {
                         if (username.equals(commentUserName)) {
                             // Delete comment
                             text = mContext.getString(R.string.remove_comment);
-                        } else {
-                            text = null;
                         }
                     }
 
@@ -242,6 +247,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                                     if (mContext instanceof StationComments) {
                                         ((StationComments) mContext).fetchStationComments();
                                     }
+
+                                    if (mContext instanceof StationDetails) {
+                                        ((StationDetails) mContext).fetchStationComments();
+                                    }
                                     break;
                                 default:
                                     Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
@@ -291,6 +300,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                                     Toast.makeText(mContext, mContext.getString(R.string.answer_delete_success), Toast.LENGTH_LONG).show();
                                     if (mContext instanceof StationComments) {
                                         ((StationComments) mContext).fetchStationComments();
+                                    }
+
+                                    if (mContext instanceof StationDetails) {
+                                        ((StationDetails) mContext).fetchStationComments();
                                     }
                                     break;
                                 default:
