@@ -6,7 +6,6 @@
     <string name="logging_in">Giriş başarılı</string>
     <string name="login_successful">Giriş başarılı. Uygulamaya yönlendiriliyorsunuz&#8230;</string>
     <string name="error_login_fail">Giriş yaparken bir hata oluştu. Lütfen tekrar deneyiniz&#8230;</string>
-    <string name="error_login_cancel">Giriş işlemi kullanıcı tarafından iptal edildi&#8230;</string>
     <!-- LoginActivity-->
 
     <!-- WelcomeActivity-->

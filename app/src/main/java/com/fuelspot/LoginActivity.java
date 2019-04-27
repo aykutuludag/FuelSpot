@@ -237,27 +237,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             notLogged.setVisibility(View.GONE);
 
             // Maybe she came from firebase notification. Redirect with url
-            String link2 = getIntent().getExtras().getString("URL");
-            if (link2 != null && link2.length() > 0) {
-                // Temporary only getting fuelspot.com
-                link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
+            if (getIntent().getExtras() != null) {
+                String link2 = getIntent().getExtras().getString("URL");
+                if (link2 != null && link2.length() > 0) {
+                    // Temporary only getting fuelspot.com
+                    link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
 
-                final Intent intent;
-                if (isSuperUser) {
-                    intent = new Intent(LoginActivity.this, SuperMainActivity.class);
-                } else {
-                    intent = new Intent(LoginActivity.this, MainActivity.class);
-                }
-
-                intent.putExtra("URL", link2);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(intent);
-                        finish();
+                    final Intent intent;
+                    if (isSuperUser) {
+                        intent = new Intent(LoginActivity.this, SuperMainActivity.class);
+                    } else {
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
                     }
-                }, 2000);
-                return;
+
+                    intent.putExtra("URL", link2);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 2000);
+                    return;
+                }
             }
 
             //Check user is regular or superUser

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EAEAEA"
     tools:context=".AddAutomobile">
 
     <android.support.design.widget.AppBarLayout
@@ -14,8 +15,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="?android:attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -24,7 +24,6 @@
         android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_main"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -37,84 +36,84 @@
                 android:id="@+id/imageViewCar"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
                 android:src="@drawable/default_automobile" />
 
-            <RelativeLayout
-                android:id="@+id/carNameLayout"
+            <TextView
+                android:id="@+id/textView_brand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageViewCar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="@string/brand"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
+
+            <Spinner
+                android:id="@+id/spinner_brands"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageViewCar"
-                android:layout_margin="8dp"
-                android:background="@drawable/round_layout_white">
+                android:layout_below="@+id/textView_brand"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
+                android:padding="16dp" />
 
-                <TextView
-                    android:id="@+id/textView_brand"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:text="@string/brand"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#555555" />
+            <TextView
+                android:id="@+id/textView_model"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spinner_brands"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="false"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="@string/vehicle_model"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
-                <Spinner
-                    android:id="@+id/spinner_brands"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView_brand"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp" />
-
-                <TextView
-                    android:id="@+id/textView_model"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/spinner_brands"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="false"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:text="@string/vehicle_model"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#555555" />
-
-                <Spinner
-                    android:id="@+id/spinner_models"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView_model"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp" />
-            </RelativeLayout>
+            <Spinner
+                android:id="@+id/spinner_models"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView_model"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
+                android:padding="16dp" />
 
             <RelativeLayout
                 android:id="@+id/fuelTypeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/carNameLayout"
-                android:layout_margin="8dp"
-                android:background="@drawable/round_layout_white">
+                android:layout_below="@+id/spinner_models"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/round_layout_white2">
 
                 <TextView
                     android:id="@+id/textView_fuelPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/gotham_black"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/primary_fuel_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#555555" />
+                    android:textColor="#161616" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelPrimary"
@@ -131,7 +130,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:checked="true"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="8dp"
                         android:text="@string/gasoline"
@@ -177,12 +175,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroup_fuelPrimary"
                     android:layout_alignStart="@+id/textView_fuelPrimary"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/gotham_black"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/secondary_fuel_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#555555" />
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textView_fuelSecondaryExp"
@@ -257,12 +255,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroup_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/gotham_black"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/kilometer"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#555555" />
+                    android:textColor="#161616" />
 
                 <EditText
                     android:id="@+id/editText_km"
@@ -284,12 +282,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/editText_km"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/gotham_black"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/plate_no"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#555555" />
+                    android:textColor="#161616" />
 
                 <EditText
                     android:id="@+id/editText_plate"
@@ -313,8 +311,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fuelTypeLayout"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="16dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/green_button"
                 android:fontFamily="@font/gotham_medium"
                 android:padding="4dp"

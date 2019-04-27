@@ -1046,7 +1046,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(AutomobileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {

@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="#EAEAEA"
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
@@ -23,8 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="0.5"
-        android:background="@drawable/background_main"
-        android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -39,7 +38,7 @@
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/station_info"
-                android:textColor="#fff" />
+                android:textColor="#161616" />
 
             <RelativeLayout
                 android:id="@+id/division0"
@@ -104,7 +103,7 @@
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/automobile_info"
-                android:textColor="#fff" />
+                android:textColor="#161616" />
 
             <RelativeLayout
                 android:id="@+id/division1"
@@ -159,7 +158,7 @@
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/primary_fuel_type"
-                android:textColor="#fff" />
+                android:textColor="#161616" />
 
             <RelativeLayout
                 android:id="@+id/division2"
@@ -275,7 +274,7 @@
                 android:background="@android:color/transparent"
                 android:clickable="false"
                 android:text="@string/secondary_fuel_type"
-                android:textColor="#fff" />
+                android:textColor="#161616" />
 
             <RelativeLayout
                 android:id="@+id/division3"
@@ -433,7 +432,7 @@
                     android:gravity="center"
                     android:text="@string/add_bill_photo_desc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-                    android:textColor="#f1f1f1" />
+                    android:textColor="#161616" />
 
                 <ImageView
                     android:id="@+id/photoHolder"

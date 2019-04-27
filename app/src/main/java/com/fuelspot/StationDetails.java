@@ -212,7 +212,7 @@ public class StationDetails extends AppCompatActivity {
         }
 
         //Dynamic bar colors
-        coloredBars(Color.RED, Color.parseColor("#F1F1F1"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#FAFAFA"));
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -1537,7 +1537,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.

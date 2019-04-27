@@ -79,7 +79,6 @@
     <string name="logging_in">Logging in</string>
     <string name="login_successful">Login successful. You are redirecting to the app&#8230;</string>
     <string name="error_login_fail">There was an error logging in. Please try again later&#8230;</string>
-    <string name="error_login_cancel">Login was canceled by user&#8230;</string>
     <!-- LoginActivity-->
 
     <!-- WelcomeActivity-->
@@ -150,7 +149,6 @@
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
-    <string name="per_100km" translatable="false">/100 km</string>
     <string name="edit">Edit</string>
     <string name="user_purchases">Your purchases</string>
     <string name="no_purchase_user">You didn\'t purchase any fuel. Your purchases and details will be listed here…</string>
