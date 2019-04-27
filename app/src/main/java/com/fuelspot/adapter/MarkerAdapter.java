@@ -34,7 +34,11 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
             sName.setText(infoWindowData.getStationName());
 
-            sLogo.setImageDrawable(infoWindowData.getStationLogoDrawable());
+            if (infoWindowData.getStationLogoDrawable() != null) {
+                sLogo.setImageDrawable(infoWindowData.getStationLogoDrawable());
+            } else {
+                sLogo.setBackgroundResource(R.drawable.default_station);
+            }
 
             if (infoWindowData.getGasolinePrice() != 0) {
                 priceOne.setText(String.valueOf(infoWindowData.getGasolinePrice()));

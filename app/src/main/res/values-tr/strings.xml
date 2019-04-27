@@ -64,6 +64,7 @@
     <string name="error_no_location">Konumunuzu tespit edemedik. Lütfen konum ayarlarını kontrol ediniz</string>
     <string name="station_found_pretext">Yakın çevrende</string>
     <string name="station_found_aftertext">istasyon bulduk.</string>
+    <string name="sort">Sırala</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->

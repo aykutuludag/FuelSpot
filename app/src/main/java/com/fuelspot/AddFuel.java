@@ -787,37 +787,31 @@ public class AddFuel extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                //Remove variables
-                bitmap = null;
-                stationName = null;
-                stationLoc = null;
-                gasolinePrice = 0;
-                dieselPrice = 0;
-                electricityPrice = 0;
-                LPGPrice = 0;
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {//Remove variables
+            bitmap = null;
+            stationName = null;
+            stationLoc = null;
+            gasolinePrice = 0;
+            dieselPrice = 0;
+            electricityPrice = 0;
+            LPGPrice = 0;
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_STORAGE: {
-                if (ActivityCompat.checkSelfPermission(AddFuel.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(AddFuel.this, getString(R.string.saved), Toast.LENGTH_SHORT).show();
-                    ImagePicker.create(AddFuel.this).single().start();
-                } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
-                }
-                break;
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_STORAGE) {
+            if (ActivityCompat.checkSelfPermission(AddFuel.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(AddFuel.this, getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                ImagePicker.create(AddFuel.this).single().start();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

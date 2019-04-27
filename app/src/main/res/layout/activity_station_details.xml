@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -68,8 +69,7 @@
                     android:id="@+id/baseInfoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white">
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/station_ID"
@@ -185,8 +185,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white">
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/title_prices"
@@ -394,9 +393,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white"
-                    android:padding="4dp">
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/title_facilities"
@@ -527,7 +524,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-                <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                <com.google.android.gms.ads.AdView
                     android:id="@+id/adView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -544,9 +541,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white"
-                    android:padding="4dp">
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/title_campaigns"
@@ -601,9 +596,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white"
-                    android:padding="4dp">
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/title_comments"
@@ -630,8 +623,9 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@drawable/green_box"
-                        android:fontFamily="@font/gotham_black"
+                        android:background="@drawable/green_button"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="4dp"
                         android:text="@string/see_all"
                         android:visibility="gone" />
 
@@ -668,15 +662,14 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white"
-                    android:padding="4dp">
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:id="@+id/title_stats"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
                         android:gravity="center"
                         android:text="@string/priceHistory"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -687,10 +680,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
                         android:layout_below="@id/title_stats"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp" />
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp" />
                 </RelativeLayout>
 
             </RelativeLayout>

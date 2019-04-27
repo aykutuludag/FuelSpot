@@ -4,8 +4,7 @@
     xmlns:map="http://schemas.android.com/tools"
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/myStationScroll"
@@ -231,7 +230,8 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/green_box"
+                    android:background="@drawable/green_button"
+                    android:padding="4dp"
                     android:text="@string/update_station" />
             </RelativeLayout>
 
@@ -260,7 +260,8 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/green_box"
+                    android:background="@drawable/green_button"
+                    android:padding="4dp"
                     android:text="@string/comments" />
             </RelativeLayout>
 
@@ -286,7 +287,8 @@
                     android:layout_below="@+id/textView10"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="8dp"
-                    android:background="@drawable/green_box"
+                    android:background="@drawable/green_button"
+                    android:padding="4dp"
                     android:text="@string/campaigns" />
             </RelativeLayout>
         </RelativeLayout>

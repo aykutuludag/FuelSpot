@@ -1150,7 +1150,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     stationHint.setTextColor(Color.parseColor("#ff0000"));
                                     stationHint.setText("Bu istasyon daha önce onaylanmış.");
                                 } else {
-                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                    stationHint.setTextColor(Color.parseColor("#2DE778"));
                                 }
                                 loadStationDetails();
                             } catch (JSONException e) {
@@ -1436,7 +1436,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_ALL: {
                 if (ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {

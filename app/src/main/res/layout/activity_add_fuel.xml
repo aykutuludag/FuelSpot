@@ -228,8 +228,8 @@
                         android:layout_marginTop="8dp"
                         android:background="#fff"
                         android:gravity="center"
-                        android:inputType="numberDecimal"
                         android:hint="@string/the_money_you_pay"
+                        android:inputType="numberDecimal"
                         android:padding="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         app:layout_widthPercent="70%" />
@@ -453,9 +453,10 @@
                 android:layout_below="@id/totalOptionel"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="16dp"
-                android:background="@drawable/green_box"
+                android:background="@drawable/green_button"
                 android:clickable="false"
-                android:fontFamily="@font/gotham_black"
+                android:fontFamily="@font/gotham_medium"
+                android:padding="4dp"
                 android:text="@string/add_fuel"
                 android:textColor="#212121" />
 

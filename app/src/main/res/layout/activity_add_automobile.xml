@@ -315,8 +315,9 @@
                 android:layout_below="@+id/fuelTypeLayout"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="16dp"
-                android:background="@drawable/green_box"
-                android:fontFamily="@font/gotham_black"
+                android:background="@drawable/green_button"
+                android:fontFamily="@font/gotham_medium"
+                android:padding="4dp"
                 android:text="@string/add_vehicle"
                 android:textAllCaps="false"
                 android:textColor="#212121" />

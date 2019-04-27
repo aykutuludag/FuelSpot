@@ -221,7 +221,7 @@
                     android:gravity="center"
                     android:text="@string/bonus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="#00801e" />
+                    android:textColor="#2DE778" />
 
                 <TextView
                     android:id="@+id/totalPrice"

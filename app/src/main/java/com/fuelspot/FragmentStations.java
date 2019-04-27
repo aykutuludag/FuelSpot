@@ -131,13 +131,12 @@ public class FragmentStations extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
-
             // Keep screen on
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("İstasyonlar");
+            t.setScreenName("Stations");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -161,53 +160,52 @@ public class FragmentStations extends Fragment {
             locLastKnown.setLongitude(Double.parseDouble(userlon));
 
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(5000);
+            mLocationRequest.setInterval(10000);
+            mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
-                    if (getActivity() != null && locationResult != null) {
-                        synchronized (getActivity()) {
-                            super.onLocationResult(locationResult);
-                            Location locCurrent = locationResult.getLastLocation();
-                            if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
-                                    userlat = String.valueOf(locCurrent.getLatitude());
-                                    userlon = String.valueOf(locCurrent.getLongitude());
-                                    prefs.edit().putString("lat", userlat).apply();
-                                    prefs.edit().putString("lon", userlon).apply();
+                    synchronized (this) {
+                        super.onLocationResult(locationResult);
+                        Location locCurrent = locationResult.getLastLocation();
+                        if (locCurrent != null) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
+                                userlat = String.valueOf(locCurrent.getLatitude());
+                                userlon = String.valueOf(locCurrent.getLongitude());
+                                prefs.edit().putString("lat", userlat).apply();
+                                prefs.edit().putString("lon", userlon).apply();
 
-                                    float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+                                float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
-                                        // User's position has been changed. Load the new map
-                                        locLastKnown.setLatitude(Double.parseDouble(userlat));
-                                        locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                        if (!isMapUpdating) {
-                                            updateMap();
-                                        }
-                                    } else {
-                                        // User position changed a little. Just update distances
-                                        for (int i = 0; i < fullStationList.size(); i++) {
-                                            String[] stationLocation = fullStationList.get(i).getLocation().split(";");
-                                            double stationLat = Double.parseDouble(stationLocation[0]);
-                                            double stationLon = Double.parseDouble(stationLocation[1]);
-
-                                            Location locStation = new Location("");
-                                            locStation.setLatitude(stationLat);
-                                            locStation.setLongitude(stationLon);
-
-                                            float newDistance = locCurrent.distanceTo(locStation);
-                                            fullStationList.get(i).setDistance((int) newDistance);
-                                        }
-                                        mAdapter.notifyDataSetChanged();
+                                if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
+                                    // User's position has been changed. Load the new map
+                                    locLastKnown.setLatitude(Double.parseDouble(userlat));
+                                    locLastKnown.setLongitude(Double.parseDouble(userlon));
+                                    if (!isMapUpdating) {
+                                        updateMap();
                                     }
                                 } else {
-                                    Toast.makeText(getActivity(), getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
+                                    // User position changed a little. Just update distances
+                                    for (int i = 0; i < fullStationList.size(); i++) {
+                                        String[] stationLocation = fullStationList.get(i).getLocation().split(";");
+                                        double stationLat = Double.parseDouble(stationLocation[0]);
+                                        double stationLon = Double.parseDouble(stationLocation[1]);
+
+                                        Location locStation = new Location("");
+                                        locStation.setLatitude(stationLat);
+                                        locStation.setLongitude(stationLon);
+
+                                        float newDistance = locCurrent.distanceTo(locStation);
+                                        fullStationList.get(i).setDistance((int) newDistance);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             } else {
-                                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -906,7 +904,7 @@ public class FragmentStations extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {

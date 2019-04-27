@@ -388,7 +388,11 @@ public class FragmentSettings extends Fragment {
         sendFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendFeedback();
+                if (feedbackMessage.length() > 0) {
+                    sendFeedback();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.add_message), Toast.LENGTH_SHORT).show();
+                }
             }
 
             private void sendFeedback() {
@@ -465,7 +469,7 @@ public class FragmentSettings extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {

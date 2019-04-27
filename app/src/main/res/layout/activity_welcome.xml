@@ -68,8 +68,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/green_box"
-            android:fontFamily="@font/gotham_black"
+            android:background="@drawable/green_button"
+            android:fontFamily="@font/gotham_medium"
+            android:padding="4dp"
             android:text="@string/button_continue"
             android:textColor="#212121" />
 
@@ -100,7 +101,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:background="#00801e"
+            android:background="#2DE778"
             android:text="@string/yes"
             android:textColor="#f1f1f1" />
 
@@ -417,8 +418,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/green_box"
-                android:fontFamily="@font/gotham_black"
+                android:background="@drawable/green_button"
+                android:fontFamily="@font/gotham_medium"
+                android:padding="4dp"
                 android:text="@string/button_continue"
                 android:textAllCaps="false"
                 android:textColor="#212121" />
@@ -756,8 +758,9 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="-24dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/green_box"
-            android:fontFamily="@font/gotham_black"
+            android:background="@drawable/green_button"
+            android:fontFamily="@font/gotham_medium"
+            android:padding="4dp"
             android:text="@string/got_it"
             android:textAllCaps="false"
             android:textColor="#212121" />

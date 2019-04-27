@@ -68,6 +68,7 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -151,7 +152,6 @@ public class FragmentMyStation extends Fragment {
             mLocationRequest.setInterval(10000);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
             mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
@@ -159,7 +159,7 @@ public class FragmentMyStation extends Fragment {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
                                 userlat = String.valueOf(locCurrent.getLatitude());
                                 userlon = String.valueOf(locCurrent.getLongitude());
                                 prefs.edit().putString("lat", userlat).apply();
@@ -167,7 +167,7 @@ public class FragmentMyStation extends Fragment {
 
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                if (distanceInMeter >= mapDefaultStationRange) {
+                                if (distanceInMeter >= (mapDefaultRange / 2)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
                                 }
@@ -403,7 +403,7 @@ public class FragmentMyStation extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION: {
                 if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {

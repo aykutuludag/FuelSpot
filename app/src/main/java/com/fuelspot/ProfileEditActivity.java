@@ -33,6 +33,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -118,6 +119,8 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(ProfileEditActivity.this);
 
+        TextView textViewUsername = findViewById(R.id.userUsername);
+        textViewUsername.setText(username);
         EditText editName = findViewById(R.id.editFullName);
         EditText editMail = findViewById(R.id.editTextMail);
         EditText editLocation = findViewById(R.id.editTextLocation);
@@ -434,7 +437,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.

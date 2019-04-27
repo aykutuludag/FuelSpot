@@ -606,7 +606,7 @@ public class SuperUpdateStation extends AppCompatActivity {
                 params.put("stationName", superStationName);
                 params.put("country", superStationCountry);
                 params.put("address", superStationAddress);
-                String dummy = "[" + String.valueOf(facilitiesObj) + "]";
+                String dummy = "[" + facilitiesObj + "]";
                 params.put("facilities", dummy);
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));

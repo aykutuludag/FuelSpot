@@ -103,7 +103,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (mContext != null && locationResult != null) {
-                    synchronized (mContext) {
+                    synchronized (this) {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {

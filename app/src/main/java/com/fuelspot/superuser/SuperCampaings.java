@@ -60,7 +60,6 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
 
-    String campaignPhoto;
     private RequestQueue requestQueue;
     private SimpleDateFormat sdf;
     private RecyclerView mRecyclerView;

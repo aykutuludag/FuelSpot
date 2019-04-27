@@ -4,7 +4,7 @@
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:background="#EAEAEA">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/layout_profile"
@@ -15,15 +15,109 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
-                layout="@layout/header_profile"
+            <RelativeLayout
+                android:id="@+id/header_profile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="300dp">
+
+                <ImageView
+                    android:id="@+id/updateUserInfo"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:contentDescription="@string/edit"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/edit" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:src="@drawable/default_profile" />
+
+                <TextView
+                    android:id="@+id/userUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profileImage"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:id="@+id/textViewFMoney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/userUsername"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/gotham_book"
+                    android:textColor="#424242" />
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/buttonBars"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewFMoney"
+                    android:layout_marginTop="8dp"
+                    android:padding="2dp">
+
+                    <Button
+                        android:id="@+id/button_fav"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_layout_white2"
+                        android:text="@string/favorites"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        app:layout_marginPercent="1.33%"
+                        app:layout_widthPercent="32%" />
+
+                    <Button
+                        android:id="@+id/button_store"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/button_fav"
+                        android:background="@drawable/round_layout_white2"
+                        android:text="@string/store"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="#212121"
+                        app:layout_marginPercent="1.33%"
+                        app:layout_widthPercent="32%" />
+
+                    <Button
+                        android:id="@+id/button_help"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/button_store"
+                        android:background="@drawable/round_layout_white2"
+                        android:text="@string/help"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        app:layout_marginPercent="1.34%"
+                        app:layout_widthPercent="32%" />
+
+                </android.support.percent.PercentRelativeLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="290dp"
+                android:layout_below="@+id/header_profile"
+                android:layout_marginTop="-24dp"
                 android:background="@drawable/round_layout">
 
                 <RelativeLayout
@@ -40,6 +134,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/gotham_bold"
                         android:text="@string/automobiles"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                         android:textColor="#212121" />
@@ -59,8 +154,9 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@drawable/green_box"
-                        android:fontFamily="@font/gotham_black"
+                        android:background="@drawable/green_button"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="4dp"
                         android:text="@string/add_vehicle" />
 
                 </RelativeLayout>
@@ -80,6 +176,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/gotham_bold"
                         android:text="@string/comments"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                         android:textColor="#212121" />
@@ -98,8 +195,9 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@drawable/green_box"
-                        android:fontFamily="@font/gotham_black"
+                        android:background="@drawable/green_button"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="4dp"
                         android:text="@string/see_all"
                         android:visibility="invisible" />
 

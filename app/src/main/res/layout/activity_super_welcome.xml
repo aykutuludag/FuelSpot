@@ -158,7 +158,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
-            android:background="@drawable/green_box"
+            android:background="@drawable/green_button"
+            android:padding="4dp"
             android:fontFamily="@font/gotham_black"
             android:text="@string/button_continue"
             android:textAllCaps="false"
@@ -310,8 +311,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
-            android:background="@drawable/green_box"
-            android:fontFamily="@font/gotham_black"
+            android:background="@drawable/green_button"
+            android:fontFamily="@font/gotham_medium"
+            android:padding="4dp"
             android:text="@string/button_continue"
             android:textAllCaps="false"
             android:textColor="#212121" />
@@ -322,8 +324,7 @@
         android:id="@+id/welcome2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -635,7 +636,8 @@
                     android:layout_below="@+id/checkBoxTerms"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="8dp"
-                    android:background="@drawable/green_box"
+                    android:background="@drawable/green_button"
+                    android:padding="4dp"
                     android:fontFamily="@font/gotham_black"
                     android:text="@string/button_continue"
                     android:textAllCaps="false"
@@ -650,8 +652,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/howtostation"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:visibility="gone">
 
         <Button
             android:id="@+id/continueToMainMenu"
@@ -661,8 +662,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/green_box"
-            android:fontFamily="@font/gotham_black"
+            android:background="@drawable/green_button"
+            android:fontFamily="@font/gotham_medium"
+            android:padding="4dp"
             android:text="@string/button_continue"
             android:textAllCaps="false"
             android:textColor="#212121" />

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ef_ic_arrow_back"
-    tools:context=".ProfileEditActivity">
+    android:background="#EAEAEA"
+    tools:context=".superuser.SuperProfileEdit">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -31,198 +31,150 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userPhoto"
-                android:layout_width="142dp"
-                android:layout_height="142dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/default_profile"
-                tools:ignore="RtlHardcoded" />
+                android:src="@drawable/default_profile" />
 
-            <ImageView
-                android:id="@+id/dummyImage1"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignTop="@+id/userPhoto"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/userPhoto"
-                android:contentDescription="@string/fullname"
-                app:srcCompat="@drawable/event_edit_title" />
+            <TextView
+                android:id="@+id/userUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/userPhoto"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/gotham_black"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121" />
 
             <TextView
                 android:id="@+id/dummyText1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/dummyImage1"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/dummyImage1"
-                android:fontFamily="@font/gotham_bold"
+                android:layout_below="@id/userUsername"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/gotham_book"
                 android:gravity="center"
                 android:text="@string/fullname"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <EditText
                 android:id="@+id/editFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dummyText1"
-                android:layout_alignStart="@+id/dummyImage1"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
                 android:gravity="bottom"
                 android:inputType="textPersonName"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-
-            <ImageView
-                android:id="@+id/dummyImage2"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_below="@+id/editFullName"
-                android:layout_alignStart="@+id/editFullName"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/email"
-                app:srcCompat="@drawable/email" />
 
             <TextView
                 android:id="@+id/mail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/dummyImage2"
-                android:layout_alignBottom="@+id/dummyImage2"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/dummyImage2"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
+                android:layout_below="@+id/editFullName"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/gotham_book"
                 android:text="@string/email"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <EditText
                 android:id="@+id/editTextMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dummyImage2"
-                android:layout_alignStart="@+id/dummyImage2"
-                android:layout_alignBottom="@+id/userPhoto"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
+                android:layout_below="@+id/mail_title"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
                 android:gravity="bottom"
                 android:inputType="textEmailAddress"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <ImageView
-                android:id="@+id/dummyImage3"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_below="@+id/userPhoto"
-                android:layout_alignStart="@+id/userPhoto"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/phone"
-                app:srcCompat="@drawable/phone" />
 
             <TextView
                 android:id="@+id/dummyText4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/dummyImage3"
-                android:layout_alignBottom="@+id/dummyImage3"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/dummyImage3"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
+                android:layout_below="@+id/editTextMail"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/gotham_book"
                 android:text="@string/phone"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <EditText
                 android:id="@+id/editTextPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dummyImage3"
-                android:layout_alignStart="@+id/userPhoto"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="bottom"
+                android:layout_below="@+id/dummyText4"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
                 android:inputType="phone"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="8dp"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-            <ImageView
-                android:id="@+id/dummyImage4"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_below="@+id/editTextPhone"
-                android:layout_alignStart="@+id/editTextPhone"
-                android:layout_marginTop="10dp"
-                android:contentDescription="@string/birthday"
-                android:scaleType="fitStart"
-                app:srcCompat="@drawable/event_edit_date" />
 
             <TextView
                 android:id="@+id/dummyText5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/dummyText4"
-                android:layout_alignTop="@+id/dummyImage4"
-                android:layout_alignBottom="@+id/dummyImage4"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
+                android:layout_below="@+id/editTextPhone"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/gotham_book"
                 android:text="@string/birthday"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <EditText
                 android:id="@+id/editTextBirthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dummyImage4"
-                android:layout_alignStart="@+id/dummyImage4"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
+                android:layout_below="@+id/dummyText5"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
                 android:enabled="true"
                 android:focusableInTouchMode="false"
                 android:inputType="none"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-            <ImageView
-                android:id="@+id/dummyImage5"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_below="@+id/editTextBirthday"
-                android:layout_alignStart="@+id/editTextBirthday"
-                android:layout_marginTop="10dp"
-                android:contentDescription="@string/gender"
-                android:scaleType="fitStart"
-                app:srcCompat="@drawable/gender" />
 
             <TextView
                 android:id="@+id/gender_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/dummyText5"
-                android:layout_alignTop="@+id/dummyImage5"
-                android:layout_alignBottom="@+id/dummyImage5"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
+                android:layout_below="@+id/editTextBirthday"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/gotham_book"
                 android:text="@string/gender"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <RadioGroup
                 android:id="@+id/radioGroupGender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dummyImage5"
-                android:layout_alignStart="@+id/dummyImage5"
-                android:layout_centerHorizontal="false"
-                android:layout_centerVertical="false"
-                android:layout_marginTop="10dp"
+                android:layout_below="@+id/gender_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
                 android:checkedButton="@+id/genderMale"
                 android:orientation="horizontal">
 
@@ -230,7 +182,7 @@
                     android:id="@+id/genderMale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
@@ -240,7 +192,8 @@
                     android:id="@+id/genderFemale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
                     android:text="@string/female" />
@@ -249,7 +202,8 @@
                     android:id="@+id/genderOther"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
                     android:text="@string/other" />
@@ -262,7 +216,8 @@
                 android:layout_below="@id/radioGroupGender"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
-                android:background="@drawable/green_box"
+                android:background="@drawable/green_button"
+                android:padding="4dp"
                 android:text="@string/log_out" />
 
         </RelativeLayout>

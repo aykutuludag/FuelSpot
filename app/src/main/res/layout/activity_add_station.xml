@@ -101,8 +101,9 @@
                 android:layout_below="@+id/stationHint"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp"
-                android:background="@drawable/green_box"
-                android:fontFamily="@font/gotham_black"
+                android:background="@drawable/green_button"
+                android:fontFamily="@font/gotham_medium"
+                android:padding="4dp"
                 android:text="@string/add_station"
                 android:textAllCaps="false"
                 android:textColor="#212121" />

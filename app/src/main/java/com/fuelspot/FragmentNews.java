@@ -42,7 +42,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -76,7 +75,6 @@ public class FragmentNews extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private List<NewsItem> feedsList = new ArrayList<>();
     private RelativeLayout errorLayout;
-    private SpinKitView proggressBar;
     private View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
@@ -134,8 +132,6 @@ public class FragmentNews extends Fragment {
 
             requestQueue = Volley.newRequestQueue(getActivity());
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
-            proggressBar = rootView.findViewById(R.id.spin_kit);
-            proggressBar.setColor(Color.BLUE);
             mRecyclerView = rootView.findViewById(R.id.newsView);
             mRecyclerView.setNestedScrollingEnabled(false);
             errorLayout = rootView.findViewById(R.id.newsErrorLayout);
@@ -248,7 +244,6 @@ public class FragmentNews extends Fragment {
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
                                 errorLayout.setVisibility(View.GONE);
-                                proggressBar.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 errorLayout();

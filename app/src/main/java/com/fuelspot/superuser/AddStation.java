@@ -269,7 +269,7 @@ public class AddStation extends AppCompatActivity {
                                     stationHint.setTextColor(Color.parseColor("#ff0000"));
                                     stationHint.setText("Bu istasyon daha önce onaylanmış.");
                                 } else {
-                                    stationHint.setTextColor(Color.parseColor("#00801e"));
+                                    stationHint.setTextColor(Color.parseColor("#2DE778"));
                                 }
                                 loadStationDetails();
                             } catch (JSONException e) {

@@ -137,6 +137,7 @@
     <string name="metre">metre</string>
     <string name="no_station">We couldn\'t find any station within 50 kilometers range…</string>
     <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
+    <string name="sort">Sort</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->

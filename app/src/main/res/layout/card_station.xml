@@ -9,9 +9,9 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         card_view:cardCornerRadius="24dp"
         card_view:cardElevation="2dp">
@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/stationLastUpdate"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="2%"
                 card_view:layout_widthPercent="17%">
@@ -56,12 +56,12 @@
                 android:layout_below="@+id/stationLastUpdate"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/baseInfoLayout"
+                android:contentDescription="@string/gasoline"
                 android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
-                android:contentDescription="@string/gasoline"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -71,7 +71,7 @@
                 android:layout_below="@+id/gasoline"
                 android:layout_alignStart="@id/gasoline"
                 android:layout_alignEnd="@id/gasoline"
-                android:fontFamily="@font/gotham_medium"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
@@ -82,13 +82,13 @@
                 android:layout_below="@+id/stationLastUpdate"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/gasoline"
+                android:contentDescription="@string/diesel"
                 android:gravity="center"
                 android:padding="4dp"
                 android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
-                android:contentDescription="@string/diesel"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -98,7 +98,7 @@
                 android:layout_below="@+id/diesel"
                 android:layout_alignStart="@id/diesel"
                 android:layout_alignEnd="@id/diesel"
-                android:fontFamily="@font/gotham_medium"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
@@ -109,12 +109,12 @@
                 android:layout_below="@+id/stationLastUpdate"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/diesel"
+                android:contentDescription="@string/lpg"
                 android:padding="4dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
-                android:contentDescription="@string/lpg"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -124,7 +124,7 @@
                 android:layout_below="@+id/lpg"
                 android:layout_alignStart="@id/lpg"
                 android:layout_alignEnd="@id/lpg"
-                android:fontFamily="@font/gotham_medium"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
@@ -135,11 +135,11 @@
                 android:layout_below="@+id/stationLastUpdate"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/lpg"
+                android:contentDescription="@string/electricity"
                 android:padding="4dp"
                 android:src="@drawable/electricity"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
-                android:contentDescription="@string/electricity"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -149,7 +149,7 @@
                 android:layout_below="@+id/electricity"
                 android:layout_alignStart="@id/electricity"
                 android:layout_alignEnd="@id/electricity"
-                android:fontFamily="@font/gotham_medium"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
@@ -160,11 +160,11 @@
                 android:layout_below="@+id/stationLastUpdate"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/electricity"
+                android:contentDescription="@string/distance"
                 android:padding="4dp"
                 android:src="@drawable/distance"
                 card_view:layout_marginEndPercent="1%"
                 card_view:layout_marginStartPercent="1%"
-                android:contentDescription="@string/distance"
                 card_view:layout_widthPercent="14%" />
 
             <TextView
@@ -174,7 +174,7 @@
                 android:layout_below="@+id/distance"
                 android:layout_alignStart="@id/distance"
                 android:layout_alignEnd="@id/distance"
-                android:fontFamily="@font/gotham_medium"
+                android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
@@ -185,9 +185,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />

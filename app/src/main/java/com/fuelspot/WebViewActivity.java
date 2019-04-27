@@ -54,7 +54,7 @@ public class WebViewActivity extends AppCompatActivity {
                     CustomTabsIntent customTabsIntent = builder.build();
                     builder.enableUrlBarHiding();
                     builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#00801e"));
+                    builder.setToolbarColor(Color.parseColor("#2DE778"));
                     customTabsIntent.launchUrl(WebViewActivity.this, Uri.parse(url));
                     return true;
                 }

@@ -4,7 +4,7 @@
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:background="#EAEAEA">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/newsInfoFragment"
@@ -23,8 +23,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout2">
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/title_News"
@@ -33,6 +32,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:padding="4dp"
                     android:text="@string/latest_news"
@@ -79,8 +79,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout2">
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/title_stats"
@@ -100,19 +99,20 @@
                     android:layout_below="@id/title_stats"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_bold"
                     android:padding="4dp"
                     android:text="@string/price_index"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chartAveragePrice"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_below="@id/subtitle0"
-                    android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/round_layout2" />
 
                 <TextView
                     android:id="@+id/dummy000"
@@ -130,19 +130,20 @@
                     android:layout_below="@id/dummy000"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/gotham_bold"
                     android:padding="4dp"
                     android:text="@string/fuel_distrubition_companies"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/chart3"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_below="@id/subtitle1"
-                    android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/round_layout2" />
 
                 <TextView
                     android:id="@+id/textViewtoplamSayi"
@@ -154,14 +155,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#000" />
             </RelativeLayout>
-
-            <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/spin_kit"
-                style="@style/SpinKitView.Large.Circle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:SpinKit_Color="@android:color/black" />
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

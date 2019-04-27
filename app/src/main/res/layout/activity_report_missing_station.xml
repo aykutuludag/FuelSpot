@@ -29,7 +29,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/markerMap"
@@ -92,8 +92,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/green_box"
-                android:fontFamily="@font/gotham_black"
+                android:background="@drawable/green_button"
+                android:fontFamily="@font/gotham_medium"
+                android:padding="4dp"
                 android:text="Gönder"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 

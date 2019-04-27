@@ -58,7 +58,6 @@ import static com.fuelspot.MainActivity.carBrand;
 import static com.fuelspot.MainActivity.carModel;
 import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.carbonEmission;
-import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
@@ -192,7 +191,7 @@ public class FragmentAutomobile extends Fragment {
         Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
         kilometerText = headerView.findViewById(R.id.automobile_kilometer);
-        String kmHolder = kilometer + " " + getString(R.string.kilometer);
+        String kmHolder = kilometer + " km";
         kilometerText.setText(kmHolder);
 
         textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
@@ -276,7 +275,7 @@ public class FragmentAutomobile extends Fragment {
 
         //Ortalama tüketim
         avgText = headerView.findViewById(R.id.automobile_consumption);
-        String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt/100km";
+        String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " LT/100km";
         avgText.setText(avgDummy);
 
         //Ortalama maliyet
@@ -286,7 +285,7 @@ public class FragmentAutomobile extends Fragment {
 
         //Ortalama emisyon
         emission = headerView.findViewById(R.id.automobile_emission);
-        String emissionHolder = calculateCarbonEmission() + " g/100km";
+        String emissionHolder = calculateCarbonEmission() + " GR/100km";
         emission.setText(emissionHolder);
 
         //Last updated
@@ -294,7 +293,7 @@ public class FragmentAutomobile extends Fragment {
         if (vehiclePurchaseList.size() > 0) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
-                Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
+                Date date = format.parse(vehiclePurchaseList.get(0).getPurchaseTime());
                 lastUpdated.setReferenceTime(date.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -372,13 +371,13 @@ public class FragmentAutomobile extends Fragment {
 
                                 //update kilometer
                                 if (kilometerText != null) {
-                                    String kmHolder = kilometer + " " + getString(R.string.kilometer);
+                                    String kmHolder = kilometer + " KM";
                                     kilometerText.setText(kmHolder);
                                 }
 
                                 //Ortalama tüketim
                                 if (avgText != null) {
-                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " lt" + getString(R.string.per_100km);
+                                    String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " LT/100km";
                                     avgText.setText(avgDummy);
                                 }
 
@@ -389,19 +388,19 @@ public class FragmentAutomobile extends Fragment {
 
                                 //Ortalama maliyet
                                 if (avgPrice != null) {
-                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " " + currencySymbol + getString(R.string.per_100km);
+                                    String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
                                     avgPrice.setText(avgPriceDummy);
                                 }
 
                                 //Ortalama emisyon
                                 if (emission != null) {
-                                    String emissionHolder = calculateCarbonEmission() + " g" + getString(R.string.per_100km);
+                                    String emissionHolder = calculateCarbonEmission() + " GR/100km";
                                     emission.setText(emissionHolder);
                                 }
 
                                 try {
                                     SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
-                                    Date date = format.parse(vehiclePurchaseList.get(vehiclePurchaseList.size() - 1).getPurchaseTime());
+                                    Date date = format.parse(vehiclePurchaseList.get(0).getPurchaseTime());
                                     lastUpdated.setReferenceTime(date.getTime());
                                 } catch (ParseException e) {
                                     e.printStackTrace();
