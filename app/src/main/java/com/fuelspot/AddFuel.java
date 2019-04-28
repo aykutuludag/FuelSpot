@@ -92,53 +92,23 @@ public class AddFuel extends AppCompatActivity {
     private RequestQueue requestQueue;
     private RequestOptions options;
 
-    private int chosenStationID;
-    private String stationName;
-    private String stationAddress;
-    private String stationLoc;
-    private String stationLogo;
-    private float gasolinePrice;
-    private float dieselPrice;
-    private float LPGPrice;
-    private float electricityPrice;
-    private float selectedUnitPrice;
-    private float buyedLiter;
-    private float entryPrice;
-    private float selectedTaxRate;
-    private float selectedUnitPrice2;
-    private float buyedLiter2;
-    private float entryPrice2;
-    private float selectedTaxRate2;
-    private float totalPrice;
+    private int chosenStationID, tempKM;
+    private String stationName, stationAddress, stationLoc, stationLogo;
+    private float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, totalPrice;
 
     /* LAYOUT 1 ÖĞELER */
     private CircleImageView istasyonLogoHolder;
     ProgressDialog stationFetching;
-    private TextView istasyonNameHolder;
-    private TextView istasyonIDHolder;
-    private RelativeLayout expandableLayoutYakit;
-    private RelativeLayout expandableLayoutYakit2;
+    private RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     private Button expandableButton1;
     private Button expandableButton2;
-    private String fuelType;
-    private String fuelType2;
-    private TextView fuelType1Text;
-    private TextView fuelType2Text;
-    private TextView fuelGrandTotal;
-    private TextView textViewLitre;
-    private ImageView fuelType1Icon;
-    private ImageView fuelType2Icon;
-    private EditText enterKilometer;
-    private EditText textViewLitreFiyati;
-    private EditText textViewTotalFiyat;
-    private EditText textViewLitreFiyati2;
-    private EditText textViewTotalFiyat2;
-    private EditText textViewLitre2;
+    private String fuelType, fuelType2;
+    private TextView istasyonNameHolder, istasyonAdresHolder, istasyonIDHolder, fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre, textViewLitre2;
+    private ImageView fuelType1Icon, fuelType2Icon, photoHolder;
+    private EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitreFiyati2, textViewTotalFiyat2;
     private Bitmap bitmap;
-    private ImageView photoHolder;
     private ScrollView scrollView;
     GridLayoutManager mLayoutManager;
-    private int tempKM;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -213,9 +183,10 @@ public class AddFuel extends AppCompatActivity {
         istasyonIDHolder = findViewById(R.id.stationIDHolder);
         istasyonLogoHolder = findViewById(R.id.stationIconHolder);
         istasyonNameHolder = findViewById(R.id.stationNameHolder);
+        istasyonAdresHolder = findViewById(R.id.stationAddressHolder);
 
-        expandableLayoutYakit = findViewById(R.id.division2);
-        expandableLayoutYakit2 = findViewById(R.id.division3);
+        expandableLayoutYakit = findViewById(R.id.division1);
+        expandableLayoutYakit2 = findViewById(R.id.division2);
         expandableButton1 = findViewById(R.id.expandableButtonYakit1);
         expandableButton2 = findViewById(R.id.expandableButtonYakit2);
 
@@ -245,7 +216,7 @@ public class AddFuel extends AppCompatActivity {
         fuelType2Icon = findViewById(R.id.fuelType2);
         fuelType2Text = findViewById(R.id.fuelType2Text);
         textViewLitreFiyati2 = findViewById(R.id.editTextPricePerLiter2);
-        textViewLitre2 = findViewById(R.id.editTextLiter2);
+        textViewLitre2 = findViewById(R.id.textViewHowManyLitre2);
         textViewTotalFiyat2 = findViewById(R.id.editTextPrice2);
 
         fuelGrandTotal = findViewById(R.id.textViewGrandTotal);
@@ -424,6 +395,8 @@ public class AddFuel extends AppCompatActivity {
     public void loadLayout() {
         istasyonIDHolder.setText("" + chosenStationID);
         istasyonNameHolder.setText(stationName);
+        istasyonAdresHolder.setText(stationAddress);
+
         Glide.with(AddFuel.this).load(stationLogo).apply(options).into(istasyonLogoHolder);
 
         updateVehicleLayout();

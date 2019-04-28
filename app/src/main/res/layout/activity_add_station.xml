@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EAEAEA"
     tools:context=".superuser.AddStation">
 
     <android.support.design.widget.AppBarLayout
@@ -24,13 +25,14 @@
         android:id="@+id/welcome2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/round_layout2"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:id="@+id/section_stationInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f0f0f0">
+            android:layout_margin="8dp">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
@@ -50,7 +52,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:gravity="center" />
+                android:background="@drawable/round_layout_white2"
+                android:gravity="center"
+                android:padding="16dp" />
 
             <EditText
                 android:id="@+id/superStationAddress"
@@ -62,9 +66,11 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white2"
                 android:gravity="center"
                 android:hint="@string/address"
                 android:inputType="textPostalAddress"
+                android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <EditText
@@ -77,8 +83,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout_white"
                 android:gravity="center"
                 android:hint="@string/license_no"
+                android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView

@@ -438,14 +438,12 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.create(ProfileEditActivity.this).single().start();
-                } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
-                }
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == REQUEST_STORAGE) {
+            if (ActivityCompat.checkSelfPermission(ProfileEditActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                ImagePicker.create(ProfileEditActivity.this).single().start();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }
         }
     }

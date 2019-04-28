@@ -15,7 +15,6 @@ public class WebViewActivity extends AppCompatActivity {
 
     WebView webView;
     String URL;
-
     Window window;
     Toolbar toolbar;
 

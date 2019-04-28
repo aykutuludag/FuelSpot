@@ -673,7 +673,15 @@ public class FragmentStations extends Fragment {
                 addMarker(fullStationList.get(i));
             }
         }
-        markers.get(0).showInfoWindow();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if (markers != null && markers.size() > 0) {
+                    markers.get(0).showInfoWindow();
+                }
+            }
+        }, 250);
     }
 
     private void addMarker(final StationItem sItem) {
@@ -905,14 +913,12 @@ public class FragmentStations extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION: {
-                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
-                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-                    loadMap();
-                } else {
-                    Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
-                }
+        if (requestCode == REQUEST_LOCATION) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+                loadMap();
+            } else {
+                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }
         }
     }

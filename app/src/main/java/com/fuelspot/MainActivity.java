@@ -598,14 +598,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.filter_stations:
-                FragmentStations fragment = (FragmentStations) fragments.get(0);
-                fragment.filterPopup();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.filter_stations) {
+            FragmentStations fragment = (FragmentStations) fragments.get(0);
+            fragment.filterPopup();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

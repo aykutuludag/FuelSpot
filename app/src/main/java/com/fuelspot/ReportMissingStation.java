@@ -315,13 +315,11 @@ public class ReportMissingStation extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION: {
-                if (ActivityCompat.checkSelfPermission(ReportMissingStation.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
-                    loadMap();
-                } else {
-                    Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
-                }
+        if (requestCode == REQUEST_LOCATION) {
+            if (ActivityCompat.checkSelfPermission(ReportMissingStation.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                loadMap();
+            } else {
+                Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }
         }
     }

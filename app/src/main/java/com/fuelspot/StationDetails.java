@@ -36,14 +36,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -175,7 +172,6 @@ public class StationDetails extends AppCompatActivity {
     private ImageView errorCampaign;
     private ImageView errorComment;
     private CircleImageView verifiedSection;
-    ProgressBar progressBar;
     private float howMuchGas;
     private float howMuchDie;
     private float howMuchLPG;
@@ -186,7 +182,6 @@ public class StationDetails extends AppCompatActivity {
     private ImageView reportStationPhoto;
     private ImageView reportPricePhoto;
     private RequestOptions options;
-    private WebView webview;
     private SharedPreferences prefs;
     private Drawable favorite;
     private int reportRequest;
@@ -240,17 +235,7 @@ public class StationDetails extends AppCompatActivity {
         errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
         scrollView = findViewById(R.id.scrollView);
-        webview = findViewById(R.id.webView);
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setDomStorageEnabled(true);
-        webview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                scrollView.requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-        progressBar = findViewById(R.id.progressBar);
+
         requestQueue = Volley.newRequestQueue(StationDetails.this);
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
@@ -632,19 +617,6 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void loadStationDetails() {
-        final String dummyUrl = "https://www.google.com/maps?cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1] + "&layer=c";
-        webview.loadUrl(dummyUrl);
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(final WebView view, String url) {
-                super.onPageFinished(view, url);
-                if (url.contains("https://www.google.com/maps/@")) {
-                    progressBar.setVisibility(View.GONE);
-                    view.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         //SingleStation
         textName.setText(stationName);
         textVicinity.setText(stationVicinity);
@@ -1538,14 +1510,12 @@ public class StationDetails extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (ActivityCompat.checkSelfPermission(StationDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.create(StationDetails.this).single().start(reportRequest);
-                } else {
-                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
-                }
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == REQUEST_STORAGE) {
+            if (ActivityCompat.checkSelfPermission(StationDetails.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                ImagePicker.create(StationDetails.this).single().start(reportRequest);
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -1573,7 +1543,6 @@ public class StationDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        webview.destroy();
         requestQueue.cancelAll(this);
         clearVariables();
         finish();

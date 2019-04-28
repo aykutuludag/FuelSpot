@@ -18,11 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:text="@string/welcome_fuelspot"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -37,7 +40,8 @@
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="İstasyon sahibi misiniz? FuelSpot Business'a hemen ücretsiz kaydolun sayısız avantaj ve fırsattan yararlanın!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+            android:textColor="#161616" />
 
         <TextView
             android:id="@+id/textView14"
@@ -52,7 +56,7 @@
             android:gravity="center"
             android:text="* DAHA FAZLA MÜŞTERİ, DAHA FAZLA SATIŞ"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -68,7 +72,7 @@
             android:gravity="center"
             android:text="* ÜCRETSİZ TANITIMLAR, KAMPANYALAR, FIRSATLAR"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -84,7 +88,7 @@
             android:gravity="center"
             android:text="* ONLİNE PLATFORMLARDA ÜCRETSİZ TANITIM (GOOGLE, YANDEX ...)"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -100,7 +104,7 @@
             android:gravity="center"
             android:text="* RAKİPLERİNİZİN FİYATLARINI ANLIK TAKİP İMKANI"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -116,7 +120,7 @@
             android:gravity="center"
             android:text="* SEKTÖRDEN SON HABERLER, FİYAT ENDEKSLERİ, İSTATİSTİKLER, ANALİZLER"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -132,7 +136,7 @@
             android:gravity="center"
             android:text="* İSTASYONUNUZUN ONLİNE PROFİLİ SİZİN KONTROLÜNÜZDE OLSUN! Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <TextView
@@ -148,7 +152,7 @@
             android:gravity="center"
             android:text="* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#fff"
+            android:textColor="#161616"
             android:textStyle="bold" />
 
         <Button
@@ -324,7 +328,7 @@
         android:id="@+id/welcome2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"

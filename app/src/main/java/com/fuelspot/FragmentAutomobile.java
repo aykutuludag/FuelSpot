@@ -82,7 +82,6 @@ public class FragmentAutomobile extends Fragment {
     private RelativeTimeTextView lastUpdated;
     private RelativeLayout userNoPurchaseLayout;
     private RequestQueue requestQueue;
-    private View headerView;
     private Button buttonSeeAllPurchases;
     private View view;
     private RelativeLayout regularLayout;
@@ -113,8 +112,6 @@ public class FragmentAutomobile extends Fragment {
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-
-            headerView = view.findViewById(R.id.header_vehicle);
 
             regularLayout = view.findViewById(R.id.userRegularLayout);
             noAracLayout = view.findViewById(R.id.userNoCarLayout);
@@ -181,7 +178,7 @@ public class FragmentAutomobile extends Fragment {
 
     private void loadVehicleProfile() {
         //ProfilePhoto
-        CircleImageView carPhotoHolder = headerView.findViewById(R.id.carPicture);
+        CircleImageView carPhotoHolder = view.findViewById(R.id.carPicture);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.default_automobile)
@@ -190,21 +187,21 @@ public class FragmentAutomobile extends Fragment {
                 .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
         Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
-        kilometerText = headerView.findViewById(R.id.automobile_kilometer);
+        kilometerText = view.findViewById(R.id.automobile_kilometer);
         String kmHolder = kilometer + " km";
         kilometerText.setText(kmHolder);
 
-        textViewPlaka = headerView.findViewById(R.id.automobile_plateNo);
+        textViewPlaka = view.findViewById(R.id.automobile_plateNo);
         textViewPlaka.setText(plateNo);
 
         //Marka-model
-        TextView fullname = headerView.findViewById(R.id.carFullname);
+        TextView fullname = view.findViewById(R.id.carFullname);
         String fullad = carBrand + " " + carModel;
         fullname.setText(fullad);
 
         //Yakıt tipi başlangıç
-        TextView fuelType = headerView.findViewById(R.id.car_fuelTypeText);
-        ImageView fuelTypeIndicator = headerView.findViewById(R.id.car_fuelType);
+        TextView fuelType = view.findViewById(R.id.car_fuelTypeText);
+        ImageView fuelTypeIndicator = view.findViewById(R.id.car_fuelType);
         String fuelText;
 
         switch (fuelPri) {
@@ -231,8 +228,8 @@ public class FragmentAutomobile extends Fragment {
         }
         fuelType.setText(fuelText);
 
-        TextView fuelType2 = headerView.findViewById(R.id.car_fuelTypeText2);
-        ImageView fuelTypeIndicator2 = headerView.findViewById(R.id.car_fuelType2);
+        TextView fuelType2 = view.findViewById(R.id.car_fuelTypeText2);
+        ImageView fuelTypeIndicator2 = view.findViewById(R.id.car_fuelType2);
         String fuelText2;
         switch (MainActivity.fuelSec) {
             case 0:
@@ -274,22 +271,22 @@ public class FragmentAutomobile extends Fragment {
         //Yakıt tipi bitiş
 
         //Ortalama tüketim
-        avgText = headerView.findViewById(R.id.automobile_consumption);
+        avgText = view.findViewById(R.id.automobile_consumption);
         String avgDummy = String.format(Locale.getDefault(), "%.2f", calculateAverageCons()) + " LT/100km";
         avgText.setText(avgDummy);
 
         //Ortalama maliyet
-        avgPrice = headerView.findViewById(R.id.automobile_priceCons);
+        avgPrice = view.findViewById(R.id.automobile_priceCons);
         String avgPriceDummy = String.format(Locale.getDefault(), "%.2f", calculateAvgPrice()) + " TL/100km";
         avgPrice.setText(avgPriceDummy);
 
         //Ortalama emisyon
-        emission = headerView.findViewById(R.id.automobile_emission);
+        emission = view.findViewById(R.id.automobile_emission);
         String emissionHolder = calculateCarbonEmission() + " GR/100km";
         emission.setText(emissionHolder);
 
         //Last updated
-        lastUpdated = headerView.findViewById(R.id.car_lastUpdated);
+        lastUpdated = view.findViewById(R.id.car_lastUpdated);
         if (vehiclePurchaseList.size() > 0) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
@@ -301,7 +298,7 @@ public class FragmentAutomobile extends Fragment {
         }
 
         //EditProfile
-        ImageView updateCar = headerView.findViewById(R.id.updateCarInfo);
+        ImageView updateCar = view.findViewById(R.id.updateCarInfo);
         updateCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

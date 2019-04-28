@@ -62,7 +62,6 @@ public class FragmentProfile extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
     private RecyclerView.Adapter mAdapter2;
-    private View headerView;
     private RelativeLayout userNoCommentLayout;
     private Button buttonSeeAllComments;
     private TextView textViewFMoney;
@@ -93,7 +92,6 @@ public class FragmentProfile extends Fragment {
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
-            headerView = rootView.findViewById(R.id.header_profile);
 
             requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -153,7 +151,7 @@ public class FragmentProfile extends Fragment {
     }
 
     private void loadProfile() {
-        CircleImageView userProfileHolder = headerView.findViewById(R.id.profileImage);
+        CircleImageView userProfileHolder = rootView.findViewById(R.id.profileImage);
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -162,12 +160,12 @@ public class FragmentProfile extends Fragment {
             Glide.with(getActivity()).load(photo).apply(options).into(userProfileHolder);
         }
 
-        textViewFMoney = headerView.findViewById(R.id.textViewFMoney);
+        textViewFMoney = rootView.findViewById(R.id.textViewFMoney);
 
-        TextView userusername = headerView.findViewById(R.id.userUsername);
+        TextView userusername = rootView.findViewById(R.id.userUsername);
         userusername.setText(username);
 
-        Button myWallet = headerView.findViewById(R.id.button_store);
+        Button myWallet = rootView.findViewById(R.id.button_store);
         myWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,7 +174,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        Button openHelp = headerView.findViewById(R.id.button_help);
+        Button openHelp = rootView.findViewById(R.id.button_help);
         openHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,7 +188,7 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        Button openFavorites = headerView.findViewById(R.id.button_fav);
+        Button openFavorites = rootView.findViewById(R.id.button_fav);
         openFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
