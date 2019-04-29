@@ -165,7 +165,8 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         // AppRater
         RateThisApp.onCreate(this);
-        RateThisApp.showRateDialogIfNeeded(this);
+        RateThisApp.Config config = new RateThisApp.Config(3, 5);
+        RateThisApp.init(config);
 
         //In-App Services
         InAppBilling();
@@ -357,9 +358,17 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                     item.setDistance((int) uzaklik);
                                     //DISTANCE END
                                     listOfOwnedStations.add(item);
+                                }
 
-                                    if (superStationID == 0) {
-                                        chooseStation(item);
+                                if (superStationID == 0) {
+                                    chooseStation(listOfOwnedStations.get(0));
+                                } else {
+                                    // User already selected station.
+                                    for (int k = 0; k < listOfOwnedStations.size(); k++) {
+                                        if (superStationID == listOfOwnedStations.get(k).getID()) {
+                                            chooseStation(listOfOwnedStations.get(k));
+                                            break;
+                                        }
                                     }
                                 }
                             } catch (JSONException e) {

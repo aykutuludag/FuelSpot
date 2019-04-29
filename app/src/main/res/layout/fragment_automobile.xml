@@ -262,7 +262,7 @@
                         android:layout_below="@id/purchaseView"
                         android:layout_centerInParent="true"
                         android:layout_margin="8dp"
-                        android:background="@drawable/green_button"
+                        android:background="@drawable/green_box"
                         android:fontFamily="@font/gotham_medium"
                         android:padding="4dp"
                         android:text="@string/see_all"
@@ -292,21 +292,11 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                             android:textColor="#212121" />
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/errorImage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textView20"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
-                            android:src="@drawable/error_nopurchase" />
-
                         <TextView
                             android:id="@+id/textView21"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/errorImage"
+                            android:layout_below="@id/textView20"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:gravity="center"

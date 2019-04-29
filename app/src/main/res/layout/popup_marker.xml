@@ -4,7 +4,8 @@
     android:id="@+id/background_marker"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/round_layout_white"
+    android:layout_margin="4dp"
+    android:background="@drawable/white_box"
     android:gravity="center"
     android:padding="2dp">
 

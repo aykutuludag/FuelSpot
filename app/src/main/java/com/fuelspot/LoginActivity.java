@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
         if (!premium) {
-            // AdMob(this);
+            /*  AdMob(this);*/
         }
 
         arrangeLayouts();
@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             startActivity(intent);
                             finish();
                         }
-                    }, 2000);
+                    }, 1250);
                     return;
                 }
             }
@@ -271,7 +271,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         startActivity(i);
                         finish();
                     }
-                }, 2000);
+                }, 1250);
             } else {
                 final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 // Check user has premium and connected to internet
@@ -283,7 +283,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             startActivity(intent);
                             finish();
                         }
-                    }, 2000);
+                    }, 1250);
                 } else {
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -291,7 +291,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             startActivity(intent);
                             finish();
                         }
-                    }, 2000);
+                    }, 1250);
                 }
             }
         }
@@ -530,7 +530,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onResume() {
         super.onResume();
         if (background != null) {
-            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background_login;
+            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.fuelspot;
             Uri uri = Uri.parse(uriPath);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);

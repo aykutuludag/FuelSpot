@@ -505,13 +505,14 @@ public class AddStation extends AppCompatActivity {
                                     //DISTANCE END
                                     listOfOwnedStations.add(item);
                                 }
+
+                                Toast.makeText(AddStation.this, "Bilgileriniz kaydedildi. Onay için sizinle en kısa sürede iletişime geçeceğiz.", Toast.LENGTH_SHORT).show();
+                                loading.dismiss();
+                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        Toast.makeText(AddStation.this, "Bilgileriniz kaydedildi. Onay için sizinle en kısa sürede iletişime geçeceğiz.", Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
-                        finish();
                     }
                 },
                 new Response.ErrorListener() {

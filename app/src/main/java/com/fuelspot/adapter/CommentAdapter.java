@@ -193,16 +193,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(mContext, mContext.getString(R.string.comment_delete_success), Toast.LENGTH_LONG).show();
-                                    if (mContext instanceof StationComments) {
-                                        ((StationComments) mContext).fetchStationComments();
-                                    }
-                                    break;
-                                default:
-                                    Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                Toast.makeText(mContext, mContext.getString(R.string.comment_delete_success), Toast.LENGTH_LONG).show();
+                                if (mContext instanceof StationComments) {
+                                    ((StationComments) mContext).fetchStationComments();
+                                }
+                            } else {
+                                Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();

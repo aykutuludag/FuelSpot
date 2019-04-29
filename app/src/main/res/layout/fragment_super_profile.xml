@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
-    android:background="#EAEAEA"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#EAEAEA">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/layout_super_profile"
@@ -13,13 +13,13 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#EDEDED">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/header_super_profile"
                 android:layout_width="match_parent"
-                android:layout_height="300dp">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <ImageView
                     android:id="@+id/updateUserInfo"
@@ -104,9 +104,9 @@
             <RelativeLayout
                 android:id="@+id/stations_layout"
                 android:layout_width="match_parent"
-                android:layout_below="@id/header_super_profile"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-24dp"
+                android:layout_below="@id/header_super_profile"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/round_layout">
 
                 <TextView
@@ -137,7 +137,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/green_button"
+                    android:background="@drawable/green_box"
                     android:fontFamily="@font/gotham_medium"
                     android:padding="4dp"
                     android:text="@string/add_station" />

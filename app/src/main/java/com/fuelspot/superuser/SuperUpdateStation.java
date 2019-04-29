@@ -666,16 +666,14 @@ public class SuperUpdateStation extends AppCompatActivity {
                                     item.setDistance((int) uzaklik);
                                     //DISTANCE END
                                     listOfOwnedStations.add(item);
-
-                                    // In this way, we assure server-local is sync
-                                    if (superStationID == item.getID()) {
-                                        chooseStation(item);
-                                    }
                                 }
 
-                                // Station info update&sync finished
-                                Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_success), Toast.LENGTH_LONG).show();
-                                finish();
+                                for (int k = 0; k < listOfOwnedStations.size(); k++) {
+                                    if (superStationID == listOfOwnedStations.get(k).getID()) {
+                                        chooseStation(listOfOwnedStations.get(k));
+                                        break;
+                                    }
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -751,6 +749,10 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+        // Station info update&sync finished
+        Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_success), Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private void coloredBars(int color1, int color2) {

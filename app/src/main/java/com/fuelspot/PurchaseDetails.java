@@ -173,7 +173,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 circleImageViewStatus.setBackgroundResource(R.drawable.question);
                 textViewStatus.setText("Satın alma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
             } else {
-                circleImageViewStatus.setBackgroundResource(R.drawable.add_fuel);
+                circleImageViewStatus.setBackgroundResource(R.drawable.money);
                 textViewStatus.setText("Bonus kazanmak için fiş/fatura fotoğrafı ekle!");
             }
         }

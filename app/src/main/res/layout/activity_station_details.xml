@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
                 <RelativeLayout
                     android:id="@+id/baseInfoLayout"
                     android:layout_width="match_parent"
@@ -493,6 +492,10 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/facilitiesSection"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         ads:adSize="MEDIUM_RECTANGLE"
                         ads:adUnitId="@string/banner_admob" />
 
@@ -540,15 +543,6 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616"
                             android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/errorNoCampaign"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/noCampaignText"
-                            android:layout_margin="8dp"
-                            android:visibility="gone"
-                            app:srcCompat="@drawable/error_nocomment" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -586,7 +580,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@drawable/green_button"
+                            android:background="@drawable/green_box"
                             android:fontFamily="@font/gotham_medium"
                             android:padding="4dp"
                             android:text="@string/see_all"
@@ -604,16 +598,6 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616"
                             android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/errorNoComment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/noCommentText"
-                            android:layout_margin="8dp"
-                            android:contentDescription="@string/no_comment_text"
-                            android:visibility="gone"
-                            app:srcCompat="@drawable/error_nocomment" />
 
                     </RelativeLayout>
 
@@ -664,7 +648,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/comment"
-            app:fab_colorNormal="#fafafa"
+            app:fab_colorNormal="#ffffff"
             fab:fab_label="@string/add_comment"
             fab:fab_size="mini" />
 
@@ -673,7 +657,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/money"
-            app:fab_colorNormal="#fafafa"
+            app:fab_colorNormal="#ffffff"
             fab:fab_label="@string/fab_report_price"
             fab:fab_size="mini" />
 
@@ -682,7 +666,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/report"
-            app:fab_colorNormal="#fafafa"
+            app:fab_colorNormal="#ffffff"
             fab:fab_label="@string/fab_report"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>

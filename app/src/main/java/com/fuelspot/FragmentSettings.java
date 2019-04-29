@@ -1,6 +1,5 @@
 package com.fuelspot;
 
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -95,6 +94,7 @@ public class FragmentSettings extends Fragment {
     private RequestQueue requestQueue;
     private View rootView;
     private CheckBox geofenceCheckBox;
+    Button buttonTax;
     DecimalFormat df = new DecimalFormat("##.#");
     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
@@ -201,7 +201,7 @@ public class FragmentSettings extends Fragment {
             String dummy3 = "% " + df.format(TAX_ELECTRICITY * 100f);
             textViewElectricityTax.setText(dummy3);
 
-            Button buttonTax = rootView.findViewById(R.id.button_tax);
+            buttonTax = rootView.findViewById(R.id.button_tax);
             buttonTax.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -248,8 +248,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            // BU İKİSİ POPUP İÇİNDE WEBVİEW OLACAK
-            TextView openTerms = rootView.findViewById(R.id.textView34);
+            Button openTerms = rootView.findViewById(R.id.button_terms);
             openTerms.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -259,7 +258,7 @@ public class FragmentSettings extends Fragment {
                 }
             });
 
-            TextView openPrivacy = rootView.findViewById(R.id.textView35);
+            Button openPrivacy = rootView.findViewById(R.id.button_privacy);
             openPrivacy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -310,6 +309,8 @@ public class FragmentSettings extends Fragment {
                                     Snackbar snackBar = Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.update_tax_success), Snackbar.LENGTH_LONG);
                                     snackBar.show();
                                 }
+
+                                buttonTax.setClickable(false);
                             } catch (JSONException e) {
                                 Toast.makeText(getActivity(), getString(R.string.error), Snackbar.LENGTH_LONG).show();
                             }

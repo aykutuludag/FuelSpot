@@ -4,9 +4,9 @@
     android:id="@+id/feedbackLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:background="#ffffff"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    android:background="@drawable/white_box"
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/textView36"
@@ -57,8 +57,8 @@
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:padding="2dp"
         android:contentDescription="@string/cancel"
+        android:padding="2dp"
         app:srcCompat="@drawable/cancel" />
 
 </RelativeLayout>

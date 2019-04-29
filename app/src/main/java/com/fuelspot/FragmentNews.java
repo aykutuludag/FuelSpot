@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +40,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -74,7 +73,6 @@ public class FragmentNews extends Fragment {
     private GridLayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private List<NewsItem> feedsList = new ArrayList<>();
-    private RelativeLayout errorLayout;
     private View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
@@ -124,8 +122,8 @@ public class FragmentNews extends Fragment {
 
             AdView mAdView = rootView.findViewById(R.id.adView);
             if (!premium) {
-               /* AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
-                mAdView.loadAd(adRequest);*/
+                AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+                mAdView.loadAd(adRequest);
             } else {
                 mAdView.setVisibility(View.GONE);
             }
@@ -134,7 +132,6 @@ public class FragmentNews extends Fragment {
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             mRecyclerView = rootView.findViewById(R.id.newsView);
             mRecyclerView.setNestedScrollingEnabled(false);
-            errorLayout = rootView.findViewById(R.id.newsErrorLayout);
 
             chart = rootView.findViewById(R.id.chartAveragePrice);
             chart.getXAxis().setAvoidFirstLastClipping(true);
@@ -243,13 +240,9 @@ public class FragmentNews extends Fragment {
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(mLayoutManager);
-                                errorLayout.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                errorLayout();
                             }
-                        } else {
-                            errorLayout();
                         }
                     }
                 },
@@ -258,7 +251,6 @@ public class FragmentNews extends Fragment {
                     public void onErrorResponse(VolleyError volleyError) {
                         swipeContainer.setRefreshing(false);
                         volleyError.printStackTrace();
-                        errorLayout();
                     }
                 }) {
             @Override
@@ -502,11 +494,5 @@ public class FragmentNews extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    private void errorLayout() {
-        errorLayout.setVisibility(View.VISIBLE);
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.no_news), Snackbar.LENGTH_LONG).show();
     }
 }

@@ -98,7 +98,6 @@ public class FragmentStations extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RequestQueue queue;
     private SharedPreferences prefs;
-    private ImageView noStationError;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private Location locLastKnown = new Location("");
@@ -211,7 +210,6 @@ public class FragmentStations extends Fragment {
                 }
             };
 
-            noStationError = rootView.findViewById(R.id.errorPicture);
             sortGasolineLayout = rootView.findViewById(R.id.sortGasoline);
             sortDieselLayout = rootView.findViewById(R.id.sortDiesel);
             sortLPGLayout = rootView.findViewById(R.id.sortLPG);
@@ -361,7 +359,6 @@ public class FragmentStations extends Fragment {
             isAllStationsListed = false;
             seeAllStations.setText(getString(R.string.see_all));
             seeAllStations.setVisibility(View.GONE);
-            noStationError.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
 
             // Clear objects
@@ -449,7 +446,6 @@ public class FragmentStations extends Fragment {
                                 whichOrder = 4;
                                 sortBy(whichOrder);
                             } catch (JSONException e) {
-                                noStationError.setVisibility(View.VISIBLE);
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                         } else {
@@ -485,7 +481,6 @@ public class FragmentStations extends Fragment {
                     public void onErrorResponse(VolleyError volleyError) {
                         swipeContainer.setRefreshing(false);
                         isMapUpdating = false;
-                        noStationError.setVisibility(View.VISIBLE);
                         volleyError.printStackTrace();
                     }
                 }) {

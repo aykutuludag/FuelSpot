@@ -145,7 +145,6 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".WebViewActivity" />
 
 
         <!-- SuperUser Class -->

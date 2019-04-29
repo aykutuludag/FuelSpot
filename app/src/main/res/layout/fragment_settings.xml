@@ -11,20 +11,25 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/settings_general"
+            android:id="@+id/settings_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_layout_white">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_layout2"
+            android:elevation="4dp">
 
             <TextView
                 android:id="@+id/textView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/settings"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#000000" />
 
             <android.support.percent.PercentRelativeLayout
                 android:id="@+id/userGen"
@@ -139,284 +144,346 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textViewCountryName"
                     android:layout_centerHorizontal="true"
-                    android:padding="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:padding="2dp"
                     android:text="@string/appVersion"
                     android:textColor="#424242" />
             </android.support.percent.PercentRelativeLayout>
-
-
         </RelativeLayout>
 
-
         <RelativeLayout
-            android:id="@+id/settings_geofence"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_general"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_layout_white">
+            android:layout_below="@+id/settings_info"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_layout2"
+            android:elevation="8dp">
+
+            <RelativeLayout
+                android:id="@+id/settings_geofence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:id="@+id/titleGeofence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/location_notifications"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleGeofence"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:padding="4dp"
+                    android:text="@string/location_notifications" />
+
+                <TextView
+                    android:id="@+id/textView37"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/checkBox"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:text="@string/location_notifications_desc" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/settings_tax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/settings_geofence"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textView114"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/tax"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/single_tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView114"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:padding="2dp">
+
+                    <ImageView
+                        android:id="@+id/gasoline"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@string/gasoline"
+                        android:padding="5dp"
+                        android:src="@drawable/gasoline"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textSize="12sp"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceGasoline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/gasoline"
+                        android:layout_alignStart="@+id/gasoline"
+                        android:layout_alignEnd="@+id/gasoline"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/diesel"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/gasoline"
+                        android:contentDescription="@string/diesel"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/diesel"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textSize="12sp"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceDiesel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/diesel"
+                        android:layout_alignEnd="@+id/diesel"
+                        android:layout_toEndOf="@+id/priceGasoline"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/lpg"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/diesel"
+                        android:contentDescription="@string/lpg"
+                        android:padding="5dp"
+                        android:src="@drawable/lpg"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textSize="12sp"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceLPG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lpg"
+                        android:layout_alignEnd="@+id/lpg"
+                        android:layout_toEndOf="@+id/priceDiesel"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/electricity"
+                        android:layout_height="32dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/lpg"
+                        android:contentDescription="@string/electricity"
+                        android:padding="5dp"
+                        android:src="@drawable/electricity"
+                        app:layout_widthPercent="25%" />
+
+                    <TextView
+                        android:id="@+id/priceElectricity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/electricity"
+                        android:layout_alignEnd="@+id/electricity"
+                        android:layout_toEndOf="@+id/priceLPG"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </android.support.percent.PercentRelativeLayout>
+
+                <Button
+                    android:id="@+id/button_tax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/single_tax"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_medium"
+                    android:padding="2dp"
+                    android:text="@string/update_tax_rates"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/settings_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/settings_tax"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textView04"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/other"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/inner_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView04"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="4dp">
+
+                    <Button
+                        android:id="@+id/button_missing_station"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/white_box"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="@string/report_missing_station"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="1.5%"
+                        app:layout_widthPercent="30%" />
+
+                    <Button
+                        android:id="@+id/button_feedback"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_toEndOf="@id/button_missing_station"
+                        android:background="@drawable/white_box"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="@string/feedback"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="1.5%"
+                        app:layout_widthPercent="30%" />
+
+                    <Button
+                        android:id="@+id/button_beta"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_toEndOf="@id/button_feedback"
+                        android:background="@drawable/white_box"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="@string/enroll_beta"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="1.5%"
+                        app:layout_widthPercent="30%" />
+                </android.support.percent.PercentRelativeLayout>
+
+
+                <android.support.percent.PercentRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/inner_buttons"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="4dp">
+
+                    <Button
+                        android:id="@+id/button_rate"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/white_box"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="@string/rate_app"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="1.5%"
+                        app:layout_widthPercent="30%" />
+
+                    <Button
+                        android:id="@+id/button_terms"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/button_rate"
+                        android:background="@drawable/white_box"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="@string/terms_and_agreements"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="1.5%"
+                        app:layout_widthPercent="30%" />
+
+                    <Button
+                        android:id="@+id/button_privacy"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/button_terms"
+                        android:background="@drawable/white_box"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="@string/privacy"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="1.5%"
+                        app:layout_widthPercent="30%" />
+                </android.support.percent.PercentRelativeLayout>
+
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/titleGeofence"
+                android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/settings_other"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:text="@string/location_notifications"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleGeofence"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/location_notifications" />
-
-            <TextView
-                android:id="@+id/textView37"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/checkBox"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
-                android:gravity="center"
-                android:text="@string/location_notifications_desc" />
+                android:text="@string/copyright_text"
+                android:textColor="#212121" />
 
         </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/settings_tax"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_geofence"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_layout_white">
-
-            <TextView
-                android:id="@+id/textView114"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:text="@string/tax"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <android.support.percent.PercentRelativeLayout
-                android:id="@+id/single_tax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView114">
-
-                <ImageView
-                    android:id="@+id/gasoline"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:contentDescription="@string/gasoline"
-                    android:padding="5dp"
-                    android:src="@drawable/gasoline"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/priceGasoline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/gasoline"
-                    android:layout_alignStart="@+id/gasoline"
-                    android:layout_alignEnd="@+id/gasoline"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/diesel"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/gasoline"
-                    android:contentDescription="@string/diesel"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:src="@drawable/diesel"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/priceDiesel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/diesel"
-                    android:layout_alignEnd="@+id/diesel"
-                    android:layout_toEndOf="@+id/priceGasoline"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/lpg"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/diesel"
-                    android:contentDescription="@string/lpg"
-                    android:padding="5dp"
-                    android:src="@drawable/lpg"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"
-                    app:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/priceLPG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lpg"
-                    android:layout_alignEnd="@+id/lpg"
-                    android:layout_toEndOf="@+id/priceDiesel"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/electricity"
-                    android:layout_height="32dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/lpg"
-                    android:contentDescription="@string/electricity"
-                    android:padding="5dp"
-                    android:src="@drawable/electricity"
-                    app:layout_widthPercent="25%" />
-
-                <TextView
-                    android:id="@+id/priceElectricity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/electricity"
-                    android:layout_alignEnd="@+id/electricity"
-                    android:layout_toEndOf="@+id/priceLPG"
-                    android:gravity="center"
-                    android:padding="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#6D6D6D"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </android.support.percent.PercentRelativeLayout>
-
-            <Button
-                android:id="@+id/button_tax"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/single_tax"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:text="@string/update_tax_rates" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/settings_other"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_tax"
-            android:layout_margin="8dp"
-            android:background="@drawable/round_layout_white">
-
-            <TextView
-                android:id="@+id/textView04"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:text="@string/other"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/button_missing_station"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textView04"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="@string/report_missing_station" />
-
-            <Button
-                android:id="@+id/button_feedback"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/button_missing_station"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="@string/feedback" />
-
-            <Button
-                android:id="@+id/button_beta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button_feedback"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="@string/enroll_beta" />
-
-            <Button
-                android:id="@+id/button_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button_beta"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:text="@string/rate_app" />
-
-            <TextView
-                android:id="@+id/textView34"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button_rate"
-                android:layout_margin="8dp"
-                android:padding="4dp"
-                android:text="@string/terms_and_agreements"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000000" />
-
-            <TextView
-                android:id="@+id/textView35"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button_rate"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="8dp"
-                android:padding="4dp"
-                android:text="@string/privacy"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#000000" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/settings_other"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/copyright_text"
-            android:textColor="#212121" />
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -678,22 +678,18 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     item.setDistance((int) uzaklik);
                                     //DISTANCE END
                                     listOfOwnedStations.add(item);
+                                }
 
-                                    if (superStationID == 0) {
-                                        chooseStation(item);
+                                if (superStationID == 0) {
+                                    chooseStation(listOfOwnedStations.get(0));
+                                } else {
+                                    // User already selected station.
+                                    for (int k = 0; k < listOfOwnedStations.size(); k++) {
+                                        if (superStationID == listOfOwnedStations.get(k).getID()) {
+                                            chooseStation(listOfOwnedStations.get(k));
+                                            break;
+                                        }
                                     }
-
-                                    isSigned = true;
-                                    prefs.edit().putBoolean("isSigned", isSigned).apply();
-
-                                    isSuperUser = true;
-                                    prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
-
-                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_LONG).show();
-
-                                    Intent intent = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
-                                    startActivity(intent);
-                                    finish();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -780,6 +776,18 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         superLastUpdate = item.getLastUpdated();
         prefs.edit().putString("SuperLastUpdate", superLastUpdate).apply();
+
+        isSigned = true;
+        prefs.edit().putBoolean("isSigned", isSigned).apply();
+
+        isSuperUser = true;
+        prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
+
+        Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void layout4() {
@@ -1497,7 +1505,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             mMapView.onResume();
         }
         if (background != null) {
-            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.background_login;
+            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.fuelspot;
             Uri uri = Uri.parse(uriPath);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);

@@ -73,6 +73,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -169,8 +170,6 @@ public class StationDetails extends AppCompatActivity {
     private PopupWindow mPopupWindow;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
-    private ImageView errorCampaign;
-    private ImageView errorComment;
     private CircleImageView verifiedSection;
     private float howMuchGas;
     private float howMuchDie;
@@ -226,13 +225,12 @@ public class StationDetails extends AppCompatActivity {
 
         AdView mAdView = findViewById(R.id.adView);
         if (!premium) {
-          /*  AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
-            mAdView.loadAd(adRequest);*/
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+            mAdView.loadAd(adRequest);
         } else {
             mAdView.setVisibility(View.GONE);
         }
 
-        errorCampaign = findViewById(R.id.errorNoCampaign);
         noCampaignText = findViewById(R.id.noCampaignText);
         scrollView = findViewById(R.id.scrollView);
 
@@ -339,7 +337,6 @@ public class StationDetails extends AppCompatActivity {
             }
         });
         RelativeLayout commentSection = findViewById(R.id.section_comment);
-        errorComment = findViewById(R.id.errorNoComment);
         noCommentText = findViewById(R.id.noCommentText);
         commentSection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -790,16 +787,13 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
 
                                 mRecyclerView.setVisibility(View.VISIBLE);
-                                errorCampaign.setVisibility(View.GONE);
                                 noCampaignText.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 mRecyclerView.setVisibility(View.GONE);
-                                errorCampaign.setVisibility(View.VISIBLE);
                                 noCampaignText.setVisibility(View.VISIBLE);
                             }
                         } else {
                             mRecyclerView.setVisibility(View.GONE);
-                            errorCampaign.setVisibility(View.VISIBLE);
                             noCampaignText.setVisibility(View.VISIBLE);
                         }
                     }
@@ -808,7 +802,6 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         mRecyclerView.setVisibility(View.GONE);
-                        errorCampaign.setVisibility(View.VISIBLE);
                         noCampaignText.setVisibility(View.VISIBLE);
                     }
                 }) {
@@ -879,7 +872,6 @@ public class StationDetails extends AppCompatActivity {
                                     floatingActionButton1.setLabelText(getString(R.string.add_comment));
                                 }
 
-                                errorComment.setVisibility(View.GONE);
                                 noCommentText.setVisibility(View.GONE);
 
                                 // Calculate station score
@@ -897,13 +889,11 @@ public class StationDetails extends AppCompatActivity {
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
                                 textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
-                                errorComment.setVisibility(View.VISIBLE);
                                 noCommentText.setVisibility(View.VISIBLE);
                             }
                         } else {
                             hasAlreadyCommented = false;
                             textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
-                            errorComment.setVisibility(View.VISIBLE);
                             noCommentText.setVisibility(View.VISIBLE);
                         }
                     }
@@ -913,7 +903,6 @@ public class StationDetails extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
                         textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
-                        errorComment.setVisibility(View.VISIBLE);
                         noCommentText.setVisibility(View.VISIBLE);
                     }
                 }) {
