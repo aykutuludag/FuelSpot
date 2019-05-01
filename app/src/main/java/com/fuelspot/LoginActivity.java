@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,7 +16,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -47,11 +43,13 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.Hashtable;
@@ -83,7 +81,7 @@ import static com.fuelspot.MainActivity.username;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private VideoView background;
+    private ScalableVideoView background;
     private RelativeLayout notLogged;
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
@@ -99,6 +97,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //Load background and login layout
         background = findViewById(R.id.animatedBackground);
         notLogged = findViewById(R.id.notLoggedLayout);
+        try {
+            background.setRawData(R.raw.fuelspot);
+            background.setVolume(0f, 0f);
+            background.prepareAsync(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    background.start();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // Analytics
         Tracker t = ((Application) this.getApplicationContext()).getDefaultTracker();
@@ -156,10 +167,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 finish();
             }
         });
-
-        if (!premium) {
-            /*  AdMob(this);*/
-        }
 
         arrangeLayouts();
     }
@@ -524,24 +531,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (background != null) {
-            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.fuelspot;
-            Uri uri = Uri.parse(uriPath);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);
-            }
-            background.setVideoURI(uri);
-            background.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                public void onPrepared(MediaPlayer mp) {
-                    background.start();
-                }
-            });
-        }
     }
 
     @Override
