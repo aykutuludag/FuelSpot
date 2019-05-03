@@ -55,7 +55,7 @@ public class UserComments extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        coloredBars(Color.parseColor("#0288D1"), Color.parseColor("#03A9F4"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         //Comments
         requestQueue = Volley.newRequestQueue(UserComments.this);

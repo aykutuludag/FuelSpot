@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/white_box"
-    android:padding="4dp">
+    android:background="@drawable/round_layout_white2"
+    android:padding="2dp">
 
     <ImageView
         android:id="@+id/campaignPhoto"

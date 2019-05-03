@@ -12,13 +12,13 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay.Dark">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay.Dark" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -479,56 +479,11 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/streetViewSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/facilitiesSection"
-                android:layout_margin="12dp"
-                android:background="@drawable/round_layout_white">
-
-                <TextView
-                    android:id="@+id/textView49"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="@string/streetview"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                <TextView
-                    android:id="@+id/textView50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView49"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="İstasyonunuzun sokak görünümü güncel değilse Google StreetView uygulaması aracılığıyla görünümü güncelleyebilirsiniz." />
-
-                <Button
-                    android:id="@+id/buttonDownloadStreetView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView50"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_medium"
-                    android:padding="4dp"
-                    android:text="@string/download_streetview"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-            </RelativeLayout>
-
             <Button
                 android:id="@+id/buttonUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/streetViewSection"
+                android:layout_below="@id/facilitiesSection"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"

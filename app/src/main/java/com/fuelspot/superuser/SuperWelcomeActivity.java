@@ -14,9 +14,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +41,6 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -91,14 +88,17 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
@@ -159,7 +159,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
     private ScrollView welcome2;
     private RelativeLayout promoLayout;
-    private RelativeLayout registerLayout;
     private RelativeLayout welcome1;
     private RelativeLayout welcome3;
     private Button continueButton;
@@ -176,13 +175,14 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private int calendarYear;
     private int calendarMonth;
     private int calendarDay;
-    private VideoView background;
     private FusedLocationProviderClient mFusedLocationClient;
     private Bitmap bitmap;
     private RequestOptions options;
     private ProgressDialog loading0;
     private ProgressDialog loading;
     private GoogleMap googleMap;
+    private ScalableVideoView background;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,12 +197,25 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
+        //Load background and login layout
+        background = findViewById(R.id.animatedBackground);
+        try {
+            background.setRawData(R.raw.fuelspot);
+            background.setVolume(0f, 0f);
+            background.prepareAsync(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    background.start();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Initialize map
         MapsInitializer.initialize(this.getApplicationContext());
 
-        background = findViewById(R.id.animatedAdminBackground);
         promoLayout = findViewById(R.id.layout_promo);
-        registerLayout = findViewById(R.id.registerLayout);
         welcome1 = findViewById(R.id.welcome1);
         welcome2 = findViewById(R.id.welcome2);
         welcome3 = findViewById(R.id.welcome3);
@@ -223,17 +236,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         loading.setCancelable(false);
 
         /* LAYOUT 01 */
-        Button register = findViewById(R.id.buttonRegister);
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                promoLayout.setVisibility(View.GONE);
-                registerLayout.setVisibility(View.VISIBLE);
-            }
-        });
-        /* LAYOUT 01 END */
-
-        /* LAYOUT 02 */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PROFILE))
                 .requestProfile()
@@ -254,8 +256,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
+        callbackManager = CallbackManager.Factory.create();
         facebookLogin();
-        /* LAYOUT 02 END */
+        /* LAYOUT 01 END */
 
         /* LAYOUT 03 */
         continueButton = findViewById(R.id.button2);
@@ -357,9 +360,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     }
 
     private void facebookLogin() {
-        CallbackManager callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.facebookButton);
-        loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -444,6 +446,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 name = obj.getString("name");
                                 prefs.edit().putString("Name", name).apply();
 
+                                username = obj.getString("username");
+                                prefs.edit().putString("UserName", username).apply();
+
                                 email = obj.getString("email");
                                 prefs.edit().putString("Email", email).apply();
 
@@ -466,8 +471,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
                                 Toast.makeText(SuperWelcomeActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
-                                registerLayout.setVisibility(View.GONE);
-                                background.setVisibility(View.INVISIBLE);
+                                promoLayout.setVisibility(View.GONE);
                                 welcome1.setVisibility(View.VISIBLE);
                             } catch (JSONException e) {
                                 Toast.makeText(SuperWelcomeActivity.this, e.toString(), Toast.LENGTH_LONG).show();
@@ -1427,6 +1431,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // FACEBOOK
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == GOOGLE_LOGIN) {
             googleSignIn(data);
         }
@@ -1503,21 +1510,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
-        }
-        if (background != null) {
-            String uriPath = "android.resource://" + getPackageName() + "/" + R.raw.fuelspot;
-            Uri uri = Uri.parse(uriPath);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                background.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE);
-            }
-            background.setVideoURI(uri);
-            background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    background.start();
-                }
-            });
-            background.start();
         }
     }
 

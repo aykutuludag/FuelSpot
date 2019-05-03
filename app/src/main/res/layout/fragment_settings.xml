@@ -42,11 +42,12 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="2dp"
+                    android:singleLine="true"
                     android:text="@string/country"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
-                    app:layout_marginPercent="1%"
+                    app:layout_marginPercent="0.5%"
                     app:layout_widthPercent="24%" />
 
 
@@ -57,11 +58,12 @@
                     android:layout_toEndOf="@id/dummy001"
                     android:gravity="center"
                     android:padding="2dp"
+                    android:singleLine="true"
                     android:text="@string/language"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
-                    app:layout_marginPercent="1%"
+                    app:layout_marginPercent="0.5%"
                     app:layout_widthPercent="24%" />
 
 
@@ -72,11 +74,12 @@
                     android:layout_toEndOf="@id/dummy002"
                     android:gravity="center"
                     android:padding="2dp"
+                    android:singleLine="true"
                     android:text="@string/currency"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
-                    app:layout_marginPercent="1%"
+                    app:layout_marginPercent="0.5%"
                     app:layout_widthPercent="24%" />
 
 
@@ -87,11 +90,12 @@
                     android:layout_toEndOf="@id/dummy003"
                     android:gravity="center"
                     android:padding="2dp"
+                    android:singleLine="true"
                     android:text="@string/units"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#424242"
                     android:textSize="12sp"
-                    app:layout_marginPercent="1%"
+                    app:layout_marginPercent="0.5%"
                     app:layout_widthPercent="24%" />
 
                 <TextView

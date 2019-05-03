@@ -65,32 +65,31 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         public void onClick(final View view) {
             CommentAdapter.ViewHolder holder = (CommentAdapter.ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
+            CommentItem yItem = feedItemList.get(position);
 
             switch (whichScreen) {
                 case "USER_COMMENTS":
                     Intent intent = new Intent(mContext, StationDetails.class);
-                    intent.putExtra("STATION_ID", feedItemList.get(position).getStationID());
+                    intent.putExtra("STATION_ID", yItem.getStationID());
                     mContext.startActivity(intent);
                     break;
                 case "STATION_COMMENTS":
                     String text = null;
-                    commentID = feedItemList.get(position).getID();
-                    commentUserName = feedItemList.get(position).getUsername();
-                    answer = feedItemList.get(position).getAnswer();
+                    commentID = yItem.getID();
+                    commentUserName = yItem.getUsername();
+                    answer = yItem.getAnswer();
 
                     if (isSuperUser) {
                         for (int i = 0; i < listOfOwnedStations.size(); i++) {
-                            if (listOfOwnedStations.get(i).getID() == feedItemList.get(position).getStationID()) {
-                                if (listOfOwnedStations.get(i).getIsVerified() == 1) {
-                                    if (answer != null && answer.length() > 0) {
-                                        // Delete answer
-                                        text = mContext.getString(R.string.remove_answer);
-                                    } else {
-                                        // Add answer
-                                        text = mContext.getString(R.string.answer_it);
-                                    }
-                                    break;
+                            if ((listOfOwnedStations.get(i).getID() == yItem.getStationID()) && listOfOwnedStations.get(i).getIsVerified() == 1) {
+                                if (answer != null && answer.length() > 0) {
+                                    // Delete answer
+                                    text = mContext.getString(R.string.remove_answer);
+                                } else {
+                                    // Add answer
+                                    text = mContext.getString(R.string.answer_it);
                                 }
+                                break;
                             }
                         }
                     } else {
@@ -99,6 +98,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             text = mContext.getString(R.string.remove_comment);
                         }
                     }
+
 
                     if (text != null) {
                         Snackbar.make(view, text, Snackbar.LENGTH_LONG)
@@ -238,20 +238,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    mPopupWindow.dismiss();
-                                    if (mContext instanceof StationComments) {
-                                        ((StationComments) mContext).fetchStationComments();
-                                    }
+                            if ("Success".equals(response)) {
+                                mPopupWindow.dismiss();
+                                if (mContext instanceof StationComments) {
+                                    ((StationComments) mContext).fetchStationComments();
+                                }
 
-                                    if (mContext instanceof StationDetails) {
-                                        ((StationDetails) mContext).fetchStationComments();
-                                    }
-                                    break;
-                                default:
-                                    Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
-                                    break;
+                                if (mContext instanceof StationDetails) {
+                                    ((StationDetails) mContext).fetchStationComments();
+                                }
+                            } else {
+                                Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
@@ -292,20 +289,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(mContext, mContext.getString(R.string.answer_delete_success), Toast.LENGTH_LONG).show();
-                                    if (mContext instanceof StationComments) {
-                                        ((StationComments) mContext).fetchStationComments();
-                                    }
+                            if ("Success".equals(response)) {
+                                Toast.makeText(mContext, mContext.getString(R.string.answer_delete_success), Toast.LENGTH_LONG).show();
+                                if (mContext instanceof StationComments) {
+                                    ((StationComments) mContext).fetchStationComments();
+                                }
 
-                                    if (mContext instanceof StationDetails) {
-                                        ((StationDetails) mContext).fetchStationComments();
-                                    }
-                                    break;
-                                default:
-                                    Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
-                                    break;
+                                if (mContext instanceof StationDetails) {
+                                    ((StationDetails) mContext).fetchStationComments();
+                                }
+                            } else {
+                                Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_LONG).show();

@@ -113,7 +113,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
         //Window
         window = this.getWindow();
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         SharedPreferences prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();

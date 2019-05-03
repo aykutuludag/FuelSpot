@@ -84,7 +84,7 @@ public class StationComments extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        coloredBars(Color.parseColor("#0288D1"), Color.parseColor("#03A9F4"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         //Comments
         requestQueue = Volley.newRequestQueue(StationComments.this);
@@ -142,11 +142,11 @@ public class StationComments extends AppCompatActivity {
             RecyclerView.Adapter mAdapter = new CommentAdapter(StationComments.this, stationCommentList, "STATION_COMMENTS");
             GridLayoutManager mLayoutManager = new GridLayoutManager(StationComments.this, 1);
 
-            mAdapter.notifyDataSetChanged();
             mRecyclerView.setVisibility(View.VISIBLE);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(mLayoutManager);
             swipeContainer.setRefreshing(false);
+            mAdapter.notifyDataSetChanged();
         } else {
             snackbar.show();
         }
@@ -279,16 +279,13 @@ public class StationComments extends AppCompatActivity {
                         mPopupWindow.dismiss();
 
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(StationComments.this, getString(R.string.add_comment_success), Toast.LENGTH_SHORT).show();
-                                    hasAlreadyCommented = true;
-                                    fetchStationComments();
-                                    break;
-                                default:
-                                    Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                    hasAlreadyCommented = false;
-                                    break;
+                            if ("Success".equals(response)) {
+                                Toast.makeText(StationComments.this, getString(R.string.add_comment_success), Toast.LENGTH_SHORT).show();
+                                hasAlreadyCommented = true;
+                                fetchStationComments();
+                            } else {
+                                Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                hasAlreadyCommented = false;
                             }
                         } else {
                             Toast.makeText(StationComments.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
@@ -345,6 +342,7 @@ public class StationComments extends AppCompatActivity {
                                     item.setID(obj.getInt("id"));
                                     item.setComment(obj.getString("comment"));
                                     item.setTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("station_id"));
                                     item.setProfile_pic(obj.getString("user_photo"));
                                     item.setUsername(obj.getString("username"));
                                     item.setRating(obj.getInt("stars"));

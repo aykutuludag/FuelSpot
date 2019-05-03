@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -143,7 +142,7 @@ public class StationDetails extends AppCompatActivity {
     private CircleImageView stationIcon;
 
     private RelativeTimeTextView textLastUpdated;
-
+    MenuItem settingsItem;
     private TextView noCampaignText;
     private TextView noCommentText;
     private TextView textStationID;
@@ -206,7 +205,7 @@ public class StationDetails extends AppCompatActivity {
         }
 
         //Dynamic bar colors
-        coloredBars(Color.parseColor("#616161"), Color.parseColor("#FAFAFA"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -387,11 +386,6 @@ public class StationDetails extends AppCompatActivity {
         } else {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
             fetchStation(choosenStationID);
-        }
-
-        // check the station added favorites
-        if (userFavorites.contains(choosenStationID + ";")) {
-            favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);
         }
 
         // Campaigns
@@ -773,15 +767,18 @@ public class StationDetails extends AppCompatActivity {
                                     JSONObject obj = res.getJSONObject(i);
 
                                     CampaignItem item = new CampaignItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationID(obj.getInt("stationID"));
                                     item.setCampaignName(obj.getString("campaignName"));
                                     item.setCampaignDesc(obj.getString("campaignDesc"));
                                     item.setCampaignPhoto(obj.getString("campaignPhoto"));
                                     item.setCampaignStart(obj.getString("campaignStart"));
                                     item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    item.setIsGlobal(obj.getInt("isGlobal"));
                                     campaignList.add(item);
                                 }
 
-                                mAdapter = new CampaignAdapter(StationDetails.this, campaignList);
+                                mAdapter = new CampaignAdapter(StationDetails.this, campaignList, "USER");
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
@@ -1452,7 +1449,18 @@ public class StationDetails extends AppCompatActivity {
         dieselPriceHistory.clear();
         lpgPriceHistory.clear();
         elecPriceHistory.clear();
-        favorite.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav));
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        settingsItem = menu.findItem(R.id.menu_fav);
+        if (userFavorites.contains(choosenStationID + ";")) {
+            settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav_orange));
+        } else {
+            settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav));
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -1471,13 +1479,14 @@ public class StationDetails extends AppCompatActivity {
             case R.id.menu_fav:
                 if (userFavorites.contains(choosenStationID + ";")) {
                     userFavorites = userFavorites.replace(choosenStationID + ";", "");
-                    favorite.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                    settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav_orange));
                     Toast.makeText(StationDetails.this, getString(R.string.removed_from_favs), Toast.LENGTH_SHORT).show();
                 } else {
                     userFavorites += choosenStationID + ";";
-                    favorite.setColorFilter(Color.argb(255, 255, 127, 80), PorterDuff.Mode.SRC_IN);
+                    settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav));
                     Toast.makeText(StationDetails.this, getString(R.string.added_to_favs), Toast.LENGTH_SHORT).show();
                 }
+                invalidateOptionsMenu();
                 prefs.edit().putString("userFavorites", userFavorites).apply();
                 return true;
             case R.id.menu_share:

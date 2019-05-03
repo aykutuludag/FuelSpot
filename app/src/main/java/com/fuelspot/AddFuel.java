@@ -136,6 +136,10 @@ public class AddFuel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
 
+        if (isSuperUser) {
+            finish();
+        }
+
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -146,15 +150,12 @@ public class AddFuel extends AppCompatActivity {
 
         //Window
         window = this.getWindow();
-        coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
 
-        if (isSuperUser) {
-            finish();
-        }
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -165,8 +166,7 @@ public class AddFuel extends AppCompatActivity {
         //Creating a Request Queue
         requestQueue = Volley.newRequestQueue(AddFuel.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-        ;
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         // ProgressDialogs
         stationFetching = new ProgressDialog(AddFuel.this);

@@ -17,59 +17,59 @@
     <!-- Units-->
 
     <!-- USER APIs -->
-    <string name="API_CREATE_USER" translatable="false">https://fuelspot.com.tr/api/user/create.php</string>
-    <string name="API_UPDATE_USER" translatable="false">https://fuelspot.com.tr/api/user/update.php</string>
+    <string name="API_CREATE_USER" translatable="false">https://fuelspot.com.tr/api/v1.0/user/create.php</string>
+    <string name="API_UPDATE_USER" translatable="false">https://fuelspot.com.tr/api/v1.0/user/update.php</string>
 
     <!-- SUPERUSER APIs -->
-    <string name="API_SUPERUSER_CREATE" translatable="false">https://fuelspot.com.tr/api/superuser/create.php</string>
-    <string name="API_SUPERUSER_UPDATE" translatable="false">https://fuelspot.com.tr/api/superuser/update.php</string>
+    <string name="API_SUPERUSER_CREATE" translatable="false">https://fuelspot.com.tr/api/v1.0/superuser/create.php</string>
+    <string name="API_SUPERUSER_UPDATE" translatable="false">https://fuelspot.com.tr/api/v1.0/superuser/update.php</string>
 
     <!-- STATION APIs -->
-    <string name="API_UPDATE_STATION" translatable="false">https://fuelspot.com.tr/api/station/update.php</string>
-    <string name="API_SEARCH_STATIONS" translatable="false">https://fuelspot.com.tr/api/station/search.php</string>
-    <string name="API_FETCH_STATION" translatable="false">https://fuelspot.com.tr/api/station/fetch.php</string>
-    <string name="API_FETCH_SUPERUSER_STATIONS" translatable="false">https://fuelspot.com.tr/api/station/fetch-superuser.php</string>
-    <string name="API_SUPERUSER_REGISTRATION" translatable="false">https://fuelspot.com.tr/api/station/superuser-registration.php</string>
+    <string name="API_UPDATE_STATION" translatable="false">https://fuelspot.com.tr/api/v1.0/station/update.php</string>
+    <string name="API_SEARCH_STATIONS" translatable="false">https://fuelspot.com.tr/api/v1.0/station/search.php</string>
+    <string name="API_FETCH_STATION" translatable="false">https://fuelspot.com.tr/api/v1.0/station/fetch.php</string>
+    <string name="API_FETCH_SUPERUSER_STATIONS" translatable="false">https://fuelspot.com.tr/api/v1.0/station/fetch-superuser.php</string>
+    <string name="API_SUPERUSER_REGISTRATION" translatable="false">https://fuelspot.com.tr/api/v1.0/station/superuser-registration.php</string>
 
     <!-- AUTOMOBILE APIs -->
-    <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/automobile/add.php</string>
-    <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/automobile/update.php</string>
-    <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/automobile/delete.php</string>
-    <string name="API_FETCH_USER_AUTOMOBILES" translatable="false">https://fuelspot.com.tr/api/automobile/fetch-user.php</string>
+    <string name="API_ADD_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/add.php</string>
+    <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/update.php</string>
+    <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/delete.php</string>
+    <string name="API_FETCH_USER_AUTOMOBILES" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/fetch-user.php</string>
 
     <!-- PURCHASE APIs -->
-    <string name="API_ADD_PURCHASE" translatable="false">https://fuelspot.com.tr/api/purchase/add.php</string>
-    <string name="API_UPDATE_PURCHASE" translatable="false">https://fuelspot.com.tr/api/purchase/update.php</string> <!-- Only adding bill photo available -->
-    <string name="API_DELETE_PURCHASE" translatable="false">https://fuelspot.com.tr/api/purchase/delete.php</string>
-    <string name="API_FETCH_AUTOMOBILE_PURCHASES" translatable="false">https://fuelspot.com.tr/api/purchase/fetch-automobile.php</string> <!-- Vehicle's purchases -->
+    <string name="API_ADD_PURCHASE" translatable="false">https://fuelspot.com.tr/api/v1.0/purchase/add.php</string>
+    <string name="API_UPDATE_PURCHASE" translatable="false">https://fuelspot.com.tr/api/v1.0/purchase/update.php</string> <!-- Only adding bill photo available -->
+    <string name="API_DELETE_PURCHASE" translatable="false">https://fuelspot.com.tr/api/v1.0/purchase/delete.php</string>
+    <string name="API_FETCH_AUTOMOBILE_PURCHASES" translatable="false">https://fuelspot.com.tr/api/v1.0/purchase/fetch-automobile.php</string> <!-- Vehicle's purchases -->
 
     <!-- COMMENT-ANSWER APIs -->
-    <string name="API_ADD_COMMENT" translatable="false">https://fuelspot.com.tr/api/comment/add.php</string>
-    <string name="API_UPDATE_COMMENT" translatable="false">https://fuelspot.com.tr/api/comment/update.php</string>
-    <string name="API_DELETE_COMMENT" translatable="false">https://fuelspot.com.tr/api/comment/delete.php</string>
-    <string name="API_FETCH_USER_COMMENTS" translatable="false">https://fuelspot.com.tr/api/comment/fetch.php</string> <!-- User's comments -->
-    <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuelspot.com.tr/api/comment/fetch-station.php</string> <!-- Station's comments -->
-    <string name="API_ADD_ANSWER" translatable="false">https://fuelspot.com.tr/api/comment/answer/add.php</string>
-    <string name="API_DELETE_ANSWER" translatable="false">https://fuelspot.com.tr/api/comment/answer/delete.php</string>
+    <string name="API_ADD_COMMENT" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/add.php</string>
+    <string name="API_UPDATE_COMMENT" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/update.php</string>
+    <string name="API_DELETE_COMMENT" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/delete.php</string>
+    <string name="API_FETCH_USER_COMMENTS" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/fetch.php</string> <!-- User's comments -->
+    <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/fetch-station.php</string> <!-- Station's comments -->
+    <string name="API_ADD_ANSWER" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/answer/add.php</string>
+    <string name="API_DELETE_ANSWER" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/answer/delete.php</string>
 
     <!-- CAMPAIGNS APIs -->
-    <string name="API_CREATE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/campaign/add.php</string>
-    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/campaign/update.php</string>
-    <string name="API_DELETE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/campaign/delete.php</string>
-    <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuelspot.com.tr/api/campaign/fetch.php</string>
+    <string name="API_CREATE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/add.php</string>
+    <string name="API_UPDATE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/update.php</string>
+    <string name="API_DELETE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/delete.php</string>
+    <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/fetch.php</string>
 
     <!-- FINANCE APIs -->
-    <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuelspot.com.tr/api/finance/fetch-station-prices.php</string> <!-- STATION -->
-    <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuelspot.com.tr/api/finance/fetch-prices.php</string> <!-- COUNTRY -->
+    <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuelspot.com.tr/api/v1.0/finance/fetch-station-prices.php</string> <!-- STATION -->
+    <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuelspot.com.tr/api/v1.0/finance/fetch-prices.php</string> <!-- COUNTRY -->
 
     <!-- OTHER APIs -->
-    <string name="API_REPORT" translatable="false">https://fuelspot.com.tr/api/other/report.php</string>
-    <string name="API_TAX" translatable="false">https://fuelspot.com.tr/api/other/tax.php</string>
-    <string name="API_FEEDBACK" translatable="false">https://fuelspot.com.tr/api/other/feedback.php</string>
-    <string name="API_NEWS" translatable="false">https://fuelspot.com.tr/api/other/news.php</string>
-    <string name="API_NEWS_SINGLE" translatable="false">https://fuelspot.com.tr/api/other/news-single.php</string>
-    <string name="API_COMPANY" translatable="false">https://fuelspot.com.tr/api/other/company.php</string>
-    <string name="API_BANKING" translatable="false">https://fuelspot.com.tr/api/other/banking.php</string>
+    <string name="API_REPORT" translatable="false">https://fuelspot.com.tr/api/v1.0/other/report.php</string>
+    <string name="API_TAX" translatable="false">https://fuelspot.com.tr/api/v1.0/other/tax.php</string>
+    <string name="API_FEEDBACK" translatable="false">https://fuelspot.com.tr/api/v1.0/other/feedback.php</string>
+    <string name="API_NEWS" translatable="false">https://fuelspot.com.tr/api/v1.0/other/news.php</string>
+    <string name="API_NEWS_SINGLE" translatable="false">https://fuelspot.com.tr/api/v1.0/other/news-single.php</string>
+    <string name="API_COMPANY" translatable="false">https://fuelspot.com.tr/api/v1.0/other/company.php</string>
+    <string name="API_BANKING" translatable="false">https://fuelspot.com.tr/api/v1.0/other/banking.php</string>
     <!-- NON TRANSLATABLE PART END -->
 
     <!-- LoginActivity-->
@@ -399,13 +399,16 @@
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
     <string name="campaign_photo">Campaign photo</string>
-    <string name="campaign_adding">Campaign adding</string>
-    <string name="campaign_added">Campaign added successfully</string>
+    <string name="campaign_adding">Creating campaign</string>
+    <string name="campaign_added">Campaign created successfully…</string>
     <string name="empty_campaign_name">Please enter campaign name</string>
     <string name="empty_campaign_desc">Please enter campaign description</string>
     <string name="empty_campaign_start">Please select campaign start date and time</string>
     <string name="empty_campaign_end">Please select campaign end date and time</string>
     <string name="loading_campaigns">Loading campaigns</string>
+    <string name="campaign_updating">Updating campaign</string>
+    <string name="campaign_updated">Campaign updated successfully…</string>
+    <string name="update_campaign">Update campaign</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperStore-->

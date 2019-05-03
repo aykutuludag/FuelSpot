@@ -106,7 +106,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         //Window
         window = this.getWindow();
-        coloredBars(Color.parseColor("#626262"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();

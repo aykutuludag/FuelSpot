@@ -333,6 +333,9 @@
     <string name="empty_campaign_start">Lütfen kampanya başlangıç gün ve saatini seçiniz</string>
     <string name="empty_campaign_end">Lütfen kampanya bitiş gün ve saatini seçiniz</string>
     <string name="loading_campaigns">Kampanyalar yükleniyor</string>
+    <string name="campaign_updating">Kampanya güncelleniyor</string>
+    <string name="campaign_updated">Kampanya başarıyla güncellendi…</string>
+    <string name="update_campaign">Kampanyayı güncelle</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperStore-->

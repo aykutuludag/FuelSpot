@@ -50,7 +50,7 @@ public class SuperStoreActivity extends AppCompatActivity {
 
         //Window
         window = this.getWindow();
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 

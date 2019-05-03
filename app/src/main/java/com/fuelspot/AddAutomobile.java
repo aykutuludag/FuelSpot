@@ -110,7 +110,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         //Window
         window = this.getWindow();
-        coloredBars(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();

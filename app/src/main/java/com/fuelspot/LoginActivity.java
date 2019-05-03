@@ -110,7 +110,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             e.printStackTrace();
         }
 
-
         // Analytics
         Tracker t = ((Application) this.getApplicationContext()).getDefaultTracker();
         t.setScreenName("LoginActivity");
@@ -365,7 +364,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void facebookLogin() {
         callbackManager = CallbackManager.Factory.create();
         loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
-        loginButton.setReadPermissions();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -488,7 +486,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                         startActivity(i);
                                         finish();
                                     }
-                                }, 2000);
+                                }, 1500);
                             } catch (JSONException e) {
                                 //Dismissing the progress dialog
                                 Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();

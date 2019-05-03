@@ -58,7 +58,7 @@ public class UserFavorites extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        coloredBars(Color.parseColor("#388E3C"), Color.parseColor("#4CAF50"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         requestQueue = Volley.newRequestQueue(this);
         mRecyclerView = findViewById(R.id.feedView);

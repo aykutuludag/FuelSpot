@@ -3,11 +3,13 @@ package com.fuelspot.model;
 public class CampaignItem {
 
     private int ID;
+    private int stationID;
     private String campaignName;
     private String campaignDesc;
     private String campaignPhoto;
     private String campaignStart;
     private String campaignEnd;
+    private int isGlobal;
 
     public int getID() {
         return ID;
@@ -15,6 +17,14 @@ public class CampaignItem {
 
     public void setID(int id) {
         this.ID = id;
+    }
+
+    public int getStationID() {
+        return stationID;
+    }
+
+    public void setStationID(int stationID) {
+        this.stationID = stationID;
     }
 
     public String getCampaignName() {
@@ -57,4 +67,11 @@ public class CampaignItem {
         this.campaignEnd = campaignEnd;
     }
 
+    public int getIsGlobal() {
+        return isGlobal;
+    }
+
+    public void setIsGlobal(int isGlobal) {
+        this.isGlobal = isGlobal;
+    }
 }

@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/newsBackground"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="135dp"
                 android:layout_gravity="center"
                 android:src="@drawable/photo_placeholder" />
 

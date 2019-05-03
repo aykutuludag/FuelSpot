@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +33,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.R;
@@ -46,6 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,12 +61,14 @@ import java.util.Map;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.isNetworkConnected;
+import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
 
     private RequestQueue requestQueue;
-    private SimpleDateFormat sdf;
+    ImageView imageViewCampaign;
+    private SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List<CampaignItem> feedsList = new ArrayList<>();
@@ -72,6 +79,9 @@ public class SuperCampaings extends AppCompatActivity {
     private Bitmap bmp;
     private Window window;
     private Toolbar toolbar;
+    private SimpleDateFormat sdf2 = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+    private SwipeRefreshLayout swipeContainer;
+    private RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +89,6 @@ public class SuperCampaings extends AppCompatActivity {
         setContentView(R.layout.activity_super_campaings);
 
         window = this.getWindow();
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -87,24 +96,47 @@ public class SuperCampaings extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        coloredBars(Color.parseColor("#7B1FA2"), Color.parseColor("#9C27B0"));
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_campaign).error(R.drawable.default_campaign)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
+
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         requestQueue = Volley.newRequestQueue(this);
-        sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
+
         // Comments
         mRecyclerView = findViewById(R.id.campaignView);
 
-        FloatingActionButton myFab = findViewById(R.id.fab);
-        myFab.setOnClickListener(new View.OnClickListener() {
+        Button buttonAdd = findViewById(R.id.button_add_campaign);
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                addCampaign(v);
+                try {
+                    addORupdateCampaign(v, null);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
+
+        swipeContainer = findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchCampaigns();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         fetchCampaigns();
     }
 
-    private void fetchCampaigns() {
+    public void fetchCampaigns() {
         final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, getString(R.string.loading_campaigns), getString(R.string.please_wait), false, false);
         feedsList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
@@ -112,6 +144,7 @@ public class SuperCampaings extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         loading.dismiss();
+                        swipeContainer.setRefreshing(false);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -119,15 +152,18 @@ public class SuperCampaings extends AppCompatActivity {
                                     JSONObject obj = res.getJSONObject(i);
 
                                     CampaignItem item = new CampaignItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationID(obj.getInt("stationID"));
                                     item.setCampaignName(obj.getString("campaignName"));
                                     item.setCampaignDesc(obj.getString("campaignDesc"));
                                     item.setCampaignPhoto(obj.getString("campaignPhoto"));
                                     item.setCampaignStart(obj.getString("campaignStart"));
                                     item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    item.setIsGlobal(obj.getInt("isGlobal"));
                                     feedsList.add(item);
                                 }
 
-                                mAdapter = new CampaignAdapter(SuperCampaings.this, feedsList);
+                                mAdapter = new CampaignAdapter(SuperCampaings.this, feedsList, "SUPERUSER");
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(SuperCampaings.this, 1);
@@ -146,6 +182,7 @@ public class SuperCampaings extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         loading.dismiss();
+                        swipeContainer.setRefreshing(false);
                         mRecyclerView.setVisibility(View.GONE);
                     }
                 }) {
@@ -166,7 +203,11 @@ public class SuperCampaings extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void addCampaign(View view) {
+    public void addORupdateCampaign(View view, final CampaignItem item) throws ParseException {
+        final String apiURL;
+        final String dialogText;
+        final String buttonText;
+
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_add_campaign, null);
         final PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -214,21 +255,24 @@ public class SuperCampaings extends AppCompatActivity {
             }
         });
 
-        final SlideDateTimeListener listener = new SlideDateTimeListener() {
-            @Override
-            public void onDateTimeSet(Date date) {
-                sTime = sdf.format(date);
-            }
-
-            @Override
-            public void onDateTimeCancel() {
-                sTime = "";
-            }
-        };
-        EditText startTimeText = customView.findViewById(R.id.editTextsTime);
+        final EditText startTimeText = customView.findViewById(R.id.editTextsTime);
         startTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SlideDateTimeListener listener = new SlideDateTimeListener() {
+                    @Override
+                    public void onDateTimeSet(Date date) {
+                        sTime = sdf.format(date);
+                        startTimeText.setText(sdf2.format(date));
+                    }
+
+                    @Override
+                    public void onDateTimeCancel() {
+                        sTime = "";
+                        startTimeText.setText(sTime);
+                    }
+                };
+
                 new SlideDateTimePicker.Builder(getSupportFragmentManager())
                         .setListener(listener)
                         .setIs24HourTime(true)
@@ -239,21 +283,25 @@ public class SuperCampaings extends AppCompatActivity {
             }
         });
 
-        final SlideDateTimeListener listener2 = new SlideDateTimeListener() {
-            @Override
-            public void onDateTimeSet(Date date) {
-                eTime = sdf.format(date);
-            }
 
-            @Override
-            public void onDateTimeCancel() {
-                eTime = "";
-            }
-        };
-        EditText endTimeText = customView.findViewById(R.id.editTexteTime);
+        final EditText endTimeText = customView.findViewById(R.id.editTexteTime);
         endTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SlideDateTimeListener listener2 = new SlideDateTimeListener() {
+                    @Override
+                    public void onDateTimeSet(Date date) {
+                        eTime = sdf.format(date);
+                        endTimeText.setText(sdf2.format(date));
+                    }
+
+                    @Override
+                    public void onDateTimeCancel() {
+                        eTime = "";
+                        endTimeText.setText(eTime);
+                    }
+                };
+
                 new SlideDateTimePicker.Builder(getSupportFragmentManager())
                         .setListener(listener2)
                         .setIs24HourTime(true)
@@ -264,7 +312,7 @@ public class SuperCampaings extends AppCompatActivity {
             }
         });
 
-        ImageView imageViewCampaign = customView.findViewById(R.id.imageViewCampaignPhoto);
+        imageViewCampaign = customView.findViewById(R.id.imageViewCampaignPhoto);
         imageViewCampaign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,8 +320,33 @@ public class SuperCampaings extends AppCompatActivity {
             }
         });
 
+        if (item != null) {
+            //UPDATE CAMPAIGN
+            apiURL = getString(R.string.API_UPDATE_CAMPAING);
+            dialogText = getString(R.string.campaign_updating);
+            buttonText = getString(R.string.update_campaign);
+
+            campaignName = item.getCampaignName();
+            campaignDesc = item.getCampaignDesc();
+            sTime = item.getCampaignStart();
+            eTime = item.getCampaignEnd();
+
+            editTextCampaignName.setText(campaignName);
+            editTextCampaignDetail.setText(campaignDesc);
+            Date a = sdf.parse(sTime);
+            startTimeText.setText(sdf2.format(a));
+            Date b = sdf.parse(eTime);
+            endTimeText.setText(sdf2.format(b));
+            Glide.with(this).load(item.getCampaignPhoto()).apply(options).into(imageViewCampaign);
+        } else {
+            // ADD CAMPAIGN
+            apiURL = getString(R.string.API_CREATE_CAMPAING);
+            dialogText = getString(R.string.campaign_adding);
+            buttonText = getString(R.string.add_campaign);
+        }
 
         Button sendValues = customView.findViewById(R.id.buttonAddCampaign);
+        sendValues.setText(buttonText);
         sendValues.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -301,16 +374,21 @@ public class SuperCampaings extends AppCompatActivity {
             }
 
             private void sendCampaignToServer() {
-                final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, getString(R.string.campaign_adding), getString(R.string.please_wait), false, false);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_CREATE_CAMPAING),
+                final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, dialogText, getString(R.string.please_wait), false, false);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, apiURL,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+                                System.out.println(response);
                                 loading.dismiss();
                                 if (response != null && response.length() > 0) {
                                     switch (response) {
                                         case "Success":
-                                            Toast.makeText(SuperCampaings.this, getString(R.string.campaign_added), Toast.LENGTH_LONG).show();
+                                            if (item != null) {
+                                                Toast.makeText(SuperCampaings.this, getString(R.string.campaign_updated), Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(SuperCampaings.this, getString(R.string.campaign_added), Toast.LENGTH_LONG).show();
+                                            }
                                             mPopupWindow.dismiss();
                                             fetchCampaigns();
                                             break;
@@ -335,7 +413,11 @@ public class SuperCampaings extends AppCompatActivity {
                         //Creating parameters
                         Map<String, String> params = new Hashtable<>();
 
-                        //Adding parameters
+                        // Adding parameters
+                        if (item != null) {
+                            // UPDATE CAMPAIGN
+                            params.put("campaignID", String.valueOf(item.getID()));
+                        }
                         params.put("stationID", String.valueOf(superStationID));
                         params.put("campaignName", campaignName);
                         params.put("campaignDesc", campaignDesc);
@@ -361,14 +443,6 @@ public class SuperCampaings extends AppCompatActivity {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    void updateCampaign(int campaignID) {
-
-    }
-
-    void deleteCampaign(int campaignID) {
-
-    }
-
     private void coloredBars(int color1, int color2) {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -390,10 +464,13 @@ public class SuperCampaings extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // Imagepicker
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
                 bmp = BitmapFactory.decodeFile(image.getPath());
+                Glide.with(this).load(image.getPath()).apply(options).into(imageViewCampaign);
             }
         }
     }

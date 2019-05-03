@@ -22,11 +22,6 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
         tools:targetApi="n">
-        <activity
-            android:name=".ReportMissingStation"
-            android:label="@string/title_activity_report_missing_station"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -145,6 +140,10 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ReportMissingStation"
+            android:label="@string/title_activity_report_missing_station"
+            android:theme="@style/AppTheme.NoActionBar" />
 
 
         <!-- SuperUser Class -->

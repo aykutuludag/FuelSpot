@@ -81,7 +81,7 @@ public class ReportMissingStation extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        coloredBars(Color.parseColor("#0288D1"), Color.parseColor("#03A9F4"));
+        coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         requestQueue = Volley.newRequestQueue(ReportMissingStation.this);
         scrollView = findViewById(R.id.missing_scroll);
