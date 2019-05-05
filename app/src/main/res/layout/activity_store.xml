@@ -35,14 +35,20 @@
             <RelativeLayout
                 android:id="@+id/layout_account_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/round_layout2">
 
                 <TextView
                     android:id="@+id/textView0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_bold"
                     android:text="@string/banking_activities"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
@@ -53,9 +59,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView0"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:gravity="center"
                     android:text="@string/banking_activities_desc"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textViewCurrentBalance"
@@ -63,17 +74,37 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textViewDummy"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="@string/current_balance"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/bankingView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/textViewCurrentBalance"
-                    android:layout_margin="4dp" />
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/textViewDummy2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bankingView"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:text="@string/banking_key_map"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
             </RelativeLayout>
 
@@ -81,7 +112,10 @@
                 android:id="@+id/layout_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_account_info">
+                android:layout_below="@+id/layout_account_info"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp">
 
                 <TextView
                     android:id="@+id/textView1"
@@ -98,16 +132,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView1"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/round_layout">
+                    android:background="@drawable/round_layout_white2">
 
                     <TextView
                         android:id="@+id/textView388"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
                         android:text="@string/double_range"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -117,9 +149,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView388"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="4dp"
                         android:text="@string/double_range_desc" />
 
@@ -129,6 +160,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textView399"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@drawable/green_box"
                         android:padding="4dp"
                         android:text="@string/start_subscription" />
@@ -139,16 +172,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/double_range_layout"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/round_layout">
+                    android:background="@drawable/round_layout_white2">
 
                     <TextView
                         android:id="@+id/textView38"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
                         android:text="@string/premium_version"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
@@ -158,9 +189,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView38"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="4dp"
                         android:text="@string/premium_version_desc" />
 
@@ -170,6 +200,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textView39"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@drawable/green_box"
                         android:padding="4dp"
                         android:text="@string/start_subscription" />
@@ -181,30 +213,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/premium_layout"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/round_layout">
+                    android:background="@drawable/round_layout_white2">
 
                     <TextView
                         android:id="@+id/textView45"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
                         android:text="Araç kokusu"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/productPhoto1"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_below="@+id/textView45"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/fuelspotkoku" />
 
                     <TextView
                         android:id="@+id/textView46"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView45"
-                        android:layout_marginStart="16dp"
+                        android:layout_below="@+id/productPhoto1"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="4dp"
-                        android:text="5 tane FuelSpot araç kokusu sadece 4.99 ₺" />
+                        android:gravity="center"
+                        android:text="5 adet FuelSpot araç kokusu sadece 4.99 ₺. Sınırlı sayıda!" />
 
                     <Button
                         android:id="@+id/button_item1"
@@ -213,10 +252,10 @@
                         android:layout_below="@id/textView46"
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@drawable/round_layout_white"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/green_box"
                         android:text="@string/buy" />
                 </RelativeLayout>
 
@@ -225,29 +264,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/arac_kokusu"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/round_layout">
+                    android:background="@drawable/round_layout_white2">
 
                     <TextView
                         android:id="@+id/textView43"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
                         android:text="Lastik tamir spreyi"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/productPhoto2"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_below="@+id/textView43"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:src="@drawable/lastiktamirkiti" />
 
                     <TextView
                         android:id="@+id/textView44"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView43"
-                        android:layout_marginStart="16dp"
+                        android:layout_below="@+id/productPhoto2"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
                         android:text="Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir." />
 
                     <Button
@@ -257,10 +304,10 @@
                         android:layout_below="@id/textView44"
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@drawable/round_layout_white"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/green_box"
                         android:text="@string/buy" />
                 </RelativeLayout>
 
@@ -269,30 +316,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lastik_tamir_kiti"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/round_layout">
+                    android:background="@drawable/round_layout_white2">
 
                     <TextView
                         android:id="@+id/textView41"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
+                        android:gravity="center"
                         android:text="Araç bakım seti"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/productPhoto3"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_below="@+id/textView41"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/aracbakimseti" />
 
                     <TextView
                         android:id="@+id/textView42"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView41"
-                        android:layout_marginStart="16dp"
+                        android:layout_below="@+id/productPhoto3"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="4dp"
-                        android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI" />
+                        android:gravity="center"
+                        android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI." />
 
                     <Button
                         android:id="@+id/button_item3"
@@ -301,10 +356,10 @@
                         android:layout_below="@id/textView42"
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@drawable/round_layout_white"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/green_box"
                         android:text="@string/buy" />
                 </RelativeLayout>
             </RelativeLayout>

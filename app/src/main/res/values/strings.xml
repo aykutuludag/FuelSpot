@@ -70,6 +70,7 @@
     <string name="API_NEWS_SINGLE" translatable="false">https://fuelspot.com.tr/api/v1.0/other/news-single.php</string>
     <string name="API_COMPANY" translatable="false">https://fuelspot.com.tr/api/v1.0/other/company.php</string>
     <string name="API_BANKING" translatable="false">https://fuelspot.com.tr/api/v1.0/other/banking.php</string>
+    <string name="API_ORDER" translatable="false">https://fuelspot.com.tr/api/v1.0/other/order.php</string>
     <!-- NON TRANSLATABLE PART END -->
 
     <!-- LoginActivity-->
@@ -143,7 +144,6 @@
     <string name="latest_news">Latest news</string>
     <string name="price_index">Price index</string>
     <string name="fuel_distrubition_companies">Fuel distrubition companies</string>
-    <string name="no_news">We couldn\'t find news about your country…</string>
     <string name="last_update">Last update</string>
     <string name="registered_station_number">Registered station number</string>
     <!-- FragmentNews-->
@@ -288,7 +288,7 @@
     <string name="unit_price">Unit price</string>
     <string name="subtotal">Subtotal</string>
     <string name="total">Total</string>
-    <string name="bonus">Bonus</string>
+    <string name="bonus" translatable="false">Bonus</string>
     <!-- PurchaseDetails-->
 
     <!-- ProfileEdit-->
@@ -324,11 +324,13 @@
     <string name="double_range">2x-Range</string>
     <string name="double_range_desc">It doubles your range. (5000 meters)</string>
     <string name="buy">Buy</string>
+    <string name="reward">Reward</string>
     <string name="insufficient_balance">Your balance is insufficient</string>
     <string name="active">Active</string>
     <string name="premium_successful">Purchase successful. You\'re switching to the premium version, thanks!</string>
     <string name="double_range_successful">Purchase successful. Your range is increasing, thanks!</string>
     <string name="purchase_failed">Purchase failed. Please try again later.</string>
+    <string name="banking_key_map"><b>Legend</b> \n\n\ <b>Bonus:</b> Earn <b>1%</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
     <!-- UserStore-->
 
     <!-- UserComments-->
@@ -388,8 +390,6 @@
     <string name="station_updating">Station updating</string>
     <string name="fuelspot_station_id">FuelSpot ID:</string>
     <string name="license_no_with_colon">License NO:</string>
-    <string name="streetview">StreetView</string>
-    <string name="download_streetview">Download Google StreetView</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
@@ -420,5 +420,7 @@
 
     <!-- ReportMissingStation-->
     <string name="title_activity_report_missing_station">Missing station</string>
+    <string name="purchasing">Purchasing</string>
+    <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargolanacaktır.</string>
     <!-- AddStation-->
 </resources>

@@ -177,7 +177,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         //UserPhoto
-        userPic = findViewById(R.id.userPhoto);
+        userPic = findViewById(R.id.receiverPhoto);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));

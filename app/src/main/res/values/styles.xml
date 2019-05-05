@@ -9,24 +9,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Base application theme. (Dark) -->
-    <style name="AppThemeDark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>>
-        <item name="android:fontFamily">@font/gotham_medium</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <!-- Smth about toolbar and appbarlayout -->
     <style name="AppTheme.AppBarOverlay" parent="AppTheme" />
 
     <style name="AppTheme.PopupOverlay" parent="AppTheme" />
-
-    <style name="AppTheme.AppBarOverlay.Dark" parent="AppThemeDark" />
-
-    <style name="AppTheme.PopupOverlay.Dark" parent="AppThemeDark" />
 
     <!-- Smth about toolbar and appbarlayout -->
     <style name="FullScreen" parent="AppTheme">

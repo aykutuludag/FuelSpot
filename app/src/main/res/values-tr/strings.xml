@@ -70,7 +70,6 @@
     <string name="latest_news">Son haberler</string>
     <string name="price_index">Fiyat endeksi</string>
     <string name="fuel_distrubition_companies">Akaryakıt dağıtım şirketleri</string>
-    <string name="no_news">Ülkeniz hakkında herhangi bir haber bulamadık…</string>
     <string name="last_update">Son güncelleme</string>
     <string name="registered_station_number">Kayıtlı istasyon sayısı</string>
     <!-- FragmentNews-->
@@ -215,7 +214,6 @@
     <string name="unit_price">Birim fiyat</string>
     <string name="subtotal">Ara toplam</string>
     <string name="total">Toplam</string>
-    <string name="bonus">Bonus</string>
     <!-- PurchaseDetails-->
 
     <!-- ProfileEdit-->
@@ -250,12 +248,14 @@
     <string name="start_subscription">Üyeliği başlat</string>
     <string name="double_range">2x-Menzil</string>
     <string name="double_range_desc">Menzilinizi 2\'ye katlar! (5000 metre)</string>
-    <string name="buy">Buy</string>
-    <string name="insufficient_balance">Hesap bakiyeniz yetersiz</string>
+    <string name="buy">Satın al</string>
+    <string name="reward">Ödül</string>
+    <string name="insufficient_balance">Bakiye yetersiz</string>
     <string name="active">Aktif</string>
     <string name="premium_successful">Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!</string>
     <string name="double_range_successful">Satın alma başarılı. Menziliniz artırılıyor, teşekkürler!</string>
     <string name="purchase_failed">Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.</string>
+    <string name="banking_key_map"><b>ETİKETLER</b> \n\n\ <b>Bonus:</b> Her yakıt eklemenizde <b>%1</b> bonus! \n\n <b>Ödül:</b> Bize FuelSpot\'da görünmeyen veya yanlış görünen istasyon bilgisi raporladığınızda (fiyat, tesis, marka, adres …) hesabınıza ödül yansıtılır. \n\n <b>Satınalma:</b> Mağazadan yaptığınız alışverişleri gösterir</string>
     <!-- UserStore-->
 
     <!-- UserComments-->
@@ -314,9 +314,7 @@
     <string name="note_for_prices">ÖNEMLİ: Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
     <string name="station_updating">İstasyon güncelleniyor</string>
     <string name="fuelspot_station_id">FuelSpot ID:</string>
-    <string name="license_no_with_colon">License NO:</string>
-    <string name="streetview">Sokak Görünümü</string>
-    <string name="download_streetview">Google StreetView\'ı indir</string>
+    <string name="license_no_with_colon">Lisans No:</string>
     <!-- SuperUpdateStation-->
 
     <!-- SuperCampaigns-->
@@ -347,5 +345,7 @@
 
     <!-- ReportMissingStation-->
     <string name="title_activity_report_missing_station">Eksik istasyon</string>
+    <string name="purchasing">Satın alınıyor</string>
+    <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargoya verilecektir. Ortalama teslim süresi 2–3 iş günüdür.</string>
     <!-- AddStation-->
 </resources>

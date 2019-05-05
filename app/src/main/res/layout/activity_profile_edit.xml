@@ -30,7 +30,7 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/userPhoto"
+                android:id="@+id/receiverPhoto"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_centerHorizontal="true"
@@ -41,7 +41,7 @@
                 android:id="@+id/userUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/userPhoto"
+                android:layout_below="@+id/receiverPhoto"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/gotham_black"
@@ -49,7 +49,7 @@
                 android:textColor="#212121" />
 
             <TextView
-                android:id="@+id/dummyText1"
+                android:id="@+id/receiverName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/userUsername"
@@ -65,7 +65,7 @@
                 android:id="@+id/editFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dummyText1"
+                android:layout_below="@+id/receiverName"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
@@ -77,7 +77,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
-                android:id="@+id/mail_title"
+                android:id="@+id/receiverMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editFullName"
@@ -91,7 +91,7 @@
                 android:id="@+id/editTextMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/mail_title"
+                android:layout_below="@+id/receiverMail"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
@@ -103,7 +103,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <TextView
-                android:id="@+id/dummyText4"
+                android:id="@+id/receiverPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editTextMail"
@@ -117,7 +117,7 @@
                 android:id="@+id/editTextPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dummyText4"
+                android:layout_below="@+id/receiverPhone"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
@@ -128,7 +128,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
-                android:id="@+id/desc_title"
+                android:id="@+id/receiverAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/editTextPhone"
@@ -142,7 +142,7 @@
                 android:id="@+id/editTextLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/desc_title"
+                android:layout_below="@+id/receiverAddress"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"

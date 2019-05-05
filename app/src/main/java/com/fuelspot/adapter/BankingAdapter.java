@@ -18,9 +18,11 @@ import static com.fuelspot.MainActivity.currencySymbol;
 
 public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHolder> {
     private List<BankingItem> feedItemList;
+    private Context mContext;
 
     public BankingAdapter(Context context, List<BankingItem> feedItemList) {
         this.feedItemList = feedItemList;
+        this.mContext = context;
     }
 
     @NonNull
@@ -34,14 +36,21 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
     public void onBindViewHolder(@NonNull BankingAdapter.ViewHolder viewHolder, int i) {
         BankingItem feedItem = feedItemList.get(i);
 
-        viewHolder.textViewType.setText(feedItem.getType());
+        switch (feedItem.getType()) {
+            case "reward":
+                viewHolder.textViewType.setText(mContext.getString(R.string.reward));
+                break;
+            case "purchase":
+                viewHolder.textViewType.setText(mContext.getString(R.string.purchase));
+                break;
+            case "bonus":
+                viewHolder.textViewType.setText(mContext.getString(R.string.bonus));
+                break;
+        }
+
 
         String amount = feedItem.getAmount() + " " + currencySymbol;
         viewHolder.textViewAmount.setText(amount);
-
-        viewHolder.textViewNotes.setText(feedItem.getNotes());
-
-        viewHolder.textViewTime.setText(feedItem.getTransactionTime());
     }
 
     @Override
@@ -52,15 +61,13 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout card;
-        TextView textViewType, textViewAmount, textViewNotes, textViewTime;
+        TextView textViewType, textViewAmount;
 
         ViewHolder(View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.single_report);
             textViewType = itemView.findViewById(R.id.banking_type);
             textViewAmount = itemView.findViewById(R.id.banking_amout);
-            textViewNotes = itemView.findViewById(R.id.banking_notes);
-            textViewTime = itemView.findViewById(R.id.banking_time);
         }
     }
 }

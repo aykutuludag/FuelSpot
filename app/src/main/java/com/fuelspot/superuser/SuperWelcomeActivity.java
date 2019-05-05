@@ -846,7 +846,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
-        userPhoto = findViewById(R.id.userPhoto);
+        userPhoto = findViewById(R.id.receiverPhoto);
         Glide.with(this).load(photo).apply(options).into(userPhoto);
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
