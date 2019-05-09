@@ -2,8 +2,9 @@ package com.fuelspot;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.fuelspot.receiver.FenceReceiver;
 import com.google.android.gms.ads.MobileAds;

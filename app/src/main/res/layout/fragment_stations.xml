@@ -1,4 +1,4 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/tools"
     android:id="@+id/swipeContainer"
@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F4F4F4">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -48,7 +48,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#131313" />
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/sortBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,6 +59,7 @@
 
                     <RelativeLayout
                         android:id="@+id/sortGasoline"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:alpha="0.33"
                         app:layout_marginEndPercent="1%"
@@ -91,6 +92,7 @@
 
                     <RelativeLayout
                         android:id="@+id/sortDiesel"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/sortGasoline"
                         android:alpha="0.33"
@@ -124,6 +126,7 @@
 
                     <RelativeLayout
                         android:id="@+id/sortLPG"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/sortDiesel"
                         android:alpha="0.33"
@@ -157,6 +160,7 @@
 
                     <RelativeLayout
                         android:id="@+id/sortElectric"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/sortLPG"
                         android:alpha="0.33"
@@ -190,6 +194,7 @@
 
                     <RelativeLayout
                         android:id="@+id/sortDistance"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/sortElectric"
                         android:alpha="0.33"
@@ -221,9 +226,9 @@
                             android:textSize="12sp" />
                     </RelativeLayout>
 
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/stationView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,5 +255,5 @@
             </RelativeLayout>
 
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nestedScrollViewSettings"
     android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#000000" />
 
-            <android.support.percent.PercentRelativeLayout
+            <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/userGen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
 
                 <TextView
                     android:id="@+id/dummy001"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="2dp"
@@ -155,7 +156,7 @@
                     android:padding="2dp"
                     android:text="@string/appVersion"
                     android:textColor="#424242" />
-            </android.support.percent.PercentRelativeLayout>
+            </androidx.percentlayout.widget.PercentRelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -233,7 +234,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#212121" />
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/single_tax"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -244,6 +245,7 @@
 
                     <ImageView
                         android:id="@+id/gasoline"
+                        android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_alignParentTop="true"
                         android:contentDescription="@string/gasoline"
@@ -269,6 +271,7 @@
 
                     <ImageView
                         android:id="@+id/diesel"
+                        android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_alignParentTop="true"
                         android:layout_toEndOf="@+id/gasoline"
@@ -296,6 +299,7 @@
 
                     <ImageView
                         android:id="@+id/lpg"
+                        android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_alignParentTop="true"
                         android:layout_toEndOf="@+id/diesel"
@@ -322,6 +326,7 @@
 
                     <ImageView
                         android:id="@+id/electricity"
+                        android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_alignParentTop="true"
                         android:layout_toEndOf="@+id/lpg"
@@ -343,7 +348,7 @@
                         android:textColor="#6D6D6D"
                         android:textSize="12sp"
                         android:textStyle="bold" />
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
                 <Button
                     android:id="@+id/button_tax"
@@ -379,7 +384,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#212121" />
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/inner_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -390,6 +395,7 @@
 
                     <Button
                         android:id="@+id/button_missing_station"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/white_box"
                         android:fontFamily="@font/gotham_book"
@@ -401,6 +407,7 @@
 
                     <Button
                         android:id="@+id/button_feedback"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="4dp"
@@ -415,6 +422,7 @@
 
                     <Button
                         android:id="@+id/button_beta"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:layout_toEndOf="@id/button_feedback"
@@ -425,10 +433,10 @@
                         android:textColor="#161616"
                         app:layout_marginPercent="1.5%"
                         app:layout_widthPercent="30%" />
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/inner_buttons"
@@ -438,6 +446,7 @@
 
                     <Button
                         android:id="@+id/button_rate"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/white_box"
                         android:fontFamily="@font/gotham_book"
@@ -449,6 +458,7 @@
 
                     <Button
                         android:id="@+id/button_terms"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/button_rate"
                         android:background="@drawable/white_box"
@@ -461,6 +471,7 @@
 
                     <Button
                         android:id="@+id/button_privacy"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/button_terms"
                         android:background="@drawable/white_box"
@@ -470,7 +481,7 @@
                         android:textColor="#161616"
                         app:layout_marginPercent="1.5%"
                         app:layout_widthPercent="30%" />
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
             </RelativeLayout>
 
@@ -490,4 +501,4 @@
         </RelativeLayout>
 
     </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>

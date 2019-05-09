@@ -8,7 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -133,7 +134,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                             double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
                                             locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
                                             AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                                            registerFence(String.valueOf(fullStationList.get(i).getID()), locationFence);
+                                            registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
                                         }
                                     }
                                 } else {
@@ -185,7 +186,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
                                     locationFence = LocationFence.in(lat, lon, 50, 15000L);
                                     AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
-                                    registerFence(String.valueOf(item.getID()), locationFence);
+                                    registerFence(String.valueOf(item.getID()), userAtStation);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

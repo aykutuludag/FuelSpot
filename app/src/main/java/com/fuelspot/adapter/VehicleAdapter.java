@@ -3,14 +3,14 @@ package com.fuelspot.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.AddFuel;
 import com.fuelspot.R;
 import com.fuelspot.model.VehicleItem;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 

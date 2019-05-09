@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-4dp"
@@ -30,7 +30,7 @@
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            <android.support.percent.PercentRelativeLayout
+            <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/bill_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,6 +43,7 @@
                     app:layout_marginBottomPercent="1%"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="5%"
+                    android:layout_width="0dp"
                     app:layout_marginTopPercent="1%"
                     app:layout_widthPercent="20%">
 
@@ -72,6 +73,7 @@
                     android:layout_toEndOf="@id/stationInfo"
                     android:gravity="center"
                     android:text="@string/type"
+                    android:layout_width="0dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     app:layout_marginPercent="1%"
                     app:layout_widthPercent="20%" />
@@ -95,6 +97,7 @@
                     android:layout_toEndOf="@+id/title_amount"
                     android:gravity="center"
                     android:text="@string/subtotal"
+                    android:layout_width="0dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     app:layout_marginPercent="1%"
                     app:layout_widthPercent="20%" />
@@ -238,9 +241,9 @@
                     android:text="@string/total"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textColor="#424242" />
-            </android.support.percent.PercentRelativeLayout>
+            </androidx.percentlayout.widget.PercentRelativeLayout>
 
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

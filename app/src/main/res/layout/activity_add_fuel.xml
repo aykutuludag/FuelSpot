@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAEAEA">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:id="@+id/addfuel_layout1"
@@ -110,7 +110,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#161616" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/automobileView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -197,7 +197,7 @@
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/priceSec1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -208,6 +208,7 @@
 
                     <EditText
                         android:id="@+id/editTextPricePerLiter"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
@@ -232,6 +233,7 @@
 
                     <EditText
                         android:id="@+id/editTextPrice"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPricePerLiter"
                         android:layout_marginTop="8dp"
@@ -245,6 +247,7 @@
 
                     <TextView
                         android:id="@+id/textViewCurrency"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/editTextPrice"
                         android:layout_alignBottom="@+id/editTextPrice"
@@ -255,6 +258,7 @@
 
                     <TextView
                         android:id="@+id/textViewHowManyLitre"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPrice"
                         android:layout_marginTop="8dp"
@@ -265,6 +269,7 @@
 
                     <TextView
                         android:id="@+id/textViewLiter"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/textViewHowManyLitre"
                         android:layout_alignBottom="@+id/textViewHowManyLitre"
@@ -272,7 +277,7 @@
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
                         app:layout_widthPercent="30%" />
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
             </RelativeLayout>
 
@@ -330,7 +335,7 @@
                     android:text="LPG"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/priceSec2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -341,6 +346,7 @@
 
                     <EditText
                         android:id="@+id/editTextPricePerLiter2"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
@@ -354,6 +360,7 @@
 
                     <TextView
                         android:id="@+id/textViewUnit2"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/editTextPricePerLiter2"
                         android:layout_alignBottom="@+id/editTextPricePerLiter2"
@@ -364,6 +371,7 @@
 
                     <EditText
                         android:id="@+id/editTextPrice2"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPricePerLiter2"
                         android:layout_marginTop="8dp"
@@ -377,6 +385,7 @@
 
                     <TextView
                         android:id="@+id/textViewCurrency2"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/editTextPrice2"
                         android:layout_alignBottom="@+id/editTextPrice2"
@@ -387,6 +396,7 @@
 
                     <TextView
                         android:id="@+id/textViewHowManyLitre2"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPrice2"
                         android:layout_marginTop="8dp"
@@ -397,6 +407,7 @@
 
                     <TextView
                         android:id="@+id/textViewLiter2"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/textViewHowManyLitre2"
                         android:layout_alignBottom="@+id/textViewHowManyLitre2"
@@ -404,7 +415,7 @@
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
                         app:layout_widthPercent="30%" />
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
             </RelativeLayout>
 
@@ -530,4 +541,4 @@
         </RelativeLayout>
     </ScrollView>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

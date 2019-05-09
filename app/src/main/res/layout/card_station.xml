@@ -6,7 +6,7 @@
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -16,7 +16,7 @@
         card_view:cardCornerRadius="24dp"
         card_view:cardElevation="2dp">
 
-        <android.support.percent.PercentRelativeLayout
+        <androidx.percentlayout.widget.PercentRelativeLayout
             android:id="@+id/single_station"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -57,6 +57,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/baseInfoLayout"
                 android:contentDescription="@string/gasoline"
+                android:layout_width="0dp"
                 android:padding="4dp"
                 android:src="@drawable/gasoline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -84,6 +85,7 @@
                 android:layout_toEndOf="@+id/gasoline"
                 android:contentDescription="@string/diesel"
                 android:gravity="center"
+                android:layout_width="0dp"
                 android:padding="4dp"
                 android:src="@drawable/diesel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -111,6 +113,7 @@
                 android:layout_toEndOf="@+id/diesel"
                 android:contentDescription="@string/lpg"
                 android:padding="4dp"
+                android:layout_width="0dp"
                 android:src="@drawable/lpg"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 card_view:layout_marginEndPercent="1%"
@@ -133,6 +136,7 @@
                 android:id="@+id/electricity"
                 android:layout_height="25dp"
                 android:layout_below="@+id/stationLastUpdate"
+                android:layout_width="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@+id/lpg"
                 android:contentDescription="@string/electricity"
@@ -164,6 +168,7 @@
                 android:padding="4dp"
                 android:src="@drawable/distance"
                 card_view:layout_marginEndPercent="1%"
+                android:layout_width="0dp"
                 card_view:layout_marginStartPercent="1%"
                 card_view:layout_widthPercent="14%" />
 
@@ -190,7 +195,7 @@
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-        </android.support.percent.PercentRelativeLayout>
-    </android.support.v7.widget.CardView>
+        </androidx.percentlayout.widget.PercentRelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

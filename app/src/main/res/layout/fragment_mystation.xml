@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/tools"
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/myStationScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,7 +26,7 @@
                 map:cameraZoom="13"
                 map:uiTiltGestures="false" />
 
-            <android.support.percent.PercentRelativeLayout
+            <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/single_station"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,6 +38,7 @@
                     android:layout_below="@+id/gasoline"
                     android:layout_alignParentStart="true"
                     app:layout_widthPercent="12.5%"
+                    android:layout_width="0dp"
                     app:srcCompat="@drawable/default_station" />
 
                 <TextView
@@ -48,6 +49,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/imageViewStationLogo"
                     android:gravity="center"
+                    android:layout_width="0dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -73,6 +75,7 @@
                     android:layout_toEndOf="@+id/ownedStationName"
                     android:contentDescription="@string/gasoline"
                     android:padding="4dp"
+                    android:layout_width="0dp"
                     android:src="@drawable/gasoline"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:layout_widthPercent="14.5%" />
@@ -95,6 +98,7 @@
                     android:id="@+id/diesel"
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
+                    android:layout_width="0dp"
                     android:layout_toEndOf="@+id/gasoline"
                     android:contentDescription="@string/diesel"
                     android:gravity="center"
@@ -121,6 +125,7 @@
                     android:id="@+id/lpg"
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
+                    android:layout_width="0dp"
                     android:layout_toEndOf="@+id/diesel"
                     android:contentDescription="@string/lpg"
                     android:padding="4dp"
@@ -147,6 +152,7 @@
                     android:layout_height="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/lpg"
+                    android:layout_width="0dp"
                     android:contentDescription="@string/electricity"
                     android:padding="4dp"
                     android:src="@drawable/electricity"
@@ -172,6 +178,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/electricity"
                     android:contentDescription="@string/distance"
+                    android:layout_width="0dp"
                     android:padding="4dp"
                     android:src="@drawable/distance"
                     app:layout_widthPercent="14.5%" />
@@ -201,7 +208,7 @@
                     android:padding="2dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
-            </android.support.percent.PercentRelativeLayout>
+            </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/edit_section"
@@ -292,5 +299,5 @@
                     android:text="@string/campaigns" />
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

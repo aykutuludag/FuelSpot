@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAEAEA">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/layout_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -69,7 +69,7 @@
                     android:fontFamily="@font/gotham_book"
                     android:textColor="#424242" />
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/buttonBars"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,6 +83,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/white_box"
                         android:fontFamily="@font/gotham_book"
+                        android:layout_width="0dp"
                         android:text="@string/favorites"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616"
@@ -96,6 +97,7 @@
                         android:background="@drawable/white_box"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/store"
+                        android:layout_width="0dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616"
                         app:layout_marginPercent="1.5%"
@@ -114,7 +116,7 @@
                         app:layout_marginPercent="1.5%"
                         app:layout_widthPercent="30%" />
 
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -144,7 +146,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                         android:textColor="#212121" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/automobileView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -186,7 +188,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
                         android:textColor="#212121" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/commentView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -229,5 +231,5 @@
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

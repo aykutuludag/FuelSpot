@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#EAEAEA"
     android:layout_height="match_parent"
+    android:background="#EAEAEA"
     tools:context=".PurchaseDetails">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -119,7 +119,7 @@
                         android:gravity="center"
                         android:textSize="14sp" />
 
-                    <android.support.percent.PercentRelativeLayout
+                    <androidx.percentlayout.widget.PercentRelativeLayout
                         android:id="@+id/bill_section"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -148,6 +148,7 @@
 
                         <TextView
                             android:id="@+id/title_unit"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_toEndOf="@+id/title_amount"
@@ -158,6 +159,7 @@
 
                         <TextView
                             android:id="@+id/title_price"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
@@ -168,6 +170,7 @@
 
                         <ImageView
                             android:id="@+id/type1"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/title_type"
                             android:layout_alignBottom="@+id/amount1"
@@ -282,7 +285,7 @@
                             android:textSize="18sp"
                             app:layout_widthPercent="75%" />
 
-                    </android.support.percent.PercentRelativeLayout>
+                    </androidx.percentlayout.widget.PercentRelativeLayout>
 
                 </RelativeLayout>
 
@@ -313,9 +316,9 @@
             </RelativeLayout>
         </ScrollView>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -323,4 +326,4 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/delete" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
