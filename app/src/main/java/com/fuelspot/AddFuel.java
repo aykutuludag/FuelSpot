@@ -75,7 +75,6 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
-import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userAutomobileList;
@@ -100,16 +99,15 @@ public class AddFuel extends AppCompatActivity {
     private CircleImageView istasyonLogoHolder;
     ProgressDialog stationFetching;
     private RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
-    private Button expandableButton1;
-    private Button expandableButton2;
     private String fuelType, fuelType2;
-    private TextView istasyonNameHolder, istasyonAdresHolder, istasyonIDHolder, fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre, textViewLitre2;
+    Button buttonAddBill;
     private ImageView fuelType1Icon, fuelType2Icon, photoHolder;
     private EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitreFiyati2, textViewTotalFiyat2;
     private Bitmap bitmap;
     private ScrollView scrollView;
     GridLayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
+    private TextView istasyonNameHolder, istasyonAdresHolder, istasyonIDHolder, fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre, textViewLitre2, textViewBonus;
     private RecyclerView.Adapter mAdapter;
 
     private static float taxCalculator(int fuelType, float price) {
@@ -136,10 +134,6 @@ public class AddFuel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
 
-        if (isSuperUser) {
-            finish();
-        }
-
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -155,7 +149,6 @@ public class AddFuel extends AppCompatActivity {
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
-
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -185,10 +178,8 @@ public class AddFuel extends AppCompatActivity {
         istasyonNameHolder = findViewById(R.id.stationNameHolder);
         istasyonAdresHolder = findViewById(R.id.stationAddressHolder);
 
-        expandableLayoutYakit = findViewById(R.id.division1);
-        expandableLayoutYakit2 = findViewById(R.id.division2);
-        expandableButton1 = findViewById(R.id.expandableButtonYakit1);
-        expandableButton2 = findViewById(R.id.expandableButtonYakit2);
+        expandableLayoutYakit = findViewById(R.id.division2);
+        expandableLayoutYakit2 = findViewById(R.id.division3);
 
         enterKilometer = findViewById(R.id.editTextKilometer);
 
@@ -218,7 +209,7 @@ public class AddFuel extends AppCompatActivity {
         textViewLitreFiyati2 = findViewById(R.id.editTextPricePerLiter2);
         textViewLitre2 = findViewById(R.id.textViewHowManyLitre2);
         textViewTotalFiyat2 = findViewById(R.id.editTextPrice2);
-
+        textViewBonus = findViewById(R.id.textViewBonus);
         fuelGrandTotal = findViewById(R.id.textViewGrandTotal);
 
         // Check whether user is at station or not
@@ -410,7 +401,6 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
-                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 selectedUnitPrice = dieselPrice;
@@ -419,7 +409,6 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
-                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 selectedUnitPrice = LPGPrice;
@@ -428,7 +417,6 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
-                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 selectedUnitPrice = electricityPrice;
@@ -437,11 +425,9 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
-                expandableButton1.setVisibility(View.VISIBLE);
                 break;
             default:
                 expandableLayoutYakit.setVisibility(View.GONE);
-                expandableButton1.setVisibility(View.GONE);
                 break;
         }
 
@@ -457,7 +443,6 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
-                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 selectedUnitPrice2 = dieselPrice;
@@ -466,7 +451,6 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
-                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 selectedUnitPrice2 = LPGPrice;
@@ -475,7 +459,6 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
-                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 selectedUnitPrice2 = electricityPrice;
@@ -484,11 +467,9 @@ public class AddFuel extends AppCompatActivity {
                 Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
-                expandableButton2.setVisibility(View.VISIBLE);
                 break;
             default:
                 expandableLayoutYakit2.setVisibility(View.GONE);
-                expandableButton2.setVisibility(View.GONE);
                 break;
         }
 
@@ -536,7 +517,6 @@ public class AddFuel extends AppCompatActivity {
                     String literText = String.format(Locale.getDefault(), "%.2f", buyedLiter);
                     textViewLitre.setText(literText);
                     totalPrice = entryPrice + entryPrice2;
-
                     updateTaxandGrandTotal();
                 }
             }
@@ -589,7 +569,9 @@ public class AddFuel extends AppCompatActivity {
         });
 
         photoHolder = findViewById(R.id.photoHolder);
-        photoHolder.setOnClickListener(new View.OnClickListener() {
+
+        buttonAddBill = findViewById(R.id.button_add_bill);
+        buttonAddBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(AddFuel.this)) {
@@ -738,6 +720,7 @@ public class AddFuel extends AppCompatActivity {
         totalPrice = entryPrice + entryPrice2;
         String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
+        textViewBonus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.1f", totalPrice / 100f) + " FS bonus kazanabilirsiniz!");
     }
 
     private String getStringImage(Bitmap bmp) {
@@ -797,6 +780,7 @@ public class AddFuel extends AppCompatActivity {
             if (image != null) {
                 bitmap = BitmapFactory.decodeFile(image.getPath());
                 Glide.with(this).load(image.getPath()).apply(options).into(photoHolder);
+                photoHolder.setVisibility(View.VISIBLE);
             }
         }
     }

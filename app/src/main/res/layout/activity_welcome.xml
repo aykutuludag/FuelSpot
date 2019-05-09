@@ -443,7 +443,7 @@
         android:visibility="gone">
 
         <RelativeLayout
-            android:id="@+id/buyScreen1"
+            android:id="@+id/howto1"
             android:layout_width="match_parent"
             android:layout_height="325dp"
             android:layout_centerVertical="true"
@@ -451,7 +451,7 @@
             android:visibility="visible">
 
             <TextView
-                android:id="@+id/textViewProductTitle"
+                android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -616,7 +616,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/buyScreen2"
+            android:id="@+id/howto2"
             android:layout_width="match_parent"
             android:layout_height="325dp"
             android:layout_centerVertical="true"
@@ -687,7 +687,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/buyScreen3"
+            android:id="@+id/howto3"
             android:layout_width="match_parent"
             android:layout_height="325dp"
             android:layout_centerVertical="true"
@@ -762,7 +762,7 @@
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buyScreen1"
+            android:layout_below="@+id/howto1"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="-24dp"
             android:layout_marginEnd="16dp"

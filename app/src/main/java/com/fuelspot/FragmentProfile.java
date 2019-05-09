@@ -48,7 +48,6 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userFSMoney;
@@ -238,7 +237,7 @@ public class FragmentProfile extends Fragment {
                                 }
 
                                 userFSMoney = (float) res.getJSONObject(0).getDouble("current_balance");
-                                String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " " + currencySymbol;
+                                String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FS";
                                 textViewFMoney.setText(dummyMoneyText);
                             } catch (JSONException e) {
                                 e.printStackTrace();

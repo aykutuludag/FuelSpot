@@ -55,12 +55,15 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.FragmentProfile.userBankingList;
+import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
+import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.username;
@@ -107,7 +110,7 @@ public class StoreActivity extends AppCompatActivity {
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         textViewCurrentBalance = findViewById(R.id.textViewCurrentBalance);
-        String holder = "MEVCUT BAKİYE: " + String.format(Locale.getDefault(), "%.2f", userFSMoney) + " " + currencySymbol;
+        String holder = "MEVCUT BAKİYE: " + String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FS";
         textViewCurrentBalance.setText(holder);
 
         mRecyclerView = findViewById(R.id.bankingView);
@@ -123,7 +126,7 @@ public class StoreActivity extends AppCompatActivity {
                             if (!hasDoubleRange) {
                                 buyPremium();
                             } else {
-                                Toast.makeText(StoreActivity.this, "Premium sürüm 2x menzil özelliğini de kapsamaktadır. Premium sürüme geçmeden önce lütfen 2x menzili iptal ediniz.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(StoreActivity.this, "Premium sürüm 2X menzil özelliğini de kapsamaktadır. Premium sürüme geçmeden önce lütfen 2X menzili iptal ediniz.", Toast.LENGTH_LONG).show();
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -147,7 +150,7 @@ public class StoreActivity extends AppCompatActivity {
                             if (!premium) {
                                 buyDoubleRange();
                             } else {
-                                Toast.makeText(StoreActivity.this, "Premium sürüm 2x menzil özelliğini de kapsamaktadır. Ayrıca 2x menzil satın almanıza gerek yoktur.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(StoreActivity.this, "Premium sürüm 2X menzil özelliğini de kapsamaktadır. Ayrıca 2X menzil satın almanıza gerek yoktur.", Toast.LENGTH_LONG).show();
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -160,7 +163,7 @@ public class StoreActivity extends AppCompatActivity {
         }
 
         Button buttonAracKokusu = findViewById(R.id.button_item1);
-        buttonAracKokusu.setText(getString(R.string.buy) + ": " + price1 + "₺");
+        buttonAracKokusu.setText(getString(R.string.buy) + ": " + price1 + " FS");
         buttonAracKokusu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +177,7 @@ public class StoreActivity extends AppCompatActivity {
         });
 
         Button buttonLastikSpreyi = findViewById(R.id.button_item2);
-        buttonLastikSpreyi.setText(getString(R.string.buy) + ": " + price2 + "₺");
+        buttonLastikSpreyi.setText(getString(R.string.buy) + ": " + price2 + " FS");
         buttonLastikSpreyi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +191,7 @@ public class StoreActivity extends AppCompatActivity {
         });
 
         Button buttonBakimKiti = findViewById(R.id.button_item3);
-        buttonBakimKiti.setText(getString(R.string.buy) + ": " + price3 + "₺");
+        buttonBakimKiti.setText(getString(R.string.buy) + ": " + price3 + " FS");
         buttonBakimKiti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,7 +260,7 @@ public class StoreActivity extends AppCompatActivity {
                 0, 0);
     }
 
-    private void buyRealItem(int id, View view) {
+    private void buyRealItem(int itemNo, View view) {
         //POPUP
         //SCREEN 1 - ITEM
         //SCREEN 2 - RECEIVER
@@ -270,10 +273,10 @@ public class StoreActivity extends AppCompatActivity {
         final float[] productPrice = new float[1];
         int imageResourceID = R.drawable.default_campaign;
 
-        switch (id) {
+        switch (itemNo) {
             case 1:
                 productName[0] = "Araç Kokusu (5 adet)";
-                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 4.99 ₺. Sınırlı sayıda!";
+                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 4.99 FS. Sınırlı sayıda!";
                 productPrice[0] = price1;
                 imageResourceID = R.drawable.fuelspotkoku;
                 break;
@@ -306,11 +309,48 @@ public class StoreActivity extends AppCompatActivity {
         final RelativeLayout layout2 = customView.findViewById(R.id.buyScreen2);
         final RelativeLayout layout3 = customView.findViewById(R.id.buyScreen3);
 
+        // PAGE 1
         CircleImageView urunPhoto = customView.findViewById(R.id.productPhoto);
         Glide.with(StoreActivity.this).load(imageResourceID).apply(options).into(urunPhoto);
 
+        TextView urunTitle1 = customView.findViewById(R.id.textViewProductTitle);
+        urunTitle1.setText(productName[0]);
+
+        TextView urunFiyat1 = customView.findViewById(R.id.urunfiyat);
+        urunFiyat1.setText(productPrice[0] + " FS");
+
+        TextView urunAciklama = customView.findViewById(R.id.urunaciklama);
+        urunAciklama.setText(productDesc[0]);
+
+        // PAGE 2
+        CircleImageView receiverPhoto = customView.findViewById(R.id.receiverPhoto);
+        Glide.with(StoreActivity.this).load(photo).apply(options).into(receiverPhoto);
+
+        TextView receiverName = customView.findViewById(R.id.receiverName);
+        receiverName.setText(name);
+
+        TextView receiverMail = customView.findViewById(R.id.receiverMail);
+        receiverMail.setText(email);
+
+        TextView receiverPhone = customView.findViewById(R.id.receiverPhone);
+        receiverPhone.setText(userPhoneNumber);
+
+        TextView receiverAddress = customView.findViewById(R.id.receiverAddress);
+        receiverAddress.setText(location);
+
+        // PAGE 3
+        TextView urunTitle2 = customView.findViewById(R.id.textViewFinal);
+        urunTitle2.setText(productName[0]);
+
         CircleImageView urunPhoto2 = customView.findViewById(R.id.productPhotoFinal);
         Glide.with(StoreActivity.this).load(imageResourceID).apply(options).into(urunPhoto2);
+
+        TextView urunFiyat2 = customView.findViewById(R.id.urunfiyatFinal);
+        urunFiyat2.setText(productPrice[0] + " FS");
+
+        TextView finalPromptText = customView.findViewById(R.id.finalPrompt);
+        float kalan = userFSMoney - productPrice[0];
+        finalPromptText.setText("Satın alma sonrası " + String.format(Locale.getDefault(), "%.2f", kalan) + " FS bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?");
 
         Button buttonContinue = customView.findViewById(R.id.buttonProcessPurchase);
         buttonContinue.setOnClickListener(new View.OnClickListener() {
@@ -367,8 +407,8 @@ public class StoreActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_SHORT).show();
                         loading.dismiss();
+                        Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
@@ -384,6 +424,8 @@ public class StoreActivity extends AppCompatActivity {
                 params.put("address", location);
                 params.put("phone", userPhoneNumber);
                 params.put("email", email);
+                params.put("currency", currencyCode);
+                params.put("country", userCountry);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters

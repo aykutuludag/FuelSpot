@@ -402,16 +402,12 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     public void onResponse(String response) {
                         loadingDelete.dismiss();
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    //set VehicleID = 0 because user delete this car. Choose another one.
-                                    vehicleID = 0;
-                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_delete_success), Toast.LENGTH_LONG).show();
-                                    fetchAutomobiles();
-                                    break;
-                                default:
-                                    Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
-                                    break;
+                            if ("Success".equals(response)) {//set VehicleID = 0 because user delete this car. Choose another one.
+                                vehicleID = 0;
+                                Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_delete_success), Toast.LENGTH_LONG).show();
+                                fetchAutomobiles();
+                            } else {
+                                Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();

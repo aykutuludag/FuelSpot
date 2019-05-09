@@ -99,11 +99,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         notLogged = findViewById(R.id.notLoggedLayout);
         try {
             background.setRawData(R.raw.fuelspot);
-            background.setVolume(0f, 0f);
-            background.prepareAsync(new MediaPlayer.OnPreparedListener() {
+            background.prepare(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    background.setVolume(0f, 0f);
                     background.start();
+                }
+            });
+            background.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    background.release();
                 }
             });
         } catch (IOException e) {
@@ -246,9 +252,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (getIntent().getExtras() != null) {
                 String link2 = getIntent().getExtras().getString("URL");
                 if (link2 != null && link2.length() > 0) {
-                    // Temporary only getting fuelspot.com
-                    link2 = link2.replace("fuelspot.com", "fuelspot.com.tr");
-
                     final Intent intent;
                     if (isSuperUser) {
                         intent = new Intent(LoginActivity.this, SuperMainActivity.class);

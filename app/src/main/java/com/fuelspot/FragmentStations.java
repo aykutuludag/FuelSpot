@@ -2,6 +2,8 @@ package com.fuelspot;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +43,7 @@ import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
+import com.fuelspot.receiver.AlarmReceiver;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -70,6 +73,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
@@ -440,6 +444,8 @@ public class FragmentStations extends Fragment {
                                     if (userAutomobileList != null && userAutomobileList.size() > 0) {
                                         AlarmBuilder(getActivity());
                                     }
+                                } else {
+                                    cancelGeofenceAlarm();
                                 }
 
                                 // Sort by distnce
@@ -904,6 +910,13 @@ public class FragmentStations extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
             adCount++;
         }
+    }
+
+    void cancelGeofenceAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+        Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.cancel(pendingIntent);
     }
 
     @Override

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="#EAEAEA">
 
     <RelativeLayout
         android:id="@+id/buyScreen1"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_centerInParent="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/round_layout_white"
         android:visibility="visible">
 
@@ -26,7 +29,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/gotham_black"
-                android:text="ARAÇ KOKUSU"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -47,7 +49,6 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="10 TL"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#161616" />
 
@@ -59,8 +60,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="Ürün açıklaması" />
+                android:gravity="center" />
         </RelativeLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -95,9 +95,12 @@
         android:id="@+id/buyScreen2"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_centerInParent="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/round_layout_white"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -219,7 +222,10 @@
         android:id="@+id/buyScreen3"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_centerInParent="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/round_layout_white"
         android:visibility="gone">
 
@@ -236,7 +242,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/gotham_black"
-                android:text="ARAÇ KOKUSU"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -257,7 +262,7 @@
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="10 TL" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/finalPrompt"
@@ -268,7 +273,7 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Satın alma sonrası 1.62 TL bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?" />
+                android:text="Satın alma sonrası - FS bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?" />
         </RelativeLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -304,10 +309,8 @@
         android:id="@+id/buttonProcessPurchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buyScreen1"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="-24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_alignEnd="@id/buyScreen1"
+        android:layout_alignBottom="@id/buyScreen1"
         android:background="@drawable/green_box"
         android:fontFamily="@font/gotham_medium"
         android:padding="4dp"
@@ -319,9 +322,8 @@
         android:id="@+id/imageViewClose"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_above="@+id/buyScreen1"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="-32dp"
+        android:layout_alignStart="@id/buyScreen1"
+        android:layout_alignTop="@id/buyScreen1"
         android:contentDescription="@string/cancel"
         app:srcCompat="@drawable/cancel" />
 </RelativeLayout>

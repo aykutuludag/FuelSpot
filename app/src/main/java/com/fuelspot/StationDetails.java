@@ -181,7 +181,6 @@ public class StationDetails extends AppCompatActivity {
     private ImageView reportPricePhoto;
     private RequestOptions options;
     private SharedPreferences prefs;
-    private Drawable favorite;
     private int reportRequest;
     private SimpleDateFormat sdf;
     private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel;
@@ -216,6 +215,7 @@ public class StationDetails extends AppCompatActivity {
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
 
+        Drawable favorite;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             favorite = ContextCompat.getDrawable(this, R.drawable.ic_fav);
         } else {
@@ -1051,15 +1051,12 @@ public class StationDetails extends AppCompatActivity {
                         loading.dismiss();
 
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(StationDetails.this, getString(R.string.comment_update_success), Toast.LENGTH_SHORT).show();
-                                    mPopupWindow.dismiss();
-                                    fetchStationComments();
-                                    break;
-                                default:
-                                    Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                    break;
+                            if ("Success".equals(response)) {
+                                Toast.makeText(StationDetails.this, getString(R.string.comment_update_success), Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                                fetchStationComments();
+                            } else {
+                                Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
@@ -1332,14 +1329,11 @@ public class StationDetails extends AppCompatActivity {
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    Toast.makeText(StationDetails.this, getString(R.string.report_send_success), Toast.LENGTH_SHORT).show();
-                                    mPopupWindow.dismiss();
-                                    break;
-                                default:
-                                    Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                    break;
+                            if ("Success".equals(response)) {
+                                Toast.makeText(StationDetails.this, getString(R.string.report_send_success), Toast.LENGTH_SHORT).show();
+                                mPopupWindow.dismiss();
+                            } else {
+                                Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(StationDetails.this, getString(R.string.error), Toast.LENGTH_SHORT).show();

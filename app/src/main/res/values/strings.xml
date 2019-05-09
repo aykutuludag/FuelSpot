@@ -346,7 +346,7 @@
     <string name="station_info_loading">Station info loading…</string>
     <string name="station_info">Station info</string>
     <string name="automobile_info">Automobile info</string>
-    <string name="add_bill_photo_desc">You can earn 1%% bonus by adding bill/receipt photo. Purchase will be inspected and after confirmation bonus will reflect to your account immediately.</string>
+    <string name="add_bill_photo">Add photo</string>
     <string name="add_fuel">Add fuel</string>
     <string name="low_kilometer">Your vehicle\'s kilometer must be higher than previous purchase.</string>
     <string name="empty_kilometer">Kilometer must be different than 0</string>

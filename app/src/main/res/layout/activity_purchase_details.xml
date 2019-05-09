@@ -297,7 +297,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:gravity="center"
-                    android:text="@string/add_bill_photo_desc"
+                    android:text="Fiş fotoğrafı ekleyerek 3 TL bonus kazanabilirsiniz!"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
 
                 <ImageView

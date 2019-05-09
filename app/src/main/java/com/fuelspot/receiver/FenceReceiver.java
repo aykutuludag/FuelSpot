@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -17,6 +18,8 @@ import com.fuelspot.R;
 import com.google.android.gms.awareness.fence.FenceState;
 
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
+import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.isSuperUser;
 
 public class FenceReceiver extends BroadcastReceiver {
 
@@ -34,7 +37,12 @@ public class FenceReceiver extends BroadcastReceiver {
                 // 2 means user is at Station
                 if (currentStationID != Integer.parseInt(fenceState.getFenceKey())) {
                     currentStationID = Integer.parseInt(fenceState.getFenceKey());
-                    sendNotification(fenceState.getFenceKey());
+
+                    SharedPreferences prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+                    getVariables(prefs);
+                    if (!isSuperUser) {
+                        sendNotification(fenceState.getFenceKey());
+                    }
                 }
             }
         }

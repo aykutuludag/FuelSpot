@@ -65,6 +65,7 @@ import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
 
 public class FragmentNews extends Fragment {
@@ -201,8 +202,8 @@ public class FragmentNews extends Fragment {
                     android.R.color.holo_red_light);
 
             // ÜLKE SEÇİMİ
-            fetchNews("TR");
-            fetchCountryFinance("TR");
+            fetchNews(userCountry);
+            fetchCountryFinance(userCountry);
             parseCompanies();
         }
         return rootView;

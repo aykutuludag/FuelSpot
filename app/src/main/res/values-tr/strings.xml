@@ -271,7 +271,7 @@
     <string name="station_info_loading">İstasyon bilgileri yükleniyor…</string>
     <string name="station_info">İstasyon bilgileri</string>
     <string name="automobile_info">Araç bilgileri</string>
-    <string name="add_bill_photo_desc">Fiş/Fatura fotoğrafı ekleyerek %1 bonus kazanabilirsin. Satın alma incelendikten ve onaylandıktan sonra bonus hemen hesabına yansıtılacaktır.</string>
+    <string name="add_bill_photo">Fotoğraf ekle</string>
     <string name="add_fuel">Yakıt ekle</string>
     <string name="low_kilometer">Aracınızın kilometresi önceki satın almaya göre daha yüksek olmalı</string>
     <string name="empty_kilometer">Kilometre 0\'dan farklı olmalı</string>

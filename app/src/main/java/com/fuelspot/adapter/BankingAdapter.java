@@ -14,8 +14,6 @@ import com.fuelspot.model.BankingItem;
 
 import java.util.List;
 
-import static com.fuelspot.MainActivity.currencySymbol;
-
 public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHolder> {
     private List<BankingItem> feedItemList;
     private Context mContext;
@@ -49,7 +47,7 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
         }
 
 
-        String amount = feedItem.getAmount() + " " + currencySymbol;
+        String amount = feedItem.getAmount() + " FS";
         viewHolder.textViewAmount.setText(amount);
     }
 

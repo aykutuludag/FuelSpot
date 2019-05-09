@@ -43,6 +43,7 @@ import java.util.Map;
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
@@ -63,14 +64,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         mContext = context;
         prefs = mContext.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
 
-        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            // If phone restarted, this section detects that and reschedule alarm
-            scheduleAlarm();
-        } else {
-            // Every xx mins, re-create fences.
-            createFences();
+        if (!isSuperUser) {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
+
+            if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+                // If phone restarted, this section detects that and reschedule alarm
+                scheduleAlarm();
+            } else {
+                // Every xx mins, re-create fences.
+                createFences();
+            }
         }
     }
 

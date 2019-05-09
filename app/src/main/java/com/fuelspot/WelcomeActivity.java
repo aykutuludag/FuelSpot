@@ -146,9 +146,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         layout3 = findViewById(R.id.layout3);
         layout4 = findViewById(R.id.layout4);
 
-        layoutHow1 = findViewById(R.id.buyScreen1);
-        layoutHow2 = findViewById(R.id.buyScreen2);
-        layoutHow3 = findViewById(R.id.buyScreen3);
+        layoutHow1 = findViewById(R.id.howto1);
+        layoutHow2 = findViewById(R.id.howto2);
+        layoutHow3 = findViewById(R.id.howto3);
 
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
