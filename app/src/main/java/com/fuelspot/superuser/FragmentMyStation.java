@@ -429,6 +429,11 @@ public class FragmentMyStation extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+            if (googleMap != null) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(true);
+                }
+            }
         }
 
         if (mFusedLocationClient != null) {
@@ -445,6 +450,11 @@ public class FragmentMyStation extends Fragment {
         super.onPause();
         if (mMapView != null) {
             mMapView.onPause();
+            if (googleMap != null) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(false);
+                }
+            }
         }
 
         if (mFusedLocationClient != null) {

@@ -164,7 +164,7 @@ public class FragmentStations extends Fragment {
             locLastKnown.setLongitude(Double.parseDouble(userlon));
 
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(10000);
+            mLocationRequest.setInterval(7500);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationCallback = new LocationCallback() {
@@ -913,7 +913,7 @@ public class FragmentStations extends Fragment {
         }
     }
 
-    void cancelGeofenceAlarm() {
+    private void cancelGeofenceAlarm() {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
         Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -946,6 +946,11 @@ public class FragmentStations extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+            if (googleMap != null) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(true);
+                }
+            }
         }
 
         if (mFusedLocationClient != null) {
@@ -958,6 +963,11 @@ public class FragmentStations extends Fragment {
         super.onPause();
         if (mMapView != null) {
             mMapView.onPause();
+            if (googleMap != null) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(false);
+                }
+            }
         }
 
         if (mFusedLocationClient != null) {

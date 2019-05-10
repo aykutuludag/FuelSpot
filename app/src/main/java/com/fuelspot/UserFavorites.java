@@ -65,6 +65,8 @@ public class UserFavorites extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.feedView);
         GridLayoutManager mLayoutManager = new GridLayoutManager(UserFavorites.this, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        parseUserFavorites();
     }
 
     private void parseUserFavorites() {
@@ -176,12 +178,6 @@ public class UserFavorites extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        parseUserFavorites();
     }
 
     @Override

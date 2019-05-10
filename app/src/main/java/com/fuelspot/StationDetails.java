@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -215,13 +214,6 @@ public class StationDetails extends AppCompatActivity {
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
-
-        Drawable favorite;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            favorite = ContextCompat.getDrawable(this, R.drawable.ic_fav);
-        } else {
-            favorite = getResources().getDrawable(R.drawable.ic_fav);
-        }
 
         AdView mAdView = findViewById(R.id.adView);
         if (!premium) {

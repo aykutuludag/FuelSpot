@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
         }
     }
 

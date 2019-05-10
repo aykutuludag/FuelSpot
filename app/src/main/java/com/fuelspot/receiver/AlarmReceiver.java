@@ -59,6 +59,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private Context mContext;
     private SharedPreferences prefs;
     private FusedLocationProviderClient mFusedLocationClient;
+    LocationCallback mLocationCallback;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -73,7 +74,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // If phone restarted, this section detects that and reschedule alarm
                 scheduleAlarm();
             } else {
-                // Every xx mins, re-create fences.
+                // Every 30 mins, re-create fences.
                 createFences();
             }
         }
@@ -87,7 +88,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, mPendingIntent);
         }
     }
 
@@ -103,8 +104,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(15 * 60 * 1000);
+        mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationCallback mLocationCallback = new LocationCallback() {
+        mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (mContext != null && locationResult != null) {
@@ -132,8 +134,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                                         for (int i = 0; i < fullStationList.size(); i++) {
                                             double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
                                             double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
-                                            locationFence = LocationFence.in(stationLat, stationLon, 50, 15000L);
-                                            AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
+                                            locationFence = LocationFence.in(stationLat, stationLon, 50, 10000L);
+                                            AwarenessFence userAtStation = AwarenessFence.and(locationFence);
                                             registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
                                         }
                                     }
@@ -184,8 +186,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     // Add fence
                                     double lat = Double.parseDouble(item.getLocation().split(";")[0]);
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
-                                    locationFence = LocationFence.in(lat, lon, 50, 15000L);
-                                    AwarenessFence userAtStation = AwarenessFence.and(vehicleFence, locationFence);
+                                    locationFence = LocationFence.in(lat, lon, 50, 10000L);
+                                    AwarenessFence userAtStation = AwarenessFence.and(locationFence);
                                     registerFence(String.valueOf(item.getID()), userAtStation);
                                 }
                             } catch (JSONException e) {
