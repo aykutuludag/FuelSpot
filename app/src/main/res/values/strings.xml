@@ -338,7 +338,9 @@
     <string name="premium_successful">Purchase successful. You\'re switching to the premium version, thanks!</string>
     <string name="double_range_successful">Purchase successful. Your range is increasing, thanks!</string>
     <string name="purchase_failed">Purchase failed. Please try again later.</string>
-    <string name="banking_key_map"><b>Legend</b> \n\n\ <b>Bonus:</b> Earn <b>1%</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
+    <string name="banking_key_map"><b>Bonus:</b> Earn <b>1%</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
+    <string name="legend">Legend</string>
+    <string name="subscriptions">Subscriptions</string>
     <!-- UserStore-->
 
     <!-- UserComments-->

@@ -111,7 +111,7 @@ public class StoreActivity extends AppCompatActivity {
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         textViewCurrentBalance = findViewById(R.id.textViewCurrentBalance);
-        String holder = "MEVCUT BAKİYE: " + String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FS";
+        String holder = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FS";
         textViewCurrentBalance.setText(holder);
 
         mRecyclerView = findViewById(R.id.bankingView);

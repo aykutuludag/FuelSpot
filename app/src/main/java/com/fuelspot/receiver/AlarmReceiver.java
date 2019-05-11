@@ -60,6 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private SharedPreferences prefs;
     private FusedLocationProviderClient mFusedLocationClient;
     LocationCallback mLocationCallback;
+    boolean doesLocationWorking;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -94,6 +95,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @SuppressLint("MissingPermission")
     private void createFences() {
+        doesLocationWorking = true;
+
         // Connect to Awareness API
         client = new GoogleApiClient.Builder(mContext)
                 .addApi(Awareness.API)
@@ -248,5 +251,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
             }
         });
+
+        if (doesLocationWorking) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+            doesLocationWorking = false;
+        }
     }
 }

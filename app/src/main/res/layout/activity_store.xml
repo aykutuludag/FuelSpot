@@ -4,8 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA"
     tools:context=".StoreActivity">
+
+    <com.yqritc.scalableimageview.ScalableImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:src="@drawable/background_doodle"
+        app:scalableType="centerCrop" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,13 +27,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <com.yqritc.scalableimageview.ScalableImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/background_doodle"
-        app:scalableType="centerCrop" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -43,22 +43,70 @@
             <RelativeLayout
                 android:id="@+id/layout_account_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
+
+                <androidx.percentlayout.widget.PercentRelativeLayout
+                    android:id="@+id/account_info_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="0dp"
+                        android:layout_height="175dp"
+                        android:layout_alignParentStart="true"
+                        android:src="@drawable/magaza_big_header"
+                        app:layout_marginEndPercent="2%"
+                        app:layout_marginStartPercent="3%"
+                        app:layout_widthPercent="45%" />
+
+                    <TextView
+                        android:id="@+id/textViewDummy4"
+                        android:layout_width="0dp"
+                        android:layout_height="75dp"
+                        android:layout_below="@id/textView0"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="bottom|center_horizontal"
+                        android:text="@string/current_balance"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#161616"
+                        app:layout_marginEndPercent="3%"
+                        app:layout_marginStartPercent="2%"
+                        app:layout_widthPercent="45%" />
+
+                    <TextView
+                        android:id="@+id/textViewCurrentBalance"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_below="@id/textViewDummy4"
+                        android:layout_alignParentEnd="true"
+                        android:fontFamily="@font/gotham_black"
+                        android:gravity="center_horizontal|top"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        android:textColor="#00E676"
+                        app:layout_marginEndPercent="3%"
+                        app:layout_marginStartPercent="2%"
+                        app:layout_widthPercent="45%" />
+
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
                 <TextView
                     android:id="@+id/textView0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/account_info_header"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_bold"
                     android:text="@string/banking_activities"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textViewDummy"
@@ -66,28 +114,13 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView0"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/banking_activities_desc"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textViewCurrentBalance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textViewDummy"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:text="@string/current_balance"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616" />
 
@@ -95,19 +128,34 @@
                     android:id="@+id/bankingView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/textViewCurrentBalance"
-                    android:layout_marginTop="8dp" />
+                    android:layout_below="@id/textViewDummy"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/textView07"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bankingView"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="@string/legend"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textViewDummy2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/bankingView"
+                    android:layout_below="@id/textView07"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/banking_key_map"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -119,250 +167,275 @@
                 android:id="@+id/layout_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_account_info"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_below="@+id/layout_account_info"
                 android:layout_marginBottom="16dp">
 
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:text="@string/store"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
                 <RelativeLayout
-                    android:id="@+id/double_range_layout"
+                    android:id="@+id/inner_store1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView1"
-                    android:layout_marginTop="16dp">
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView388"
+                        android:id="@+id/textView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/double_range"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                        android:fontFamily="@font/gotham_bold"
+                        android:text="@string/subscriptions"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-                    <TextView
-                        android:id="@+id/textView399"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/double_range_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView388"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/double_range_desc" />
-
-                    <Button
-                        android:id="@+id/buttonPurchaseRange"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView399"
-                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/textView1"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/green_box"
-                        android:padding="4dp"
-                        android:text="@string/start_subscription" />
+                        android:background="@drawable/round_layout_white2"
+                        android:elevation="8dp">
+
+                        <TextView
+                            android:id="@+id/textView388"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/double_range"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                        <TextView
+                            android:id="@+id/textView399"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView388"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/double_range_desc" />
+
+                        <Button
+                            android:id="@+id/buttonPurchaseRange"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textView399"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/green_box"
+                            android:padding="4dp"
+                            android:text="@string/start_subscription" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/premium_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/double_range_layout"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/round_layout_white2"
+                        android:elevation="8dp">
+
+                        <TextView
+                            android:id="@+id/textView38"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/premium_version"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                        <TextView
+                            android:id="@+id/textView39"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView38"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/premium_version_desc" />
+
+                        <Button
+                            android:id="@+id/buttonPurchasePremium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textView39"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/green_box"
+                            android:padding="4dp"
+                            android:text="@string/start_subscription" />
+                    </RelativeLayout>
+
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/premium_layout"
+                    android:id="@+id/inner_store2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/double_range_layout"
-                    android:layout_marginTop="16dp">
+                    android:layout_below="@id/inner_store1">
 
                     <TextView
-                        android:id="@+id/textView38"
+                        android:id="@+id/textView18"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/premium_version"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                        android:fontFamily="@font/gotham_bold"
+                        android:text="@string/store"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-                    <TextView
-                        android:id="@+id/textView39"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/arac_kokusu"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView38"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/premium_version_desc" />
+                        android:layout_below="@+id/textView18"
+                        android:layout_marginTop="16dp">
 
-                    <Button
-                        android:id="@+id/buttonPurchasePremium"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/textView45"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:text="Araç kokusu"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/productPhoto1"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_below="@+id/textView45"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/fuelspotkoku" />
+
+                        <TextView
+                            android:id="@+id/textView46"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/productPhoto1"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:gravity="center"
+                            android:text="5 adet FuelSpot araç kokusu sadece 4.99 FS. Sınırlı sayıda!" />
+
+                        <Button
+                            android:id="@+id/button_item1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textView46"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/green_box"
+                            android:text="@string/buy" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/lastik_tamir_kiti"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/textView39"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/green_box"
-                        android:padding="4dp"
-                        android:text="@string/start_subscription" />
-                </RelativeLayout>
+                        android:layout_below="@+id/arac_kokusu"
+                        android:layout_marginTop="16dp">
 
+                        <TextView
+                            android:id="@+id/textView43"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:text="Lastik tamir spreyi"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-                <RelativeLayout
-                    android:id="@+id/arac_kokusu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/premium_layout"
-                    android:layout_marginTop="16dp">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/productPhoto2"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_below="@+id/textView43"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:src="@drawable/lastiktamirkiti" />
 
-                    <TextView
-                        android:id="@+id/textView45"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/textView44"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/productPhoto2"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="center"
+                            android:text="Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir." />
+
+                        <Button
+                            android:id="@+id/button_item2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textView44"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/green_box"
+                            android:text="@string/buy" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/arac_bakim_seti"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:text="Araç kokusu"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                        android:layout_below="@+id/lastik_tamir_kiti"
+                        android:layout_marginTop="16dp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/productPhoto1"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_below="@+id/textView45"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/fuelspotkoku" />
+                        <TextView
+                            android:id="@+id/textView41"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center"
+                            android:text="Araç bakım seti"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-                    <TextView
-                        android:id="@+id/textView46"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/productPhoto1"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:text="5 adet FuelSpot araç kokusu sadece 4.99 FS. Sınırlı sayıda!" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/productPhoto3"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_below="@+id/textView41"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/aracbakimseti" />
 
-                    <Button
-                        android:id="@+id/button_item1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView46"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/green_box"
-                        android:text="@string/buy" />
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textView42"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/productPhoto3"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:gravity="center"
+                            android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI." />
 
-                <RelativeLayout
-                    android:id="@+id/lastik_tamir_kiti"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/arac_kokusu"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:id="@+id/textView43"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:text="Lastik tamir spreyi"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/productPhoto2"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_below="@+id/textView43"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:src="@drawable/lastiktamirkiti" />
-
-                    <TextView
-                        android:id="@+id/textView44"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/productPhoto2"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="16dp"
-                        android:gravity="center"
-                        android:text="Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir." />
-
-                    <Button
-                        android:id="@+id/button_item2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView44"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/green_box"
-                        android:text="@string/buy" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/arac_bakim_seti"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lastik_tamir_kiti"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:id="@+id/textView41"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center"
-                        android:text="Araç bakım seti"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/productPhoto3"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_below="@+id/textView41"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/aracbakimseti" />
-
-                    <TextView
-                        android:id="@+id/textView42"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/productPhoto3"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI." />
-
-                    <Button
-                        android:id="@+id/button_item3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView42"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/green_box"
-                        android:text="@string/buy" />
+                        <Button
+                            android:id="@+id/button_item3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/textView42"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/green_box"
+                            android:text="@string/buy" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
