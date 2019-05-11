@@ -21,9 +21,17 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.yqritc.scalableimageview.ScalableImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background_doodle"
+        app:scalableType="centerCrop" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".StoreActivity"
         tools:showIn="@layout/activity_store">
@@ -39,8 +47,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout2">
+                android:layout_marginBottom="16dp">
 
                 <TextView
                     android:id="@+id/textView0"
@@ -132,8 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView1"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/round_layout_white2">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:id="@+id/textView388"
@@ -172,8 +178,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/double_range_layout"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/round_layout_white2">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:id="@+id/textView38"
@@ -213,8 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/premium_layout"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/round_layout_white2">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:id="@+id/textView45"
@@ -264,8 +268,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/arac_kokusu"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/round_layout_white2">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:id="@+id/textView43"
@@ -316,8 +319,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lastik_tamir_kiti"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/round_layout_white2">
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         android:id="@+id/textView41"

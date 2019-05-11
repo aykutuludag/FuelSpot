@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -51,6 +53,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -455,28 +458,43 @@ public class SuperCampaings extends AppCompatActivity {
         }
     }
 
-    private String getStringImage(Bitmap bmp) {
-        // We guarantee that max resolution will be 1080*1920
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1 / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1 / aspectRatio));
-            }
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
 
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
+        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
+            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
+            int width, height;
+
+            if (aspectRatio < 1) {
+                // Portrait
+                width = (int) (aspectRatio * 1920);
+                height = (int) (width * (1f / aspectRatio));
+            } else {
+                // Landscape
+                width = (int) (aspectRatio * 1080);
+                height = (int) (width * (1f / aspectRatio));
+            }
+
+            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+        }
+
+        if (degrees != 0) {
+            return rotate(bmp, degrees);
+        } else {
+            return bmp;
+        }
     }
 
     @Override
@@ -488,7 +506,28 @@ public class SuperCampaings extends AppCompatActivity {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
                 bmp = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(image.getPath()).apply(options).into(imageViewCampaign);
+                try {
+                    bmp = BitmapFactory.decodeFile(image.getPath());
+                    ExifInterface ei = new ExifInterface(image.getPath());
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_NORMAL:
+                            bmp = resizeAndRotate(bmp, 0);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bmp = resizeAndRotate(bmp, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bmp = resizeAndRotate(bmp, 180);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bmp = resizeAndRotate(bmp, 270);
+                            break;
+                    }
+                    Glide.with(this).load(bmp).apply(options).into(imageViewCampaign);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

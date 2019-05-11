@@ -35,10 +35,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getNotification() != null) {
             title = remoteMessage.getNotification().getTitle();
+        } else {
+            title = getString(R.string.app_name);
         }
 
-        if (remoteMessage.getData().size() > 0) {
+        if (remoteMessage.getData() != null && remoteMessage.getData().size() > 0) {
             newsURL = remoteMessage.getData().get("URL");
+        } else {
+            newsURL = "https://fuelspot.com.tr";
         }
 
         sendNotification(title, newsURL);

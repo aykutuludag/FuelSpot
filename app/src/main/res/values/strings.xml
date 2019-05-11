@@ -16,6 +16,13 @@
     <string name="electricity_unit" translatable="false">kWh</string>
     <!-- Units-->
 
+    <!-- Social-->
+    <string name="facebook_page_url" translatable="false">https://www.facebook.com/fuelspotapp</string>
+    <string name="twitter_page_url" translatable="false">https://twitter.com/fuelspotapp</string>
+    <string name="instagram_page_url" translatable="false">https://www.instagram.com/fuelspot</string>
+    <string name="youtube_page_url" translatable="false">https://www.youtube.com/channel/UCy7-mbEFFvOyaPYfhQRReyw</string>
+    <!-- Social-->
+
     <!-- USER APIs -->
     <string name="API_CREATE_USER" translatable="false">https://fuelspot.com.tr/api/v1.0/user/create.php</string>
     <string name="API_UPDATE_USER" translatable="false">https://fuelspot.com.tr/api/v1.0/user/update.php</string>
@@ -192,6 +199,7 @@
     <string name="send_feedback">Send feedback</string>
     <string name="feedback_sending">Sending feedback</string>
     <string name="thanks_for_feedback">Thank you for feedback!</string>
+    <string name="contact_us">Contact us!</string>
     <!-- FragmentSettings-->
     <!-- MainActivity-->
 

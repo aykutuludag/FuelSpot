@@ -251,8 +251,6 @@
                         android:contentDescription="@string/gasoline"
                         android:padding="5dp"
                         android:src="@drawable/gasoline"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textSize="12sp"
                         app:layout_widthPercent="25%" />
 
                     <TextView
@@ -279,8 +277,6 @@
                         android:gravity="center"
                         android:padding="5dp"
                         android:src="@drawable/diesel"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textSize="12sp"
                         app:layout_widthPercent="25%" />
 
                     <TextView
@@ -306,8 +302,6 @@
                         android:contentDescription="@string/lpg"
                         android:padding="5dp"
                         android:src="@drawable/lpg"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textSize="12sp"
                         app:layout_widthPercent="25%" />
 
                     <TextView
@@ -359,7 +353,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_medium"
+                    android:fontFamily="@font/gotham_book"
                     android:padding="2dp"
                     android:text="@string/update_tax_rates"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -485,11 +479,85 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/settings_social"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/settings_other"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:id="@+id/textView05"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:text="@string/contact_us"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <androidx.percentlayout.widget.PercentRelativeLayout
+                    android:id="@+id/social_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView05"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="2dp">
+
+                    <ImageView
+                        android:id="@+id/social_facebook"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:padding="2dp"
+                        android:src="@drawable/social_facebook"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="23%" />
+
+                    <ImageView
+                        android:id="@+id/social_twitter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@id/social_facebook"
+                        android:padding="2dp"
+                        android:src="@drawable/social_twitter"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="23%" />
+
+                    <ImageView
+                        android:id="@+id/social_instagram"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@id/social_twitter"
+                        android:padding="2dp"
+                        android:src="@drawable/social_instagram"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="23%" />
+
+                    <ImageView
+                        android:id="@+id/social_youtube"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@id/social_instagram"
+                        android:padding="2dp"
+                        android:src="@drawable/social_youtube"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="23%" />
+                </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/settings_other"
+                android:layout_below="@+id/settings_social"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"

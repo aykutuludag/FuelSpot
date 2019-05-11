@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -57,6 +59,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -536,28 +539,43 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         editor.apply();
     }
 
-    private String getStringImage(Bitmap bmp) {
-        // We guarantee that max resolution will be 1080*1920
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1 / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1 / aspectRatio));
-            }
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
 
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
+        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
+            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
+            int width, height;
+
+            if (aspectRatio < 1) {
+                // Portrait
+                width = (int) (aspectRatio * 1920);
+                height = (int) (width * (1f / aspectRatio));
+            } else {
+                // Landscape
+                width = (int) (aspectRatio * 1080);
+                height = (int) (width * (1f / aspectRatio));
+            }
+
+            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+        }
+
+        if (degrees != 0) {
+            return rotate(bmp, degrees);
+        } else {
+            return bmp;
+        }
     }
 
     private void coloredBars(int color1, int color2) {
@@ -1079,10 +1097,30 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
-                bitmap = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(bitmap).apply(options).into(carPic);
-                carPhoto = "https://fuelspot.com.tr/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
-                editor.putString("CarPhoto", carPhoto);
+                try {
+                    bitmap = BitmapFactory.decodeFile(image.getPath());
+                    ExifInterface ei = new ExifInterface(image.getPath());
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_NORMAL:
+                            bitmap = resizeAndRotate(bitmap, 0);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bitmap = resizeAndRotate(bitmap, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bitmap = resizeAndRotate(bitmap, 180);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bitmap = resizeAndRotate(bitmap, 270);
+                            break;
+                    }
+                    Glide.with(this).load(bitmap).apply(options).into(carPic);
+                    carPhoto = "https://fuelspot.com.tr/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                    editor.putString("CarPhoto", carPhoto);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

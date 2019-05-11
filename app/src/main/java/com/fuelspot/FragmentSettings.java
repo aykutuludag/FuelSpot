@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 import java.util.Map;
@@ -108,169 +111,10 @@ public class FragmentSettings extends Fragment {
         return fragment;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-
-            // Keep screen off
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Settings");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
-
-            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
-
-            requestQueue = Volley.newRequestQueue(getActivity());
-            options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-
-            builder.enableUrlBarHiding();
-            builder.setShowTitle(true);
-            builder.setToolbarColor(Color.parseColor("#FF7439"));
-
-            TextView countryText = rootView.findViewById(R.id.textViewCountryName);
-            countryText.setText(userCountryName);
-
-            TextView languageText = rootView.findViewById(R.id.textViewLanguage);
-            languageText.setText(userDisplayLanguage);
-
-            TextView currencyText = rootView.findViewById(R.id.textViewCurrency);
-            currencyText.setText(currencyCode);
-
-            TextView unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
-            unitSystemText.setText(userUnit);
-
-            TextView textViewVersion = rootView.findViewById(R.id.textViewVersion);
-            try {
-                PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-                String version = "v";
-                version += pInfo != null ? pInfo.versionName : null;
-                String aq = getString(R.string.appVersion) + " " + version;
-                textViewVersion.setText(aq);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            RelativeLayout geofenceLayout = rootView.findViewById(R.id.settings_geofence);
-            if (isSuperUser) {
-                geofenceLayout.setVisibility(View.GONE);
-            } else {
-                geofenceCheckBox = rootView.findViewById(R.id.checkBox);
-                if (isGeofenceOpen) {
-                    geofenceCheckBox.setChecked(true);
-                    geofenceCheckBox.setText(getString(R.string.location_notification_on));
-                } else {
-                    geofenceCheckBox.setChecked(false);
-                    geofenceCheckBox.setText(getString(R.string.location_notification_off));
-                }
-                geofenceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            isGeofenceOpen = true;
-                            geofenceCheckBox.setChecked(true);
-                            geofenceCheckBox.setText(getString(R.string.location_notification_on));
-                        } else {
-                            isGeofenceOpen = false;
-                            geofenceCheckBox.setChecked(false);
-                            geofenceCheckBox.setText(getString(R.string.location_notification_off));
-                        }
-
-                        prefs.edit().putBoolean("Geofence", isGeofenceOpen).apply();
-                    }
-                });
-            }
-
-            textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
-            String dummy0 = "% " + df.format(TAX_GASOLINE * 100f);
-            textViewGasolineTax.setText(dummy0);
-
-            textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
-            String dummy1 = "% " + df.format(TAX_DIESEL * 100f);
-            textViewDieselTax.setText(dummy1);
-
-            textViewLPGTax = rootView.findViewById(R.id.priceLPG);
-            String dummy2 = "% " + df.format(TAX_LPG * 100f);
-            textViewLPGTax.setText(dummy2);
-
-            textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
-            String dummy3 = "% " + df.format(TAX_ELECTRICITY * 100f);
-            textViewElectricityTax.setText(dummy3);
-
-            buttonTax = rootView.findViewById(R.id.button_tax);
-            buttonTax.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updateTaxRates();
-                }
-            });
-
-            Button buttonBeta = rootView.findViewById(R.id.button_beta);
-            buttonBeta.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.enableUrlBarHiding();
-                    builder.setShowTitle(true);
-                    builder.setToolbarColor(Color.parseColor("#FF7439"));
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://play.google.com/apps/testing/com.fuelspot"));
-                }
-            });
-
-            Button buttonMissingStation = rootView.findViewById(R.id.button_missing_station);
-            buttonMissingStation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ReportMissingStation.class);
-                    startActivity(intent);
-                }
-            });
-
-            Button buttonFeedback = rootView.findViewById(R.id.button_feedback);
-            buttonFeedback.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openFeedBackPopup(v);
-                }
-            });
-
-            Button buttonRate = rootView.findViewById(R.id.button_rate);
-            buttonRate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fuelspot"));
-                    startActivity(intent);
-                }
-            });
-
-            Button openTerms = rootView.findViewById(R.id.button_terms);
-            openTerms.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    customTabsIntent.intent.setPackage("com.android.chrome");
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/terms-and-conditions"));
-                }
-            });
-
-            Button openPrivacy = rootView.findViewById(R.id.button_privacy);
-            openPrivacy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    customTabsIntent.intent.setPackage("com.android.chrome");
-                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/privacy"));
-                }
-            });
-        }
-
-        return rootView;
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private void updateTaxRates() {
@@ -463,28 +307,235 @@ public class FragmentSettings extends Fragment {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    private String getStringImage(Bitmap bmp) {
-        // We guarantee that max resolution will be 1080*1920
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1 / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1 / aspectRatio));
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+
+            // Keep screen off
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+            // Analytics
+            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
+            t.setScreenName("Settings");
+            t.enableAdvertisingIdCollection(true);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
+
+            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+            requestQueue = Volley.newRequestQueue(getActivity());
+            options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
+            builder.enableUrlBarHiding();
+            builder.setShowTitle(true);
+            builder.setToolbarColor(Color.parseColor("#FF7439"));
+
+            TextView countryText = rootView.findViewById(R.id.textViewCountryName);
+            countryText.setText(userCountryName);
+
+            TextView languageText = rootView.findViewById(R.id.textViewLanguage);
+            languageText.setText(userDisplayLanguage);
+
+            TextView currencyText = rootView.findViewById(R.id.textViewCurrency);
+            currencyText.setText(currencyCode);
+
+            TextView unitSystemText = rootView.findViewById(R.id.textViewUnitSystem);
+            unitSystemText.setText(userUnit);
+
+            TextView textViewVersion = rootView.findViewById(R.id.textViewVersion);
+            try {
+                PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+                String version = "v";
+                version += pInfo != null ? pInfo.versionName : null;
+                String aq = getString(R.string.appVersion) + " " + version;
+                textViewVersion.setText(aq);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+
+            RelativeLayout geofenceLayout = rootView.findViewById(R.id.settings_geofence);
+            if (isSuperUser) {
+                geofenceLayout.setVisibility(View.GONE);
+            } else {
+                geofenceCheckBox = rootView.findViewById(R.id.checkBox);
+                if (isGeofenceOpen) {
+                    geofenceCheckBox.setChecked(true);
+                    geofenceCheckBox.setText(getString(R.string.location_notification_on));
+                } else {
+                    geofenceCheckBox.setChecked(false);
+                    geofenceCheckBox.setText(getString(R.string.location_notification_off));
+                }
+                geofenceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            isGeofenceOpen = true;
+                            geofenceCheckBox.setChecked(true);
+                            geofenceCheckBox.setText(getString(R.string.location_notification_on));
+                        } else {
+                            isGeofenceOpen = false;
+                            geofenceCheckBox.setChecked(false);
+                            geofenceCheckBox.setText(getString(R.string.location_notification_off));
+                        }
+
+                        prefs.edit().putBoolean("Geofence", isGeofenceOpen).apply();
+                    }
+                });
+            }
+
+            textViewGasolineTax = rootView.findViewById(R.id.priceGasoline);
+            String dummy0 = "% " + df.format(TAX_GASOLINE * 100f);
+            textViewGasolineTax.setText(dummy0);
+
+            textViewDieselTax = rootView.findViewById(R.id.priceDiesel);
+            String dummy1 = "% " + df.format(TAX_DIESEL * 100f);
+            textViewDieselTax.setText(dummy1);
+
+            textViewLPGTax = rootView.findViewById(R.id.priceLPG);
+            String dummy2 = "% " + df.format(TAX_LPG * 100f);
+            textViewLPGTax.setText(dummy2);
+
+            textViewElectricityTax = rootView.findViewById(R.id.priceElectricity);
+            String dummy3 = "% " + df.format(TAX_ELECTRICITY * 100f);
+            textViewElectricityTax.setText(dummy3);
+
+            buttonTax = rootView.findViewById(R.id.button_tax);
+            buttonTax.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateTaxRates();
+                }
+            });
+
+            Button buttonBeta = rootView.findViewById(R.id.button_beta);
+            buttonBeta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://play.google.com/apps/testing/com.fuelspot"));
+                }
+            });
+
+            Button buttonMissingStation = rootView.findViewById(R.id.button_missing_station);
+            buttonMissingStation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ReportMissingStation.class);
+                    startActivity(intent);
+                }
+            });
+
+            Button buttonFeedback = rootView.findViewById(R.id.button_feedback);
+            buttonFeedback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openFeedBackPopup(v);
+                }
+            });
+
+            Button buttonRate = rootView.findViewById(R.id.button_rate);
+            buttonRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fuelspot"));
+                    startActivity(intent);
+                }
+            });
+
+            Button openTerms = rootView.findViewById(R.id.button_terms);
+            openTerms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.intent.setPackage("com.android.chrome");
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/terms-and-conditions"));
+                }
+            });
+
+            Button openPrivacy = rootView.findViewById(R.id.button_privacy);
+            openPrivacy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.intent.setPackage("com.android.chrome");
+                    customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/privacy"));
+                }
+            });
+
+            ImageView facebook = rootView.findViewById(R.id.social_facebook);
+            facebook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_page_url)));
+                    startActivity(intent);
+                }
+            });
+
+            ImageView twitter = rootView.findViewById(R.id.social_twitter);
+            twitter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.twitter_page_url)));
+                    startActivity(intent);
+                }
+            });
+
+            ImageView instagram = rootView.findViewById(R.id.social_instagram);
+            instagram.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.instagram_page_url)));
+                    startActivity(intent);
+                }
+            });
+
+            ImageView youtube = rootView.findViewById(R.id.social_youtube);
+            youtube.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_page_url)));
+                    startActivity(intent);
+                }
+            });
         }
 
+        return rootView;
+    }
+
+    private String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
 
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
+        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
+            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
+            int width, height;
+
+            if (aspectRatio < 1) {
+                // Portrait
+                width = (int) (aspectRatio * 1920);
+                height = (int) (width * (1f / aspectRatio));
+            } else {
+                // Landscape
+                width = (int) (aspectRatio * 1080);
+                height = (int) (width * (1f / aspectRatio));
+            }
+
+            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+        }
+
+        if (degrees != 0) {
+            return rotate(bmp, degrees);
+        } else {
+            return bmp;
+        }
     }
 
     @Override
@@ -508,8 +559,28 @@ public class FragmentSettings extends Fragment {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
-                bitmap = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(image.getPath()).apply(options).into(getScreenshot);
+                try {
+                    bitmap = BitmapFactory.decodeFile(image.getPath());
+                    ExifInterface ei = new ExifInterface(image.getPath());
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_NORMAL:
+                            bitmap = resizeAndRotate(bitmap, 0);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bitmap = resizeAndRotate(bitmap, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bitmap = resizeAndRotate(bitmap, 180);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bitmap = resizeAndRotate(bitmap, 270);
+                            break;
+                    }
+                    Glide.with(this).load(bitmap).apply(options).into(getScreenshot);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -22,6 +22,13 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.yqritc.scalableimageview.ScalableImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background_doodle"
+        app:scalableType="centerCrop" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,8 +58,7 @@
                 android:layout_below="@+id/textView1"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/round_layout_white2">
+                android:layout_marginEnd="16dp">
 
                 <TextView
                     android:id="@+id/textView388"
@@ -94,8 +100,7 @@
                 android:layout_below="@+id/double_range_layout"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/round_layout_white2">
+                android:layout_marginEnd="16dp">
 
                 <TextView
                     android:id="@+id/textView38"

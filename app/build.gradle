@@ -42,6 +42,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.android.volley:volley:1.1.1'
 
@@ -76,6 +77,7 @@ dependencies {
     implementation 'com.github.esafirm.android-image-picker:imagepicker:2.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.yqritc:android-scalablevideoview:1.0.4'
+    implementation 'com.yqritc:android-scalableimageview:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

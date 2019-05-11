@@ -364,9 +364,25 @@ public class StoreActivity extends AppCompatActivity {
                         whichPage[0] = 2;
                         break;
                     case 2:
-                        layout2.setVisibility(View.INVISIBLE);
-                        layout3.setVisibility(View.VISIBLE);
-                        whichPage[0] = 3;
+                        if (name.length() > 0) {
+                            if (email.length() > 0 && email.contains("@")) {
+                                if (userPhoneNumber.length() > 0) {
+                                    if (location.length() > 0) {
+                                        layout2.setVisibility(View.INVISIBLE);
+                                        layout3.setVisibility(View.VISIBLE);
+                                        whichPage[0] = 3;
+                                    } else {
+                                        Toast.makeText(StoreActivity.this, "Adres bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Toast.makeText(StoreActivity.this, "Telefon bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(StoreActivity.this, "E-posta bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(StoreActivity.this, "Ad-Soyad bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                        }
                         break;
                     case 3:
                         processPurchase(productName[0], productPrice[0]);

@@ -8,9 +8,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -61,6 +63,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Currency;
 import java.util.Hashtable;
 import java.util.List;
@@ -1218,6 +1221,12 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1226,31 +1235,35 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             if (image != null) {
-                bitmap = BitmapFactory.decodeFile(image.getPath());
-                Glide.with(this).load(bitmap).apply(options).into(carPic);
-                carPhoto = "https://fuelspot.com.tr/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
-                prefs.edit().putString("CarPhoto", carPhoto).apply();
+                try {
+                    bitmap = BitmapFactory.decodeFile(image.getPath());
+                    ExifInterface ei = new ExifInterface(image.getPath());
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_NORMAL:
+                            bitmap = resizeAndRotate(bitmap, 0);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bitmap = resizeAndRotate(bitmap, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bitmap = resizeAndRotate(bitmap, 180);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bitmap = resizeAndRotate(bitmap, 270);
+                            break;
+                    }
+                    Glide.with(this).load(bitmap).apply(options).into(carPic);
+                    carPhoto = "https://fuelspot.com.tr/uploads/automobiles/" + username + "-" + plateNo + ".jpg";
+                    prefs.edit().putString("CarPhoto", carPhoto).apply();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private String getStringImage(Bitmap bmp) {
-        // We guarantee that max resolution will be 1080*1920
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1 / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1 / aspectRatio));
-            }
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
 
@@ -1258,11 +1271,36 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
+    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
+        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
+            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
+            int width, height;
+
+            if (aspectRatio < 1) {
+                // Portrait
+                width = (int) (aspectRatio * 1920);
+                height = (int) (width * (1f / aspectRatio));
+            } else {
+                // Landscape
+                width = (int) (aspectRatio * 1080);
+                height = (int) (width * (1f / aspectRatio));
+            }
+
+            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+        }
+
+        if (degrees != 0) {
+            return rotate(bmp, degrees);
+        } else {
+            return bmp;
+        }
+    }
+
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
         startActivity(intent);
-        super.onBackPressed();
         finish();
     }
 }
