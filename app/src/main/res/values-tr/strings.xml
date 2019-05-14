@@ -256,9 +256,12 @@
     <string name="premium_successful">Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!</string>
     <string name="double_range_successful">Satın alma başarılı. Menziliniz artırılıyor, teşekkürler!</string>
     <string name="purchase_failed">Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="banking_key_map"><b>Bonus:</b> Her yakıt eklemenizde <b>%1</b> bonus! \n\n <b>Ödül:</b> Bize FuelSpot\'da görünmeyen veya yanlış görünen istasyon bilgisi raporladığınızda (fiyat, tesis, marka, adres …) hesabınıza ödül yansıtılır. \n\n <b>Satınalma:</b> Mağazadan yaptığınız alışverişleri gösterir</string>
+    <string name="banking_key_map"><b>Bonus:</b> Her yakıt eklemenizde <b>%1</b> bonus! \n\n <b>Ödül:</b> Bize FuelSpot\'da görünmeyen veya yanlış görünen istasyon bilgisi raporladığınızda (fiyat, tesis, marka, adres …) hesabınıza ödül yansıtılır. \n\n <b>Satınalma:</b> Mağazadan yaptığınız alışverişleri gösterir \n\n</string>
     <string name="legend">Etiketler</string>
     <string name="subscriptions">Abonelikler</string>
+    <string name="process_type">İşlem türü</string>
+    <string name="date">Tarih</string>
+    <string name="products">Ürünler</string>
     <!-- UserStore-->
 
     <!-- UserComments-->

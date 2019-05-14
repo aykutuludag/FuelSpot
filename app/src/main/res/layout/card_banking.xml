@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,13 +8,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/round_layout_white2"
-        card_view:cardUseCompatPadding="true">
+        app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="8dp"
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:id="@+id/single_report"
@@ -23,59 +18,97 @@
             android:layout_height="wrap_content">
 
             <androidx.percentlayout.widget.PercentRelativeLayout
-                android:id="@+id/tripBar"
+                android:id="@+id/inner_banking"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <TextView
                     android:id="@+id/dummy0"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="@string/process_type"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
                     app:layout_marginEndPercent="1%"
-                    app:layout_marginStartPercent="1%"
-                    app:layout_widthPercent="48%"
-                    app:srcCompat="@drawable/icon_id" />
+                    app:layout_marginStartPercent="1.5%"
+                    app:layout_widthPercent="31%" />
 
-                <ImageView
+                <TextView
                     android:id="@+id/dummy1"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/dummy0"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="@string/amount"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
-                    app:layout_widthPercent="48%"
-                    app:srcCompat="@drawable/icon_reason" />
+                    app:layout_widthPercent="31%" />
+
+                <TextView
+                    android:id="@+id/dummy2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/dummy1"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/date"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginEndPercent="1.5%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="31%" />
 
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
-                android:id="@+id/tripBar2"
+                android:id="@+id/inner_banking2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tripBar">
+                android:layout_below="@id/inner_banking">
 
                 <TextView
                     android:id="@+id/banking_type"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
                     app:layout_marginEndPercent="1%"
-                    app:layout_marginStartPercent="1%"
-                    app:layout_widthPercent="48%" />
+                    app:layout_marginStartPercent="1.5%"
+                    app:layout_widthPercent="31%" />
 
                 <TextView
                     android:id="@+id/banking_amout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:layout_toEndOf="@id/banking_type"
                     android:gravity="center"
-                    android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
                     app:layout_marginEndPercent="1%"
                     app:layout_marginStartPercent="1%"
-                    app:layout_widthPercent="48%" />
+                    app:layout_widthPercent="31%" />
+
+                <TextView
+                    android:id="@+id/banking_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_toEndOf="@id/banking_amout"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginEndPercent="1.5%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="31%" />
 
             </androidx.percentlayout.widget.PercentRelativeLayout>
         </RelativeLayout>

@@ -45,7 +45,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.maps.MapsInitializer;
-import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.json.JSONArray;
@@ -57,6 +56,8 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
+import hotchemi.android.rate.AppRate;
 
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
@@ -271,9 +272,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         InAppBilling();
 
         // AppRater
-        RateThisApp.onCreate(this);
-        RateThisApp.Config config = new RateThisApp.Config(3, 5);
-        RateThisApp.init(config);
+        AppRate.with(this).setInstallDays(0).setLaunchTimes(5).setRemindInterval(3).monitor();
+        AppRate.showRateDialogIfMeetsConditions(this);
 
         // Fetch user vehicles once for each session
         fetchAutomobiles();

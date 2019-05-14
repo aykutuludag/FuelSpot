@@ -4,7 +4,7 @@
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA">
+    android:background="@drawable/background_doodle">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/layout_profile"
@@ -80,10 +80,10 @@
 
                     <Button
                         android:id="@+id/button_fav"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/white_box"
                         android:fontFamily="@font/gotham_book"
-                        android:layout_width="0dp"
                         android:text="@string/favorites"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616"
@@ -92,12 +92,12 @@
 
                     <Button
                         android:id="@+id/button_store"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/button_fav"
                         android:background="@drawable/white_box"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/store"
-                        android:layout_width="0dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616"
                         app:layout_marginPercent="1.5%"

@@ -9,7 +9,7 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 53
+        versionCode 54
         versionName "1.0.0"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
@@ -68,7 +68,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.amirdew:JSON:v1.0.0'
     implementation 'com.github.curioustechizen.android-ago:library:1.4.0'
-    implementation 'io.github.kobakei:ratethisapp:1.2.0'
+    implementation 'com.github.hotchemi:android-rate:1.0.1'
     implementation 'com.github.pwiniars:SlideDateTimePicker:v1.0.8'
     implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
     implementation 'com.ncapdevi:frag-nav:2.4.0'
@@ -77,7 +77,6 @@ dependencies {
     implementation 'com.github.esafirm.android-image-picker:imagepicker:2.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.yqritc:android-scalablevideoview:1.0.4'
-    implementation 'com.yqritc:android-scalableimageview:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
 

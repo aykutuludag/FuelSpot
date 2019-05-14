@@ -738,7 +738,7 @@ public class AddFuel extends AppCompatActivity {
         totalPrice = entryPrice + entryPrice2;
         String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
-        textViewBonus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FS bonus kazanabilirsiniz!");
+        textViewBonus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazanabilirsiniz!");
     }
 
     public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {

@@ -43,7 +43,6 @@ import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.material.snackbar.Snackbar;
-import com.kobakei.ratethisapp.RateThisApp;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.json.JSONArray;
@@ -54,6 +53,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
+import hotchemi.android.rate.AppRate;
 
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.companyList;
@@ -165,9 +166,8 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation.setOnTabSelectedListener(this);
 
         // AppRater
-        RateThisApp.onCreate(this);
-        RateThisApp.Config config = new RateThisApp.Config(3, 5);
-        RateThisApp.init(config);
+        AppRate.with(this).setInstallDays(0).setLaunchTimes(5).setRemindInterval(3).monitor();
+        AppRate.showRateDialogIfMeetsConditions(this);
 
         //In-App Services
         InAppBilling();

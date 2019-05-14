@@ -13,7 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fuelspot.R;
 import com.fuelspot.model.BankingItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.shortTimeFormat;
 
 public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHolder> {
     private List<BankingItem> feedItemList;
@@ -47,9 +54,18 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
                 break;
         }
 
-
-        String amount = feedItem.getAmount() + " FS";
+        String amount = feedItem.getAmount() + " FP";
         viewHolder.textViewAmount.setText(amount);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
+            Date date = sdf.parse(feedItem.getTransactionTime());
+
+            SimpleDateFormat sdf2 = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+            viewHolder.textViewDate.setText(sdf2.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -60,13 +76,14 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout card;
-        TextView textViewType, textViewAmount;
+        TextView textViewType, textViewAmount, textViewDate;
 
         ViewHolder(View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.single_report);
             textViewType = itemView.findViewById(R.id.banking_type);
             textViewAmount = itemView.findViewById(R.id.banking_amout);
+            textViewDate = itemView.findViewById(R.id.banking_date);
         }
     }
 }

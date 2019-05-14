@@ -120,6 +120,7 @@ public class FragmentStations extends Fragment {
     NestedScrollView scrollView;
     boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
     private SwipeRefreshLayout swipeContainer;
+    RelativeLayout stationLayout;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -215,6 +216,7 @@ public class FragmentStations extends Fragment {
                 }
             };
 
+            stationLayout = rootView.findViewById(R.id.stationLayout);
             sortGasolineLayout = rootView.findViewById(R.id.sortGasoline);
             sortDieselLayout = rootView.findViewById(R.id.sortDiesel);
             sortLPGLayout = rootView.findViewById(R.id.sortLPG);
@@ -364,7 +366,7 @@ public class FragmentStations extends Fragment {
             isAllStationsListed = false;
             seeAllStations.setText(getString(R.string.see_all));
             seeAllStations.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.GONE);
+            stationLayout.setVisibility(View.GONE);
 
             // Clear objects
             shortStationList.clear();
@@ -432,7 +434,7 @@ public class FragmentStations extends Fragment {
 
                                 Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
                                 // Stations fetched. Visible recyclerview
-                                mRecyclerView.setVisibility(View.VISIBLE);
+                                stationLayout.setVisibility(View.VISIBLE);
 
                                 if (fullStationList.size() > 5) {
                                     seeAllStations.setVisibility(View.VISIBLE);

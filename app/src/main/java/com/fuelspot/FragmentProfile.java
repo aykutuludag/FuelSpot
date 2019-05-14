@@ -1,6 +1,8 @@
 package com.fuelspot;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.VehicleAdapter;
 import com.fuelspot.model.BankingItem;
 import com.fuelspot.model.CommentItem;
+import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -49,10 +52,20 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.averageCons;
+import static com.fuelspot.MainActivity.carBrand;
+import static com.fuelspot.MainActivity.carModel;
+import static com.fuelspot.MainActivity.carPhoto;
+import static com.fuelspot.MainActivity.carbonEmission;
+import static com.fuelspot.MainActivity.fuelPri;
+import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentProfile extends Fragment {
 
@@ -68,6 +81,7 @@ public class FragmentProfile extends Fragment {
     private RequestQueue requestQueue;
     private View rootView;
     private SwipeRefreshLayout swipeContainer;
+    SharedPreferences prefs;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -92,7 +106,7 @@ public class FragmentProfile extends Fragment {
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
-
+            prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             requestQueue = Volley.newRequestQueue(getActivity());
 
             ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
@@ -198,15 +212,10 @@ public class FragmentProfile extends Fragment {
         });
 
 
-        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-        RecyclerView.Adapter mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
-        mAdapter.notifyDataSetChanged();
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
         swipeContainer.setRefreshing(false);
         fetchBanking();
         fetchComments();
+        fetchAutomobiles();
     }
 
     private void fetchBanking() {
@@ -238,7 +247,7 @@ public class FragmentProfile extends Fragment {
                                 }
 
                                 userFSMoney = (float) res.getJSONObject(0).getDouble("current_balance");
-                                String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FS";
+                                String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FP";
                                 textViewFMoney.setText(dummyMoneyText);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -268,6 +277,104 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void fetchAutomobiles() {
+        userAutomobileList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    VehicleItem item = new VehicleItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setVehicleBrand(obj.getString("car_brand"));
+                                    item.setVehicleModel(obj.getString("car_model"));
+                                    item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                    item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                    item.setVehicleKilometer(obj.getInt("kilometer"));
+                                    item.setVehiclePhoto(obj.getString("carPhoto"));
+                                    item.setVehiclePlateNo(obj.getString("plateNo"));
+                                    item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                    item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                    userAutomobileList.add(item);
+
+                                    // If there is any selected auto, choose first one.
+                                    if (vehicleID == 0) {
+                                        chooseVehicle(item);
+                                    }
+
+                                    GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                                    RecyclerView.Adapter mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
+                                    mAdapter.notifyDataSetChanged();
+                                    mRecyclerView.setLayoutManager(mLayoutManager);
+                                    mRecyclerView.setAdapter(mAdapter);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void chooseVehicle(VehicleItem item) {
+        vehicleID = item.getID();
+        prefs.edit().putInt("vehicleID", vehicleID).apply();
+
+        carBrand = item.getVehicleBrand();
+        prefs.edit().putString("carBrand", carBrand).apply();
+
+        carModel = item.getVehicleModel();
+        prefs.edit().putString("carModel", carModel).apply();
+
+        fuelPri = item.getVehicleFuelPri();
+        prefs.edit().putInt("FuelPrimary", fuelPri).apply();
+
+        fuelSec = item.getVehicleFuelSec();
+        prefs.edit().putInt("FuelSecondary", fuelSec).apply();
+
+        kilometer = item.getVehicleKilometer();
+        prefs.edit().putInt("Kilometer", kilometer).apply();
+
+        carPhoto = item.getVehiclePhoto();
+        prefs.edit().putString("CarPhoto", carPhoto).apply();
+
+        plateNo = item.getVehiclePlateNo();
+        prefs.edit().putString("plateNo", plateNo).apply();
+
+        averageCons = item.getVehicleConsumption();
+        prefs.edit().putFloat("averageConsumption", averageCons).apply();
+
+        carbonEmission = item.getVehicleEmission();
+        prefs.edit().putInt("carbonEmission", carbonEmission).apply();
     }
 
     private void fetchComments() {
@@ -305,7 +412,7 @@ public class FragmentProfile extends Fragment {
                                 }
                                 mAdapter2 = new CommentAdapter(getActivity(), dummyList, "USER_COMMENTS");
                                 GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
+                                userNoCommentLayout.setVisibility(View.GONE);
                                 mAdapter2.notifyDataSetChanged();
                                 mRecyclerView2.setAdapter(mAdapter2);
                                 mRecyclerView2.setLayoutManager(mLayoutManager);
@@ -339,5 +446,14 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (textViewFMoney != null) {
+            String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FP";
+            textViewFMoney.setText(dummyMoneyText);
+        }
     }
 }

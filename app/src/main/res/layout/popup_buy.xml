@@ -1,108 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#EAEAEA">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#50000000">
 
     <RelativeLayout
         android:id="@+id/buyScreen1"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="450dp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/round_layout_white"
+        android:background="@drawable/round_layout_white2"
         android:visibility="visible">
 
         <RelativeLayout
+            android:id="@+id/layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/productPhoto"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/textViewProductTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/gotham_black"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/productPhoto"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_below="@+id/textViewProductTitle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/default_profile" />
-
-            <TextView
-                android:id="@+id/urunfiyat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/productPhoto"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#161616" />
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/gotham_black"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/urunaciklama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/urunfiyat"
+                android:layout_below="@+id/textViewProductTitle"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:textColor="#161616" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/urunaciklama"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center" />
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/icon_coin" />
+
+                <TextView
+                    android:id="@+id/urunfiyat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignTop="@id/imageView7"
+                    android:layout_alignBottom="@id/imageView7"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/imageView7"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
+            </RelativeLayout>
         </RelativeLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageViewIndicator2"
-            android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@+id/imageViewIndicator2"
-            android:src="@drawable/radio_active" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator2"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/radio_passive" />
+            android:padding="2dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageViewIndicator"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/imageViewIndicator2"
-            android:src="@drawable/radio_passive" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator2"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@+id/imageViewIndicator2"
+                android:src="@drawable/radio_active" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/imageViewIndicator2"
+                android:src="@drawable/radio_passive" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/buyScreen2"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="450dp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/round_layout_white"
-        android:visibility="invisible">
+        android:background="@drawable/round_layout_white2"
+        android:visibility="gone">
 
         <RelativeLayout
+            android:id="@+id/layout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
@@ -112,7 +156,7 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/default_profile" />
 
             <TextView
@@ -122,9 +166,9 @@
                 android:layout_below="@id/receiverPhoto"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
                 android:text="@string/fullname"
@@ -138,12 +182,12 @@
                 android:layout_below="@+id/receiverName"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/gotham_book"
                 android:text="@string/email"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
             <TextView
@@ -153,12 +197,12 @@
                 android:layout_below="@+id/receiverMail"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/gotham_book"
                 android:text="@string/phone"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
             <TextView
@@ -168,12 +212,13 @@
                 android:layout_below="@+id/receiverPhone"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/gotham_book"
+                android:gravity="center"
                 android:text="@string/address"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
             <TextView
@@ -187,46 +232,58 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="Bilgilerinizde hata var ise lütfen ilerlemeden önce profilinizden düzenleyin. Yanlış-eksik adres bildirimleri sonucu ulaşmayan kargolardan FuelSpot sorumlu değildir." />
+                android:text="Bilgilerinizde hata var ise lütfen ilerlemeden önce profilinizden düzenleyin. Yanlış-eksik adres bildirimleri sonucu ulaşmayan kargolardan FuelSpot sorumlu değildir."
+                android:textColor="#161616" />
         </RelativeLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageViewIndicator12"
-            android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@+id/imageViewIndicator12"
-            android:src="@drawable/radio_passive" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator12"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/radio_active" />
+            android:padding="2dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageViewIndicator12"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/imageViewIndicator12"
-            android:src="@drawable/radio_passive" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator12"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@+id/imageViewIndicator12"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/radio_active" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator12"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/imageViewIndicator12"
+                android:src="@drawable/radio_passive" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/buyScreen3"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="450dp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/round_layout_white"
+        android:background="@drawable/round_layout_white2"
         android:visibility="gone">
 
         <RelativeLayout
@@ -234,32 +291,39 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
 
+            <ImageView
+                android:id="@+id/productPhotoFinal"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp" />
+
             <TextView
                 android:id="@+id/textViewFinal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/productPhotoFinal"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/gotham_black"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/productPhotoFinal"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_below="@+id/textViewFinal"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/default_profile" />
 
             <TextView
                 android:id="@+id/urunfiyatFinal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/productPhotoFinal"
+                android:layout_below="@+id/textViewFinal"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -270,38 +334,51 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/urunfiyatFinal"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="Satın alma sonrası - FS bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?" />
+                android:text="Satın alma sonrası - FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?" />
         </RelativeLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageViewIndicator5"
-            android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@+id/imageViewIndicator5"
-            android:src="@drawable/radio_passive" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator5"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/radio_passive" />
+            android:padding="2dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageViewIndicator6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageViewIndicator4"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/imageViewIndicator5"
-            android:src="@drawable/radio_active" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator5"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@+id/imageViewIndicator5"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/radio_passive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewIndicator6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageViewIndicator4"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/imageViewIndicator5"
+                android:src="@drawable/radio_active" />
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -311,12 +388,17 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/buyScreen1"
         android:layout_alignBottom="@id/buyScreen1"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/green_box"
-        android:fontFamily="@font/gotham_medium"
-        android:padding="4dp"
+        android:fontFamily="@font/gotham_book"
+        android:padding="2dp"
         android:text="@string/button_continue"
         android:textAllCaps="false"
-        android:textColor="#212121" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="#161616" />
 
     <ImageView
         android:id="@+id/imageViewClose"
@@ -324,6 +406,10 @@
         android:layout_height="32dp"
         android:layout_alignStart="@id/buyScreen1"
         android:layout_alignTop="@id/buyScreen1"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:contentDescription="@string/cancel"
-        app:srcCompat="@drawable/cancel" />
+        android:src="@drawable/cancel" />
 </RelativeLayout>

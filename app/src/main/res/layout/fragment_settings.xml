@@ -4,7 +4,7 @@
     android:id="@+id/nestedScrollViewSettings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA">
+    android:background="@drawable/background_doodle">
 
     <RelativeLayout
         android:layout_width="match_parent"

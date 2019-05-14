@@ -4,7 +4,7 @@
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA">
+    android:background="@drawable/background_doodle">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/layout_automobile"
@@ -23,8 +23,7 @@
                 <RelativeLayout
                     android:id="@+id/header_vehicle"
                     android:layout_width="match_parent"
-                    android:layout_height="324dp"
-                    android:background="#EAEAEA">
+                    android:layout_height="324dp">
 
                     <ImageView
                         android:id="@+id/updateCarInfo"

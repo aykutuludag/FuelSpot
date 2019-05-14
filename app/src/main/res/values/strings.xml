@@ -341,6 +341,9 @@
     <string name="banking_key_map"><b>Bonus:</b> Earn <b>1%</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
     <string name="legend">Legend</string>
     <string name="subscriptions">Subscriptions</string>
+    <string name="process_type">Process type</string>
+    <string name="date">Date</string>
+    <string name="products">Products</string>
     <!-- UserStore-->
 
     <!-- UserComments-->

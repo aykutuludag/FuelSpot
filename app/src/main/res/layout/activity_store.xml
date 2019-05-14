@@ -4,15 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_doodle"
     tools:context=".StoreActivity">
-
-    <com.yqritc.scalableimageview.ScalableImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:src="@drawable/background_doodle"
-        app:scalableType="centerCrop" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -43,9 +36,9 @@
             <RelativeLayout
                 android:id="@+id/layout_account_info"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
 
                 <androidx.percentlayout.widget.PercentRelativeLayout
@@ -56,9 +49,9 @@
                     android:layout_marginBottom="4dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/profileImage"
+                        android:id="@+id/magaza_header"
                         android:layout_width="0dp"
-                        android:layout_height="175dp"
+                        android:layout_height="180dp"
                         android:layout_alignParentStart="true"
                         android:src="@drawable/magaza_big_header"
                         app:layout_marginEndPercent="2%"
@@ -68,7 +61,7 @@
                     <TextView
                         android:id="@+id/textViewDummy4"
                         android:layout_width="0dp"
-                        android:layout_height="75dp"
+                        android:layout_height="80dp"
                         android:layout_below="@id/textView0"
                         android:layout_alignParentEnd="true"
                         android:gravity="bottom|center_horizontal"
@@ -167,9 +160,9 @@
                 android:id="@+id/layout_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_account_info"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_below="@+id/layout_account_info"
                 android:layout_marginBottom="16dp">
 
                 <RelativeLayout
@@ -193,16 +186,29 @@
                         android:layout_below="@+id/textView1"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/round_layout_white2"
-                        android:elevation="8dp">
+                        android:elevation="4dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/double_range_photo"
+                            android:layout_width="125dp"
+                            android:layout_height="125dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@drawable/store_2x" />
 
                         <TextView
                             android:id="@+id/textView388"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/double_range_photo"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
                             android:text="@string/double_range"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#161616" />
 
                         <TextView
                             android:id="@+id/textView399"
@@ -210,9 +216,16 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/textView388"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
-                            android:text="@string/double_range_desc" />
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="@font/gotham_book"
+                            android:gravity="center"
+                            android:text="@string/double_range_desc"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
 
                         <Button
                             android:id="@+id/buttonPurchaseRange"
@@ -223,8 +236,10 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/green_box"
-                            android:padding="4dp"
-                            android:text="@string/start_subscription" />
+                            android:fontFamily="@font/gotham_book"
+                            android:text="@string/start_subscription"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -234,16 +249,30 @@
                         android:layout_below="@+id/double_range_layout"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/round_layout_white2"
-                        android:elevation="8dp">
+                        android:elevation="4dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/premium_photo"
+                            android:layout_width="125dp"
+                            android:layout_height="125dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:src="@drawable/store_premium" />
 
                         <TextView
                             android:id="@+id/textView38"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/premium_photo"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
                             android:text="@string/premium_version"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#161616" />
 
                         <TextView
                             android:id="@+id/textView39"
@@ -251,9 +280,16 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/textView38"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
-                            android:text="@string/premium_version_desc" />
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="@font/gotham_book"
+                            android:gravity="center"
+                            android:text="@string/premium_version_desc"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
 
                         <Button
                             android:id="@+id/buttonPurchasePremium"
@@ -264,8 +300,10 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/green_box"
-                            android:padding="4dp"
-                            android:text="@string/start_subscription" />
+                            android:fontFamily="@font/gotham_book"
+                            android:text="@string/start_subscription"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -274,7 +312,8 @@
                     android:id="@+id/inner_store2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/inner_store1">
+                    android:layout_below="@id/inner_store1"
+                    android:layout_marginTop="8dp">
 
                     <TextView
                         android:id="@+id/textView18"
@@ -282,7 +321,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:fontFamily="@font/gotham_bold"
-                        android:text="@string/store"
+                        android:text="@string/products"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <RelativeLayout
@@ -290,36 +329,46 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView18"
-                        android:layout_marginTop="16dp">
-
-                        <TextView
-                            android:id="@+id/textView45"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="16dp"
-                            android:text="Araç kokusu"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/round_layout_white2"
+                        android:elevation="4dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/productPhoto1"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:layout_below="@+id/textView45"
+                            android:layout_width="125dp"
+                            android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
                             android:src="@drawable/fuelspotkoku" />
 
                         <TextView
-                            android:id="@+id/textView46"
+                            android:id="@+id/textView45"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/productPhoto1"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:text="Araç kokusu"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#161616" />
+
+                        <TextView
+                            android:id="@+id/textView46"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView45"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="5 adet FuelSpot araç kokusu sadece 4.99 FS. Sınırlı sayıda!" />
+                            android:text="5 adet FuelSpot araç kokusu sadece 4.99 FP. Sınırlı sayıda!"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
 
                         <Button
                             android:id="@+id/button_item1"
@@ -327,12 +376,42 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/textView46"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginStart="4dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginEnd="4dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/green_box"
-                            android:text="@string/buy" />
+                            android:fontFamily="@font/gotham_book"
+                            android:text="@string/buy"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/imageView7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                app:srcCompat="@drawable/icon_coin" />
+
+                            <TextView
+                                android:id="@+id/textView_price1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageView7"
+                                android:layout_centerHorizontal="true"
+                                android:fontFamily="@font/gotham_bold"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="#161616" />
+                        </RelativeLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -340,37 +419,46 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/arac_kokusu"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/round_layout_white2"
+                        android:elevation="4dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/productPhoto2"
+                            android:layout_width="125dp"
+                            android:layout_height="125dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/lastiktamirkiti" />
 
                         <TextView
                             android:id="@+id/textView43"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/productPhoto2"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
                             android:text="Lastik tamir spreyi"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/productPhoto2"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:layout_below="@+id/textView43"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:src="@drawable/lastiktamirkiti" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#161616" />
 
                         <TextView
                             android:id="@+id/textView44"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/productPhoto2"
+                            android:layout_below="@+id/textView43"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir." />
+                            android:text="Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir."
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
 
                         <Button
                             android:id="@+id/button_item2"
@@ -378,12 +466,42 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/textView44"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginStart="4dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginEnd="4dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/green_box"
-                            android:text="@string/buy" />
+                            android:fontFamily="@font/gotham_book"
+                            android:text="@string/buy"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/imageView78"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                app:srcCompat="@drawable/icon_coin" />
+
+                            <TextView
+                                android:id="@+id/textView_price2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageView78"
+                                android:layout_centerHorizontal="true"
+                                android:fontFamily="@font/gotham_bold"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="#161616" />
+                        </RelativeLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -391,37 +509,47 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/lastik_tamir_kiti"
-                        android:layout_marginTop="16dp">
-
-                        <TextView
-                            android:id="@+id/textView41"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="16dp"
-                            android:gravity="center"
-                            android:text="Araç bakım seti"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/round_layout_white2"
+                        android:elevation="4dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/productPhoto3"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:layout_below="@+id/textView41"
+                            android:layout_width="125dp"
+                            android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
                             android:src="@drawable/aracbakimseti" />
 
                         <TextView
+                            android:id="@+id/textView41"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/productPhoto3"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:gravity="center"
+                            android:text="Araç bakım seti"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="#161616" />
+
+                        <TextView
                             android:id="@+id/textView42"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/productPhoto3"
+                            android:layout_below="@+id/textView41"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI." />
+                            android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI."
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
 
                         <Button
                             android:id="@+id/button_item3"
@@ -429,12 +557,42 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/textView42"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginStart="4dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginEnd="4dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/green_box"
-                            android:text="@string/buy" />
+                            android:fontFamily="@font/gotham_book"
+                            android:text="@string/buy"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/imageView76"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                app:srcCompat="@drawable/icon_coin" />
+
+                            <TextView
+                                android:id="@+id/textView_price3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageView76"
+                                android:layout_centerHorizontal="true"
+                                android:fontFamily="@font/gotham_bold"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="#161616" />
+                        </RelativeLayout>
                     </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>

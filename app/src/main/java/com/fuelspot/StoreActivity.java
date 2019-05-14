@@ -111,7 +111,7 @@ public class StoreActivity extends AppCompatActivity {
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
         textViewCurrentBalance = findViewById(R.id.textViewCurrentBalance);
-        String holder = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FS";
+        String holder = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FP";
         textViewCurrentBalance.setText(holder);
 
         mRecyclerView = findViewById(R.id.bankingView);
@@ -163,8 +163,9 @@ public class StoreActivity extends AppCompatActivity {
             });
         }
 
+        TextView textViewPrice1 = findViewById(R.id.textView_price1);
+        textViewPrice1.setText(price1 + " FP");
         Button buttonAracKokusu = findViewById(R.id.button_item1);
-        buttonAracKokusu.setText(getString(R.string.buy) + ": " + price1 + " FS");
         buttonAracKokusu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,8 +178,9 @@ public class StoreActivity extends AppCompatActivity {
             }
         });
 
+        TextView textViewPrice2 = findViewById(R.id.textView_price2);
+        textViewPrice2.setText(price2 + " FP");
         Button buttonLastikSpreyi = findViewById(R.id.button_item2);
-        buttonLastikSpreyi.setText(getString(R.string.buy) + ": " + price2 + " FS");
         buttonLastikSpreyi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,8 +193,9 @@ public class StoreActivity extends AppCompatActivity {
             }
         });
 
+        TextView textViewPrice3 = findViewById(R.id.textView_price3);
+        textViewPrice3.setText(price3 + " FP");
         Button buttonBakimKiti = findViewById(R.id.button_item3);
-        buttonBakimKiti.setText(getString(R.string.buy) + ": " + price3 + " FS");
         buttonBakimKiti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -277,21 +280,21 @@ public class StoreActivity extends AppCompatActivity {
         switch (itemNo) {
             case 1:
                 productName[0] = "Araç Kokusu (5 adet)";
-                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 4.99 FS. Sınırlı sayıda!";
+                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 4.99 FP. Sınırlı sayıda!";
                 productPrice[0] = price1;
-                imageResourceID = R.drawable.fuelspotkoku;
+                imageResourceID = R.drawable.popup_product1;
                 break;
             case 2:
                 productName[0] = "Lastik Tamir Spreyi";
                 productDesc[0] = "Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir.";
                 productPrice[0] = price2;
-                imageResourceID = R.drawable.lastiktamirkiti;
+                imageResourceID = R.drawable.popup_product2;
                 break;
             case 3:
                 productName[0] = "Araç Bakım Kiti";
                 productDesc[0] = "SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI";
                 productPrice[0] = price3;
-                imageResourceID = R.drawable.aracbakimseti;
+                imageResourceID = R.drawable.popup_product3;
                 break;
             default:
                 Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
@@ -301,9 +304,9 @@ public class StoreActivity extends AppCompatActivity {
 
         LayoutInflater inflater = (LayoutInflater) StoreActivity.this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_buy, null);
-        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.setElevation(5.0f);
+            mPopupWindow.setElevation(8.0f);
         }
 
         final RelativeLayout layout1 = customView.findViewById(R.id.buyScreen1);
@@ -311,14 +314,14 @@ public class StoreActivity extends AppCompatActivity {
         final RelativeLayout layout3 = customView.findViewById(R.id.buyScreen3);
 
         // PAGE 1
-        CircleImageView urunPhoto = customView.findViewById(R.id.productPhoto);
+        ImageView urunPhoto = customView.findViewById(R.id.productPhoto);
         Glide.with(StoreActivity.this).load(imageResourceID).apply(options).into(urunPhoto);
 
         TextView urunTitle1 = customView.findViewById(R.id.textViewProductTitle);
         urunTitle1.setText(productName[0]);
 
         TextView urunFiyat1 = customView.findViewById(R.id.urunfiyat);
-        urunFiyat1.setText(productPrice[0] + " FS");
+        urunFiyat1.setText(productPrice[0] + " FP");
 
         TextView urunAciklama = customView.findViewById(R.id.urunaciklama);
         urunAciklama.setText(productDesc[0]);
@@ -343,15 +346,15 @@ public class StoreActivity extends AppCompatActivity {
         TextView urunTitle2 = customView.findViewById(R.id.textViewFinal);
         urunTitle2.setText(productName[0]);
 
-        CircleImageView urunPhoto2 = customView.findViewById(R.id.productPhotoFinal);
+        ImageView urunPhoto2 = customView.findViewById(R.id.productPhotoFinal);
         Glide.with(StoreActivity.this).load(imageResourceID).apply(options).into(urunPhoto2);
 
         TextView urunFiyat2 = customView.findViewById(R.id.urunfiyatFinal);
-        urunFiyat2.setText(productPrice[0] + " FS");
+        urunFiyat2.setText(productPrice[0] + " FP");
 
         TextView finalPromptText = customView.findViewById(R.id.finalPrompt);
         float kalan = userFSMoney - productPrice[0];
-        finalPromptText.setText("Satın alma sonrası " + String.format(Locale.getDefault(), "%.2f", kalan) + " FS bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?");
+        finalPromptText.setText("Satın alma sonrası " + String.format(Locale.getDefault(), "%.2f", kalan) + " FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?");
 
         Button buttonContinue = customView.findViewById(R.id.buttonProcessPurchase);
         buttonContinue.setOnClickListener(new View.OnClickListener() {
