@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +42,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -528,8 +528,6 @@ public class StationDetails extends AppCompatActivity {
                                     dataSet.setDrawValues(false);
                                     dataSet.setColor(Color.BLACK);
                                     dataSet.setDrawCircles(false);
-                                    dataSet.setDrawFilled(true);
-                                    dataSet.setFillColor(Color.parseColor("#90000000"));
                                     dataSets.add(dataSet);
                                 }
 
@@ -539,8 +537,6 @@ public class StationDetails extends AppCompatActivity {
                                     dataSet2.setDrawValues(false);
                                     dataSet2.setColor(Color.RED);
                                     dataSet2.setDrawCircles(false);
-                                    dataSet2.setDrawFilled(true);
-                                    dataSet2.setFillColor(Color.parseColor("#90FF0000"));
                                     dataSets.add(dataSet2);
                                 }
 
@@ -550,8 +546,6 @@ public class StationDetails extends AppCompatActivity {
                                     dataSet3.setDrawValues(false);
                                     dataSet3.setColor(Color.BLUE);
                                     dataSet3.setDrawCircles(false);
-                                    dataSet3.setDrawFilled(true);
-                                    dataSet3.setFillColor(Color.parseColor("#900000FF"));
                                     dataSets.add(dataSet3);
                                 }
 
@@ -561,8 +555,6 @@ public class StationDetails extends AppCompatActivity {
                                     dataSet4.setDrawValues(false);
                                     dataSet4.setColor(Color.GREEN);
                                     dataSet4.setDrawCircles(false);
-                                    dataSet4.setDrawFilled(true);
-                                    dataSet4.setFillColor(Color.parseColor("#9000FF00"));
                                     dataSets.add(dataSet4);
                                 }
 

@@ -64,7 +64,11 @@ public class SuperStoreActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mService != null) {
                         try {
-                            buyPremium();
+                            if (!hasDoubleRange) {
+                                buyPremium();
+                            } else {
+                                Toast.makeText(SuperStoreActivity.this, "Premium aboneliğini başlatabilmek için öncelikle Google Play uygulamasından 2x-Range aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
+                            }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         } catch (IntentSender.SendIntentException e) {
@@ -84,7 +88,11 @@ public class SuperStoreActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mService != null) {
                         try {
-                            buyDoubleRange();
+                            if (!premium) {
+                                buyDoubleRange();
+                            } else {
+                                Toast.makeText(SuperStoreActivity.this, "2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
+                            }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         } catch (IntentSender.SendIntentException e) {

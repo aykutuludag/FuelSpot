@@ -127,7 +127,7 @@ public class StoreActivity extends AppCompatActivity {
                             if (!hasDoubleRange) {
                                 buyPremium();
                             } else {
-                                Toast.makeText(StoreActivity.this, "Premium sürüm 2X menzil özelliğini de kapsamaktadır. Premium sürüme geçmeden önce lütfen 2X menzili iptal ediniz.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(StoreActivity.this, "Premium aboneliğini başlatabilmek için öncelikle Google Play uygulamasından 2x-Range aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -151,7 +151,7 @@ public class StoreActivity extends AppCompatActivity {
                             if (!premium) {
                                 buyDoubleRange();
                             } else {
-                                Toast.makeText(StoreActivity.this, "Premium sürüm 2X menzil özelliğini de kapsamaktadır. Ayrıca 2X menzil satın almanıza gerek yoktur.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(StoreActivity.this, "2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
                             }
                         } catch (RemoteException e) {
                             e.printStackTrace();

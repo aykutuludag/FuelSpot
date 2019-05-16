@@ -41,54 +41,26 @@
                     android:layout_height="300dp" />
 
                 <RelativeLayout
-                    android:id="@+id/purchaseStatus"
+                    android:id="@+id/single_purchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/mapView"
+                    android:layout_below="@id/mapView"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="#fafafa">
+                    android:background="@drawable/round_layout_white2">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/statusIcon"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                    <ImageView
+                        android:id="@+id/imageViewStationLogo"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/statusText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginBottom="4dp"
-                        android:layout_toEndOf="@+id/statusIcon" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/single_purchase"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/purchaseStatus"
-                    android:background="#EDEDED">
-
-                    <ImageView
-                        android:id="@+id/imageViewStationLogo"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_margin="4dp"
                         app:srcCompat="@drawable/default_station" />
 
                     <TextView
@@ -105,8 +77,9 @@
                         android:fontFamily="@font/gotham_black"
                         android:gravity="center"
                         android:text="@string/purchase"
+                        android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textSize="18sp" />
+                        android:textColor="#161616" />
 
                     <com.github.curioustechizen.ago.RelativeTimeTextView
                         android:id="@+id/purchaseTime"
@@ -124,26 +97,33 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/section1"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/title_type"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
+                            android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
                             android:text="@string/type"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
                             android:id="@+id/title_amount"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_toEndOf="@+id/title_type"
+                            android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
                             android:text="@string/amount"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -152,9 +132,12 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_toEndOf="@+id/title_amount"
+                            android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
                             android:text="@string/unit_price"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
@@ -163,15 +146,18 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
+                            android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
                             android:text="@string/subtotal"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <ImageView
                             android:id="@+id/type1"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/title_type"
                             android:layout_alignBottom="@+id/amount1"
                             android:layout_alignParentStart="true"
@@ -180,41 +166,44 @@
 
                         <TextView
                             android:id="@+id/amount1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/title_type"
                             android:layout_toEndOf="@+id/title_type"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#626262"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
                             android:id="@+id/unitPrice1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_alignTop="@+id/type1"
                             android:layout_toEndOf="@+id/amount1"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#626262"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
                             android:id="@+id/price1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/title_type"
                             android:layout_alignParentEnd="true"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#626262"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <ImageView
                             android:id="@+id/type2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="16dp"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/type1"
                             android:layout_alignBottom="@+id/amount2"
                             android:layout_alignParentStart="true"
@@ -224,57 +213,62 @@
 
                         <TextView
                             android:id="@+id/amount2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/type1"
                             android:layout_marginTop="4dp"
                             android:layout_toEndOf="@+id/title_type"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#626262"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
                             android:id="@+id/unitPrice2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/unitPrice1"
                             android:layout_centerVertical="true"
                             android:layout_marginTop="4dp"
                             android:layout_toEndOf="@id/amount2"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#626262"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
                             android:id="@+id/price2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
                             android:layout_below="@+id/type1"
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#626262"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616"
                             app:layout_widthPercent="25%" />
 
                         <TextView
                             android:id="@+id/totalTax"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/type2"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="32dp"
+                            android:layout_marginTop="16dp"
                             android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
                             android:text="@string/tax"
+                            android:textAlignment="center"
+                            android:textColor="#161616"
                             android:textSize="18sp"
                             app:layout_widthPercent="75%" />
 
                         <TextView
                             android:id="@+id/totalPrice"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/totalTax"
                             android:layout_centerHorizontal="true"
@@ -282,6 +276,8 @@
                             android:fontFamily="@font/gotham_bold"
                             android:gravity="center"
                             android:text="@string/total"
+                            android:textAlignment="center"
+                            android:textColor="#161616"
                             android:textSize="18sp"
                             app:layout_widthPercent="75%" />
 
@@ -289,30 +285,90 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/billText"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/purchaseStatus"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/single_purchase"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center"
-                    android:text="Fiş fotoğrafı ekleyerek 3 TL bonus kazanabilirsiniz!"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+                    android:layout_below="@+id/single_purchase"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/round_layout_white2">
 
-                <ImageView
-                    android:id="@+id/billPhoto"
-                    android:layout_width="180dp"
-                    android:layout_height="320dp"
-                    android:layout_below="@id/billText"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="16dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/photo_placeholder" />
+                    <TextView
+                        android:id="@+id/bonus_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/gotham_bold"
+                        android:gravity="center"
+                        android:text="@string/bonus"
+                        android:textAlignment="center"
+                        android:textColor="#161616"
+                        android:textSize="18sp" />
 
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/statusIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_below="@id/bonus_title"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/icon_coin" />
+
+                    <TextView
+                        android:id="@+id/statusText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/statusIcon"
+                        android:layout_alignBottom="@id/statusIcon"
+                        android:layout_marginEnd="8dp"
+                        android:layout_toEndOf="@+id/statusIcon"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="Fiş/Fatura fotoğrafı ekleyerek - FP bonus kazanabilirsiniz!"
+                        android:textAlignment="center"
+                        android:textColor="#161616" />
+
+                    <Button
+                        android:id="@+id/button_add_bill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/statusText"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/red_box"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="2dp"
+                        android:text="@string/add_bill_photo"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#f1f1f1" />
+
+                    <ImageView
+                        android:id="@+id/billPhoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/button_add_bill"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/photo_placeholder"
+                        android:scaleType="fitXY"
+                        android:visibility="gone" />
+                </RelativeLayout>
             </RelativeLayout>
         </ScrollView>
 

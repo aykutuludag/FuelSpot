@@ -412,10 +412,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                                     item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
                                     item.setVehicleEmission(obj.getInt("carbonEmission"));
                                     userAutomobileList.add(item);
+                                }
 
-                                    // If there is any selected auto, choose first one.
-                                    if (vehicleID == 0) {
-                                        chooseVehicle(item);
+                                if (vehicleID == 0) {
+                                    chooseVehicle(userAutomobileList.get(0));
+                                } else {
+                                    // User already selected station.
+                                    for (int k = 0; k < userAutomobileList.size(); k++) {
+                                        if (vehicleID == userAutomobileList.get(k).getID()) {
+                                            chooseVehicle(userAutomobileList.get(k));
+                                            break;
+                                        }
                                     }
                                 }
                             } catch (JSONException e) {

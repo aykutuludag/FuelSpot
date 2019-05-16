@@ -3,10 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
     android:background="@drawable/white_box"
-    android:gravity="center"
-    android:padding="4dp">
+    android:gravity="center">
 
     <RelativeLayout
         android:id="@+id/inner"
@@ -16,107 +14,108 @@
 
         <ImageView
             android:id="@+id/gasoline"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
             android:contentDescription="@string/gasoline"
-            android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:padding="2dp"
             app:srcCompat="@drawable/gasoline" />
 
         <TextView
             android:id="@+id/fiyatBenzin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/gasoline"
             android:layout_alignStart="@id/gasoline"
             android:layout_alignEnd="@id/gasoline"
             android:layout_marginTop="2dp"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121" />
+            android:textColor="#161616" />
 
         <ImageView
             android:id="@+id/diesel"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_toEndOf="@+id/gasoline"
             android:contentDescription="@string/diesel"
             android:gravity="center"
-            android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:padding="2dp"
             app:srcCompat="@drawable/diesel" />
 
         <TextView
             android:id="@+id/fiyatDizel"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/diesel"
             android:layout_alignStart="@id/diesel"
             android:layout_alignEnd="@id/diesel"
             android:layout_marginTop="2dp"
-            android:fontFamily="@font/gotham_medium"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121" />
+            android:textColor="#161616" />
 
         <ImageView
             android:id="@+id/lpg"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/fiyatBenzin"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
             android:contentDescription="@string/lpg"
-            android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:padding="2dp"
             app:srcCompat="@drawable/lpg" />
 
         <TextView
             android:id="@+id/fiyatLPG"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lpg"
             android:layout_alignStart="@id/lpg"
             android:layout_alignEnd="@id/lpg"
             android:layout_marginTop="2dp"
-            android:fontFamily="@font/gotham_medium"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121" />
+            android:textColor="#161616" />
 
         <ImageView
             android:id="@+id/electric"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/fiyatDizel"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_toEndOf="@+id/lpg"
             android:contentDescription="@string/electricity"
-            android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:padding="2dp"
             app:srcCompat="@drawable/electricity" />
 
         <TextView
             android:id="@+id/fiyatElektrik"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/electric"
             android:layout_alignStart="@id/electric"
             android:layout_alignEnd="@id/electric"
             android:layout_marginTop="2dp"
-            android:fontFamily="@font/gotham_medium"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121" />
+            android:textColor="#161616" />
     </RelativeLayout>
 
     <TextView
@@ -125,13 +124,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/inner"
         android:layout_centerHorizontal="true"
-        android:layout_margin="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
         android:fontFamily="@font/gotham_book"
         android:gravity="center"
-        android:textColor="#424242" />
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="#161616" />
 
 </RelativeLayout>

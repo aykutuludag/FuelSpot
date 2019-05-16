@@ -4,231 +4,236 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA"
+    android:background="@drawable/background_doodle"
     tools:context=".superuser.SuperWelcomeActivity">
 
     <RelativeLayout
         android:id="@+id/layout_promo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/round_layout"
+        android:visibility="visible">
 
-        <com.yqritc.scalablevideoview.ScalableVideoView
-            android:id="@+id/animatedBackground"
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/gotham_black"
+            android:gravity="center"
+            android:text="@string/welcome_fuelspot"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="İstasyon yöneticisi misiniz? FuelSpot'a hemen ücretsiz kaydolun sayısız avantaj ve fırsattan yararlanın!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView12"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* DAHA FAZLA MÜŞTERİ, DAHA FAZLA SATIŞ"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView14"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* ÜCRETSİZ TANITIMLAR, KAMPANYALAR, FIRSATLAR"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView28"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* ONLİNE PLATFORMLARDA ÜCRETSİZ TANITIM (GOOGLE, YANDEX ...)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView30"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* RAKİPLERİNİZİN FİYATLARINI ANLIK TAKİP İMKANI"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView31"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* SEKTÖRDEN SON HABERLER, FİYAT ENDEKSLERİ, İSTATİSTİKLER, ANALİZLER"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView32"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* İSTASYONUNUZUN ONLİNE PROFİLİ SİZİN KONTROLÜNÜZDE OLSUN! Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <TextView
+            android:id="@+id/textView35"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView33"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+        <ImageView
+            android:id="@+id/imageViewGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/facebookButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:clickable="false"
+            android:contentDescription="@string/loginWithGoogle"
+            app:srcCompat="@drawable/button_google" />
+
+        <TextView
+            android:id="@+id/textViewGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/imageViewGoogle"
+            android:layout_alignTop="@id/imageViewGoogle"
+            android:layout_alignEnd="@id/imageViewGoogle"
+            android:layout_alignBottom="@id/imageViewGoogle"
+            android:layout_marginStart="42dp"
+            android:clickable="false"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithGoogle" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:scalableType="centerCrop" />
+            android:layout_alignStart="@id/imageViewGoogle"
+            android:layout_alignTop="@id/imageViewGoogle"
+            android:layout_alignEnd="@id/imageViewGoogle"
+            android:layout_alignBottom="@id/imageViewGoogle"
+            android:layout_centerHorizontal="true"
+            android:alpha="0"
+            android:background="@drawable/button_google"
+            android:text="@string/common_signin_button_text_long" />
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/imageViewFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="42dp"
+            android:background="@drawable/button_facebook"
+            android:clickable="false"
+            android:contentDescription="@string/loginWithFacebook"
+            android:visibility="visible"
+            app:srcCompat="@drawable/button_facebook" />
+
+        <TextView
+            android:id="@+id/textViewFacebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/imageViewFacebook"
+            android:layout_alignTop="@id/imageViewFacebook"
+            android:layout_alignEnd="@id/imageViewFacebook"
+            android:layout_alignBottom="@id/imageViewFacebook"
+            android:layout_marginStart="42dp"
+            android:clickable="false"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center_vertical"
+            android:text="@string/loginWithFacebook" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebookButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#20000000">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout_white2">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:text="@string/welcome_fuelspot"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:gravity="center"
-                    android:text="İstasyon yöneticisi misiniz? FuelSpot'a hemen ücretsiz kaydolun sayısız avantaj ve fırsattan yararlanın!"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView12"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* DAHA FAZLA MÜŞTERİ, DAHA FAZLA SATIŞ"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView28"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView14"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* ÜCRETSİZ TANITIMLAR, KAMPANYALAR, FIRSATLAR"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView30"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView28"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* ONLİNE PLATFORMLARDA ÜCRETSİZ TANITIM (GOOGLE, YANDEX ...)"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView31"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView30"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* RAKİPLERİNİZİN FİYATLARINI ANLIK TAKİP İMKANI"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView32"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView31"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* SEKTÖRDEN SON HABERLER, FİYAT ENDEKSLERİ, İSTATİSTİKLER, ANALİZLER"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView33"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView32"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* İSTASYONUNUZUN ONLİNE PROFİLİ SİZİN KONTROLÜNÜZDE OLSUN! Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView35"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView33"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/imageViewGoogle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/facebookButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"
-                android:clickable="false"
-                android:contentDescription="@string/loginWithGoogle"
-                app:srcCompat="@drawable/button_google" />
-
-            <TextView
-                android:id="@+id/textViewGoogle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/imageViewGoogle"
-                android:layout_alignTop="@id/imageViewGoogle"
-                android:layout_alignEnd="@id/imageViewGoogle"
-                android:layout_alignBottom="@id/imageViewGoogle"
-                android:layout_marginStart="42dp"
-                android:clickable="false"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center_vertical"
-                android:text="@string/loginWithGoogle" />
-
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/googleButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignStart="@id/imageViewGoogle"
-                android:layout_alignTop="@id/imageViewGoogle"
-                android:layout_alignEnd="@id/imageViewGoogle"
-                android:layout_alignBottom="@id/imageViewGoogle"
-                android:layout_centerHorizontal="true"
-                android:alpha="0"
-                android:background="@drawable/button_google"
-                android:text="@string/common_signin_button_text_long" />
-
-            <ImageView
-                android:id="@+id/imageViewFacebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="48dp"
-                android:background="@drawable/button_facebook"
-                android:clickable="false"
-                android:contentDescription="@string/loginWithFacebook"
-                android:visibility="visible"
-                app:srcCompat="@drawable/button_facebook" />
-
-            <TextView
-                android:id="@+id/textViewFacebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/imageViewFacebook"
-                android:layout_alignTop="@id/imageViewFacebook"
-                android:layout_alignEnd="@id/imageViewFacebook"
-                android:layout_alignBottom="@id/imageViewFacebook"
-                android:layout_marginStart="42dp"
-                android:clickable="false"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center_vertical"
-                android:text="@string/loginWithFacebook" />
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/facebookButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignStart="@id/imageViewFacebook"
-                android:layout_alignTop="@id/imageViewFacebook"
-                android:layout_alignEnd="@id/imageViewFacebook"
-                android:layout_alignBottom="@id/imageViewFacebook"
-                android:alpha="0" />
-        </RelativeLayout>
+            android:layout_alignStart="@id/imageViewFacebook"
+            android:layout_alignTop="@id/imageViewFacebook"
+            android:layout_alignEnd="@id/imageViewFacebook"
+            android:layout_alignBottom="@id/imageViewFacebook"
+            android:alpha="0" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -308,15 +313,37 @@
                 android:id="@+id/section_stationInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f0f0f0">
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout2">
+
+                <TextView
+                    android:id="@+id/station_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/station_info"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/mapView"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_alignParentTop="true"
+                    android:layout_height="300dp"
+                    android:layout_below="@+id/station_title"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="8dp" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp" />
 
                 <Spinner
                     android:id="@+id/simpleSpinner"
@@ -324,25 +351,27 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mapView"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:gravity="center" />
 
-                <EditText
+                <TextView
                     android:id="@+id/superStationAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/simpleSpinner"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:gravity="center"
-                    android:inputType="textPostalAddress"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:hint="@string/address"
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <EditText
                     android:id="@+id/editTextLicense"
@@ -350,13 +379,15 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/superStationAddress"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/white_box"
                     android:gravity="center"
                     android:hint="@string/license_no"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TextView
                     android:id="@+id/stationHint"
@@ -370,22 +401,83 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="#ff0000"
                     android:textSize="12sp" />
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/section_problem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/section_stationInfo"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout2">
+
+                <TextView
+                    android:id="@+id/textView49"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center"
+                    android:text="Kayıt işleminde bir sorunla mı karşılaştınız?"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
+
+                <Button
+                    android:id="@+id/reportButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView49"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/red_box"
+                    android:padding="2dp"
+                    android:text="@string/contact_us"
+                    android:textAllCaps="false"
+                    android:textColor="#f0f0f0" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/section_ownerInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/section_stationInfo"
-                android:background="@drawable/round_layout">
+                android:layout_below="@id/section_problem"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout2">
+
+                <TextView
+                    android:id="@+id/owner_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/personal_info"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/receiverPhoto"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
+                    android:layout_below="@+id/owner_title"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/default_profile" />
 
                 <TextView
@@ -417,15 +509,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/receiverName"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white2"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/white_box"
                     android:gravity="bottom"
                     android:inputType="textPersonName"
-                    android:padding="10dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/receiverMail"
@@ -443,15 +536,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/receiverMail"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white2"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/white_box"
                     android:gravity="bottom"
                     android:inputType="textEmailAddress"
-                    android:padding="10dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/receiverPhone"
@@ -469,14 +563,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/receiverPhone"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white2"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/white_box"
                     android:inputType="phone"
-                    android:padding="10dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/dummyText5"
@@ -494,16 +589,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/dummyText5"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/round_layout_white2"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/white_box"
                     android:enabled="true"
                     android:focusableInTouchMode="false"
                     android:inputType="none"
-                    android:padding="10dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/gender_title"
@@ -570,10 +666,11 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/terms_accepted_text"
-                    android:textColor="#212121"
-                    android:textSize="12sp" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <Button
                     android:id="@+id/finishRegistration"
@@ -581,7 +678,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/checkBoxTerms"
                     android:layout_alignParentEnd="true"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:background="@drawable/green_box"
                     android:fontFamily="@font/gotham_black"
                     android:padding="4dp"

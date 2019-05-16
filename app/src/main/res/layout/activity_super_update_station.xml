@@ -36,7 +36,10 @@
                 android:id="@+id/baseInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_layout_white">
 
                 <TextView
@@ -49,9 +52,12 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_ultra"
                     android:gravity="center"
                     android:text="@string/station_info"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <Spinner
                     android:id="@+id/simpleSpinner"
@@ -59,11 +65,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_baseInfo"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center" />
+                    android:layout_margin="8dp"
+                    android:background="#f4f4f4"
+                    android:gravity="center"
+                    android:padding="4dp" />
 
                 <TextView
                     android:id="@+id/textView40"
@@ -72,11 +77,13 @@
                     android:layout_below="@id/simpleSpinner"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_bold"
                     android:padding="2dp"
                     android:text="@string/fuelspot_station_id"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textViewStationID"
@@ -87,8 +94,9 @@
                     android:layout_marginStart="4dp"
                     android:layout_toEndOf="@id/textView40"
                     android:gravity="center"
+                    android:text="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#212121" />
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textView41"
@@ -97,11 +105,13 @@
                     android:layout_below="@+id/textView40"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_bold"
                     android:padding="2dp"
                     android:text="@string/license_no_with_colon"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/editTextStationLicense"
@@ -112,19 +122,24 @@
                     android:layout_marginStart="4dp"
                     android:layout_toEndOf="@id/textView41"
                     android:gravity="center"
+                    android:text="BAY/432-98/01028"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#212121" />
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textView42"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView41"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:padding="2dp"
                     android:text="@string/address"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <EditText
                     android:id="@+id/editTextStationAddress"
@@ -144,14 +159,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/baseInfo"
-                android:layout_margin="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_layout_white"
                 android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/verifiedStation"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="8dp"
@@ -165,9 +183,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_margin="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_toEndOf="@+id/verifiedStation"
-                    android:text="@string/stationVerifiedText" />
+                    android:fontFamily="@font/gotham_book"
+                    android:text="@string/stationVerifiedText"
+                    android:textColor="#161616" />
 
             </RelativeLayout>
 
@@ -176,7 +199,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/verifiedSection"
-                android:layout_margin="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_layout_white"
                 android:gravity="center">
 
@@ -190,9 +216,12 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_ultra"
                     android:gravity="center"
                     android:text="@string/prices"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <RelativeLayout
                     android:id="@+id/subPriceSec"
@@ -321,10 +350,11 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/note_for_prices"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp" />
+                    android:textColor="#161616" />
 
 
                 <RelativeLayout
@@ -341,9 +371,12 @@
                         android:id="@+id/textView422"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/gotham_book"
                         android:padding="2dp"
                         android:text="@string/last_update"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
 
                     <com.github.curioustechizen.ago.RelativeTimeTextView
                         android:id="@+id/stationLastUpdate"
@@ -365,27 +398,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/priceSec"
-                android:layout_margin="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_layout_white">
 
                 <TextView
                     android:id="@+id/title_facilities"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_ultra"
                     android:gravity="center"
                     android:text="@string/facilities"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
 
                 <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_facilities"
-                    android:layout_margin="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center">
 
                     <de.hdodenhof.circleimageview.CircleImageView

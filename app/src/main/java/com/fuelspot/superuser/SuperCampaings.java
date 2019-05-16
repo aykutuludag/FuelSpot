@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -73,9 +73,10 @@ public class SuperCampaings extends AppCompatActivity {
     private RequestQueue requestQueue;
     ImageView imageViewCampaign;
     private SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView, mRecyclerView2;
     private RecyclerView.Adapter mAdapter;
     private List<CampaignItem> feedsList = new ArrayList<>();
+    private List<CampaignItem> feedsList2 = new ArrayList<>();
     private String campaignName;
     private String campaignDesc;
     private String sTime;
@@ -110,6 +111,7 @@ public class SuperCampaings extends AppCompatActivity {
 
         // Comments
         mRecyclerView = findViewById(R.id.campaignView);
+        mRecyclerView2 = findViewById(R.id.campaignOldView);
 
         Button buttonAdd = findViewById(R.id.button_add_campaign);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +140,7 @@ public class SuperCampaings extends AppCompatActivity {
                 android.R.color.holo_red_light);
 
         fetchCampaigns();
+        fetchOldCampaigns();
     }
 
     public void fetchCampaigns() {
@@ -188,6 +191,67 @@ public class SuperCampaings extends AppCompatActivity {
                         loading.dismiss();
                         swipeContainer.setRefreshing(false);
                         mRecyclerView.setVisibility(View.GONE);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+                //Adding parameters
+                params.put("stationID", String.valueOf(superStationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    public void fetchOldCampaigns() {
+        feedsList2.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_OLD_CAMPAINGS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CampaignItem item = new CampaignItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationID(obj.getInt("stationID"));
+                                    item.setCampaignName(obj.getString("campaignName"));
+                                    item.setCampaignDesc(obj.getString("campaignDesc"));
+                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                    item.setCampaignStart(obj.getString("campaignStart"));
+                                    item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    item.setIsGlobal(obj.getInt("isGlobal"));
+                                    feedsList2.add(item);
+                                }
+
+                                mAdapter = new CampaignAdapter(SuperCampaings.this, feedsList2, "SUPERUSER");
+                                mAdapter.notifyDataSetChanged();
+                                mRecyclerView2.setAdapter(mAdapter);
+                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(SuperCampaings.this, 1);
+                                mRecyclerView2.setLayoutManager(mLayoutManager);
+                                mRecyclerView2.setVisibility(View.VISIBLE);
+                            } catch (JSONException e) {
+                                mRecyclerView2.setVisibility(View.GONE);
+                            }
+                        } else {
+                            mRecyclerView2.setVisibility(View.GONE);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mRecyclerView2.setVisibility(View.GONE);
                     }
                 }) {
             @Override

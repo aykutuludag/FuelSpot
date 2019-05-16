@@ -12,7 +12,6 @@ import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -36,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;

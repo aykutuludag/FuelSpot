@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA"
     tools:context=".WelcomeActivity">
 
     <RelativeLayout
@@ -82,13 +81,17 @@
         android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_welcome"
+        android:background="@drawable/background_doodle"
         android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/round_layout_white2"
             android:padding="16dp">
 
@@ -97,8 +100,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:fontFamily="@font/gotham_bold"
                 android:text="@string/do_you_have_car"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <Button
                 android:id="@+id/button6"
@@ -110,9 +115,12 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="#2DE778"
+                android:background="@drawable/green_box"
+                android:padding="4dp"
                 android:text="@string/yes"
-                android:textColor="#f1f1f1" />
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
 
             <Button
                 android:id="@+id/button7"
@@ -124,8 +132,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="#ff0000"
+                android:background="@drawable/red_box"
+                android:padding="4dp"
                 android:text="@string/no_later"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#f1f1f1" />
         </RelativeLayout>
     </RelativeLayout>
@@ -299,12 +309,15 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/secondary_fuel_type_desc"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelSecondary"
@@ -440,13 +453,16 @@
         android:id="@+id/layout4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_doodle"
         android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/howto1"
             android:layout_width="match_parent"
             android:layout_height="325dp"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/round_layout_white"
             android:visibility="visible">
 
@@ -456,7 +472,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="48dp"
                 android:fontFamily="@font/gotham_black"
                 android:text="@string/fuel_symbols"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -465,8 +481,11 @@
                 android:id="@+id/imageView14"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_centerVertical="true"
-                android:layout_margin="4dp"
+                android:layout_below="@id/textView11"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toStartOf="@+id/imageView15"
                 android:contentDescription="@string/gasoline"
                 android:padding="8dp"
@@ -482,14 +501,19 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="@string/gasoline" />
+                android:text="@string/gasoline"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <ImageView
                 android:id="@+id/imageView15"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_centerVertical="true"
-                android:layout_margin="4dp"
+                android:layout_below="@id/textView11"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toStartOf="@id/imageView16"
                 android:contentDescription="@string/diesel"
                 android:padding="8dp"
@@ -505,15 +529,20 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="@string/diesel" />
+                android:text="@string/diesel"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <ImageView
                 android:id="@+id/imageView16"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_centerInParent="true"
+                android:layout_below="@id/textView11"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/lpg"
                 android:padding="8dp"
                 app:srcCompat="@drawable/lpg" />
@@ -528,14 +557,19 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="@string/lpg" />
+                android:text="@string/lpg"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <ImageView
                 android:id="@+id/imageView17"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_centerVertical="true"
-                android:layout_margin="4dp"
+                android:layout_below="@id/textView11"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@+id/imageView16"
                 android:contentDescription="@string/electricity"
                 android:padding="8dp"
@@ -551,14 +585,19 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="@string/electricity" />
+                android:text="@string/electricity"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <ImageView
                 android:id="@+id/imageView6"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_centerVertical="true"
-                android:layout_margin="4dp"
+                android:layout_below="@id/textView11"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@+id/imageView17"
                 android:contentDescription="@string/distance"
                 android:padding="8dp"
@@ -574,7 +613,9 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gotham_bold"
                 android:gravity="center"
-                android:text="@string/distance" />
+                android:text="@string/distance"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <TextView
                 android:id="@+id/how_tosortExp"
@@ -582,10 +623,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView13"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/gotham_bold"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="@string/how_to_sort" />
+                android:text="@string/how_to_sort"
+                android:textColor="#161616" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewIndicator"
@@ -620,6 +665,10 @@
             android:layout_width="match_parent"
             android:layout_height="325dp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/round_layout_white"
             android:visibility="gone">
 
@@ -653,9 +702,11 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
-                android:fontFamily="@font/gotham_bold"
+                android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="@string/how_to_register_car_desc" />
+                android:text="@string/how_to_register_car_desc"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewIndicator7"
@@ -691,6 +742,10 @@
             android:layout_width="match_parent"
             android:layout_height="325dp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/round_layout_white"
             android:visibility="gone">
 
@@ -700,7 +755,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/gotham_black"
                 android:text="@string/how_to_add_fuel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -725,9 +780,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:fontFamily="@font/gotham_bold"
+                android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="@string/how_to_add_fuel_desc" />
+                android:text="@string/how_to_add_fuel_desc"
+                android:textAlignment="center"
+                android:textColor="#161616" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewIndicator4"
@@ -765,7 +822,7 @@
             android:layout_below="@+id/howto1"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="-24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_medium"
             android:padding="4dp"

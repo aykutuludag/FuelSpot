@@ -82,7 +82,7 @@ public class FragmentNews extends Fragment {
     private SimpleDateFormat sdf2 = new SimpleDateFormat(UniversalTimeFormat, Locale.getDefault());
 
     // Price Index
-    private LineChart chart;
+    private LineChart chart, chart2, chart3, chart4;
     private List<Entry> gasolinePriceHistory = new ArrayList<>();
     private List<Entry> dieselPriceHistory = new ArrayList<>();
     private List<Entry> lpgPriceHistory = new ArrayList<>();
@@ -90,11 +90,10 @@ public class FragmentNews extends Fragment {
     private TextView lastUpdatedAvgPrice;
 
     // Companies
-    private PieChart chart3;
+    private PieChart pieChart;
     private TextView textViewTotalNumber;
     private ArrayList<PieEntry> entries = new ArrayList<>();
     private int otherStations;
-    private int totalVerified;
     private int totalStation;
     private SwipeRefreshLayout swipeContainer;
 
@@ -133,15 +132,15 @@ public class FragmentNews extends Fragment {
             requestQueue = Volley.newRequestQueue(getActivity());
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             mRecyclerView = rootView.findViewById(R.id.newsView);
-            mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerView.setNestedScrollingEnabled(true);
 
-            chart = rootView.findViewById(R.id.chartAveragePrice);
+            chart = rootView.findViewById(R.id.chartAveragePriceGasoline);
             chart.getXAxis().setAvoidFirstLastClipping(true);
             chart.getXAxis().setLabelCount(3, true);
             chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             chart.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart.getDescription().setTextSize(12f);
-            chart.getDescription().setTextColor(Color.WHITE);
+            chart.getDescription().setTextSize(13f);
+            chart.getDescription().setTextColor(Color.BLACK);
             chart.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
@@ -151,9 +150,83 @@ public class FragmentNews extends Fragment {
                     return formatter.format(date);
                 }
             });
-            chart.animateX(1000, Easing.EaseInElastic);
-            chart.setExtraRightOffset(16f);
+            chart.animateX(1500, Easing.EaseInElastic);
             chart.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            chart2 = rootView.findViewById(R.id.chartAveragePriceDiesel);
+            chart2.getXAxis().setAvoidFirstLastClipping(true);
+            chart2.getXAxis().setLabelCount(3, true);
+            chart2.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart2.getDescription().setText(currencySymbol + " / " + userUnit);
+            chart2.getDescription().setTextSize(13f);
+            chart2.getDescription().setTextColor(Color.BLACK);
+            chart2.getXAxis().setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+                    Date date = new Date();
+                    date.setTime((long) value);
+                    return formatter.format(date);
+                }
+            });
+            chart2.animateX(1500, Easing.EaseInElastic);
+            chart2.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            chart3 = rootView.findViewById(R.id.chartAveragePriceLPG);
+            chart3.getXAxis().setAvoidFirstLastClipping(true);
+            chart3.getXAxis().setLabelCount(3, true);
+            chart3.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart3.getDescription().setText(currencySymbol + " / " + userUnit);
+            chart3.getDescription().setTextSize(12f);
+            chart3.getDescription().setTextColor(Color.BLACK);
+            chart3.getXAxis().setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+                    Date date = new Date();
+                    date.setTime((long) value);
+                    return formatter.format(date);
+                }
+            });
+            chart3.animateX(1500, Easing.EaseInElastic);
+            chart3.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            chart4 = rootView.findViewById(R.id.chartAveragePriceElectricity);
+            chart4.getXAxis().setAvoidFirstLastClipping(true);
+            chart4.getXAxis().setLabelCount(3, true);
+            chart4.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart4.getDescription().setText(currencySymbol + " / " + userUnit);
+            chart4.getDescription().setTextSize(12f);
+            chart4.getDescription().setTextColor(Color.BLACK);
+            chart4.getXAxis().setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
+                    Date date = new Date();
+                    date.setTime((long) value);
+                    return formatter.format(date);
+                }
+            });
+            chart4.animateX(1500, Easing.EaseInElastic);
+            chart4.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     scrollView.requestDisallowInterceptTouchEvent(true);
@@ -163,20 +236,20 @@ public class FragmentNews extends Fragment {
 
             lastUpdatedAvgPrice = rootView.findViewById(R.id.dummy000);
 
-            chart3 = rootView.findViewById(R.id.chart3);
-            chart3.getDescription().setEnabled(false);
-            chart3.setDragDecelerationFrictionCoef(0.95f);
-            chart3.setDrawHoleEnabled(false);
-            chart3.getLegend().setEnabled(false);
-            chart3.setTransparentCircleColor(Color.BLACK);
-            chart3.setTransparentCircleAlpha(120);
-            chart3.setTransparentCircleRadius(60f);
-            chart3.setUsePercentValues(false);
-            chart3.setRotationEnabled(true);
-            chart3.setHighlightPerTapEnabled(true);
-            chart3.setEntryLabelColor(Color.BLACK);
-            chart3.setEntryLabelTextSize(12f);
-            chart3.setOnTouchListener(new View.OnTouchListener() {
+            pieChart = rootView.findViewById(R.id.chart3);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.setDrawHoleEnabled(false);
+            pieChart.getLegend().setEnabled(false);
+            pieChart.setDragDecelerationFrictionCoef(0.95f);
+            pieChart.setTransparentCircleColor(Color.BLACK);
+            pieChart.setTransparentCircleAlpha(120);
+            pieChart.setTransparentCircleRadius(60f);
+            pieChart.setUsePercentValues(false);
+            pieChart.setRotationEnabled(true);
+            pieChart.setHighlightPerTapEnabled(false);
+            pieChart.setEntryLabelColor(Color.BLACK);
+            pieChart.setEntryLabelTextSize(12f);
+            pieChart.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     scrollView.requestDisallowInterceptTouchEvent(true);
@@ -285,6 +358,8 @@ public class FragmentNews extends Fragment {
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             try {
+                                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+
                                 JSONArray res = new JSONArray(response);
 
                                 for (int i = res.length() - 1; i >= 0; i--) {
@@ -307,56 +382,62 @@ public class FragmentNews extends Fragment {
                                     }
                                 }
 
-                                String dummyLastText = getString(R.string.last_update) + " " + sdf2.format(sdf.parse(res.getJSONObject(0).getString("date")));
-                                lastUpdatedAvgPrice.setText(dummyLastText);
-
-                                ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-
                                 if (gasolinePriceHistory.size() > 0) {
                                     LineDataSet dataSet = new LineDataSet(gasolinePriceHistory, getString(R.string.gasoline)); // add entries to dataset
                                     dataSet.setDrawValues(false);
-                                    dataSet.setColor(Color.BLACK);
                                     dataSet.setDrawCircles(false);
-                                    dataSet.setDrawFilled(true);
-                                    dataSet.setFillColor(Color.parseColor("#90000000"));
+                                    dataSet.setColor(Color.BLACK);
+
+                                    LineData lineData = new LineData(dataSet);
+                                    chart.setData(lineData);
+                                    chart.invalidate();
                                     dataSets.add(dataSet);
                                 }
 
                                 if (dieselPriceHistory.size() > 0) {
                                     LineDataSet dataSet2 = new LineDataSet(dieselPriceHistory, getString(R.string.diesel)); // add entries to dataset
                                     dataSet2.setDrawValues(false);
-                                    dataSet2.setColor(Color.RED);
                                     dataSet2.setDrawCircles(false);
-                                    dataSet2.setDrawFilled(true);
-                                    dataSet2.setFillColor(Color.parseColor("#90FF0000"));
+                                    dataSet2.setColor(Color.RED);
+
+                                    LineData lineData = new LineData(dataSet2);
+                                    chart2.setData(lineData);
+                                    chart2.invalidate();
                                     dataSets.add(dataSet2);
                                 }
 
                                 if (lpgPriceHistory.size() > 0) {
                                     LineDataSet dataSet3 = new LineDataSet(lpgPriceHistory, getString(R.string.lpg)); // add entries to dataset
                                     dataSet3.setDrawValues(false);
-                                    dataSet3.setColor(Color.BLUE);
                                     dataSet3.setDrawCircles(false);
-                                    dataSet3.setDrawFilled(true);
-                                    dataSet3.setFillColor(Color.parseColor("#900000FF"));
+                                    dataSet3.setColor(Color.BLUE);
+
+                                    LineData lineData = new LineData(dataSet3);
+                                    chart3.setData(lineData);
+                                    chart3.invalidate();
                                     dataSets.add(dataSet3);
                                 }
 
                                 if (elecPriceHistory.size() > 0) {
                                     LineDataSet dataSet4 = new LineDataSet(elecPriceHistory, getString(R.string.electricity)); // add entries to dataset
                                     dataSet4.setDrawValues(false);
-                                    dataSet4.setColor(Color.GREEN);
                                     dataSet4.setDrawCircles(false);
-                                    dataSet4.setFillColor(Color.parseColor("#9000FF00"));
-                                    dataSet4.setDrawFilled(true);
+                                    dataSet4.setColor(Color.GREEN);
+
+                                    LineData lineData = new LineData(dataSet4);
+                                    chart4.setData(lineData);
+                                    chart4.invalidate();
                                     dataSets.add(dataSet4);
                                 }
 
-                                LineData lineData = new LineData(dataSets);
-                                chart.setData(lineData);
                                 GraphMarkerAdapter mv = new GraphMarkerAdapter(getActivity(), R.layout.popup_graph_marker, dataSets);
                                 chart.setMarker(mv);
-                                chart.invalidate(); // refresh
+                                chart2.setMarker(mv);
+                                chart3.setMarker(mv);
+                                chart4.setMarker(mv);
+
+                                String dummyLastText = getString(R.string.last_update) + " " + sdf2.format(sdf.parse(res.getJSONObject(0).getString("date")));
+                                lastUpdatedAvgPrice.setText(dummyLastText);
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }
@@ -390,7 +471,6 @@ public class FragmentNews extends Fragment {
     private void parseCompanies() {
         if (companyList != null && companyList.size() > 0) {
             for (int i = 0; i < companyList.size(); i++) {
-                totalVerified += companyList.get(i).getNumOfVerifieds();
                 totalStation += companyList.get(i).getNumOfStations();
 
                 if (companyList.get(i).getNumOfStations() >= 300) {
@@ -430,9 +510,9 @@ public class FragmentNews extends Fragment {
             PieData data = new PieData(dataSet);
             data.setValueTextSize(11f);
             data.setValueTextColor(Color.BLACK);
-            chart3.setData(data);
-            chart3.highlightValues(null);
-            chart3.invalidate();
+            pieChart.setData(data);
+            pieChart.highlightValues(null);
+            pieChart.invalidate();
 
             String dummy = getString(R.string.registered_station_number) + ": " + totalStation;
             textViewTotalNumber.setText(dummy);
@@ -445,7 +525,6 @@ public class FragmentNews extends Fragment {
     private void fetchCompanies() {
         companyList.clear();
         totalStation = 0;
-        totalVerified = 0;
         otherStations = 0;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),

@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -33,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -468,12 +468,10 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                     item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
                                     item.setVehicleEmission(obj.getInt("carbonEmission"));
                                     userAutomobileList.add(item);
+                                }
 
-                                    // If there is any selected auto, choose first one.
-                                    if (vehicleID == 0) {
-                                        chooseVehicle(item);
-                                    }
-                                    finish();
+                                if (vehicleID == 0) {
+                                    chooseVehicle(userAutomobileList.get(0));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -537,6 +535,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         editor.putInt("carbonEmission", carbonEmission);
 
         editor.apply();
+        finish();
     }
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {

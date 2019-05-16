@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.userUnit;
@@ -36,13 +38,10 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         public void onClick(View view) {
             ViewHolder holder = (ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
-
             Intent intent = new Intent(mContext, PurchaseDetails.class);
             intent.putExtra("PURCHASE_ID", feedItemList.get(position).getID());
-            intent.putExtra("STATION_NAME", feedItemList.get(position).getStationName());
-            intent.putExtra("STATION_ICON", feedItemList.get(position).getStationIcon());
-            intent.putExtra("STATION_LOC", feedItemList.get(position).getStationLocation());
-            intent.putExtra("PURCHASE_TIME", feedItemList.get(position).getPurchaseTime());
+            intent.putExtra("PLATE_NO", feedItemList.get(position).getPlateNo());
+            intent.putExtra("STATION_ID", feedItemList.get(position).getStationID());
             intent.putExtra("FUEL_TYPE_1", feedItemList.get(position).getFuelType());
             intent.putExtra("FUEL_PRICE_1", feedItemList.get(position).getFuelPrice());
             intent.putExtra("FUEL_LITER_1", feedItemList.get(position).getFuelLiter());
@@ -52,10 +51,10 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             intent.putExtra("FUEL_LITER_2", feedItemList.get(position).getFuelLiter2());
             intent.putExtra("FUEL_TAX_2", feedItemList.get(position).getFuelTax2());
             intent.putExtra("TOTAL_PRICE", feedItemList.get(position).getTotalPrice());
+            intent.putExtra("BONUS", feedItemList.get(position).getBonus());
             intent.putExtra("BILL_PHOTO", feedItemList.get(position).getBillPhoto());
             intent.putExtra("IS_PURCHASE_VERIFIED", feedItemList.get(position).getIsVerified());
-            intent.putExtra("PLATE_NO", feedItemList.get(position).getPlateNo());
-
+            intent.putExtra("PURCHASE_TIME", feedItemList.get(position).getPurchaseTime());
             mContext.startActivity(intent);
         }
     };
@@ -127,7 +126,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             }
 
             // AMOUNT 2
-            viewHolder.amount2.setText(feedItem.getFuelLiter2() + " " + userUnit);
+            viewHolder.amount2.setText(String.format(Locale.getDefault(), "%.1f", feedItem.getFuelLiter2()) + " " + userUnit);
 
             // PRICE 2
             String priceHolder2 = String.format(Locale.getDefault(), "%.2f", feedItem.getSubTotal2()) + " " + currencySymbol;
@@ -139,7 +138,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         // Bonus
-        String bonusHolder = "BONUS: " + String.format(Locale.getDefault(), "%.2f", feedItem.getBonus()) + " " + currencySymbol;
+        String bonusHolder = "BONUS: " + String.format(Locale.getDefault(), "%.2f", feedItem.getBonus()) + " FP";
         viewHolder.bonusText.setText(bonusHolder);
 
         //TotalPrice
@@ -160,6 +159,9 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             Glide.with(mContext).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);
         }
 
+        // Station Name
+        viewHolder.stationName.setText(feedItem.getStationName());
+
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);
         viewHolder.backgroundClick.setTag(viewHolder);
@@ -174,7 +176,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         RelativeLayout backgroundClick, type2Layout;
         TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text, bonusText;
-        ImageView stationLogo, type1, type2;
+        ImageView type1, type2;
+        CircleImageView stationLogo;
         RelativeTimeTextView purchaseTime;
 
         ViewHolder(View itemView) {

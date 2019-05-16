@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,7 @@ import com.bumptech.glide.request.target.Target;
 import com.fuelspot.Application;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
+import com.fuelspot.StationDetails;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -69,6 +71,8 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
@@ -288,6 +292,13 @@ public class FragmentMyStation extends Fragment {
                 });
                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                 googleMap.setInfoWindowAdapter(customInfoWindow);
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        StationItem infoWindowData = (StationItem) marker.getTag();
+                        openStation(infoWindowData);
+                    }
+                });
                 loadStationDetails();
             }
         });
@@ -401,6 +412,42 @@ public class FragmentMyStation extends Fragment {
             m.setTag(info);
         }
         m.showInfoWindow();
+    }
+
+    private void openStation(StationItem feedItemList) {
+        Intent intent = new Intent(getActivity(), StationDetails.class);
+        intent.putExtra("STATION_ID", feedItemList.getID());
+        intent.putExtra("STATION_NAME", feedItemList.getStationName());
+        intent.putExtra("STATION_VICINITY", feedItemList.getVicinity());
+        intent.putExtra("STATION_LOCATION", feedItemList.getLocation());
+        intent.putExtra("STATION_DISTANCE", feedItemList.getDistance());
+        intent.putExtra("STATION_LASTUPDATED", feedItemList.getLastUpdated());
+        intent.putExtra("STATION_GASOLINE", feedItemList.getGasolinePrice());
+        intent.putExtra("STATION_DIESEL", feedItemList.getDieselPrice());
+        intent.putExtra("STATION_LPG", feedItemList.getLpgPrice());
+        intent.putExtra("STATION_ELECTRIC", feedItemList.getElectricityPrice());
+        intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
+        intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
+        intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
+        showAds(intent);
+    }
+
+    private void showAds(Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            //Facebook ads doesnt loaded he will see AdMob
+            startActivity(intent);
+            admobInterstitial.show();
+            adCount++;
+            admobInterstitial = null;
+        } else {
+            // Ads doesn't loaded.
+            startActivity(intent);
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(getActivity(), getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
+        }
     }
 
     @Override

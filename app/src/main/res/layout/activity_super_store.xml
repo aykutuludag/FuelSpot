@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_doodle"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".StoreActivity">
+    tools:context=".superuser.SuperStoreActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -32,16 +32,19 @@
         <RelativeLayout
             android:id="@+id/layout_store"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
                 android:fontFamily="@font/gotham_bold"
-                android:text="@string/store"
+                android:text="@string/subscriptions"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <RelativeLayout
@@ -49,29 +52,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textView1"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/round_layout_white2"
+                android:elevation="4dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/double_range_photo"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/store_2x" />
 
                 <TextView
                     android:id="@+id/textView388"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_below="@id/double_range_photo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:text="@string/double_range"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textView399"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView388"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="@string/double_range_desc" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:text="@string/double_range_desc"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <Button
                     android:id="@+id/buttonPurchaseRange"
@@ -82,8 +104,10 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/green_box"
-                    android:padding="4dp"
-                    android:text="@string/start_subscription" />
+                    android:fontFamily="@font/gotham_book"
+                    android:text="@string/start_subscription"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -91,29 +115,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/double_range_layout"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/round_layout_white2"
+                android:elevation="4dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/premium_photo"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:src="@drawable/store_premium" />
 
                 <TextView
                     android:id="@+id/textView38"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_below="@+id/premium_photo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:text="@string/premium_version"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/textView39"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView38"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="@string/premium_version_desc" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:text="@string/premium_version_desc"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <Button
                     android:id="@+id/buttonPurchasePremium"
@@ -124,10 +168,11 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/green_box"
-                    android:padding="4dp"
-                    android:text="@string/start_subscription" />
+                    android:fontFamily="@font/gotham_book"
+                    android:text="@string/start_subscription"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
             </RelativeLayout>
-
         </RelativeLayout>
     </ScrollView>
 

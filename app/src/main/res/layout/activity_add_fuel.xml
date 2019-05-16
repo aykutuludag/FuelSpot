@@ -485,7 +485,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="Fiş fotoğrafı ekleyerek - FP bonus kazanabilirsiniz!"
+                    android:text="Fiş/Fatura fotoğrafı ekleyerek - FP bonus kazanabilirsiniz!"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="#161616" />
 

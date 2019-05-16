@@ -335,6 +335,7 @@ public class FragmentAutomobile extends Fragment {
                                     PurchaseItem item = new PurchaseItem();
                                     item.setID(obj.getInt("id"));
                                     item.setPurchaseTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("stationID"));
                                     item.setStationName(obj.getString("stationName"));
                                     item.setStationIcon(obj.getString("stationIcon"));
                                     item.setStationLocation(obj.getString("stationLocation"));

@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="42dp"
             android:background="@drawable/button_facebook"
             android:clickable="false"
             android:contentDescription="@string/loginWithSuperUser"

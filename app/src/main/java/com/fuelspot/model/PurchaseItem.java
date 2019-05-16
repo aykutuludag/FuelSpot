@@ -3,16 +3,17 @@ package com.fuelspot.model;
 public class PurchaseItem {
 
     private int ID;
+    private String plateNo;
+    private int kilometer;
+    private int stationID;
     private String stationName;
     private String stationIcon;
     private String stationLocation;
-    private String plateNo;
-    private String purchaseTime;
-    private int fuelType1;
-    private float fuelPrice1;
-    private float fuelLiter1;
-    private float fuelTax1;
-    private float subTotal1;
+    private int fuelType;
+    private float fuelPrice;
+    private float fuelLiter;
+    private float fuelTax;
+    private float subTotal;
     private int fuelType2;
     private float fuelPrice2;
     private float fuelLiter2;
@@ -22,7 +23,7 @@ public class PurchaseItem {
     private String billPhoto;
     private float bonus;
     private int isVerified;
-    private int kilometer;
+    private String purchaseTime;
 
     public int getID() {
         return ID;
@@ -30,6 +31,30 @@ public class PurchaseItem {
 
     public void setID(int id) {
         this.ID = id;
+    }
+
+    public String getPlateNo() {
+        return plateNo;
+    }
+
+    public void setPlateNo(String plateNo) {
+        this.plateNo = plateNo;
+    }
+
+    public int getKilometer() {
+        return kilometer;
+    }
+
+    public void setKilometer(int kilometer) {
+        this.kilometer = kilometer;
+    }
+
+    public int getStationID() {
+        return stationID;
+    }
+
+    public void setStationID(int stationID) {
+        this.stationID = stationID;
     }
 
     public String getStationName() {
@@ -56,60 +81,44 @@ public class PurchaseItem {
         this.stationLocation = stationLocation;
     }
 
-    public String getPlateNo() {
-        return plateNo;
-    }
-
-    public void setPlateNo(String plateNo) {
-        this.plateNo = plateNo;
-    }
-
-    public String getPurchaseTime() {
-        return purchaseTime;
-    }
-
-    public void setPurchaseTime(String purchaseTime) {
-        this.purchaseTime = purchaseTime;
-    }
-
     public int getFuelType() {
-        return fuelType1;
+        return fuelType;
     }
 
-    public void setFuelType(int fuelType1) {
-        this.fuelType1 = fuelType1;
+    public void setFuelType(int fuelType) {
+        this.fuelType = fuelType;
     }
 
     public float getFuelPrice() {
-        return fuelPrice1;
+        return fuelPrice;
     }
 
-    public void setFuelPrice(float fuelPrice1) {
-        this.fuelPrice1 = fuelPrice1;
+    public void setFuelPrice(float fuelPrice) {
+        this.fuelPrice = fuelPrice;
     }
 
     public float getFuelLiter() {
-        return fuelLiter1;
+        return fuelLiter;
     }
 
-    public void setFuelLiter(float fuelLiter1) {
-        this.fuelLiter1 = fuelLiter1;
+    public void setFuelLiter(float fuelLiter) {
+        this.fuelLiter = fuelLiter;
     }
 
     public float getFuelTax() {
-        return fuelTax1;
+        return fuelTax;
     }
 
-    public void setFuelTax(float fuelTax1) {
-        this.fuelTax1 = fuelTax1;
+    public void setFuelTax(float fuelTax) {
+        this.fuelTax = fuelTax;
     }
 
     public float getSubTotal() {
-        return subTotal1;
+        return subTotal;
     }
 
-    public void setSubTotal(float subTotal1) {
-        this.subTotal1 = subTotal1;
+    public void setSubTotal(float subTotal) {
+        this.subTotal = subTotal;
     }
 
     public int getFuelType2() {
@@ -184,11 +193,11 @@ public class PurchaseItem {
         this.isVerified = isVerified;
     }
 
-    public int getKilometer() {
-        return kilometer;
+    public String getPurchaseTime() {
+        return purchaseTime;
     }
 
-    public void setKilometer(int kilometer) {
-        this.kilometer = kilometer;
+    public void setPurchaseTime(String purchaseTime) {
+        this.purchaseTime = purchaseTime;
     }
 }

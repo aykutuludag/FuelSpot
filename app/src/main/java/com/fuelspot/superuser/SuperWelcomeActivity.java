@@ -15,12 +15,12 @@ import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.ExifInterface;
-import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -41,8 +42,10 @@ import android.widget.Toast;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -85,13 +88,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,7 +175,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private GoogleApiClient mGoogleApiClient;
     private TextView stationHint;
     private Spinner spinner;
-    private EditText editTextStationAddress;
+    private TextView textViewStationAddress;
     private EditText editTextStationLicense;
     private EditText editTextBirthday;
     private CircleImageView userPhoto;
@@ -184,7 +189,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private ProgressDialog loading0;
     private ProgressDialog loading;
     private GoogleMap googleMap;
-    private ScalableVideoView background;
     private CallbackManager callbackManager;
 
     @Override
@@ -199,21 +203,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         requestQueue = Volley.newRequestQueue(SuperWelcomeActivity.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-
-        //Load background and login layout
-        background = findViewById(R.id.animatedBackground);
-        try {
-            background.setRawData(R.raw.fuelspot);
-            background.setVolume(0f, 0f);
-            background.prepareAsync(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    background.start();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // Initialize map
         MapsInitializer.initialize(this.getApplicationContext());
@@ -349,7 +338,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 if (isNetworkConnected(SuperWelcomeActivity.this)) {
                     saveUserInfo();
                 } else {
-                    Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
                     prefs.edit().putBoolean("isSigned", false).apply();
                 }
             } else {
@@ -406,11 +395,11 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             if (isNetworkConnected(SuperWelcomeActivity.this)) {
                                 saveUserInfo();
                             } else {
-                                Snackbar.make(background, getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(android.R.id.content), getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
                                 prefs.edit().putBoolean("isSigned", false).apply();
                             }
                         } catch (JSONException e) {
-                            Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
                             prefs.edit().putBoolean("isSigned", false).apply();
                         }
                     }
@@ -429,7 +418,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
             @Override
             public void onError(FacebookException error) {
-                Snackbar.make(background, getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_login_fail), Snackbar.LENGTH_SHORT).show();
                 prefs.edit().putBoolean("isSigned", false).apply();
             }
         });
@@ -805,27 +794,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         spinner = findViewById(R.id.simpleSpinner);
 
-        editTextStationAddress = findViewById(R.id.superStationAddress);
-        editTextStationAddress.setText(superStationAddress);
-        editTextStationAddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    superStationAddress = s.toString();
-                    prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
-                }
-            }
-        });
+        textViewStationAddress = findViewById(R.id.superStationAddress);
+        textViewStationAddress.setText(superStationAddress);
 
         editTextStationLicense = findViewById(R.id.editTextLicense);
         editTextStationLicense.setText(superLicenseNo);
@@ -1008,9 +978,18 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         });
 
         termsAndConditions = findViewById(R.id.checkBoxTerms);
-        termsAndConditions.setText("");
-        termsAndConditions.setClickable(true);
         termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        termsAndConditions.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                    customTabsIntent.intent.setPackage("com.android.chrome");
+                    customTabsIntent.launchUrl(SuperWelcomeActivity.this, Uri.parse("https://fuelspot.com.tr/terms-and-conditions"));
+                }
+            }
+        });
 
         Button finishRegistration = findViewById(R.id.finishRegistration);
         finishRegistration.setOnClickListener(new View.OnClickListener() {
@@ -1163,10 +1142,12 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
                                 if (isStationVerified == 1) {
                                     stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                    stationHint.setText("Bu istasyon daha önce onaylanmış.");
+                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
                                 } else {
+                                    stationHint.setText("Şu anda istasyondasınız!");
                                     stationHint.setTextColor(Color.parseColor("#2DE778"));
                                 }
+                                addMarker();
                                 loadStationDetails();
                             } catch (JSONException e) {
                                 superStationName = "";
@@ -1175,6 +1156,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 superStationCountry = "";
                                 superLicenseNo = "";
                                 superStationLogo = "";
+                                stationHint.setText("");
                                 stationHint.setTextColor(Color.parseColor("#ff0000"));
                                 loadStationDetails();
                                 Toast.makeText(SuperWelcomeActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -1186,6 +1168,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             superStationCountry = "";
                             superLicenseNo = "";
                             superStationLogo = "";
+                            stationHint.setText("");
                             stationHint.setTextColor(Color.parseColor("#ff0000"));
                             loadStationDetails();
                         }
@@ -1200,6 +1183,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         superStationCountry = "";
                         superLicenseNo = "";
                         superStationLogo = "";
+                        stationHint.setText("");
                         stationHint.setTextColor(Color.parseColor("#ff0000"));
                         loadStationDetails();
 
@@ -1224,6 +1208,21 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         requestQueue.add(stringRequest);
     }
 
+    private void addMarker() {
+        // Add marker
+        String[] stationKonum = superStationLocation.split(";");
+        LatLng sydney = new LatLng(Double.parseDouble(stationKonum[0]), Double.parseDouble(stationKonum[1]));
+
+        MarkerOptions mOptions;
+        if (isStationVerified == 1) {
+            mOptions = new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
+        } else {
+            mOptions = new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
+        }
+        Marker m = googleMap.addMarker(mOptions);
+        m.showInfoWindow();
+    }
+
     private void loadStationDetails() {
         if (companyList != null && companyList.size() > 0) {
             CompanyAdapter customAdapter = new CompanyAdapter(SuperWelcomeActivity.this, companyList);
@@ -1242,7 +1241,11 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             fetchCompanies();
         }
 
-        editTextStationAddress.setText(superStationAddress);
+
+        textViewStationAddress.setText(superStationAddress);
+
+        editTextStationLicense.setFocusable(true);
+        editTextStationLicense.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         editTextStationLicense.setText(superLicenseNo);
     }
 
@@ -1273,7 +1276,17 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     companyList.add(item);
                                 }
 
+                                CompanyAdapter customAdapter = new CompanyAdapter(SuperWelcomeActivity.this, companyList);
+                                spinner.setEnabled(false);
+                                spinner.setClickable(false);
+                                spinner.setAdapter(customAdapter);
 
+                                for (int i = 0; i < companyList.size(); i++) {
+                                    if (companyList.get(i).getName().equals(superStationName)) {
+                                        spinner.setSelection(i, true);
+                                        break;
+                                    }
+                                }
                             } catch (JSONException e) {
                                 Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
                             }
@@ -1338,6 +1351,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 //Adding parameters
                 params.put("stationID", String.valueOf(superStationID));
                 params.put("licenseNo", superLicenseNo);
+                params.put("address", superStationAddress);
                 params.put("owner", username);
                 params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 

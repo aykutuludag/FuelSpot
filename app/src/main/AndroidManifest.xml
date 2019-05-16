@@ -144,7 +144,6 @@
             android:label="@string/title_activity_report_missing_station"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
         <!-- SuperUser Class -->
         <activity
             android:name=".superuser.SuperWelcomeActivity"
@@ -182,7 +181,6 @@
             android:parentActivityName=".superuser.SuperMainActivity"
             android:screenOrientation="portrait" />
 
-
         <!-- AlarmReceiver -->
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
@@ -195,10 +193,14 @@
             <intent-filter>
                 <action android:name="com.fuelspot.FENCE_RECEIVER_ACTION" />
             </intent-filter>
-        </receiver> <!-- AdMob -->
+        </receiver>
+
+        <!-- AdMob -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admobAppId" /> <!-- Facebook -->
+            android:value="@string/admobAppId" />
+
+        <!-- Facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -218,7 +220,9 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity> <!-- Google Maps && PlaceAutoComplete && Awareness -->
+        </activity>
+
+        <!-- Google Maps && PlaceAutoComplete && Awareness -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -227,7 +231,9 @@
             android:value="@string/google_key" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/google_key" /> <!-- Firebase -->
+            android:value="@string/google_key" />
+
+        <!-- Firebase -->
         <service
             android:name=".service.MyFirebaseMessagingService"
             android:exported="false">
@@ -241,7 +247,9 @@
             android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" /> <!-- FileProvider -->
+            android:resource="@color/colorAccent" />
+
+        <!-- FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

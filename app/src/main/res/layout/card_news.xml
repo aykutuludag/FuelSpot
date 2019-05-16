@@ -31,9 +31,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/newsBackground"
                 android:layout_alignParentEnd="true"
-                android:background="#fff"
+                android:background="#f4f4f4"
                 android:padding="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
 
             <TextView
                 android:id="@+id/txt_text"
@@ -42,7 +44,9 @@
                 android:layout_below="@id/newsBackground"
                 android:gravity="center"
                 android:padding="2dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

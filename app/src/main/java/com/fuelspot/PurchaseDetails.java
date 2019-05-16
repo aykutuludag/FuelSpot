@@ -8,21 +8,25 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,11 +35,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.fuelspot.adapter.MarkerAdapter;
+import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -44,12 +54,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -67,10 +83,13 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 
 public class PurchaseDetails extends AppCompatActivity {
 
@@ -78,16 +97,18 @@ public class PurchaseDetails extends AppCompatActivity {
     private MapView mMapView;
     private GoogleMap googleMap;
     private int purchaseID;
+    Button addBillPhotoButton;
     private int isPurchaseVerified;
-    private String stationName;
-    private String stationLocation;
     private String plakaNo;
-
+    RequestQueue requestQueue;
+    FloatingActionButton fab;
     private ImageView fatura;
-    private RelativeTimeTextView tarih;
     private Bitmap bitmap;
     private Toolbar toolbar;
     private Window window;
+    StationItem info = new StationItem();
+    ImageView istasyonLogo;
+    private int stationID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,15 +133,15 @@ public class PurchaseDetails extends AppCompatActivity {
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
+        requestQueue = Volley.newRequestQueue(this);
         mMapView = findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
+        // Variables from Intent
         purchaseID = getIntent().getIntExtra("PURCHASE_ID", 0);
-        stationName = getIntent().getStringExtra("STATION_NAME");
-        String iconURL = getIntent().getStringExtra("STATION_ICON");
-        stationLocation = getIntent().getStringExtra("STATION_LOC");
-        String purchaseTime = getIntent().getStringExtra("PURCHASE_TIME");
+        plakaNo = getIntent().getStringExtra("PLATE_NO");
+        stationID = getIntent().getIntExtra("STATION_ID", 0);
         int fuelType1 = getIntent().getIntExtra("FUEL_TYPE_1", -1);
         int fuelType2 = getIntent().getIntExtra("FUEL_TYPE_2", -1);
         String billPhoto = getIntent().getStringExtra("BILL_PHOTO");
@@ -131,10 +152,12 @@ public class PurchaseDetails extends AppCompatActivity {
         float fuelTax1 = getIntent().getFloatExtra("FUEL_TAX_1", 0);
         float fuelTax2 = getIntent().getFloatExtra("FUEL_TAX_2", 0);
         float totalPrice = getIntent().getFloatExtra("TOTAL_PRICE", 0);
-        plakaNo = getIntent().getStringExtra("PLATE_NO");
+        float bonus = getIntent().getFloatExtra("BONUS", 0);
         isPurchaseVerified = getIntent().getIntExtra("IS_PURCHASE_VERIFIED", 0);
+        String purchaseTime = getIntent().getStringExtra("PURCHASE_TIME");
+        // Variables from Intent
 
-        ImageView istasyonLogo = findViewById(R.id.imageViewStationLogo);
+        istasyonLogo = findViewById(R.id.imageViewStationLogo);
         CircleImageView circleImageViewStatus = findViewById(R.id.statusIcon);
         TextView textViewStatus = findViewById(R.id.statusText);
         fatura = findViewById(R.id.billPhoto);
@@ -148,17 +171,41 @@ public class PurchaseDetails extends AppCompatActivity {
         TextView litre2 = findViewById(R.id.amount2);
         TextView vergi = findViewById(R.id.totalTax);
         TextView toplamfiyat = findViewById(R.id.totalPrice);
-        tarih = findViewById(R.id.purchaseTime);
+        RelativeTimeTextView tarih = findViewById(R.id.purchaseTime);
 
-        options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Satın alma silinecek", Snackbar.LENGTH_LONG)
+                        .setAction("SİL", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (isPurchaseVerified == 1) {
+                                    Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                                } else {
+                                    deletePurchase();
+                                }
+                            }
+                        }).show();
+            }
+        });
+
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
-        Glide.with(this).load(billPhoto).apply(options).into(fatura);
-        fatura.setOnClickListener(new View.OnClickListener() {
+        if (billPhoto != null && billPhoto.length() > 0) {
+            fatura.setVisibility(View.VISIBLE);
+            Glide.with(this).load(billPhoto).apply(options).into(fatura);
+        } else {
+            fatura.setVisibility(View.GONE);
+        }
+
+        addBillPhotoButton = findViewById(R.id.button_add_bill);
+        addBillPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isPurchaseVerified == 1) {
-                    Toast.makeText(PurchaseDetails.this, "Onaylanmış siparişlerde değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
                 } else {
                     if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
                         ImagePicker.cameraOnly().start(PurchaseDetails.this);
@@ -171,18 +218,19 @@ public class PurchaseDetails extends AppCompatActivity {
 
         if (isPurchaseVerified == 1) {
             circleImageViewStatus.setBackgroundResource(R.drawable.verified);
-            textViewStatus.setText("Satın alma onaylandı! Bonus hesabınıza yansıtılmıştır.");
+            textViewStatus.setText("Satın alma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
+            fab.hide();
+            addBillPhotoButton.setVisibility(View.GONE);
         } else {
             if (billPhoto != null && billPhoto.length() > 0) {
                 circleImageViewStatus.setBackgroundResource(R.drawable.question);
-                textViewStatus.setText("Satın alma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+                textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
             } else {
                 circleImageViewStatus.setBackgroundResource(R.drawable.money);
-                textViewStatus.setText("Bonus kazanmak için fiş/fatura fotoğrafı ekle!");
+                textViewStatus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus kazanabilirsiniz!");
             }
         }
 
-        Glide.with(this).load(iconURL).into(istasyonLogo);
         switch (fuelType1) {
             case 0:
                 Glide.with(this).load(R.drawable.gasoline).into(tur1);
@@ -229,9 +277,8 @@ public class PurchaseDetails extends AppCompatActivity {
             litre2.setVisibility(View.GONE);
         }
 
-        float tax1 = fuelPrice1 * fuelLiter1 * fuelTax1;
-        float tax2 = fuelPrice2 * fuelLiter2 * fuelTax2;
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", tax1 + tax2) + " " + currencySymbol;
+
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", fuelTax1 + fuelTax2) + " " + currencySymbol;
         vergi.setText(taxHolder);
 
         String totalHolder = "TOPLAM : " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencySymbol;
@@ -245,23 +292,6 @@ public class PurchaseDetails extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Satın alma silinecek", Snackbar.LENGTH_LONG)
-                        .setAction("SİL", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (isPurchaseVerified == 1) {
-                                    Toast.makeText(PurchaseDetails.this, "Onaylanmış siparişlerde değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
-                                } else {
-                                    deletePurchase();
-                                }
-                            }
-                        }).show();
-            }
-        });
 
         checkLocationPermission();
     }
@@ -282,19 +312,153 @@ public class PurchaseDetails extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                LatLng mStationLoc = new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1]));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mStationLoc).zoom(16f).build();
-                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition
-                        (cameraPosition));
-                googleMap.addMarker(new MarkerOptions().position(mStationLoc).title(stationName).snippet(tarih.getText().toString()));
-                //Draw a circle with radius of mapDefaultRange
-                googleMap.addCircle(new CircleOptions()
-                        .center(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])))
-                        .radius(mapDefaultStationRange)
-                        .fillColor(0x220000FF)
-                        .strokeColor(Color.parseColor("#FF5635")));
+                MarkerAdapter customInfoWindow = new MarkerAdapter(PurchaseDetails.this);
+                googleMap.setInfoWindowAdapter(customInfoWindow);
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        StationItem infoWindowData = (StationItem) marker.getTag();
+                        openStation(infoWindowData);
+                    }
+                });
+                fetchStation(stationID);
             }
         });
+    }
+
+    private void fetchStation(final int stationID) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray res = new JSONArray(response);
+                            JSONObject obj = res.getJSONObject(0);
+
+                            info.setID(obj.getInt("id"));
+                            info.setStationName(obj.getString("name"));
+                            info.setVicinity(obj.getString("vicinity"));
+                            info.setCountryCode(obj.getString("country"));
+                            info.setLocation(obj.getString("location"));
+                            info.setGoogleMapID(obj.getString("googleID"));
+                            info.setFacilities(obj.getString("facilities"));
+                            info.setLicenseNo(obj.getString("licenseNo"));
+                            info.setOwner(obj.getString("owner"));
+                            info.setPhotoURL(obj.getString("logoURL"));
+                            info.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                            info.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                            info.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                            info.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                            info.setIsVerified(obj.getInt("isVerified"));
+                            info.setLastUpdated(obj.getString("lastUpdated"));
+
+                            Glide.with(PurchaseDetails.this).load(info.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    info.setStationLogoDrawable(resource);
+                                    return false;
+                                }
+                            }).into(istasyonLogo);
+
+                            // We are waiting for loading logos
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    addMarker();
+                                }
+                            }, 750);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(PurchaseDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("stationID", String.valueOf(stationID));
+                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void addMarker() {
+        Marker m;
+        LatLng sydney = new LatLng(Double.parseDouble(info.getLocation().split(";")[0]), Double.parseDouble(info.getLocation().split(";")[1]));
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.addCircle(new CircleOptions()
+                .center(sydney)
+                .radius(mapDefaultStationRange)
+                .fillColor(0x220000FF)
+                .strokeColor(Color.parseColor("#FF5635")));
+
+        if (isStationVerified == 1) {
+            MarkerOptions mOptions = new MarkerOptions().position(sydney).title(info.getStationName()).snippet(info.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
+            m = googleMap.addMarker(mOptions);
+            m.setTag(info);
+        } else {
+            MarkerOptions mOptions = new MarkerOptions().position(sydney).title(info.getStationName()).snippet(info.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
+            m = googleMap.addMarker(mOptions);
+            m.setTag(info);
+        }
+        m.showInfoWindow();
+    }
+
+    private void openStation(StationItem feedItemList) {
+        Intent intent = new Intent(PurchaseDetails.this, StationDetails.class);
+        intent.putExtra("STATION_ID", feedItemList.getID());
+        intent.putExtra("STATION_NAME", feedItemList.getStationName());
+        intent.putExtra("STATION_VICINITY", feedItemList.getVicinity());
+        intent.putExtra("STATION_LOCATION", feedItemList.getLocation());
+        intent.putExtra("STATION_DISTANCE", feedItemList.getDistance());
+        intent.putExtra("STATION_LASTUPDATED", feedItemList.getLastUpdated());
+        intent.putExtra("STATION_GASOLINE", feedItemList.getGasolinePrice());
+        intent.putExtra("STATION_DIESEL", feedItemList.getDieselPrice());
+        intent.putExtra("STATION_LPG", feedItemList.getLpgPrice());
+        intent.putExtra("STATION_ELECTRIC", feedItemList.getElectricityPrice());
+        intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
+        intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
+        intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
+        showAds(intent);
+    }
+
+    private void showAds(Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            //Facebook ads doesnt loaded he will see AdMob
+            startActivity(intent);
+            admobInterstitial.show();
+            adCount++;
+            admobInterstitial = null;
+        } else {
+            // Ads doesn't loaded.
+            startActivity(intent);
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(PurchaseDetails.this, getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
+        }
     }
 
     private void deletePurchase() {
@@ -337,7 +501,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -351,22 +515,23 @@ public class PurchaseDetails extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(PurchaseDetails.this, "Satın alma güncellendi...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PurchaseDetails.this, "Satınalma güncellendi...", Toast.LENGTH_LONG).show();
                                     finish();
                                     break;
                                 case "Fail":
-                                    Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz...", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(PurchaseDetails.this, "An error occured. Try again later...", Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
+                        Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz....", Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -494,6 +659,7 @@ public class PurchaseDetails extends AppCompatActivity {
                             break;
                     }
                     Glide.with(this).load(bitmap).apply(options).into(fatura);
+                    fatura.setVisibility(View.VISIBLE);
                     updatePurchase();
                 } catch (IOException e) {
                     e.printStackTrace();
