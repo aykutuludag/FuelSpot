@@ -514,7 +514,7 @@ public class FragmentNews extends Fragment {
             pieChart.highlightValues(null);
             pieChart.invalidate();
 
-            String dummy = getString(R.string.registered_station_number) + ": " + totalStation;
+            String dummy = getString(R.string.registered_station_number) + " " + totalStation;
             textViewTotalNumber.setText(dummy);
         } else {
             // Somehow companList didn't fetch at MainActivity or SuperMainActivity. Fetch it.

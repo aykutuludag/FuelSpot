@@ -23,7 +23,7 @@
                 <RelativeLayout
                     android:id="@+id/header_vehicle"
                     android:layout_width="match_parent"
-                    android:layout_height="324dp">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/updateCarInfo"
@@ -231,9 +231,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/header_vehicle"
-                    android:layout_marginTop="-24dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/round_layout"
-                    android:elevation="8dp">
+                    android:elevation="4dp">
 
                     <TextView
                         android:id="@+id/purchaseTitle"
@@ -311,16 +311,41 @@
                 android:id="@+id/userNoCarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/round_layout_white2"
+                android:padding="16dp"
                 android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/dummy"
-                    android:contentDescription="@string/add_vehicle" />
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="@string/do_you_have_car"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#161616" />
+
+                <Button
+                    android:id="@+id/buttonAddCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView4"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/green_box"
+                    android:padding="4dp"
+                    android:text="@string/add_vehicle"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

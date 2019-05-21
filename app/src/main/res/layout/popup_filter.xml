@@ -36,13 +36,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewx"
-        android:layout_margin="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/gotham_bold"
         android:gravity="center"
-        android:text="İstasyondaki tesislere göre filtreleme yaparak aradığını çok daha kolay bulabilirsin!" />
+        android:text="İstasyondaki tesislere göre filtreleme yaparak aradığını çok daha kolay bulabilirsin!"
+        android:textAlignment="center"
+        android:textColor="#161616" />
 
     <RelativeLayout
         android:id="@+id/checkBoxLayout"
@@ -60,27 +62,39 @@
                 android:id="@+id/checkBox2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:padding="2dp"
-                android:text="@string/wc" />
+                android:text="@string/wc"
+                android:textColor="#161616" />
 
             <CheckBox
                 android:id="@+id/checkBox3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@id/checkBox2"
                 android:padding="2dp"
-                android:text="@string/market" />
+                android:text="@string/market"
+                android:textColor="#161616" />
 
             <CheckBox
                 android:id="@+id/checkBox4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@id/checkBox3"
                 android:padding="2dp"
-                android:text="@string/carwash" />
+                android:text="@string/carwash"
+                android:textColor="#161616" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -94,27 +108,39 @@
                 android:id="@+id/checkBox5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:padding="2dp"
-                android:text="@string/tire_store" />
+                android:text="@string/tire_store"
+                android:textColor="#161616" />
 
             <CheckBox
                 android:id="@+id/checkBox6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@id/checkBox5"
                 android:padding="2dp"
-                android:text="@string/mechanic" />
+                android:text="@string/mechanic"
+                android:textColor="#161616" />
 
             <CheckBox
                 android:id="@+id/checkBox7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@id/checkBox6"
                 android:padding="2dp"
-                android:text="@string/restaurant" />
+                android:text="@string/restaurant"
+                android:textColor="#161616" />
 
         </RelativeLayout>
 
@@ -129,27 +155,39 @@
                 android:id="@+id/checkBox8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:padding="2dp"
-                android:text="@string/parkspot" />
+                android:text="@string/parkspot"
+                android:textColor="#161616" />
 
             <CheckBox
                 android:id="@+id/checkBox9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@id/checkBox8"
                 android:padding="2dp"
-                android:text="@string/atm" />
+                android:text="@string/atm"
+                android:textColor="#161616" />
 
             <CheckBox
                 android:id="@+id/checkBox10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_toEndOf="@id/checkBox9"
                 android:padding="2dp"
-                android:text="@string/motel" />
+                android:text="@string/motel"
+                android:textColor="#161616" />
         </RelativeLayout>
 
         <TextView
@@ -163,7 +201,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/gotham_bold"
-            android:text="Bütün istasyonları görüntülemek için filtreleri kaldır" />
+            android:text="Bütün istasyonları görüntülemek için filtreleri kaldır"
+            android:textAlignment="center"
+            android:textColor="#161616" />
 
     </RelativeLayout>
 

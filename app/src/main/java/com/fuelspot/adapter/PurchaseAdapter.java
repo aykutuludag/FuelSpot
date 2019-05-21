@@ -79,19 +79,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         // FUEL TYPE 1
         switch (feedItem.getFuelType()) {
             case 0:
-                Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.fuel_gasoline).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.gasoline));
                 break;
             case 1:
-                Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.fuel_diesel).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.diesel));
                 break;
             case 2:
-                Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.fuel_lpg).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.lpg));
                 break;
             case 3:
-                Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type1);
+                Glide.with(mContext).load(R.drawable.fuel_electricity).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.electricity));
                 break;
         }
@@ -108,19 +108,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             // FUEL TYPE 2
             switch (feedItem.getFuelType2()) {
                 case 0:
-                    Glide.with(mContext).load(R.drawable.gasoline).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.fuel_gasoline).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.gasoline));
                     break;
                 case 1:
-                    Glide.with(mContext).load(R.drawable.diesel).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.fuel_diesel).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.diesel));
                     break;
                 case 2:
-                    Glide.with(mContext).load(R.drawable.lpg).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.fuel_lpg).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.lpg));
                     break;
                 case 3:
-                    Glide.with(mContext).load(R.drawable.electricity).into(viewHolder.type2);
+                    Glide.with(mContext).load(R.drawable.fuel_electricity).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.electricity));
                     break;
             }

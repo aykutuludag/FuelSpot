@@ -84,7 +84,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     private IInAppBillingService mService;
     private ServiceConnection mServiceConn;
     private FragNavController mFragNavController;
-    private AHBottomNavigation bottomNavigation;
+    public AHBottomNavigation bottomNavigation;
     private List<Fragment> fragments = new ArrayList<>(5);
     public MenuItem filterButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();

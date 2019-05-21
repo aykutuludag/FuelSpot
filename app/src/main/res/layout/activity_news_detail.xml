@@ -10,7 +10,7 @@
         <ImageView
             android:id="@+id/newsCover"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             app:srcCompat="@drawable/default_news" />
 
         <com.github.curioustechizen.ago.RelativeTimeTextView
@@ -19,10 +19,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/newsCover"
             android:layout_alignParentEnd="true"
-            android:background="#fff"
+            android:background="#f0f0f0"
             android:padding="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#212121" />
+            android:textColor="#161616" />
 
         <TextView
             android:id="@+id/newsTitle"
@@ -61,13 +61,13 @@
 
         <TextView
             android:id="@+id/newsSource"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/dummyText"
             android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="48dp"
             android:fontFamily="@font/gotham_book"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#0000EE" />

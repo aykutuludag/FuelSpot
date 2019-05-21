@@ -321,7 +321,7 @@
                     android:contentDescription="@string/type"
                     android:padding="4dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:srcCompat="@drawable/lpg" />
+                    app:srcCompat="@drawable/fuel_lpg" />
 
                 <TextView
                     android:id="@+id/fuelType2Text"
@@ -332,7 +332,7 @@
                     android:layout_toEndOf="@+id/fuelType2"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="LPG"
+                    android:text="@string/lpg"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <androidx.percentlayout.widget.PercentRelativeLayout

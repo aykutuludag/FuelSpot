@@ -1283,7 +1283,7 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (benzinFiyat[0] != 0 || dizelFiyat[0] != 0 || LPGFiyat[0] != 0 || ElektrikFiyat[0] != 0) {
-                    pricesArray[0] = "PRICES: { gasoline= " + benzinFiyat[0] + ", diesel= " + dizelFiyat[0] + ", lpg= " + LPGFiyat[0] + ", electricity= " + ElektrikFiyat[0] + " }";
+                    pricesArray[0] = "PRICES: { fuel_gasoline= " + benzinFiyat[0] + ", fuel_diesel= " + dizelFiyat[0] + ", fuel_lpg= " + LPGFiyat[0] + ", fuel_electricity= " + ElektrikFiyat[0] + " }";
                     if (bitmap != null) {
                         sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", pricesArray[0], bitmap);
                     } else {

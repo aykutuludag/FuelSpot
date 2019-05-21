@@ -402,7 +402,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice = gasolinePrice;
                 selectedTaxRate = TAX_GASOLINE;
                 fuelType = getString(R.string.gasoline);
-                Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType1Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_gasoline).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
                 break;
@@ -410,7 +410,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice = dieselPrice;
                 selectedTaxRate = TAX_DIESEL;
                 fuelType = getString(R.string.diesel);
-                Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType1Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_diesel).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
                 break;
@@ -418,7 +418,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice = LPGPrice;
                 selectedTaxRate = TAX_LPG;
                 fuelType = getString(R.string.lpg);
-                Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType1Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_lpg).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
                 break;
@@ -426,7 +426,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice = electricityPrice;
                 selectedTaxRate = TAX_ELECTRICITY;
                 fuelType = getString(R.string.electricity);
-                Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType1Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_electricity).apply(options).into(fuelType1Icon);
 
                 expandableLayoutYakit.setVisibility(View.VISIBLE);
                 break;
@@ -444,7 +444,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice2 = gasolinePrice;
                 selectedTaxRate2 = TAX_GASOLINE;
                 fuelType2 = getString(R.string.gasoline);
-                Glide.with(AddFuel.this).load(R.drawable.gasoline).apply(options).into(fuelType2Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_gasoline).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
                 break;
@@ -452,7 +452,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice2 = dieselPrice;
                 selectedTaxRate2 = TAX_DIESEL;
                 fuelType2 = getString(R.string.diesel);
-                Glide.with(AddFuel.this).load(R.drawable.diesel).apply(options).into(fuelType2Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_diesel).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
                 break;
@@ -460,7 +460,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice2 = LPGPrice;
                 selectedTaxRate2 = TAX_LPG;
                 fuelType2 = getString(R.string.lpg);
-                Glide.with(AddFuel.this).load(R.drawable.lpg).apply(options).into(fuelType2Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_lpg).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
                 break;
@@ -468,7 +468,7 @@ public class AddFuel extends AppCompatActivity {
                 selectedUnitPrice2 = electricityPrice;
                 selectedTaxRate2 = TAX_ELECTRICITY;
                 fuelType2 = getString(R.string.electricity);
-                Glide.with(AddFuel.this).load(R.drawable.electricity).apply(options).into(fuelType2Icon);
+                Glide.with(AddFuel.this).load(R.drawable.fuel_electricity).apply(options).into(fuelType2Icon);
 
                 expandableLayoutYakit2.setVisibility(View.VISIBLE);
                 break;

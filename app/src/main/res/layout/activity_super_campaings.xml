@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/button_add_campaign"
                 android:layout_centerHorizontal="true"
-                android:fontFamily="@font/gotham_bold"
+                android:fontFamily="@font/gotham_black"
                 android:text="@string/old_campaigns"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#161616" />

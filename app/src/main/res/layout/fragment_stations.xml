@@ -73,7 +73,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="4dp"
                             android:contentDescription="@string/gasoline"
-                            android:src="@drawable/gasoline"
+                            android:src="@drawable/fuel_gasoline"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                         <TextView
@@ -107,7 +107,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="4dp"
                             android:contentDescription="@string/diesel"
-                            android:src="@drawable/diesel"
+                            android:src="@drawable/fuel_diesel"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                         <TextView
@@ -141,7 +141,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="4dp"
                             android:contentDescription="@string/lpg"
-                            android:src="@drawable/lpg"
+                            android:src="@drawable/fuel_lpg"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                         <TextView
@@ -175,7 +175,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="4dp"
                             android:contentDescription="@string/electricity"
-                            android:src="@drawable/electricity"
+                            android:src="@drawable/fuel_electricity"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                         <TextView

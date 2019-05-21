@@ -44,6 +44,7 @@ import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.receiver.AlarmReceiver;
+import com.fuelspot.superuser.SuperMainActivity;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -454,6 +455,12 @@ public class FragmentStations extends Fragment {
                                 // Sort by distnce
                                 whichOrder = 4;
                                 sortBy(whichOrder);
+
+                                if (isSuperUser) {
+                                    ((SuperMainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 0);
+                                } else {
+                                    ((MainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 0);
+                                }
                             } catch (JSONException e) {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }

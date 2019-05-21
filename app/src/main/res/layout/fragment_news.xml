@@ -29,12 +29,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:padding="4dp"
+                    android:padding="2dp"
                     android:text="@string/latest_news"
+                    android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -42,7 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_News"
-                    android:layout_margin="4dp" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp" />
             </RelativeLayout>
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -71,13 +71,19 @@
 
                 <TextView
                     android:id="@+id/title_stats"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_margin="4dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:padding="4dp"
+                    android:padding="2dp"
                     android:text="@string/stats"
+                    android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <TextView
@@ -86,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_stats"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:fontFamily="@font/gotham_bold"
                     android:padding="4dp"
                     android:text="@string/price_index"
@@ -126,7 +132,8 @@
                     android:layout_below="@id/chartAveragePriceElectricity"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
 
                 <TextView
                     android:id="@+id/subtitle1"

@@ -222,27 +222,26 @@ public class PurchaseDetails extends AppCompatActivity {
             fab.hide();
             addBillPhotoButton.setVisibility(View.GONE);
         } else {
+            circleImageViewStatus.setBackgroundResource(R.drawable.money);
             if (billPhoto != null && billPhoto.length() > 0) {
-                circleImageViewStatus.setBackgroundResource(R.drawable.question);
                 textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
             } else {
-                circleImageViewStatus.setBackgroundResource(R.drawable.money);
                 textViewStatus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus kazanabilirsiniz!");
             }
         }
 
         switch (fuelType1) {
             case 0:
-                Glide.with(this).load(R.drawable.gasoline).into(tur1);
+                Glide.with(this).load(R.drawable.fuel_gasoline).into(tur1);
                 break;
             case 1:
-                Glide.with(this).load(R.drawable.diesel).into(tur1);
+                Glide.with(this).load(R.drawable.fuel_diesel).into(tur1);
                 break;
             case 2:
-                Glide.with(this).load(R.drawable.lpg).into(tur1);
+                Glide.with(this).load(R.drawable.fuel_lpg).into(tur1);
                 break;
             case 3:
-                Glide.with(this).load(R.drawable.electricity).into(tur1);
+                Glide.with(this).load(R.drawable.fuel_electricity).into(tur1);
                 break;
         }
         birimFiyat1.setText(fuelPrice1 + " " + currencySymbol);
@@ -254,16 +253,16 @@ public class PurchaseDetails extends AppCompatActivity {
         if (fuelType2 != -1) {
             switch (fuelType2) {
                 case 0:
-                    Glide.with(this).load(R.drawable.gasoline).into(tur2);
+                    Glide.with(this).load(R.drawable.fuel_gasoline).into(tur2);
                     break;
                 case 1:
-                    Glide.with(this).load(R.drawable.diesel).into(tur2);
+                    Glide.with(this).load(R.drawable.fuel_diesel).into(tur2);
                     break;
                 case 2:
-                    Glide.with(this).load(R.drawable.lpg).into(tur2);
+                    Glide.with(this).load(R.drawable.fuel_lpg).into(tur2);
                     break;
                 case 3:
-                    Glide.with(this).load(R.drawable.electricity).into(tur2);
+                    Glide.with(this).load(R.drawable.fuel_electricity).into(tur2);
                     break;
             }
             birimFiyat2.setText(fuelPrice2 + " " + currencySymbol);

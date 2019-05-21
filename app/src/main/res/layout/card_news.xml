@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/round_layout2"
-        card_view:cardCornerRadius="16dp"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -21,9 +22,9 @@
             <ImageView
                 android:id="@+id/newsBackground"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/photo_placeholder" />
+                android:src="@drawable/default_news" />
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/newsPublished"
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/newsBackground"
                 android:layout_alignParentEnd="true"
-                android:background="#f4f4f4"
+                android:background="#f0f0f0"
                 android:padding="4dp"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -42,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/newsBackground"
+                android:fontFamily="@font/gotham_black"
                 android:gravity="center"
                 android:padding="2dp"
                 android:textAlignment="center"

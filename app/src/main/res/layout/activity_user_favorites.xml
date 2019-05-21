@@ -29,5 +29,4 @@
         tools:context=".UserFavorites"
         tools:showIn="@layout/activity_user_favorites" />
 
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -54,7 +54,9 @@
                 android:layout_marginBottom="4dp"
                 android:gravity="center"
                 android:text="Haritadan istasyonun konumunu işaretleyiniz."
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
             <TextView
                 android:id="@+id/textView04"
@@ -91,16 +93,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/spinner"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="16dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/green_box"
                 android:fontFamily="@font/gotham_medium"
                 android:padding="4dp"
-                android:text="Gönder"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:text="@string/send_report"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
 
         </RelativeLayout>
 

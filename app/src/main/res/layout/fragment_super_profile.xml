@@ -18,8 +18,7 @@
             <RelativeLayout
                 android:id="@+id/header_super_profile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/updateUserInfo"
@@ -61,8 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/userUsername"
-                    android:layout_marginTop="8dp"
-                    android:padding="2dp">
+                    android:layout_marginTop="8dp">
 
                     <Button
                         android:id="@+id/button_fav"
@@ -71,6 +69,7 @@
                         android:background="@drawable/round_layout_white2"
                         android:text="@string/favorites"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="#161616"
                         app:layout_marginPercent="1.33%"
                         app:layout_widthPercent="32%" />
 
@@ -82,7 +81,7 @@
                         android:background="@drawable/round_layout_white2"
                         android:text="@string/store"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColor="#212121"
+                        android:textColor="#161616"
                         app:layout_marginPercent="1.33%"
                         app:layout_widthPercent="32%" />
 
@@ -94,6 +93,7 @@
                         android:background="@drawable/round_layout_white2"
                         android:text="@string/help"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="#161616"
                         app:layout_marginPercent="1.34%"
                         app:layout_widthPercent="32%" />
 
@@ -120,7 +120,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/tab_stations"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                    android:textColor="#212121" />
+                    android:textColor="#161616" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/stationViewAdmin"
@@ -136,7 +136,7 @@
                     android:layout_below="@id/stationViewAdmin"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/green_box"
                     android:fontFamily="@font/gotham_medium"
                     android:padding="4dp"

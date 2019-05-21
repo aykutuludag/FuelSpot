@@ -87,6 +87,7 @@ public class FragmentAutomobile extends Fragment {
     private View view;
     private RelativeLayout regularLayout;
     private RelativeLayout noAracLayout;
+    Button addAutomobileButton;
     private SwipeRefreshLayout swipeContainer;
 
     public static FragmentAutomobile newInstance() {
@@ -116,6 +117,7 @@ public class FragmentAutomobile extends Fragment {
 
             regularLayout = view.findViewById(R.id.userRegularLayout);
             noAracLayout = view.findViewById(R.id.userNoCarLayout);
+
             userNoPurchaseLayout = view.findViewById(R.id.noPurchaseLayout);
             requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -161,17 +163,20 @@ public class FragmentAutomobile extends Fragment {
             if (userAutomobileList != null && userAutomobileList.size() > 0) {
                 noAracLayout.setVisibility(View.GONE);
                 regularLayout.setVisibility(View.VISIBLE);
+
                 loadVehicleProfile();
             } else {
                 noAracLayout.setVisibility(View.VISIBLE);
-                noAracLayout.setOnClickListener(new View.OnClickListener() {
+                regularLayout.setVisibility(View.GONE);
+
+                addAutomobileButton = view.findViewById(R.id.buttonAddCar);
+                addAutomobileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), AddAutomobile.class);
                         startActivity(intent);
                     }
                 });
-                regularLayout.setVisibility(View.GONE);
             }
         }
         return view;
@@ -208,19 +213,19 @@ public class FragmentAutomobile extends Fragment {
         switch (fuelPri) {
             case 0:
                 fuelText = getString(R.string.gasoline);
-                fuelTypeIndicator.setImageResource(R.drawable.gasoline);
+                fuelTypeIndicator.setImageResource(R.drawable.fuel_gasoline);
                 break;
             case 1:
                 fuelText = getString(R.string.diesel);
-                fuelTypeIndicator.setImageResource(R.drawable.diesel);
+                fuelTypeIndicator.setImageResource(R.drawable.fuel_diesel);
                 break;
             case 2:
                 fuelText = getString(R.string.lpg);
-                fuelTypeIndicator.setImageResource(R.drawable.lpg);
+                fuelTypeIndicator.setImageResource(R.drawable.fuel_lpg);
                 break;
             case 3:
                 fuelText = getString(R.string.electricity);
-                fuelTypeIndicator.setImageResource(R.drawable.electricity);
+                fuelTypeIndicator.setImageResource(R.drawable.fuel_electricity);
                 break;
             default:
                 fuelText = "";
@@ -235,28 +240,28 @@ public class FragmentAutomobile extends Fragment {
         switch (MainActivity.fuelSec) {
             case 0:
                 fuelText2 = getString(R.string.gasoline);
-                fuelTypeIndicator2.setImageResource(R.drawable.gasoline);
+                fuelTypeIndicator2.setImageResource(R.drawable.fuel_gasoline);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 fuelText2 = getString(R.string.diesel);
-                fuelTypeIndicator2.setImageResource(R.drawable.diesel);
+                fuelTypeIndicator2.setImageResource(R.drawable.fuel_diesel);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 fuelText2 = getString(R.string.lpg);
-                fuelTypeIndicator2.setImageResource(R.drawable.lpg);
+                fuelTypeIndicator2.setImageResource(R.drawable.fuel_lpg);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 fuelText2 = getString(R.string.electricity);
-                fuelTypeIndicator2.setImageResource(R.drawable.electricity);
+                fuelTypeIndicator2.setImageResource(R.drawable.fuel_electricity);
 
                 fuelType2.setVisibility(View.VISIBLE);
                 fuelTypeIndicator2.setVisibility(View.VISIBLE);

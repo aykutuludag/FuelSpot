@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:background="#f0f0f0"
-    android:padding="16dp">
+    android:elevation="4dp"
+    android:padding="2dp">
 
     <TextView
         android:id="@+id/dummyTextt"
@@ -43,6 +45,7 @@
         android:layout_alignStart="@+id/editTextAnswer"
         android:layout_alignEnd="@+id/editTextAnswer"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:background="#FF6838"
         android:text="@string/add_answer"
         android:textColor="#f0f0f0" />
@@ -53,6 +56,10 @@
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:contentDescription="@string/cancel"
         app:srcCompat="@drawable/cancel" />
 </RelativeLayout>

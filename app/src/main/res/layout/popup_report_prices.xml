@@ -6,11 +6,12 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:background="@drawable/white_box"
-    android:padding="4dp">
+    android:elevation="4dp"
+    android:padding="2dp">
 
     <TextView
         android:id="@+id/campaignPhoto"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -28,14 +29,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/campaignPhoto"
-        android:layout_margin="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:fontFamily="@font/gotham_book"
         android:gravity="center"
-        android:text="@string/send_report_desc" />
+        android:text="@string/send_report_desc"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <RelativeLayout
         android:id="@+id/inner01"
@@ -53,19 +54,27 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/gasoline" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:srcCompat="@drawable/fuel_gasoline" />
 
         <EditText
             android:id="@+id/editTextGasoline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imageView2"
+            android:layout_alignBottom="@id/imageView2"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/imageView2"
+            android:background="@drawable/white_box"
             android:ems="10"
+            android:fontFamily="@font/gotham_black"
+            android:gravity="center"
             android:hint="@string/gasoline"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="#161616" />
 
         <TextView
             android:id="@+id/textView5"
@@ -75,8 +84,11 @@
             android:layout_alignBottom="@+id/editTextGasoline"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/editTextGasoline"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
-            android:text="₺" />
+            android:text="₺ / litre"
+            android:textAlignment="center"
+            android:textColor="#161616" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -95,19 +107,27 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/diesel" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:srcCompat="@drawable/fuel_diesel" />
 
         <EditText
             android:id="@+id/editTextDiesel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imageView3"
+            android:layout_alignBottom="@id/imageView3"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/imageView3"
+            android:background="@drawable/white_box"
             android:ems="10"
+            android:fontFamily="@font/gotham_black"
+            android:gravity="center"
             android:hint="@string/diesel"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="#161616" />
 
         <TextView
             android:id="@+id/textView6"
@@ -117,8 +137,11 @@
             android:layout_alignBottom="@+id/editTextDiesel"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/editTextDiesel"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
-            android:text="₺" />
+            android:text="₺ / litre"
+            android:textAlignment="center"
+            android:textColor="#161616" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -137,19 +160,27 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/lpg" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:srcCompat="@drawable/fuel_lpg" />
 
         <EditText
             android:id="@+id/editTextLPG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imageView4"
+            android:layout_alignBottom="@id/imageView4"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/imageView4"
+            android:background="@drawable/white_box"
             android:ems="10"
+            android:fontFamily="@font/gotham_black"
+            android:gravity="center"
             android:hint="@string/lpg"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="#161616" />
 
         <TextView
             android:id="@+id/textView7"
@@ -159,8 +190,11 @@
             android:layout_alignBottom="@+id/editTextLPG"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/editTextLPG"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
-            android:text="₺" />
+            android:text="₺ / litre"
+            android:textAlignment="center"
+            android:textColor="#161616" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -179,19 +213,27 @@
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/electricity" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:srcCompat="@drawable/fuel_electricity" />
 
         <EditText
             android:id="@+id/editTextElectricity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imageView5"
+            android:layout_alignBottom="@id/imageView5"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/imageView5"
+            android:background="@drawable/white_box"
             android:ems="10"
+            android:fontFamily="@font/gotham_black"
+            android:gravity="center"
             android:hint="@string/electricity"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="#161616" />
 
         <TextView
             android:id="@+id/textView9"
@@ -201,14 +243,17 @@
             android:layout_alignBottom="@+id/editTextElectricity"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/editTextElectricity"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
-            android:text="₺" />
+            android:text="₺ / kW"
+            android:textAlignment="center"
+            android:textColor="#161616" />
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/imageViewPricesPhoto"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:layout_below="@+id/inner04"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="4dp"
@@ -238,6 +283,10 @@
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:contentDescription="@string/cancel"
         android:padding="2dp"
         app:srcCompat="@drawable/cancel" />

@@ -489,7 +489,7 @@
                 android:layout_toStartOf="@+id/imageView15"
                 android:contentDescription="@string/gasoline"
                 android:padding="8dp"
-                app:srcCompat="@drawable/gasoline" />
+                app:srcCompat="@drawable/fuel_gasoline" />
 
             <TextView
                 android:id="@+id/textView13"
@@ -517,7 +517,7 @@
                 android:layout_toStartOf="@id/imageView16"
                 android:contentDescription="@string/diesel"
                 android:padding="8dp"
-                app:srcCompat="@drawable/diesel" />
+                app:srcCompat="@drawable/fuel_diesel" />
 
             <TextView
                 android:id="@+id/textView15"
@@ -545,7 +545,7 @@
                 android:layout_marginBottom="4dp"
                 android:contentDescription="@string/lpg"
                 android:padding="8dp"
-                app:srcCompat="@drawable/lpg" />
+                app:srcCompat="@drawable/fuel_lpg" />
 
             <TextView
                 android:id="@+id/textView17"
@@ -573,7 +573,7 @@
                 android:layout_toEndOf="@+id/imageView16"
                 android:contentDescription="@string/electricity"
                 android:padding="8dp"
-                app:srcCompat="@drawable/electricity" />
+                app:srcCompat="@drawable/fuel_electricity" />
 
             <TextView
                 android:id="@+id/textView18"

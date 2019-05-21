@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private Toolbar toolbar;
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
-    private AHBottomNavigation bottomNavigation;
+    public AHBottomNavigation bottomNavigation;
     private RequestQueue queue;
     public static InterstitialAd admobInterstitial;
     public MenuItem filterButton;

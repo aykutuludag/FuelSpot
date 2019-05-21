@@ -339,7 +339,7 @@
                             android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
-                            android:src="@drawable/fuelspotkoku" />
+                            android:src="@drawable/urun_fuelspotkoku" />
 
                         <TextView
                             android:id="@+id/textView45"
@@ -429,7 +429,7 @@
                             android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
-                            android:src="@drawable/lastiktamirkiti" />
+                            android:src="@drawable/urun_lastiktamirspreyi" />
 
                         <TextView
                             android:id="@+id/textView43"
@@ -519,7 +519,7 @@
                             android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
-                            android:src="@drawable/aracbakimseti" />
+                            android:src="@drawable/urun_aracbakimseti" />
 
                         <TextView
                             android:id="@+id/textView41"

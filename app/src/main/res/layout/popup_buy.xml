@@ -406,10 +406,10 @@
         android:layout_height="32dp"
         android:layout_alignStart="@id/buyScreen1"
         android:layout_alignTop="@id/buyScreen1"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
         android:contentDescription="@string/cancel"
         android:src="@drawable/cancel" />
 </RelativeLayout>

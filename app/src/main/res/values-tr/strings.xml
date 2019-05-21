@@ -71,7 +71,7 @@
     <string name="price_index">Fiyat endeksi</string>
     <string name="fuel_distrubition_companies">Akaryakıt dağıtım şirketleri</string>
     <string name="last_update">Son güncelleme</string>
-    <string name="registered_station_number">Kayıtlı istasyon : -</string>
+    <string name="registered_station_number">Kayıtlı istasyon:</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
@@ -296,7 +296,7 @@
     <!-- SuperWelcome-->
 
     <!-- SuperMainActivity-->
-    <string name="station_waiting_approval">Hesabınız onay sürecindedir. Temsilcilerimiz en kısa sürede sizinle iletişime geçecekler.</string>
+    <string name="station_waiting_approval">Hesabınız onay sürecindedir. Sizinle en kısa sürede iletişime geçeceğiz.</string>
 
     <!-- FragmentMyStation-->
     <string name="tab_mystation">MyStation</string>
