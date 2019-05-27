@@ -146,7 +146,7 @@ public class SuperCampaings extends AppCompatActivity {
     public void fetchCampaigns() {
         final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, getString(R.string.loading_campaigns), getString(R.string.please_wait), false, false);
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_CAMPAINGS) + "?stationID=" + superStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -193,17 +193,6 @@ public class SuperCampaings extends AppCompatActivity {
                         mRecyclerView.setVisibility(View.GONE);
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-                //Adding parameters
-                params.put("stationID", String.valueOf(superStationID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -212,7 +201,7 @@ public class SuperCampaings extends AppCompatActivity {
 
     public void fetchOldCampaigns() {
         feedsList2.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_OLD_CAMPAINGS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_OLD_CAMPAINGS) + "?stationID=" + superStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -254,17 +243,6 @@ public class SuperCampaings extends AppCompatActivity {
                         mRecyclerView2.setVisibility(View.GONE);
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-                //Adding parameters
-                params.put("stationID", String.valueOf(superStationID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

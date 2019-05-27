@@ -492,7 +492,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         companyList.clear();
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -538,17 +538,6 @@ public class SuperUpdateStation extends AppCompatActivity {
                         Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -615,7 +604,7 @@ public class SuperUpdateStation extends AppCompatActivity {
 
     private void fetchOwnedStations() {
         listOfOwnedStations.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_SUPERUSER_STATIONS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -676,18 +665,6 @@ public class SuperUpdateStation extends AppCompatActivity {
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("superusername", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

@@ -32,7 +32,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -71,9 +70,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -120,7 +117,6 @@ public class FragmentStations extends Fragment {
     boolean isMapUpdating;
     NestedScrollView scrollView;
     boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
-    private SwipeRefreshLayout swipeContainer;
     RelativeLayout stationLayout;
 
     public static FragmentStations newInstance() {
@@ -274,20 +270,6 @@ public class FragmentStations extends Fragment {
                 }
             });
 
-            swipeContainer = rootView.findViewById(R.id.swipeContainer);
-            // Setup refresh listener which triggers new data loading
-            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    updateMap();
-                }
-            });
-            // Configure the refreshing colors
-            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                    android.R.color.holo_green_light,
-                    android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light);
-
             // Start the load map
             checkLocationPermission();
         }
@@ -316,12 +298,28 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.setTrafficEnabled(true);
+
+                // Dokundu
                 googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
                     @Override
                     public void onCameraMoveStarted(int i) {
                         if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                             scrollView.requestDisallowInterceptTouchEvent(true);
                         }
+                    }
+                });
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+                // Dokunma bitti
+                googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
                     }
                 });
                 googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
@@ -400,11 +398,10 @@ public class FragmentStations extends Fragment {
     }
 
     private void searchStations() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SEARCH_STATIONS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        swipeContainer.setRefreshing(false);
                         isMapUpdating = false;
                         if (response != null && response.length() > 0) {
                             try {
@@ -495,23 +492,10 @@ public class FragmentStations extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        swipeContainer.setRefreshing(false);
                         isMapUpdating = false;
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                params.put("location", userlat + ";" + userlon);
-                params.put("radius", String.valueOf(mapDefaultRange));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

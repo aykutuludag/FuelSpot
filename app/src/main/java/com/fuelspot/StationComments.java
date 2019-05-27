@@ -327,7 +327,7 @@ public class StationComments extends AppCompatActivity {
     public void fetchStationComments() {
         final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.loading_comments), getString(R.string.please_wait), false, false);
         stationCommentList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + istasyonID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -386,18 +386,6 @@ public class StationComments extends AppCompatActivity {
                         snackbar.show();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(istasyonID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

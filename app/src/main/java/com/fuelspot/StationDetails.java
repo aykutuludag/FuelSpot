@@ -266,7 +266,7 @@ public class StationDetails extends AppCompatActivity {
         });
         chart.getDescription().setText(currencySymbol + " / " + userUnit);
         chart.getDescription().setTextSize(13f);
-        chart.getDescription().setTextColor(Color.WHITE);
+        chart.getDescription().setTextColor(Color.BLUE);
         chart.setExtraRightOffset(10f);
         imageViewWC = findViewById(R.id.WC);
         imageViewWC.setOnClickListener(new View.OnClickListener() {
@@ -434,7 +434,7 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void fetchStation(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -468,18 +468,6 @@ public class StationDetails extends AppCompatActivity {
                         Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(stationID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -492,7 +480,7 @@ public class StationDetails extends AppCompatActivity {
         lpgPriceHistory.clear();
         elecPriceHistory.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_PRICES),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_PRICES) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -577,18 +565,6 @@ public class StationDetails extends AppCompatActivity {
                         Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(choosenStationID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -744,7 +720,7 @@ public class StationDetails extends AppCompatActivity {
 
     private void fetchCampaigns() {
         campaignList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_CAMPAINGS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_CAMPAINGS) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -790,17 +766,6 @@ public class StationDetails extends AppCompatActivity {
                         noCampaignText.setVisibility(View.VISIBLE);
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-                //Adding parameters
-                params.put("stationID", String.valueOf(choosenStationID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -811,7 +776,7 @@ public class StationDetails extends AppCompatActivity {
         sumOfPoints = 0;
         numOfComments = 0;
         stationCommentList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_STATION_COMMENTS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -891,18 +856,6 @@ public class StationDetails extends AppCompatActivity {
                         noCommentText.setVisibility(View.VISIBLE);
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("stationID", String.valueOf(choosenStationID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

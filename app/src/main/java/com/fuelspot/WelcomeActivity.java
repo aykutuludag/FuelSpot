@@ -361,7 +361,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void fetchTaxRates() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -393,18 +393,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("country", userCountry);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -412,7 +400,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void fetchAutomobiles() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_USER_AUTOMOBILES),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -447,18 +435,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

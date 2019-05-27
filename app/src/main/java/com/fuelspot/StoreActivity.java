@@ -460,7 +460,7 @@ public class StoreActivity extends AppCompatActivity {
     private void fetchBanking() {
         userBankingList.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_BANKING),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_BANKING) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -502,18 +502,6 @@ public class StoreActivity extends AppCompatActivity {
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

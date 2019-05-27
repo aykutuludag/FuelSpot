@@ -28,7 +28,6 @@ import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.NewsItem;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -135,6 +134,8 @@ public class FragmentNews extends Fragment {
             mRecyclerView.setNestedScrollingEnabled(true);
 
             chart = rootView.findViewById(R.id.chartAveragePriceGasoline);
+            chart.setScaleEnabled(false);
+            chart.setDragEnabled(false);
             chart.getXAxis().setAvoidFirstLastClipping(true);
             chart.getXAxis().setLabelCount(3, true);
             chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -150,16 +151,10 @@ public class FragmentNews extends Fragment {
                     return formatter.format(date);
                 }
             });
-            chart.animateX(1500, Easing.EaseInElastic);
-            chart.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
 
             chart2 = rootView.findViewById(R.id.chartAveragePriceDiesel);
+            chart2.setScaleEnabled(false);
+            chart2.setDragEnabled(false);
             chart2.getXAxis().setAvoidFirstLastClipping(true);
             chart2.getXAxis().setLabelCount(3, true);
             chart2.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -175,16 +170,10 @@ public class FragmentNews extends Fragment {
                     return formatter.format(date);
                 }
             });
-            chart2.animateX(1500, Easing.EaseInElastic);
-            chart2.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
 
             chart3 = rootView.findViewById(R.id.chartAveragePriceLPG);
+            chart3.setScaleEnabled(false);
+            chart3.setDragEnabled(false);
             chart3.getXAxis().setAvoidFirstLastClipping(true);
             chart3.getXAxis().setLabelCount(3, true);
             chart3.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -200,16 +189,10 @@ public class FragmentNews extends Fragment {
                     return formatter.format(date);
                 }
             });
-            chart3.animateX(1500, Easing.EaseInElastic);
-            chart3.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
 
             chart4 = rootView.findViewById(R.id.chartAveragePriceElectricity);
+            chart4.setScaleEnabled(false);
+            chart4.setDragEnabled(false);
             chart4.getXAxis().setAvoidFirstLastClipping(true);
             chart4.getXAxis().setLabelCount(3, true);
             chart4.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -223,14 +206,6 @@ public class FragmentNews extends Fragment {
                     Date date = new Date();
                     date.setTime((long) value);
                     return formatter.format(date);
-                }
-            });
-            chart4.animateX(1500, Easing.EaseInElastic);
-            chart4.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
                 }
             });
 
@@ -285,7 +260,7 @@ public class FragmentNews extends Fragment {
 
     private void fetchNews(final String tempCountryCode) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_NEWS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_NEWS) + "?country=" + tempCountryCode + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -328,18 +303,6 @@ public class FragmentNews extends Fragment {
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("country", tempCountryCode);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -352,7 +315,7 @@ public class FragmentNews extends Fragment {
         lpgPriceHistory.clear();
         elecPriceHistory.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_FETCH_COUNTRY_PRICES),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_COUNTRY_PRICES) + "?country=" + tempCountryCode + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -450,18 +413,6 @@ public class FragmentNews extends Fragment {
                         Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("country", tempCountryCode);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -473,7 +424,7 @@ public class FragmentNews extends Fragment {
             for (int i = 0; i < companyList.size(); i++) {
                 totalStation += companyList.get(i).getNumOfStations();
 
-                if (companyList.get(i).getNumOfStations() >= 300) {
+                if (companyList.get(i).getNumOfStations() >= 350) {
                     entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
                 } else {
                     otherStations += companyList.get(i).getNumOfStations();
@@ -487,13 +438,13 @@ public class FragmentNews extends Fragment {
             // add a lot of colors
             ArrayList<Integer> colors = new ArrayList<>();
 
+            for (int c : ColorTemplate.COLORFUL_COLORS)
+                colors.add(c);
+
             for (int c : ColorTemplate.VORDIPLOM_COLORS)
                 colors.add(c);
 
             for (int c : ColorTemplate.JOYFUL_COLORS)
-                colors.add(c);
-
-            for (int c : ColorTemplate.COLORFUL_COLORS)
                 colors.add(c);
 
             for (int c : ColorTemplate.LIBERTY_COLORS)
@@ -503,15 +454,12 @@ public class FragmentNews extends Fragment {
                 colors.add(c);
 
             colors.add(ColorTemplate.getHoloBlue());
-
             dataSet.setColors(colors);
-            //dataSet.setSelectionShift(0f);
 
             PieData data = new PieData(dataSet);
-            data.setValueTextSize(11f);
+            data.setValueTextSize(12f);
             data.setValueTextColor(Color.BLACK);
             pieChart.setData(data);
-            pieChart.highlightValues(null);
             pieChart.invalidate();
 
             String dummy = getString(R.string.registered_station_number) + " " + totalStation;
@@ -527,7 +475,7 @@ public class FragmentNews extends Fragment {
         totalStation = 0;
         otherStations = 0;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_COMPANY),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

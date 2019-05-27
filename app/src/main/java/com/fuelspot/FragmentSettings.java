@@ -118,7 +118,7 @@ public class FragmentSettings extends Fragment {
     }
 
     private void updateTaxRates() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_TAX),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -170,18 +170,6 @@ public class FragmentSettings extends Fragment {
                         Toast.makeText(getActivity(), volleyError.toString(), Snackbar.LENGTH_LONG).show();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("country", userCountry);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue

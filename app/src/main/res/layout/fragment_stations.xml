@@ -1,259 +1,253 @@
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:map="http://schemas.android.com/tools"
-    android:id="@+id/swipeContainer"
+    android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F4F4">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="325dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            map:cameraTargetLat="39.92505"
+            map:cameraTargetLng="32.83476"
+            map:cameraZoom="13"
+            map:uiTiltGestures="false" />
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="325dp"
-                android:layout_alignParentTop="true"
+        <RelativeLayout
+            android:id="@+id/stationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/map"
+            android:layout_marginTop="-10dp"
+            android:background="@drawable/round_layout"
+            android:elevation="8dp">
+
+            <TextView
+                android:id="@+id/titleStations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                map:cameraTargetLat="39.92505"
-                map:cameraTargetLng="32.83476"
-                map:cameraZoom="13"
-                map:uiTiltGestures="false" />
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/tab_stations"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#131313" />
 
-            <RelativeLayout
-                android:id="@+id/stationLayout"
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/sortBar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/map"
-                android:layout_marginTop="-10dp"
-                android:background="@drawable/round_layout"
-                android:elevation="8dp">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleStations"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/round_layout_white2">
 
-                <TextView
-                    android:id="@+id/titleStations"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/sortGasoline"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="@string/tab_stations"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#131313" />
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="21%"
+                    app:layout_widthPercent="14%">
 
-                <androidx.percentlayout.widget.PercentRelativeLayout
-                    android:id="@+id/sortBar"
-                    android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/gasoline"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/gasoline"
+                        android:src="@drawable/fuel_gasoline"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyGasoline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/gasoline"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="@string/sort"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortDiesel"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/titleStations"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/round_layout_white2">
+                    android:layout_toEndOf="@+id/sortGasoline"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
 
-                    <RelativeLayout
-                        android:id="@+id/sortGasoline"
-                        android:layout_width="0dp"
+                    <ImageView
+                        android:id="@+id/diesel"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/diesel"
+                        android:src="@drawable/fuel_diesel"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyDiesel"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:alpha="0.33"
-                        app:layout_marginEndPercent="1%"
-                        app:layout_marginStartPercent="21%"
-                        app:layout_widthPercent="14%">
+                        android:layout_below="@+id/diesel"
+                        android:layout_marginBottom="3dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="@string/sort"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
 
-                        <ImageView
-                            android:id="@+id/gasoline"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:contentDescription="@string/gasoline"
-                            android:src="@drawable/fuel_gasoline"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/dummyGasoline"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/gasoline"
-                            android:layout_marginBottom="4dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/sort"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#6D6D6D"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sortDiesel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@+id/sortGasoline"
-                        android:alpha="0.33"
-                        app:layout_marginEndPercent="1%"
-                        app:layout_marginStartPercent="1%"
-                        app:layout_widthPercent="14%">
-
-                        <ImageView
-                            android:id="@+id/diesel"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:contentDescription="@string/diesel"
-                            android:src="@drawable/fuel_diesel"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/dummyDiesel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/diesel"
-                            android:layout_marginBottom="3dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/sort"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#717171"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sortLPG"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/sortDiesel"
-                        android:alpha="0.33"
-                        app:layout_marginEndPercent="1%"
-                        app:layout_marginStartPercent="1%"
-                        app:layout_widthPercent="14%">
-
-                        <ImageView
-                            android:id="@+id/LPG"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:contentDescription="@string/lpg"
-                            android:src="@drawable/fuel_lpg"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/dummyLPG"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/LPG"
-                            android:layout_marginBottom="4dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/sort"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#717171"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sortElectric"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/sortLPG"
-                        android:alpha="0.33"
-                        app:layout_marginEndPercent="1%"
-                        app:layout_marginStartPercent="1%"
-                        app:layout_widthPercent="14%">
-
-                        <ImageView
-                            android:id="@+id/electric"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:contentDescription="@string/electricity"
-                            android:src="@drawable/fuel_electricity"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/dummyElectric"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/electric"
-                            android:layout_marginBottom="4dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/sort"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#717171"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sortDistance"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/sortElectric"
-                        android:alpha="0.33"
-                        app:layout_marginEndPercent="1%"
-                        app:layout_marginStartPercent="1%"
-                        app:layout_widthPercent="14%">
-
-                        <ImageView
-                            android:id="@+id/distanceToStation"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="4dp"
-                            android:contentDescription="@string/distance"
-                            android:src="@drawable/distance"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <TextView
-                            android:id="@+id/dummyDistance"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/distanceToStation"
-                            android:layout_marginBottom="4dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/sort"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#717171"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
-
-                </androidx.percentlayout.widget.PercentRelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/stationView"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/sortLPG"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/sortBar"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_toEndOf="@id/sortDiesel"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
 
-                <Button
-                    android:id="@+id/button_seeAllStations"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/LPG"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/lpg"
+                        android:src="@drawable/fuel_lpg"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyLPG"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/LPG"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="@string/sort"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortElectric"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/stationView"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/green_box"
-                    android:fontFamily="@font/gotham_medium"
-                    android:padding="4dp"
-                    android:text="@string/see_all"
-                    android:visibility="gone" />
+                    android:layout_toEndOf="@id/sortLPG"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
 
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/electric"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/electricity"
+                        android:src="@drawable/fuel_electricity"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyElectric"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/electric"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="@string/sort"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortDistance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/sortElectric"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/distanceToStation"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/distance"
+                        android:src="@drawable/distance"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyDistance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/distanceToStation"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="@string/sort"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sortBar"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp" />
+
+            <Button
+                android:id="@+id/button_seeAllStations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stationView"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/green_box"
+                android:fontFamily="@font/gotham_medium"
+                android:padding="4dp"
+                android:text="@string/see_all"
+                android:visibility="gone" />
 
         </RelativeLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>

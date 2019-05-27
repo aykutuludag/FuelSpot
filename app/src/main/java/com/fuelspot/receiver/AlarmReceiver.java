@@ -38,8 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.Hashtable;
-import java.util.Map;
 
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 import static com.fuelspot.MainActivity.fullStationList;
@@ -156,7 +154,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void fetchStations() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_SEARCH_STATIONS),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange + "&AUTH_KEY=" + mContext.getString(R.string.fuelspot_api_key),
                 new Response.Listener<String>() {
                     @SuppressLint("MissingPermission")
                     @Override
@@ -219,18 +217,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                         volleyError.printStackTrace();
                     }
                 }) {
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                params.put("location", userlat + ";" + userlon);
-                params.put("radius", String.valueOf(mapDefaultRange));
-                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
