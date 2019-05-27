@@ -43,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -51,6 +52,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -161,6 +163,13 @@ public class ReportMissingStation extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -172,7 +181,6 @@ public class ReportMissingStation extends AppCompatActivity {
                 params.put("details", reportDetails);
                 params.put("photo", "");
                 params.put("prices", "");
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -247,7 +255,7 @@ public class ReportMissingStation extends AppCompatActivity {
         companyList.clear();
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -286,6 +294,12 @@ public class ReportMissingStation extends AppCompatActivity {
                         Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

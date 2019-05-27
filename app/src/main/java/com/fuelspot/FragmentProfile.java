@@ -45,8 +45,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,6 +62,7 @@ import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.username;
@@ -219,7 +222,7 @@ public class FragmentProfile extends Fragment {
     private void fetchBanking() {
         userBankingList.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_BANKING) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_BANKING) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -259,6 +262,12 @@ public class FragmentProfile extends Fragment {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -267,7 +276,7 @@ public class FragmentProfile extends Fragment {
 
     private void fetchAutomobiles() {
         userAutomobileList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -313,6 +322,12 @@ public class FragmentProfile extends Fragment {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -354,7 +369,7 @@ public class FragmentProfile extends Fragment {
     private void fetchComments() {
         userCommentList.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_COMMENTS) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_COMMENTS) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -404,6 +419,12 @@ public class FragmentProfile extends Fragment {
                         userNoCommentLayout.setVisibility(View.VISIBLE);
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

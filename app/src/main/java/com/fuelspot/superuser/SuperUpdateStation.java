@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -50,6 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.companyList;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -492,7 +494,7 @@ public class SuperUpdateStation extends AppCompatActivity {
         companyList.clear();
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -538,6 +540,12 @@ public class SuperUpdateStation extends AppCompatActivity {
                         Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -576,6 +584,13 @@ public class SuperUpdateStation extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -591,7 +606,6 @@ public class SuperUpdateStation extends AppCompatActivity {
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -604,7 +618,7 @@ public class SuperUpdateStation extends AppCompatActivity {
 
     private void fetchOwnedStations() {
         listOfOwnedStations.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -665,6 +679,12 @@ public class SuperUpdateStation extends AppCompatActivity {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

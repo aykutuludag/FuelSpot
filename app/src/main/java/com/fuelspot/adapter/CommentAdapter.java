@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +49,7 @@ import java.util.Map;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
@@ -214,13 +216,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
                 params.put("commentID", String.valueOf(id));
-                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -263,6 +271,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -271,7 +286,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 params.put("commentID", String.valueOf(commentID));
                 params.put("answer", userAnswer);
                 params.put("logo", superStationLogo);
-                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -314,13 +328,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
                 params.put("commentID", String.valueOf(commentID));
-                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

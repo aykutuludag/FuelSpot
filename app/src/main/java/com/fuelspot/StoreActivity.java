@@ -49,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -64,6 +65,7 @@ import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.userPhoneNumber;
@@ -432,6 +434,13 @@ public class StoreActivity extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -446,7 +455,6 @@ public class StoreActivity extends AppCompatActivity {
                 params.put("email", email);
                 params.put("currency", currencyCode);
                 params.put("country", userCountry);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -460,7 +468,7 @@ public class StoreActivity extends AppCompatActivity {
     private void fetchBanking() {
         userBankingList.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_BANKING) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_BANKING) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -502,6 +510,12 @@ public class StoreActivity extends AppCompatActivity {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

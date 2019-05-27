@@ -43,11 +43,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.StationDetails.choosenStationID;
 import static com.fuelspot.StationDetails.hasAlreadyCommented;
@@ -251,6 +253,13 @@ public class StationComments extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -259,7 +268,6 @@ public class StationComments extends AppCompatActivity {
                 params.put("commentID", String.valueOf(userCommentID));
                 params.put("comment", userComment);
                 params.put("stars", String.valueOf(stars));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -303,6 +311,13 @@ public class StationComments extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -313,7 +328,6 @@ public class StationComments extends AppCompatActivity {
                 params.put("username", username);
                 params.put("stars", String.valueOf(stars));
                 params.put("user_photo", photo);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -327,7 +341,7 @@ public class StationComments extends AppCompatActivity {
     public void fetchStationComments() {
         final ProgressDialog loading = ProgressDialog.show(StationComments.this, getString(R.string.loading_comments), getString(R.string.please_wait), false, false);
         stationCommentList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + istasyonID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + istasyonID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -386,6 +400,12 @@ public class StationComments extends AppCompatActivity {
                         snackbar.show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

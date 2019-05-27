@@ -154,7 +154,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void fetchStations() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange + "&AUTH_KEY=" + mContext.getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange,
                 new Response.Listener<String>() {
                     @SuppressLint("MissingPermission")
                     @Override

@@ -50,7 +50,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import hotchemi.android.rate.AppRate;
 
@@ -61,6 +63,7 @@ import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -296,7 +299,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
     private void fetchOwnedStations() {
         listOfOwnedStations.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -362,6 +365,12 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -419,7 +428,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         companyList.clear();
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -453,6 +462,12 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                         Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

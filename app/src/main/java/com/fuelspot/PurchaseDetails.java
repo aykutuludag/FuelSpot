@@ -72,6 +72,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -87,6 +88,7 @@ import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
@@ -326,7 +328,7 @@ public class PurchaseDetails extends AppCompatActivity {
     }
 
     private void fetchStation(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + stationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + stationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -382,6 +384,12 @@ public class PurchaseDetails extends AppCompatActivity {
                         Toast.makeText(PurchaseDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -476,13 +484,19 @@ public class PurchaseDetails extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
                 params.put("purchaseID", String.valueOf(purchaseID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -522,6 +536,13 @@ public class PurchaseDetails extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -535,7 +556,6 @@ public class PurchaseDetails extends AppCompatActivity {
                 } else {
                     params.put("billPhoto", "");
                 }
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

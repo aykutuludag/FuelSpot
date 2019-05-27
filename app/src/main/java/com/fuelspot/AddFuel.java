@@ -56,6 +56,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -81,6 +82,7 @@ import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
@@ -236,7 +238,7 @@ public class AddFuel extends AppCompatActivity {
 
     private void fetchSingleStation() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + chosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + chosenStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -280,7 +282,7 @@ public class AddFuel extends AppCompatActivity {
 
     private void fetchAutomobiles() {
         userAutomobileList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -325,6 +327,13 @@ public class AddFuel extends AppCompatActivity {
                         volleyError.printStackTrace();
                     }
                 }) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -649,6 +658,13 @@ public class AddFuel extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -681,7 +697,6 @@ public class AddFuel extends AppCompatActivity {
                 } else {
                     params.put("billPhoto", "");
                 }
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
                 //returning parameters
                 return params;
             }

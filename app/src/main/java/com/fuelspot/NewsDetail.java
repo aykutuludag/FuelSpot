@@ -37,9 +37,12 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.token;
 
 public class NewsDetail extends AppCompatActivity {
 
@@ -103,7 +106,7 @@ public class NewsDetail extends AppCompatActivity {
     }
 
     void fetchSingleNews() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_NEWS_SINGLE) + "?url=" + url + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_NEWS_SINGLE) + "?url=" + url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -133,6 +136,12 @@ public class NewsDetail extends AppCompatActivity {
                         Toast.makeText(NewsDetail.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

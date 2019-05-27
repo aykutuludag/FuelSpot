@@ -92,6 +92,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -107,6 +108,7 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.userlat;
@@ -381,7 +383,7 @@ public class StationDetails extends AppCompatActivity {
             loadStationDetails();
         } else {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
-            fetchStation(choosenStationID);
+            fetchStation();
         }
 
         // Campaigns
@@ -433,8 +435,8 @@ public class StationDetails extends AppCompatActivity {
         });
     }
 
-    private void fetchStation(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+    private void fetchStation() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + choosenStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -468,6 +470,12 @@ public class StationDetails extends AppCompatActivity {
                         Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -480,7 +488,7 @@ public class StationDetails extends AppCompatActivity {
         lpgPriceHistory.clear();
         elecPriceHistory.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_PRICES) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_PRICES) + "?stationID=" + choosenStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -565,6 +573,12 @@ public class StationDetails extends AppCompatActivity {
                         Toast.makeText(StationDetails.this, volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -720,7 +734,7 @@ public class StationDetails extends AppCompatActivity {
 
     private void fetchCampaigns() {
         campaignList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_CAMPAINGS) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_CAMPAINGS) + "?stationID=" + choosenStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -766,6 +780,12 @@ public class StationDetails extends AppCompatActivity {
                         noCampaignText.setVisibility(View.VISIBLE);
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -776,7 +796,7 @@ public class StationDetails extends AppCompatActivity {
         sumOfPoints = 0;
         numOfComments = 0;
         stationCommentList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + choosenStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + choosenStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -856,6 +876,12 @@ public class StationDetails extends AppCompatActivity {
                         noCommentText.setVisibility(View.VISIBLE);
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -962,6 +988,13 @@ public class StationDetails extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -972,7 +1005,6 @@ public class StationDetails extends AppCompatActivity {
                 params.put("username", username);
                 params.put("stars", String.valueOf(stars));
                 params.put("user_photo", photo);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1012,6 +1044,13 @@ public class StationDetails extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -1020,7 +1059,6 @@ public class StationDetails extends AppCompatActivity {
                 params.put("commentID", String.valueOf(userCommentID));
                 params.put("comment", userComment);
                 params.put("stars", String.valueOf(stars));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1289,6 +1327,13 @@ public class StationDetails extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -1297,7 +1342,6 @@ public class StationDetails extends AppCompatActivity {
                 params.put("username", kullaniciAdi);
                 params.put("stationID", String.valueOf(istasyonID));
                 params.put("report", raporSebebi);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
                 if (raporDetayi != null && raporDetayi.length() > 0) {
                     params.put("details", raporDetayi);
                 } else {

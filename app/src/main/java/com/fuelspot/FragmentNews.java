@@ -54,7 +54,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -65,6 +65,7 @@ import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
 
@@ -260,7 +261,7 @@ public class FragmentNews extends Fragment {
 
     private void fetchNews(final String tempCountryCode) {
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_NEWS) + "?country=" + tempCountryCode + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_NEWS) + "?country=" + tempCountryCode,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -303,6 +304,12 @@ public class FragmentNews extends Fragment {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -315,7 +322,7 @@ public class FragmentNews extends Fragment {
         lpgPriceHistory.clear();
         elecPriceHistory.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_COUNTRY_PRICES) + "?country=" + tempCountryCode + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_COUNTRY_PRICES) + "?country=" + tempCountryCode,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -413,6 +420,12 @@ public class FragmentNews extends Fragment {
                         Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -475,7 +488,7 @@ public class FragmentNews extends Fragment {
         totalStation = 0;
         otherStations = 0;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -509,14 +522,9 @@ public class FragmentNews extends Fragment {
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
-                //returning parameters
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
                 return params;
             }
         };

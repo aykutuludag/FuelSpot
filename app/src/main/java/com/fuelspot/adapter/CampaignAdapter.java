@@ -33,6 +33,7 @@ import com.fuelspot.superuser.SuperCampaings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +42,7 @@ import java.util.Map;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.token;
 
 public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHolder> {
     private List<CampaignItem> mItemList;
@@ -201,13 +203,19 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
                 params.put("campaignID", String.valueOf(campaignID));
-                params.put("AUTH_KEY", mContext.getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

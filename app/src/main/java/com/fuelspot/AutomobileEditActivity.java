@@ -60,6 +60,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -77,11 +78,11 @@ import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
 import static com.fuelspot.MainActivity.verifyFilePickerPermission;
-
 
 public class AutomobileEditActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -367,6 +368,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -387,7 +395,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 params.put("plate", plateNo);
                 params.put("avgCons", String.valueOf(averageCons));
                 params.put("carbonEmission", String.valueOf(carbonEmission));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -426,6 +433,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -433,7 +447,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                 //Adding parameters
                 params.put("username", username);
                 params.put("vehicleID", String.valueOf(vehicleID));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -446,7 +459,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
     private void fetchAutomobiles() {
         userAutomobileList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -486,13 +499,19 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

@@ -2,7 +2,6 @@
     <!-- NON TRANSLATABLE PART BEGINS -->
     <string name="app_name" translatable="false">FuelSpot</string>
     <string name="google_key" translatable="false">AIzaSyAYL33WnxHUGcetc-pO-ZbcjqKw7PCmq_c</string>
-    <string name="fuelspot_api_key" translatable="false">Ph76g0MSZ2okeWQmShYDlXakjgjhbe</string>
     <string name="facebook_app_id" translatable="false">380327342377274</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>

@@ -57,6 +57,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -73,6 +74,7 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
@@ -349,6 +351,13 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -366,8 +375,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                 } else {
                     params.put("carPhoto", "");
                 }
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
-
 
                 //returning parameters
                 return params;
@@ -380,7 +387,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
     private void fetchAutomobiles() {
         userAutomobileList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

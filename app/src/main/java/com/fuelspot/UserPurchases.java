@@ -27,8 +27,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 
 public class UserPurchases extends AppCompatActivity {
 
@@ -89,7 +93,7 @@ public class UserPurchases extends AppCompatActivity {
     private void fetchPurchases() {
         vehiclePurchaseList.clear();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -141,6 +145,12 @@ public class UserPurchases extends AppCompatActivity {
                         swipeContainer.setRefreshing(false);
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

@@ -26,7 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.fuelspot.FragmentProfile.userCommentList;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
 
 public class UserComments extends AppCompatActivity {
@@ -90,7 +94,7 @@ public class UserComments extends AppCompatActivity {
         userCommentList.clear();
         mAdapter.notifyDataSetChanged();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_COMMENTS) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_COMMENTS) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -133,6 +137,12 @@ public class UserComments extends AppCompatActivity {
                         error.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

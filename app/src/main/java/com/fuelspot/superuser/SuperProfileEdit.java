@@ -63,6 +63,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -78,6 +79,7 @@ import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
 import static com.fuelspot.MainActivity.userPhoneNumber;
@@ -340,6 +342,13 @@ public class SuperProfileEdit extends AppCompatActivity {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -359,7 +368,6 @@ public class SuperProfileEdit extends AppCompatActivity {
                 params.put("location", location);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

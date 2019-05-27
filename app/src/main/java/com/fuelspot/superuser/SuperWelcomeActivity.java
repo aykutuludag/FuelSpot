@@ -110,6 +110,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -135,6 +136,7 @@ import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -486,6 +488,13 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -495,7 +504,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -579,7 +587,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
     private void fetchTaxRates() {
         final ProgressDialog loading = ProgressDialog.show(SuperWelcomeActivity.this, getString(R.string.updating_tax), getString(R.string.please_wait), false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -615,6 +623,12 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         loading.dismiss();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -622,7 +636,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     }
 
     private void fetchOwnedStations() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -699,13 +713,19 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
                 params.put("superusername", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1077,7 +1097,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -1180,13 +1200,19 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
 
                 params.put("location", userlat + ";" + userlon);
                 params.put("radius", String.valueOf(mapDefaultStationRange));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1242,7 +1268,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         companyList.clear();
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -1288,6 +1314,12 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -1322,6 +1354,13 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -1331,7 +1370,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("licenseNo", superLicenseNo);
                 params.put("address", superStationAddress);
                 params.put("owner", username);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -1370,6 +1408,13 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -1388,7 +1433,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("phoneNumber", userPhoneNumber);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

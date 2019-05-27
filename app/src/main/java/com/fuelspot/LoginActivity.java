@@ -71,6 +71,7 @@ import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -445,6 +446,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println(response);
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
@@ -481,6 +483,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 userDisplayLanguage = obj.getString("language");
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
+                                token = obj.getString("token");
+                                prefs.edit().putString("token", token).apply();
+
                                 Toast.makeText(LoginActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 notLogged.setVisibility(View.GONE);
                                 new Handler().postDelayed(new Runnable() {
@@ -492,6 +497,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     }
                                 }, 1500);
                             } catch (JSONException e) {
+                                System.out.println(e.toString());
                                 //Dismissing the progress dialog
                                 Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
                                 prefs.edit().putBoolean("isSigned", false).apply();
@@ -509,6 +515,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         loading.dismiss();
                         Snackbar.make(background, volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
+                        System.out.println(volleyError.toString());
                     }
                 }) {
             @Override
@@ -521,7 +528,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
+                params.put("deviceType", "mobile");
 
                 //returning parameters
                 return params;

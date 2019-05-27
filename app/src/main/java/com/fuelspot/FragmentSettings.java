@@ -60,6 +60,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -75,6 +76,7 @@ import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -118,7 +120,7 @@ public class FragmentSettings extends Fragment {
     }
 
     private void updateTaxRates() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -170,6 +172,12 @@ public class FragmentSettings extends Fragment {
                         Toast.makeText(getActivity(), volleyError.toString(), Snackbar.LENGTH_LONG).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -256,6 +264,13 @@ public class FragmentSettings extends Fragment {
                             }
                         }) {
                     @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("token", token);
+                        return params;
+                    }
+
+                    @Override
                     protected Map<String, String> getParams() {
                         //Creating parameters
                         Map<String, String> params = new Hashtable<>();
@@ -268,7 +283,6 @@ public class FragmentSettings extends Fragment {
                         } else {
                             params.put("screenshot", "");
                         }
-                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                         //returning parameters
                         return params;

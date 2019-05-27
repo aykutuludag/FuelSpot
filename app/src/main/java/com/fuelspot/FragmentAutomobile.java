@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -63,6 +64,7 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.vehicleID;
 
@@ -319,7 +321,7 @@ public class FragmentAutomobile extends Fragment {
 
     private void fetchVehiclePurchases() {
         vehiclePurchaseList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -429,6 +431,12 @@ public class FragmentAutomobile extends Fragment {
                         Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -549,6 +557,13 @@ public class FragmentAutomobile extends Fragment {
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -556,7 +571,6 @@ public class FragmentAutomobile extends Fragment {
                 params.put("vehicleID", String.valueOf(vehicleID));
                 params.put("avgCons", String.valueOf(averageCons));
                 params.put("carbonEmission", String.valueOf(carbonEmission));
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

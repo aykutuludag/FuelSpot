@@ -27,9 +27,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -97,7 +100,7 @@ public class UserFavorites extends AppCompatActivity {
     }
 
     private void fetchStation(final int stationID) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + stationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + stationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -149,6 +152,12 @@ public class UserFavorites extends AppCompatActivity {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

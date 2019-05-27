@@ -65,6 +65,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -95,6 +96,7 @@ import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
 import static com.fuelspot.MainActivity.userDisplayLanguage;
@@ -330,6 +332,13 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -349,7 +358,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("location", location);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;
@@ -361,7 +369,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void fetchTaxRates() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_TAX) + "?country=" + userCountry,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -393,6 +401,12 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -400,7 +414,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void fetchAutomobiles() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -435,6 +449,12 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -661,6 +681,13 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     }
                 }) {
             @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
                 Map<String, String> params = new Hashtable<>();
@@ -678,7 +705,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 } else {
                     params.put("carPhoto", "");
                 }
-                params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                 //returning parameters
                 return params;

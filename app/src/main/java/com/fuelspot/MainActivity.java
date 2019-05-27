@@ -53,7 +53,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import hotchemi.android.rate.AppRate;
 
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int fuelSec;
     public static int kilometer;
     public static int mapDefaultRange;
-    public static String userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
+    public static String token, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static int adCount;
 
     private List<Fragment> fragments = new ArrayList<>(5);
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         userPhoneNumber = prefs.getString("userPhoneNumber", "");
         currencySymbol = prefs.getString("userCurrencySymbol", "");
         userFavorites = prefs.getString("userFavorites", "");
+        token = prefs.getString("token", "");
     }
 
     public static boolean isNetworkConnected(Context mContext) {
@@ -388,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     private void fetchAutomobiles() {
         userAutomobileList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -435,6 +438,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -477,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         companyList.clear();
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY) + "?AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -511,6 +520,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue

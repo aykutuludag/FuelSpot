@@ -58,6 +58,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +67,7 @@ import java.util.Map;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
@@ -146,7 +148,7 @@ public class SuperCampaings extends AppCompatActivity {
     public void fetchCampaigns() {
         final ProgressDialog loading = ProgressDialog.show(SuperCampaings.this, getString(R.string.loading_campaigns), getString(R.string.please_wait), false, false);
         feedsList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_CAMPAINGS) + "?stationID=" + superStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_CAMPAINGS) + "?stationID=" + superStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -193,6 +195,12 @@ public class SuperCampaings extends AppCompatActivity {
                         mRecyclerView.setVisibility(View.GONE);
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -201,7 +209,7 @@ public class SuperCampaings extends AppCompatActivity {
 
     public void fetchOldCampaigns() {
         feedsList2.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_OLD_CAMPAINGS) + "?stationID=" + superStationID + "&AUTH_KEY=" + getString(R.string.fuelspot_api_key),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_OLD_CAMPAINGS) + "?stationID=" + superStationID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -243,6 +251,12 @@ public class SuperCampaings extends AppCompatActivity {
                         mRecyclerView2.setVisibility(View.GONE);
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -455,6 +469,13 @@ public class SuperCampaings extends AppCompatActivity {
                             }
                         }) {
                     @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("token", token);
+                        return params;
+                    }
+
+                    @Override
                     protected Map<String, String> getParams() {
                         //Creating parameters
                         Map<String, String> params = new Hashtable<>();
@@ -472,7 +493,6 @@ public class SuperCampaings extends AppCompatActivity {
                         }
                         params.put("campaignStart", sTime);
                         params.put("campaignEnd", eTime);
-                        params.put("AUTH_KEY", getString(R.string.fuelspot_api_key));
 
                         //returning parameters
                         return params;
