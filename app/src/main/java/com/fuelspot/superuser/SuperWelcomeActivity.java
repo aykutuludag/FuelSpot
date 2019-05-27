@@ -465,6 +465,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 userDisplayLanguage = obj.getString("language");
                                 prefs.edit().putString("userLanguage", userDisplayLanguage).apply();
 
+                                token = obj.getString("token");
+                                prefs.edit().putString("token", token).apply();
+
                                 Toast.makeText(SuperWelcomeActivity.this, getString(R.string.login_successful), Toast.LENGTH_LONG).show();
                                 promoLayout.setVisibility(View.GONE);
                                 welcome1.setVisibility(View.VISIBLE);
@@ -504,6 +507,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
+                params.put("deviceType", "mobile");
 
                 //returning parameters
                 return params;
