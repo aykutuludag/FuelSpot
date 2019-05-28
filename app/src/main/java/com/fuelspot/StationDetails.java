@@ -118,12 +118,6 @@ import static com.fuelspot.MainActivity.username;
 public class StationDetails extends AppCompatActivity {
 
     public static List<CommentItem> stationCommentList = new ArrayList<>();
-    private static List<CampaignItem> campaignList = new ArrayList<>();
-    private List<Entry> gasolinePriceHistory = new ArrayList<>();
-    private List<Entry> dieselPriceHistory = new ArrayList<>();
-    private List<Entry> lpgPriceHistory = new ArrayList<>();
-    private List<Entry> elecPriceHistory = new ArrayList<>();
-
     public static int stars = 5;
     public static int choosenStationID;
     public static int userCommentID;
@@ -132,6 +126,7 @@ public class StationDetails extends AppCompatActivity {
     public static float stationScore;
     public static String userComment;
     public static boolean hasAlreadyCommented;
+    private static List<CampaignItem> campaignList = new ArrayList<>();
     private static int isStationVerified;
     private static float gasolinePrice;
     private static float dieselPrice;
@@ -142,12 +137,14 @@ public class StationDetails extends AppCompatActivity {
     private static String stationVicinity;
     private static String stationLocation;
     private static String iconURL;
-
+    MenuItem settingsItem;
+    private List<Entry> gasolinePriceHistory = new ArrayList<>();
+    private List<Entry> dieselPriceHistory = new ArrayList<>();
+    private List<Entry> lpgPriceHistory = new ArrayList<>();
+    private List<Entry> elecPriceHistory = new ArrayList<>();
     private String facilitiesOfStation;
     private CircleImageView stationIcon;
-
     private RelativeTimeTextView textLastUpdated;
-    MenuItem settingsItem;
     private TextView noCampaignText;
     private TextView noCommentText;
     private TextView textStationID;
@@ -189,6 +186,12 @@ public class StationDetails extends AppCompatActivity {
     private int reportRequest;
     private SimpleDateFormat sdf;
     private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel;
+
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
     @SuppressLint({"ClickableViewAccessibility", "SetJavaScriptEnabled"})
     @Override
@@ -472,9 +475,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -575,9 +578,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -782,9 +785,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -878,9 +881,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -989,9 +992,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -1045,9 +1048,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -1328,9 +1331,9 @@ public class StationDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -1365,12 +1368,6 @@ public class StationDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private String getStringImage(Bitmap bmp) {

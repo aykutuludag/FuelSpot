@@ -23,8 +23,8 @@ public class GraphMarkerAdapter extends MarkerView {
 
     ArrayList<ILineDataSet> dataSets;
     List<Entry> benzinDegerler, dizelDegerler, lpgDegerler, elektrikDegerler;
-    private SimpleDateFormat sdf = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
     DecimalFormat df = new DecimalFormat("#.##");
+    private SimpleDateFormat sdf = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
     private TextView textViewGasoline, textViewDiesel, textViewLPG, textViewElectricity, textViewTime;
     private MPPointF mOffset;
 

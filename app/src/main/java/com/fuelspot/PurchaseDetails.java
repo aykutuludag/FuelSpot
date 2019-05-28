@@ -98,22 +98,28 @@ import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 
 public class PurchaseDetails extends AppCompatActivity {
 
+    Button addBillPhotoButton;
+    RequestQueue requestQueue;
+    FloatingActionButton fab;
+    StationItem info = new StationItem();
+    ImageView istasyonLogo;
     private RequestOptions options;
     private MapView mMapView;
     private GoogleMap googleMap;
     private int purchaseID;
-    Button addBillPhotoButton;
     private int isPurchaseVerified;
     private String plakaNo;
-    RequestQueue requestQueue;
-    FloatingActionButton fab;
     private ImageView fatura;
     private Bitmap bitmap;
     private Toolbar toolbar;
     private Window window;
-    StationItem info = new StationItem();
-    ImageView istasyonLogo;
     private int stationID;
+
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,9 +397,9 @@ public class PurchaseDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -490,9 +496,9 @@ public class PurchaseDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -542,9 +548,9 @@ public class PurchaseDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -625,20 +631,14 @@ public class PurchaseDetails extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private String getStringImage(Bitmap bmp) {

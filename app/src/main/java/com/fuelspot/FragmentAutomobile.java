@@ -71,14 +71,13 @@ import static com.fuelspot.MainActivity.vehicleID;
 public class FragmentAutomobile extends Fragment {
 
     public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
-
+    TextView textViewPlaka;
+    Button addAutomobileButton;
     private RecyclerView mRecyclerView;
     private GridLayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-
     private SharedPreferences prefs;
     private TextView kilometerText;
-    TextView textViewPlaka;
     private TextView avgText;
     private TextView avgPrice;
     private TextView emission;
@@ -89,7 +88,6 @@ public class FragmentAutomobile extends Fragment {
     private View view;
     private RelativeLayout regularLayout;
     private RelativeLayout noAracLayout;
-    Button addAutomobileButton;
     private SwipeRefreshLayout swipeContainer;
 
     public static FragmentAutomobile newInstance() {
@@ -432,9 +430,9 @@ public class FragmentAutomobile extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -557,9 +555,9 @@ public class FragmentAutomobile extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override

@@ -79,7 +79,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     public static int isStationVerified, superStationID;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
-
+    public AHBottomNavigation bottomNavigation;
+    public MenuItem filterButton;
+    CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private boolean doubleBackToExitPressedOnce;
     private RequestQueue queue;
     private Window window;
@@ -88,10 +90,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     private IInAppBillingService mService;
     private ServiceConnection mServiceConn;
     private FragNavController mFragNavController;
-    public AHBottomNavigation bottomNavigation;
     private List<Fragment> fragments = new ArrayList<>(5);
-    public MenuItem filterButton;
-    CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
 
     public static void getSuperVariables(SharedPreferences prefs) {
         // Station-specific information
@@ -373,9 +372,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -489,9 +488,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 

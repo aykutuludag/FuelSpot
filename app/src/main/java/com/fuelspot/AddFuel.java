@@ -91,27 +91,25 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class AddFuel extends AppCompatActivity {
 
+    ProgressDialog stationFetching;
+    Button buttonAddBill;
+    GridLayoutManager mLayoutManager;
     private Window window;
     private Toolbar toolbar;
     private SharedPreferences prefs;
     private RequestQueue requestQueue;
     private RequestOptions options;
-
     private int chosenStationID, tempKM;
     private String stationName, stationAddress, stationLoc, stationLogo;
     private float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, totalPrice;
-
     /* LAYOUT 1 ÖĞELER */
     private CircleImageView istasyonLogoHolder;
-    ProgressDialog stationFetching;
     private RelativeLayout expandableLayoutYakit, expandableLayoutYakit2;
     private String fuelType, fuelType2;
-    Button buttonAddBill;
     private ImageView fuelType1Icon, fuelType2Icon, photoHolder;
     private EditText enterKilometer, textViewLitreFiyati, textViewTotalFiyat, textViewLitreFiyati2, textViewTotalFiyat2;
     private Bitmap bitmap;
     private ScrollView scrollView;
-    GridLayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private TextView istasyonNameHolder, istasyonAdresHolder, istasyonIDHolder, fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre, textViewLitre2, textViewBonus;
     private RecyclerView.Adapter mAdapter;
@@ -133,6 +131,12 @@ public class AddFuel extends AppCompatActivity {
                 break;
         }
         return tax;
+    }
+
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     @Override
@@ -276,9 +280,9 @@ public class AddFuel extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -336,9 +340,9 @@ public class AddFuel extends AppCompatActivity {
 
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -665,9 +669,9 @@ public class AddFuel extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -711,12 +715,6 @@ public class AddFuel extends AppCompatActivity {
         //Adding request to the queue
         requestQueue.add(stringRequest);
 
-    }
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private String getStringImage(Bitmap bmp) {

@@ -92,7 +92,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int mapDefaultRange;
     public static String token, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static int adCount;
-
+    public static InterstitialAd admobInterstitial;
+    public AHBottomNavigation bottomNavigation;
+    public MenuItem filterButton;
+    CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private List<Fragment> fragments = new ArrayList<>(5);
     private SharedPreferences prefs;
     private IInAppBillingService mService;
@@ -101,11 +104,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private Toolbar toolbar;
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
-    public AHBottomNavigation bottomNavigation;
     private RequestQueue queue;
-    public static InterstitialAd admobInterstitial;
-    public MenuItem filterButton;
-    CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -445,9 +444,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -546,9 +545,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 

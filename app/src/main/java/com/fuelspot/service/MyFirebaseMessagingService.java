@@ -20,10 +20,10 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private NotificationCompat.Builder builder;
-    private PendingIntent pIntent;
     String title, newsURL;
     Intent intent;
+    private NotificationCompat.Builder builder;
+    private PendingIntent pIntent;
 
     @Override
     public void onNewToken(String token) {

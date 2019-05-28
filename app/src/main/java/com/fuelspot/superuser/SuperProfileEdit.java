@@ -99,6 +99,12 @@ public class SuperProfileEdit extends AppCompatActivity {
     private RequestQueue requestQueue;
     private RequestOptions options;
 
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -343,9 +349,9 @@ public class SuperProfileEdit extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -376,12 +382,6 @@ public class SuperProfileEdit extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private String getStringImage(Bitmap bmp) {

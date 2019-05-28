@@ -96,6 +96,10 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class FragmentMyStation extends Fragment {
 
+    NestedScrollView scrollView;
+    float distanceInMeters;
+    StationItem info = new StationItem();
+    LatLng sydney;
     private SharedPreferences prefs;
     private MapView mMapView;
     private RequestQueue queue;
@@ -114,10 +118,6 @@ public class FragmentMyStation extends Fragment {
     private LocationCallback mLocationCallback;
     private View rootView;
     private GoogleMap googleMap;
-    NestedScrollView scrollView;
-    float distanceInMeters;
-    StationItem info = new StationItem();
-    LatLng sydney;
     private SwipeRefreshLayout swipeContainer;
 
     public static FragmentMyStation newInstance() {

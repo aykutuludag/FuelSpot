@@ -45,8 +45,8 @@ import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.token;
 
 public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHolder> {
-    private List<CampaignItem> mItemList;
     RequestOptions options;
+    private List<CampaignItem> mItemList;
     private Context mContext;
     private ImageView imageViewCampaign;
     private String whichScreen;
@@ -203,9 +203,9 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override

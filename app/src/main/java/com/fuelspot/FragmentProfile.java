@@ -72,7 +72,7 @@ public class FragmentProfile extends Fragment {
 
     public static List<CommentItem> userCommentList = new ArrayList<>();
     public static List<BankingItem> userBankingList = new ArrayList<>();
-
+    SharedPreferences prefs;
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
     private RecyclerView.Adapter mAdapter2;
@@ -82,7 +82,6 @@ public class FragmentProfile extends Fragment {
     private RequestQueue requestQueue;
     private View rootView;
     private SwipeRefreshLayout swipeContainer;
-    SharedPreferences prefs;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -264,9 +263,9 @@ public class FragmentProfile extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -324,9 +323,9 @@ public class FragmentProfile extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -421,9 +420,9 @@ public class FragmentProfile extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 

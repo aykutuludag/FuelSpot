@@ -75,11 +75,6 @@ public class StoreActivity extends AppCompatActivity {
 
     private static final int PURCHASE_PREMIUM = 13200;
     private static final int PURCHASE_DOUBLE_RANGE = 63000;
-    private RecyclerView mRecyclerView;
-    private IInAppBillingService mService;
-    private SharedPreferences prefs;
-    private Window window;
-    private Toolbar toolbar;
     int itemNo;
     float price1 = 4.99f;
     float price2 = 29.90f;
@@ -87,6 +82,11 @@ public class StoreActivity extends AppCompatActivity {
     RequestOptions options;
     PopupWindow mPopupWindow;
     TextView textViewCurrentBalance;
+    private RecyclerView mRecyclerView;
+    private IInAppBillingService mService;
+    private SharedPreferences prefs;
+    private Window window;
+    private Toolbar toolbar;
     private RequestQueue requestQueue;
 
     @Override
@@ -435,9 +435,9 @@ public class StoreActivity extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -512,9 +512,9 @@ public class StoreActivity extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 

@@ -72,8 +72,8 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationID;
 
 public class SuperCampaings extends AppCompatActivity {
 
-    private RequestQueue requestQueue;
     ImageView imageViewCampaign;
+    private RequestQueue requestQueue;
     private SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private RecyclerView mRecyclerView, mRecyclerView2;
     private RecyclerView.Adapter mAdapter;
@@ -89,6 +89,12 @@ public class SuperCampaings extends AppCompatActivity {
     private SimpleDateFormat sdf2 = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
     private SwipeRefreshLayout swipeContainer;
     private RequestOptions options;
+
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,9 +203,9 @@ public class SuperCampaings extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -253,9 +259,9 @@ public class SuperCampaings extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -469,9 +475,9 @@ public class SuperCampaings extends AppCompatActivity {
                         }) {
                     @Override
                     public Map<String, String> getHeaders() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("token", token);
-                        return params;
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        return headers;
                     }
 
                     @Override
@@ -517,12 +523,6 @@ public class SuperCampaings extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     private String getStringImage(Bitmap bmp) {

@@ -95,6 +95,11 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class FragmentStations extends Fragment {
 
+    int whichOrder;
+    boolean isMapUpdating;
+    NestedScrollView scrollView;
+    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
+    RelativeLayout stationLayout;
     // Station variables
     private List<StationItem> shortStationList = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
@@ -116,11 +121,6 @@ public class FragmentStations extends Fragment {
     private RelativeLayout sortDistanceLayout;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    int whichOrder;
-    boolean isMapUpdating;
-    NestedScrollView scrollView;
-    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
-    RelativeLayout stationLayout;
 
     public static FragmentStations newInstance() {
         Bundle args = new Bundle();
@@ -501,9 +501,9 @@ public class FragmentStations extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 

@@ -74,6 +74,7 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 
 public class SuperUpdateStation extends AppCompatActivity {
 
+    SharedPreferences prefs;
     private EditText stationAddressHolder;
     private TextView stationLicenseHolder;
     private TextView textViewStationIDHolder;
@@ -83,7 +84,6 @@ public class SuperUpdateStation extends AppCompatActivity {
     private EditText lpgHolder;
     private RequestQueue requestQueue;
     private RelativeTimeTextView lastUpdateTimeText;
-    SharedPreferences prefs;
     private RelativeLayout verifiedLayout;
     private Spinner spinner;
     private Window window;
@@ -542,9 +542,9 @@ public class SuperUpdateStation extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -585,9 +585,9 @@ public class SuperUpdateStation extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
 
             @Override
@@ -681,9 +681,9 @@ public class SuperUpdateStation extends AppCompatActivity {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 

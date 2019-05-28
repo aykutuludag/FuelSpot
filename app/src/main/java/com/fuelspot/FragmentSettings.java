@@ -86,6 +86,9 @@ import static com.fuelspot.MainActivity.verifyFilePickerPermission;
 
 public class FragmentSettings extends Fragment {
 
+    Button buttonTax;
+    DecimalFormat df = new DecimalFormat("##.#");
+    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
     private TextView textViewGasolineTax;
     private TextView textViewDieselTax;
     private TextView textViewLPGTax;
@@ -100,9 +103,6 @@ public class FragmentSettings extends Fragment {
     private RequestQueue requestQueue;
     private View rootView;
     private CheckBox geofenceCheckBox;
-    Button buttonTax;
-    DecimalFormat df = new DecimalFormat("##.#");
-    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
     public static FragmentSettings newInstance() {
         Bundle args = new Bundle();
@@ -174,9 +174,9 @@ public class FragmentSettings extends Fragment {
                 }) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", token);
-                return params;
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
 
@@ -265,9 +265,9 @@ public class FragmentSettings extends Fragment {
                         }) {
                     @Override
                     public Map<String, String> getHeaders() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("token", token);
-                        return params;
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        return headers;
                     }
 
                     @Override

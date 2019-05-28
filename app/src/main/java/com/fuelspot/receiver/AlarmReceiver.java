@@ -50,6 +50,8 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    LocationCallback mLocationCallback;
+    boolean doesLocationWorking;
     private GoogleApiClient client;
     private PendingIntent mPendingIntent;
     private AwarenessFence locationFence;
@@ -57,8 +59,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     private Context mContext;
     private SharedPreferences prefs;
     private FusedLocationProviderClient mFusedLocationClient;
-    LocationCallback mLocationCallback;
-    boolean doesLocationWorking;
 
     @Override
     public void onReceive(Context context, Intent intent) {
