@@ -351,6 +351,8 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                                 editor.apply();
                                 Toast.makeText(AutomobileEditActivity.this, getString(R.string.vehicle_update_success), Toast.LENGTH_LONG).show();
                                 finish();
+                            } else if (response.equals("plateNo exists")) {
+                                Toast.makeText(AutomobileEditActivity.this, "Bu plaka daha önce eklenmiş. Bir hata olduğunu düşünüyorsanız bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(AutomobileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                             }

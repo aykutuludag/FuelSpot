@@ -46,10 +46,12 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             intent.putExtra("FUEL_PRICE_1", feedItemList.get(position).getFuelPrice());
             intent.putExtra("FUEL_LITER_1", feedItemList.get(position).getFuelLiter());
             intent.putExtra("FUEL_TAX_1", feedItemList.get(position).getFuelTax());
+            intent.putExtra("SUB_TOTAL", feedItemList.get(position).getSubTotal());
             intent.putExtra("FUEL_TYPE_2", feedItemList.get(position).getFuelType2());
             intent.putExtra("FUEL_PRICE_2", feedItemList.get(position).getFuelPrice2());
             intent.putExtra("FUEL_LITER_2", feedItemList.get(position).getFuelLiter2());
             intent.putExtra("FUEL_TAX_2", feedItemList.get(position).getFuelTax2());
+            intent.putExtra("SUB_TOTAL_2", feedItemList.get(position).getSubTotal2());
             intent.putExtra("TOTAL_PRICE", feedItemList.get(position).getTotalPrice());
             intent.putExtra("BONUS", feedItemList.get(position).getBonus());
             intent.putExtra("BILL_PHOTO", feedItemList.get(position).getBillPhoto());

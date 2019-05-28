@@ -34,7 +34,7 @@
     <string name="how_to_register_car">Nasıl araç eklerim?</string>
     <string name="how_to_register_car_desc">Profil sayfasındaki araç ekle butonuna basarak araç eklereyek online araç takibine başlayabilirsiniz.</string>
     <string name="how_to_add_fuel">Nasıl yakıt eklerim?</string>
-    <string name="how_to_add_fuel_desc">FuelSpot istasyona yakıt almaya gittiğinizde bunu tespit edip size bildirim gönderecektir. Bildirime tıklayarak yakıt ekleme yapabilrisiniz.</string>
+    <string name="how_to_add_fuel_desc">FuelSpot istasyona yakıt almaya gittiğinizde bunu tespit edip size bildirim gönderecektir. Bildirime tıklayarak yakıt ekleyebilirsiniz.</string>
     <string name="info_saved_welcome">Bilgileriniz kaydedildi. FuelSpot\'a tekrardan hoşgeldiniz!</string>
     <string name="enter_plate_no">Lütfen plakanızı giriniz</string>
     <string name="plate_no_exist">Bu plaka daha önce sisteme kaydedilmiş…</string>

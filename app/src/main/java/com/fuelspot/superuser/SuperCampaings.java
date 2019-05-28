@@ -439,7 +439,6 @@ public class SuperCampaings extends AppCompatActivity {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                System.out.println(response);
                                 loading.dismiss();
                                 if (response != null && response.length() > 0) {
                                     switch (response) {

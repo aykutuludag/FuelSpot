@@ -507,7 +507,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
-                params.put("deviceType", "mobile");
+                params.put("deviceType", "android");
 
                 //returning parameters
                 return params;

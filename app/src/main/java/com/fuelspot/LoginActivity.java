@@ -446,7 +446,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println(response);
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
                             try {
@@ -497,7 +496,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     }
                                 }, 1500);
                             } catch (JSONException e) {
-                                System.out.println(e.toString());
                                 //Dismissing the progress dialog
                                 Snackbar.make(background, e.toString(), Snackbar.LENGTH_SHORT).show();
                                 prefs.edit().putBoolean("isSigned", false).apply();
@@ -515,7 +513,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         loading.dismiss();
                         Snackbar.make(background, volleyError.toString(), Snackbar.LENGTH_SHORT).show();
                         prefs.edit().putBoolean("isSigned", false).apply();
-                        System.out.println(volleyError.toString());
                     }
                 }) {
             @Override
@@ -528,7 +525,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 params.put("name", name);
                 params.put("email", email);
                 params.put("photo", photo);
-                params.put("deviceType", "mobile");
+                params.put("deviceType", "android");
 
                 //returning parameters
                 return params;

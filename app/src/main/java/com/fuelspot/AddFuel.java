@@ -274,6 +274,12 @@ public class AddFuel extends AppCompatActivity {
                         Toast.makeText(AddFuel.this, volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
         };
 
         //Adding request to the queue
@@ -528,7 +534,7 @@ public class AddFuel extends AppCompatActivity {
                     selectedUnitPrice2 = Float.parseFloat(s.toString());
                     buyedLiter2 = howManyLiter(selectedUnitPrice2, entryPrice2);
                     String literText2 = String.format(Locale.getDefault(), "%.2f", buyedLiter2);
-                    textViewLitre.setText(literText2);
+                    textViewLitre2.setText(literText2);
                 }
             }
         });

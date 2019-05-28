@@ -403,7 +403,6 @@ public class FragmentAutomobile extends Fragment {
                                     String emissionHolder = calculateCarbonEmission() + " GR/100km";
                                     emission.setText(emissionHolder);
                                 }
-
                                 try {
                                     SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
                                     Date date = format.parse(vehiclePurchaseList.get(0).getPurchaseTime());

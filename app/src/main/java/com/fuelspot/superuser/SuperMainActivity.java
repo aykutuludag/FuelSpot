@@ -1,10 +1,12 @@
 package com.fuelspot.superuser;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -49,6 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -163,7 +166,10 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         bottomNavigation.addItem(item5);
 
         // Bottombar Settings
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+        bottomNavigation.setAccentColor(Color.parseColor("#FF4500"));
+        bottomNavigation.setInactiveColor(Color.parseColor("#424242"));
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         bottomNavigation.setOnTabSelectedListener(this);
 
         // AppRater
@@ -433,6 +439,25 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
+                            if (response.equals("AuthError")) {
+                                //We're just checking here for any authentication error. If it is, log out.
+
+                                // Do logout
+                                @SuppressLint("SdCardPath")
+                                File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
+                                File[] listFiles = sharedPreferenceFile.listFiles();
+                                for (File file : listFiles) {
+                                    file.delete();
+                                }
+
+                                PackageManager packageManager = SuperMainActivity.this.getPackageManager();
+                                Intent intent = packageManager.getLaunchIntentForPackage(SuperMainActivity.this.getPackageName());
+                                ComponentName componentName = intent.getComponent();
+                                Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                                SuperMainActivity.this.startActivity(mainIntent);
+                                Runtime.getRuntime().exit(0);
+                            }
+
                             try {
                                 JSONArray res = new JSONArray(response);
 

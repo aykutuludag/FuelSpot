@@ -175,7 +175,6 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
     }
 
     private void deleteCampaign(final int campaignID) {
-        System.out.println(campaignID);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_DELETE_CAMPAING),
                 new Response.Listener<String>() {
                     @Override

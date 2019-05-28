@@ -45,6 +45,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.MarkerAdapter;
+import com.fuelspot.model.PurchaseItem;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.gms.analytics.HitBuilders;
@@ -79,6 +80,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
@@ -88,6 +90,7 @@ import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -153,6 +156,8 @@ public class PurchaseDetails extends AppCompatActivity {
         float fuelLiter2 = getIntent().getFloatExtra("FUEL_LITER_2", 0);
         float fuelTax1 = getIntent().getFloatExtra("FUEL_TAX_1", 0);
         float fuelTax2 = getIntent().getFloatExtra("FUEL_TAX_2", 0);
+        float subTotal = getIntent().getFloatExtra("SUB_TOTAL", 0);
+        float subTotal2 = getIntent().getFloatExtra("SUB_TOTAL_2", 0);
         float totalPrice = getIntent().getFloatExtra("TOTAL_PRICE", 0);
         float bonus = getIntent().getFloatExtra("BONUS", 0);
         isPurchaseVerified = getIntent().getIntExtra("IS_PURCHASE_VERIFIED", 0);
@@ -227,8 +232,9 @@ public class PurchaseDetails extends AppCompatActivity {
             circleImageViewStatus.setBackgroundResource(R.drawable.money);
             if (billPhoto != null && billPhoto.length() > 0) {
                 textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+                addBillPhotoButton.setText("Fotoğrafı güncelle");
             } else {
-                textViewStatus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus kazanabilirsiniz!");
+                textViewStatus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazanabilirsiniz!");
             }
         }
 
@@ -248,8 +254,7 @@ public class PurchaseDetails extends AppCompatActivity {
         }
         birimFiyat1.setText(fuelPrice1 + " " + currencySymbol);
         litre1.setText(fuelLiter1 + " " + userUnit);
-        int priceOne = (int) (fuelPrice1 * fuelLiter1);
-        String priceHolder = priceOne + " " + currencySymbol;
+        String priceHolder = String.format(Locale.getDefault(), "%.2f", subTotal) + " " + currencySymbol;
         fiyat1.setText(priceHolder);
 
         if (fuelType2 != -1) {
@@ -269,8 +274,7 @@ public class PurchaseDetails extends AppCompatActivity {
             }
             birimFiyat2.setText(fuelPrice2 + " " + currencySymbol);
             litre2.setText(fuelLiter2 + " " + userUnit);
-            int priceTwo = (int) (fuelPrice2 * fuelLiter2);
-            String priceHolder2 = priceTwo + " " + currencySymbol;
+            String priceHolder2 = String.format(Locale.getDefault(), "%.2f", subTotal2) + " " + currencySymbol;
             fiyat2.setText(priceHolder2);
         } else {
             tur2.setVisibility(View.GONE);
@@ -279,7 +283,8 @@ public class PurchaseDetails extends AppCompatActivity {
         }
 
 
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", fuelTax1 + fuelTax2) + " " + currencySymbol;
+        float totalVergiMoney = subTotal * fuelTax1 + subTotal2 * fuelTax2;
+        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", totalVergiMoney) + " " + currencySymbol;
         vergi.setText(taxHolder);
 
         String totalHolder = "TOPLAM : " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencySymbol;
@@ -517,7 +522,7 @@ public class PurchaseDetails extends AppCompatActivity {
                             switch (response) {
                                 case "Success":
                                     Toast.makeText(PurchaseDetails.this, "Satınalma güncellendi...", Toast.LENGTH_LONG).show();
-                                    finish();
+                                    fetchVehiclePurchases();
                                     break;
                                 case "Fail":
                                     Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz...", Toast.LENGTH_LONG).show();
@@ -562,6 +567,69 @@ public class PurchaseDetails extends AppCompatActivity {
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void fetchVehiclePurchases() {
+        vehiclePurchaseList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    PurchaseItem item = new PurchaseItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setPurchaseTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("stationID"));
+                                    item.setStationName(obj.getString("stationName"));
+                                    item.setStationIcon(obj.getString("stationIcon"));
+                                    item.setStationLocation(obj.getString("stationLocation"));
+                                    item.setPlateNo(obj.getString("plateNo"));
+                                    item.setFuelType(obj.getInt("fuelType"));
+                                    item.setFuelPrice((float) obj.getDouble("fuelPrice"));
+                                    item.setFuelLiter((float) obj.getDouble("fuelLiter"));
+                                    item.setFuelTax((float) obj.getDouble("fuelTax"));
+                                    item.setSubTotal((float) obj.getDouble("subTotal"));
+                                    item.setFuelType2(obj.getInt("fuelType2"));
+                                    item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
+                                    item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
+                                    item.setFuelTax2((float) obj.getDouble("fuelTax2"));
+                                    item.setSubTotal2((float) obj.getDouble("subTotal2"));
+                                    item.setBonus((float) obj.getDouble("bonus"));
+                                    item.setTotalPrice((float) obj.getDouble("totalPrice"));
+                                    item.setBillPhoto(obj.getString("billPhoto"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setKilometer(obj.getInt("kilometer"));
+                                    vehiclePurchaseList.add(item);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", token);
+                return params;
+            }
+        };
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
