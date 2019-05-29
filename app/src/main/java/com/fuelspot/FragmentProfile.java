@@ -75,7 +75,7 @@ public class FragmentProfile extends Fragment {
     SharedPreferences prefs;
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
-    private RecyclerView.Adapter mAdapter2;
+    private RecyclerView.Adapter mAdapter, mAdapter2;
     private RelativeLayout userNoCommentLayout;
     private Button buttonSeeAllComments;
     private TextView textViewFMoney;
@@ -120,7 +120,7 @@ public class FragmentProfile extends Fragment {
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
-            mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerView.setNestedScrollingEnabled(true);
 
             Button addAutomobile = rootView.findViewById(R.id.button_add_vehicle);
             addAutomobile.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +134,7 @@ public class FragmentProfile extends Fragment {
             // Comments
             userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
             mRecyclerView2 = rootView.findViewById(R.id.commentView);
-            mRecyclerView2.setNestedScrollingEnabled(false);
+            mRecyclerView2.setNestedScrollingEnabled(true);
 
             buttonSeeAllComments = rootView.findViewById(R.id.button_seeAllComments);
             buttonSeeAllComments.setOnClickListener(new View.OnClickListener() {
@@ -304,7 +304,7 @@ public class FragmentProfile extends Fragment {
                                     }
 
                                     GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-                                    RecyclerView.Adapter mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
+                                    mAdapter = new VehicleAdapter(getActivity(), userAutomobileList);
                                     mAdapter.notifyDataSetChanged();
                                     mRecyclerView.setLayoutManager(mLayoutManager);
                                     mRecyclerView.setAdapter(mAdapter);
@@ -436,6 +436,10 @@ public class FragmentProfile extends Fragment {
         if (textViewFMoney != null) {
             String dummyMoneyText = String.format(Locale.getDefault(), "%.2f", userFSMoney) + " FP";
             textViewFMoney.setText(dummyMoneyText);
+        }
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

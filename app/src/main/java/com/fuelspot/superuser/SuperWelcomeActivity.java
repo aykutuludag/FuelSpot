@@ -132,7 +132,6 @@ import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
-import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
@@ -171,7 +170,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private ScrollView welcome2;
     private RelativeLayout promoLayout;
     private RelativeLayout welcome1;
-    private RelativeLayout welcome3;
     private Button continueButton;
     private MapView mMapView;
     private Circle circle;
@@ -219,7 +217,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         promoLayout = findViewById(R.id.layout_promo);
         welcome1 = findViewById(R.id.welcome1);
         welcome2 = findViewById(R.id.welcome2);
-        welcome3 = findViewById(R.id.welcome3);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -1091,7 +1088,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         if (googleMap != null) {
             googleMap.clear();
-            //Draw a circle with radius of 150m
+            //Draw a circle with radius of 50m
             circle = googleMap.addCircle(new CircleOptions()
                     .center(new LatLng(Double.parseDouble(MainActivity.userlat), Double.parseDouble(MainActivity.userlon)))
                     .radius(mapDefaultStationRange)
@@ -1107,7 +1104,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultStationRange,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -1215,18 +1212,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 headers.put("Authorization", "Bearer " + token);
                 return headers;
             }
-
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                params.put("location", userlat + ";" + userlon);
-                params.put("radius", String.valueOf(mapDefaultStationRange));
-
-                //returning parameters
-                return params;
-            }
         };
 
         //Adding request to the queue
@@ -1268,7 +1253,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
 
         textViewStationAddress.setText(superStationAddress);
-
         editTextStationLicense.setFocusable(true);
         editTextStationLicense.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         editTextStationLicense.setText(superLicenseNo);
@@ -1399,9 +1383,21 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         if (res != null && res.length() > 0) {
                             if (res.equals("Success")) {
                                 Toast.makeText(SuperWelcomeActivity.this, getString(R.string.info_saved_welcome), Toast.LENGTH_SHORT).show();
-                                welcome2.setVisibility(View.GONE);
-                                welcome3.setVisibility(View.VISIBLE);
-                                layout5();
+                                isSigned = true;
+                                prefs.edit().putBoolean("isSigned", isSigned).apply();
+                                isSuperUser = true;
+                                prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
+
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent i = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                }, 1250);
+
                             } else {
                                 Toast.makeText(SuperWelcomeActivity.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                             }
@@ -1451,29 +1447,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    private void layout5() {
-        isSigned = true;
-        prefs.edit().putBoolean("isSigned", isSigned).apply();
-
-        isSuperUser = true;
-        prefs.edit().putBoolean("isSuperUser", isSuperUser).apply();
-
-        Button finishHowTo = findViewById(R.id.continueToMainMenu);
-        finishHowTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(SuperWelcomeActivity.this, SuperMainActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
-                }, 1500);
-            }
-        });
     }
 
     @Override

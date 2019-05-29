@@ -227,7 +227,7 @@ public class AddFuel extends AppCompatActivity {
 
         // Get user automobiles
         mRecyclerView = findViewById(R.id.automobileView);
-        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setNestedScrollingEnabled(true);
         mLayoutManager = new GridLayoutManager(AddFuel.this, 1);
 
         if (userAutomobileList != null && userAutomobileList.size() > 0) {
@@ -587,7 +587,7 @@ public class AddFuel extends AppCompatActivity {
             public void onClick(View v) {
                 if (isNetworkConnected(AddFuel.this)) {
                     if (totalPrice > 0) {
-                        if (kilometer != 0) {
+                        if (tempKM != 0) {
                             if (tempKM > kilometer) {
                                 addPurchase();
                             } else {

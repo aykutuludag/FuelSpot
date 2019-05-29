@@ -159,7 +159,6 @@
     <string name="edit">Edit</string>
     <string name="user_purchases">Your purchases</string>
     <string name="no_purchase_user">You didn\'t purchase any fuel. Your purchases and details will be listed here…</string>
-    <string name="no_purchase_note">Note: Location services should be open for working fuel adding system seamlessly.</string>
     <!-- FragmentAutomobile-->
 
     <!-- FragmentProfile-->

@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.GOOGLE_LOGIN;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.currencyCode;
@@ -275,19 +276,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             //Check user is regular or superUser
             if (isSuperUser) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
-                }, 1250);
+                if (isNetworkConnected(LoginActivity.this) && !premium) {
+                    AdMob(LoginActivity.this);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    }, 1250);
+                } else {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    }, 1250);
+                }
             } else {
                 final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 // Check user has premium and connected to internet
                 if (isNetworkConnected(LoginActivity.this) && !premium) {
-                    // AdMob(LoginActivity.this);
+                    AdMob(LoginActivity.this);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {

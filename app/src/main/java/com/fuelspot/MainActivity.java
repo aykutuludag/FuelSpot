@@ -42,7 +42,6 @@ import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.model.VehicleItem;
 import com.fuelspot.receiver.AlarmReceiver;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.maps.MapsInitializer;
@@ -177,23 +176,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
         admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
         admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
-        admobInterstitial.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                if (adCount < 2) {
-                    AdMob(mContext);
-                }
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
-                if (adCount < 2) {
-                    AdMob(mContext);
-                }
-            }
-        });
         admobInterstitial.loadAd(adRequest);
     }
 

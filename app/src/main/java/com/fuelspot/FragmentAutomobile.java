@@ -71,6 +71,7 @@ import static com.fuelspot.MainActivity.vehicleID;
 public class FragmentAutomobile extends Fragment {
 
     public static List<PurchaseItem> vehiclePurchaseList = new ArrayList<>();
+    public static List<PurchaseItem> dummyPurchaseList = new ArrayList<>();
     TextView textViewPlaka;
     Button addAutomobileButton;
     private RecyclerView mRecyclerView;
@@ -313,25 +314,23 @@ public class FragmentAutomobile extends Fragment {
             }
         });
 
-        swipeContainer.setRefreshing(false);
         fetchVehiclePurchases();
     }
 
     private void fetchVehiclePurchases() {
+        dummyPurchaseList.clear();
         vehiclePurchaseList.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        swipeContainer.setRefreshing(false);
                         if (response != null && response.length() > 0) {
-                            mRecyclerView.setVisibility(View.VISIBLE);
-                            userNoPurchaseLayout.setVisibility(View.GONE);
-
-                            List<PurchaseItem> dummyList = new ArrayList<>();
-                            mAdapter = new PurchaseAdapter(getActivity(), dummyList);
-                            mLayoutManager = new GridLayoutManager(getActivity(), 1);
-
                             try {
+                                mRecyclerView.setVisibility(View.VISIBLE);
+                                userNoPurchaseLayout.setVisibility(View.GONE);
+
                                 JSONArray res = new JSONArray(response);
 
                                 for (int i = 0; i < res.length(); i++) {
@@ -363,14 +362,16 @@ public class FragmentAutomobile extends Fragment {
                                     vehiclePurchaseList.add(item);
 
                                     if (i < 3) {
-                                        dummyList.add(item);
+                                        dummyPurchaseList.add(item);
                                     } else {
                                         buttonSeeAllPurchases.setVisibility(View.VISIBLE);
                                     }
-                                    mAdapter.notifyDataSetChanged();
                                 }
 
+                                mAdapter = new PurchaseAdapter(getActivity(), dummyPurchaseList);
+                                mLayoutManager = new GridLayoutManager(getActivity(), 1);
                                 mRecyclerView.setAdapter(mAdapter);
+                                mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setLayoutManager(mLayoutManager);
 
                                 //update kilometer
@@ -424,7 +425,7 @@ public class FragmentAutomobile extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
+                        swipeContainer.setRefreshing(false);
                         Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -585,6 +586,10 @@ public class FragmentAutomobile extends Fragment {
             if (!plateNo.equals(textViewPlaka.getText().toString())) {
                 loadVehicleProfile();
             }
+        }
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

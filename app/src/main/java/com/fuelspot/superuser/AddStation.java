@@ -50,7 +50,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.companyList;
-import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
@@ -245,7 +244,7 @@ public class AddStation extends AppCompatActivity {
 
 
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultStationRange,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

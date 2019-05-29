@@ -78,7 +78,6 @@
     <string name="edit">Düzenle</string>
     <string name="user_purchases">Yakıt alımlarınız</string>
     <string name="no_purchase_user">Henüz hiç yakıt eklememişsiniz Yakıt alımlarınız ve detayları burada listelenecek…</string>
-    <string name="no_purchase_note">Not: Yakıt ekleme sisteminin sorunsuz çalışması için konum servislerinin açık olması gerekmektedir.</string>
     <!-- FragmentAutomobile-->
 
     <!-- FragmentProfile-->

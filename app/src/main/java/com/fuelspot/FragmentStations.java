@@ -44,6 +44,7 @@ import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.receiver.AlarmReceiver;
 import com.fuelspot.superuser.SuperMainActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -76,6 +77,7 @@ import java.util.Map;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
@@ -261,7 +263,7 @@ public class FragmentStations extends Fragment {
             mRecyclerView = rootView.findViewById(R.id.stationView);
             GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerView.setNestedScrollingEnabled(true);
             mRecyclerView.removeAllViews();
 
             seeAllStations = rootView.findViewById(R.id.button_seeAllStations);
@@ -457,7 +459,7 @@ public class FragmentStations extends Fragment {
                                 sortBy(whichOrder);
 
                                 if (isSuperUser) {
-                                    ((SuperMainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 0);
+                                    ((SuperMainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 2);
                                 } else {
                                     ((MainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 0);
                                 }
@@ -897,13 +899,29 @@ public class FragmentStations extends Fragment {
         showAds(intent);
     }
 
-    private void showAds(Intent intent) {
+    private void showAds(final Intent intent) {
         if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            //Facebook ads doesnt loaded he will see AdMob
-            startActivity(intent);
             admobInterstitial.show();
             adCount++;
-            admobInterstitial = null;
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    if (adCount < 2) {
+                        startActivity(intent);
+                        admobInterstitial = null;
+                        AdMob(getActivity());
+                    }
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    if (adCount < 2) {
+                        AdMob(getActivity());
+                    }
+                }
+            });
         } else {
             // Ads doesn't loaded.
             startActivity(intent);

@@ -391,11 +391,11 @@ public class StationDetails extends AppCompatActivity {
 
         // Campaigns
         mRecyclerView = findViewById(R.id.campaignView);
-        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setNestedScrollingEnabled(true);
 
         // Comments
         mRecyclerView2 = findViewById(R.id.commentView);
-        mRecyclerView2.setNestedScrollingEnabled(false);
+        mRecyclerView2.setNestedScrollingEnabled(true);
 
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);

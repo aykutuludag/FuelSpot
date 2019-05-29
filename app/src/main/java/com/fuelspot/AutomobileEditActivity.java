@@ -66,6 +66,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.averageCons;
@@ -289,43 +290,50 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         //PlakaNO
         final EditText plateText = findViewById(R.id.editText_plate);
         plateText.setText(plateNo);
-        TextWatcher mTextWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if (vehiclePurchaseList.size() > 0) {
+            plateText.setEnabled(false);
+        } else {
+            TextWatcher mTextWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    // Normalize
-                    plateNo = s.toString().replaceAll(" ", "");
-                    plateNo = plateNo.toUpperCase();
-                    editor.putString("plateNo", plateNo);
                 }
-            }
-        };
-        InputFilter filter = new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                for (int i = start; i < end; i++) {
-                    if (!Character.isLetterOrDigit(source.charAt(i))) {
-                        return "";
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s != null && s.length() > 0) {
+                        // Normalize
+                        plateNo = s.toString().replaceAll(" ", "");
+                        plateNo = plateNo.toUpperCase();
+                        editor.putString("plateNo", plateNo);
                     }
                 }
-                return null;
-            }
-        };
-        plateText.setFilters(new InputFilter[]{filter});
-        plateText.addTextChangedListener(mTextWatcher);
+            };
+            InputFilter filter = new InputFilter() {
+                @Override
+                public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                    for (int i = start; i < end; i++) {
+                        if (!Character.isLetterOrDigit(source.charAt(i))) {
+                            return "";
+                        }
+                    }
+                    return null;
+                }
+            };
+            plateText.setFilters(new InputFilter[]{filter});
+            plateText.addTextChangedListener(mTextWatcher);
+        }
 
         final int vehicleNumber = userAutomobileList.size();
         FloatingActionButton fab = findViewById(R.id.fab);
+        if (vehiclePurchaseList.size() > 0) {
+            fab.hide();
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {

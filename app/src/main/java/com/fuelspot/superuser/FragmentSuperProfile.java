@@ -41,6 +41,7 @@ public class FragmentSuperProfile extends Fragment {
     private RecyclerView mRecyclerView;
     private View rootView;
     private SwipeRefreshLayout swipeContainer;
+    RecyclerView.Adapter mAdapter;
 
     public static FragmentSuperProfile newInstance() {
         Bundle args = new Bundle();
@@ -76,7 +77,7 @@ public class FragmentSuperProfile extends Fragment {
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
-            mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerView.setNestedScrollingEnabled(true);
 
             Button addStationButton = rootView.findViewById(R.id.button_add_station);
             addStationButton.setOnClickListener(new View.OnClickListener() {
@@ -152,11 +153,19 @@ public class FragmentSuperProfile extends Fragment {
         });
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-        RecyclerView.Adapter mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
+        mAdapter = new StationAdapter(getActivity(), listOfOwnedStations, "SUPERUSER_STATIONS");
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

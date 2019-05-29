@@ -80,6 +80,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.FragmentAutomobile.dummyPurchaseList;
 import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
@@ -231,7 +232,7 @@ public class PurchaseDetails extends AppCompatActivity {
 
         if (isPurchaseVerified == 1) {
             circleImageViewStatus.setBackgroundResource(R.drawable.verified);
-            textViewStatus.setText("Satın alma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
+            textViewStatus.setText("Satınalma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
             fab.hide();
             addBillPhotoButton.setVisibility(View.GONE);
         } else {
@@ -446,12 +447,11 @@ public class PurchaseDetails extends AppCompatActivity {
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
-        showAds(intent);
+        startActivity(intent);
     }
 
     private void showAds(Intent intent) {
         if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            //Facebook ads doesnt loaded he will see AdMob
             startActivity(intent);
             admobInterstitial.show();
             adCount++;
@@ -476,14 +476,20 @@ public class PurchaseDetails extends AppCompatActivity {
                             switch (response) {
                                 case "Success":
                                     Toast.makeText(PurchaseDetails.this, "Satın alma silindi", Toast.LENGTH_LONG).show();
-                                    finish();
+                                    fetchVehiclePurchases();
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            finish();
+                                        }
+                                    }, 1000);
                                     break;
                                 case "Fail":
-                                    Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PurchaseDetails.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
-                            Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PurchaseDetails.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -491,7 +497,7 @@ public class PurchaseDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        Toast.makeText(PurchaseDetails.this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PurchaseDetails.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -579,7 +585,9 @@ public class PurchaseDetails extends AppCompatActivity {
     }
 
     private void fetchVehiclePurchases() {
+        dummyPurchaseList.clear();
         vehiclePurchaseList.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo,
                 new Response.Listener<String>() {
                     @Override
@@ -615,6 +623,10 @@ public class PurchaseDetails extends AppCompatActivity {
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setKilometer(obj.getInt("kilometer"));
                                     vehiclePurchaseList.add(item);
+
+                                    if (i < 3) {
+                                        dummyPurchaseList.add(item);
+                                    }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

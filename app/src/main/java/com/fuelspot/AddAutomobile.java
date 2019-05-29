@@ -335,7 +335,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                                     Toast.makeText(AddAutomobile.this, getString(R.string.plate_no_exist), Toast.LENGTH_LONG).show();
                                     break;
                                 case "Success":
-                                    Toast.makeText(AddAutomobile.this, getString(R.string.vehicle_added) + ": " + dummyPlateNo, Toast.LENGTH_LONG).show();
                                     fetchAutomobiles();
                                     break;
                                 default:
@@ -427,11 +426,13 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                                         }
                                     }
                                 }
+
+                                Toast.makeText(AddAutomobile.this, getString(R.string.vehicle_added) + ": " + dummyPlateNo, Toast.LENGTH_LONG).show();
+                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        finish();
                     }
                 },
                 new Response.ErrorListener() {
@@ -440,6 +441,12 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
         };
 
         //Adding request to the queue

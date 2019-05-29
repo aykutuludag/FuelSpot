@@ -44,6 +44,7 @@ import com.fuelspot.StationDetails;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,6 +69,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.USTimeFormat;
@@ -432,13 +434,29 @@ public class FragmentMyStation extends Fragment {
         showAds(intent);
     }
 
-    private void showAds(Intent intent) {
+    private void showAds(final Intent intent) {
         if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            //Facebook ads doesnt loaded he will see AdMob
-            startActivity(intent);
             admobInterstitial.show();
             adCount++;
-            admobInterstitial = null;
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    if (adCount < 2) {
+                        startActivity(intent);
+                        admobInterstitial = null;
+                        AdMob(getActivity());
+                    }
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    if (adCount < 2) {
+                        AdMob(getActivity());
+                    }
+                }
+            });
         } else {
             // Ads doesn't loaded.
             startActivity(intent);

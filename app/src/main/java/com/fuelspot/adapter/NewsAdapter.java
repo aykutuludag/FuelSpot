@@ -20,6 +20,7 @@ import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
 import com.fuelspot.model.NewsItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.google.android.gms.ads.AdListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
@@ -97,13 +99,29 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         showAds(intent);
     }
 
-    private void showAds(Intent intent) {
+    private void showAds(final Intent intent) {
         if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            //Facebook ads doesnt loaded he will see AdMob
-            mContext.startActivity(intent);
             admobInterstitial.show();
             adCount++;
-            admobInterstitial = null;
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    if (adCount < 2) {
+                        mContext.startActivity(intent);
+                        admobInterstitial = null;
+                        AdMob(mContext);
+                    }
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    if (adCount < 2) {
+                        AdMob(mContext);
+                    }
+                }
+            });
         } else {
             // Ads doesn't loaded.
             mContext.startActivity(intent);

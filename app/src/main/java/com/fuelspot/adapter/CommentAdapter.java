@@ -35,6 +35,7 @@ import com.fuelspot.StationComments;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.CommentItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
@@ -47,7 +48,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.adCount;
+import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
@@ -74,7 +78,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 case "USER_COMMENTS":
                     Intent intent = new Intent(mContext, StationDetails.class);
                     intent.putExtra("STATION_ID", yItem.getStationID());
-                    mContext.startActivity(intent);
+                    showAds(intent);
                     break;
                 case "STATION_COMMENTS":
                     String text = null;
@@ -188,6 +192,40 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.feedItemList = feedItemList;
         this.mContext = context;
         this.whichScreen = whichPage;
+    }
+
+    private void showAds(final Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            admobInterstitial.show();
+            adCount++;
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    if (adCount < 2) {
+                        mContext.startActivity(intent);
+                        admobInterstitial = null;
+                        AdMob(mContext);
+                    }
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    if (adCount < 2) {
+                        AdMob(mContext);
+                    }
+                }
+            });
+        } else {
+            // Ads doesn't loaded.
+            mContext.startActivity(intent);
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(mContext, mContext.getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
+        }
     }
 
     private void deleteComment(final int id) {

@@ -28,13 +28,16 @@ import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.google.android.gms.ads.AdListener;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
@@ -60,6 +63,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     private List<StationItem> feedItemList;
     private String whichScreen;
     private Context mContext;
+    private DecimalFormat df = new DecimalFormat("##.##");
     private SharedPreferences prefs;
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -151,13 +155,29 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         Toast.makeText(mContext, "İSTASYON SEÇİLDİ: " + superStationName, Toast.LENGTH_SHORT).show();
     }
 
-    private void showAds(Intent intent) {
+    private void showAds(final Intent intent) {
         if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            //Facebook ads doesnt loaded he will see AdMob
-            mContext.startActivity(intent);
             admobInterstitial.show();
             adCount++;
-            admobInterstitial = null;
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    if (adCount < 2) {
+                        mContext.startActivity(intent);
+                        admobInterstitial = null;
+                        AdMob(mContext);
+                    }
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    if (adCount < 2) {
+                        AdMob(mContext);
+                    }
+                }
+            });
         } else {
             // Ads doesn't loaded.
             mContext.startActivity(intent);
@@ -207,7 +227,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getGasolinePrice() == 0) {
             gasolineHolder = "-";
         } else {
-            gasolineHolder = feedItem.getGasolinePrice() + " " + currencySymbol;
+            gasolineHolder = df.format(feedItem.getGasolinePrice()) + " " + currencySymbol;
         }
         viewHolder.gasolinePrice.setText(gasolineHolder);
 
@@ -215,7 +235,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getDieselPrice() == 0) {
             dieselHolder = "-";
         } else {
-            dieselHolder = feedItem.getDieselPrice() + " " + currencySymbol;
+            dieselHolder = df.format(feedItem.getDieselPrice()) + " " + currencySymbol;
         }
         viewHolder.dieselPrice.setText(dieselHolder);
 
@@ -223,7 +243,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getLpgPrice() == 0) {
             lpgHolder = "-";
         } else {
-            lpgHolder = feedItem.getLpgPrice() + " " + currencySymbol;
+            lpgHolder = df.format(feedItem.getLpgPrice()) + " " + currencySymbol;
         }
         viewHolder.lpgPrice.setText(lpgHolder);
 
@@ -231,7 +251,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         if (feedItem.getElectricityPrice() == 0) {
             elecHolder = "-";
         } else {
-            elecHolder = feedItem.getElectricityPrice() + " " + currencySymbol;
+            elecHolder = df.format(feedItem.getElectricityPrice()) + " " + currencySymbol;
         }
         viewHolder.electricityPrice.setText(elecHolder);
 

@@ -62,7 +62,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="* DAHA FAZLA MÜŞTERİ, DAHA FAZLA SATIŞ"
+            android:text="* Daha fazla müşteri, daha fazla gelir"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#161616" />
 
@@ -78,7 +78,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="* ÜCRETSİZ TANITIMLAR, KAMPANYALAR, FIRSATLAR"
+            android:text="* Kampanyalar, fırsatlar ve tanıtım imkanları"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#161616" />
 
@@ -94,7 +94,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="* ONLİNE PLATFORMLARDA ÜCRETSİZ TANITIM (GOOGLE, YANDEX ...)"
+            android:text="* Dijital platformlarda ücretsiz reklam ve tanıtım (Google, Yandex, Yahoo vb.)"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#161616" />
 
@@ -109,7 +109,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="* RAKİPLERİNİZİN FİYATLARINI ANLIK TAKİP İMKANI"
+            android:text="* Rakiplerinizin fiyatlarını anlık takip imkanı"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#161616" />
 
@@ -125,7 +125,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="* SEKTÖRDEN SON HABERLER, FİYAT ENDEKSLERİ, İSTATİSTİKLER, ANALİZLER"
+            android:text="* Sektörden son haberler, fiyat endeksleri, istatistikler, analizler"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#161616" />
 
@@ -140,7 +140,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="* İSTASYONUNUZUN ONLİNE PROFİLİ SİZİN KONTROLÜNÜZDE OLSUN! Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
+            android:text="* İstasyonunuzun dijital profili sizin elinizde olsun. Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#161616" />
 
@@ -692,29 +692,5 @@
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/welcome3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/howtostation"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/continueToMainMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/green_box"
-            android:fontFamily="@font/gotham_medium"
-            android:padding="4dp"
-            android:text="@string/button_continue"
-            android:textAllCaps="false"
-            android:textColor="#212121" />
-
-    </RelativeLayout>
 
 </RelativeLayout>
