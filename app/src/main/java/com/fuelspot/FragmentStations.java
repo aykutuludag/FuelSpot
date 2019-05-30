@@ -907,19 +907,15 @@ public class FragmentStations extends Fragment {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
-                    if (adCount < 2) {
-                        startActivity(intent);
-                        admobInterstitial = null;
-                        AdMob(getActivity());
-                    }
+                    startActivity(intent);
+                    admobInterstitial = null;
+                    AdMob(getActivity());
                 }
 
                 @Override
                 public void onAdFailedToLoad(int errorCode) {
                     super.onAdFailedToLoad(errorCode);
-                    if (adCount < 2) {
-                        AdMob(getActivity());
-                    }
+                    AdMob(getActivity());
                 }
             });
         } else {

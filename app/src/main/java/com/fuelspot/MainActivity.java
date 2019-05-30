@@ -173,10 +173,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     public static void AdMob(final Context mContext) {
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
-        admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
-        admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
-        admobInterstitial.loadAd(adRequest);
+        if (adCount < 2) {
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+            admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
+            admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
+            admobInterstitial.loadAd(adRequest);
+        }
     }
 
     public static void AlarmBuilder(Context mContext) {

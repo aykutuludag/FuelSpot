@@ -48,6 +48,7 @@ import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.PurchaseItem;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -82,6 +83,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.FragmentAutomobile.dummyPurchaseList;
 import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
@@ -447,15 +449,28 @@ public class PurchaseDetails extends AppCompatActivity {
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
-        startActivity(intent);
+        showAds(intent);
     }
 
-    private void showAds(Intent intent) {
+    private void showAds(final Intent intent) {
         if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            startActivity(intent);
             admobInterstitial.show();
             adCount++;
-            admobInterstitial = null;
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    startActivity(intent);
+                    admobInterstitial = null;
+                    AdMob(PurchaseDetails.this);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    AdMob(PurchaseDetails.this);
+                }
+            });
         } else {
             // Ads doesn't loaded.
             startActivity(intent);

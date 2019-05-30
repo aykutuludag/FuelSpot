@@ -202,19 +202,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
-                    if (adCount < 2) {
-                        mContext.startActivity(intent);
-                        admobInterstitial = null;
-                        AdMob(mContext);
-                    }
+                    mContext.startActivity(intent);
+                    admobInterstitial = null;
+                    AdMob(mContext);
                 }
 
                 @Override
                 public void onAdFailedToLoad(int errorCode) {
                     super.onAdFailedToLoad(errorCode);
-                    if (adCount < 2) {
-                        AdMob(mContext);
-                    }
+                    AdMob(mContext);
                 }
             });
         } else {
