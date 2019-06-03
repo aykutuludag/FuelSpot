@@ -1,5 +1,6 @@
 package com.fuelspot;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +52,9 @@ public class NewsDetail extends AppCompatActivity {
     Window window;
     ActionBar actionBar;
     ImageView imageViewCover;
-    TextView textViewTitle, textViewBody, textViewSourceURL;
+    TextView textViewTitle, textViewSourceURL;
     RelativeTimeTextView textViewPublished;
+    WebView webView;
     private RequestOptions options;
     private RequestQueue requestQueue;
 
@@ -91,7 +94,7 @@ public class NewsDetail extends AppCompatActivity {
 
         imageViewCover = findViewById(R.id.newsCover);
         textViewTitle = findViewById(R.id.newsTitle);
-        textViewBody = findViewById(R.id.newsContent);
+        webView = findViewById(R.id.newsContent);
         textViewPublished = findViewById(R.id.newsPublished);
         textViewSourceURL = findViewById(R.id.newsSource);
 
@@ -148,10 +151,12 @@ public class NewsDetail extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     void loadNews() {
         Glide.with(this).load(coverPhoto).apply(options).into(imageViewCover);
         textViewTitle.setText(title);
-        textViewBody.setText(content);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadData(content, "text/html; charset=utf-8", "utf-8");
 
         if (publishDate != null && publishDate.length() > 0) {
             SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
