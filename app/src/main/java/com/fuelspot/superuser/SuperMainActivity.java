@@ -41,6 +41,7 @@ import com.fuelspot.LoginActivity;
 import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
+import com.fuelspot.UserFavorites;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.MapsInitializer;
@@ -80,7 +81,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, superGoogleID, superFacilities, superLastUpdate;
     public AHBottomNavigation bottomNavigation;
-    public MenuItem filterButton;
+    public MenuItem filterButton, favoriteButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private boolean doubleBackToExitPressedOnce;
     private RequestQueue queue;
@@ -512,9 +513,12 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        getMenuInflater().inflate(R.menu.menu_stations, menu);
         filterButton = menu.findItem(R.id.filter_stations);
         filterButton.setVisible(false);
+
+        favoriteButton = menu.findItem(R.id.favorite_stations);
+        favoriteButton.setVisible(false);
         return true;
     }
 
@@ -523,18 +527,22 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         if (item.getItemId() == R.id.filter_stations) {
             FragmentStations fragment = (FragmentStations) fragments.get(2);
             fragment.filterPopup();
-            return true;
+        } else if (item.getItemId() == R.id.favorite_stations) {
+            Intent intent = new Intent(SuperMainActivity.this, UserFavorites.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
-        if (filterButton != null) {
+        if (filterButton != null && favoriteButton != null) {
             if (position == 2) {
                 filterButton.setVisible(true);
+                favoriteButton.setVisible(true);
             } else {
                 filterButton.setVisible(false);
+                favoriteButton.setVisible(false);
             }
         }
         mFragNavController.switchTab(position);

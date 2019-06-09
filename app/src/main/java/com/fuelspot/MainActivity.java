@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int adCount;
     public static InterstitialAd admobInterstitial;
     public AHBottomNavigation bottomNavigation;
-    public MenuItem filterButton;
+    public MenuItem filterButton, favoriteButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private List<Fragment> fragments = new ArrayList<>(5);
     private SharedPreferences prefs;
@@ -564,8 +564,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        getMenuInflater().inflate(R.menu.menu_stations, menu);
         filterButton = menu.findItem(R.id.filter_stations);
+        favoriteButton = menu.findItem(R.id.favorite_stations);
         return true;
     }
 
@@ -574,7 +575,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (item.getItemId() == R.id.filter_stations) {
             FragmentStations fragment = (FragmentStations) fragments.get(0);
             fragment.filterPopup();
-            return true;
+        } else if (item.getItemId() == R.id.favorite_stations) {
+            Intent intent = new Intent(MainActivity.this, UserFavorites.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -648,11 +651,13 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
-        if (filterButton != null) {
+        if (filterButton != null && favoriteButton != null) {
             if (position == 0) {
                 filterButton.setVisible(true);
+                favoriteButton.setVisible(true);
             } else {
                 filterButton.setVisible(false);
+                favoriteButton.setVisible(false);
             }
         }
         mFragNavController.switchTab(position);

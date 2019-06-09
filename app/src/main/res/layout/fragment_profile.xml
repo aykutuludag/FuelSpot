@@ -79,18 +79,6 @@
                     android:padding="4dp">
 
                     <Button
-                        android:id="@+id/button_fav"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/white_box"
-                        android:fontFamily="@font/gotham_book"
-                        android:text="@string/favorites"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#161616"
-                        app:layout_marginPercent="1.5%"
-                        app:layout_widthPercent="30%" />
-
-                    <Button
                         android:id="@+id/button_store"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -100,8 +88,8 @@
                         android:text="@string/store"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616"
-                        app:layout_marginPercent="1.5%"
-                        app:layout_widthPercent="30%" />
+                        app:layout_marginPercent="5%"
+                        app:layout_widthPercent="40%" />
 
                     <Button
                         android:id="@+id/button_help"
@@ -113,8 +101,8 @@
                         android:text="@string/help"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616"
-                        app:layout_marginPercent="1.5%"
-                        app:layout_widthPercent="30%" />
+                        app:layout_marginPercent="5%"
+                        app:layout_widthPercent="40%" />
 
                 </androidx.percentlayout.widget.PercentRelativeLayout>
             </RelativeLayout>

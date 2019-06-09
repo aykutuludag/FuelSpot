@@ -202,16 +202,6 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        Button openFavorites = rootView.findViewById(R.id.button_fav);
-        openFavorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserFavorites.class);
-                startActivity(intent);
-            }
-        });
-
-
         swipeContainer.setRefreshing(false);
         fetchBanking();
         fetchComments();
