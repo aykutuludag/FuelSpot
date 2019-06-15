@@ -81,7 +81,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -192,6 +194,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private ProgressDialog loading;
     private GoogleMap googleMap;
     private CallbackManager callbackManager;
+    LocationCallback mLocationCallback;
+    LocationRequest mLocationRequest;
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
@@ -220,6 +224,22 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         welcome2 = findViewById(R.id.welcome2);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                synchronized (this) {
+                    super.onLocationResult(locationResult);
+                    Location locCurrent = locationResult.getLastLocation();
+                    if (locCurrent != null) {
+                        Localization();
+                    }
+                }
+            }
+        };
 
         // ProgressDialogs
         loading0 = new ProgressDialog(SuperWelcomeActivity.this);
@@ -280,10 +300,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     prefs.edit().putString("lon", MainActivity.userlon).apply();
                                     Localization();
                                 } else {
-                                    LocationRequest mLocationRequest = new LocationRequest();
-                                    mLocationRequest.setInterval(5000);
-                                    mLocationRequest.setFastestInterval(1000);
-                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
                                     Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -585,7 +602,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 userUnit = getString(R.string.unitSystem1);
                                 break;
                         }
+
                         prefs.edit().putString("userUnit", userUnit).apply();
+
+                        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
                         fetchTaxRates();
                         fetchOwnedStations();
                     }
@@ -1460,6 +1480,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 if (ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     if (isLocationEnabled(SuperWelcomeActivity.this)) {
                         mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
+                            @SuppressLint("MissingPermission")
                             @Override
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
@@ -1470,10 +1491,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     prefs.edit().putString("lon", MainActivity.userlon).apply();
                                     Localization();
                                 } else {
-                                    LocationRequest mLocationRequest = new LocationRequest();
-                                    mLocationRequest.setInterval(5000);
-                                    mLocationRequest.setFastestInterval(1000);
-                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
                                     Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
                                 }
                             }

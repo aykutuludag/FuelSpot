@@ -53,7 +53,9 @@ import com.fuelspot.automobile.Models;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -126,6 +128,9 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     private RadioGroup radioGroup2;
     private RequestOptions options;
     private ProgressDialog loading;
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationCallback mLocationCallback;
+    LocationRequest mLocationRequest;
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
@@ -146,6 +151,23 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(WelcomeActivity.this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                synchronized (this) {
+                    super.onLocationResult(locationResult);
+                    Location locCurrent = locationResult.getLastLocation();
+                    if (locCurrent != null) {
+                        Localization();
+                    }
+                }
+            }
+        };
 
         // ProgressDialogs
         loading = new ProgressDialog(WelcomeActivity.this);
@@ -194,7 +216,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_ALL);
                 } else {
                     if (isLocationEnabled(WelcomeActivity.this)) {
-                        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(WelcomeActivity.this);
                         mFusedLocationClient.getLastLocation().addOnSuccessListener(WelcomeActivity.this, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
@@ -206,10 +227,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                     prefs.edit().putString("lon", userlon).apply();
                                     Localization();
                                 } else {
-                                    LocationRequest mLocationRequest = new LocationRequest();
-                                    mLocationRequest.setInterval(5000);
-                                    mLocationRequest.setFastestInterval(1000);
-                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
                                     Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -318,6 +336,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                 break;
                         }
                         prefs.edit().putString("userUnit", userUnit).apply();
+
+                        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
                         updateUser();
                         fetchTaxRates();
                         fetchAutomobiles();
@@ -1196,8 +1216,8 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
             case REQUEST_ALL: {
                 if (ContextCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
                     if (isLocationEnabled(WelcomeActivity.this)) {
-                        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
                         mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                            @SuppressLint("MissingPermission")
                             @Override
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
@@ -1208,10 +1228,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                                     prefs.edit().putString("lon", userlon).apply();
                                     Localization();
                                 } else {
-                                    LocationRequest mLocationRequest = new LocationRequest();
-                                    mLocationRequest.setInterval(5000);
-                                    mLocationRequest.setFastestInterval(1000);
-                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
                                     Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
                                 }
                             }
