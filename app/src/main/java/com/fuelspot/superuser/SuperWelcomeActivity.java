@@ -129,6 +129,7 @@ import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -267,26 +268,29 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 if (Build.VERSION.SDK_INT >= 23) {
                     ActivityCompat.requestPermissions(SuperWelcomeActivity.this, new String[]{PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_ALL);
                 } else {
-                    FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(SuperWelcomeActivity.this);
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                userlat = String.valueOf(location.getLatitude());
-                                userlon = String.valueOf(location.getLongitude());
-                                prefs.edit().putString("lat", userlat).apply();
-                                prefs.edit().putString("lon", userlon).apply();
-                                Localization();
-                            } else {
-                                LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(5000);
-                                mLocationRequest.setFastestInterval(1000);
-                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
+                    if (isLocationEnabled(SuperWelcomeActivity.this)) {
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    MainActivity.userlat = String.valueOf(location.getLatitude());
+                                    MainActivity.userlon = String.valueOf(location.getLongitude());
+                                    prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                    prefs.edit().putString("lon", MainActivity.userlon).apply();
+                                    Localization();
+                                } else {
+                                    LocationRequest mLocationRequest = new LocationRequest();
+                                    mLocationRequest.setInterval(5000);
+                                    mLocationRequest.setFastestInterval(1000);
+                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -1454,26 +1458,29 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         switch (requestCode) {
             case REQUEST_ALL: {
                 if (ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    //Request location updates:
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                MainActivity.userlat = String.valueOf(location.getLatitude());
-                                MainActivity.userlon = String.valueOf(location.getLongitude());
-                                prefs.edit().putString("lat", MainActivity.userlat).apply();
-                                prefs.edit().putString("lon", MainActivity.userlon).apply();
-                                Localization();
-                            } else {
-                                LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(5000);
-                                mLocationRequest.setFastestInterval(1000);
-                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
+                    if (isLocationEnabled(SuperWelcomeActivity.this)) {
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    MainActivity.userlat = String.valueOf(location.getLatitude());
+                                    MainActivity.userlon = String.valueOf(location.getLongitude());
+                                    prefs.edit().putString("lat", MainActivity.userlat).apply();
+                                    prefs.edit().putString("lon", MainActivity.userlon).apply();
+                                    Localization();
+                                } else {
+                                    LocationRequest mLocationRequest = new LocationRequest();
+                                    mLocationRequest.setInterval(5000);
+                                    mLocationRequest.setFastestInterval(1000);
+                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        Toast.makeText(SuperWelcomeActivity.this, getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }

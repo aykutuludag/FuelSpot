@@ -75,6 +75,7 @@ import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
+import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.userlat;
@@ -266,6 +267,9 @@ public class FragmentMyStation extends Fragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
+            if (!isLocationEnabled(getActivity())) {
+                Toast.makeText(getActivity(), getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+            }
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
             loadMap();
         }
@@ -470,6 +474,10 @@ public class FragmentMyStation extends Fragment {
             if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
                 mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
                 loadMap();
+
+                if (!isLocationEnabled(getActivity())) {
+                    Toast.makeText(getActivity(), getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+                }
             } else {
                 Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }

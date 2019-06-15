@@ -63,6 +63,7 @@ import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.UniversalTimeFormat;
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.token;
@@ -252,9 +253,13 @@ public class FragmentNews extends Fragment {
                     android.R.color.holo_red_light);
 
             // ÜLKE SEÇİMİ
-            fetchNews(userCountry);
-            fetchCountryFinance(userCountry);
-            parseCompanies();
+            if (isNetworkConnected(getActivity())) {
+                fetchNews(userCountry);
+                fetchCountryFinance(userCountry);
+                parseCompanies();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
         }
         return rootView;
     }

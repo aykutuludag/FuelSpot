@@ -123,6 +123,7 @@
     <string name="error">An error occurred. Please try again later…</string>
     <string name="location_fetching">Location info fetching…</string>
     <string name="permission_denied">Permission denied&#8230;</string>
+    <string name="location_services_off">Location services is not enabled. Please turn your location services on and try again…</string>
     <!-- WelcomeActivity-->
 
     <!-- MainActivity-->

@@ -42,6 +42,7 @@
     <string name="error">Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz…</string>
     <string name="location_fetching">Konum bilgisi çekiliyor…</string>
     <string name="permission_denied">İzin reddedildi&#8230;</string>
+    <string name="location_services_off">Konum servisleri kapalı. Lütfen cihazınızın konum servislerini açıp tekrar deneyiniz…</string>
     <!-- WelcomeActivity-->
 
     <!-- MainActivity-->

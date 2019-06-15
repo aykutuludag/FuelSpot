@@ -91,6 +91,7 @@ import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.location;
@@ -192,27 +193,30 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 if (Build.VERSION.SDK_INT >= 23) {
                     ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_ALL);
                 } else {
-                    FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(WelcomeActivity.this);
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(WelcomeActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                userlat = String.valueOf(location.getLatitude());
-                                userlon = String.valueOf(location.getLongitude());
-                                prefs.edit().putString("lat", userlat).apply();
-                                prefs.edit().putString("lon", userlon).apply();
-                                Localization();
-                            } else {
-                                LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(5000);
-                                mLocationRequest.setFastestInterval(1000);
-                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
+                    if (isLocationEnabled(WelcomeActivity.this)) {
+                        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(WelcomeActivity.this);
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(WelcomeActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    userlat = String.valueOf(location.getLatitude());
+                                    userlon = String.valueOf(location.getLongitude());
+                                    prefs.edit().putString("lat", userlat).apply();
+                                    prefs.edit().putString("lon", userlon).apply();
+                                    Localization();
+                                } else {
+                                    LocationRequest mLocationRequest = new LocationRequest();
+                                    mLocationRequest.setInterval(5000);
+                                    mLocationRequest.setFastestInterval(1000);
+                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
-                    fetchAutomobiles();
+                        });
+                    } else {
+                        Toast.makeText(WelcomeActivity.this, getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -316,6 +320,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                         prefs.edit().putString("userUnit", userUnit).apply();
                         updateUser();
                         fetchTaxRates();
+                        fetchAutomobiles();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1190,27 +1195,30 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
         switch (requestCode) {
             case REQUEST_ALL: {
                 if (ContextCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(WelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
-                    FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                userlat = String.valueOf(location.getLatitude());
-                                userlon = String.valueOf(location.getLongitude());
-                                prefs.edit().putString("lat", userlat).apply();
-                                prefs.edit().putString("lon", userlon).apply();
-                                Localization();
-                            } else {
-                                LocationRequest mLocationRequest = new LocationRequest();
-                                mLocationRequest.setInterval(5000);
-                                mLocationRequest.setFastestInterval(1000);
-                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
+                    if (isLocationEnabled(WelcomeActivity.this)) {
+                        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    userlat = String.valueOf(location.getLatitude());
+                                    userlon = String.valueOf(location.getLongitude());
+                                    prefs.edit().putString("lat", userlat).apply();
+                                    prefs.edit().putString("lon", userlon).apply();
+                                    Localization();
+                                } else {
+                                    LocationRequest mLocationRequest = new LocationRequest();
+                                    mLocationRequest.setInterval(5000);
+                                    mLocationRequest.setFastestInterval(1000);
+                                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                    Toast.makeText(WelcomeActivity.this, getString(R.string.location_fetching), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
-                    fetchAutomobiles();
+                        });
+                    } else {
+                        Toast.makeText(WelcomeActivity.this, getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
                 }

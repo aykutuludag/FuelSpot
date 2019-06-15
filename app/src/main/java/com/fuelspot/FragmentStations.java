@@ -85,6 +85,7 @@ import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
+import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
@@ -286,12 +287,15 @@ public class FragmentStations extends Fragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
+            if (!isLocationEnabled(getActivity())) {
+                Toast.makeText(getActivity(), getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+            }
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
             loadMap();
         }
     }
 
-    void loadMap() {
+    private void loadMap() {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
@@ -352,7 +356,7 @@ public class FragmentStations extends Fragment {
         });
     }
 
-    void updateMap() {
+    private void updateMap() {
         if (googleMap != null) {
             isMapUpdating = true;
 
@@ -396,9 +400,6 @@ public class FragmentStations extends Fragment {
                 isMapUpdating = false;
                 Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
-        } else {
-            isMapUpdating = false;
-            Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
