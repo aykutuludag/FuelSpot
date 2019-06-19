@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
         mapDefaultRange = prefs.getInt("RANGE", 2500);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 12.75f);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         plateNo = prefs.getString("plateNo", "");
         vehicleID = prefs.getInt("vehicleID", 0);

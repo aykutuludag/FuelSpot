@@ -30,26 +30,14 @@
             android:background="@drawable/round_layout"
             android:elevation="8dp">
 
-            <TextView
-                android:id="@+id/titleStations"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/tab_stations"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#131313" />
-
             <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/sortBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/titleStations"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/round_layout_white2">
 
                 <RelativeLayout
@@ -79,7 +67,7 @@
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
-                        android:text="@string/sort"
+                        android:text="@string/gasoline"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#6D6D6D"
                         android:textSize="12sp" />
@@ -113,7 +101,7 @@
                         android:layout_marginBottom="3dp"
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
-                        android:text="@string/sort"
+                        android:text="@string/diesel"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#717171"
                         android:textSize="12sp" />
@@ -147,7 +135,7 @@
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
-                        android:text="@string/sort"
+                        android:text="@string/lpg"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#717171"
                         android:textSize="12sp" />
@@ -181,7 +169,7 @@
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
-                        android:text="@string/sort"
+                        android:text="@string/electricity"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#717171"
                         android:textSize="12sp" />

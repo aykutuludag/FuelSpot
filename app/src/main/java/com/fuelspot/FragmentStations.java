@@ -470,12 +470,12 @@ public class FragmentStations extends Fragment {
                         } else {
                             if (mapDefaultRange == 2500) {
                                 mapDefaultRange = 5000;
-                                mapDefaultZoom = 12f;
+                                mapDefaultZoom = 13f;
                                 Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 updateMap();
                             } else if (mapDefaultRange == 5000) {
                                 mapDefaultRange = 10000;
-                                mapDefaultZoom = 11.25f;
+                                mapDefaultZoom = 11.5f;
                                 Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 updateMap();
                             } else if (mapDefaultRange == 10000) {
@@ -485,7 +485,7 @@ public class FragmentStations extends Fragment {
                                 updateMap();
                             } else if (mapDefaultRange == 25000) {
                                 mapDefaultRange = 50000;
-                                mapDefaultZoom = 8.75f;
+                                mapDefaultZoom = 9f;
                                 Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 updateMap();
                             } else {

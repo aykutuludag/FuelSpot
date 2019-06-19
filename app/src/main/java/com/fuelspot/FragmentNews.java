@@ -142,8 +142,7 @@ public class FragmentNews extends Fragment {
             chart.getXAxis().setLabelCount(3, true);
             chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             chart.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart.getDescription().setTextSize(13f);
-            chart.getDescription().setTextColor(Color.BLACK);
+            chart.getDescription().setTextColor(Color.WHITE);
             chart.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
@@ -161,8 +160,7 @@ public class FragmentNews extends Fragment {
             chart2.getXAxis().setLabelCount(3, true);
             chart2.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             chart2.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart2.getDescription().setTextSize(13f);
-            chart2.getDescription().setTextColor(Color.BLACK);
+            chart2.getDescription().setTextColor(Color.WHITE);
             chart2.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
@@ -180,8 +178,7 @@ public class FragmentNews extends Fragment {
             chart3.getXAxis().setLabelCount(3, true);
             chart3.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             chart3.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart3.getDescription().setTextSize(12f);
-            chart3.getDescription().setTextColor(Color.BLACK);
+            chart3.getDescription().setTextColor(Color.WHITE);
             chart3.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
@@ -199,8 +196,7 @@ public class FragmentNews extends Fragment {
             chart4.getXAxis().setLabelCount(3, true);
             chart4.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             chart4.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart4.getDescription().setTextSize(12f);
-            chart4.getDescription().setTextColor(Color.BLACK);
+            chart4.getDescription().setTextColor(Color.WHITE);
             chart4.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
@@ -362,6 +358,8 @@ public class FragmentNews extends Fragment {
                                     dataSet.setDrawValues(false);
                                     dataSet.setDrawCircles(false);
                                     dataSet.setColor(Color.BLACK);
+                                    dataSet.setDrawFilled(true);
+                                    dataSet.setFillColor(Color.parseColor("#90000000"));
 
                                     LineData lineData = new LineData(dataSet);
                                     chart.setData(lineData);
@@ -374,6 +372,8 @@ public class FragmentNews extends Fragment {
                                     dataSet2.setDrawValues(false);
                                     dataSet2.setDrawCircles(false);
                                     dataSet2.setColor(Color.RED);
+                                    dataSet2.setDrawFilled(true);
+                                    dataSet2.setFillColor(Color.parseColor("#90FF0000"));
 
                                     LineData lineData = new LineData(dataSet2);
                                     chart2.setData(lineData);
@@ -386,6 +386,8 @@ public class FragmentNews extends Fragment {
                                     dataSet3.setDrawValues(false);
                                     dataSet3.setDrawCircles(false);
                                     dataSet3.setColor(Color.BLUE);
+                                    dataSet3.setDrawFilled(true);
+                                    dataSet3.setFillColor(Color.parseColor("#900000FF"));
 
                                     LineData lineData = new LineData(dataSet3);
                                     chart3.setData(lineData);
@@ -398,6 +400,8 @@ public class FragmentNews extends Fragment {
                                     dataSet4.setDrawValues(false);
                                     dataSet4.setDrawCircles(false);
                                     dataSet4.setColor(Color.GREEN);
+                                    dataSet4.setFillColor(Color.parseColor("#9000FF00"));
+                                    dataSet4.setDrawFilled(true);
 
                                     LineData lineData = new LineData(dataSet4);
                                     chart4.setData(lineData);

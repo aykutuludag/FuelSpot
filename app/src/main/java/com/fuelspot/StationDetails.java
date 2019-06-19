@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -250,13 +249,8 @@ public class StationDetails extends AppCompatActivity {
         textViewLPGLt = findViewById(R.id.howMuchLPG);
         textViewElectricityLt = findViewById(R.id.howMuchElectricity);
         chart = findViewById(R.id.chart);
-        chart.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                scrollView.requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
+        chart.setScaleEnabled(false);
+        chart.setDragEnabled(false);
         chart.getXAxis().setAvoidFirstLastClipping(true);
         chart.getXAxis().setLabelCount(3, true);
         chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -270,8 +264,7 @@ public class StationDetails extends AppCompatActivity {
             }
         });
         chart.getDescription().setText(currencySymbol + " / " + userUnit);
-        chart.getDescription().setTextSize(13f);
-        chart.getDescription().setTextColor(Color.BLUE);
+        chart.getDescription().setTextColor(Color.WHITE);
         chart.setExtraRightOffset(10f);
         imageViewWC = findViewById(R.id.WC);
         imageViewWC.setOnClickListener(new View.OnClickListener() {
@@ -526,6 +519,8 @@ public class StationDetails extends AppCompatActivity {
                                     LineDataSet dataSet = new LineDataSet(gasolinePriceHistory, getString(R.string.gasoline)); // add entries to dataset
                                     dataSet.setDrawValues(false);
                                     dataSet.setColor(Color.BLACK);
+                                    dataSet.setDrawFilled(true);
+                                    dataSet.setFillColor(Color.parseColor("#90000000"));
                                     dataSet.setDrawCircles(false);
                                     dataSets.add(dataSet);
                                 }
@@ -535,6 +530,8 @@ public class StationDetails extends AppCompatActivity {
                                     LineDataSet dataSet2 = new LineDataSet(dieselPriceHistory, getString(R.string.diesel)); // add entries to dataset
                                     dataSet2.setDrawValues(false);
                                     dataSet2.setColor(Color.RED);
+                                    dataSet2.setDrawFilled(true);
+                                    dataSet2.setFillColor(Color.parseColor("#90FF0000"));
                                     dataSet2.setDrawCircles(false);
                                     dataSets.add(dataSet2);
                                 }
@@ -544,6 +541,8 @@ public class StationDetails extends AppCompatActivity {
                                     LineDataSet dataSet3 = new LineDataSet(lpgPriceHistory, getString(R.string.lpg)); // add entries to dataset
                                     dataSet3.setDrawValues(false);
                                     dataSet3.setColor(Color.BLUE);
+                                    dataSet3.setDrawFilled(true);
+                                    dataSet3.setFillColor(Color.parseColor("#900000FF"));
                                     dataSet3.setDrawCircles(false);
                                     dataSets.add(dataSet3);
                                 }
@@ -553,6 +552,8 @@ public class StationDetails extends AppCompatActivity {
                                     LineDataSet dataSet4 = new LineDataSet(elecPriceHistory, getString(R.string.electricity)); // add entries to dataset
                                     dataSet4.setDrawValues(false);
                                     dataSet4.setColor(Color.GREEN);
+                                    dataSet4.setFillColor(Color.parseColor("#9000FF00"));
+                                    dataSet4.setDrawFilled(true);
                                     dataSet4.setDrawCircles(false);
                                     dataSets.add(dataSet4);
                                 }
