@@ -40,6 +40,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.model.VehicleItem;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static List<StationItem> fullStationList = new ArrayList<>();
     public static List<VehicleItem> userAutomobileList = new ArrayList<>();
     public static List<CompanyItem> companyList = new ArrayList<>();
+    public static List<CampaignItem> globalCampaignList = new ArrayList<>();
 
     public static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     public static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -285,6 +287,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         // Fetch companies once for each session
         fetchCompanies();
+
+        // Fetch globalCampaigns once for each session
+        fetchGlobalCampaigns();
 
         if (savedInstanceState == null) {
             if (isSigned) {
@@ -541,6 +546,54 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
+    }
+
+    private void fetchGlobalCampaigns() {
+        globalCampaignList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("ANNNNNNNNNN" + response);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CampaignItem item = new CampaignItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationID(-1);
+                                    item.setCompanyName(obj.getString("companyName"));
+                                    item.setCampaignName(obj.getString("campaignName"));
+                                    item.setCampaignDesc(obj.getString("campaignDesc"));
+                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                    item.setCampaignStart(obj.getString("campaignStart"));
+                                    item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    globalCampaignList.add(item);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
                     }
                 }) {
             @Override

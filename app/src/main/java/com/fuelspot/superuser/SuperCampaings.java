@@ -174,7 +174,6 @@ public class SuperCampaings extends AppCompatActivity {
                                     item.setCampaignPhoto(obj.getString("campaignPhoto"));
                                     item.setCampaignStart(obj.getString("campaignStart"));
                                     item.setCampaignEnd(obj.getString("campaignEnd"));
-                                    item.setIsGlobal(obj.getInt("isGlobal"));
                                     feedsList.add(item);
                                 }
 
@@ -233,7 +232,6 @@ public class SuperCampaings extends AppCompatActivity {
                                     item.setCampaignPhoto(obj.getString("campaignPhoto"));
                                     item.setCampaignStart(obj.getString("campaignStart"));
                                     item.setCampaignEnd(obj.getString("campaignEnd"));
-                                    item.setIsGlobal(obj.getInt("isGlobal"));
                                     feedsList2.add(item);
                                 }
 

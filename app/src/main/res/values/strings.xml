@@ -63,6 +63,7 @@
     <string name="API_UPDATE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/update.php</string>
     <string name="API_DELETE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/delete.php</string>
     <string name="API_FETCH_CAMPAINGS" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/fetch.php</string>
+    <string name="API_FETCH_GLOBAL_CAMPAINGS" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/fetch-global.php</string>
     <string name="API_FETCH_OLD_CAMPAINGS" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/fetch-old.php</string>
 
     <!-- FINANCE APIs -->

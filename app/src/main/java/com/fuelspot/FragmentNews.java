@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -24,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
 import com.fuelspot.model.CompanyItem;
@@ -63,6 +65,7 @@ import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.UniversalTimeFormat;
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
@@ -72,9 +75,9 @@ import static com.fuelspot.MainActivity.userUnit;
 
 public class FragmentNews extends Fragment {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView, mRecyclerViewKampanya;
     private GridLayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mAdapter, mAdapterKampanya;
     private List<NewsItem> feedsList = new ArrayList<>();
     private View rootView;
     private RequestQueue requestQueue;
@@ -134,6 +137,8 @@ public class FragmentNews extends Fragment {
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             mRecyclerView = rootView.findViewById(R.id.newsView);
             mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerViewKampanya = rootView.findViewById(R.id.kampanyaView);
+            mRecyclerViewKampanya.setNestedScrollingEnabled(true);
 
             chart = rootView.findViewById(R.id.chartAveragePriceGasoline);
             chart.setScaleEnabled(false);
@@ -253,11 +258,21 @@ public class FragmentNews extends Fragment {
                 fetchNews(userCountry);
                 fetchCountryFinance(userCountry);
                 parseCompanies();
+                loadGlobalCampaigns();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         }
         return rootView;
+    }
+
+    private void loadGlobalCampaigns() {
+        if (globalCampaignList != null && globalCampaignList.size() > 0) {
+            mAdapterKampanya = new CampaignAdapter(getActivity(), globalCampaignList, "USER");
+            mRecyclerViewKampanya.setAdapter(mAdapterKampanya);
+            mRecyclerViewKampanya.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+            mAdapterKampanya.notifyDataSetChanged();
+        }
     }
 
     private void fetchNews(final String tempCountryCode) {

@@ -40,7 +40,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -103,6 +102,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
@@ -117,6 +117,8 @@ import static com.fuelspot.MainActivity.username;
 public class StationDetails extends AppCompatActivity {
 
     public static List<CommentItem> stationCommentList = new ArrayList<>();
+    private List<CommentItem> dummyList = new ArrayList<>();
+    private List<CampaignItem> campaignList = new ArrayList<>();
     public static int stars = 5;
     public static int choosenStationID;
     public static int userCommentID;
@@ -125,7 +127,6 @@ public class StationDetails extends AppCompatActivity {
     public static float stationScore;
     public static String userComment;
     public static boolean hasAlreadyCommented;
-    private static List<CampaignItem> campaignList = new ArrayList<>();
     private static int isStationVerified;
     private static float gasolinePrice;
     private static float dieselPrice;
@@ -169,7 +170,6 @@ public class StationDetails extends AppCompatActivity {
     private FloatingActionButton floatingActionButton1;
     private PopupWindow mPopupWindow;
     private RequestQueue requestQueue;
-    private NestedScrollView scrollView;
     private CircleImageView verifiedSection;
     private float howMuchGas;
     private float howMuchDie;
@@ -221,6 +221,7 @@ public class StationDetails extends AppCompatActivity {
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
+        requestQueue = Volley.newRequestQueue(StationDetails.this);
 
         AdView mAdView = findViewById(R.id.adView);
         if (!premium) {
@@ -231,9 +232,6 @@ public class StationDetails extends AppCompatActivity {
         }
 
         noCampaignText = findViewById(R.id.noCampaignText);
-        scrollView = findViewById(R.id.scrollView);
-
-        requestQueue = Volley.newRequestQueue(StationDetails.this);
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
         textVicinity = findViewById(R.id.station_vicinity);
@@ -360,28 +358,6 @@ public class StationDetails extends AppCompatActivity {
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_station).error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
-        // Nerden gelirse gelsin stationID boş olamaz.
-        choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
-        stationName = getIntent().getStringExtra("STATION_NAME");
-        if (stationName != null && stationName.length() > 0) {
-            getSupportActionBar().setTitle(stationName);
-            //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
-            stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
-            stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-            gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
-            dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
-            lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
-            electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
-            lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
-            iconURL = getIntent().getStringExtra("STATION_ICON");
-            isStationVerified = getIntent().getIntExtra("IS_VERIFIED", 0);
-            facilitiesOfStation = getIntent().getStringExtra("STATION_FACILITIES");
-            loadStationDetails();
-        } else {
-            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
-            fetchStation();
-        }
-
         // Campaigns
         mRecyclerView = findViewById(R.id.campaignView);
         mRecyclerView.setNestedScrollingEnabled(true);
@@ -429,6 +405,31 @@ public class StationDetails extends AppCompatActivity {
                 reportStation(v);
             }
         });
+
+        mAdapter = new CampaignAdapter(StationDetails.this, campaignList, "USER");
+        mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
+
+        // Nerden gelirse gelsin stationID boş olamaz.
+        choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
+        stationName = getIntent().getStringExtra("STATION_NAME");
+        if (stationName != null && stationName.length() > 0) {
+            getSupportActionBar().setTitle(stationName);
+            //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
+            stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
+            stationLocation = getIntent().getStringExtra("STATION_LOCATION");
+            gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
+            dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
+            lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
+            electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
+            lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
+            iconURL = getIntent().getStringExtra("STATION_ICON");
+            isStationVerified = getIntent().getIntExtra("IS_VERIFIED", 0);
+            facilitiesOfStation = getIntent().getStringExtra("STATION_FACILITIES");
+            loadStationDetails();
+        } else {
+            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
+            fetchStation();
+        }
     }
 
     private void fetchStation() {
@@ -756,11 +757,9 @@ public class StationDetails extends AppCompatActivity {
                                     item.setCampaignPhoto(obj.getString("campaignPhoto"));
                                     item.setCampaignStart(obj.getString("campaignStart"));
                                     item.setCampaignEnd(obj.getString("campaignEnd"));
-                                    item.setIsGlobal(obj.getInt("isGlobal"));
                                     campaignList.add(item);
                                 }
 
-                                mAdapter = new CampaignAdapter(StationDetails.this, campaignList, "USER");
                                 mAdapter.notifyDataSetChanged();
                                 mRecyclerView.setAdapter(mAdapter);
                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
@@ -775,6 +774,7 @@ public class StationDetails extends AppCompatActivity {
                             mRecyclerView.setVisibility(View.GONE);
                             noCampaignText.setVisibility(View.VISIBLE);
                         }
+                        addGlobalCampaigns();
                     }
                 },
                 new Response.ErrorListener() {
@@ -782,6 +782,7 @@ public class StationDetails extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         mRecyclerView.setVisibility(View.GONE);
                         noCampaignText.setVisibility(View.VISIBLE);
+                        addGlobalCampaigns();
                     }
                 }) {
             @Override
@@ -796,6 +797,27 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    void addGlobalCampaigns() {
+        // Add global campaign if any
+        if (globalCampaignList != null && globalCampaignList.size() > 0) {
+            for (int i = 0; i < globalCampaignList.size(); i++) {
+                if (globalCampaignList.get(i).getCompanyName().equals(stationName)) {
+                    globalCampaignList.get(i).setID(campaignList.size() + 1);
+                    campaignList.add(globalCampaignList.get(i));
+                }
+            }
+
+            if (campaignList.size() > 0) {
+                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(StationDetails.this, LinearLayoutManager.HORIZONTAL, false));
+                mAdapter.notifyDataSetChanged();
+
+                mRecyclerView.setVisibility(View.VISIBLE);
+                noCampaignText.setVisibility(View.GONE);
+            }
+        }
+    }
+
     public void fetchStationComments() {
         sumOfPoints = 0;
         numOfComments = 0;
@@ -805,7 +827,6 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
-                            List<CommentItem> dummyList = new ArrayList<>();
                             try {
                                 JSONArray res = new JSONArray(response);
                                 for (int i = 0; i < res.length(); i++) {
@@ -854,7 +875,6 @@ public class StationDetails extends AppCompatActivity {
                                 textViewStationPoint.setText((int) numOfComments + " " + getString(R.string.comments) + " - " + df.format(stationScore));
 
                                 // Display first three comments
-                                mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
                                 GridLayoutManager mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
 
                                 mAdapter2.notifyDataSetChanged();

@@ -9,7 +9,9 @@ public class CampaignItem {
     private String campaignPhoto;
     private String campaignStart;
     private String campaignEnd;
-    private int isGlobal;
+    // Only for global campaigns
+    private String companyName;
+    // Only for global campaigns
 
     public int getID() {
         return ID;
@@ -67,11 +69,11 @@ public class CampaignItem {
         this.campaignEnd = campaignEnd;
     }
 
-    public int getIsGlobal() {
-        return isGlobal;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setIsGlobal(int isGlobal) {
-        this.isGlobal = isGlobal;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

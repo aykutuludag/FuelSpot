@@ -42,6 +42,7 @@ import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.UserFavorites;
+import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.MapsInitializer;
@@ -63,6 +64,7 @@ import hotchemi.android.rate.AppRate;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.getVariables;
+import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSigned;
@@ -184,6 +186,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         // Fetch companies once for each session
         fetchCompanies();
+
+        // Fetch globalCampaigns once for each session
+        fetchGlobalCampaigns();
 
         if (savedInstanceState == null) {
             if (isSigned) {
@@ -485,6 +490,52 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
+    }
+
+    private void fetchGlobalCampaigns() {
+        globalCampaignList.clear();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CampaignItem item = new CampaignItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setCompanyName(obj.getString("companyName"));
+                                    item.setCampaignName(obj.getString("campaignName"));
+                                    item.setCampaignDesc(obj.getString("campaignDesc"));
+                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                    item.setCampaignStart(obj.getString("campaignStart"));
+                                    item.setCampaignEnd(obj.getString("campaignEnd"));
+                                    globalCampaignList.add(item);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
                     }
                 }) {
             @Override

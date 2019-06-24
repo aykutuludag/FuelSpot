@@ -45,10 +45,9 @@ import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.token;
 
 public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHolder> {
-    RequestOptions options;
+    private RequestOptions options;
     private List<CampaignItem> mItemList;
     private Context mContext;
-    private ImageView imageViewCampaign;
     private String whichScreen;
     private RequestQueue requestQueue;
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -59,8 +58,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
             final CampaignItem cItem = mItemList.get(position);
 
             if (whichScreen.equals("SUPERUSER")) {
-                // superuser at SuperCampaigns
-                if (cItem.getIsGlobal() == 1) {
+                if (cItem.getStationID() == -1) {
                     Toast.makeText(mContext, "Bu kampanya firma tarafından eklendiğinden düzenleyemezsiniz.", Toast.LENGTH_LONG).show();
                     showCampaignPopup(cItem, view);
                 } else {
