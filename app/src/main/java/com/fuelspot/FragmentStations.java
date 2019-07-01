@@ -83,8 +83,8 @@ import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
+import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fullStationList;
-import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -92,7 +92,6 @@ import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.token;
-import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
@@ -446,24 +445,28 @@ public class FragmentStations extends Fragment {
                                     seeAllStations.setVisibility(View.GONE);
                                 }
 
-                                // Create a fence
-                                if (!isSuperUser && isGeofenceOpen) {
-                                    if (userAutomobileList != null && userAutomobileList.size() > 0) {
-                                        AlarmBuilder(getActivity());
-                                    }
-                                } else {
-                                    cancelGeofenceAlarm();
-                                }
-
-                                // Sort by distnce
-                                whichOrder = 4;
-                                sortBy(whichOrder);
-
                                 if (isSuperUser) {
+                                    cancelGeofenceAlarm();
+
+                                    // Sort by distance
+                                    whichOrder = 4;
+
                                     ((SuperMainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 2);
                                 } else {
+                                    if (fuelPri == -1) {
+                                        // Sort by distance
+                                        whichOrder = 4;
+                                    } else {
+                                        AlarmBuilder(getActivity());
+
+                                        // Sort by fuelType
+                                        whichOrder = fuelPri;
+                                    }
+
                                     ((MainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 0);
                                 }
+
+                                sortBy(whichOrder);
                             } catch (JSONException e) {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }

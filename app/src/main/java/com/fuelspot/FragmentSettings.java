@@ -442,7 +442,7 @@ public class FragmentSettings extends Fragment {
             buttonRate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tesis_market://details?id=com.fuelspot"));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fuelspot"));
                     startActivity(intent);
                 }
             });
