@@ -43,6 +43,19 @@
                     android:layout_below="@id/title_News"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/button_seeAllNews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/newsView"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/green_box"
+                    android:fontFamily="@font/gotham_medium"
+                    android:padding="4dp"
+                    android:text="@string/see_all" />
             </RelativeLayout>
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"

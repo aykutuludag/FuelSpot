@@ -31,6 +31,7 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
             TextView priceOne = view.findViewById(R.id.priceGasoline);
             TextView priceTwo = view.findViewById(R.id.priceDiesel);
             TextView priceThree = view.findViewById(R.id.priceLPG);
+            TextView distanceText = view.findViewById(R.id.textDistance);
 
             sName.setText(infoWindowData.getStationName());
 
@@ -57,6 +58,9 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
             } else {
                 priceThree.setText("-");
             }
+
+            distanceText.setText(infoWindowData.getDistance() + " metre uzakta");
+
         }
         return view;
     }

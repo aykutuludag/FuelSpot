@@ -1,6 +1,7 @@
 package com.fuelspot;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +79,8 @@ public class FragmentNews extends Fragment {
 
     private RecyclerView mRecyclerView, mRecyclerViewKampanya;
     private GridLayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter, mAdapterKampanya;
-    private List<NewsItem> feedsList = new ArrayList<>();
+    static List<NewsItem> newsFeed = new ArrayList<>();
+    private RecyclerView.Adapter mAdapter;
     private View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
@@ -256,19 +258,28 @@ public class FragmentNews extends Fragment {
             // ÜLKE SEÇİMİ
             if (isNetworkConnected(getActivity())) {
                 fetchNews(userCountry);
+                loadGlobalCampaigns();
                 fetchCountryFinance(userCountry);
                 parseCompanies();
-                loadGlobalCampaigns();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
+
+            Button seeNewsButton = rootView.findViewById(R.id.button_seeAllNews);
+            seeNewsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), AllNews.class);
+                    startActivity(intent);
+                }
+            });
         }
         return rootView;
     }
 
     private void loadGlobalCampaigns() {
         if (globalCampaignList != null && globalCampaignList.size() > 0) {
-            mAdapterKampanya = new CampaignAdapter(getActivity(), globalCampaignList, "USER");
+            RecyclerView.Adapter mAdapterKampanya = new CampaignAdapter(getActivity(), globalCampaignList, "USER");
             mRecyclerViewKampanya.setAdapter(mAdapterKampanya);
             mRecyclerViewKampanya.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
             mAdapterKampanya.notifyDataSetChanged();
@@ -276,7 +287,7 @@ public class FragmentNews extends Fragment {
     }
 
     private void fetchNews(final String tempCountryCode) {
-        feedsList.clear();
+        newsFeed.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_NEWS) + "?country=" + tempCountryCode,
                 new Response.Listener<String>() {
                     @Override
@@ -284,6 +295,8 @@ public class FragmentNews extends Fragment {
                         swipeContainer.setRefreshing(false);
                         if (response != null && response.length() > 0) {
                             try {
+                                List<NewsItem> dummyList = new ArrayList<>();
+
                                 JSONArray res = new JSONArray(response);
 
                                 for (int i = 0; i < res.length(); i++) {
@@ -298,10 +311,14 @@ public class FragmentNews extends Fragment {
                                     item.setURL(obj.getString("url"));
                                     item.setSourceURL(obj.getString("sourceURL"));
                                     item.setPublishDate(obj.getString("releaseDate"));
-                                    feedsList.add(item);
+                                    newsFeed.add(item);
+
+                                    if (i < 3) {
+                                        dummyList.add(item);
+                                    }
                                 }
 
-                                mAdapter = new NewsAdapter(getActivity(), feedsList);
+                                mAdapter = new NewsAdapter(getActivity(), dummyList);
                                 mLayoutManager = new GridLayoutManager(getActivity(), 1);
 
                                 mAdapter.notifyDataSetChanged();

@@ -134,6 +134,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/ContentTheme" />
         <activity
+            android:name=".AllNews"
+            android:label="@string/latest_news"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".UserPurchases"
             android:label="@string/user_purchases"
             android:parentActivityName=".MainActivity"

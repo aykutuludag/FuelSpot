@@ -105,7 +105,7 @@ public class FragmentStations extends Fragment {
     // Station variables
     private List<StationItem> shortStationList = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
-    private boolean isAllStationsListed;
+    private boolean isAllStationsListed = true;
     private MapView mMapView;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -370,7 +370,7 @@ public class FragmentStations extends Fragment {
             filterByATM = false;
             filterByMotel = false;
 
-            isAllStationsListed = false;
+            isAllStationsListed = true;
             seeAllStations.setText(getString(R.string.see_all));
             seeAllStations.setVisibility(View.GONE);
             stationLayout.setVisibility(View.GONE);
