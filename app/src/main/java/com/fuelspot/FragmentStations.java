@@ -167,7 +167,7 @@ public class FragmentStations extends Fragment {
             locLastKnown.setLongitude(Double.parseDouble(userlon));
 
             mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(7500);
+            mLocationRequest.setInterval(5000);
             mLocationRequest.setFastestInterval(1000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             mLocationCallback = new LocationCallback() {
@@ -620,10 +620,6 @@ public class FragmentStations extends Fragment {
                 sortLPGLayout.setAlpha(0.33f);
                 sortElectricityLayout.setAlpha(0.33f);
                 sortDistanceLayout.setAlpha(1.0f);
-                break;
-            default:
-                whichOrder = 4;
-                sortBy(whichOrder);
                 break;
         }
 

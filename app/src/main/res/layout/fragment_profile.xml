@@ -83,7 +83,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/button_fav"
-                        android:background="@drawable/white_box"
+                        android:background="@drawable/green_box"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/store"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -96,7 +96,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/button_store"
-                        android:background="@drawable/white_box"
+                        android:background="@drawable/orange_box"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/help"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -151,7 +151,7 @@
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/green_box"
                         android:fontFamily="@font/gotham_medium"
-                        android:padding="4dp"
+                        android:padding="8dp"
                         android:text="@string/add_vehicle" />
 
                 </RelativeLayout>
@@ -192,9 +192,9 @@
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/green_box"
                         android:fontFamily="@font/gotham_medium"
-                        android:padding="4dp"
+                        android:padding="8dp"
                         android:text="@string/see_all"
-                        android:visibility="invisible" />
+                        android:visibility="gone" />
 
                     <RelativeLayout
                         android:id="@+id/noCommentLayout"

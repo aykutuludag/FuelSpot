@@ -132,7 +132,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/red_box"
+                android:background="@drawable/orange_box"
                 android:padding="4dp"
                 android:text="@string/no_later"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -477,151 +477,150 @@
                 android:text="@string/fuel_symbols"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <ImageView
-                android:id="@+id/imageView14"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_below="@id/textView11"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toStartOf="@+id/imageView15"
-                android:contentDescription="@string/gasoline"
-                android:padding="8dp"
-                app:srcCompat="@drawable/fuel_gasoline" />
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/percentHowTo1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView14"
-                android:layout_alignStart="@+id/imageView14"
-                android:layout_alignEnd="@+id/imageView14"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="@string/gasoline"
-                android:textAlignment="center"
-                android:textColor="#161616" />
-
-            <ImageView
-                android:id="@+id/imageView15"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
                 android:layout_below="@id/textView11"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toStartOf="@id/imageView16"
-                android:contentDescription="@string/diesel"
-                android:padding="8dp"
-                app:srcCompat="@drawable/fuel_diesel" />
+                android:layout_marginTop="16dp">
 
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView14"
-                android:layout_alignStart="@+id/imageView15"
-                android:layout_alignEnd="@+id/imageView15"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="@string/diesel"
-                android:textAlignment="center"
-                android:textColor="#161616" />
+                <ImageView
+                    android:id="@+id/imageView14"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_below="@id/textView11"
+                    android:layout_toStartOf="@+id/imageView15"
+                    android:contentDescription="@string/gasoline"
+                    android:padding="8dp"
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="18%"
+                    app:srcCompat="@drawable/fuel_gasoline" />
 
-            <ImageView
-                android:id="@+id/imageView16"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_below="@id/textView11"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:contentDescription="@string/lpg"
-                android:padding="8dp"
-                app:srcCompat="@drawable/fuel_lpg" />
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView14"
+                    android:layout_alignStart="@+id/imageView14"
+                    android:layout_alignEnd="@+id/imageView14"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/gasoline"
+                    android:textAlignment="center"
+                    android:textColor="#161616" />
 
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView14"
-                android:layout_alignStart="@+id/imageView16"
-                android:layout_alignEnd="@id/imageView16"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="@string/lpg"
-                android:textAlignment="center"
-                android:textColor="#161616" />
+                <ImageView
+                    android:id="@+id/imageView15"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_below="@id/textView11"
+                    android:layout_toStartOf="@id/imageView16"
+                    android:contentDescription="@string/diesel"
+                    android:padding="8dp"
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="18%"
+                    app:srcCompat="@drawable/fuel_diesel" />
 
-            <ImageView
-                android:id="@+id/imageView17"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_below="@id/textView11"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@+id/imageView16"
-                android:contentDescription="@string/electricity"
-                android:padding="8dp"
-                app:srcCompat="@drawable/fuel_electricity" />
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView14"
+                    android:layout_alignStart="@+id/imageView15"
+                    android:layout_alignEnd="@+id/imageView15"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/diesel"
+                    android:textAlignment="center"
+                    android:textColor="#161616" />
 
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView14"
-                android:layout_alignStart="@+id/imageView17"
-                android:layout_alignEnd="@+id/imageView17"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="@string/electricity"
-                android:textAlignment="center"
-                android:textColor="#161616" />
+                <ImageView
+                    android:id="@+id/imageView16"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_below="@id/textView11"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/lpg"
+                    android:padding="8dp"
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="18%"
+                    app:srcCompat="@drawable/fuel_lpg" />
 
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_below="@id/textView11"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@+id/imageView17"
-                android:contentDescription="@string/distance"
-                android:padding="8dp"
-                app:srcCompat="@drawable/distance" />
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView14"
+                    android:layout_alignStart="@+id/imageView16"
+                    android:layout_alignEnd="@id/imageView16"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/lpg"
+                    android:textAlignment="center"
+                    android:textColor="#161616" />
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView6"
-                android:layout_alignStart="@+id/imageView6"
-                android:layout_alignEnd="@+id/imageView6"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="@string/distance"
-                android:textAlignment="center"
-                android:textColor="#161616" />
+                <ImageView
+                    android:id="@+id/imageView17"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_below="@id/textView11"
+                    android:layout_toEndOf="@+id/imageView16"
+                    android:contentDescription="@string/electricity"
+                    android:padding="8dp"
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="18%"
+                    app:srcCompat="@drawable/fuel_electricity" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView14"
+                    android:layout_alignStart="@+id/imageView17"
+                    android:layout_alignEnd="@+id/imageView17"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/electricity"
+                    android:textAlignment="center"
+                    android:textColor="#161616" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_below="@id/textView11"
+                    android:layout_toEndOf="@+id/imageView17"
+                    android:contentDescription="@string/distance"
+                    android:padding="8dp"
+                    app:layout_marginPercent="1%"
+                    app:layout_widthPercent="18%"
+                    app:srcCompat="@drawable/distance" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView6"
+                    android:layout_alignStart="@+id/imageView6"
+                    android:layout_alignEnd="@+id/imageView6"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_bold"
+                    android:gravity="center"
+                    android:text="@string/distance"
+                    android:textAlignment="center"
+                    android:textColor="#161616" />
+
+            </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <TextView
                 android:id="@+id/how_tosortExp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView13"
+                android:layout_below="@+id/percentHowTo1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
@@ -678,7 +677,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="48dp"
                 android:fontFamily="@font/gotham_black"
                 android:text="@string/how_to_register_car"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -686,10 +685,10 @@
             <ImageView
                 android:id="@+id/imageView19"
                 android:layout_width="wrap_content"
-                android:layout_height="180dp"
+                android:layout_height="100dp"
                 android:layout_below="@+id/textViewOnayli"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/how_to_register_car"
                 app:srcCompat="@drawable/howaddvehicle" />
 
@@ -700,7 +699,7 @@
                 android:layout_below="@+id/imageView19"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
@@ -755,7 +754,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="48dp"
                 android:fontFamily="@font/gotham_black"
                 android:text="@string/how_to_add_fuel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -763,7 +762,7 @@
             <ImageView
                 android:id="@+id/imageView18"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:layout_below="@+id/textView159"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
