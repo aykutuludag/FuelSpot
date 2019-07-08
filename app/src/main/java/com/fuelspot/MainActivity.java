@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
     private RequestQueue queue;
+    static boolean hideStreetView;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -676,6 +677,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 if (doubleBackToExitPressedOnce) {
                     adCount = 0;
                     mFragNavController.clearStack();
+                    hideStreetView = false;
                     super.onBackPressed();
                     finish();
                 }

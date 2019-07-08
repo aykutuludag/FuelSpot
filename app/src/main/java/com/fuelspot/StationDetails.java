@@ -61,6 +61,7 @@ import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CommentItem;
+import com.fuelspot.superuser.SuperStoreActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -75,6 +76,11 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
+import com.google.android.gms.maps.StreetViewPanoramaView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -103,6 +109,7 @@ import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.globalCampaignList;
+import static com.fuelspot.MainActivity.hideStreetView;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
@@ -185,6 +192,8 @@ public class StationDetails extends AppCompatActivity {
     private int reportRequest;
     private SimpleDateFormat sdf;
     private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel;
+    StreetViewPanoramaView mStreetViewPanoramaView;
+    RelativeLayout buyPremiumLayout;
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
@@ -223,13 +232,6 @@ public class StationDetails extends AppCompatActivity {
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
         requestQueue = Volley.newRequestQueue(StationDetails.this);
 
-        AdView mAdView = findViewById(R.id.adView);
-        if (!premium) {
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
-            mAdView.loadAd(adRequest);
-        } else {
-            mAdView.setVisibility(View.GONE);
-        }
 
         noCampaignText = findViewById(R.id.noCampaignText);
         textName = findViewById(R.id.station_name);
@@ -430,6 +432,62 @@ public class StationDetails extends AppCompatActivity {
             //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
             fetchStation();
         }
+
+        //StreetView
+        mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
+        mStreetViewPanoramaView.onCreate(savedInstanceState);
+
+        buyPremiumLayout = findViewById(R.id.buy_premium_fromStreetView);
+        buyPremiumLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSuperUser) {
+                    Intent intent = new Intent(StationDetails.this, SuperStoreActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(StationDetails.this, StoreActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+        AdView mAdView = findViewById(R.id.adView);
+        if (!premium) {
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+            mAdView.loadAd(adRequest);
+
+            if (!hideStreetView) {
+                loadStreetView();
+            } else {
+                buyPremiumLayout.setVisibility(View.VISIBLE);
+                mStreetViewPanoramaView.setVisibility(View.GONE);
+            }
+        } else {
+            mAdView.setVisibility(View.GONE);
+            loadStreetView();
+        }
+    }
+
+    void loadStreetView() {
+        mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
+            @Override
+            public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
+                panorama.setStreetNamesEnabled(true);
+                panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
+                panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
+                    @Override
+                    public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
+                        if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
+                            hideStreetView = true;
+                        } else {
+                            Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void fetchStation() {
