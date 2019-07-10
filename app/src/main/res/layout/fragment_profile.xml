@@ -82,7 +82,6 @@
                         android:id="@+id/button_store"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/button_fav"
                         android:background="@drawable/green_box"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/store"
@@ -100,7 +99,7 @@
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/help"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#161616"
+                        android:textColor="#f1f1f1"
                         app:layout_marginPercent="5%"
                         app:layout_widthPercent="40%" />
 

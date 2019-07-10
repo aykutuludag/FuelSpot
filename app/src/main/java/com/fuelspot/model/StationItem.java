@@ -18,6 +18,7 @@ public class StationItem {
     private float dieselPrice;
     private float lpgPrice;
     private float electricityPrice;
+    private String otherFuels;
     private int isVerified;
     private String lastUpdated;
     private int distance;
@@ -141,6 +142,14 @@ public class StationItem {
 
     public void setElectricityPrice(float electricityPrice) {
         this.electricityPrice = electricityPrice;
+    }
+
+    public String getOtherFuels() {
+        return otherFuels;
+    }
+
+    public void setOtherFuels(String otherFuels) {
+        this.otherFuels = otherFuels;
     }
 
     public int getIsVerified() {

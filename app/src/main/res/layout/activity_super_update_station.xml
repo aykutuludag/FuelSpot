@@ -260,6 +260,19 @@
                         android:inputType="numberDecimal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
+                    <EditText
+                        android:id="@+id/editTextGasoline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/editTextGasoline"
+                        android:layout_alignStart="@+id/gasolineIcon"
+                        android:layout_alignEnd="@id/gasolineIcon"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="@string/gasoline2"
+                        android:inputType="numberDecimal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dieselIcon"
                         android:layout_width="wrap_content"
@@ -283,6 +296,19 @@
                         android:ems="10"
                         android:gravity="center"
                         android:hint="@string/diesel"
+                        android:inputType="numberDecimal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <EditText
+                        android:id="@+id/editTextDiesel2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/editTextDiesel"
+                        android:layout_alignStart="@+id/dieselIcon"
+                        android:layout_alignEnd="@id/dieselIcon"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="@string/diesel2"
                         android:inputType="numberDecimal"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -340,27 +366,11 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/dummy0001"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/subPriceSec"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/gotham_book"
-                    android:gravity="center"
-                    android:text="@string/note_for_prices"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
-
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/dummy0001"
+                    android:layout_below="@id/subPriceSec"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="4dp"
@@ -434,90 +444,117 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/WC"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentStart="true"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_wc"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Market"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_toEndOf="@id/WC"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_market"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/CarWash"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_toEndOf="@id/Market"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_carwash"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/TireRepair"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_toEndOf="@id/CarWash"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_tirerepair"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Mechanic"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_toEndOf="@id/TireRepair"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_mechanic"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/Restaurant"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_toEndOf="@id/Mechanic"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/WC"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_restaurant"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/ParkSpot"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
+                        android:layout_below="@+id/Market"
                         android:layout_toEndOf="@id/Restaurant"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_parkspot"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/ATM"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/CarWash"
                         android:layout_toEndOf="@id/ParkSpot"
                         android:alpha="0.25"
                         android:src="@drawable/tesis_atm"
-                        app:layout_marginEndPercent="0.25%"
-                        app:layout_marginStartPercent="0.25%"
-                        app:layout_widthPercent="12%" />
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/Motel"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/TireRepair"
+                        android:layout_toEndOf="@id/ATM"
+                        android:alpha="0.25"
+                        android:src="@drawable/tesis_motel"
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/Mosque"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/Mechanic"
+                        android:layout_toEndOf="@id/Motel"
+                        android:alpha="0.25"
+                        android:src="@drawable/tesis_cami"
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/CoffeeShop"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/ATM"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="0.25"
+                        android:src="@drawable/tesis_kahveci"
+                        app:layout_marginPercent="0.5%"
+                        app:layout_widthPercent="19%" />
                 </androidx.percentlayout.widget.PercentRelativeLayout>
 
             </RelativeLayout>

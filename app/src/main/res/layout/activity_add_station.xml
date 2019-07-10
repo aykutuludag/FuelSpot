@@ -21,7 +21,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/welcome2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -119,6 +119,6 @@
                 android:textAllCaps="false"
                 android:textColor="#212121" />
         </RelativeLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -17,8 +16,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +23,22 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
-import com.android.vending.billing.IInAppBillingService;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchaseHistoryRecord;
+import com.android.billingclient.api.PurchaseHistoryResponseListener;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -63,7 +70,12 @@ import java.util.Map;
 
 import hotchemi.android.rate.AppRate;
 
-public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
+import static com.fuelspot.StoreActivity.doubleSku;
+import static com.fuelspot.StoreActivity.premiumSku;
+import static com.fuelspot.superuser.SuperStoreActivity.doubleSuperSku;
+import static com.fuelspot.superuser.SuperStoreActivity.premiumSuperSku;
+
+public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener, PurchasesUpdatedListener {
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
@@ -101,14 +113,13 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private List<Fragment> fragments = new ArrayList<>(5);
     private SharedPreferences prefs;
-    private IInAppBillingService mService;
-    private ServiceConnection mServiceConn;
     private Window window;
     private Toolbar toolbar;
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
     private RequestQueue queue;
     static boolean hideStreetView;
+    private BillingClient billingClient;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -276,8 +287,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
         bottomNavigation.setAccentColor(Color.parseColor("#FF4500"));
-        bottomNavigation.setInactiveColor(Color.parseColor("#424242"));
+        bottomNavigation.setInactiveColor(Color.parseColor("#626262"));
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        bottomNavigation.setBehaviorTranslationEnabled(false);
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
@@ -350,57 +362,96 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void InAppBilling() {
-        mServiceConn = new ServiceConnection() {
+        billingClient = BillingClient.newBuilder(this).setListener(this).enablePendingPurchases().build();
+        billingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mService = null;
-            }
-
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mService = IInAppBillingService.Stub.asInterface(service);
-                try {
-                    checkPremium();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    getSkus();
+                    checkSubscriptions();
+                } else {
+                    billingClient = null;
                 }
             }
-        };
 
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+            @Override
+            public void onBillingServiceDisconnected() {
+                billingClient = null;
+            }
+        });
     }
 
-    private void checkPremium() throws RemoteException {
-        Bundle ownedItems = mService.getPurchases(3, getPackageName(), "subs", null);
-        if (ownedItems.getInt("RESPONSE_CODE") == 0) {
-            ArrayList<String> ownedSkus = ownedItems.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-            assert ownedSkus != null;
+    private void getSkus() {
+        List<String> skuList = new ArrayList<>();
+        skuList.add("premium");
+        skuList.add("premium_super");
+        skuList.add("2x_range");
+        skuList.add("2x_range_super");
+        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+        params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
+        billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
+            @Override
+            public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
+                    for (int i = 0; i < skuDetailsList.size(); i++) {
+                        if (skuDetailsList.get(i).getSku().equals("premium")) {
+                            premiumSku = skuDetailsList.get(i);
+                        }
 
-            if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
-                premium = true;
-                prefs.edit().putInt("RANGE", 5000).apply();
-                prefs.edit().putFloat("ZOOM", 12f).apply();
-            } else {
-                premium = false;
-                prefs.edit().putInt("RANGE", 2500).apply();
-                prefs.edit().putFloat("ZOOM", 13f).apply();
+                        if (skuDetailsList.get(i).getSku().equals("premium_super")) {
+                            premiumSuperSku = skuDetailsList.get(i);
+                        }
+
+                        if (skuDetailsList.get(i).getSku().equals("2x_range")) {
+                            doubleSku = skuDetailsList.get(i);
+                        }
+
+                        if (skuDetailsList.get(i).getSku().equals("2x_range_super")) {
+                            doubleSuperSku = skuDetailsList.get(i);
+                        }
+                    }
+                }
             }
-            prefs.edit().putBoolean("hasPremium", premium).apply();
+        });
+    }
 
-            if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
-                hasDoubleRange = true;
-                prefs.edit().putInt("RANGE", 5000).apply();
-                prefs.edit().putFloat("ZOOM", 12f).apply();
+    private void checkSubscriptions() {
+        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS, new PurchaseHistoryResponseListener() {
+            @Override
+            public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchasesList) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchasesList != null) {
+                    ArrayList<String> ownedSkus = new ArrayList<>();
+                    for (int i = 0; i < purchasesList.size(); i++) {
+                        ownedSkus.add(purchasesList.get(i).getSku());
+                    }
 
-            } else {
-                hasDoubleRange = false;
-                prefs.edit().putInt("RANGE", 2500).apply();
-                prefs.edit().putFloat("ZOOM", 13f).apply();
+                    if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
+                        premium = true;
+                        mapDefaultRange = 5000;
+                        mapDefaultZoom = 12f;
+                    } else {
+                        premium = false;
+                        mapDefaultRange = 2500;
+                        mapDefaultZoom = 13f;
+                    }
+
+                    if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                        hasDoubleRange = true;
+                        mapDefaultRange = 5000;
+                        mapDefaultZoom = 12f;
+                    } else {
+                        hasDoubleRange = false;
+                        mapDefaultRange = 2500;
+                        mapDefaultZoom = 13f;
+                    }
+
+                    prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+                    prefs.edit().putBoolean("hasPremium", premium).apply();
+                    prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+                    prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+                }
             }
-            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
-        }
+        });
     }
 
     private void fetchAutomobiles() {
@@ -522,27 +573,27 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                                 Intent mainIntent = Intent.makeRestartActivityTask(componentName);
                                 MainActivity.this.startActivity(mainIntent);
                                 Runtime.getRuntime().exit(0);
-                            }
+                            } else {
+                                try {
+                                    JSONArray res = new JSONArray(response);
 
-                            try {
-                                JSONArray res = new JSONArray(response);
+                                    for (int i = 0; i < res.length(); i++) {
+                                        JSONObject obj = res.getJSONObject(i);
 
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    CompanyItem item = new CompanyItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setName(obj.getString("companyName"));
-                                    item.setLogo(obj.getString("companyLogo"));
-                                    item.setWebsite(obj.getString("companyWebsite"));
-                                    item.setPhone(obj.getString("companyPhone"));
-                                    item.setAddress(obj.getString("companyAddress"));
-                                    item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                    item.setNumOfStations(obj.getInt("numOfStations"));
-                                    companyList.add(item);
+                                        CompanyItem item = new CompanyItem();
+                                        item.setID(obj.getInt("id"));
+                                        item.setName(obj.getString("companyName"));
+                                        item.setLogo(obj.getString("companyLogo"));
+                                        item.setWebsite(obj.getString("companyWebsite"));
+                                        item.setPhone(obj.getString("companyPhone"));
+                                        item.setAddress(obj.getString("companyAddress"));
+                                        item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                        item.setNumOfStations(obj.getInt("numOfStations"));
+                                        companyList.add(item);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         }
                     }
@@ -571,7 +622,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("ANNNNNNNNNN" + response);
                         if (response != null && response.length() > 0) {
                             try {
                                 JSONArray res = new JSONArray(response);
@@ -659,11 +709,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if (mServiceConn != null) {
-            unbindService(mServiceConn);
-        }
-
         if (queue != null) {
             queue.cancelAll(this);
         }
@@ -737,5 +782,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
         mFragNavController.switchTab(position);
         return true;
+    }
+
+    /**
+     * Implement this method to get notifications for purchases updates. Both purchases initiated by
+     * your app and the ones initiated by Play Store will be reported here.
+     *
+     * @param billingResult BillingResult of the update.
+     * @param purchases     List of updated purchases if present.
+     */
+    @Override
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+        // DO NOTHING. WE DO NOT PURCHASE ANYTHING HERE
     }
 }

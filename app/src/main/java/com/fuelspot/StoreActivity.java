@@ -1,18 +1,11 @@
 package com.fuelspot;
 
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,12 +20,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.vending.billing.IInAppBillingService;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -49,8 +49,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -62,6 +64,8 @@ import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.location;
+import static com.fuelspot.MainActivity.mapDefaultRange;
+import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
@@ -71,23 +75,22 @@ import static com.fuelspot.MainActivity.userFSMoney;
 import static com.fuelspot.MainActivity.userPhoneNumber;
 import static com.fuelspot.MainActivity.username;
 
-public class StoreActivity extends AppCompatActivity {
+public class StoreActivity extends AppCompatActivity implements PurchasesUpdatedListener {
 
-    private static final int PURCHASE_PREMIUM = 13200;
-    private static final int PURCHASE_DOUBLE_RANGE = 63000;
     int itemNo;
-    float price1 = 4.99f;
+    public static SkuDetails premiumSku, doubleSku;
     float price2 = 29.90f;
     float price3 = 39.90f;
     RequestOptions options;
     PopupWindow mPopupWindow;
     TextView textViewCurrentBalance;
     private RecyclerView mRecyclerView;
-    private IInAppBillingService mService;
     private SharedPreferences prefs;
     private Window window;
     private Toolbar toolbar;
     private RequestQueue requestQueue;
+    float price1 = 9.99f;
+    private BillingClient billingClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,18 +127,14 @@ public class StoreActivity extends AppCompatActivity {
             buttonBuyPremium.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mService != null) {
-                        try {
-                            if (!hasDoubleRange) {
-                                buyPremium();
-                            } else {
-                                Toast.makeText(StoreActivity.this, "Premium aboneliğini başlatabilmek için öncelikle Google Play uygulamasından 2x-Range aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
-                            }
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
+                    if (billingClient != null) {
+                        if (!hasDoubleRange) {
+                            buyPremium();
+                        } else {
+                            Toast.makeText(StoreActivity.this, "Premium aboneliğini başlatabilmek için öncelikle Google Play uygulamasından 2x-Range aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
                         }
+                    } else {
+                        Toast.makeText(StoreActivity.this, "Google Play serverları ile bağlantı kurulurken bir sorun oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -148,18 +147,14 @@ public class StoreActivity extends AppCompatActivity {
             buttonBuyDoubleRange.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mService != null) {
-                        try {
-                            if (!premium) {
-                                buyDoubleRange();
-                            } else {
-                                Toast.makeText(StoreActivity.this, "2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
-                            }
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
+                    if (billingClient != null) {
+                        if (!premium) {
+                            buyDoubleRange();
+                        } else {
+                            Toast.makeText(StoreActivity.this, "2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
                         }
+                    } else {
+                        Toast.makeText(StoreActivity.this, "Google Play serverları ile bağlantı kurulurken bir sorun oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -229,41 +224,32 @@ public class StoreActivity extends AppCompatActivity {
     }
 
     private void InAppBilling() {
-        ServiceConnection mServiceConn = new ServiceConnection() {
+        billingClient = BillingClient.newBuilder(this).setListener(this).enablePendingPurchases().build();
+        billingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mService = null;
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+                    billingClient = null;
+                }
             }
 
             @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mService = IInAppBillingService.Stub.asInterface(service);
+            public void onBillingServiceDisconnected() {
+                billingClient = null;
             }
-        };
-
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        });
     }
 
-    private void buyPremium() throws RemoteException, IntentSender.SendIntentException {
+    private void buyPremium() {
         Toast.makeText(StoreActivity.this, getString(R.string.premium_version_desc), Toast.LENGTH_LONG).show();
-        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "premium", "subs",
-                "dfgfddfgdfgasd/sdfsffgdgfgjkjk/ajyUFbAyw93xVnDkeTZFdhdSdJ8M");
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        assert pendingIntent != null;
-        startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_PREMIUM, new Intent(), 0,
-                0, 0);
+        BillingFlowParams flowParams = BillingFlowParams.newBuilder().setSkuDetails(premiumSku).build();
+        billingClient.launchBillingFlow(StoreActivity.this, flowParams);
     }
 
-    private void buyDoubleRange() throws RemoteException, IntentSender.SendIntentException {
+    private void buyDoubleRange() {
         Toast.makeText(StoreActivity.this, getString(R.string.double_range_desc), Toast.LENGTH_LONG).show();
-        Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), "2x_range", "subs",
-                "dfkjk/ajyUFbAyw93xVnDkeTZFdhdSdJ8M");
-        PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-        assert pendingIntent != null;
-        startIntentSenderForResult(pendingIntent.getIntentSender(), PURCHASE_PREMIUM, new Intent(), 0,
-                0, 0);
+        BillingFlowParams flowParams = BillingFlowParams.newBuilder().setSkuDetails(doubleSku).build();
+        billingClient.launchBillingFlow(StoreActivity.this, flowParams);
     }
 
     private void buyRealItem(int itemNo, View view) {
@@ -282,7 +268,7 @@ public class StoreActivity extends AppCompatActivity {
         switch (itemNo) {
             case 1:
                 productName[0] = "Araç Kokusu (5 adet)";
-                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 4.99 FP. Sınırlı sayıda!";
+                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 9.99 FP. Sınırlı sayıda!";
                 productPrice[0] = price1;
                 imageResourceID = R.drawable.popup_product1;
                 break;
@@ -522,47 +508,51 @@ public class StoreActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
+    /**
+     * Implement this method to get notifications for purchases updates. Both purchases initiated by
+     * your app and the ones initiated by Play Store will be reported here.
+     *
+     * @param billingResult BillingResult of the update.
+     * @param purchases     List of updated purchases if present.
+     */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case PURCHASE_PREMIUM:
-                if (resultCode == RESULT_OK) {
-                    Toast.makeText(StoreActivity.this, getString(R.string.premium_successful), Toast.LENGTH_LONG).show();
-                    premium = true;
-                    prefs.edit().putBoolean("hasPremium", premium).apply();
-                    prefs.edit().putInt("RANGE", 5000).apply();
-                    prefs.edit().putFloat("ZOOM", 12f).apply();
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    if (i != null) {
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasPremium", false).apply();
-                }
-                break;
-            case PURCHASE_DOUBLE_RANGE:
-                if (resultCode == RESULT_OK) {
-                    Toast.makeText(StoreActivity.this, getString(R.string.double_range_successful), Toast.LENGTH_LONG).show();
-                    hasDoubleRange = true;
-                    prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
-                    prefs.edit().putInt("RANGE", 5000).apply();
-                    prefs.edit().putFloat("ZOOM", 12f).apply();
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    if (i != null) {
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
-                    prefs.edit().putBoolean("hasDoubleRange", false).apply();
-                }
-                break;
+    public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
+            ArrayList<String> ownedSkus = new ArrayList<>();
+            for (int i = 0; i < purchases.size(); i++) {
+                ownedSkus.add(purchases.get(i).getSku());
+            }
+
+            if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
+                premium = true;
+                mapDefaultRange = 5000;
+                mapDefaultZoom = 12f;
+
+                Toast.makeText(StoreActivity.this, getString(R.string.premium_successful), Toast.LENGTH_LONG).show();
+            } else {
+                premium = false;
+                mapDefaultRange = 2500;
+                mapDefaultZoom = 13f;
+            }
+
+            if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                hasDoubleRange = true;
+                mapDefaultRange = 5000;
+                mapDefaultZoom = 12f;
+
+                Toast.makeText(StoreActivity.this, getString(R.string.double_range_successful), Toast.LENGTH_LONG).show();
+            } else {
+                hasDoubleRange = false;
+                mapDefaultRange = 2500;
+                mapDefaultZoom = 13f;
+            }
+
+            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+            prefs.edit().putBoolean("hasPremium", premium).apply();
+            prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+            prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+        } else {
+            Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
         }
     }
 

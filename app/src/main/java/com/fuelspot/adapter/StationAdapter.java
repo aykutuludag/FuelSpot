@@ -47,6 +47,7 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
 import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
@@ -85,6 +86,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     intent.putExtra("STATION_DIESEL", feedItemList.get(position).getDieselPrice());
                     intent.putExtra("STATION_LPG", feedItemList.get(position).getLpgPrice());
                     intent.putExtra("STATION_ELECTRIC", feedItemList.get(position).getElectricityPrice());
+                    intent.putExtra("STATION_OTHER_FUELS", feedItemList.get(position).getOtherFuels());
                     intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
                     intent.putExtra("IS_VERIFIED", feedItemList.get(position).getIsVerified());
                     intent.putExtra("STATION_FACILITIES", feedItemList.get(position).getFacilities());
@@ -141,6 +143,9 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         ownedElectricityPrice = item.getElectricityPrice();
         prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        ownedOtherFuels = item.getOtherFuels();
+        prefs.edit().putString("superOtherFuels", ownedOtherFuels).apply();
 
         superLicenseNo = item.getLicenseNo();
         prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();

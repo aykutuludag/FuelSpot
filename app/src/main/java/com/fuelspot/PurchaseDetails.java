@@ -364,6 +364,7 @@ public class PurchaseDetails extends AppCompatActivity {
                             info.setDieselPrice((float) obj.getDouble("dieselPrice"));
                             info.setLpgPrice((float) obj.getDouble("lpgPrice"));
                             info.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                            info.setOtherFuels(obj.getString("otherFuels"));
                             info.setIsVerified(obj.getInt("isVerified"));
                             info.setLastUpdated(obj.getString("lastUpdated"));
 
@@ -446,6 +447,7 @@ public class PurchaseDetails extends AppCompatActivity {
         intent.putExtra("STATION_DIESEL", feedItemList.getDieselPrice());
         intent.putExtra("STATION_LPG", feedItemList.getLpgPrice());
         intent.putExtra("STATION_ELECTRIC", feedItemList.getElectricityPrice());
+        intent.putExtra("STATION_OTHER_FUELS", feedItemList.getOtherFuels());
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());

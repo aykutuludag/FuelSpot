@@ -24,6 +24,8 @@
     <string name="lpg">LPG</string>
     <string name="distance">Mesafe</string>
     <string name="electricity">Elektrik</string>
+    <string name="gasoline2">2. Benzin</string>
+    <string name="diesel2">2. Dizel</string>
     <string name="secondary_fuel_type">İkincil yakıt tipi</string>
     <string name="secondary_fuel_type_desc">Eğer aracınız ikincil bir yakıt sistemine sahip değilse boş bırakın</string>
     <string name="kilometer">Kilometre</string>
@@ -147,8 +149,7 @@
         <item>Diğer</item>
     </string-array>
 
-    <string name="send_report_desc">Eğer bu istasyondaki fiyatları biliyorsan bize gönderebilirsin. Gönderilen her bildirimi dikkatlice inceliyoruz. Bildiriminiz onaylandığında ödül hesabınıza anında yansıtılacaktır.</string>
-    <string name="enter_prices">Lütfen fiyatları giriniz…</string>
+    <string name="send_report_desc">Eğer bu istasyondaki fiyatları biliyorsan bize gönderebilirsin. Gönderilen her bildirimi dikkatlice inceliyoruz. Bildiriminiz onaylandığında ödül hesabınıza anında yansıtılacaktır. Lütfen istasyon fiyat tabelasını net ve okunaklı bir biçimde fotoğrafını ekleyiniz.</string>
     <string name="send_report">Raporu gönder</string>
     <string name="add_answer">Cevapla</string>
     <string name="empty_comment">Lütfen yorumunuzu giriniz…</string>
@@ -172,6 +173,8 @@
     <string name="parkspot">Park yeri</string>
     <string name="atm">ATM</string>
     <string name="motel">Motel</string>
+    <string name="coffee_shop">Kahveci</string>
+    <string name="mosque">Camii / Mescit</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -318,7 +321,6 @@
     <string name="update_station">İstasyonu güncelle</string>
     <string name="station_update_success">İstasyon başarıyla güncellendi…</string>
     <string name="station_update_fail">İstayon güncellenirken bir hata oluştu… Lütfen tekrar deneyiniz.</string>
-    <string name="note_for_prices">ÖNEMLİ: Eğer aynı ürün grubundan birden fazla yakıt satıyorsanız (Örnek: Dizel, Euro-Dizel), fiyatı yüksek olanı giriniz.</string>
     <string name="station_updating">İstasyon güncelleniyor</string>
     <string name="fuelspot_station_id">FuelSpot ID:</string>
     <string name="license_no_with_colon">Lisans no:</string>
@@ -342,6 +344,8 @@
     <string name="campaign_updated">Kampanya başarıyla güncellendi…</string>
     <string name="update_campaign">Kampanyayı güncelle</string>
     <string name="old_campaigns">Eski kampanyalar</string>
+    <string name="active_campaigns">Aktif kampanyalar</string>
+    <string name="company_campaigns">Firma kampanyaları</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperStore-->

@@ -100,7 +100,7 @@ public class FragmentStations extends Fragment {
     int whichOrder;
     boolean isMapUpdating;
     NestedScrollView scrollView;
-    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel;
+    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel, filterByCoffeeShop, filterByMosque;
     RelativeLayout stationLayout;
     // Station variables
     private List<StationItem> shortStationList = new ArrayList<>();
@@ -133,6 +133,7 @@ public class FragmentStations extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -294,6 +295,7 @@ public class FragmentStations extends Fragment {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void loadMap() {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
@@ -305,17 +307,10 @@ public class FragmentStations extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
 
-                // Dokundu
-                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-                    @Override
-                    public void onCameraMoveStarted(int i) {
-                        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                            scrollView.requestDisallowInterceptTouchEvent(true);
-                        }
-                    }
-                });
                 googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
                     public void onCameraMove() {
@@ -323,13 +318,13 @@ public class FragmentStations extends Fragment {
                     }
                 });
 
-                // Dokunma bitti
                 googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
                     @Override
                     public void onCameraMoveCanceled() {
                         scrollView.requestDisallowInterceptTouchEvent(false);
                     }
                 });
+
                 googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                     @Override
                     public void onCameraIdle() {
@@ -369,6 +364,8 @@ public class FragmentStations extends Fragment {
             filterByParkSpot = false;
             filterByATM = false;
             filterByMotel = false;
+            filterByCoffeeShop = false;
+            filterByMosque = false;
 
             isAllStationsListed = true;
             seeAllStations.setText(getString(R.string.see_all));
@@ -429,6 +426,7 @@ public class FragmentStations extends Fragment {
                                     item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setOtherFuels(obj.getString("otherFuels"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
                                     item.setDistance((int) obj.getDouble("distance"));
@@ -519,7 +517,7 @@ public class FragmentStations extends Fragment {
 
     private void sortBy(int position) {
         // User is at filter mode. just do nothing for now.
-        if (filterByWC || filterByMarket || filterByTireStore || filterByMechanic || filterByRestaurant || filterByParkSpot || filterByATM || filterByMotel) {
+        if (filterByWC || filterByMarket || filterByTireStore || filterByMechanic || filterByRestaurant || filterByParkSpot || filterByATM || filterByMotel || filterByCoffeeShop || filterByMosque) {
             return;
         }
 
@@ -708,7 +706,7 @@ public class FragmentStations extends Fragment {
     }
 
     public void filterPopup() {
-        CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9;
+        CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10, checkBox11;
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_filter, null);
@@ -798,6 +796,24 @@ public class FragmentStations extends Fragment {
             }
         });
 
+        checkBox10 = customView.findViewById(R.id.checkBox11);
+        checkBox10.setChecked(filterByCoffeeShop);
+        checkBox10.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByCoffeeShop = isChecked;
+            }
+        });
+
+        checkBox11 = customView.findViewById(R.id.checkBox12);
+        checkBox11.setChecked(filterByMosque);
+        checkBox11.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterByMosque = isChecked;
+            }
+        });
+
         Button filterButton = customView.findViewById(R.id.button8);
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -823,7 +839,7 @@ public class FragmentStations extends Fragment {
 
     void filterStations() {
         // If there is no filter, just order by distance
-        if (!filterByWC && !filterByMarket && !filterByTireStore && !filterByMechanic && !filterByRestaurant && !filterByParkSpot && !filterByATM && !filterByMotel) {
+        if (!filterByWC && !filterByMarket && !filterByTireStore && !filterByMechanic && !filterByRestaurant && !filterByParkSpot && !filterByATM && !filterByMotel && !filterByCoffeeShop && !filterByMosque) {
             seeAllStations.setVisibility(View.VISIBLE);
             whichOrder = 4;
             sortBy(whichOrder);
@@ -862,6 +878,10 @@ public class FragmentStations extends Fragment {
                     continue;
                 } else if (filterByMotel && facilitiesObj.getInt("Motel") == 0) {
                     continue;
+                } else if (filterByCoffeeShop && facilitiesObj.getInt("CoffeeShop") == 0) {
+                    continue;
+                } else if (filterByMosque && facilitiesObj.getInt("Mosque") == 0) {
+                    continue;
                 }
                 shortStationList.add(fullStationList.get(i));
             } catch (JSONException e) {
@@ -893,6 +913,7 @@ public class FragmentStations extends Fragment {
         intent.putExtra("STATION_DIESEL", feedItemList.getDieselPrice());
         intent.putExtra("STATION_LPG", feedItemList.getLpgPrice());
         intent.putExtra("STATION_ELECTRIC", feedItemList.getElectricityPrice());
+        intent.putExtra("STATION_OTHER_FUELS", feedItemList.getOtherFuels());
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());

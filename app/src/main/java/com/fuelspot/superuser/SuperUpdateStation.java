@@ -61,6 +61,7 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
 import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
@@ -75,21 +76,17 @@ import static com.fuelspot.superuser.SuperMainActivity.superStationName;
 public class SuperUpdateStation extends AppCompatActivity {
 
     SharedPreferences prefs;
-    private EditText stationAddressHolder;
-    private TextView stationLicenseHolder;
-    private TextView textViewStationIDHolder;
-    private EditText gasolineHolder;
-    private EditText dieselHolder;
-    private EditText electricityHolder;
-    private EditText lpgHolder;
+    float gasolinePrice2, dieselPrice2;
+    private TextView stationLicenseHolder, textViewStationIDHolder;
     private RequestQueue requestQueue;
     private RelativeTimeTextView lastUpdateTimeText;
     private RelativeLayout verifiedLayout;
     private Spinner spinner;
     private Window window;
     private Toolbar toolbar;
-    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM;
-    private JSONObject facilitiesObj;
+    private EditText stationAddressHolder, gasolineHolder, dieselHolder, electricityHolder, lpgHolder, gasolineHolder2, dieselHolder2;
+    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel, imageViewCoffeeShop, imageViewMosque;
+    private JSONObject facilitiesObj, otherFuelObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +116,8 @@ public class SuperUpdateStation extends AppCompatActivity {
         dieselHolder = findViewById(R.id.editTextDiesel);
         lpgHolder = findViewById(R.id.editTextLPG);
         electricityHolder = findViewById(R.id.editTextElectricity);
+        gasolineHolder2 = findViewById(R.id.editTextGasoline2);
+        dieselHolder2 = findViewById(R.id.editTextDiesel2);
 
         imageViewWC = findViewById(R.id.WC);
         imageViewMarket = findViewById(R.id.Market);
@@ -128,6 +127,9 @@ public class SuperUpdateStation extends AppCompatActivity {
         imageViewRestaurant = findViewById(R.id.Restaurant);
         imageViewParkSpot = findViewById(R.id.ParkSpot);
         imageViewATM = findViewById(R.id.ATM);
+        imageViewMotel = findViewById(R.id.Motel);
+        imageViewCoffeeShop = findViewById(R.id.CoffeeShop);
+        imageViewMosque = findViewById(R.id.Mosque);
 
         Button buttonUpdateStation = findViewById(R.id.buttonUpdate);
         buttonUpdateStation.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +288,83 @@ public class SuperUpdateStation extends AppCompatActivity {
             }
         });
 
+        // İkincil yakıtlar v1.1
+        if (ownedOtherFuels != null && ownedOtherFuels.length() > 0) {
+            try {
+                JSONArray secondaryFuelRes = new JSONArray(ownedOtherFuels);
+                otherFuelObj = secondaryFuelRes.getJSONObject(0);
+
+                if (otherFuelObj.has("gasoline2") && otherFuelObj.getString("gasoline2").length() > 0) {
+                    gasolinePrice2 = Float.parseFloat(otherFuelObj.getString("gasoline2"));
+                    gasolineHolder2.setText("" + gasolinePrice2);
+                } else {
+                    otherFuelObj.put("gasoline2", "");
+                    gasolineHolder2.setText("-");
+                }
+
+                if (otherFuelObj.has("diesel2") && otherFuelObj.getString("diesel2").length() > 0) {
+                    dieselPrice2 = Float.parseFloat(otherFuelObj.getString("diesel2"));
+                    dieselHolder2.setText("" + dieselPrice2);
+                } else {
+                    otherFuelObj.put("diesel2", "");
+                    dieselHolder2.setText("-");
+                }
+            } catch (JSONException e) {
+                gasolineHolder2.setText("-");
+                dieselHolder2.setText("-");
+                e.printStackTrace();
+            }
+        }
+
+        gasolineHolder2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    gasolinePrice2 = Float.parseFloat(s.toString());
+                    try {
+                        otherFuelObj.put("gasoline2", String.valueOf(gasolinePrice2));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        dieselHolder2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    dieselPrice2 = Float.parseFloat(s.toString());
+                    try {
+                        otherFuelObj.put("diesel2", String.valueOf(dieselPrice2));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        // İkincil yakıtlar v1.1
+
         // Facilities
         try {
             JSONArray facilitiesRes = new JSONArray(superFacilities);
@@ -338,6 +417,36 @@ public class SuperUpdateStation extends AppCompatActivity {
             } else {
                 imageViewATM.setAlpha(0.25f);
             }
+
+            if (facilitiesObj.getInt("Motel") == 1) {
+                imageViewMotel.setAlpha(1.0f);
+            } else {
+                imageViewMotel.setAlpha(0.25f);
+            }
+
+            /* NEW FACILITIES v1.1 */
+            if (!facilitiesObj.has("CoffeeShop")) {
+                facilitiesObj.put("CoffeeShop", "0");
+                imageViewCoffeeShop.setAlpha(0.25f);
+            } else {
+                if (facilitiesObj.getInt("CoffeeShop") == 1) {
+                    imageViewCoffeeShop.setAlpha(1.0f);
+                } else {
+                    imageViewCoffeeShop.setAlpha(0.25f);
+                }
+            }
+
+            if (!facilitiesObj.has("Mosque")) {
+                facilitiesObj.put("Mosque", "0");
+                imageViewMosque.setAlpha(0.25f);
+            } else {
+                if (facilitiesObj.getInt("Mosque") == 1) {
+                    imageViewMosque.setAlpha(1.0f);
+                } else {
+                    imageViewMosque.setAlpha(0.25f);
+                }
+            }
+            /* NEW FACILITIES v1.1 */
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -487,6 +596,60 @@ public class SuperUpdateStation extends AppCompatActivity {
                     }
                 }
             });
+
+            imageViewMotel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("Motel") == 1) {
+                            facilitiesObj.put("Motel", "0");
+                            imageViewMotel.setAlpha(0.25f);
+                        } else {
+                            facilitiesObj.put("Motel", "1");
+                            imageViewMotel.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.motel), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewCoffeeShop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("CoffeeShop") == 1) {
+                            facilitiesObj.put("CoffeeShop", "0");
+                            imageViewCoffeeShop.setAlpha(0.25f);
+                        } else {
+                            facilitiesObj.put("CoffeeShop", "1");
+                            imageViewCoffeeShop.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.coffee_shop), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            imageViewMosque.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if (facilitiesObj.getInt("Mosque") == 1) {
+                            facilitiesObj.put("Mosque", "0");
+                            imageViewMosque.setAlpha(0.25f);
+                        } else {
+                            facilitiesObj.put("Mosque", "1");
+                            imageViewMosque.setAlpha(1.0f);
+                            Toast.makeText(SuperUpdateStation.this, getString(R.string.mosque), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -602,11 +765,14 @@ public class SuperUpdateStation extends AppCompatActivity {
                 params.put("address", superStationAddress);
                 String dummy = "[" + facilitiesObj + "]";
                 params.put("facilities", dummy);
+
                 params.put("gasolinePrice", String.valueOf(ownedGasolinePrice));
                 params.put("dieselPrice", String.valueOf(ownedDieselPrice));
                 params.put("lpgPrice", String.valueOf(ownedLPGPrice));
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
-
+                String dummy2 = "[" + otherFuelObj + "]";
+                params.put("otherFuels", dummy2);
+                System.out.println(dummy2);
                 //returning parameters
                 return params;
             }
@@ -643,6 +809,7 @@ public class SuperUpdateStation extends AppCompatActivity {
                                     item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setOtherFuels(obj.getString("otherFuels"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
 
@@ -730,6 +897,9 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         ownedElectricityPrice = item.getElectricityPrice();
         prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        ownedOtherFuels = item.getOtherFuels();
+        prefs.edit().putString("superOtherFuels", ownedOtherFuels).apply();
 
         isStationVerified = item.getIsVerified();
         prefs.edit().putInt("isStationVerified", isStationVerified).apply();

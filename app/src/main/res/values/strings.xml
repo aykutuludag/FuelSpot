@@ -106,6 +106,8 @@
     <string name="lpg">LPG</string>
     <string name="distance">Distance</string>
     <string name="electricity">Electricity</string>
+    <string name="gasoline2">2nd Gasoline</string>
+    <string name="diesel2">2nd Diesel</string>
     <string name="secondary_fuel_type">Secondary fuel type</string>
     <string name="secondary_fuel_type_desc">If you don\'t have secondary fuel system, leave this empty</string>
     <string name="kilometer">Kilometer</string>
@@ -229,8 +231,7 @@
         <item>Other</item>
     </string-array>
 
-    <string name="send_report_desc">If you know the current prices for this station you can send us. We are investigating every report. When we approve the report, the prize will be reflected on the account.</string>
-    <string name="enter_prices">Please enter prices…</string>
+    <string name="send_report_desc">If you know the current prices for this station you can send us. We are investigating every report. When we approve the report, the prize will be reflected on the account.\n\n</string>
     <string name="send_report">Send report</string>
     <string name="add_answer">Add answer</string>
     <string name="empty_comment">Please enter your comment…</string>
@@ -254,6 +255,8 @@
     <string name="parkspot">Park spot</string>
     <string name="atm">ATM</string>
     <string name="motel">Motel</string>
+    <string name="coffee_shop">Coffee Shop</string>
+    <string name="mosque">Mosque</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -401,7 +404,6 @@
     <string name="update_station">Update station</string>
     <string name="station_update_success">Station updated successfully…</string>
     <string name="station_update_fail">An error occurred while updating station… Please try again later</string>
-    <string name="note_for_prices">IMPORTANT: If you have multiple fuels in the same type (Example: Diesel, Euro Diesel), enter the highest price</string>
     <string name="station_updating">Station updating</string>
     <string name="fuelspot_station_id">FuelSpot ID:</string>
     <string name="license_no_with_colon">License NO:</string>
@@ -425,6 +427,8 @@
     <string name="campaign_updated">Campaign updated successfully…</string>
     <string name="update_campaign">Update campaign</string>
     <string name="old_campaigns">Old campaigns</string>
+    <string name="active_campaigns">Active campaigns</string>
+    <string name="company_campaigns">Company campaigns</string>
     <!-- SuperCampaigns-->
 
     <!-- SuperStore-->

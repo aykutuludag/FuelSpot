@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +44,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.android.volley.Request;
@@ -154,6 +154,7 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
 import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
@@ -170,7 +171,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private SharedPreferences prefs;
     private RequestQueue requestQueue;
 
-    private ScrollView welcome2;
+    private NestedScrollView welcome2;
     private RelativeLayout promoLayout;
     private RelativeLayout welcome1;
     private Button continueButton;
@@ -692,6 +693,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setOtherFuels(obj.getString("otherFuels"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
 
@@ -806,6 +808,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         ownedElectricityPrice = item.getElectricityPrice();
         prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+        ownedOtherFuels = item.getOtherFuels();
+        prefs.edit().putString("superOtherFuels", ownedOtherFuels).apply();
 
         isStationVerified = item.getIsVerified();
         prefs.edit().putInt("isStationVerified", isStationVerified).apply();
@@ -1076,7 +1081,31 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
+
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        welcome2.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+                googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        welcome2.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        welcome2.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
                 updateMapObject();
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -1172,6 +1201,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
                                 ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
                                 prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+
+                                ownedOtherFuels = obj.getString("otherFuels");
+                                prefs.edit().putString("superOtherFuels", ownedOtherFuels).apply();
 
                                 superLicenseNo = obj.getString("licenseNo");
                                 prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();

@@ -299,11 +299,12 @@
 
     </RelativeLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/welcome2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -649,6 +650,6 @@
 
             </RelativeLayout>
         </RelativeLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>

@@ -180,6 +180,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setOtherFuels(obj.getString("otherFuels"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
                                     item.setDistance((int) obj.getDouble("distance"));

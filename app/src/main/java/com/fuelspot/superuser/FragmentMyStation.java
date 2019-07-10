@@ -86,6 +86,7 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
+import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
 import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
@@ -287,15 +288,31 @@ public class FragmentMyStation extends Fragment {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
-                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
-                    public void onCameraMoveStarted(int i) {
-                        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                            scrollView.requestDisallowInterceptTouchEvent(true);
-                        }
+                    public void onCameraMove() {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
                     }
                 });
+
+                googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
                 MarkerAdapter customInfoWindow = new MarkerAdapter(getActivity());
                 googleMap.setInfoWindowAdapter(customInfoWindow);
                 googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -305,6 +322,7 @@ public class FragmentMyStation extends Fragment {
                         openStation(infoWindowData);
                     }
                 });
+
                 loadStationDetails();
             }
         });
@@ -347,17 +365,9 @@ public class FragmentMyStation extends Fragment {
         textVicinity.setText(superStationAddress);
         distanceInMeters = loc1.distanceTo(loc2);
         textDistance.setText((int) distanceInMeters + " m");
-
-        prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
         textGasoline.setText(ownedGasolinePrice + "TL");
-
-        prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
         textDiesel.setText(ownedDieselPrice + "TL");
-
-        prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
         textLPG.setText(ownedLPGPrice + "TL");
-
-        prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
         textElectricity.setText(ownedElectricityPrice + "TL");
 
         //Last updated
@@ -383,6 +393,7 @@ public class FragmentMyStation extends Fragment {
         info.setDieselPrice(ownedDieselPrice);
         info.setLpgPrice(ownedLPGPrice);
         info.setElectricityPrice(ownedElectricityPrice);
+        info.setOtherFuels(ownedOtherFuels);
         info.setIsVerified(isStationVerified);
         info.setLastUpdated(superLastUpdate);
         info.setDistance((int) distanceInMeters);
@@ -402,7 +413,7 @@ public class FragmentMyStation extends Fragment {
             public void run() {
                 addMarker();
             }
-        }, 750);
+        }, 1000);
         swipeContainer.setRefreshing(false);
     }
 
@@ -432,6 +443,7 @@ public class FragmentMyStation extends Fragment {
         intent.putExtra("STATION_DIESEL", feedItemList.getDieselPrice());
         intent.putExtra("STATION_LPG", feedItemList.getLpgPrice());
         intent.putExtra("STATION_ELECTRIC", feedItemList.getElectricityPrice());
+        intent.putExtra("STATION_OTHER_FUELS", feedItemList.getOtherFuels());
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());

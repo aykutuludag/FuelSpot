@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -83,6 +84,7 @@ public class AddStation extends AppCompatActivity {
     private float lpgPrice;
     private float electricityPrice;
     private ProgressDialog loading;
+    private NestedScrollView welcome2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class AddStation extends AppCompatActivity {
         MapsInitializer.initialize(this.getApplicationContext());
 
         stationHint = findViewById(R.id.stationHint);
-
+        welcome2 = findViewById(R.id.welcome2);
         spinner = findViewById(R.id.simpleSpinner);
 
         editTextStationAddress = findViewById(R.id.superStationAddress);
@@ -192,7 +194,31 @@ public class AddStation extends AppCompatActivity {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
+
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        welcome2.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+                googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        welcome2.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        welcome2.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
                 updateMapObject();
 
                 googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -486,6 +512,7 @@ public class AddStation extends AppCompatActivity {
                                     item.setDieselPrice((float) obj.getDouble("dieselPrice"));
                                     item.setLpgPrice((float) obj.getDouble("lpgPrice"));
                                     item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setOtherFuels(obj.getString("otherFuels"));
                                     item.setIsVerified(obj.getInt("isVerified"));
                                     item.setLastUpdated(obj.getString("lastUpdated"));
 

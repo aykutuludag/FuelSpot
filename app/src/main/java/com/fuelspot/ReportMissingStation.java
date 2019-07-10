@@ -210,15 +210,24 @@ public class ReportMissingStation extends AppCompatActivity {
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
-                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
-                    public void onCameraMoveStarted(int i) {
-                        if (i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                            scrollView.requestDisallowInterceptTouchEvent(true);
-                        }
+                    public void onCameraMove() {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
                     }
                 });
+
+                googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
                 googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                     @Override
                     public void onCameraIdle() {

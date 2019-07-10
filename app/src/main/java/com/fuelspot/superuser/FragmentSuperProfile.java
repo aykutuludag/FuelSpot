@@ -25,7 +25,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.fuelspot.Application;
 import com.fuelspot.R;
-import com.fuelspot.UserFavorites;
 import com.fuelspot.adapter.StationAdapter;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -140,15 +139,6 @@ public class FragmentSuperProfile extends Fragment {
                 builder.setToolbarColor(Color.parseColor("#FF7439"));
                 customTabsIntent.intent.setPackage("com.android.chrome");
                 customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/help-for-superuser"));
-            }
-        });
-
-        Button openFavorites = rootView.findViewById(R.id.button_fav);
-        openFavorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserFavorites.class);
-                startActivity(intent);
             }
         });
 

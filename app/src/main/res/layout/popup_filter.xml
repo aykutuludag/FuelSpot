@@ -190,18 +190,51 @@
                 android:textColor="#161616" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/inner4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inner3"
+            android:layout_centerHorizontal="true">
+
+            <CheckBox
+                android:id="@+id/checkBox11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:padding="2dp"
+                android:text="@string/coffee_shop"
+                android:textColor="#161616" />
+
+            <CheckBox
+                android:id="@+id/checkBox12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_toEndOf="@id/checkBox11"
+                android:padding="2dp"
+                android:text="@string/mosque"
+                android:textColor="#161616" />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/textView48"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/inner3"
+            android:layout_below="@id/inner4"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/gotham_bold"
-            android:text="Bütün istasyonları görüntülemek için filtreleri kaldır"
+            android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin"
             android:textAlignment="center"
             android:textColor="#161616" />
 

@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -40,6 +41,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -135,10 +137,7 @@ public class StationDetails extends AppCompatActivity {
     public static String userComment;
     public static boolean hasAlreadyCommented;
     private static int isStationVerified;
-    private static float gasolinePrice;
-    private static float dieselPrice;
-    private static float lpgPrice;
-    private static float electricityPrice;
+    JSONObject otherFuelObj;
     private static String lastUpdated;
     private static String stationName;
     private static String stationVicinity;
@@ -149,23 +148,10 @@ public class StationDetails extends AppCompatActivity {
     private List<Entry> dieselPriceHistory = new ArrayList<>();
     private List<Entry> lpgPriceHistory = new ArrayList<>();
     private List<Entry> elecPriceHistory = new ArrayList<>();
-    private String facilitiesOfStation;
-    private CircleImageView stationIcon;
+    NestedScrollView scrollView;
+    private float gasolinePrice, dieselPrice, lpgPrice, electricityPrice, gasolinePrice2, dieselPrice2;
     private RelativeTimeTextView textLastUpdated;
-    private TextView noCampaignText;
-    private TextView noCommentText;
-    private TextView textStationID;
-    private TextView textName;
-    private TextView textVicinity;
-    private TextView textGasoline;
-    private TextView textDiesel;
-    private TextView textLPG;
-    private TextView textElectricity;
-    private TextView literSectionTitle;
-    private TextView textViewGasLt;
-    private TextView textViewDieselLt;
-    private TextView textViewLPGLt;
-    private TextView textViewElectricityLt;
+    private String facilitiesOfStation, otherFuelsOfStation;
     private TextView textViewStationPoint;
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
@@ -177,11 +163,7 @@ public class StationDetails extends AppCompatActivity {
     private FloatingActionButton floatingActionButton1;
     private PopupWindow mPopupWindow;
     private RequestQueue requestQueue;
-    private CircleImageView verifiedSection;
-    private float howMuchGas;
-    private float howMuchDie;
-    private float howMuchLPG;
-    private float howMuchEle;
+    private CircleImageView stationIcon, verifiedSection, imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel, imageViewMosque, imageViewCoffeeShop;
     private Button seeAllComments;
     private LineChart chart;
     private Bitmap bitmap;
@@ -191,9 +173,10 @@ public class StationDetails extends AppCompatActivity {
     private SharedPreferences prefs;
     private int reportRequest;
     private SimpleDateFormat sdf;
-    private CircleImageView imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel;
     StreetViewPanoramaView mStreetViewPanoramaView;
     RelativeLayout buyPremiumLayout;
+    private TextView noCampaignText, noCommentText, textStationID, textName, textVicinity, textGasoline, textDiesel, textLPG, textElectricity, textGasoline2, textDiesel2, textViewGasLt, textViewDieselLt, textViewLPGLt, textViewElectricityLt, textViewGasLt2, textViewDieselLt2, literSectionTitle;
+    private float howMuchGas, howMuchDie, howMuchLPG, howMuchEle, howMuchGas2, howMuchDie2;
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
@@ -232,7 +215,7 @@ public class StationDetails extends AppCompatActivity {
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
         requestQueue = Volley.newRequestQueue(StationDetails.this);
 
-
+        scrollView = findViewById(R.id.scrollView);
         noCampaignText = findViewById(R.id.noCampaignText);
         textName = findViewById(R.id.station_name);
         textStationID = findViewById(R.id.station_ID);
@@ -241,6 +224,8 @@ public class StationDetails extends AppCompatActivity {
         textDiesel = findViewById(R.id.priceDiesel);
         textLPG = findViewById(R.id.priceLPG);
         textElectricity = findViewById(R.id.priceElectricity);
+        textGasoline2 = findViewById(R.id.priceGasoline2);
+        textDiesel2 = findViewById(R.id.priceDiesel2);
         textLastUpdated = findViewById(R.id.stationLastUpdate);
         stationIcon = findViewById(R.id.station_photo);
         literSectionTitle = findViewById(R.id.textViewUnitPrice);
@@ -248,6 +233,8 @@ public class StationDetails extends AppCompatActivity {
         textViewDieselLt = findViewById(R.id.howMuchDiesel);
         textViewLPGLt = findViewById(R.id.howMuchLPG);
         textViewElectricityLt = findViewById(R.id.howMuchElectricity);
+        textViewGasLt2 = findViewById(R.id.howMuchGasoline2);
+        textViewDieselLt2 = findViewById(R.id.howMuchDiesel2);
         chart = findViewById(R.id.chart);
         chart.setScaleEnabled(false);
         chart.setDragEnabled(false);
@@ -327,6 +314,20 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(StationDetails.this, getString(R.string.motel), Toast.LENGTH_SHORT).show();
+            }
+        });
+        imageViewMosque = findViewById(R.id.Mosque);
+        imageViewMosque.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.mosque), Toast.LENGTH_SHORT).show();
+            }
+        });
+        imageViewCoffeeShop = findViewById(R.id.CoffeeShop);
+        imageViewCoffeeShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StationDetails.this, getString(R.string.coffee_shop), Toast.LENGTH_SHORT).show();
             }
         });
         RelativeLayout commentSection = findViewById(R.id.section_comment);
@@ -423,6 +424,7 @@ public class StationDetails extends AppCompatActivity {
             dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
             lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
             electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
+            otherFuelsOfStation = getIntent().getStringExtra("STATION_OTHER_FUELS");
             lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
             iconURL = getIntent().getStringExtra("STATION_ICON");
             isStationVerified = getIntent().getIntExtra("IS_VERIFIED", 0);
@@ -436,6 +438,22 @@ public class StationDetails extends AppCompatActivity {
         //StreetView
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);
+        mStreetViewPanoramaView.setOnTouchListener(new StreetViewPanoramaView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case android.view.MotionEvent.ACTION_DOWN:
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        Toast.makeText(StationDetails.this, "Dokundu", Toast.LENGTH_SHORT).show();
+                        break;
+                    case android.view.MotionEvent.ACTION_UP:
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                        Toast.makeText(StationDetails.this, "Çekti", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return false;
+            }
+        });
 
         buyPremiumLayout = findViewById(R.id.buy_premium_fromStreetView);
         buyPremiumLayout.setOnClickListener(new View.OnClickListener() {
@@ -470,12 +488,15 @@ public class StationDetails extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     void loadStreetView() {
         mStreetViewPanoramaView.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
             @Override
             public void onStreetViewPanoramaReady(final StreetViewPanorama panorama) {
-                panorama.setStreetNamesEnabled(true);
                 panorama.setPosition(new LatLng(Double.parseDouble(stationLocation.split(";")[0]), Double.parseDouble(stationLocation.split(";")[1])));
+                panorama.setStreetNamesEnabled(true);
+
+                // Check coordinates has streetView
                 panorama.setOnStreetViewPanoramaChangeListener(new StreetViewPanorama.OnStreetViewPanoramaChangeListener() {
                     @Override
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
@@ -509,6 +530,7 @@ public class StationDetails extends AppCompatActivity {
                             dieselPrice = (float) obj.getDouble("dieselPrice");
                             lpgPrice = (float) obj.getDouble("lpgPrice");
                             electricityPrice = (float) obj.getDouble("electricityPrice");
+                            otherFuelsOfStation = obj.getString("otherFuels");
                             lastUpdated = obj.getString("lastUpdated");
                             iconURL = obj.getString("logoURL");
                             isStationVerified = obj.getInt("isVerified");
@@ -672,11 +694,37 @@ public class StationDetails extends AppCompatActivity {
             textLPG.setText(lpgPrice + " " + currencySymbol);
         }
         if (electricityPrice == 0) {
-
             textElectricity.setText("-");
         } else {
             textElectricity.setText(electricityPrice + " " + currencySymbol);
         }
+
+        // İkincil yakıtlar v1.1
+        if (otherFuelsOfStation != null && otherFuelsOfStation.length() > 0) {
+            try {
+                JSONArray secondaryFuelRes = new JSONArray(otherFuelsOfStation);
+                otherFuelObj = secondaryFuelRes.getJSONObject(0);
+
+                if (otherFuelObj.has("gasoline2") && otherFuelObj.getString("gasoline2").length() > 0) {
+                    gasolinePrice2 = Float.parseFloat(otherFuelObj.getString("gasoline2"));
+                    textGasoline2.setText(gasolinePrice2 + " " + currencySymbol);
+                } else {
+                    textGasoline2.setText("-");
+                }
+
+                if (otherFuelObj.has("diesel2") && otherFuelObj.getString("diesel2").length() > 0) {
+                    dieselPrice2 = Float.parseFloat(otherFuelObj.getString("diesel2"));
+                    textDiesel2.setText(dieselPrice2 + " " + currencySymbol);
+                } else {
+                    textDiesel2.setText("-");
+                }
+            } catch (JSONException e) {
+                textGasoline2.setText("-");
+                textDiesel2.setText("-");
+                e.printStackTrace();
+            }
+        }
+        // İkincil yakıtlar v1.1
 
         try {
             SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
@@ -726,6 +774,20 @@ public class StationDetails extends AppCompatActivity {
         } else {
             String electricityHolder = String.format(Locale.getDefault(), "%.1f", howMuchEle) + " " + getString(R.string.electricity_unit);
             textViewElectricityLt.setText(electricityHolder);
+        }
+
+        if (howMuchGas2 == 0) {
+            textViewGasLt2.setText("-");
+        } else {
+            String gasolineHolder2 = String.format(Locale.getDefault(), "%.1f", howMuchGas2) + " " + userUnit;
+            textViewGasLt2.setText(gasolineHolder2);
+        }
+
+        if (howMuchDie2 == 0) {
+            textViewDieselLt2.setText("-");
+        } else {
+            String dieselHolder2 = String.format(Locale.getDefault(), "%.1f", howMuchDie2) + " " + userUnit;
+            textViewDieselLt2.setText(dieselHolder2);
         }
 
         // Facilities
@@ -786,6 +848,28 @@ public class StationDetails extends AppCompatActivity {
             } else {
                 imageViewMotel.setAlpha(0.25f);
             }
+
+            /* NEW FACILITIES v1.1 */
+            if (!facilitiesObj.has("CoffeeShop")) {
+                imageViewCoffeeShop.setAlpha(0.25f);
+            } else {
+                if (facilitiesObj.getInt("CoffeeShop") == 1) {
+                    imageViewCoffeeShop.setAlpha(1.0f);
+                } else {
+                    imageViewCoffeeShop.setAlpha(0.25f);
+                }
+            }
+
+            if (!facilitiesObj.has("Mosque")) {
+                imageViewMosque.setAlpha(0.25f);
+            } else {
+                if (facilitiesObj.getInt("Mosque") == 1) {
+                    imageViewMosque.setAlpha(1.0f);
+                } else {
+                    imageViewMosque.setAlpha(0.25f);
+                }
+            }
+            /* NEW FACILITIES v1.1 */
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1245,98 +1329,12 @@ public class StationDetails extends AppCompatActivity {
         // Clear image
         bitmap = null;
 
-        final float[] benzinFiyat = new float[1];
-        final float[] dizelFiyat = new float[1];
-        final float[] LPGFiyat = new float[1];
-        final float[] ElektrikFiyat = new float[1];
-        final String[] pricesArray = new String[1];
-
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_report_prices, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         if (Build.VERSION.SDK_INT >= 21) {
             mPopupWindow.setElevation(5.0f);
         }
-
-        EditText editText = customView.findViewById(R.id.editTextGasoline);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    benzinFiyat[0] = Float.parseFloat(s.toString());
-                }
-            }
-        });
-
-        EditText editText2 = customView.findViewById(R.id.editTextDiesel);
-        editText2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    dizelFiyat[0] = Float.parseFloat(s.toString());
-                }
-            }
-        });
-
-        EditText editText3 = customView.findViewById(R.id.editTextLPG);
-        editText3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    LPGFiyat[0] = Float.parseFloat(s.toString());
-                }
-            }
-        });
-
-        EditText editText4 = customView.findViewById(R.id.editTextElectricity);
-        editText4.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    ElektrikFiyat[0] = Float.parseFloat(s.toString());
-                }
-            }
-        });
 
         reportPricePhoto = customView.findViewById(R.id.imageViewPricesPhoto);
         reportPricePhoto.setOnClickListener(new View.OnClickListener() {
@@ -1355,15 +1353,10 @@ public class StationDetails extends AppCompatActivity {
         sendReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (benzinFiyat[0] != 0 || dizelFiyat[0] != 0 || LPGFiyat[0] != 0 || ElektrikFiyat[0] != 0) {
-                    pricesArray[0] = "PRICES: { fuel_gasoline= " + benzinFiyat[0] + ", fuel_diesel= " + dizelFiyat[0] + ", fuel_lpg= " + LPGFiyat[0] + ", fuel_electricity= " + ElektrikFiyat[0] + " }";
-                    if (bitmap != null) {
-                        sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", pricesArray[0], bitmap);
-                    } else {
-                        Toast.makeText(StationDetails.this, "Raporunuzun değerlendirmeye alınabilmesi için lütfen fiyat tabelası/fiş-fatura vs gibi kanıtlayıcı bir görsel ekleyiniz.", Toast.LENGTH_LONG).show();
-                    }
+                if (bitmap != null) {
+                    sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", "", bitmap);
                 } else {
-                    Toast.makeText(StationDetails.this, getString(R.string.enter_prices), Toast.LENGTH_LONG).show();
+                    Toast.makeText(StationDetails.this, "Raporunuzun değerlendirmeye alınabilmesi için lütfen fiyat tabelası/fiş-fatura vs gibi kanıtlayıcı bir görsel ekleyiniz.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -1497,6 +1490,14 @@ public class StationDetails extends AppCompatActivity {
 
         if (electricityPrice > 0) {
             howMuchEle = 100 / electricityPrice;
+        }
+
+        if (gasolinePrice2 > 0) {
+            howMuchGas2 = 100 / gasolinePrice2;
+        }
+
+        if (dieselPrice2 > 0) {
+            howMuchDie2 = 100 / dieselPrice2;
         }
     }
 
