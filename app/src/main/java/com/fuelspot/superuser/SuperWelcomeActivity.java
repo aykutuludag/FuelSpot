@@ -171,8 +171,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private SharedPreferences prefs;
     private RequestQueue requestQueue;
 
-    private NestedScrollView welcome2;
-    private RelativeLayout promoLayout;
+    private NestedScrollView promoLayout, welcome2;
     private RelativeLayout welcome1;
     private Button continueButton;
     private MapView mMapView;

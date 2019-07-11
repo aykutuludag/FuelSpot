@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     public static String FENCE_RECEIVER_ACTION = "com.fuelspot.FENCE_RECEIVER_ACTION";
     public static int mapDefaultStationRange = 50;
+    public static int streetViewCountForPremium;
 
     public static String USTimeFormat = "yyyy-MM-dd HH:mm:ss";
     public static String UniversalTimeFormat = "dd-MM-yyyy HH:mm:ss";
@@ -429,18 +430,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                         premium = true;
                         mapDefaultRange = 5000;
                         mapDefaultZoom = 12f;
-                    } else {
-                        premium = false;
-                        mapDefaultRange = 2500;
-                        mapDefaultZoom = 13f;
-                    }
-
-                    if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                    } else if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
                         hasDoubleRange = true;
                         mapDefaultRange = 5000;
                         mapDefaultZoom = 12f;
                     } else {
-                        hasDoubleRange = false;
+                        premium = false;
                         mapDefaultRange = 2500;
                         mapDefaultZoom = 13f;
                     }

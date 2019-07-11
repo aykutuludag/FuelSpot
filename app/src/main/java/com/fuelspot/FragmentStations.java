@@ -433,7 +433,6 @@ public class FragmentStations extends Fragment {
                                     fullStationList.add(item);
                                 }
 
-                                Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
                                 // Stations fetched. Visible recyclerview
                                 stationLayout.setVisibility(View.VISIBLE);
 
@@ -465,6 +464,12 @@ public class FragmentStations extends Fragment {
                                 }
 
                                 sortBy(whichOrder);
+
+                                if (fullStationList.size() == 33) {
+                                    Toast.makeText(getActivity(), "Size en yakın 33 istasyonu görmektesiniz.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
+                                }
                             } catch (JSONException e) {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }

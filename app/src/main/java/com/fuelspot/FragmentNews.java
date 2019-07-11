@@ -128,11 +128,11 @@ public class FragmentNews extends Fragment {
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
             AdView mAdView = rootView.findViewById(R.id.adView);
-            if (!premium) {
+            if (premium) {
+                mAdView.setVisibility(View.GONE);
+            } else {
                 AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
                 mAdView.loadAd(adRequest);
-            } else {
-                mAdView.setVisibility(View.GONE);
             }
 
             requestQueue = Volley.newRequestQueue(getActivity());

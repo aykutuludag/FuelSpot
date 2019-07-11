@@ -7,234 +7,250 @@
     android:background="@drawable/background_doodle"
     tools:context=".superuser.SuperWelcomeActivity">
 
-    <RelativeLayout
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/layout_promo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/round_layout"
-        android:visibility="visible">
+        android:layout_height="match_parent">
 
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/gotham_black"
-            android:gravity="center"
-            android:text="@string/welcome_fuelspot"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="İstasyon yöneticisi misiniz? FuelSpot'a hemen ücretsiz kaydolun sayısız avantaj ve fırsattan yararlanın!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView12"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* Daha fazla müşteri, daha fazla gelir"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView28"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView14"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* Kampanyalar, fırsatlar ve tanıtım imkanları"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView28"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* Dijital platformlarda ücretsiz reklam ve tanıtım (Google, Yandex, Yahoo vb.)"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView31"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView30"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* Rakiplerinizin fiyatlarını anlık takip imkanı"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView32"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView31"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* Sektörden son haberler, fiyat endeksleri, istatistikler, analizler"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView33"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView32"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* İstasyonunuzun dijital profili sizin elinizde olsun. Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <TextView
-            android:id="@+id/textView35"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView33"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="#161616" />
-
-        <ImageView
-            android:id="@+id/imageViewGoogle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/facebookButton"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp"
-            android:clickable="false"
-            android:contentDescription="@string/loginWithGoogle"
-            app:srcCompat="@drawable/button_google" />
-
-        <TextView
-            android:id="@+id/textViewGoogle"
+        <RelativeLayout
+            android:id="@+id/promo_inner1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@id/imageViewGoogle"
-            android:layout_alignTop="@id/imageViewGoogle"
-            android:layout_alignEnd="@id/imageViewGoogle"
-            android:layout_alignBottom="@id/imageViewGoogle"
-            android:layout_marginStart="42dp"
-            android:clickable="false"
-            android:fontFamily="@font/gotham_bold"
-            android:gravity="center_vertical"
-            android:text="@string/loginWithGoogle" />
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/round_layout2"
+            android:padding="8dp"
+            android:visibility="visible">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/googleButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignStart="@id/imageViewGoogle"
-            android:layout_alignTop="@id/imageViewGoogle"
-            android:layout_alignEnd="@id/imageViewGoogle"
-            android:layout_alignBottom="@id/imageViewGoogle"
-            android:layout_centerHorizontal="true"
-            android:alpha="0"
-            android:background="@drawable/button_google"
-            android:text="@string/common_signin_button_text_long" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/gotham_black"
+                android:gravity="center"
+                android:text="@string/welcome_fuelspot"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#161616" />
 
-        <ImageView
-            android:id="@+id/imageViewFacebook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="42dp"
-            android:background="@drawable/button_facebook"
-            android:clickable="false"
-            android:contentDescription="@string/loginWithFacebook"
-            android:visibility="visible"
-            app:srcCompat="@drawable/button_facebook" />
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="İstasyon yöneticisi misiniz? FuelSpot'a hemen ücretsiz kaydolun sayısız avantaj ve fırsattan yararlanın!"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#161616" />
 
-        <TextView
-            android:id="@+id/textViewFacebook"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/imageViewFacebook"
-            android:layout_alignTop="@id/imageViewFacebook"
-            android:layout_alignEnd="@id/imageViewFacebook"
-            android:layout_alignBottom="@id/imageViewFacebook"
-            android:layout_marginStart="42dp"
-            android:clickable="false"
-            android:fontFamily="@font/gotham_bold"
-            android:gravity="center_vertical"
-            android:text="@string/loginWithFacebook" />
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView12"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* Daha fazla müşteri, daha fazla gelir"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebookButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignStart="@id/imageViewFacebook"
-            android:layout_alignTop="@id/imageViewFacebook"
-            android:layout_alignEnd="@id/imageViewFacebook"
-            android:layout_alignBottom="@id/imageViewFacebook"
-            android:alpha="0" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView14"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* Kampanyalar, fırsatlar ve tanıtım imkanları"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
+
+            <TextView
+                android:id="@+id/textView30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView28"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* Dijital platformlarda ücretsiz reklam ve tanıtım (Google, Yandex, Yahoo vb.)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
+
+            <TextView
+                android:id="@+id/textView31"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView30"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* Rakiplerinizin fiyatlarını anlık takip imkanı"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
+
+            <TextView
+                android:id="@+id/textView32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView31"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* Sektörden son haberler, fiyat endeksleri, istatistikler, analizler"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
+
+            <TextView
+                android:id="@+id/textView33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView32"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* İstasyonunuzun dijital profili sizin elinizde olsun. Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
+
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView33"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
+
+            <ImageView
+                android:id="@+id/imageViewGoogle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView35"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="false"
+                android:contentDescription="@string/loginWithGoogle"
+                app:srcCompat="@drawable/button_google" />
+
+            <TextView
+                android:id="@+id/textViewGoogle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/imageViewGoogle"
+                android:layout_alignTop="@id/imageViewGoogle"
+                android:layout_alignEnd="@id/imageViewGoogle"
+                android:layout_alignBottom="@id/imageViewGoogle"
+                android:layout_marginStart="42dp"
+                android:clickable="false"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center_vertical"
+                android:text="@string/loginWithGoogle" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/googleButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignStart="@id/imageViewGoogle"
+                android:layout_alignTop="@id/imageViewGoogle"
+                android:layout_alignEnd="@id/imageViewGoogle"
+                android:layout_alignBottom="@id/imageViewGoogle"
+                android:layout_centerHorizontal="true"
+                android:alpha="0"
+                android:background="@drawable/button_google"
+                android:text="@string/common_signin_button_text_long" />
+
+            <ImageView
+                android:id="@+id/imageViewFacebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageViewGoogle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_facebook"
+                android:clickable="false"
+                android:contentDescription="@string/loginWithFacebook"
+                android:visibility="visible"
+                app:srcCompat="@drawable/button_facebook" />
+
+            <TextView
+                android:id="@+id/textViewFacebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/imageViewFacebook"
+                android:layout_alignTop="@id/imageViewFacebook"
+                android:layout_alignEnd="@id/imageViewFacebook"
+                android:layout_alignBottom="@id/imageViewFacebook"
+                android:layout_marginStart="42dp"
+                android:clickable="false"
+                android:fontFamily="@font/gotham_bold"
+                android:gravity="center_vertical"
+                android:text="@string/loginWithFacebook" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/facebookButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignStart="@id/imageViewFacebook"
+                android:layout_alignTop="@id/imageViewFacebook"
+                android:layout_alignEnd="@id/imageViewFacebook"
+                android:layout_alignBottom="@id/imageViewFacebook"
+                android:alpha="0" />
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/welcome1"
@@ -266,7 +282,7 @@
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/gotham_medium"
             android:gravity="center"
-            android:text="FuelSpot Business, istasyon sahiplerine hitap eden, daha geniş kitlelere ulaşmalarını sağlayıp karlılık ve verimliliği artırmayı yönelik bir platformdur."
+            android:text="FuelSpot, istasyon sahiplerine hitap eden, daha geniş kitlelere ulaşmalarını sağlayıp karlılık ve verimliliği artırmayı yönelik bir platformdur."
             android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
             android:textColor="#fff" />
 

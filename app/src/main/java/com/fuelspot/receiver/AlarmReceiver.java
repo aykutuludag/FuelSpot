@@ -38,6 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
 import static com.fuelspot.MainActivity.fullStationList;
@@ -45,6 +47,7 @@ import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 
@@ -218,6 +221,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                         volleyError.printStackTrace();
                     }
                 }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
         };
 
         //Adding request to the queue

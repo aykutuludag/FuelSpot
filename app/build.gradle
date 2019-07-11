@@ -9,8 +9,8 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 73
-        versionName "1.1"
+        versionCode 74
+        versionName "1.1.1"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
     }
@@ -62,8 +62,8 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     // FACEBOOK
-    implementation 'com.facebook.android:facebook-core:5.1.0'
-    implementation 'com.facebook.android:facebook-login:5.1.0'
+    implementation 'com.facebook.android:facebook-core:5.1.1'
+    implementation 'com.facebook.android:facebook-login:5.1.1'
 
     // 3RD PARTY
     implementation 'de.hdodenhof:circleimageview:3.0.0'

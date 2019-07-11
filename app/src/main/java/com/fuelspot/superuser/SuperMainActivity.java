@@ -325,18 +325,12 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                         premium = true;
                         mapDefaultRange = 5000;
                         mapDefaultZoom = 12f;
-                    } else {
-                        premium = false;
-                        mapDefaultRange = 2500;
-                        mapDefaultZoom = 13f;
-                    }
-
-                    if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                    } else if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
                         hasDoubleRange = true;
                         mapDefaultRange = 5000;
                         mapDefaultZoom = 12f;
                     } else {
-                        hasDoubleRange = false;
+                        premium = false;
                         mapDefaultRange = 2500;
                         mapDefaultZoom = 13f;
                     }

@@ -116,6 +116,7 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.shortTimeFormat;
+import static com.fuelspot.MainActivity.streetViewCountForPremium;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
@@ -409,32 +410,6 @@ public class StationDetails extends AppCompatActivity {
             }
         });
 
-        mAdapter = new CampaignAdapter(StationDetails.this, campaignList, "USER");
-        mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
-
-        // Nerden gelirse gelsin stationID boş olamaz.
-        choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
-        stationName = getIntent().getStringExtra("STATION_NAME");
-        if (stationName != null && stationName.length() > 0) {
-            getSupportActionBar().setTitle(stationName);
-            //Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
-            stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
-            stationLocation = getIntent().getStringExtra("STATION_LOCATION");
-            gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
-            dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
-            lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
-            electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
-            otherFuelsOfStation = getIntent().getStringExtra("STATION_OTHER_FUELS");
-            lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
-            iconURL = getIntent().getStringExtra("STATION_ICON");
-            isStationVerified = getIntent().getIntExtra("IS_VERIFIED", 0);
-            facilitiesOfStation = getIntent().getStringExtra("STATION_FACILITIES");
-            loadStationDetails();
-        } else {
-            //Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
-            fetchStation();
-        }
-
         //StreetView
         mStreetViewPanoramaView = findViewById(R.id.street_view_panorama);
         mStreetViewPanoramaView.onCreate(savedInstanceState);
@@ -444,11 +419,9 @@ public class StationDetails extends AppCompatActivity {
                 switch (event.getAction()) {
                     case android.view.MotionEvent.ACTION_DOWN:
                         scrollView.requestDisallowInterceptTouchEvent(true);
-                        Toast.makeText(StationDetails.this, "Dokundu", Toast.LENGTH_SHORT).show();
                         break;
                     case android.view.MotionEvent.ACTION_UP:
                         scrollView.requestDisallowInterceptTouchEvent(false);
-                        Toast.makeText(StationDetails.this, "Çekti", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 return false;
@@ -471,20 +444,38 @@ public class StationDetails extends AppCompatActivity {
             }
         });
 
+        mAdapter = new CampaignAdapter(StationDetails.this, campaignList, "USER");
+        mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
+
+        // Nerden gelirse gelsin stationID boş olamaz.
+        choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
+        stationName = getIntent().getStringExtra("STATION_NAME");
+        if (stationName != null && stationName.length() > 0) {
+            getSupportActionBar().setTitle(stationName);
+            // Bilgiler intent ile geçilmiş. Yakın istasyonlar sayfasından geliyor olmalı.
+            stationVicinity = getIntent().getStringExtra("STATION_VICINITY");
+            stationLocation = getIntent().getStringExtra("STATION_LOCATION");
+            gasolinePrice = getIntent().getFloatExtra("STATION_GASOLINE", 0f);
+            dieselPrice = getIntent().getFloatExtra("STATION_DIESEL", 0f);
+            lpgPrice = getIntent().getFloatExtra("STATION_LPG", 0f);
+            electricityPrice = getIntent().getFloatExtra("STATION_ELECTRIC", 0f);
+            otherFuelsOfStation = getIntent().getStringExtra("STATION_OTHER_FUELS");
+            lastUpdated = getIntent().getStringExtra("STATION_LASTUPDATED");
+            iconURL = getIntent().getStringExtra("STATION_ICON");
+            isStationVerified = getIntent().getIntExtra("IS_VERIFIED", 0);
+            facilitiesOfStation = getIntent().getStringExtra("STATION_FACILITIES");
+            loadStationDetails();
+        } else {
+            // Bilgiler intent ile pass olmamış. Profil sayfasından geliyor olmalı. İnternetten çek verileri
+            fetchStation();
+        }
+
         AdView mAdView = findViewById(R.id.adView);
-        if (!premium) {
+        if (premium) {
+            mAdView.setVisibility(View.GONE);
+        } else {
             AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
             mAdView.loadAd(adRequest);
-
-            if (!hideStreetView) {
-                loadStreetView();
-            } else {
-                buyPremiumLayout.setVisibility(View.VISIBLE);
-                mStreetViewPanoramaView.setVisibility(View.GONE);
-            }
-        } else {
-            mAdView.setVisibility(View.GONE);
-            loadStreetView();
         }
     }
 
@@ -502,6 +493,7 @@ public class StationDetails extends AppCompatActivity {
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
                         if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
                             hideStreetView = true;
+                            streetViewCountForPremium++;
                         } else {
                             Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
                         }
@@ -872,6 +864,23 @@ public class StationDetails extends AppCompatActivity {
             /* NEW FACILITIES v1.1 */
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+
+        if (premium) {
+            if (streetViewCountForPremium < 3) {
+                loadStreetView();
+            } else {
+                buyPremiumLayout.setVisibility(View.GONE);
+                mStreetViewPanoramaView.setVisibility(View.GONE);
+            }
+        } else {
+            if (!hideStreetView) {
+                loadStreetView();
+            } else {
+                buyPremiumLayout.setVisibility(View.VISIBLE);
+                mStreetViewPanoramaView.setVisibility(View.GONE);
+            }
         }
 
         fetchStationFinance();
