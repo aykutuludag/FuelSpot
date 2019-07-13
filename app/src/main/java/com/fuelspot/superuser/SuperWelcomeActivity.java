@@ -131,6 +131,7 @@ import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSigned;
@@ -211,7 +212,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        getVariables(prefs);
         getSuperVariables(prefs);
+
         requestQueue = Volley.newRequestQueue(SuperWelcomeActivity.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_profile).error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);

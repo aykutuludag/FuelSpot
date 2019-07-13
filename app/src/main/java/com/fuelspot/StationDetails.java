@@ -866,7 +866,6 @@ public class StationDetails extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         if (premium) {
             if (streetViewCountForPremium < 3) {
                 loadStreetView();
@@ -1313,7 +1312,7 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (reportDetails[0] != null && reportDetails[0].length() > 0) {
-                    sendReporttoServer(username, choosenStationID, reportReason[0], reportDetails[0], "", bitmap);
+                    sendReporttoServer(username, choosenStationID, reportReason[0], reportDetails[0], bitmap);
                 } else {
                     Toast.makeText(StationDetails.this, "Lütfen mesajınızı giriniz", Toast.LENGTH_LONG).show();
                 }
@@ -1363,7 +1362,7 @@ public class StationDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (bitmap != null) {
-                    sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", "", bitmap);
+                    sendReporttoServer(username, choosenStationID, getApplicationContext().getResources().getStringArray(R.array.report_reasons)[5], "", bitmap);
                 } else {
                     Toast.makeText(StationDetails.this, "Raporunuzun değerlendirmeye alınabilmesi için lütfen fiyat tabelası/fiş-fatura vs gibi kanıtlayıcı bir görsel ekleyiniz.", Toast.LENGTH_LONG).show();
                 }
@@ -1384,7 +1383,7 @@ public class StationDetails extends AppCompatActivity {
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
-    private void sendReporttoServer(final String kullaniciAdi, final int istasyonID, final String raporSebebi, final String raporDetayi, final String fiyatlar, final Bitmap bitmap) {
+    private void sendReporttoServer(final String kullaniciAdi, final int istasyonID, final String raporSebebi, final String raporDetayi, final Bitmap bitmap) {
         final ProgressDialog loading = ProgressDialog.show(StationDetails.this, getString(R.string.sending_report), getString(R.string.sending_report), false, true);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_REPORT),
                 new Response.Listener<String>() {
@@ -1430,11 +1429,6 @@ public class StationDetails extends AppCompatActivity {
                     params.put("details", raporDetayi);
                 } else {
                     params.put("details", "");
-                }
-                if (fiyatlar != null && fiyatlar.length() > 0) {
-                    params.put("prices", fiyatlar);
-                } else {
-                    params.put("prices", "");
                 }
                 if (bitmap != null) {
                     params.put("photo", getStringImage(bitmap));

@@ -117,12 +117,16 @@
 
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelPrimary"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelPrimary"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:orientation='horizontal'>
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation='horizontal'
+                    android:padding="8dp">
 
                     <RadioButton
                         android:id="@+id/gasoline"
@@ -130,9 +134,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/gasoline"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -141,9 +147,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/diesel"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -152,9 +160,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/lpg"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -163,9 +173,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/electricity"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
                 </RadioGroup>
 
@@ -175,7 +187,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroup_fuelPrimary"
                     android:layout_alignStart="@+id/textView_fuelPrimary"
-                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/secondary_fuel_type"
@@ -188,21 +199,40 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/secondary_fuel_type_desc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup_fuelSecondary"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_fuelSecondaryExp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
                     android:orientation='horizontal'>
+
+                    <RadioButton
+                        android:id="@+id/notExist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@drawable/radiobutton"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
+                        android:text="YOK"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#757575" />
 
                     <RadioButton
                         android:id="@+id/gasoline2"
@@ -210,9 +240,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/gasoline"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -221,9 +253,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/diesel"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -232,9 +266,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/lpg"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
 
                     <RadioButton
@@ -243,9 +279,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:button="@drawable/radiobutton"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:padding="4dp"
                         android:text="@string/electricity"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
                 </RadioGroup>
 
@@ -255,7 +293,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroup_fuelSecondary"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_book"
                     android:gravity="center"
                     android:text="@string/kilometer"

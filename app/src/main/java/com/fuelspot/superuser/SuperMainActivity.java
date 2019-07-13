@@ -356,84 +356,85 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     }
 
     private void fetchOwnedStations() {
-        listOfOwnedStations.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
+        if (listOfOwnedStations == null || listOfOwnedStations.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_SUPERUSER_STATIONS) + "?superusername=" + username,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
+                                try {
+                                    JSONArray res = new JSONArray(response);
+                                    for (int i = 0; i < res.length(); i++) {
+                                        JSONObject obj = res.getJSONObject(i);
 
-                                    StationItem item = new StationItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setStationName(obj.getString("name"));
-                                    item.setVicinity(obj.getString("vicinity"));
-                                    item.setCountryCode(obj.getString("country"));
-                                    item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
-                                    item.setFacilities(obj.getString("facilities"));
-                                    item.setLicenseNo(obj.getString("licenseNo"));
-                                    item.setOwner(obj.getString("owner"));
-                                    item.setPhotoURL(obj.getString("logoURL"));
-                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
-                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
-                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
-                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                    item.setOtherFuels(obj.getString("otherFuels"));
-                                    item.setIsVerified(obj.getInt("isVerified"));
-                                    item.setLastUpdated(obj.getString("lastUpdated"));
+                                        StationItem item = new StationItem();
+                                        item.setID(obj.getInt("id"));
+                                        item.setStationName(obj.getString("name"));
+                                        item.setVicinity(obj.getString("vicinity"));
+                                        item.setCountryCode(obj.getString("country"));
+                                        item.setLocation(obj.getString("location"));
+                                        item.setGoogleMapID(obj.getString("googleID"));
+                                        item.setFacilities(obj.getString("facilities"));
+                                        item.setLicenseNo(obj.getString("licenseNo"));
+                                        item.setOwner(obj.getString("owner"));
+                                        item.setPhotoURL(obj.getString("logoURL"));
+                                        item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                        item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                        item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                        item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                        item.setOtherFuels(obj.getString("otherFuels"));
+                                        item.setIsVerified(obj.getInt("isVerified"));
+                                        item.setLastUpdated(obj.getString("lastUpdated"));
 
-                                    //DISTANCE START
-                                    Location locLastKnow = new Location("");
-                                    locLastKnow.setLatitude(Double.parseDouble(userlat));
-                                    locLastKnow.setLongitude(Double.parseDouble(userlon));
+                                        //DISTANCE START
+                                        Location locLastKnow = new Location("");
+                                        locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                        locLastKnow.setLongitude(Double.parseDouble(userlon));
 
-                                    Location loc = new Location("");
-                                    String[] stationKonum = item.getLocation().split(";");
-                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
-                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
-                                    float uzaklik = locLastKnow.distanceTo(loc);
-                                    item.setDistance((int) uzaklik);
-                                    //DISTANCE END
-                                    listOfOwnedStations.add(item);
-                                }
+                                        Location loc = new Location("");
+                                        String[] stationKonum = item.getLocation().split(";");
+                                        loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                        loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                        float uzaklik = locLastKnow.distanceTo(loc);
+                                        item.setDistance((int) uzaklik);
+                                        //DISTANCE END
+                                        listOfOwnedStations.add(item);
+                                    }
 
-                                if (superStationID == 0) {
-                                    chooseStation(listOfOwnedStations.get(0));
-                                } else {
-                                    // User already selected station.
-                                    for (int k = 0; k < listOfOwnedStations.size(); k++) {
-                                        if (superStationID == listOfOwnedStations.get(k).getID()) {
-                                            chooseStation(listOfOwnedStations.get(k));
-                                            break;
+                                    if (superStationID == 0) {
+                                        chooseStation(listOfOwnedStations.get(0));
+                                    } else {
+                                        // User already selected station.
+                                        for (int k = 0; k < listOfOwnedStations.size(); k++) {
+                                            if (superStationID == listOfOwnedStations.get(k).getID()) {
+                                                chooseStation(listOfOwnedStations.get(k));
+                                                break;
+                                            }
                                         }
                                     }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            volleyError.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
-        //Adding request to the queue
-        queue.add(stringRequest);
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
     }
 
     private void chooseStation(StationItem item) {
@@ -487,118 +488,119 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     }
 
     private void fetchCompanies() {
-        companyList.clear();
+        if (companyList == null || companyList.size() == 0) {
+            //Showing the progress dialog
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
+                                if (response.equals("AuthError")) {
+                                    //We're just checking here for any authentication error. If it is, log out.
 
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            if (response.equals("AuthError")) {
-                                //We're just checking here for any authentication error. If it is, log out.
+                                    // Do logout
+                                    @SuppressLint("SdCardPath")
+                                    File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
+                                    File[] listFiles = sharedPreferenceFile.listFiles();
+                                    for (File file : listFiles) {
+                                        file.delete();
+                                    }
 
-                                // Do logout
-                                @SuppressLint("SdCardPath")
-                                File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
-                                File[] listFiles = sharedPreferenceFile.listFiles();
-                                for (File file : listFiles) {
-                                    file.delete();
+                                    PackageManager packageManager = SuperMainActivity.this.getPackageManager();
+                                    Intent intent = packageManager.getLaunchIntentForPackage(SuperMainActivity.this.getPackageName());
+                                    ComponentName componentName = intent.getComponent();
+                                    Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                                    SuperMainActivity.this.startActivity(mainIntent);
+                                    Runtime.getRuntime().exit(0);
+                                } else {
+                                    try {
+                                        JSONArray res = new JSONArray(response);
+                                        for (int i = 0; i < res.length(); i++) {
+                                            JSONObject obj = res.getJSONObject(i);
+
+                                            CompanyItem item = new CompanyItem();
+                                            item.setID(obj.getInt("id"));
+                                            item.setName(obj.getString("companyName"));
+                                            item.setLogo(obj.getString("companyLogo"));
+                                            item.setWebsite(obj.getString("companyWebsite"));
+                                            item.setPhone(obj.getString("companyPhone"));
+                                            item.setAddress(obj.getString("companyAddress"));
+                                            item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                            item.setNumOfStations(obj.getInt("numOfStations"));
+                                            companyList.add(item);
+                                        }
+                                    } catch (JSONException e) {
+                                        Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
+                                    }
                                 }
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
-                                PackageManager packageManager = SuperMainActivity.this.getPackageManager();
-                                Intent intent = packageManager.getLaunchIntentForPackage(SuperMainActivity.this.getPackageName());
-                                ComponentName componentName = intent.getComponent();
-                                Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-                                SuperMainActivity.this.startActivity(mainIntent);
-                                Runtime.getRuntime().exit(0);
-                            } else {
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
+    }
+
+    private void fetchGlobalCampaigns() {
+        if (globalCampaignList == null || globalCampaignList.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
                                 try {
                                     JSONArray res = new JSONArray(response);
                                     for (int i = 0; i < res.length(); i++) {
                                         JSONObject obj = res.getJSONObject(i);
 
-                                        CompanyItem item = new CompanyItem();
+                                        CampaignItem item = new CampaignItem();
                                         item.setID(obj.getInt("id"));
-                                        item.setName(obj.getString("companyName"));
-                                        item.setLogo(obj.getString("companyLogo"));
-                                        item.setWebsite(obj.getString("companyWebsite"));
-                                        item.setPhone(obj.getString("companyPhone"));
-                                        item.setAddress(obj.getString("companyAddress"));
-                                        item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                        item.setNumOfStations(obj.getInt("numOfStations"));
-                                        companyList.add(item);
+                                        item.setStationID(-1);
+                                        item.setCompanyName(obj.getString("companyName"));
+                                        item.setCampaignName(obj.getString("campaignName"));
+                                        item.setCampaignDesc(obj.getString("campaignDesc"));
+                                        item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                        item.setCampaignStart(obj.getString("campaignStart"));
+                                        item.setCampaignEnd(obj.getString("campaignEnd"));
+                                        globalCampaignList.add(item);
                                     }
                                 } catch (JSONException e) {
-                                    Snackbar.make(findViewById(android.R.id.content), e.toString(), Snackbar.LENGTH_SHORT).show();
+                                    e.printStackTrace();
                                 }
                             }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Snackbar.make(findViewById(android.R.id.content), volleyError.toString(), Snackbar.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
-
-        //Adding request to the queue
-        queue.add(stringRequest);
-    }
-
-    private void fetchGlobalCampaigns() {
-        globalCampaignList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    CampaignItem item = new CampaignItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setStationID(-1);
-                                    item.setCompanyName(obj.getString("companyName"));
-                                    item.setCampaignName(obj.getString("campaignName"));
-                                    item.setCampaignDesc(obj.getString("campaignDesc"));
-                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
-                                    item.setCampaignStart(obj.getString("campaignStart"));
-                                    item.setCampaignEnd(obj.getString("campaignEnd"));
-                                    globalCampaignList.add(item);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
-        //Adding request to the queue
-        queue.add(stringRequest);
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
     }
 
     @Override

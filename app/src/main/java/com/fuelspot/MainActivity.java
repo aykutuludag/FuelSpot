@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static final int REQUEST_ALL = 2;
     public static final int GOOGLE_LOGIN = 100;
 
+    public static List<VehicleItem> automobileModels = new ArrayList<>();
     public static List<StationItem> fullStationList = new ArrayList<>();
     public static List<VehicleItem> userAutomobileList = new ArrayList<>();
     public static List<CompanyItem> companyList = new ArrayList<>();
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         username = prefs.getString("UserName", "");
         carBrand = prefs.getString("carBrand", "Acura");
         carModel = prefs.getString("carModel", "RSX");
-        fuelPri = prefs.getInt("FuelPrimary", -1);
+        fuelPri = prefs.getInt("FuelPrimary", 0);
         fuelSec = prefs.getInt("FuelSecondary", -1);
         kilometer = prefs.getInt("Kilometer", 0);
         userlat = prefs.getString("lat", "39.92505");
@@ -300,6 +301,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         AppRate.with(this).setInstallDays(0).setLaunchTimes(5).setRemindInterval(3).monitor();
         AppRate.showRateDialogIfMeetsConditions(this);
 
+        // Fetch automobile modes once for each session
+        fetchAutomobileModels();
+
         // Fetch user vehicles once for each session
         fetchAutomobiles();
 
@@ -450,64 +454,108 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void fetchAutomobiles() {
-        userAutomobileList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
+        if (userAutomobileList == null || userAutomobileList.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
+                                try {
+                                    JSONArray res = new JSONArray(response);
 
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-                                    VehicleItem item = new VehicleItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setVehicleBrand(obj.getString("car_brand"));
-                                    item.setVehicleModel(obj.getString("car_model"));
-                                    item.setVehicleFuelPri(obj.getInt("fuelPri"));
-                                    item.setVehicleFuelSec(obj.getInt("fuelSec"));
-                                    item.setVehicleKilometer(obj.getInt("kilometer"));
-                                    item.setVehiclePhoto(obj.getString("carPhoto"));
-                                    item.setVehiclePlateNo(obj.getString("plateNo"));
-                                    item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
-                                    item.setVehicleEmission(obj.getInt("carbonEmission"));
-                                    userAutomobileList.add(item);
-                                }
+                                    for (int i = 0; i < res.length(); i++) {
+                                        JSONObject obj = res.getJSONObject(i);
+                                        VehicleItem item = new VehicleItem();
+                                        item.setID(obj.getInt("id"));
+                                        item.setVehicleBrand(obj.getString("car_brand"));
+                                        item.setVehicleModel(obj.getString("car_model"));
+                                        item.setVehicleFuelPri(obj.getInt("fuelPri"));
+                                        item.setVehicleFuelSec(obj.getInt("fuelSec"));
+                                        item.setVehicleKilometer(obj.getInt("kilometer"));
+                                        item.setVehiclePhoto(obj.getString("carPhoto"));
+                                        item.setVehiclePlateNo(obj.getString("plateNo"));
+                                        item.setVehicleConsumption((float) obj.getDouble("avgConsumption"));
+                                        item.setVehicleEmission(obj.getInt("carbonEmission"));
+                                        userAutomobileList.add(item);
+                                    }
 
-                                if (vehicleID == 0) {
-                                    chooseVehicle(userAutomobileList.get(0));
-                                } else {
-                                    // User already selected station.
-                                    for (int k = 0; k < userAutomobileList.size(); k++) {
-                                        if (vehicleID == userAutomobileList.get(k).getID()) {
-                                            chooseVehicle(userAutomobileList.get(k));
-                                            break;
+                                    if (vehicleID == 0) {
+                                        chooseVehicle(userAutomobileList.get(0));
+                                    } else {
+                                        // User already selected station.
+                                        for (int k = 0; k < userAutomobileList.size(); k++) {
+                                            if (vehicleID == userAutomobileList.get(k).getID()) {
+                                                chooseVehicle(userAutomobileList.get(k));
+                                                break;
+                                            }
                                         }
                                     }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            volleyError.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
-        //Adding request to the queue
-        queue.add(stringRequest);
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
+    }
+
+    private void fetchAutomobileModels() {
+        if (automobileModels == null || automobileModels.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_MODELS),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
+                                try {
+                                    JSONArray res = new JSONArray(response);
+
+                                    for (int i = 0; i < res.length(); i++) {
+                                        JSONObject obj = res.getJSONObject(i);
+                                        VehicleItem item = new VehicleItem();
+                                        item.setID(obj.getInt("id"));
+                                        item.setVehicleBrand(obj.getString("brand"));
+                                        item.setVehicleModel(obj.getString("models"));
+                                        automobileModels.add(item);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            volleyError.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
+
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
     }
 
     private void chooseVehicle(VehicleItem item) {
@@ -543,119 +591,120 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void fetchCompanies() {
-        companyList.clear();
+        if (companyList == null || companyList.size() == 0) {
+            //Showing the progress dialog
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
+                                if (response.equals("AuthError")) {
+                                    //We're just checking here for any authentication error. If it is, log out.
 
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            if (response.equals("AuthError")) {
-                                //We're just checking here for any authentication error. If it is, log out.
+                                    // Do logout
+                                    @SuppressLint("SdCardPath")
+                                    File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
+                                    File[] listFiles = sharedPreferenceFile.listFiles();
+                                    for (File file : listFiles) {
+                                        file.delete();
+                                    }
 
-                                // Do logout
-                                @SuppressLint("SdCardPath")
-                                File sharedPreferenceFile = new File("/data/data/" + getPackageName() + "/shared_prefs/");
-                                File[] listFiles = sharedPreferenceFile.listFiles();
-                                for (File file : listFiles) {
-                                    file.delete();
+                                    PackageManager packageManager = MainActivity.this.getPackageManager();
+                                    Intent intent = packageManager.getLaunchIntentForPackage(MainActivity.this.getPackageName());
+                                    ComponentName componentName = intent.getComponent();
+                                    Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                                    MainActivity.this.startActivity(mainIntent);
+                                    Runtime.getRuntime().exit(0);
+                                } else {
+                                    try {
+                                        JSONArray res = new JSONArray(response);
+
+                                        for (int i = 0; i < res.length(); i++) {
+                                            JSONObject obj = res.getJSONObject(i);
+
+                                            CompanyItem item = new CompanyItem();
+                                            item.setID(obj.getInt("id"));
+                                            item.setName(obj.getString("companyName"));
+                                            item.setLogo(obj.getString("companyLogo"));
+                                            item.setWebsite(obj.getString("companyWebsite"));
+                                            item.setPhone(obj.getString("companyPhone"));
+                                            item.setAddress(obj.getString("companyAddress"));
+                                            item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
+                                            item.setNumOfStations(obj.getInt("numOfStations"));
+                                            companyList.add(item);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            volleyError.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
-                                PackageManager packageManager = MainActivity.this.getPackageManager();
-                                Intent intent = packageManager.getLaunchIntentForPackage(MainActivity.this.getPackageName());
-                                ComponentName componentName = intent.getComponent();
-                                Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-                                MainActivity.this.startActivity(mainIntent);
-                                Runtime.getRuntime().exit(0);
-                            } else {
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
+    }
+
+    private void fetchGlobalCampaigns() {
+        if (globalCampaignList == null || globalCampaignList.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
                                 try {
                                     JSONArray res = new JSONArray(response);
-
                                     for (int i = 0; i < res.length(); i++) {
                                         JSONObject obj = res.getJSONObject(i);
 
-                                        CompanyItem item = new CompanyItem();
+                                        CampaignItem item = new CampaignItem();
                                         item.setID(obj.getInt("id"));
-                                        item.setName(obj.getString("companyName"));
-                                        item.setLogo(obj.getString("companyLogo"));
-                                        item.setWebsite(obj.getString("companyWebsite"));
-                                        item.setPhone(obj.getString("companyPhone"));
-                                        item.setAddress(obj.getString("companyAddress"));
-                                        item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                        item.setNumOfStations(obj.getInt("numOfStations"));
-                                        companyList.add(item);
+                                        item.setStationID(-1);
+                                        item.setCompanyName(obj.getString("companyName"));
+                                        item.setCampaignName(obj.getString("campaignName"));
+                                        item.setCampaignDesc(obj.getString("campaignDesc"));
+                                        item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                        item.setCampaignStart(obj.getString("campaignStart"));
+                                        item.setCampaignEnd(obj.getString("campaignEnd"));
+                                        globalCampaignList.add(item);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        volleyError.printStackTrace();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
-
-        //Adding request to the queue
-        queue.add(stringRequest);
-    }
-
-    private void fetchGlobalCampaigns() {
-        globalCampaignList.clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                for (int i = 0; i < res.length(); i++) {
-                                    JSONObject obj = res.getJSONObject(i);
-
-                                    CampaignItem item = new CampaignItem();
-                                    item.setID(obj.getInt("id"));
-                                    item.setStationID(-1);
-                                    item.setCompanyName(obj.getString("companyName"));
-                                    item.setCampaignName(obj.getString("campaignName"));
-                                    item.setCampaignDesc(obj.getString("campaignDesc"));
-                                    item.setCampaignPhoto(obj.getString("campaignPhoto"));
-                                    item.setCampaignStart(obj.getString("campaignStart"));
-                                    item.setCampaignEnd(obj.getString("campaignEnd"));
-                                    globalCampaignList.add(item);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
-        //Adding request to the queue
-        queue.add(stringRequest);
+            //Adding request to the queue
+            queue.add(stringRequest);
+        }
     }
 
     private void coloredBars(int color1, int color2) {

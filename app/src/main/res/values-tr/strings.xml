@@ -27,7 +27,7 @@
     <string name="gasoline2">2. Benzin</string>
     <string name="diesel2">2. Dizel</string>
     <string name="secondary_fuel_type">İkincil yakıt tipi</string>
-    <string name="secondary_fuel_type_desc">Eğer aracınız ikincil bir yakıt sistemine sahip değilse boş bırakın</string>
+    <string name="secondary_fuel_type_desc">Otomobilinizde ikincil bir yakıt sistemi yoksa (Örnek: Benzin-LPG, Hibrit araçlar) YOK seçeneğini işaretleyiniz.</string>
     <string name="kilometer">Kilometre</string>
     <string name="plate_no">Plaka</string>
     <string name="fuel_symbols">Yakıt sembolleri</string>

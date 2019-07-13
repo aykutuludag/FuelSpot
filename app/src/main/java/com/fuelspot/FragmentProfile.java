@@ -203,6 +203,7 @@ public class FragmentProfile extends Fragment {
         });
 
         swipeContainer.setRefreshing(false);
+
         fetchBanking();
         fetchComments();
         fetchAutomobiles();
@@ -265,6 +266,7 @@ public class FragmentProfile extends Fragment {
 
     private void fetchAutomobiles() {
         userAutomobileList.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_USER_AUTOMOBILES) + "?username=" + username,
                 new Response.Listener<String>() {
                     @Override

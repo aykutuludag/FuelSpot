@@ -42,6 +42,7 @@
     <string name="API_UPDATE_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/update.php</string>
     <string name="API_DELETE_AUTOMOBILE" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/delete.php</string>
     <string name="API_FETCH_USER_AUTOMOBILES" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/fetch-user.php</string>
+    <string name="API_FETCH_AUTOMOBILE_MODELS" translatable="false">https://fuelspot.com.tr/api/v1.0/automobile/fetch-models.php</string>
 
     <!-- PURCHASE APIs -->
     <string name="API_ADD_PURCHASE" translatable="false">https://fuelspot.com.tr/api/v1.0/purchase/add.php</string>
@@ -109,7 +110,7 @@
     <string name="gasoline2">2nd Gasoline</string>
     <string name="diesel2">2nd Diesel</string>
     <string name="secondary_fuel_type">Secondary fuel type</string>
-    <string name="secondary_fuel_type_desc">If you don\'t have secondary fuel system, leave this empty</string>
+    <string name="secondary_fuel_type_desc">If you don\'t have secondary fuel system, select NO</string>
     <string name="kilometer">Kilometer</string>
     <string name="plate_no">Plate no</string>
     <string name="fuel_symbols">Fuel symbols</string>
