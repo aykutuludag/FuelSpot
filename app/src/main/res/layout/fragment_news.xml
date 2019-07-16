@@ -143,36 +143,17 @@
                     android:textColor="#161616" />
 
                 <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chartAveragePriceGasoline"
+                    android:id="@+id/chartPriceIndex"
                     android:layout_width="match_parent"
-                    android:layout_height="125dp"
+                    android:layout_height="400dp"
                     android:layout_below="@id/subtitle0"
                     android:layout_marginTop="4dp" />
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chartAveragePriceDiesel"
-                    android:layout_width="match_parent"
-                    android:layout_height="125dp"
-                    android:layout_below="@id/chartAveragePriceGasoline" />
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chartAveragePriceLPG"
-                    android:layout_width="match_parent"
-                    android:layout_height="125dp"
-                    android:layout_below="@id/chartAveragePriceDiesel" />
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chartAveragePriceElectricity"
-                    android:layout_width="match_parent"
-                    android:layout_height="125dp"
-                    android:layout_below="@id/chartAveragePriceLPG"
-                    android:layout_marginBottom="4dp" />
 
                 <TextView
                     android:id="@+id/dummy000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/chartAveragePriceElectricity"
+                    android:layout_below="@id/chartPriceIndex"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"

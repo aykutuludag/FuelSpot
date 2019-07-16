@@ -88,7 +88,7 @@ public class FragmentNews extends Fragment {
     private SimpleDateFormat sdf2 = new SimpleDateFormat(UniversalTimeFormat, Locale.getDefault());
 
     // Price Index
-    private LineChart chart, chart2, chart3, chart4;
+    private LineChart chart;
     private List<Entry> gasolinePriceHistory = new ArrayList<>();
     private List<Entry> dieselPriceHistory = new ArrayList<>();
     private List<Entry> lpgPriceHistory = new ArrayList<>();
@@ -142,7 +142,7 @@ public class FragmentNews extends Fragment {
             mRecyclerViewKampanya = rootView.findViewById(R.id.kampanyaView);
             mRecyclerViewKampanya.setNestedScrollingEnabled(true);
 
-            chart = rootView.findViewById(R.id.chartAveragePriceGasoline);
+            chart = rootView.findViewById(R.id.chartPriceIndex);
             chart.setScaleEnabled(false);
             chart.setDragEnabled(false);
             chart.getXAxis().setAvoidFirstLastClipping(true);
@@ -151,60 +151,6 @@ public class FragmentNews extends Fragment {
             chart.getDescription().setText(currencySymbol + " / " + userUnit);
             chart.getDescription().setTextColor(Color.WHITE);
             chart.getXAxis().setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getFormattedValue(float value) {
-                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                    Date date = new Date();
-                    date.setTime((long) value);
-                    return formatter.format(date);
-                }
-            });
-
-            chart2 = rootView.findViewById(R.id.chartAveragePriceDiesel);
-            chart2.setScaleEnabled(false);
-            chart2.setDragEnabled(false);
-            chart2.getXAxis().setAvoidFirstLastClipping(true);
-            chart2.getXAxis().setLabelCount(3, true);
-            chart2.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-            chart2.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart2.getDescription().setTextColor(Color.WHITE);
-            chart2.getXAxis().setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getFormattedValue(float value) {
-                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                    Date date = new Date();
-                    date.setTime((long) value);
-                    return formatter.format(date);
-                }
-            });
-
-            chart3 = rootView.findViewById(R.id.chartAveragePriceLPG);
-            chart3.setScaleEnabled(false);
-            chart3.setDragEnabled(false);
-            chart3.getXAxis().setAvoidFirstLastClipping(true);
-            chart3.getXAxis().setLabelCount(3, true);
-            chart3.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-            chart3.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart3.getDescription().setTextColor(Color.WHITE);
-            chart3.getXAxis().setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getFormattedValue(float value) {
-                    DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
-                    Date date = new Date();
-                    date.setTime((long) value);
-                    return formatter.format(date);
-                }
-            });
-
-            chart4 = rootView.findViewById(R.id.chartAveragePriceElectricity);
-            chart4.setScaleEnabled(false);
-            chart4.setDragEnabled(false);
-            chart4.getXAxis().setAvoidFirstLastClipping(true);
-            chart4.getXAxis().setLabelCount(3, true);
-            chart4.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-            chart4.getDescription().setText(currencySymbol + " / " + userUnit);
-            chart4.getDescription().setTextColor(Color.WHITE);
-            chart4.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {
                     DateFormat formatter = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
@@ -369,11 +315,21 @@ public class FragmentNews extends Fragment {
                                     JSONObject obj = res.getJSONObject(i);
 
                                     if (obj.getDouble("gasolinePrice") != 0) {
-                                        gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("gasolinePrice")));
+                                        if (obj.getDouble("gasolinePrice2") != 0) {
+                                            float avgPrice = (float) (obj.getDouble("gasolinePrice") + obj.getDouble("gasolinePrice2")) / 2;
+                                            gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), avgPrice));
+                                        } else {
+                                            gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("gasolinePrice")));
+                                        }
                                     }
 
                                     if (obj.getDouble("dieselPrice") != 0) {
-                                        dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("dieselPrice")));
+                                        if (obj.getDouble("dieselPrice2") != 0) {
+                                            float avgPrice = (float) (obj.getDouble("dieselPrice") + obj.getDouble("dieselPrice2")) / 2;
+                                            dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), avgPrice));
+                                        } else {
+                                            dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("dieselPrice")));
+                                        }
                                     }
 
                                     if (obj.getDouble("lpgPrice") != 0) {
@@ -392,10 +348,6 @@ public class FragmentNews extends Fragment {
                                     dataSet.setColor(Color.BLACK);
                                     dataSet.setDrawFilled(true);
                                     dataSet.setFillColor(Color.parseColor("#90000000"));
-
-                                    LineData lineData = new LineData(dataSet);
-                                    chart.setData(lineData);
-                                    chart.invalidate();
                                     dataSets.add(dataSet);
                                 }
 
@@ -406,10 +358,6 @@ public class FragmentNews extends Fragment {
                                     dataSet2.setColor(Color.RED);
                                     dataSet2.setDrawFilled(true);
                                     dataSet2.setFillColor(Color.parseColor("#90FF0000"));
-
-                                    LineData lineData = new LineData(dataSet2);
-                                    chart2.setData(lineData);
-                                    chart2.invalidate();
                                     dataSets.add(dataSet2);
                                 }
 
@@ -420,10 +368,6 @@ public class FragmentNews extends Fragment {
                                     dataSet3.setColor(Color.BLUE);
                                     dataSet3.setDrawFilled(true);
                                     dataSet3.setFillColor(Color.parseColor("#900000FF"));
-
-                                    LineData lineData = new LineData(dataSet3);
-                                    chart3.setData(lineData);
-                                    chart3.invalidate();
                                     dataSets.add(dataSet3);
                                 }
 
@@ -434,18 +378,14 @@ public class FragmentNews extends Fragment {
                                     dataSet4.setColor(Color.GREEN);
                                     dataSet4.setFillColor(Color.parseColor("#9000FF00"));
                                     dataSet4.setDrawFilled(true);
-
-                                    LineData lineData = new LineData(dataSet4);
-                                    chart4.setData(lineData);
-                                    chart4.invalidate();
                                     dataSets.add(dataSet4);
                                 }
 
+                                LineData lineData = new LineData(dataSets);
+                                chart.setData(lineData);
                                 GraphMarkerAdapter mv = new GraphMarkerAdapter(getActivity(), R.layout.popup_graph_marker, dataSets);
                                 chart.setMarker(mv);
-                                chart2.setMarker(mv);
-                                chart3.setMarker(mv);
-                                chart4.setMarker(mv);
+                                chart.invalidate(); // refresh
 
                                 String dummyLastText = getString(R.string.last_update) + " " + sdf2.format(sdf.parse(res.getJSONObject(0).getString("date")));
                                 lastUpdatedAvgPrice.setText(dummyLastText);

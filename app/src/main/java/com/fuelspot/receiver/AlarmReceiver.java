@@ -139,7 +139,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                             double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
                                             double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
                                             locationFence = LocationFence.in(stationLat, stationLon, 50, 10000L);
-                                            AwarenessFence userAtStation = AwarenessFence.and(locationFence);
+                                            AwarenessFence userAtStation = AwarenessFence.and(locationFence, vehicleFence);
                                             registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
                                         }
                                     }
@@ -192,7 +192,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     double lat = Double.parseDouble(item.getLocation().split(";")[0]);
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
                                     locationFence = LocationFence.in(lat, lon, 50, 10000L);
-                                    AwarenessFence userAtStation = AwarenessFence.and(locationFence);
+                                    AwarenessFence userAtStation = AwarenessFence.and(locationFence, vehicleFence);
                                     registerFence(String.valueOf(item.getID()), userAtStation);
                                 }
                             } catch (JSONException e) {

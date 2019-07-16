@@ -117,6 +117,8 @@ public class PurchaseDetails extends AppCompatActivity {
     private Toolbar toolbar;
     private Window window;
     private int stationID;
+    SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
+    private int remainingHour, remainingMin;
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
@@ -173,6 +175,25 @@ public class PurchaseDetails extends AppCompatActivity {
         String purchaseTime = getIntent().getStringExtra("PURCHASE_TIME");
         // Variables from Intent
 
+        // Remaining time for uploading bill photo
+        try {
+            Date date = format.parse(purchaseTime);
+            Date dateNow = new Date(System.currentTimeMillis());
+
+            int howManyHourPassed = (int) (dateNow.getTime() - date.getTime()) / (1000 * 60 * 60);
+            int howManyMinPassed = (int) (dateNow.getTime() - date.getTime() - (remainingHour * 1000 * 60 * 60)) / (1000 * 60);
+
+            if (howManyHourPassed <= 23 || howManyMinPassed <= 59) {
+                remainingHour = howManyHourPassed;
+                remainingMin = howManyMinPassed;
+            } else {
+                remainingHour = 0;
+                remainingMin = 0;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         istasyonLogo = findViewById(R.id.imageViewStationLogo);
         CircleImageView circleImageViewStatus = findViewById(R.id.statusIcon);
         TextView textViewStatus = findViewById(R.id.statusText);
@@ -223,10 +244,14 @@ public class PurchaseDetails extends AppCompatActivity {
                 if (isPurchaseVerified == 1) {
                     Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
                 } else {
-                    if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
-                        ImagePicker.cameraOnly().start(PurchaseDetails.this);
+                    if (remainingHour > 0 || remainingMin > 0) {
+                        if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
+                            ImagePicker.cameraOnly().start(PurchaseDetails.this);
+                        } else {
+                            ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                        }
                     } else {
-                        ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                        Toast.makeText(PurchaseDetails.this, "Üzerinden 24 saatten fazla süre geçmiş satınalmalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -243,7 +268,11 @@ public class PurchaseDetails extends AppCompatActivity {
                 textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
                 addBillPhotoButton.setText("Fotoğrafı güncelle");
             } else {
-                textViewStatus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazanabilirsiniz!");
+                if (remainingHour > 0 || remainingMin > 0) {
+                    textViewStatus.setText("Fiş/Fatura fotoğrafı ekle, " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazan! Fotoğraf eklemek için son " + remainingHour + " saat " + remainingMin + " dakika!");
+                } else {
+                    textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda değişiklik yapılamaz...");
+                }
             }
         }
 
@@ -299,14 +328,12 @@ public class PurchaseDetails extends AppCompatActivity {
         String totalHolder = "TOPLAM : " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencySymbol;
         toplamfiyat.setText(totalHolder);
 
-        SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
         try {
             Date date = format.parse(purchaseTime);
             tarih.setReferenceTime(date.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         checkLocationPermission();
     }

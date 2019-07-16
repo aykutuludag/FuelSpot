@@ -569,11 +569,21 @@ public class StationDetails extends AppCompatActivity {
                                     JSONObject obj = res.getJSONObject(i);
 
                                     if (obj.getDouble("gasolinePrice") != 0) {
-                                        gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("gasolinePrice")));
+                                        if (obj.getDouble("gasolinePrice2") != 0) {
+                                            float avgPrice = (float) (obj.getDouble("gasolinePrice") + obj.getDouble("gasolinePrice2")) / 2;
+                                            gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), avgPrice));
+                                        } else {
+                                            gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("gasolinePrice")));
+                                        }
                                     }
 
                                     if (obj.getDouble("dieselPrice") != 0) {
-                                        dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("dieselPrice")));
+                                        if (obj.getDouble("dieselPrice2") != 0) {
+                                            float avgPrice = (float) (obj.getDouble("dieselPrice") + obj.getDouble("dieselPrice2")) / 2;
+                                            dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), avgPrice));
+                                        } else {
+                                            dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("dieselPrice")));
+                                        }
                                     }
 
                                     if (obj.getDouble("lpgPrice") != 0) {

@@ -27,8 +27,6 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
@@ -312,36 +310,34 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     }
 
     private void checkSubscriptions() {
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.SUBS, new PurchaseHistoryResponseListener() {
-            @Override
-            public void onPurchaseHistoryResponse(BillingResult billingResult, List<PurchaseHistoryRecord> purchasesList) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchasesList != null) {
-                    ArrayList<String> ownedSkus = new ArrayList<>();
-                    for (int i = 0; i < purchasesList.size(); i++) {
-                        ownedSkus.add(purchasesList.get(i).getSku());
-                    }
-
-                    if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
-                        premium = true;
-                        mapDefaultRange = 5000;
-                        mapDefaultZoom = 12f;
-                    } else if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
-                        hasDoubleRange = true;
-                        mapDefaultRange = 5000;
-                        mapDefaultZoom = 12f;
-                    } else {
-                        premium = false;
-                        mapDefaultRange = 2500;
-                        mapDefaultZoom = 13f;
-                    }
-
-                    prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
-                    prefs.edit().putBoolean("hasPremium", premium).apply();
-                    prefs.edit().putInt("RANGE", mapDefaultRange).apply();
-                    prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
-                }
+        Purchase.PurchasesResult billingResult = billingClient.queryPurchases(BillingClient.SkuType.SUBS);
+        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && billingResult.getPurchasesList() != null) {
+            ArrayList<String> ownedSkus = new ArrayList<>();
+            for (int i = 0; i < billingResult.getPurchasesList().size(); i++) {
+                ownedSkus.add(billingResult.getPurchasesList().get(i).getSku());
+                System.out.println(billingResult.getPurchasesList().get(i));
             }
-        });
+
+            if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
+                premium = true;
+                mapDefaultRange = 5000;
+                mapDefaultZoom = 12f;
+            } else if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
+                hasDoubleRange = true;
+                mapDefaultRange = 5000;
+                mapDefaultZoom = 12f;
+            } else {
+                hasDoubleRange = false;
+                premium = false;
+                mapDefaultRange = 2500;
+                mapDefaultZoom = 13f;
+            }
+
+            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+            prefs.edit().putBoolean("hasPremium", premium).apply();
+            prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+            prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+        }
     }
 
     private void coloredBars(int color1, int color2) {

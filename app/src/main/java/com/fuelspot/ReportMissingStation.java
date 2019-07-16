@@ -180,7 +180,6 @@ public class ReportMissingStation extends AppCompatActivity {
                 params.put("report", report);
                 params.put("details", reportDetails);
                 params.put("photo", "");
-                params.put("prices", "");
 
                 //returning parameters
                 return params;
