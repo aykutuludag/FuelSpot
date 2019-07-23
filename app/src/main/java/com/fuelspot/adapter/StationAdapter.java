@@ -204,8 +204,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         //Station Icon
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
+                .placeholder(R.drawable.default_station)
+                .error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
             @Override

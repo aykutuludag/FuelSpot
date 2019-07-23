@@ -76,7 +76,7 @@ public class FragmentSuperProfile extends Fragment {
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
-            mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
 
             Button addStationButton = rootView.findViewById(R.id.button_add_station);
             addStationButton.setOnClickListener(new View.OnClickListener() {

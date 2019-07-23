@@ -7,11 +7,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -69,7 +67,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,8 +89,10 @@ import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -119,12 +118,6 @@ public class PurchaseDetails extends AppCompatActivity {
     private int stationID;
     SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private int remainingHour, remainingMin;
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +221,7 @@ public class PurchaseDetails extends AppCompatActivity {
             }
         });
 
-        options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.icon_upload).error(R.drawable.icon_upload).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())));
         if (billPhoto != null && billPhoto.length() > 0) {
             fatura.setVisibility(View.VISIBLE);
@@ -354,15 +347,25 @@ public class PurchaseDetails extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
+                googleMap.setMyLocationEnabled(false);
+                googleMap.getUiSettings().setCompassEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setMapToolbarEnabled(false);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                googleMap.getUiSettings().setTiltGesturesEnabled(false);
+                googleMap.setTrafficEnabled(true);
+
                 MarkerAdapter customInfoWindow = new MarkerAdapter(PurchaseDetails.this);
                 googleMap.setInfoWindowAdapter(customInfoWindow);
-                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
                         StationItem infoWindowData = (StationItem) marker.getTag();
                         openStation(infoWindowData);
                     }
                 });
+
                 fetchStation(stationID);
             }
         });
@@ -414,7 +417,7 @@ public class PurchaseDetails extends AppCompatActivity {
                                 public void run() {
                                     addMarker();
                                 }
-                            }, 750);
+                            }, 1000);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -695,39 +698,6 @@ public class PurchaseDetails extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
-    }
-
-    private String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
-    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1f / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1f / aspectRatio));
-            }
-
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
-
-        if (degrees != 0) {
-            return rotate(bmp, degrees);
-        } else {
-            return bmp;
-        }
     }
 
     private void coloredBars(int color1, int color2) {

@@ -120,7 +120,7 @@ public class FragmentProfile extends Fragment {
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
-            mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
 
             Button addAutomobile = rootView.findViewById(R.id.button_add_vehicle);
             addAutomobile.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +134,7 @@ public class FragmentProfile extends Fragment {
             // Comments
             userNoCommentLayout = rootView.findViewById(R.id.noCommentLayout);
             mRecyclerView2 = rootView.findViewById(R.id.commentView);
-            mRecyclerView2.setNestedScrollingEnabled(true);
+            mRecyclerView2.setNestedScrollingEnabled(false);
 
             buttonSeeAllComments = rootView.findViewById(R.id.button_seeAllComments);
             buttonSeeAllComments.setOnClickListener(new View.OnClickListener() {

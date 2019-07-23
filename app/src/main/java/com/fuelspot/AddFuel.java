@@ -8,11 +8,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -54,7 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -78,10 +75,12 @@ import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
+import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userCountry;
@@ -133,12 +132,6 @@ public class AddFuel extends AppCompatActivity {
         return tax;
     }
 
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,7 +161,7 @@ public class AddFuel extends AppCompatActivity {
 
         //Creating a Request Queue
         requestQueue = Volley.newRequestQueue(AddFuel.this);
-        options = new RequestOptions().centerCrop().placeholder(R.drawable.photo_placeholder).error(R.drawable.photo_placeholder)
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.icon_upload).error(R.drawable.icon_upload)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         // ProgressDialogs
@@ -227,7 +220,7 @@ public class AddFuel extends AppCompatActivity {
 
         // Get user automobiles
         mRecyclerView = findViewById(R.id.automobileView);
-        mRecyclerView.setNestedScrollingEnabled(true);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mLayoutManager = new GridLayoutManager(AddFuel.this, 1);
 
         if (userAutomobileList != null && userAutomobileList.size() > 0) {
@@ -717,14 +710,6 @@ public class AddFuel extends AppCompatActivity {
 
     }
 
-    private String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
     private void updateTaxandGrandTotal() {
         float tax1 = taxCalculator(fuelPri, entryPrice);
         float tax2 = taxCalculator(fuelSec, entryPrice2);
@@ -734,31 +719,6 @@ public class AddFuel extends AppCompatActivity {
         String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
         textViewBonus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazanabilirsiniz!");
-    }
-
-    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1f / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1f / aspectRatio));
-            }
-
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
-
-        if (degrees != 0) {
-            return rotate(bmp, degrees);
-        } else {
-            return bmp;
-        }
     }
 
     private void coloredBars(int color1, int color2) {

@@ -110,7 +110,7 @@ public class FragmentAutomobile extends Fragment {
 
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Vehicle");
+            t.setScreenName("Otomobil");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 

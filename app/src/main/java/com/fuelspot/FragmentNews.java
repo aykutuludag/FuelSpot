@@ -138,9 +138,9 @@ public class FragmentNews extends Fragment {
             requestQueue = Volley.newRequestQueue(getActivity());
             scrollView = rootView.findViewById(R.id.newsInfoFragment);
             mRecyclerView = rootView.findViewById(R.id.newsView);
-            mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
             mRecyclerViewKampanya = rootView.findViewById(R.id.kampanyaView);
-            mRecyclerViewKampanya.setNestedScrollingEnabled(true);
+            mRecyclerViewKampanya.setNestedScrollingEnabled(false);
 
             chart = rootView.findViewById(R.id.chartPriceIndex);
             chart.setScaleEnabled(false);

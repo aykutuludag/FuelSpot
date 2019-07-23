@@ -365,7 +365,7 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="16dp"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/photo_placeholder"
+                        android:background="@drawable/icon_upload"
                         android:scaleType="fitXY"
                         android:visibility="gone" />
                 </RelativeLayout>

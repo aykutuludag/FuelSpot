@@ -94,7 +94,7 @@
     <!-- WelcomeActivity-->
     <string name="welcome_fuelspot">Welcome to FuelSpot!</string>
     <string name="welcome_fuelspot_long">FuelSpot is the platform which you can track gas prices, recent news in addition to vehicle track (average consumption, emission…) and many more!</string>
-    <string name="welcome_permission_text">Account created. We need some permission to showing nearest stations!</string>
+    <string name="welcome_permission_text">Account created. We need location permission to showing nearest stations!</string>
     <string name="button_continue">Continue</string>
     <string name="do_you_have_car">Do you have a car?</string>
     <string name="yes">Yes</string>

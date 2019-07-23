@@ -21,7 +21,6 @@ import com.fuelspot.R;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.fence.AwarenessFence;
-import com.google.android.gms.awareness.fence.DetectedActivityFence;
 import com.google.android.gms.awareness.fence.FenceUpdateRequest;
 import com.google.android.gms.awareness.fence.LocationFence;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -58,7 +57,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     private GoogleApiClient client;
     private PendingIntent mPendingIntent;
     private AwarenessFence locationFence;
-    private AwarenessFence vehicleFence;
     private Context mContext;
     private SharedPreferences prefs;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -104,8 +102,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .build();
         client.connect();
 
-        vehicleFence = DetectedActivityFence.during(DetectedActivityFence.IN_VEHICLE);
-
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(15 * 60 * 1000);
         mLocationRequest.setFastestInterval(1000);
@@ -139,7 +135,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                             double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
                                             double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
                                             locationFence = LocationFence.in(stationLat, stationLon, 50, 10000L);
-                                            AwarenessFence userAtStation = AwarenessFence.and(locationFence, vehicleFence);
+                                            AwarenessFence userAtStation = AwarenessFence.and(locationFence);
                                             registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
                                         }
                                     }
@@ -192,7 +188,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     double lat = Double.parseDouble(item.getLocation().split(";")[0]);
                                     double lon = Double.parseDouble(item.getLocation().split(";")[1]);
                                     locationFence = LocationFence.in(lat, lon, 50, 10000L);
-                                    AwarenessFence userAtStation = AwarenessFence.and(locationFence, vehicleFence);
+                                    AwarenessFence userAtStation = AwarenessFence.and(locationFence);
                                     registerFence(String.valueOf(item.getID()), userAtStation);
                                 }
                             } catch (JSONException e) {

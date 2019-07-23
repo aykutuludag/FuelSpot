@@ -10,19 +10,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -76,7 +70,24 @@ import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.ALARM_SERVICE;
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.fuelspot.FragmentFilterDistributors.filterStation1;
+import static com.fuelspot.FragmentFilterDistributors.filterStation2;
+import static com.fuelspot.FragmentFilterDistributors.filterStation3;
+import static com.fuelspot.FragmentFilterDistributors.filterStation4;
+import static com.fuelspot.FragmentFilterDistributors.filterStation5;
+import static com.fuelspot.FragmentFilterDistributors.filterStation6;
+import static com.fuelspot.FragmentFilterDistributors.markalar;
+import static com.fuelspot.FragmentFilterFacilities.filterByATM;
+import static com.fuelspot.FragmentFilterFacilities.filterByCarWash;
+import static com.fuelspot.FragmentFilterFacilities.filterByCoffeeShop;
+import static com.fuelspot.FragmentFilterFacilities.filterByMarket;
+import static com.fuelspot.FragmentFilterFacilities.filterByMechanic;
+import static com.fuelspot.FragmentFilterFacilities.filterByMosque;
+import static com.fuelspot.FragmentFilterFacilities.filterByMotel;
+import static com.fuelspot.FragmentFilterFacilities.filterByParkSpot;
+import static com.fuelspot.FragmentFilterFacilities.filterByRestaurant;
+import static com.fuelspot.FragmentFilterFacilities.filterByTireStore;
+import static com.fuelspot.FragmentFilterFacilities.filterByWC;
 import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
@@ -100,7 +111,6 @@ public class FragmentStations extends Fragment {
     int whichOrder;
     boolean isMapUpdating;
     NestedScrollView scrollView;
-    boolean filterByWC, filterByMarket, filterByCarWash, filterByTireStore, filterByMechanic, filterByRestaurant, filterByParkSpot, filterByATM, filterByMotel, filterByCoffeeShop, filterByMosque;
     RelativeLayout stationLayout;
     // Station variables
     private List<StationItem> shortStationList = new ArrayList<>();
@@ -264,7 +274,7 @@ public class FragmentStations extends Fragment {
             mRecyclerView = rootView.findViewById(R.id.stationView);
             GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
             mRecyclerView.removeAllViews();
 
             seeAllStations = rootView.findViewById(R.id.button_seeAllStations);
@@ -287,11 +297,12 @@ public class FragmentStations extends Fragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
         } else {
-            if (!isLocationEnabled(getActivity())) {
-                Toast.makeText(getActivity(), getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
-            }
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
             loadMap();
+        }
+
+        if (!isLocationEnabled(getActivity())) {
+            Toast.makeText(getActivity(), getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -710,139 +721,7 @@ public class FragmentStations extends Fragment {
         markers.add(m);
     }
 
-    public void filterPopup() {
-        CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBox10, checkBox11;
-
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup_filter, null);
-        final PopupWindow mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.setElevation(5.0f);
-        }
-
-        checkBox1 = customView.findViewById(R.id.checkBox2);
-        checkBox1.setChecked(filterByWC);
-        checkBox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByWC = isChecked;
-            }
-        });
-
-        checkBox2 = customView.findViewById(R.id.checkBox3);
-        checkBox2.setChecked(filterByMarket);
-        checkBox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByMarket = isChecked;
-            }
-        });
-
-        checkBox3 = customView.findViewById(R.id.checkBox4);
-        checkBox3.setChecked(filterByCarWash);
-        checkBox3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByCarWash = isChecked;
-            }
-        });
-
-        checkBox4 = customView.findViewById(R.id.checkBox5);
-        checkBox4.setChecked(filterByTireStore);
-        checkBox4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByTireStore = isChecked;
-            }
-        });
-
-        checkBox5 = customView.findViewById(R.id.checkBox6);
-        checkBox5.setChecked(filterByMechanic);
-        checkBox5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByMechanic = isChecked;
-            }
-        });
-
-        checkBox6 = customView.findViewById(R.id.checkBox7);
-        checkBox6.setChecked(filterByRestaurant);
-        checkBox6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByRestaurant = isChecked;
-            }
-        });
-
-        checkBox7 = customView.findViewById(R.id.checkBox8);
-        checkBox7.setChecked(filterByParkSpot);
-        checkBox7.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByParkSpot = isChecked;
-            }
-        });
-
-        checkBox8 = customView.findViewById(R.id.checkBox9);
-        checkBox8.setChecked(filterByATM);
-        checkBox8.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByATM = isChecked;
-            }
-        });
-
-        checkBox9 = customView.findViewById(R.id.checkBox10);
-        checkBox9.setChecked(filterByMotel);
-        checkBox9.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByMotel = isChecked;
-            }
-        });
-
-        checkBox10 = customView.findViewById(R.id.checkBox11);
-        checkBox10.setChecked(filterByCoffeeShop);
-        checkBox10.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByCoffeeShop = isChecked;
-            }
-        });
-
-        checkBox11 = customView.findViewById(R.id.checkBox12);
-        checkBox11.setChecked(filterByMosque);
-        checkBox11.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                filterByMosque = isChecked;
-            }
-        });
-
-        Button filterButton = customView.findViewById(R.id.button8);
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterStations();
-                mPopupWindow.dismiss();
-            }
-        });
-
-        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
-        // Set a click listener for the popup window close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dismiss the popup window
-                mPopupWindow.dismiss();
-            }
-        });
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.update();
-        mPopupWindow.showAtLocation(customView, Gravity.CENTER, 0, 0);
-    }
-
-    void filterStations() {
+    void filterStationsByFacilities() {
         // If there is no filter, just order by distance
         if (!filterByWC && !filterByMarket && !filterByTireStore && !filterByMechanic && !filterByRestaurant && !filterByParkSpot && !filterByATM && !filterByMotel && !filterByCoffeeShop && !filterByMosque) {
             seeAllStations.setVisibility(View.VISIBLE);
@@ -891,6 +770,68 @@ public class FragmentStations extends Fragment {
                 shortStationList.add(fullStationList.get(i));
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+
+        Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + shortStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
+        mAdapter = new StationAdapter(getActivity(), shortStationList, "NEARBY_STATIONS");
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mAdapter);
+        seeAllStations.setVisibility(View.GONE);
+
+        for (int i = 0; i < shortStationList.size(); i++) {
+            addMarker(shortStationList.get(i));
+            markers.get(0).showInfoWindow();
+        }
+    }
+
+    void filterStationsByDistributors() {
+        // If there is no filter, just order by distance
+        if (!filterStation1 && !filterStation2 && !filterStation3 && !filterStation4 && !filterStation5 && !filterStation6) {
+            seeAllStations.setVisibility(View.VISIBLE);
+            whichOrder = 4;
+            sortBy(whichOrder);
+            return;
+        }
+
+        // Clear variables
+        googleMap.clear();
+        markers.clear();
+        shortStationList.clear();
+
+        googleMap.addCircle(new CircleOptions().center(new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon)))
+                .radius(mapDefaultRange)
+                .fillColor(0x220000FF).strokeColor(Color.parseColor("#FF5635")));
+
+        List<String> dummySelectedBrand = new ArrayList<>();
+
+        if (filterStation1) {
+            dummySelectedBrand.add(markalar.get(0));
+        }
+
+        if (filterStation2) {
+            dummySelectedBrand.add(markalar.get(1));
+        }
+
+        if (filterStation3) {
+            dummySelectedBrand.add(markalar.get(2));
+        }
+
+        if (filterStation4) {
+            dummySelectedBrand.add(markalar.get(3));
+        }
+
+        if (filterStation5) {
+            dummySelectedBrand.add(markalar.get(4));
+        }
+
+        if (filterStation6) {
+            dummySelectedBrand.add(markalar.get(5));
+        }
+
+        for (int i = 0; i < fullStationList.size(); i++) {
+            if (dummySelectedBrand.contains(fullStationList.get(i).getStationName())) {
+                shortStationList.add(fullStationList.get(i));
             }
         }
 

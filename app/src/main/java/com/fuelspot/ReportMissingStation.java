@@ -3,7 +3,10 @@ package com.fuelspot;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,6 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.CompanyAdapter;
 import com.fuelspot.model.CompanyItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,15 +54,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.companyList;
+import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
+import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -69,6 +85,9 @@ public class ReportMissingStation extends AppCompatActivity {
     private Window window;
     private Toolbar toolbar;
     private RequestQueue requestQueue;
+    ImageView uploadMissingImage;
+    Bitmap bitmap;
+    private RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +107,7 @@ public class ReportMissingStation extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(ReportMissingStation.this);
         scrollView = findViewById(R.id.missing_scroll);
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.icon_upload).error(R.drawable.icon_upload).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
         // Activate map
         mMapView = findViewById(R.id.markerMap);
@@ -116,6 +136,18 @@ public class ReportMissingStation extends AppCompatActivity {
             fetchCompanies();
         }
 
+        uploadMissingImage = findViewById(R.id.missingPhoto);
+        uploadMissingImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.verifyFilePickerPermission(ReportMissingStation.this)) {
+                    ImagePicker.create(ReportMissingStation.this).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(ReportMissingStation.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
+
         Button button = findViewById(R.id.buttonSend);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +155,7 @@ public class ReportMissingStation extends AppCompatActivity {
                 if (dummyLocation != null && dummyLocation.length() > 0) {
                     if (dummyBrandName != null && dummyBrandName.length() > 0) {
                         report = "Eksik istasyon";
-                        reportDetails = "REPORT: { konum = " + dummyLocation + " marka = " + dummyBrandName + " }";
+                        reportDetails = "{konum: " + dummyLocation + " marka: " + dummyBrandName + " }";
                         sendReporttoServer();
                     } else {
                         Toast.makeText(ReportMissingStation.this, "Lütfen istasyonun markasını seçiniz...", Toast.LENGTH_SHORT).show();
@@ -179,7 +211,11 @@ public class ReportMissingStation extends AppCompatActivity {
                 params.put("stationID", String.valueOf(-1));
                 params.put("report", report);
                 params.put("details", reportDetails);
-                params.put("photo", "");
+                if (bitmap != null) {
+                    params.put("photo", getStringImage(bitmap));
+                } else {
+                    params.put("photo", "");
+                }
 
                 //returning parameters
                 return params;
@@ -204,14 +240,13 @@ public class ReportMissingStation extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                googleMap.setMyLocationEnabled(true);
+                googleMap.setMyLocationEnabled(false);
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setRotateGesturesEnabled(false);
                 googleMap.getUiSettings().setTiltGesturesEnabled(false);
-                googleMap.setTrafficEnabled(true);
 
                 googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
@@ -234,6 +269,7 @@ public class ReportMissingStation extends AppCompatActivity {
                     }
                 });
 
+
                 // For zooming automatically to the location of the marker
                 LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
@@ -249,7 +285,7 @@ public class ReportMissingStation extends AppCompatActivity {
                     @Override
                     public void onMapClick(LatLng latLng) {
                         googleMap.clear();
-                        dummyLocation = String.format(Locale.getDefault(), "%.5f", latLng.latitude) + ";" + String.format(Locale.getDefault(), "%.5f", latLng.longitude);
+                        dummyLocation = String.format(Locale.US, "%.5f", latLng.latitude) + "," + String.format(Locale.US, "%.5f", latLng.longitude);
                         MarkerOptions mOptions = new MarkerOptions().position(latLng).title("İstasyon").snippet(dummyLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
                         Marker m = googleMap.addMarker(mOptions);
                         m.showInfoWindow();
@@ -326,12 +362,57 @@ public class ReportMissingStation extends AppCompatActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                try {
+                    bitmap = BitmapFactory.decodeFile(image.getPath());
+                    ExifInterface ei = new ExifInterface(image.getPath());
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_NORMAL:
+                            bitmap = resizeAndRotate(bitmap, 0);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bitmap = resizeAndRotate(bitmap, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bitmap = resizeAndRotate(bitmap, 180);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bitmap = resizeAndRotate(bitmap, 270);
+                            break;
+                    }
+                    Glide.with(this).load(bitmap).apply(options).into(uploadMissingImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION) {
-            if (ActivityCompat.checkSelfPermission(ReportMissingStation.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
-                loadMap();
-            } else {
-                Snackbar.make(findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
+        switch (requestCode) {
+            case REQUEST_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (ActivityCompat.checkSelfPermission(ReportMissingStation.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                    ImagePicker.create(ReportMissingStation.this).single().start();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
+                }
+            }
+            case REQUEST_LOCATION: {
+                if (ActivityCompat.checkSelfPermission(ReportMissingStation.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        loadMap();
+                    }
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
+                }
             }
         }
     }

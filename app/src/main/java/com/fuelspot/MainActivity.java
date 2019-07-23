@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -59,6 +62,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
-    public static final int REQUEST_ALL = 2;
     public static final int GOOGLE_LOGIN = 100;
 
     public static List<VehicleItem> automobileModels = new ArrayList<>();
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public AHBottomNavigation bottomNavigation;
     public MenuItem filterButton, favoriteButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
-    private List<Fragment> fragments = new ArrayList<>(5);
+    public static List<Fragment> fragmentsUser = new ArrayList<>(5);
     private SharedPreferences prefs;
     private Window window;
     private Toolbar toolbar;
@@ -171,22 +174,62 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         token = prefs.getString("token", "");
     }
 
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    public static Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
+        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
+            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
+            int width, height;
+
+            if (aspectRatio < 1) {
+                // Portrait
+                width = (int) (aspectRatio * 1920);
+                height = (int) (width * (1f / aspectRatio));
+            } else {
+                // Landscape
+                width = (int) (aspectRatio * 1080);
+                height = (int) (width * (1f / aspectRatio));
+            }
+
+            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
+        }
+
+        if (degrees != 0) {
+            return rotate(bmp, degrees);
+        } else {
+            return bmp;
+        }
+    }
+
+    public static String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
     public static boolean isNetworkConnected(Context mContext) {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
     }
 
     public static Boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
+        int locationMode;
         String locationProviders;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+                return locationMode != Settings.Secure.LOCATION_MODE_OFF;
             } catch (Settings.SettingNotFoundException e) {
                 e.printStackTrace();
+                return false;
             }
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
         } else {
             //Lower than API 19
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
@@ -223,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
         }
     }
 
@@ -260,12 +303,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);
-        fragments.add(FragmentStations.newInstance());
-        fragments.add(FragmentNews.newInstance());
-        fragments.add(FragmentAutomobile.newInstance());
-        fragments.add(FragmentProfile.newInstance());
-        fragments.add(FragmentSettings.newInstance());
-        builder.rootFragments(fragments);
+        fragmentsUser.add(FragmentStations.newInstance());
+        fragmentsUser.add(FragmentNews.newInstance());
+        fragmentsUser.add(FragmentAutomobile.newInstance());
+        fragmentsUser.add(FragmentProfile.newInstance());
+        fragmentsUser.add(FragmentSettings.newInstance());
+        builder.rootFragments(fragmentsUser);
         mFragNavController = builder.build();
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
@@ -371,7 +414,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             public void onBillingSetupFinished(BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     getSkus();
-                    checkSubscriptions();
                 } else {
                     billingClient = null;
                 }
@@ -413,6 +455,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                             doubleSuperSku = skuDetailsList.get(i);
                         }
                     }
+
+                    checkSubscriptions();
                 }
             }
         });
@@ -737,8 +781,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.filter_stations) {
-            FragmentStations fragment = (FragmentStations) fragments.get(0);
-            fragment.filterPopup();
+            new FragmentFilter().show(getSupportFragmentManager(), "FragmentFilter");
         } else if (item.getItemId() == R.id.favorite_stations) {
             Intent intent = new Intent(MainActivity.this, UserFavorites.class);
             startActivity(intent);
@@ -757,8 +800,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public void onBackPressed() {
         // FragmentHome OnBackPressed
-        if (fragments.get(0) != null) {
-            if (fragments.get(0).isVisible()) {
+        if (fragmentsUser.get(0) != null) {
+            if (fragmentsUser.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
                     adCount = 0;
                     mFragNavController.clearStack();
@@ -780,29 +823,29 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             }
         }
 
-        if (fragments.get(1) != null) {
-            if (fragments.get(1).isVisible()) {
+        if (fragmentsUser.get(1) != null) {
+            if (fragmentsUser.get(1).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
 
-        if (fragments.get(2) != null) {
-            if (fragments.get(2).isVisible()) {
+        if (fragmentsUser.get(2) != null) {
+            if (fragmentsUser.get(2).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
 
-        if (fragments.get(3) != null) {
-            if (fragments.get(3).isVisible()) {
+        if (fragmentsUser.get(3) != null) {
+            if (fragmentsUser.get(3).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
 
-        if (fragments.get(4) != null) {
-            if (fragments.get(4).isVisible()) {
+        if (fragmentsUser.get(4) != null) {
+            if (fragmentsUser.get(4).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_box"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/textView47"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/gotham_bold"
+        android:text="Bir ya da birden fazla marka seçerek sadece o marka/markalara ait istasyonları görüntüleyebilirsin."
+        android:textAlignment="center"
+        android:textColor="#161616" />
+
+    <RelativeLayout
+        android:id="@+id/checkBoxLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.percentlayout.widget.PercentRelativeLayout
+            android:id="@+id/inner1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/default_station"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="STATION"
+                android:textColor="#161616"
+                android:visibility="gone"
+                app:layout_marginPercent="1%"
+                app:layout_widthPercent="31%" />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/checkBox1"
+                android:drawableTop="@drawable/default_station"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="STATION"
+                android:textColor="#161616"
+                android:visibility="gone"
+                app:layout_marginPercent="1.5%"
+                app:layout_widthPercent="31%" />
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/checkBox2"
+                android:drawableTop="@drawable/default_station"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="STATION"
+                android:textColor="#161616"
+                android:visibility="gone"
+                app:layout_marginPercent="1.5%"
+                app:layout_widthPercent="31%" />
+        </androidx.percentlayout.widget.PercentRelativeLayout>
+
+        <androidx.percentlayout.widget.PercentRelativeLayout
+            android:id="@+id/inner2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inner1"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/checkBox4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/default_station"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="STATION"
+                android:textColor="#161616"
+                android:visibility="gone"
+                app:layout_marginPercent="1%"
+                app:layout_widthPercent="31%" />
+
+            <CheckBox
+                android:id="@+id/checkBox5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/checkBox4"
+                android:drawableTop="@drawable/default_station"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="STATION"
+                android:textColor="#161616"
+                android:visibility="gone"
+                app:layout_marginPercent="1%"
+                app:layout_widthPercent="31%" />
+
+            <CheckBox
+                android:id="@+id/checkBox6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/checkBox5"
+                android:drawableTop="@drawable/default_station"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="STATION"
+                android:textColor="#161616"
+                android:visibility="gone"
+                app:layout_marginPercent="1%"
+                app:layout_widthPercent="31%" />
+        </androidx.percentlayout.widget.PercentRelativeLayout>
+
+        <TextView
+            android:id="@+id/textView48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inner2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/gotham_bold"
+            android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin."
+            android:textAlignment="center"
+            android:textColor="#161616" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonFilterDistributors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FF6838"
+        android:text="@string/apply"
+        android:textColor="#f1f1f1" />
+</LinearLayout>

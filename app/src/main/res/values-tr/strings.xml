@@ -11,7 +11,7 @@
     <!-- WelcomeActivity-->
     <string name="welcome_fuelspot">FuelSpot\'a hoşgeldiniz!</string>
     <string name="welcome_fuelspot_long">FuelSpot akaryakıt fiyatlarını, güncel gelişmeleri ve bunlara ek olarak araç takibini (yakıt tüketimi, emisyon…) ve çok daha fazlasını içeren bir platformdur.</string>
-    <string name="welcome_permission_text">Hesabınız oluşturuldu. Yakınınızdaki istasyonları gösterebilmek için bazı izinlere ihtiyaç duyuyoruz</string>
+    <string name="welcome_permission_text">Hesabınız oluşturuldu. Yakınınızdaki istasyonları gösterebilmek için FuelSpot\'ın konum iznine ihtiyacı var.</string>
     <string name="button_continue">Devam</string>
     <string name="do_you_have_car">Arabanız var mı?</string>
     <string name="yes">Evet</string>

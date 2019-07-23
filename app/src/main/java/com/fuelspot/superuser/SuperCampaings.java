@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +51,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,8 +63,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.isNetworkConnected;
+import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.superuser.SuperMainActivity.superStationID;
@@ -94,12 +93,6 @@ public class SuperCampaings extends AppCompatActivity {
     private SwipeRefreshLayout swipeContainer;
     private RequestOptions options;
     private List<CampaignItem> feedList3 = new ArrayList<>();
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -618,39 +611,6 @@ public class SuperCampaings extends AppCompatActivity {
             toolbar.setBackgroundColor(color2);
         } else {
             toolbar.setBackgroundColor(color2);
-        }
-    }
-
-    private String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
-    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1f / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1f / aspectRatio));
-            }
-
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
-
-        if (degrees != 0) {
-            return rotate(bmp, degrees);
-        } else {
-            return bmp;
         }
     }
 

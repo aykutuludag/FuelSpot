@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -23,7 +23,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -40,6 +39,7 @@ import android.widget.Toast;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.ActivityCompat;
@@ -54,8 +54,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.facebook.CallbackManager;
@@ -69,6 +73,7 @@ import com.fuelspot.LoginActivity;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.adapter.CompanyAdapter;
+import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.google.android.gms.auth.api.Auth;
@@ -104,7 +109,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -123,7 +127,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.fuelspot.MainActivity.GOOGLE_LOGIN;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
-import static com.fuelspot.MainActivity.REQUEST_ALL;
+import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.companyList;
@@ -131,6 +135,7 @@ import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.gender;
+import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -139,6 +144,7 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userCountryName;
@@ -197,12 +203,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private CallbackManager callbackManager;
     LocationCallback mLocationCallback;
     LocationRequest mLocationRequest;
+    StationItem superStationITEM = new StationItem();
 
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,7 +240,23 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     super.onLocationResult(locationResult);
                     Location locCurrent = locationResult.getLastLocation();
                     if (locCurrent != null) {
-                        Localization();
+                        Location loc1 = new Location("");
+                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
+
+                        Location loc2 = new Location("");
+                        loc2.setLatitude(locCurrent.getLatitude());
+                        loc2.setLongitude(locCurrent.getLongitude());
+
+                        float distanceInMeters = loc1.distanceTo(loc2);
+
+                        if (distanceInMeters >= mapDefaultStationRange / 2) {
+                            MainActivity.userlat = String.valueOf(locCurrent.getLatitude());
+                            MainActivity.userlon = String.valueOf(locCurrent.getLongitude());
+                            prefs.edit().putString("lat", MainActivity.userlat).apply();
+                            prefs.edit().putString("lon", MainActivity.userlon).apply();
+                            updateMapObject();
+                        }
                     }
                 }
             }
@@ -289,7 +307,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    ActivityCompat.requestPermissions(SuperWelcomeActivity.this, new String[]{PERMISSIONS_STORAGE[0], PERMISSIONS_STORAGE[1], PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_ALL);
+                    ActivityCompat.requestPermissions(SuperWelcomeActivity.this, new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
                 } else {
                     if (isLocationEnabled(SuperWelcomeActivity.this)) {
                         mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
@@ -833,9 +851,11 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         finish();
     }
 
+    @SuppressLint("MissingPermission")
     private void layout4() {
         /* LAYOUT 04 */
         loadMap();
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
 
         stationHint = findViewById(R.id.stationHint);
 
@@ -1108,30 +1128,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     }
                 });
 
+                MarkerAdapter customInfoWindow = new MarkerAdapter(SuperWelcomeActivity.this);
+                googleMap.setInfoWindowAdapter(customInfoWindow);
+
                 updateMapObject();
-
-                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                    @Override
-                    public void onMyLocationChange(Location arg0) {
-                        Location loc1 = new Location("");
-                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
-                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
-
-                        Location loc2 = new Location("");
-                        loc2.setLatitude(arg0.getLatitude());
-                        loc2.setLongitude(arg0.getLongitude());
-
-                        float distanceInMeters = loc1.distanceTo(loc2);
-
-                        if (distanceInMeters >= mapDefaultStationRange / 2) {
-                            MainActivity.userlat = String.valueOf(arg0.getLatitude());
-                            MainActivity.userlon = String.valueOf(arg0.getLongitude());
-                            prefs.edit().putString("lat", MainActivity.userlat).apply();
-                            prefs.edit().putString("lon", MainActivity.userlon).apply();
-                            updateMapObject();
-                        }
-                    }
-                });
             }
         });
     }
@@ -1161,6 +1161,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultStationRange,
                 new Response.Listener<String>() {
+                    @SuppressLint("CheckResult")
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
@@ -1169,60 +1170,60 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 JSONObject obj = res.getJSONObject(0);
 
                                 superStationID = obj.getInt("id");
-                                prefs.edit().putInt("SuperStationID", superStationID).apply();
-
                                 superStationName = obj.getString("name");
-                                prefs.edit().putString("SuperStationName", superStationName).apply();
-
                                 superStationAddress = obj.getString("vicinity");
-                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
-
                                 superStationCountry = obj.getString("country");
-                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
-
                                 superStationLocation = obj.getString("location");
-                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
                                 superGoogleID = obj.getString("googleID");
-                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
-
                                 superFacilities = obj.getString("facilities");
-                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
-
                                 superStationLogo = obj.getString("logoURL");
-                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
-
                                 ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
-                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
-
                                 ownedDieselPrice = (float) obj.getDouble("dieselPrice");
-                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
-
                                 ownedLPGPrice = (float) obj.getDouble("lpgPrice");
-                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
-
                                 ownedElectricityPrice = (float) obj.getDouble("electricityPrice");
-                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
-
                                 ownedOtherFuels = obj.getString("otherFuels");
-                                prefs.edit().putString("superOtherFuels", ownedOtherFuels).apply();
-
                                 superLicenseNo = obj.getString("licenseNo");
-                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+                                isStationVerified = obj.getInt("isVerified");
+
                                 editTextStationLicense.setText(superLicenseNo);
 
-                                isStationVerified = obj.getInt("isVerified");
-                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
+                                superStationITEM.setID(superStationID);
+                                superStationITEM.setStationName(superStationName);
+                                superStationITEM.setVicinity(superStationAddress);
+                                superStationITEM.setCountryCode(superStationCountry);
+                                superStationITEM.setLocation(superStationLocation);
+                                superStationITEM.setGoogleMapID(superGoogleID);
+                                superStationITEM.setFacilities(superFacilities);
+                                superStationITEM.setLicenseNo(superLicenseNo);
+                                superStationITEM.setPhotoURL(superStationLogo);
+                                superStationITEM.setGasolinePrice(ownedGasolinePrice);
+                                superStationITEM.setDieselPrice(ownedDieselPrice);
+                                superStationITEM.setLpgPrice(ownedLPGPrice);
+                                superStationITEM.setElectricityPrice(ownedElectricityPrice);
+                                superStationITEM.setOtherFuels(ownedOtherFuels);
+                                superStationITEM.setDistance((int) obj.getDouble("distance"));
 
-                                if (isStationVerified == 1) {
-                                    stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                    stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
-                                } else {
-                                    stationHint.setText("Şu anda istasyondasınız!");
-                                    stationHint.setTextColor(Color.parseColor("#2DE778"));
-                                }
-                                addMarker();
+                                //Station Icon
+                                Glide.with(SuperWelcomeActivity.this).load(superStationITEM.getPhotoURL()).listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        superStationITEM.setStationLogoDrawable(resource);
+                                        return false;
+                                    }
+                                });
+
                                 loadStationDetails();
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        addMarker();
+                                    }
+                                }, 1000);
                             } catch (JSONException e) {
                                 superStationName = "";
                                 superStationAddress = "";
@@ -1230,7 +1231,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 superStationCountry = "";
                                 superLicenseNo = "";
                                 superStationLogo = "";
-                                stationHint.setText("");
+                                stationHint.setText(getString(R.string.go_to_station_text));
                                 stationHint.setTextColor(Color.parseColor("#ff0000"));
                                 loadStationDetails();
                                 Toast.makeText(SuperWelcomeActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -1242,7 +1243,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             superStationCountry = "";
                             superLicenseNo = "";
                             superStationLogo = "";
-                            stationHint.setText("");
+                            stationHint.setText(getString(R.string.go_to_station_text));
                             stationHint.setTextColor(Color.parseColor("#ff0000"));
                             loadStationDetails();
                         }
@@ -1257,7 +1258,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                         superStationCountry = "";
                         superLicenseNo = "";
                         superStationLogo = "";
-                        stationHint.setText("");
+                        stationHint.setText(getString(R.string.go_to_station_text));
                         stationHint.setTextColor(Color.parseColor("#ff0000"));
                         loadStationDetails();
 
@@ -1283,15 +1284,24 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         MarkerOptions mOptions;
         if (isStationVerified == 1) {
-            mOptions = new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
+            mOptions = new MarkerOptions().position(sydney).title(superStationITEM.getStationName()).snippet(superStationITEM.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
         } else {
-            mOptions = new MarkerOptions().position(sydney).title(superStationName).snippet(superStationAddress).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
+            mOptions = new MarkerOptions().position(sydney).title(superStationITEM.getStationName()).snippet(superStationITEM.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
         }
         Marker m = googleMap.addMarker(mOptions);
+        m.setTag(superStationITEM);
         m.showInfoWindow();
     }
 
     private void loadStationDetails() {
+        if (isStationVerified == 1) {
+            stationHint.setTextColor(Color.parseColor("#ff0000"));
+            stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
+        } else {
+            stationHint.setText("Şu anda istasyondasınız!");
+            stationHint.setTextColor(Color.parseColor("#2DE778"));
+        }
+
         if (companyList != null && companyList.size() > 0) {
             CompanyAdapter customAdapter = new CompanyAdapter(SuperWelcomeActivity.this, companyList);
             spinner.setEnabled(false);
@@ -1387,6 +1397,21 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     public void onResponse(String res) {
                         if (res != null && res.length() > 0) {
                             if (res.equals("Success")) {
+                                prefs.edit().putInt("SuperStationID", superStationID).apply();
+                                prefs.edit().putString("SuperStationName", superStationName).apply();
+                                prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
+                                prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
+                                prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
+                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
+                                prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
+                                prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
+                                prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();
+                                prefs.edit().putFloat("superDieselPrice", ownedDieselPrice).apply();
+                                prefs.edit().putFloat("superLPGPrice", ownedLPGPrice).apply();
+                                prefs.edit().putFloat("superElectricityPrice", ownedElectricityPrice).apply();
+                                prefs.edit().putString("superOtherFuels", ownedOtherFuels).apply();
+                                prefs.edit().putString("SuperLicenseNo", superLicenseNo).apply();
+                                prefs.edit().putInt("isStationVerified", isStationVerified).apply();
                                 updateSuperUser();
                             } else {
                                 loading.dismiss();
@@ -1510,8 +1535,8 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_ALL: {
-                if (ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+            case REQUEST_LOCATION: {
+                if (ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[0]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(SuperWelcomeActivity.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
                     if (isLocationEnabled(SuperWelcomeActivity.this)) {
                         mFusedLocationClient.getLastLocation().addOnSuccessListener(SuperWelcomeActivity.this, new OnSuccessListener<Location>() {
                             @SuppressLint("MissingPermission")
@@ -1519,10 +1544,10 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 if (location != null) {
-                                    MainActivity.userlat = String.valueOf(location.getLatitude());
-                                    MainActivity.userlon = String.valueOf(location.getLongitude());
-                                    prefs.edit().putString("lat", MainActivity.userlat).apply();
-                                    prefs.edit().putString("lon", MainActivity.userlon).apply();
+                                    userlat = String.valueOf(location.getLatitude());
+                                    userlon = String.valueOf(location.getLongitude());
+                                    prefs.edit().putString("lat", userlat).apply();
+                                    prefs.edit().putString("lon", userlon).apply();
                                     Localization();
                                 } else {
                                     mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
@@ -1595,39 +1620,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     e.printStackTrace();
                 }
             }
-        }
-    }
-
-    private String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-
-        byte[] imageBytes = baos.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
-    public Bitmap resizeAndRotate(Bitmap bmp, float degrees) {
-        if (bmp.getWidth() > 1080 || bmp.getHeight() > 1920) {
-            float aspectRatio = (float) bmp.getWidth() / bmp.getHeight();
-            int width, height;
-
-            if (aspectRatio < 1) {
-                // Portrait
-                width = (int) (aspectRatio * 1920);
-                height = (int) (width * (1f / aspectRatio));
-            } else {
-                // Landscape
-                width = (int) (aspectRatio * 1080);
-                height = (int) (width * (1f / aspectRatio));
-            }
-
-            bmp = Bitmap.createScaledBitmap(bmp, width, height, true);
-        }
-
-        if (degrees != 0) {
-            return rotate(bmp, degrees);
-        } else {
-            return bmp;
         }
     }
 

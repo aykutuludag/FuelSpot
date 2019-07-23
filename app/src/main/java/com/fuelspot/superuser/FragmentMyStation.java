@@ -334,8 +334,8 @@ public class FragmentMyStation extends Fragment {
         //Station Icon
         RequestOptions options = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .error(R.drawable.photo_placeholder)
+                .placeholder(R.drawable.default_station)
+                .error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(getActivity()).load(superStationLogo).apply(options).listener(new RequestListener<Drawable>() {
             @Override

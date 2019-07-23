@@ -39,6 +39,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.fuelspot.FragmentFilter;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
@@ -102,7 +103,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     private Toolbar toolbar;
     private SharedPreferences prefs;
     private FragNavController mFragNavController;
-    private List<Fragment> fragments = new ArrayList<>(5);
+    public static List<Fragment> fragmentsSuperUser = new ArrayList<>(5);
     private BillingClient billingClient;
 
     public static void getSuperVariables(SharedPreferences prefs) {
@@ -156,12 +157,12 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
-        fragments.add(FragmentMyStation.newInstance());
-        fragments.add(FragmentNews.newInstance());
-        fragments.add(FragmentStations.newInstance());
-        fragments.add(FragmentSuperProfile.newInstance());
-        fragments.add(FragmentSettings.newInstance());
-        builder.rootFragments(fragments);
+        fragmentsSuperUser.add(FragmentMyStation.newInstance());
+        fragmentsSuperUser.add(FragmentNews.newInstance());
+        fragmentsSuperUser.add(FragmentStations.newInstance());
+        fragmentsSuperUser.add(FragmentSuperProfile.newInstance());
+        fragmentsSuperUser.add(FragmentSettings.newInstance());
+        builder.rootFragments(fragmentsSuperUser);
         mFragNavController = builder.build();
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
@@ -625,8 +626,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.filter_stations) {
-            FragmentStations fragment = (FragmentStations) fragments.get(2);
-            fragment.filterPopup();
+            new FragmentFilter().show(getSupportFragmentManager(), "");
         } else if (item.getItemId() == R.id.favorite_stations) {
             Intent intent = new Intent(SuperMainActivity.this, UserFavorites.class);
             startActivity(intent);
@@ -652,8 +652,8 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     @Override
     public void onBackPressed() {
         // FragmentHome OnBackPressed
-        if (fragments.get(0) != null) {
-            if (fragments.get(0).isVisible()) {
+        if (fragmentsSuperUser.get(0) != null) {
+            if (fragmentsSuperUser.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
                     adCount = 0;
                     mFragNavController.clearStack();
@@ -674,29 +674,29 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
             }
         }
 
-        if (fragments.get(1) != null) {
-            if (fragments.get(1).isVisible()) {
+        if (fragmentsSuperUser.get(1) != null) {
+            if (fragmentsSuperUser.get(1).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
 
-        if (fragments.get(2) != null) {
-            if (fragments.get(2).isVisible()) {
+        if (fragmentsSuperUser.get(2) != null) {
+            if (fragmentsSuperUser.get(2).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
 
-        if (fragments.get(3) != null) {
-            if (fragments.get(3).isVisible()) {
+        if (fragmentsSuperUser.get(3) != null) {
+            if (fragmentsSuperUser.get(3).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
         }
 
-        if (fragments.get(4) != null) {
-            if (fragments.get(4).isVisible()) {
+        if (fragmentsSuperUser.get(4) != null) {
+            if (fragmentsSuperUser.get(4).isVisible()) {
                 bottomNavigation.setCurrentItem(0);
                 mFragNavController.switchTab(FragNavController.TAB1);
             }
