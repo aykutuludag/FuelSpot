@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,150 +8,356 @@
     android:orientation="vertical"
     android:padding="4dp">
 
-    <TextView
-        android:id="@+id/textView47"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/gotham_bold"
-        android:text="Bir ya da birden fazla marka seçerek sadece o marka/markalara ait istasyonları görüntüleyebilirsin."
-        android:textAlignment="center"
-        android:textColor="#161616" />
-
     <RelativeLayout
-        android:id="@+id/checkBoxLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.percentlayout.widget.PercentRelativeLayout
-            android:id="@+id/inner1"
+        <RelativeLayout
+            android:id="@+id/filter_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                app:srcCompat="@drawable/green_warning_icon" />
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageView"
+                android:layout_alignBottom="@id/imageView"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_toEndOf="@id/imageView"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="Görmek istediğin markayı/markaları seçerek ilgilendiğin markalara ait istasyonları görebilirsin!"
+                android:textAlignment="center"
+                android:textColor="#161616" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/checkBoxLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:gravity="center">
+            android:layout_below="@id/filter_header">
 
-            <CheckBox
-                android:id="@+id/checkBox1"
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/default_station"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="STATION"
-                android:textColor="#161616"
-                android:visibility="gone"
-                app:layout_marginPercent="1%"
-                app:layout_widthPercent="31%" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp">
 
-            <CheckBox
-                android:id="@+id/checkBox2"
-                android:layout_width="match_parent"
+                <CheckBox
+                    android:id="@+id/checkBox1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox1"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox2"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/checkBox1"
-                android:drawableTop="@drawable/default_station"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="STATION"
-                android:textColor="#161616"
-                android:visibility="gone"
-                app:layout_marginPercent="1.5%"
-                app:layout_widthPercent="31%" />
+                android:layout_below="@+id/inner1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center">
 
-            <CheckBox
-                android:id="@+id/checkBox3"
-                android:layout_width="match_parent"
+                <CheckBox
+                    android:id="@+id/checkBox4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox4"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox5"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner3"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/checkBox2"
-                android:drawableTop="@drawable/default_station"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="STATION"
-                android:textColor="#161616"
-                android:visibility="gone"
-                app:layout_marginPercent="1.5%"
-                app:layout_widthPercent="31%" />
-        </androidx.percentlayout.widget.PercentRelativeLayout>
+                android:layout_below="@+id/inner2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center">
 
-        <androidx.percentlayout.widget.PercentRelativeLayout
-            android:id="@+id/inner2"
+                <CheckBox
+                    android:id="@+id/checkBox7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox7"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox9"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox8"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/inner3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/checkBox10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox11"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox10"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox11"
+                    android:button="@null"
+                    android:drawableTop="@drawable/default_station"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/brand"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    android:visibility="gone"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <TextView
+                android:id="@+id/textView48"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/inner4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin."
+                android:textAlignment="center"
+                android:textColor="#212121" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/buttonFilterDistributors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/inner1"
-            android:layout_centerHorizontal="true"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/checkBox4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/default_station"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="STATION"
-                android:textColor="#161616"
-                android:visibility="gone"
-                app:layout_marginPercent="1%"
-                app:layout_widthPercent="31%" />
-
-            <CheckBox
-                android:id="@+id/checkBox5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/checkBox4"
-                android:drawableTop="@drawable/default_station"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="STATION"
-                android:textColor="#161616"
-                android:visibility="gone"
-                app:layout_marginPercent="1%"
-                app:layout_widthPercent="31%" />
-
-            <CheckBox
-                android:id="@+id/checkBox6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/checkBox5"
-                android:drawableTop="@drawable/default_station"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="STATION"
-                android:textColor="#161616"
-                android:visibility="gone"
-                app:layout_marginPercent="1%"
-                app:layout_widthPercent="31%" />
-        </androidx.percentlayout.widget.PercentRelativeLayout>
-
-        <TextView
-            android:id="@+id/textView48"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/inner2"
+            android:layout_below="@id/checkBoxLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_bold"
-            android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin."
+            android:text="@string/apply"
             android:textAlignment="center"
-            android:textColor="#161616" />
+            android:textAllCaps="false"
+            android:textColor="#212121" />
 
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/buttonFilterDistributors"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="#FF6838"
-        android:text="@string/apply"
-        android:textColor="#f1f1f1" />
-</LinearLayout>
+</ScrollView>

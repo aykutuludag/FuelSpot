@@ -108,7 +108,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 public void onAdClosed() {
                     super.onAdClosed();
                     mContext.startActivity(intent);
-                    admobInterstitial = null;
                     AdMob(mContext);
                 }
 

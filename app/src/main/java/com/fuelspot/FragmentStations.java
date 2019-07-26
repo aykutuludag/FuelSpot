@@ -71,11 +71,17 @@ import java.util.Map;
 
 import static android.content.Context.ALARM_SERVICE;
 import static com.fuelspot.FragmentFilterDistributors.filterStation1;
+import static com.fuelspot.FragmentFilterDistributors.filterStation10;
+import static com.fuelspot.FragmentFilterDistributors.filterStation11;
+import static com.fuelspot.FragmentFilterDistributors.filterStation12;
 import static com.fuelspot.FragmentFilterDistributors.filterStation2;
 import static com.fuelspot.FragmentFilterDistributors.filterStation3;
 import static com.fuelspot.FragmentFilterDistributors.filterStation4;
 import static com.fuelspot.FragmentFilterDistributors.filterStation5;
 import static com.fuelspot.FragmentFilterDistributors.filterStation6;
+import static com.fuelspot.FragmentFilterDistributors.filterStation7;
+import static com.fuelspot.FragmentFilterDistributors.filterStation8;
+import static com.fuelspot.FragmentFilterDistributors.filterStation9;
 import static com.fuelspot.FragmentFilterDistributors.markalar;
 import static com.fuelspot.FragmentFilterFacilities.filterByATM;
 import static com.fuelspot.FragmentFilterFacilities.filterByCarWash;
@@ -108,10 +114,10 @@ import static com.fuelspot.MainActivity.userlon;
 
 public class FragmentStations extends Fragment {
 
-    int whichOrder;
-    boolean isMapUpdating;
-    NestedScrollView scrollView;
-    RelativeLayout stationLayout;
+    public View rootView;
+    private int whichOrder;
+    private boolean isMapUpdating;
+    private NestedScrollView scrollView;
     // Station variables
     private List<StationItem> shortStationList = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
@@ -125,7 +131,7 @@ public class FragmentStations extends Fragment {
     private LocationCallback mLocationCallback;
     private Location locLastKnown = new Location("");
     private Button seeAllStations;
-    private View rootView;
+    private RelativeLayout stationLayout;
     private RelativeLayout sortGasolineLayout;
     private RelativeLayout sortDieselLayout;
     private RelativeLayout sortLPGLayout;
@@ -787,7 +793,8 @@ public class FragmentStations extends Fragment {
 
     void filterStationsByDistributors() {
         // If there is no filter, just order by distance
-        if (!filterStation1 && !filterStation2 && !filterStation3 && !filterStation4 && !filterStation5 && !filterStation6) {
+        if (!filterStation1 && !filterStation2 && !filterStation3 && !filterStation4 && !filterStation5 && !filterStation6 && !filterStation7 && !filterStation8 && !filterStation9 && !filterStation10
+                && !filterStation11 && !filterStation12) {
             seeAllStations.setVisibility(View.VISIBLE);
             whichOrder = 4;
             sortBy(whichOrder);
@@ -827,6 +834,30 @@ public class FragmentStations extends Fragment {
 
         if (filterStation6) {
             dummySelectedBrand.add(markalar.get(5));
+        }
+
+        if (filterStation7) {
+            dummySelectedBrand.add(markalar.get(6));
+        }
+
+        if (filterStation8) {
+            dummySelectedBrand.add(markalar.get(7));
+        }
+
+        if (filterStation9) {
+            dummySelectedBrand.add(markalar.get(8));
+        }
+
+        if (filterStation10) {
+            dummySelectedBrand.add(markalar.get(9));
+        }
+
+        if (filterStation11) {
+            dummySelectedBrand.add(markalar.get(10));
+        }
+
+        if (filterStation12) {
+            dummySelectedBrand.add(markalar.get(11));
         }
 
         for (int i = 0; i < fullStationList.size(); i++) {
@@ -875,7 +906,6 @@ public class FragmentStations extends Fragment {
                 public void onAdClosed() {
                     super.onAdClosed();
                     startActivity(intent);
-                    admobInterstitial = null;
                     AdMob(getActivity());
                 }
 
@@ -955,6 +985,14 @@ public class FragmentStations extends Fragment {
 
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mMapView != null) {
+            mMapView.onStart();
         }
     }
 

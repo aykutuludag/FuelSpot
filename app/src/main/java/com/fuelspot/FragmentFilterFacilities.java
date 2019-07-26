@@ -12,11 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import static com.fuelspot.FragmentFilterDistributors.filterStation1;
+import static com.fuelspot.FragmentFilterDistributors.filterStation10;
+import static com.fuelspot.FragmentFilterDistributors.filterStation11;
+import static com.fuelspot.FragmentFilterDistributors.filterStation12;
 import static com.fuelspot.FragmentFilterDistributors.filterStation2;
 import static com.fuelspot.FragmentFilterDistributors.filterStation3;
 import static com.fuelspot.FragmentFilterDistributors.filterStation4;
 import static com.fuelspot.FragmentFilterDistributors.filterStation5;
 import static com.fuelspot.FragmentFilterDistributors.filterStation6;
+import static com.fuelspot.FragmentFilterDistributors.filterStation7;
+import static com.fuelspot.FragmentFilterDistributors.filterStation8;
+import static com.fuelspot.FragmentFilterDistributors.filterStation9;
 import static com.fuelspot.MainActivity.fragmentsUser;
 import static com.fuelspot.MainActivity.isSuperUser;
 
@@ -147,6 +153,12 @@ public class FragmentFilterFacilities extends Fragment {
                 filterStation4 = false;
                 filterStation5 = false;
                 filterStation6 = false;
+                filterStation7 = false;
+                filterStation8 = false;
+                filterStation9 = false;
+                filterStation10 = false;
+                filterStation11 = false;
+                filterStation12 = false;
 
                 fragmentStations.filterStationsByFacilities();
                 fragmentFilter.getDialog().dismiss();

@@ -493,7 +493,6 @@ public class PurchaseDetails extends AppCompatActivity {
                 public void onAdClosed() {
                     super.onAdClosed();
                     startActivity(intent);
-                    admobInterstitial = null;
                     AdMob(PurchaseDetails.this);
                 }
 

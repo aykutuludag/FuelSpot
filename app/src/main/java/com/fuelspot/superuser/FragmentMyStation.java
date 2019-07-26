@@ -459,7 +459,6 @@ public class FragmentMyStation extends Fragment {
                 public void onAdClosed() {
                     super.onAdClosed();
                     startActivity(intent);
-                    admobInterstitial = null;
                     AdMob(getActivity());
                 }
 

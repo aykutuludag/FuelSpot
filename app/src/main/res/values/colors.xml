@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#FF4500</color>
+    <color name="filterTabActive">#00E676</color>
+    <color name="filterTabPassive">#232323</color>
 </resources>

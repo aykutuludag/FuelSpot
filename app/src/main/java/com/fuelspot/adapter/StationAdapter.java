@@ -169,7 +169,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 public void onAdClosed() {
                     super.onAdClosed();
                     mContext.startActivity(intent);
-                    admobInterstitial = null;
                     AdMob(mContext);
                 }
 

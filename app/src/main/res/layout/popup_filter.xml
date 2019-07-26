@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="#F4F4F4"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_margin="16dp"
+    android:background="@drawable/round_layout_white"
+    android:gravity="center">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:tabBackground="@drawable/tab_selector"
+        app:tabIndicatorColor="#00E676"
+        app:tabSelectedTextColor="#000000"
+        app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:tabTextColor="#ffffff">
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/filter_tesis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tesisler" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/filter_marka"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Markalar" />
@@ -26,6 +33,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tabLayout" />
 
-</LinearLayout>
+</RelativeLayout>

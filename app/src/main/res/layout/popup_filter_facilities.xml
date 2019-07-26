@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/white_box"
@@ -7,259 +8,323 @@
     android:orientation="vertical"
     android:padding="4dp">
 
-    <TextView
-        android:id="@+id/textView47"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/gotham_bold"
-        android:text="İstasyondaki tesislere göre filtreleme yaparak aradığını çok daha kolay bulabilirsin!"
-        android:textAlignment="center"
-        android:textColor="#161616" />
-
     <RelativeLayout
-        android:id="@+id/checkBoxLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/inner1"
+            android:id="@+id/filter_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:gravity="center">
+            android:layout_gravity="center">
 
-            <CheckBox
-                android:id="@+id/checkBox2"
+            <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:drawableTop="@drawable/tesis_wc"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/wc"
-                android:textColor="#161616" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                app:srcCompat="@drawable/green_warning_icon" />
 
-            <CheckBox
-                android:id="@+id/checkBox3"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imageView"
+                android:layout_alignBottom="@id/imageView"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox2"
-                android:drawableTop="@drawable/tesis_market"
+                android:layout_marginEnd="8dp"
+                android:layout_toEndOf="@id/imageView"
+                android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/market"
-                android:textColor="#161616" />
-
-            <CheckBox
-                android:id="@+id/checkBox4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox3"
-                android:drawableTop="@drawable/tesis_carwash"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/carwash"
+                android:text="İstasyondaki tesislere göre filtreleme yaparak aradığını çok daha kolay bulabilirsin!"
+                android:textAlignment="center"
                 android:textColor="#161616" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/inner2"
-            android:layout_width="wrap_content"
+            android:id="@+id/checkBoxLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/inner1"
-            android:layout_centerHorizontal="true"
-            android:gravity="center">
+            android:layout_below="@id/filter_header">
 
-            <CheckBox
-                android:id="@+id/checkBox5"
-                android:layout_width="wrap_content"
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:drawableTop="@drawable/tesis_tirerepair"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/tire_store"
-                android:textColor="#161616" />
+                android:layout_marginBottom="4dp">
 
-            <CheckBox
-                android:id="@+id/checkBox6"
-                android:layout_width="wrap_content"
+                <CheckBox
+                    android:id="@+id/checkBox2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_wc"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/wc"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox2"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_market"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/market"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox3"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_carwash"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/carwash"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/inner1"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox5"
-                android:drawableTop="@drawable/tesis_mechanic"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/mechanic"
-                android:textColor="#161616" />
+                android:layout_marginBottom="4dp">
 
-            <CheckBox
-                android:id="@+id/checkBox7"
-                android:layout_width="wrap_content"
+                <CheckBox
+                    android:id="@+id/checkBox5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_tirerepair"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/tire_store"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox5"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_mechanic"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/mechanic"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox6"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_restaurant"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/restaurant"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/inner2"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox6"
-                android:drawableTop="@drawable/tesis_restaurant"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/restaurant"
+                android:layout_marginBottom="4dp">
+
+                <CheckBox
+                    android:id="@+id/checkBox8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_parkspot"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/parkspot"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox9"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox8"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_atm"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/atm"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox9"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_motel"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/motel"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/inner4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/inner3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp">
+
+                <CheckBox
+                    android:id="@+id/checkBox11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_kahveci"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/coffee_shop"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="1.5%"
+                    app:layout_marginRightPercent="1.5%"
+                    app:layout_widthPercent="30%" />
+
+                <CheckBox
+                    android:id="@+id/checkBox12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/checkBox11"
+                    android:button="@null"
+                    android:drawableTop="@drawable/tesis_cami"
+                    android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/mosque"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616"
+                    app:layout_marginLeftPercent="2%"
+                    app:layout_marginRightPercent="2%"
+                    app:layout_widthPercent="30%" />
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <TextView
+                android:id="@+id/textView48"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/inner4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin."
+                android:textAlignment="center"
                 android:textColor="#161616" />
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/inner3"
+        <Button
+            android:id="@+id/button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/inner2"
-            android:layout_centerHorizontal="true"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/checkBox8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:drawableTop="@drawable/tesis_parkspot"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/parkspot"
-                android:textColor="#161616" />
-
-            <CheckBox
-                android:id="@+id/checkBox9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox8"
-                android:drawableTop="@drawable/tesis_atm"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/atm"
-                android:textColor="#161616" />
-
-            <CheckBox
-                android:id="@+id/checkBox10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox9"
-                android:drawableTop="@drawable/tesis_motel"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/motel"
-                android:textColor="#161616" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/inner4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/inner3"
-            android:layout_centerHorizontal="true"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/checkBox11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:drawableTop="@drawable/tesis_kahveci"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/coffee_shop"
-                android:textColor="#161616" />
-
-            <CheckBox
-                android:id="@+id/checkBox12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/checkBox11"
-                android:drawableTop="@drawable/tesis_cami"
-                android:gravity="center"
-                android:padding="2dp"
-                android:singleLine="true"
-                android:text="@string/mosque"
-                android:textColor="#161616" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView48"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/inner4"
+            android:layout_below="@id/checkBoxLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_bold"
-            android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin."
+            android:text="@string/apply"
             android:textAlignment="center"
-            android:textColor="#161616" />
+            android:textAllCaps="false"
+            android:textColor="#212121" />
 
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="#FF6838"
-        android:text="@string/apply"
-        android:textColor="#f1f1f1" />
-</LinearLayout>
+</ScrollView>

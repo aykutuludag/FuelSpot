@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
     private RequestQueue queue;
-    static boolean hideStreetView;
+    public static boolean hideStreetView;
     private BillingClient billingClient;
 
     public static int getIndexOf(String[] strings, String item) {
@@ -804,10 +804,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             if (fragmentsUser.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
                     adCount = 0;
-                    mFragNavController.clearStack();
                     hideStreetView = false;
+                    FragmentStations fs = (FragmentStations) fragmentsUser.get(0);
+                    fs.rootView = null;
                     super.onBackPressed();
-                    finish();
+                    return;
                 }
 
                 this.doubleBackToExitPressedOnce = true;

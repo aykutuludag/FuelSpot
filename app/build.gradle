@@ -9,8 +9,8 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 77
-        versionName "1.2"
+        versionCode 78
+        versionName "1.2.1"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
     }
@@ -30,6 +30,10 @@ android {
 
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
+    aaptOptions {
+        noCompress "webm"
     }
 }
 
@@ -58,7 +62,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
     implementation 'com.google.firebase:firebase-appindexing:19.0.0'
-    implementation 'com.google.firebase:firebase-ads:18.1.0'
+    implementation 'com.google.firebase:firebase-ads:18.1.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     // FACEBOOK

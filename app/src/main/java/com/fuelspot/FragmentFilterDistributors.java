@@ -32,11 +32,12 @@ import static com.fuelspot.MainActivity.isSuperUser;
 
 public class FragmentFilterDistributors extends Fragment {
 
-    static boolean filterStation1, filterStation2, filterStation3, filterStation4, filterStation5, filterStation6;
+    static boolean filterStation1, filterStation2, filterStation3, filterStation4, filterStation5, filterStation6, filterStation7, filterStation8, filterStation9, filterStation10, filterStation11, filterStation12;
     static List<String> markalar = new ArrayList<>();
     private static List<Drawable> logolar = new ArrayList<>();
     private FragmentFilter fragmentFilter;
     private FragmentStations fragmentStations;
+    private List<CheckBox> checkBoxes = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class FragmentFilterDistributors extends Fragment {
 
         markalar.clear();
         logolar.clear();
+        checkBoxes.clear();
 
         fragmentFilter = (FragmentFilter) getActivity().getSupportFragmentManager().findFragmentByTag("FragmentFilter");
         if (isSuperUser) {
@@ -61,6 +63,7 @@ public class FragmentFilterDistributors extends Fragment {
             }
         });
 
+
         CheckBox checkBox2 = view.findViewById(R.id.checkBox2);
         checkBox2.setChecked(filterStation2);
         checkBox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -69,6 +72,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation2 = isChecked;
             }
         });
+
 
         CheckBox checkBox3 = view.findViewById(R.id.checkBox3);
         checkBox3.setChecked(filterStation3);
@@ -79,6 +83,7 @@ public class FragmentFilterDistributors extends Fragment {
             }
         });
 
+
         CheckBox checkBox4 = view.findViewById(R.id.checkBox4);
         checkBox4.setChecked(filterStation4);
         checkBox4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -87,6 +92,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation4 = isChecked;
             }
         });
+
 
         CheckBox checkBox5 = view.findViewById(R.id.checkBox5);
         checkBox5.setChecked(filterStation5);
@@ -97,6 +103,7 @@ public class FragmentFilterDistributors extends Fragment {
             }
         });
 
+
         CheckBox checkBox6 = view.findViewById(R.id.checkBox6);
         checkBox6.setChecked(filterStation6);
         checkBox6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -106,6 +113,75 @@ public class FragmentFilterDistributors extends Fragment {
             }
         });
 
+
+        CheckBox checkBox7 = view.findViewById(R.id.checkBox7);
+        checkBox7.setChecked(filterStation7);
+        checkBox7.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterStation7 = isChecked;
+            }
+        });
+
+
+        CheckBox checkBox8 = view.findViewById(R.id.checkBox8);
+        checkBox8.setChecked(filterStation8);
+        checkBox8.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterStation8 = isChecked;
+            }
+        });
+
+        CheckBox checkBox9 = view.findViewById(R.id.checkBox9);
+        checkBox9.setChecked(filterStation9);
+        checkBox9.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterStation9 = isChecked;
+            }
+        });
+
+        CheckBox checkBox10 = view.findViewById(R.id.checkBox10);
+        checkBox10.setChecked(filterStation10);
+        checkBox10.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterStation10 = isChecked;
+            }
+        });
+
+        CheckBox checkBox11 = view.findViewById(R.id.checkBox11);
+        checkBox11.setChecked(filterStation11);
+        checkBox11.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterStation11 = isChecked;
+            }
+        });
+
+        CheckBox checkBox12 = view.findViewById(R.id.checkBox12);
+        checkBox12.setChecked(filterStation12);
+        checkBox12.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterStation12 = isChecked;
+            }
+        });
+
+        checkBoxes.add(checkBox1);
+        checkBoxes.add(checkBox2);
+        checkBoxes.add(checkBox3);
+        checkBoxes.add(checkBox4);
+        checkBoxes.add(checkBox5);
+        checkBoxes.add(checkBox6);
+        checkBoxes.add(checkBox7);
+        checkBoxes.add(checkBox8);
+        checkBoxes.add(checkBox9);
+        checkBoxes.add(checkBox10);
+        checkBoxes.add(checkBox11);
+        checkBoxes.add(checkBox12);
+
         for (int i = 0; i < fullStationList.size(); i++) {
             if (!markalar.contains(fullStationList.get(i).getStationName())) {
                 markalar.add(fullStationList.get(i).getStationName());
@@ -113,117 +189,15 @@ public class FragmentFilterDistributors extends Fragment {
             }
         }
 
-        if (markalar.size() >= 6) {
-            checkBox1.setVisibility(View.VISIBLE);
-            checkBox1.setCompoundDrawables(null, logolar.get(0), null, null);
-            checkBox1.setText(markalar.get(0));
-
-            checkBox2.setVisibility(View.VISIBLE);
-            checkBox2.setCompoundDrawables(null, logolar.get(1), null, null);
-            checkBox2.setText(markalar.get(1));
-
-            checkBox3.setVisibility(View.VISIBLE);
-            checkBox3.setCompoundDrawables(null, logolar.get(2), null, null);
-            checkBox3.setText(markalar.get(2));
-
-            checkBox4.setVisibility(View.VISIBLE);
-            checkBox4.setCompoundDrawables(null, logolar.get(3), null, null);
-            checkBox4.setText(markalar.get(3));
-
-            checkBox5.setVisibility(View.VISIBLE);
-            checkBox5.setCompoundDrawables(null, logolar.get(4), null, null);
-            checkBox5.setText(markalar.get(4));
-
-            checkBox6.setVisibility(View.VISIBLE);
-            checkBox6.setCompoundDrawables(null, logolar.get(5), null, null);
-            checkBox6.setText(markalar.get(5));
-        } else if (markalar.size() == 5) {
-            checkBox1.setVisibility(View.VISIBLE);
-            checkBox1.setCompoundDrawables(null, logolar.get(0), null, null);
-            checkBox1.setText(markalar.get(0));
-
-            checkBox2.setVisibility(View.VISIBLE);
-            checkBox2.setCompoundDrawables(null, logolar.get(1), null, null);
-            checkBox2.setText(markalar.get(1));
-
-            checkBox3.setVisibility(View.VISIBLE);
-            checkBox3.setCompoundDrawables(null, logolar.get(2), null, null);
-            checkBox3.setText(markalar.get(2));
-
-            checkBox4.setVisibility(View.VISIBLE);
-            checkBox4.setCompoundDrawables(null, logolar.get(3), null, null);
-            checkBox4.setText(markalar.get(3));
-
-            checkBox5.setVisibility(View.VISIBLE);
-            checkBox5.setCompoundDrawables(null, logolar.get(4), null, null);
-            checkBox5.setText(markalar.get(4));
-
-            checkBox6.setVisibility(View.GONE);
-        } else if (markalar.size() == 4) {
-            checkBox1.setVisibility(View.VISIBLE);
-            checkBox1.setCompoundDrawables(null, logolar.get(0), null, null);
-            checkBox1.setText(markalar.get(0));
-
-            checkBox2.setVisibility(View.VISIBLE);
-            checkBox2.setCompoundDrawables(null, logolar.get(1), null, null);
-            checkBox2.setText(markalar.get(1));
-
-            checkBox3.setVisibility(View.VISIBLE);
-            checkBox3.setCompoundDrawables(null, logolar.get(2), null, null);
-            checkBox3.setText(markalar.get(2));
-
-            checkBox4.setVisibility(View.VISIBLE);
-            checkBox4.setCompoundDrawables(null, logolar.get(3), null, null);
-            checkBox4.setText(markalar.get(3));
-
-            checkBox5.setVisibility(View.GONE);
-            checkBox6.setVisibility(View.GONE);
-        } else if (markalar.size() == 3) {
-            checkBox1.setVisibility(View.VISIBLE);
-            checkBox1.setCompoundDrawables(null, logolar.get(0), null, null);
-            checkBox1.setText(markalar.get(0));
-
-            checkBox2.setVisibility(View.VISIBLE);
-            checkBox2.setCompoundDrawables(null, logolar.get(1), null, null);
-            checkBox2.setText(markalar.get(1));
-
-            checkBox3.setVisibility(View.VISIBLE);
-            checkBox3.setCompoundDrawables(null, logolar.get(2), null, null);
-            checkBox3.setText(markalar.get(2));
-
-            checkBox4.setVisibility(View.GONE);
-            checkBox5.setVisibility(View.GONE);
-            checkBox6.setVisibility(View.GONE);
-        } else if (markalar.size() == 2) {
-            checkBox1.setVisibility(View.VISIBLE);
-            checkBox1.setCompoundDrawables(null, logolar.get(0), null, null);
-            checkBox1.setText(markalar.get(0));
-
-            checkBox2.setVisibility(View.VISIBLE);
-            checkBox2.setCompoundDrawables(null, logolar.get(1), null, null);
-            checkBox2.setText(markalar.get(1));
-
-            checkBox3.setVisibility(View.GONE);
-            checkBox4.setVisibility(View.GONE);
-            checkBox5.setVisibility(View.GONE);
-            checkBox6.setVisibility(View.GONE);
-        } else if (markalar.size() == 1) {
-            checkBox1.setVisibility(View.VISIBLE);
-            checkBox1.setCompoundDrawables(null, logolar.get(0), null, null);
-            checkBox1.setText(markalar.get(0));
-
-            checkBox2.setVisibility(View.GONE);
-            checkBox3.setVisibility(View.GONE);
-            checkBox4.setVisibility(View.GONE);
-            checkBox5.setVisibility(View.GONE);
-            checkBox6.setVisibility(View.GONE);
-        } else {
-            checkBox1.setVisibility(View.GONE);
-            checkBox2.setVisibility(View.GONE);
-            checkBox3.setVisibility(View.GONE);
-            checkBox4.setVisibility(View.GONE);
-            checkBox5.setVisibility(View.GONE);
-            checkBox6.setVisibility(View.GONE);
+        for (int i = 0; i < checkBoxes.size(); i++) {
+            if (i < markalar.size()) {
+                checkBoxes.get(i).setVisibility(View.VISIBLE);
+                Drawable dummy = checkBoxes.get(i).getCompoundDrawables()[3];
+                checkBoxes.get(i).setCompoundDrawables(null, logolar.get(i), null, dummy);
+                checkBoxes.get(i).setText(markalar.get(i));
+            } else {
+                checkBoxes.get(i).setVisibility(View.GONE);
+            }
         }
 
         Button filterButton = view.findViewById(R.id.buttonFilterDistributors);

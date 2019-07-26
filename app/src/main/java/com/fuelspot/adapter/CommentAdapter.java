@@ -203,7 +203,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 public void onAdClosed() {
                     super.onAdClosed();
                     mContext.startActivity(intent);
-                    admobInterstitial = null;
                     AdMob(mContext);
                 }
 
