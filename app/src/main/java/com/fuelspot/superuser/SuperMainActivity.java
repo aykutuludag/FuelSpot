@@ -46,6 +46,7 @@ import com.fuelspot.FragmentStations;
 import com.fuelspot.LoginActivity;
 import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
+import com.fuelspot.SearchActivity;
 import com.fuelspot.StationDetails;
 import com.fuelspot.UserFavorites;
 import com.fuelspot.model.CampaignItem;
@@ -78,6 +79,7 @@ import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -96,7 +98,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, ownedOtherFuels, superGoogleID, superFacilities, superLastUpdate;
     public AHBottomNavigation bottomNavigation;
-    public MenuItem filterButton, favoriteButton;
+    public MenuItem filterButton, favoriteButton, searchButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private boolean doubleBackToExitPressedOnce;
     private RequestQueue queue;
@@ -233,11 +235,11 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         if (URL.contains("fuelspot.com.tr/news")) {
             Intent intent = new Intent(SuperMainActivity.this, NewsDetail.class);
             intent.putExtra("URL", URL);
-            startActivity(intent);
+            showAds(this, intent);
         } else if (URL.contains("fuelspot.com.tr/stations")) {
             Intent intent2 = new Intent(SuperMainActivity.this, StationDetails.class);
             intent2.putExtra("STATION_ID", Integer.parseInt(URL.replace("https://fuelspot.com.tr/stations/", "")));
-            startActivity(intent2);
+            showAds(this, intent2);
         } else if (URL.contains("fuelspot.com.tr/terms-and-conditions")) {
             CustomTabsIntent customTabsIntent = customTabBuilder.build();
             customTabsIntent.intent.setPackage("com.android.chrome");
@@ -621,6 +623,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         favoriteButton = menu.findItem(R.id.favorite_stations);
         favoriteButton.setVisible(false);
+
+        searchButton = menu.findItem(R.id.search_station);
+        searchButton.setVisible(false);
         return true;
     }
 
@@ -630,6 +635,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
             new FragmentFilter().show(getSupportFragmentManager(), "");
         } else if (item.getItemId() == R.id.favorite_stations) {
             Intent intent = new Intent(SuperMainActivity.this, UserFavorites.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.search_station) {
+            Intent intent = new Intent(SuperMainActivity.this, SearchActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -641,9 +649,11 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
             if (position == 2) {
                 filterButton.setVisible(true);
                 favoriteButton.setVisible(true);
+                searchButton.setVisible(true);
             } else {
                 filterButton.setVisible(false);
                 favoriteButton.setVisible(false);
+                searchButton.setVisible(false);
             }
         }
         mFragNavController.switchTab(position);

@@ -38,7 +38,6 @@ import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.receiver.AlarmReceiver;
 import com.fuelspot.superuser.SuperMainActivity;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -94,12 +93,9 @@ import static com.fuelspot.FragmentFilterFacilities.filterByParkSpot;
 import static com.fuelspot.FragmentFilterFacilities.filterByRestaurant;
 import static com.fuelspot.FragmentFilterFacilities.filterByTireStore;
 import static com.fuelspot.FragmentFilterFacilities.filterByWC;
-import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.AlarmBuilder;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
-import static com.fuelspot.MainActivity.adCount;
-import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.isLocationEnabled;
@@ -108,6 +104,7 @@ import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
+import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
@@ -174,10 +171,15 @@ public class FragmentStations extends Fragment {
             queue = Volley.newRequestQueue(getActivity());
             scrollView = rootView.findViewById(R.id.nestedScrollView);
 
+            mRecyclerView = rootView.findViewById(R.id.stationView);
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerView.removeAllViews();
+
             // Activate map
             mMapView = rootView.findViewById(R.id.map);
             mMapView.onCreate(savedInstanceState);
-
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
             locLastKnown.setLatitude(Double.parseDouble(userlat));
@@ -223,7 +225,10 @@ public class FragmentStations extends Fragment {
                                         float newDistance = locCurrent.distanceTo(locStation);
                                         fullStationList.get(i).setDistance((int) newDistance);
                                     }
-                                    mAdapter.notifyDataSetChanged();
+
+                                    if (mAdapter != null) {
+                                        mAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             } else {
                                 Toast.makeText(getActivity(), getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
@@ -276,12 +281,6 @@ public class FragmentStations extends Fragment {
                     sortBy(whichOrder);
                 }
             });
-
-            mRecyclerView = rootView.findViewById(R.id.stationView);
-            GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setNestedScrollingEnabled(false);
-            mRecyclerView.removeAllViews();
 
             seeAllStations = rootView.findViewById(R.id.button_seeAllStations);
             seeAllStations.setOnClickListener(new View.OnClickListener() {
@@ -383,6 +382,19 @@ public class FragmentStations extends Fragment {
             filterByMotel = false;
             filterByCoffeeShop = false;
             filterByMosque = false;
+
+            filterStation1 = false;
+            filterStation2 = false;
+            filterStation3 = false;
+            filterStation4 = false;
+            filterStation5 = false;
+            filterStation6 = false;
+            filterStation7 = false;
+            filterStation8 = false;
+            filterStation9 = false;
+            filterStation10 = false;
+            filterStation11 = false;
+            filterStation12 = false;
 
             isAllStationsListed = true;
             seeAllStations.setText(getString(R.string.see_all));
@@ -894,36 +906,7 @@ public class FragmentStations extends Fragment {
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
-        showAds(intent);
-    }
-
-    private void showAds(final Intent intent) {
-        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            admobInterstitial.show();
-            adCount++;
-            admobInterstitial.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    startActivity(intent);
-                    AdMob(getActivity());
-                }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    AdMob(getActivity());
-                }
-            });
-        } else {
-            // Ads doesn't loaded.
-            startActivity(intent);
-        }
-
-        if (adCount == 2) {
-            Toast.makeText(getActivity(), getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
-            adCount++;
-        }
+        showAds(getActivity(), intent);
     }
 
     private void cancelGeofenceAlarm() {

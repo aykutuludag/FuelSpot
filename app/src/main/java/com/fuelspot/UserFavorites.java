@@ -80,9 +80,9 @@ public class UserFavorites extends AppCompatActivity {
             if (premium) {
                 untilWhere = favStationss.length;
             } else {
-                if (favStationss.length >= 3) {
-                    untilWhere = 3;
-                    Toast.makeText(UserFavorites.this, getString(R.string.less_than_3_favs), Toast.LENGTH_SHORT).show();
+                if (favStationss.length >= 5) {
+                    untilWhere = 5;
+                    Toast.makeText(UserFavorites.this, getString(R.string.less_than_5_favs), Toast.LENGTH_SHORT).show();
                 } else {
                     untilWhere = favStationss.length;
                 }

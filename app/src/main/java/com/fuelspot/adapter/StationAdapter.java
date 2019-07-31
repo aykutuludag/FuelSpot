@@ -28,7 +28,6 @@ import com.fuelspot.R;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.ads.AdListener;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -37,11 +36,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.USTimeFormat;
-import static com.fuelspot.MainActivity.adCount;
-import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.showAds;
+import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
@@ -90,12 +88,30 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                     intent.putExtra("STATION_ICON", feedItemList.get(position).getPhotoURL());
                     intent.putExtra("IS_VERIFIED", feedItemList.get(position).getIsVerified());
                     intent.putExtra("STATION_FACILITIES", feedItemList.get(position).getFacilities());
-                    showAds(intent);
+                    showAds(mContext, intent);
                     break;
                 case "SUPERUSER_STATIONS":
                     changeSuperStation(feedItemList.get(position));
                     break;
             }
+        }
+    };
+
+    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            ViewHolder holder = (ViewHolder) v.getTag();
+            int position = holder.getAdapterPosition();
+            int stationID = feedItemList.get(position).getID();
+            if (userFavorites.contains(stationID + ";")) {
+                userFavorites = userFavorites.replace(stationID + ";", "");
+                Toast.makeText(mContext, mContext.getString(R.string.removed_from_favs), Toast.LENGTH_SHORT).show();
+            } else {
+                userFavorites += stationID + ";";
+                Toast.makeText(mContext, mContext.getString(R.string.added_to_favs), Toast.LENGTH_SHORT).show();
+            }
+            prefs.edit().putString("userFavorites", userFavorites).apply();
+            return false;
         }
     };
 
@@ -158,35 +174,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         notifyDataSetChanged();
         Toast.makeText(mContext, "İSTASYON SEÇİLDİ: " + superStationName, Toast.LENGTH_SHORT).show();
-    }
-
-    private void showAds(final Intent intent) {
-        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            admobInterstitial.show();
-            adCount++;
-            admobInterstitial.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    mContext.startActivity(intent);
-                    AdMob(mContext);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    AdMob(mContext);
-                }
-            });
-        } else {
-            // Ads doesn't loaded.
-            mContext.startActivity(intent);
-        }
-
-        if (adCount == 2) {
-            Toast.makeText(mContext, mContext.getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
-            adCount++;
-        }
     }
 
     @NonNull
@@ -270,10 +257,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             }
         }
 
-        // Handle click event on image click
-        viewHolder.background.setOnClickListener(clickListener);
-        viewHolder.background.setTag(viewHolder);
-
         if (whichScreen.equals("SUPERUSER_STATIONS")) {
             if (feedItem.getID() == superStationID) {
                 viewHolder.background.setBackgroundColor(Color.parseColor("#7CFC00"));
@@ -281,6 +264,11 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 viewHolder.background.setBackgroundColor(Color.parseColor("#ffffff"));
             }
         }
+
+        // Handle click event on image click
+        viewHolder.background.setOnClickListener(clickListener);
+        viewHolder.background.setOnLongClickListener(longClickListener);
+        viewHolder.background.setTag(viewHolder);
     }
 
     @Override

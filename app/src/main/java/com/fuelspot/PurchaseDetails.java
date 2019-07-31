@@ -46,7 +46,6 @@ import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.PurchaseItem;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -80,19 +79,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.fuelspot.FragmentAutomobile.dummyPurchaseList;
 import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
-import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
-import static com.fuelspot.MainActivity.adCount;
-import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.resizeAndRotate;
+import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userUnit;
 import static com.fuelspot.MainActivity.username;
@@ -481,36 +478,7 @@ public class PurchaseDetails extends AppCompatActivity {
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
-        showAds(intent);
-    }
-
-    private void showAds(final Intent intent) {
-        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            admobInterstitial.show();
-            adCount++;
-            admobInterstitial.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    startActivity(intent);
-                    AdMob(PurchaseDetails.this);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    AdMob(PurchaseDetails.this);
-                }
-            });
-        } else {
-            // Ads doesn't loaded.
-            startActivity(intent);
-        }
-
-        if (adCount == 2) {
-            Toast.makeText(PurchaseDetails.this, getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
-            adCount++;
-        }
+        showAds(PurchaseDetails.this, intent);
     }
 
     private void deletePurchase() {

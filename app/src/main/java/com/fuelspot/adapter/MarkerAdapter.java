@@ -32,8 +32,10 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
             TextView priceTwo = view.findViewById(R.id.priceDiesel);
             TextView priceThree = view.findViewById(R.id.priceLPG);
             TextView distanceText = view.findViewById(R.id.textDistance);
+            TextView stationIDText = view.findViewById(R.id.textViewStationID);
 
             sName.setText(infoWindowData.getStationName());
+            stationIDText.setText(String.valueOf(infoWindowData.getID()));
 
             if (infoWindowData.getStationLogoDrawable() != null) {
                 sLogo.setImageDrawable(infoWindowData.getStationLogoDrawable());

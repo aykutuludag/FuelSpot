@@ -323,7 +323,7 @@
 
     <!-- UserFavorites-->
     <string name="no_favorite_station">You didn\'t add any station to favorites…</string>
-    <string name="less_than_3_favs">If you want to follow more than 3 stations, start premium membership…</string>
+    <string name="less_than_5_favs">If you want to follow more than 5 stations, start premium membership…</string>
     <!-- UserFavorites-->
 
     <!-- UserStore-->
@@ -442,5 +442,6 @@
     <string name="title_activity_report_missing_station">Missing station</string>
     <string name="purchasing">Purchasing</string>
     <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargolanacaktır.</string>
+    <string name="search">Search</string>
     <!-- AddStation-->
 </resources>

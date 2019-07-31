@@ -3,15 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/favorite_stations"
-        android:icon="@drawable/ic_fav"
-        android:title="@string/favorites"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/filter_stations"
         android:icon="@drawable/icon_filter"
         android:title="@string/menu_filter"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/favorite_stations"
+        android:icon="@drawable/ic_fav"
+        android:title="@string/favorites"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/search_station"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="ifRoom" />
 
 </menu>

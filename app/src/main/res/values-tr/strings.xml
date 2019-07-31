@@ -239,7 +239,7 @@
 
     <!-- UserFavorites-->
     <string name="no_favorite_station">Favorilerinize hiç istasyon eklememişsiniz…</string>
-    <string name="less_than_3_favs">3\'ten fazla istasyonu aynı anda takip edebilmek için premium sürüme geç!</string>
+    <string name="less_than_5_favs">5\'ten fazla istasyonu aynı anda takip edebilmek için premium sürüme geç!</string>
     <!-- UserFavorites-->
 
     <!-- UserStore-->
@@ -358,5 +358,6 @@
     <string name="title_activity_report_missing_station">Eksik istasyon</string>
     <string name="purchasing">Satın alınıyor</string>
     <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargoya verilecektir. Ortalama teslim süresi 2–3 iş günüdür.</string>
+    <string name="search">Ara</string>
     <!-- AddStation-->
 </resources>

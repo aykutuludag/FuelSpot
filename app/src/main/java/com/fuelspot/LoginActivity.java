@@ -276,7 +276,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             //Check user is regular or superUser
             if (isSuperUser) {
-                if (isNetworkConnected(LoginActivity.this) && !premium) {
+                if (!premium) {
                     AdMob(LoginActivity.this);
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -299,7 +299,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             } else {
                 final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 // Check user has premium and connected to internet
-                if (isNetworkConnected(LoginActivity.this) && !premium) {
+                if (!premium) {
                     AdMob(LoginActivity.this);
                     handler.postDelayed(new Runnable() {
                         @Override

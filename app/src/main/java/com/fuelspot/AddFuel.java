@@ -1,7 +1,9 @@
 package com.fuelspot;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,7 +13,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -60,6 +61,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.TAX_DIESEL;
@@ -80,7 +82,9 @@ import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.resizeAndRotate;
+import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userCountry;
@@ -137,21 +141,26 @@ public class AddFuel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
 
+        //Window
+        window = this.getWindow();
+
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setLogo(R.drawable.brand_logo);
         }
 
-        //Window
-        window = this.getWindow();
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
+
+        if (!premium) {
+            AdMob(this);
+        }
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
@@ -173,6 +182,11 @@ public class AddFuel extends AppCompatActivity {
         stationFetching.show();
 
         chosenStationID = getIntent().getIntExtra("STATION_ID", 0);
+        if (chosenStationID == 0) {
+            Intent intent = new Intent(AddFuel.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         scrollView = findViewById(R.id.addfuel_layout1);
 
@@ -600,7 +614,8 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateVehicleLayout() {
-        enterKilometer.setText(String.valueOf(kilometer));
+        tempKM = kilometer;
+        enterKilometer.setText(String.valueOf(tempKM));
         enterKilometer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -641,7 +656,53 @@ public class AddFuel extends AppCompatActivity {
                                 Toast.makeText(AddFuel.this, getString(R.string.fuel_add_success), Toast.LENGTH_LONG).show();
                                 kilometer = tempKM;
                                 prefs.edit().putInt("Kilometer", kilometer).apply();
-                                finish();
+
+                                showAds(AddFuel.this, null);
+
+                                AlertDialog alertDialog = new AlertDialog.Builder(AddFuel.this).create();
+                                alertDialog.setTitle("Yakıt eklendi");
+                                alertDialog.setMessage("Satınalmanız başarıyla eklendi. Fiş fotoğrafı eklediyseniz veya 24 saat içerisinde eklerseniz bonus için değerlendirmeye alınacaktır. Şimdi ne yapmak istersiniz?");
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Satınalmaları görüntüle",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                bitmap = null;
+                                                stationName = null;
+                                                chosenStationID = 0;
+                                                tempKM = 0;
+                                                stationLoc = null;
+                                                stationLogo = null;
+                                                gasolinePrice = 0;
+                                                dieselPrice = 0;
+                                                electricityPrice = 0;
+                                                LPGPrice = 0;
+
+                                                Intent intent = new Intent(AddFuel.this, LoginActivity.class);
+                                                startActivity(intent);
+
+                                                dialog.dismiss();
+                                                finish();
+                                            }
+                                        });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Çıkış",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                bitmap = null;
+                                                stationName = null;
+                                                chosenStationID = 0;
+                                                tempKM = 0;
+                                                stationLoc = null;
+                                                stationLogo = null;
+                                                gasolinePrice = 0;
+                                                dieselPrice = 0;
+                                                electricityPrice = 0;
+                                                LPGPrice = 0;
+
+                                                dialog.dismiss();
+                                                finish();
+                                            }
+                                        });
+                                alertDialog.setCancelable(false);
+                                alertDialog.show();
                             } else {
                                 Toast.makeText(AddFuel.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
@@ -686,11 +747,19 @@ public class AddFuel extends AppCompatActivity {
                 params.put("fuelLiter", String.valueOf(buyedLiter));
                 params.put("fuelTax", String.valueOf(selectedTaxRate));
                 params.put("subTotal", String.valueOf(entryPrice));
-                params.put("fuelType2", String.valueOf(fuelSec));
-                params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
-                params.put("fuelLiter2", String.valueOf(buyedLiter2));
-                params.put("fuelTax2", String.valueOf(selectedTaxRate2));
-                params.put("subTotal2", String.valueOf(entryPrice2));
+                if (entryPrice2 > 0) {
+                    params.put("fuelType2", String.valueOf(fuelSec));
+                    params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));
+                    params.put("fuelLiter2", String.valueOf(buyedLiter2));
+                    params.put("fuelTax2", String.valueOf(selectedTaxRate2));
+                    params.put("subTotal2", String.valueOf(entryPrice2));
+                } else {
+                    params.put("fuelType2", String.valueOf(-1));
+                    params.put("fuelPrice2", String.valueOf(0));
+                    params.put("fuelLiter2", String.valueOf(0));
+                    params.put("fuelTax2", String.valueOf(0));
+                    params.put("subTotal2", String.valueOf(0));
+                }
                 params.put("totalPrice", String.valueOf(totalPrice));
                 params.put("country", userCountry);
                 params.put("unit", String.valueOf(userUnit));
@@ -730,22 +799,6 @@ public class AddFuel extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {//Remove variables
-            bitmap = null;
-            stationName = null;
-            stationLoc = null;
-            gasolinePrice = 0;
-            dieselPrice = 0;
-            electricityPrice = 0;
-            LPGPrice = 0;
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -801,6 +854,7 @@ public class AddFuel extends AppCompatActivity {
         super.onBackPressed();
         //Remove variables
         bitmap = null;
+        chosenStationID = 0;
         stationName = null;
         tempKM = 0;
         stationLoc = null;

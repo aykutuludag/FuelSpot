@@ -467,7 +467,7 @@ public class StationDetails extends AppCompatActivity {
         if (premium) {
             mAdView.setVisibility(View.GONE);
         } else {
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
+            AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
     }

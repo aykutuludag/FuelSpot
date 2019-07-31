@@ -53,6 +53,7 @@ import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.model.VehicleItem;
 import com.fuelspot.receiver.AlarmReceiver;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.maps.MapsInitializer;
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int adCount;
     public static InterstitialAd admobInterstitial;
     public AHBottomNavigation bottomNavigation;
-    public MenuItem filterButton, favoriteButton;
+    public MenuItem filterButton, favoriteButton, searchButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     public static List<Fragment> fragmentsUser = new ArrayList<>(5);
     private SharedPreferences prefs;
@@ -258,6 +259,40 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
+    public static void showAds(final Context mContext, final Intent intent) {
+        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
+            admobInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    if (intent != null) {
+                        mContext.startActivity(intent);
+                    }
+                    AdMob(mContext);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    AdMob(mContext);
+                }
+            });
+
+            admobInterstitial.show();
+            adCount++;
+        } else {
+            // Ads doesn't loaded.
+            if (intent != null) {
+                mContext.startActivity(intent);
+            }
+        }
+
+        if (adCount == 2) {
+            Toast.makeText(mContext, mContext.getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
+            adCount++;
+        }
+    }
+
     public static void AlarmBuilder(Context mContext) {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
@@ -383,11 +418,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (URL.contains("fuelspot.com.tr/news")) {
             Intent intent = new Intent(MainActivity.this, NewsDetail.class);
             intent.putExtra("URL", URL);
-            startActivity(intent);
+            showAds(MainActivity.this, intent);
         } else if (URL.contains("fuelspot.com.tr/stations")) {
             Intent intent2 = new Intent(MainActivity.this, StationDetails.class);
             intent2.putExtra("STATION_ID", Integer.parseInt(URL.replace("https://fuelspot.com.tr/stations/", "")));
-            startActivity(intent2);
+            showAds(MainActivity.this, intent2);
         } else if (URL.contains("fuelspot.com.tr/terms-and-conditions")) {
             CustomTabsIntent customTabsIntent = customTabBuilder.build();
             customTabsIntent.intent.setPackage("com.android.chrome");
@@ -408,11 +443,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void InAppBilling() {
-        billingClient = BillingClient.newBuilder(this).setListener(this).enablePendingPurchases().build();
+        billingClient = BillingClient.newBuilder(MainActivity.this).setListener(MainActivity.this).enablePendingPurchases().build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                if ((billingResult != null && billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) && billingClient.isReady()) {
+                    billingClient.isReady();
                     getSkus();
                 } else {
                     billingClient = null;
@@ -775,6 +811,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         getMenuInflater().inflate(R.menu.menu_stations, menu);
         filterButton = menu.findItem(R.id.filter_stations);
         favoriteButton = menu.findItem(R.id.favorite_stations);
+        searchButton = menu.findItem(R.id.search_station);
         return true;
     }
 
@@ -784,6 +821,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             new FragmentFilter().show(getSupportFragmentManager(), "FragmentFilter");
         } else if (item.getItemId() == R.id.favorite_stations) {
             Intent intent = new Intent(MainActivity.this, UserFavorites.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.search_station) {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -859,9 +899,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             if (position == 0) {
                 filterButton.setVisible(true);
                 favoriteButton.setVisible(true);
+                searchButton.setVisible(true);
             } else {
                 filterButton.setVisible(false);
                 favoriteButton.setVisible(false);
+                searchButton.setVisible(false);
             }
         }
         mFragNavController.switchTab(position);

@@ -44,7 +44,6 @@ import com.fuelspot.StationDetails;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -69,15 +68,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.USTimeFormat;
-import static com.fuelspot.MainActivity.adCount;
-import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
+import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
@@ -447,36 +444,7 @@ public class FragmentMyStation extends Fragment {
         intent.putExtra("STATION_ICON", feedItemList.getPhotoURL());
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
-        showAds(intent);
-    }
-
-    private void showAds(final Intent intent) {
-        if (admobInterstitial != null && admobInterstitial.isLoaded()) {
-            admobInterstitial.show();
-            adCount++;
-            admobInterstitial.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    startActivity(intent);
-                    AdMob(getActivity());
-                }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    AdMob(getActivity());
-                }
-            });
-        } else {
-            // Ads doesn't loaded.
-            startActivity(intent);
-        }
-
-        if (adCount == 2) {
-            Toast.makeText(getActivity(), getString(R.string.last_ads_info), Toast.LENGTH_SHORT).show();
-            adCount++;
-        }
+        showAds(getActivity(), intent);
     }
 
     @Override
