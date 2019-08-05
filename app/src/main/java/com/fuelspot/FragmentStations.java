@@ -192,49 +192,51 @@ public class FragmentStations extends Fragment {
             mLocationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
-                    synchronized (this) {
-                        super.onLocationResult(locationResult);
-                        Location locCurrent = locationResult.getLastLocation();
-                        if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
-                                userlat = String.valueOf(locCurrent.getLatitude());
-                                userlon = String.valueOf(locCurrent.getLongitude());
-                                prefs.edit().putString("lat", userlat).apply();
-                                prefs.edit().putString("lon", userlon).apply();
+                    if (getActivity() != null) {
+                        synchronized (getActivity()) {
+                            super.onLocationResult(locationResult);
+                            Location locCurrent = locationResult.getLastLocation();
+                            if (locCurrent != null) {
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
+                                    userlat = String.valueOf(locCurrent.getLatitude());
+                                    userlon = String.valueOf(locCurrent.getLongitude());
+                                    prefs.edit().putString("lat", userlat).apply();
+                                    prefs.edit().putString("lon", userlon).apply();
 
-                                float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+                                    float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
-                                    // User's position has been changed. Load the new map
-                                    locLastKnown.setLatitude(Double.parseDouble(userlat));
-                                    locLastKnown.setLongitude(Double.parseDouble(userlon));
-                                    if (!isMapUpdating) {
-                                        updateMap();
+                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
+                                        // User's position has been changed. Load the new map
+                                        locLastKnown.setLatitude(Double.parseDouble(userlat));
+                                        locLastKnown.setLongitude(Double.parseDouble(userlon));
+                                        if (!isMapUpdating) {
+                                            updateMap();
+                                        }
+                                    } else {
+                                        // User position changed a little. Just update distances
+                                        for (int i = 0; i < fullStationList.size(); i++) {
+                                            String[] stationLocation = fullStationList.get(i).getLocation().split(";");
+                                            double stationLat = Double.parseDouble(stationLocation[0]);
+                                            double stationLon = Double.parseDouble(stationLocation[1]);
+
+                                            Location locStation = new Location("");
+                                            locStation.setLatitude(stationLat);
+                                            locStation.setLongitude(stationLon);
+
+                                            float newDistance = locCurrent.distanceTo(locStation);
+                                            fullStationList.get(i).setDistance((int) newDistance);
+                                        }
+
+                                        if (mAdapter != null) {
+                                            mAdapter.notifyDataSetChanged();
+                                        }
                                     }
                                 } else {
-                                    // User position changed a little. Just update distances
-                                    for (int i = 0; i < fullStationList.size(); i++) {
-                                        String[] stationLocation = fullStationList.get(i).getLocation().split(";");
-                                        double stationLat = Double.parseDouble(stationLocation[0]);
-                                        double stationLon = Double.parseDouble(stationLocation[1]);
-
-                                        Location locStation = new Location("");
-                                        locStation.setLatitude(stationLat);
-                                        locStation.setLongitude(stationLon);
-
-                                        float newDistance = locCurrent.distanceTo(locStation);
-                                        fullStationList.get(i).setDistance((int) newDistance);
-                                    }
-
-                                    if (mAdapter != null) {
-                                        mAdapter.notifyDataSetChanged();
-                                    }
+                                    Toast.makeText(getActivity(), getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(getActivity(), getString(R.string.location_fetching), Toast.LENGTH_SHORT).show();
+                                Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                             }
-                        } else {
-                            Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.error_no_location), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }

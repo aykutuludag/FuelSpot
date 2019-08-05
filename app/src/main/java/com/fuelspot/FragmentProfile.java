@@ -80,7 +80,7 @@ public class FragmentProfile extends Fragment {
     private Button buttonSeeAllComments;
     private TextView textViewFMoney;
     private RequestQueue requestQueue;
-    private View rootView;
+    public View rootView;
     private SwipeRefreshLayout swipeContainer;
 
     public static FragmentProfile newInstance() {

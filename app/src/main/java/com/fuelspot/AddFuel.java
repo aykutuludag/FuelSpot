@@ -742,11 +742,19 @@ public class AddFuel extends AppCompatActivity {
                 params.put("stationNAME", stationName);
                 params.put("stationLOC", stationLoc);
                 params.put("stationICON", stationLogo);
-                params.put("fuelType", String.valueOf(fuelPri));
-                params.put("fuelPrice", String.valueOf(selectedUnitPrice));
-                params.put("fuelLiter", String.valueOf(buyedLiter));
-                params.put("fuelTax", String.valueOf(selectedTaxRate));
-                params.put("subTotal", String.valueOf(entryPrice));
+                if (entryPrice > 0) {
+                    params.put("fuelType", String.valueOf(fuelPri));
+                    params.put("fuelPrice", String.valueOf(selectedUnitPrice));
+                    params.put("fuelLiter", String.valueOf(buyedLiter));
+                    params.put("fuelTax", String.valueOf(selectedTaxRate));
+                    params.put("subTotal", String.valueOf(entryPrice));
+                } else {
+                    params.put("fuelType", String.valueOf(-1));
+                    params.put("fuelPrice", String.valueOf(0));
+                    params.put("fuelLiter", String.valueOf(0));
+                    params.put("fuelTax", String.valueOf(0));
+                    params.put("subTotal", String.valueOf(0));
+                }
                 if (entryPrice2 > 0) {
                     params.put("fuelType2", String.valueOf(fuelSec));
                     params.put("fuelPrice2", String.valueOf(selectedUnitPrice2));

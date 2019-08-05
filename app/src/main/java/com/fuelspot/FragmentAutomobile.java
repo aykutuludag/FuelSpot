@@ -86,7 +86,7 @@ public class FragmentAutomobile extends Fragment {
     private RelativeLayout userNoPurchaseLayout;
     private RequestQueue requestQueue;
     private Button buttonSeeAllPurchases;
-    private View view;
+    public View view;
     private RelativeLayout regularLayout;
     private RelativeLayout noAracLayout;
     private SwipeRefreshLayout swipeContainer;

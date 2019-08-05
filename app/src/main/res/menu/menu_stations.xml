@@ -6,13 +6,7 @@
         android:id="@+id/filter_stations"
         android:icon="@drawable/icon_filter"
         android:title="@string/menu_filter"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/favorite_stations"
-        android:icon="@drawable/ic_fav"
-        android:title="@string/favorites"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/search_station"
@@ -20,4 +14,9 @@
         android:title="@string/search"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/favorite_stations"
+        android:icon="@drawable/ic_fav"
+        android:title="@string/favorites"
+        app:showAsAction="ifRoom" />
 </menu>

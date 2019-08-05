@@ -38,7 +38,7 @@ import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 public class FragmentSuperProfile extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private View rootView;
+    public View rootView;
     private SwipeRefreshLayout swipeContainer;
     RecyclerView.Adapter mAdapter;
 

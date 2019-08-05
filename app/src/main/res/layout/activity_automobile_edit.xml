@@ -306,7 +306,7 @@
                     android:layout_marginRight="16dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:inputType="numberSigned|numberDecimal"
+                    android:inputType="number"
                     android:shadowColor="#3A3A3A"
                     android:textColor="#3A3A3A" />
 

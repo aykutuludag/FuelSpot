@@ -100,7 +100,7 @@ public class FragmentSettings extends Fragment {
     private RequestOptions options;
     //Creating a Request Queue
     private RequestQueue requestQueue;
-    private View rootView;
+    public View rootView;
     private CheckBox geofenceCheckBox;
 
     public static FragmentSettings newInstance() {

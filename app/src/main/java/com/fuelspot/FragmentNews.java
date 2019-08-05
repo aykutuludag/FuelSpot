@@ -81,7 +81,7 @@ public class FragmentNews extends Fragment {
     private GridLayoutManager mLayoutManager;
     static List<NewsItem> newsFeed = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
-    private View rootView;
+    public View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
     private SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
@@ -418,7 +418,7 @@ public class FragmentNews extends Fragment {
             for (int i = 0; i < companyList.size(); i++) {
                 totalStation += companyList.get(i).getNumOfStations();
 
-                if (companyList.get(i).getNumOfStations() >= 350) {
+                if (companyList.get(i).getNumOfStations() >= 450) {
                     entries.add(new PieEntry((float) companyList.get(i).getNumOfStations(), companyList.get(i).getName()));
                 } else {
                     otherStations += companyList.get(i).getNumOfStations();

@@ -73,7 +73,6 @@ import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.hasDoubleRange;
-import static com.fuelspot.MainActivity.hideStreetView;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.mapDefaultRange;
@@ -666,11 +665,25 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         if (fragmentsSuperUser.get(0) != null) {
             if (fragmentsSuperUser.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
                     adCount = 0;
-                    hideStreetView = false;
+
+                    FragmentMyStation fMy = (FragmentMyStation) fragmentsSuperUser.get(0);
+                    fMy.rootView = null;
+
+                    FragmentNews fn = (FragmentNews) fragmentsSuperUser.get(1);
+                    fn.rootView = null;
+
                     FragmentStations fs = (FragmentStations) fragmentsSuperUser.get(2);
                     fs.rootView = null;
-                    super.onBackPressed();
+
+                    FragmentSuperProfile fp = (FragmentSuperProfile) fragmentsSuperUser.get(3);
+                    fp.rootView = null;
+
+                    FragmentSettings fsettings = (FragmentSettings) fragmentsSuperUser.get(4);
+                    fsettings.rootView = null;
+
+                    finish();
                     return;
                 }
 

@@ -247,7 +247,12 @@ public class PurchaseDetails extends AppCompatActivity {
             }
         });
 
-        if (isPurchaseVerified == 1) {
+        if (isPurchaseVerified == -1) {
+            // SATINALMA REDDEDİLDİ. DETAYLAR İÇİN GELEN KUTUSUNA BAKINIZ.
+            circleImageViewStatus.setBackgroundResource(R.drawable.cancel);
+            textViewStatus.setText("Satınalma onaylanmadı. Detaylar için gelen kutusuna bakınız.");
+            addBillPhotoButton.setVisibility(View.GONE);
+        } else if (isPurchaseVerified == 1) {
             circleImageViewStatus.setBackgroundResource(R.drawable.verified);
             textViewStatus.setText("Satınalma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
             fab.hide();
@@ -261,7 +266,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 if (remainingHour > 0 || remainingMin > 0) {
                     textViewStatus.setText("Fiş/Fatura fotoğrafı ekle, " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazan! Fotoğraf eklemek için son " + remainingHour + " saat " + remainingMin + " dakika!");
                 } else {
-                    textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda değişiklik yapılamaz...");
+                    textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
                 }
             }
         }

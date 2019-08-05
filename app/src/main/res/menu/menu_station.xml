@@ -12,12 +12,12 @@
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share"
         android:title="@string/menu_share"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_go"
         android:icon="@drawable/ic_go"
         android:title="@string/menu_go"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

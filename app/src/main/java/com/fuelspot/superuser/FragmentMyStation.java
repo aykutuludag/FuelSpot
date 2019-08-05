@@ -117,7 +117,7 @@ public class FragmentMyStation extends Fragment {
     private Location locLastKnown = new Location("");
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
-    private View rootView;
+    public View rootView;
     private GoogleMap googleMap;
     private SwipeRefreshLayout swipeContainer;
 

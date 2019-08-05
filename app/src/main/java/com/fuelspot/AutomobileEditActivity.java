@@ -284,7 +284,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() >= 1) {
+                if (s != null && s.length() >= 1) {
                     MainActivity.kilometer = Integer.parseInt(s.toString());
                     editor.putInt("Kilometer", MainActivity.kilometer);
                 }

@@ -107,9 +107,9 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.doesStreetViewShown;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.globalCampaignList;
-import static com.fuelspot.MainActivity.hideStreetView;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
@@ -485,7 +485,8 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
                         if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
-                            hideStreetView = true;
+                            doesStreetViewShown = true;
+                            prefs.edit().putBoolean("StreetViewShown", doesStreetViewShown).apply();
                             streetViewCountForPremium++;
                         } else {
                             Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
@@ -877,7 +878,7 @@ public class StationDetails extends AppCompatActivity {
                 mStreetViewPanoramaView.setVisibility(View.GONE);
             }
         } else {
-            if (!hideStreetView) {
+            if (!doesStreetViewShown) {
                 loadStreetView();
             } else {
                 buyPremiumLayout.setVisibility(View.VISIBLE);
@@ -1538,7 +1539,7 @@ public class StationDetails extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.menu_fav:
-                if (userFavorites.contains(choosenStationID + ";")) {
+                if (userFavorites != null && userFavorites.contains(choosenStationID + ";")) {
                     userFavorites = userFavorites.replace(choosenStationID + ";", "");
                     settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav_orange));
                     Toast.makeText(StationDetails.this, getString(R.string.removed_from_favs), Toast.LENGTH_SHORT).show();

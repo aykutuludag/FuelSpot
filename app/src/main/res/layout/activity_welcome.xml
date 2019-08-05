@@ -438,11 +438,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_km"
                     android:layout_marginLeft="16dp"
+                    android:inputType="number"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:inputType="numberSigned|numberDecimal"
                     android:shadowColor="#3A3A3A"
                     android:textColor="#3A3A3A" />
 

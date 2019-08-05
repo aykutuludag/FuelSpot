@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
     private RequestQueue queue;
-    public static boolean hideStreetView;
+    public static boolean doesStreetViewShown;
     private BillingClient billingClient;
 
     public static int getIndexOf(String[] strings, String item) {
@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         currencySymbol = prefs.getString("userCurrencySymbol", "");
         userFavorites = prefs.getString("userFavorites", "");
         token = prefs.getString("token", "");
+        doesStreetViewShown = prefs.getBoolean("StreetViewShown", false);
     }
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
@@ -450,14 +451,12 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 if ((billingResult != null && billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) && billingClient.isReady()) {
                     billingClient.isReady();
                     getSkus();
-                } else {
-                    billingClient = null;
                 }
             }
 
             @Override
             public void onBillingServiceDisconnected() {
-                billingClient = null;
+                // DO NOTHING
             }
         });
     }
@@ -504,7 +503,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             ArrayList<String> ownedSkus = new ArrayList<>();
             for (int i = 0; i < billingResult.getPurchasesList().size(); i++) {
                 ownedSkus.add(billingResult.getPurchasesList().get(i).getSku());
-                System.out.println(billingResult.getPurchasesList().get(i));
             }
 
             if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
@@ -843,11 +841,25 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         if (fragmentsUser.get(0) != null) {
             if (fragmentsUser.get(0).isVisible()) {
                 if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
                     adCount = 0;
-                    hideStreetView = false;
+
                     FragmentStations fs = (FragmentStations) fragmentsUser.get(0);
                     fs.rootView = null;
-                    super.onBackPressed();
+
+                    FragmentNews fn = (FragmentNews) fragmentsUser.get(1);
+                    fn.rootView = null;
+
+                    FragmentAutomobile fa = (FragmentAutomobile) fragmentsUser.get(2);
+                    fa.view = null;
+
+                    FragmentProfile fp = (FragmentProfile) fragmentsUser.get(3);
+                    fp.rootView = null;
+
+                    FragmentSettings fsettings = (FragmentSettings) fragmentsUser.get(4);
+                    fsettings.rootView = null;
+
+                    finish();
                     return;
                 }
 
