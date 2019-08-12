@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.token;
@@ -228,9 +229,10 @@ public class StationComments extends AppCompatActivity {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setFocusable(true);
+
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void updateComment() {

@@ -112,10 +112,11 @@
     <string name="enroll_beta">Beta testine katıl</string>
     <string name="report_missing_station">Eksik istasyon bildir</string>
     <string name="feedback">Geri-bildirim</string>
-    <string name="rate_app">FuelSpot\'ı puanla!</string>
+    <string name="rate_app">Puanla!</string>
     <string name="terms_and_agreements">Şartlar &amp; Koşullar</string>
     <string name="fuel_dist_comp">Akaryakıt dağıtım şirketleri</string>
     <string name="add_message">Lütfen mesajınızı giriniz…</string>
+    <string name="sending_message">Mesajınız gönderiliyor</string>
     <string name="send_feedback">Geri-bildirim gönder</string>
     <string name="feedback_sending">Geri-bildirim gönderiliyor</string>
     <string name="thanks_for_feedback">Geri bildiriminiz için teşekkür ederiz!</string>
@@ -359,5 +360,6 @@
     <string name="purchasing">Satın alınıyor</string>
     <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargoya verilecektir. Ortalama teslim süresi 2–3 iş günüdür.</string>
     <string name="search">Ara</string>
+    <string name="inbox">Gelen kutusu</string>
     <!-- AddStation-->
 </resources>

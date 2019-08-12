@@ -40,7 +40,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout_white">
+                android:background="@drawable/white_box3">
 
                 <TextView
                     android:id="@+id/title_baseInfo"
@@ -161,7 +161,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout_white"
+                android:background="@drawable/white_box3"
                 android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -201,7 +201,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout_white"
+                android:background="@drawable/white_box3"
                 android:gravity="center">
 
                 <TextView
@@ -410,7 +410,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout_white">
+                android:background="@drawable/white_box3">
 
                 <TextView
                     android:id="@+id/title_facilities"

@@ -1,12 +1,18 @@
 package com.fuelspot.superuser;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -16,8 +22,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.android.volley.Request;
@@ -26,20 +35,32 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.adapter.CompanyAdapter;
+import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -50,12 +71,16 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
+import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.companyList;
+import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
+import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
 
 public class AddStation extends AppCompatActivity {
@@ -77,6 +102,7 @@ public class AddStation extends AppCompatActivity {
     private String stationCoordinates;
     private String stationCountry;
     private String licenseNo;
+    StationItem superStationITEM = new StationItem();
     private String stationLogo;
     private String stationFacilities;
     private float gasolinePrice;
@@ -84,7 +110,11 @@ public class AddStation extends AppCompatActivity {
     private float lpgPrice;
     private float electricityPrice;
     private ProgressDialog loading;
+    LocationCallback mLocationCallback;
     private NestedScrollView welcome2;
+    LocationRequest mLocationRequest;
+    private String otherFuels;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +210,54 @@ public class AddStation extends AppCompatActivity {
             }
         });
 
-        loadMap();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                synchronized (this) {
+                    super.onLocationResult(locationResult);
+                    Location locCurrent = locationResult.getLastLocation();
+                    if (locCurrent != null) {
+                        Location loc1 = new Location("");
+                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
+                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
+
+                        Location loc2 = new Location("");
+                        loc2.setLatitude(locCurrent.getLatitude());
+                        loc2.setLongitude(locCurrent.getLongitude());
+
+                        float distanceInMeters = loc1.distanceTo(loc2);
+
+                        if (distanceInMeters >= mapDefaultStationRange / 2) {
+                            MainActivity.userlat = String.valueOf(locCurrent.getLatitude());
+                            MainActivity.userlon = String.valueOf(locCurrent.getLongitude());
+                            prefs.edit().putString("lat", MainActivity.userlat).apply();
+                            prefs.edit().putString("lon", MainActivity.userlon).apply();
+                            updateMapObject();
+                        }
+                    }
+                }
+            }
+        };
+
+        checkLocationPermission();
+    }
+
+    private void checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(AddStation.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(AddStation.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(AddStation.this, new String[]{PERMISSIONS_LOCATION[0], PERMISSIONS_LOCATION[1]}, REQUEST_LOCATION);
+        } else {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+            loadMap();
+        }
+
+        if (!isLocationEnabled(AddStation.this)) {
+            Toast.makeText(AddStation.this, getString(R.string.location_services_off), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void loadMap() {
@@ -197,6 +274,9 @@ public class AddStation extends AppCompatActivity {
                 googleMap.getUiSettings().setRotateGesturesEnabled(false);
                 googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
+
+                MarkerAdapter customInfoWindow = new MarkerAdapter(AddStation.this);
+                googleMap.setInfoWindowAdapter(customInfoWindow);
 
                 googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                     @Override
@@ -220,29 +300,6 @@ public class AddStation extends AppCompatActivity {
                 });
 
                 updateMapObject();
-
-                googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                    @Override
-                    public void onMyLocationChange(Location arg0) {
-                        Location loc1 = new Location("");
-                        loc1.setLatitude(Double.parseDouble(MainActivity.userlat));
-                        loc1.setLongitude(Double.parseDouble(MainActivity.userlon));
-
-                        Location loc2 = new Location("");
-                        loc2.setLatitude(arg0.getLatitude());
-                        loc2.setLongitude(arg0.getLongitude());
-
-                        float distanceInMeters = loc1.distanceTo(loc2);
-
-                        if (distanceInMeters >= mapDefaultStationRange / 2) {
-                            MainActivity.userlat = String.valueOf(arg0.getLatitude());
-                            MainActivity.userlon = String.valueOf(arg0.getLongitude());
-                            prefs.edit().putString("lat", MainActivity.userlat).apply();
-                            prefs.edit().putString("lon", MainActivity.userlon).apply();
-                            updateMapObject();
-                        }
-                    }
-                });
             }
         });
     }
@@ -272,6 +329,7 @@ public class AddStation extends AppCompatActivity {
         //Showing the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultStationRange,
                 new Response.Listener<String>() {
+                    @SuppressLint("CheckResult")
                     @Override
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
@@ -292,7 +350,41 @@ public class AddStation extends AppCompatActivity {
                                 lpgPrice = (float) obj.getDouble("lpgPrice");
                                 electricityPrice = (float) obj.getDouble("electricityPrice");
                                 licenseNo = obj.getString("licenseNo");
+                                otherFuels = obj.getString("otherFuels");
                                 doesStationVerified = obj.getInt("isVerified");
+
+                                superStationITEM.setID(stationID);
+                                superStationITEM.setStationName(stationName);
+                                superStationITEM.setVicinity(stationAddress);
+                                superStationITEM.setCountryCode(stationCountry);
+                                superStationITEM.setLocation(stationCoordinates);
+                                superStationITEM.setGoogleMapID(googleID);
+                                superStationITEM.setFacilities(stationFacilities);
+                                superStationITEM.setLicenseNo(licenseNo);
+                                superStationITEM.setPhotoURL(stationLogo);
+                                superStationITEM.setGasolinePrice(gasolinePrice);
+                                superStationITEM.setDieselPrice(dieselPrice);
+                                superStationITEM.setLpgPrice(lpgPrice);
+                                superStationITEM.setElectricityPrice(electricityPrice);
+                                superStationITEM.setOtherFuels(otherFuels);
+                                superStationITEM.setDistance((int) obj.getDouble("distance"));
+
+                                // Station Icon
+                                Glide.with(AddStation.this)
+                                        .asBitmap()
+                                        .load(superStationITEM.getPhotoURL())
+                                        .into(new CustomTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                Drawable d = new BitmapDrawable(getResources(), resource);
+                                                superStationITEM.setStationLogoDrawable(d);
+                                            }
+
+                                            @Override
+                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                            }
+                                        });
+                                // Station Icon
 
                                 if (doesStationVerified == 1) {
                                     stationHint.setTextColor(Color.parseColor("#ff0000"));
@@ -301,38 +393,72 @@ public class AddStation extends AppCompatActivity {
                                     stationHint.setTextColor(Color.parseColor("#2DE778"));
                                 }
                                 loadStationDetails();
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        addMarker();
+                                    }
+                                }, 1000);
                             } catch (JSONException e) {
+                                stationID = 0;
                                 stationName = "";
                                 stationAddress = "";
-                                stationCoordinates = "";
                                 stationCountry = "";
-                                licenseNo = "";
+                                stationCoordinates = "";
+                                googleID = "";
+                                stationFacilities = "";
                                 stationLogo = "";
+                                gasolinePrice = 0;
+                                dieselPrice = 0;
+                                lpgPrice = 0;
+                                electricityPrice = 0;
+                                licenseNo = "";
+                                otherFuels = "";
+                                doesStationVerified = 0;
                                 stationHint.setTextColor(Color.parseColor("#ff0000"));
                                 loadStationDetails();
-                                Toast.makeText(AddStation.this, e.toString(), Toast.LENGTH_SHORT).show();
+                                googleMap.clear();
                             }
                         } else {
+                            stationID = 0;
                             stationName = "";
                             stationAddress = "";
-                            stationCoordinates = "";
                             stationCountry = "";
-                            licenseNo = "";
+                            stationCoordinates = "";
+                            googleID = "";
+                            stationFacilities = "";
                             stationLogo = "";
+                            gasolinePrice = 0;
+                            dieselPrice = 0;
+                            lpgPrice = 0;
+                            electricityPrice = 0;
+                            licenseNo = "";
+                            otherFuels = "";
+                            doesStationVerified = 0;
                             stationHint.setTextColor(Color.parseColor("#ff0000"));
                             loadStationDetails();
+                            googleMap.clear();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        stationID = 0;
                         stationName = "";
                         stationAddress = "";
-                        stationCoordinates = "";
                         stationCountry = "";
-                        licenseNo = "";
+                        stationCoordinates = "";
+                        googleID = "";
+                        stationFacilities = "";
                         stationLogo = "";
+                        gasolinePrice = 0;
+                        dieselPrice = 0;
+                        lpgPrice = 0;
+                        electricityPrice = 0;
+                        licenseNo = "";
+                        otherFuels = "";
+                        doesStationVerified = 0;
                         stationHint.setTextColor(Color.parseColor("#ff0000"));
                         loadStationDetails();
 
@@ -349,6 +475,22 @@ public class AddStation extends AppCompatActivity {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void addMarker() {
+        // Add marker
+        String[] stationKonum = stationCoordinates.split(";");
+        LatLng sydney = new LatLng(Double.parseDouble(stationKonum[0]), Double.parseDouble(stationKonum[1]));
+
+        MarkerOptions mOptions;
+        if (isStationVerified == 1) {
+            mOptions = new MarkerOptions().position(sydney).title(superStationITEM.getStationName()).snippet(superStationITEM.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
+        } else {
+            mOptions = new MarkerOptions().position(sydney).title(superStationITEM.getStationName()).snippet(superStationITEM.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
+        }
+        Marker m = googleMap.addMarker(mOptions);
+        m.setTag(superStationITEM);
+        m.showInfoWindow();
     }
 
     private void loadStationDetails() {
@@ -569,6 +711,19 @@ public class AddStation extends AppCompatActivity {
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION) {
+            if (ActivityCompat.checkSelfPermission(AddStation.this, PERMISSIONS_LOCATION[1]) == PackageManager.PERMISSION_GRANTED) {
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+                loadMap();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

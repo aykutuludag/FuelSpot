@@ -3,7 +3,6 @@ package com.fuelspot.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -193,6 +192,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 .placeholder(R.drawable.default_station)
                 .error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
         Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -259,9 +259,9 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         if (whichScreen.equals("SUPERUSER_STATIONS")) {
             if (feedItem.getID() == superStationID) {
-                viewHolder.background.setBackgroundColor(Color.parseColor("#7CFC00"));
+                viewHolder.background.setBackgroundResource(R.drawable.white_box_stroke);
             } else {
-                viewHolder.background.setBackgroundColor(Color.parseColor("#ffffff"));
+                viewHolder.background.setBackground(null);
             }
         }
 

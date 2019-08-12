@@ -48,6 +48,7 @@ import java.util.Map;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
@@ -163,9 +164,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                                                         mPopupWindow.dismiss();
                                                     }
                                                 });
-                                                mPopupWindow.setFocusable(true);
+
                                                 mPopupWindow.update();
                                                 mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                                                dimBehind(mPopupWindow);
                                             }
                                         } else {
                                             if (username.equals(commentUserName)) {

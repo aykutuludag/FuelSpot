@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/round_layout_white2"
+        android:background="@drawable/white_box"
         android:visibility="visible">
 
         <RelativeLayout
@@ -142,7 +142,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/round_layout_white2"
+        android:background="@drawable/white_box"
         android:visibility="gone">
 
         <RelativeLayout
@@ -283,7 +283,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/round_layout_white2"
+        android:background="@drawable/white_box"
         android:visibility="gone">
 
         <RelativeLayout

@@ -71,6 +71,10 @@
     <string name="API_FETCH_STATION_PRICES" translatable="false">https://fuelspot.com.tr/api/v1.0/finance/fetch-station-prices.php</string> <!-- STATION -->
     <string name="API_FETCH_COUNTRY_PRICES" translatable="false">https://fuelspot.com.tr/api/v1.0/finance/fetch-prices.php</string> <!-- COUNTRY -->
 
+    <!-- INBOX APIs -->
+    <string name="API_FETCH_INBOX" translatable="false">https://fuelspot.com.tr/api/v1.0/inbox/fetch-messages.php</string>
+    <string name="API_SEND_MESSAGE" translatable="false">https://fuelspot.com.tr/api/v1.0/inbox/send-message.php</string>
+
     <!-- OTHER APIs -->
     <string name="API_REPORT" translatable="false">https://fuelspot.com.tr/api/v1.0/other/report.php</string>
     <string name="API_TAX" translatable="false">https://fuelspot.com.tr/api/v1.0/other/tax.php</string>
@@ -195,7 +199,8 @@
     <string name="enroll_beta">Enroll beta test</string>
     <string name="report_missing_station">Report missing station</string>
     <string name="feedback">Feedback</string>
-    <string name="rate_app">Rate FuelSpot!</string>
+    <string name="rate_app">Rate!</string>
+    <string name="sending_message">Message is sending</string>
     <string name="terms_and_agreements">Terms &amp; Agreements</string>
     <string name="fuel_dist_comp">Fuel distribution companies</string>
     <string name="add_message">Please add your message…</string>
@@ -443,5 +448,6 @@
     <string name="purchasing">Purchasing</string>
     <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargolanacaktır.</string>
     <string name="search">Search</string>
+    <string name="inbox">Inbox</string>
     <!-- AddStation-->
 </resources>

@@ -25,9 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ratingBar"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -36,6 +40,9 @@
         android:layout_below="@+id/popup_comment_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
+        android:progressTint="#5EFFAA"
+        android:scaleX="0.75"
+        android:scaleY="0.75"
         android:stepSize="1" />
 
     <Button
@@ -43,10 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editTextComment"
-        android:layout_alignStart="@+id/editTextComment"
-        android:layout_alignEnd="@+id/editTextComment"
-        android:layout_marginTop="16dp"
-        android:background="#FF6838"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:background="@drawable/orange_box"
+        android:padding="16dp"
         android:text="@string/add_comment"
         android:textColor="#f0f0f0" />
 

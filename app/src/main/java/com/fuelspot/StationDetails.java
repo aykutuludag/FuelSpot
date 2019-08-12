@@ -107,6 +107,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.doesStreetViewShown;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.globalCampaignList;
@@ -1140,9 +1141,10 @@ public class StationDetails extends AppCompatActivity {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setFocusable(true);
+
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void addComment() {
@@ -1332,9 +1334,10 @@ public class StationDetails extends AppCompatActivity {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setFocusable(true);
+
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void reportPrices(View view) {
@@ -1382,9 +1385,11 @@ public class StationDetails extends AppCompatActivity {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setFocusable(true);
+
+
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void sendReporttoServer(final String kullaniciAdi, final int istasyonID, final String raporSebebi, final String raporDetayi, final Bitmap bitmap) {

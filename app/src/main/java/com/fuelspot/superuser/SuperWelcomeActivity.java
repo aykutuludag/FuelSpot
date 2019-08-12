@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -54,12 +55,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.facebook.CallbackManager;
@@ -204,7 +203,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     LocationCallback mLocationCallback;
     LocationRequest mLocationRequest;
     StationItem superStationITEM = new StationItem();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1203,19 +1201,22 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 superStationITEM.setOtherFuels(ownedOtherFuels);
                                 superStationITEM.setDistance((int) obj.getDouble("distance"));
 
-                                //Station Icon
-                                Glide.with(SuperWelcomeActivity.this).load(superStationITEM.getPhotoURL()).listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                        return false;
-                                    }
+                                // Station Icon
+                                Glide.with(SuperWelcomeActivity.this)
+                                        .asBitmap()
+                                        .load(superStationITEM.getPhotoURL())
+                                        .into(new CustomTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                Drawable d = new BitmapDrawable(getResources(), resource);
+                                                superStationITEM.setStationLogoDrawable(d);
+                                            }
 
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                        superStationITEM.setStationLogoDrawable(resource);
-                                        return false;
-                                    }
-                                });
+                                            @Override
+                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                            }
+                                        });
+                                // Station Icon
 
                                 loadStationDetails();
                                 Handler handler = new Handler();

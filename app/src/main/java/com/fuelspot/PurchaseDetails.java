@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -92,6 +93,8 @@ import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 
@@ -248,24 +251,36 @@ public class PurchaseDetails extends AppCompatActivity {
         });
 
         if (isPurchaseVerified == -1) {
-            // SATINALMA REDDEDİLDİ. DETAYLAR İÇİN GELEN KUTUSUNA BAKINIZ.
-            circleImageViewStatus.setBackgroundResource(R.drawable.cancel);
+            Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
+
             textViewStatus.setText("Satınalma onaylanmadı. Detaylar için gelen kutusuna bakınız.");
+
             addBillPhotoButton.setVisibility(View.GONE);
         } else if (isPurchaseVerified == 1) {
-            circleImageViewStatus.setBackgroundResource(R.drawable.verified);
+            Glide.with(this).load(R.drawable.verified).apply(options).into(circleImageViewStatus);
+
             textViewStatus.setText("Satınalma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
             fab.hide();
+
             addBillPhotoButton.setVisibility(View.GONE);
         } else {
-            circleImageViewStatus.setBackgroundResource(R.drawable.money);
             if (billPhoto != null && billPhoto.length() > 0) {
+                Glide.with(this).load(R.drawable.ic_waiting).apply(options).into(circleImageViewStatus);
+
                 textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+
+                addBillPhotoButton.setVisibility(View.VISIBLE);
                 addBillPhotoButton.setText("Fotoğrafı güncelle");
             } else {
                 if (remainingHour > 0 || remainingMin > 0) {
+                    Glide.with(this).load(R.drawable.money).apply(options).into(circleImageViewStatus);
+
                     textViewStatus.setText("Fiş/Fatura fotoğrafı ekle, " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazan! Fotoğraf eklemek için son " + remainingHour + " saat " + remainingMin + " dakika!");
+                    addBillPhotoButton.setText("Fotoğrafı güncelle");
+                    addBillPhotoButton.setText("Fotoğraf ekle");
                 } else {
+                    Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
+                    addBillPhotoButton.setVisibility(View.GONE);
                     textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
                 }
             }
@@ -314,7 +329,6 @@ public class PurchaseDetails extends AppCompatActivity {
             fiyat2.setVisibility(View.GONE);
             litre2.setVisibility(View.GONE);
         }
-
 
         float totalVergiMoney = subTotal * fuelTax1 + subTotal2 * fuelTax2;
         String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", totalVergiMoney) + " " + currencySymbol;
@@ -399,6 +413,18 @@ public class PurchaseDetails extends AppCompatActivity {
                             info.setOtherFuels(obj.getString("otherFuels"));
                             info.setIsVerified(obj.getInt("isVerified"));
                             info.setLastUpdated(obj.getString("lastUpdated"));
+
+                            // DISTANCE
+                            String[] locationHolder = info.getLocation().split(";");
+                            LatLng sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
+                            Location loc1 = new Location("");
+                            loc1.setLatitude(Double.parseDouble(userlat));
+                            loc1.setLongitude(Double.parseDouble(userlon));
+                            Location loc2 = new Location("");
+                            loc2.setLatitude(sydney.latitude);
+                            loc2.setLongitude(sydney.longitude);
+                            info.setDistance((int) loc1.distanceTo(loc2));
+                            // DISTANCE
 
                             Glide.with(PurchaseDetails.this).load(info.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
                                 @Override

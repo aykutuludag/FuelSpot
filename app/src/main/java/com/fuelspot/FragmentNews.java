@@ -57,6 +57,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -102,6 +103,13 @@ public class FragmentNews extends Fragment {
     private int otherStations;
     private int totalStation;
     private SwipeRefreshLayout swipeContainer;
+
+    List<Float> list = new ArrayList<>();
+    List<Float> list2 = new ArrayList<>();
+    List<Float> list3 = new ArrayList<>();
+    List<Float> list4 = new ArrayList<>();
+
+    private TextView gasolineMin, gasolineMax, dieselMin, dieselMax, lpgMin, lpgMax, electricityMin, electricityMax;
 
     public static FragmentNews newInstance() {
         Bundle args = new Bundle();
@@ -159,6 +167,18 @@ public class FragmentNews extends Fragment {
                     return formatter.format(date);
                 }
             });
+
+            gasolineMax = rootView.findViewById(R.id.gasolinePriceMax);
+            gasolineMin = rootView.findViewById(R.id.gasolinePriceMin);
+
+            dieselMax = rootView.findViewById(R.id.dieselPriceMax);
+            dieselMin = rootView.findViewById(R.id.dieselPriceMin);
+
+            lpgMax = rootView.findViewById(R.id.LPGPriceMax);
+            lpgMin = rootView.findViewById(R.id.LPGPriceMin);
+
+            electricityMax = rootView.findViewById(R.id.ElectricPriceMax);
+            electricityMin = rootView.findViewById(R.id.ElectricPriceMin);
 
             lastUpdatedAvgPrice = rootView.findViewById(R.id.dummy000);
 
@@ -301,6 +321,11 @@ public class FragmentNews extends Fragment {
         lpgPriceHistory.clear();
         elecPriceHistory.clear();
 
+        list.clear();
+        list2.clear();
+        list3.clear();
+        list4.clear();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_COUNTRY_PRICES) + "?country=" + tempCountryCode,
                 new Response.Listener<String>() {
                     @Override
@@ -311,6 +336,7 @@ public class FragmentNews extends Fragment {
 
                                 JSONArray res = new JSONArray(response);
 
+
                                 for (int i = res.length() - 1; i >= 0; i--) {
                                     JSONObject obj = res.getJSONObject(i);
 
@@ -318,8 +344,10 @@ public class FragmentNews extends Fragment {
                                         if (obj.getDouble("gasolinePrice2") != 0) {
                                             float avgPrice = (float) (obj.getDouble("gasolinePrice") + obj.getDouble("gasolinePrice2")) / 2;
                                             gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), avgPrice));
+                                            list.add(avgPrice);
                                         } else {
                                             gasolinePriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("gasolinePrice")));
+                                            list.add((float) obj.getDouble("gasolinePrice"));
                                         }
                                     }
 
@@ -327,17 +355,21 @@ public class FragmentNews extends Fragment {
                                         if (obj.getDouble("dieselPrice2") != 0) {
                                             float avgPrice = (float) (obj.getDouble("dieselPrice") + obj.getDouble("dieselPrice2")) / 2;
                                             dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), avgPrice));
+                                            list2.add(avgPrice);
                                         } else {
                                             dieselPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("dieselPrice")));
+                                            list2.add((float) obj.getDouble("dieselPrice"));
                                         }
                                     }
 
                                     if (obj.getDouble("lpgPrice") != 0) {
                                         lpgPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("lpgPrice")));
+                                        list3.add((float) obj.getDouble("lpgPrice"));
                                     }
 
                                     if (obj.getDouble("electricityPrice") != 0) {
                                         elecPriceHistory.add(new Entry((float) sdf.parse(obj.getString("date")).getTime(), (float) obj.getDouble("electricityPrice")));
+                                        list4.add((float) obj.getDouble("electricityPrice"));
                                     }
                                 }
 
@@ -349,6 +381,15 @@ public class FragmentNews extends Fragment {
                                     dataSet.setDrawFilled(true);
                                     dataSet.setFillColor(Color.parseColor("#90000000"));
                                     dataSets.add(dataSet);
+
+                                    float min = Collections.min(list);
+                                    float max = Collections.max(list);
+
+                                    gasolineMin.setText(min + " " + currencySymbol);
+                                    gasolineMax.setText(max + " " + currencySymbol);
+                                } else {
+                                    gasolineMin.setText("- " + currencySymbol);
+                                    gasolineMax.setText("- " + currencySymbol);
                                 }
 
                                 if (dieselPriceHistory.size() > 0) {
@@ -359,6 +400,15 @@ public class FragmentNews extends Fragment {
                                     dataSet2.setDrawFilled(true);
                                     dataSet2.setFillColor(Color.parseColor("#90FF0000"));
                                     dataSets.add(dataSet2);
+
+                                    float min = Collections.min(list2);
+                                    float max = Collections.max(list2);
+
+                                    dieselMin.setText(min + " " + currencySymbol);
+                                    dieselMax.setText(max + " " + currencySymbol);
+                                } else {
+                                    dieselMin.setText("- " + currencySymbol);
+                                    dieselMax.setText("- " + currencySymbol);
                                 }
 
                                 if (lpgPriceHistory.size() > 0) {
@@ -369,6 +419,15 @@ public class FragmentNews extends Fragment {
                                     dataSet3.setDrawFilled(true);
                                     dataSet3.setFillColor(Color.parseColor("#900000FF"));
                                     dataSets.add(dataSet3);
+
+                                    float min = Collections.min(list3);
+                                    float max = Collections.max(list3);
+
+                                    lpgMin.setText(min + " " + currencySymbol);
+                                    lpgMax.setText(max + " " + currencySymbol);
+                                } else {
+                                    lpgMin.setText("- " + currencySymbol);
+                                    lpgMax.setText("- " + currencySymbol);
                                 }
 
                                 if (elecPriceHistory.size() > 0) {
@@ -379,6 +438,15 @@ public class FragmentNews extends Fragment {
                                     dataSet4.setFillColor(Color.parseColor("#9000FF00"));
                                     dataSet4.setDrawFilled(true);
                                     dataSets.add(dataSet4);
+
+                                    float min = Collections.min(list4);
+                                    float max = Collections.max(list4);
+
+                                    electricityMin.setText(min + " " + currencySymbol);
+                                    electricityMax.setText(max + " " + currencySymbol);
+                                } else {
+                                    electricityMin.setText("- " + currencySymbol);
+                                    electricityMax.setText("- " + currencySymbol);
                                 }
 
                                 LineData lineData = new LineData(dataSets);

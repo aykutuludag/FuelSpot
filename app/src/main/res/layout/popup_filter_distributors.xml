@@ -41,7 +41,7 @@
                 android:layout_toEndOf="@id/imageView"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="Görmek istediğin markayı/markaları seçerek ilgilendiğin markalara ait istasyonları görebilirsin!"
+                android:text="Görüntülemek istediğin markaları seçerek alakasız istasyonları filtrele!"
                 android:textAlignment="center"
                 android:textColor="#161616" />
         </RelativeLayout>

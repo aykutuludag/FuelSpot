@@ -2,7 +2,6 @@ package com.fuelspot.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +91,9 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         }
 
         if (feedItem.getID() == vehicleID) {
-            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#6000FF00"));
+            viewHolder.vehicleLayout.setBackgroundResource(R.drawable.white_box_stroke);
         } else {
-            viewHolder.vehicleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            viewHolder.vehicleLayout.setBackground(null);
         }
 
         // Handle click event on image click

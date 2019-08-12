@@ -63,6 +63,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -598,9 +599,9 @@ public class SuperCampaings extends AppCompatActivity {
             }
         });
 
-        mPopupWindow.setFocusable(true);
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void coloredBars(int color1, int color2) {

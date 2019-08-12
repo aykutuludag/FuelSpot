@@ -36,7 +36,39 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
-                android:background="@drawable/round_layout_white2">
+                android:background="@drawable/white_box2">
+
+                <RelativeLayout
+                    android:id="@+id/sortSort"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/dummySortIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="Sırala"
+                        android:src="@drawable/sort" />
+
+                    <TextView
+                        android:id="@+id/imageView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dummySortIcon"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="Sırala"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp" />
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/sortGasoline"
@@ -88,15 +120,14 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="4dp"
                         android:contentDescription="@string/diesel"
-                        android:src="@drawable/fuel_diesel"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                        android:src="@drawable/fuel_diesel" />
 
                     <TextView
                         android:id="@+id/dummyDiesel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/diesel"
-                        android:layout_marginBottom="3dp"
+                        android:layout_marginBottom="4dp"
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
                         android:text="@string/diesel"

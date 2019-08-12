@@ -1,201 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    android:orientation="vertical">
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="16dp">
 
-    <androidx.cardview.widget.CardView
+    <androidx.percentlayout.widget.PercentRelativeLayout
+        android:id="@+id/single_station"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        card_view:cardCornerRadius="24dp"
-        card_view:cardElevation="2dp">
+        android:layout_height="wrap_content">
 
-        <androidx.percentlayout.widget.PercentRelativeLayout
-            android:id="@+id/single_station"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/baseInfoLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stationLastUpdate"
+            android:layout_marginBottom="8dp"
+            card_view:layout_marginEndPercent="1%"
+            card_view:layout_marginStartPercent="2%"
+            card_view:layout_widthPercent="17%">
 
-            <RelativeLayout
-                android:id="@+id/baseInfoLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/stationLastUpdate"
-                android:layout_marginBottom="8dp"
-                card_view:layout_marginEndPercent="1%"
-                card_view:layout_marginStartPercent="2%"
-                card_view:layout_widthPercent="17%">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/station_photo"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/default_station" />
-
-                <TextView
-                    android:id="@+id/station_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/station_photo"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#141414" />
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/gasoline"
-                android:layout_height="25dp"
-                android:layout_below="@+id/stationLastUpdate"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/baseInfoLayout"
-                android:contentDescription="@string/gasoline"
-                android:layout_width="0dp"
-                android:padding="4dp"
-                android:src="@drawable/fuel_gasoline"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_marginEndPercent="1%"
-                card_view:layout_marginStartPercent="1%"
-                card_view:layout_widthPercent="14%" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/station_photo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/default_station" />
 
             <TextView
-                android:id="@+id/priceGasoline"
-                android:layout_width="wrap_content"
+                android:id="@+id/station_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/gasoline"
-                android:layout_alignStart="@id/gasoline"
-                android:layout_alignEnd="@id/gasoline"
-                android:fontFamily="@font/gotham_bold"
+                android:layout_below="@id/station_photo"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/gotham_black"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#212121" />
+                android:textColor="#141414" />
+        </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/diesel"
-                android:layout_height="25dp"
-                android:layout_below="@+id/stationLastUpdate"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/gasoline"
-                android:contentDescription="@string/diesel"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:padding="4dp"
-                android:src="@drawable/fuel_diesel"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_marginEndPercent="1%"
-                card_view:layout_marginStartPercent="1%"
-                card_view:layout_widthPercent="14%" />
+        <ImageView
+            android:id="@+id/gasoline"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/stationLastUpdate"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/baseInfoLayout"
+            android:contentDescription="@string/gasoline"
+            android:padding="4dp"
+            android:src="@drawable/fuel_gasoline"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            card_view:layout_marginEndPercent="1%"
+            card_view:layout_marginStartPercent="1%"
+            card_view:layout_widthPercent="14%" />
 
-            <TextView
-                android:id="@+id/priceDiesel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/diesel"
-                android:layout_alignStart="@id/diesel"
-                android:layout_alignEnd="@id/diesel"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#212121" />
+        <TextView
+            android:id="@+id/priceGasoline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gasoline"
+            android:layout_alignStart="@id/gasoline"
+            android:layout_alignEnd="@id/gasoline"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
 
-            <ImageView
-                android:id="@+id/lpg"
-                android:layout_height="25dp"
-                android:layout_below="@+id/stationLastUpdate"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/diesel"
-                android:contentDescription="@string/lpg"
-                android:padding="4dp"
-                android:layout_width="0dp"
-                android:src="@drawable/fuel_lpg"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                card_view:layout_marginEndPercent="1%"
-                card_view:layout_marginStartPercent="1%"
-                card_view:layout_widthPercent="14%" />
+        <ImageView
+            android:id="@+id/diesel"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/stationLastUpdate"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/gasoline"
+            android:contentDescription="@string/diesel"
+            android:gravity="center"
+            android:padding="4dp"
+            android:src="@drawable/fuel_diesel"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            card_view:layout_marginEndPercent="1%"
+            card_view:layout_marginStartPercent="1%"
+            card_view:layout_widthPercent="14%" />
 
-            <TextView
-                android:id="@+id/priceLPG"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/lpg"
-                android:layout_alignStart="@id/lpg"
-                android:layout_alignEnd="@id/lpg"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#212121" />
+        <TextView
+            android:id="@+id/priceDiesel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/diesel"
+            android:layout_alignStart="@id/diesel"
+            android:layout_alignEnd="@id/diesel"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
 
-            <ImageView
-                android:id="@+id/electricity"
-                android:layout_height="25dp"
-                android:layout_below="@+id/stationLastUpdate"
-                android:layout_width="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/lpg"
-                android:contentDescription="@string/electricity"
-                android:padding="4dp"
-                android:src="@drawable/fuel_electricity"
-                card_view:layout_marginEndPercent="1%"
-                card_view:layout_marginStartPercent="1%"
-                card_view:layout_widthPercent="14%" />
+        <ImageView
+            android:id="@+id/lpg"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/stationLastUpdate"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/diesel"
+            android:contentDescription="@string/lpg"
+            android:padding="4dp"
+            android:src="@drawable/fuel_lpg"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            card_view:layout_marginEndPercent="1%"
+            card_view:layout_marginStartPercent="1%"
+            card_view:layout_widthPercent="14%" />
 
-            <TextView
-                android:id="@+id/priceElectricity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/electricity"
-                android:layout_alignStart="@id/electricity"
-                android:layout_alignEnd="@id/electricity"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#212121" />
+        <TextView
+            android:id="@+id/priceLPG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lpg"
+            android:layout_alignStart="@id/lpg"
+            android:layout_alignEnd="@id/lpg"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
 
-            <ImageView
-                android:id="@+id/distance"
-                android:layout_height="25dp"
-                android:layout_below="@+id/stationLastUpdate"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/electricity"
-                android:contentDescription="@string/distance"
-                android:padding="4dp"
-                android:src="@drawable/distance"
-                card_view:layout_marginEndPercent="1%"
-                android:layout_width="0dp"
-                card_view:layout_marginStartPercent="1%"
-                card_view:layout_widthPercent="14%" />
+        <ImageView
+            android:id="@+id/electricity"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/stationLastUpdate"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/lpg"
+            android:contentDescription="@string/electricity"
+            android:padding="4dp"
+            android:src="@drawable/fuel_electricity"
+            card_view:layout_marginEndPercent="1%"
+            card_view:layout_marginStartPercent="1%"
+            card_view:layout_widthPercent="14%" />
 
-            <TextView
-                android:id="@+id/distance_ofStation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/distance"
-                android:layout_alignStart="@id/distance"
-                android:layout_alignEnd="@id/distance"
-                android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#212121" />
+        <TextView
+            android:id="@+id/priceElectricity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/electricity"
+            android:layout_alignStart="@id/electricity"
+            android:layout_alignEnd="@id/electricity"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
 
-            <com.github.curioustechizen.ago.RelativeTimeTextView
-                android:id="@+id/stationLastUpdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/gotham_book"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-        </androidx.percentlayout.widget.PercentRelativeLayout>
-    </androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/distance"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/stationLastUpdate"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/electricity"
+            android:contentDescription="@string/distance"
+            android:padding="4dp"
+            android:src="@drawable/distance"
+            card_view:layout_marginEndPercent="1%"
+            card_view:layout_marginStartPercent="1%"
+            card_view:layout_widthPercent="14%" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/distance_ofStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/distance"
+            android:layout_alignStart="@id/distance"
+            android:layout_alignEnd="@id/distance"
+            android:fontFamily="@font/gotham_bold"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#212121" />
+
+        <com.github.curioustechizen.ago.RelativeTimeTextView
+            android:id="@+id/stationLastUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/gotham_book"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </androidx.percentlayout.widget.PercentRelativeLayout>
+</androidx.cardview.widget.CardView>

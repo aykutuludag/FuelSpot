@@ -61,6 +61,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.fuelspot.FragmentProfile.userBankingList;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
+import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.location;
@@ -79,8 +80,9 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
     int itemNo;
     public static SkuDetails premiumSku, doubleSku;
-    float price2 = 29.90f;
-    float price3 = 39.90f;
+    float price1 = 9.99f;
+    float price2 = 39.90f;
+    float price3 = 49.90f;
     RequestOptions options;
     PopupWindow mPopupWindow;
     TextView textViewCurrentBalance;
@@ -89,7 +91,6 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
     private Window window;
     private Toolbar toolbar;
     private RequestQueue requestQueue;
-    float price1 = 9.99f;
     private BillingClient billingClient;
 
     @Override
@@ -391,9 +392,10 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setFocusable(true);
+
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void processPurchase(final String productName, final float productPrice) {

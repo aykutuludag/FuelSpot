@@ -16,11 +16,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -76,7 +76,7 @@ import static com.fuelspot.MainActivity.username;
 public class ReportMissingStation extends AppCompatActivity {
 
     ScrollView scrollView;
-    Spinner spinner;
+    AppCompatSpinner spinner;
     String dummyBrandName;
     String dummyLocation;
     String report, reportDetails;

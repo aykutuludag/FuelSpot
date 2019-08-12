@@ -71,6 +71,7 @@ import static com.fuelspot.MainActivity.TAX_ELECTRICITY;
 import static com.fuelspot.MainActivity.TAX_GASOLINE;
 import static com.fuelspot.MainActivity.TAX_LPG;
 import static com.fuelspot.MainActivity.currencyCode;
+import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -297,9 +298,9 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-        mPopupWindow.setFocusable(true);
         mPopupWindow.update();
         mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     @SuppressLint("ClickableViewAccessibility")

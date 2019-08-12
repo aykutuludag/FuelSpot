@@ -37,7 +37,7 @@
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="350dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp" />
@@ -52,7 +52,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout_white2"
+                android:background="@drawable/white_box"
                 android:gravity="center"
                 android:padding="16dp" />
 
@@ -66,7 +66,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout_white2"
+                android:background="@drawable/white_box"
                 android:gravity="center"
                 android:hint="@string/address"
                 android:inputType="textPostalAddress"
@@ -83,7 +83,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout_white"
+                android:background="@drawable/white_box3"
                 android:gravity="center"
                 android:hint="@string/license_no"
                 android:padding="8dp"

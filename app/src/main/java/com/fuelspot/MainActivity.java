@@ -22,8 +22,10 @@ import android.provider.Settings;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -266,10 +268,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
+                    AdMob(mContext);
                     if (intent != null) {
                         mContext.startActivity(intent);
                     }
-                    AdMob(mContext);
                 }
 
                 @Override
@@ -779,6 +781,29 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             //Adding request to the queue
             queue.add(stringRequest);
         }
+    }
+
+    public static void dimBehind(PopupWindow popupWindow) {
+        View container;
+        if (popupWindow.getBackground() == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                container = (View) popupWindow.getContentView().getParent();
+            } else {
+                container = popupWindow.getContentView();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                container = (View) popupWindow.getContentView().getParent().getParent();
+            } else {
+                container = (View) popupWindow.getContentView().getParent();
+            }
+        }
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.75f;
+        wm.updateViewLayout(container, p);
     }
 
     private void coloredBars(int color1, int color2) {

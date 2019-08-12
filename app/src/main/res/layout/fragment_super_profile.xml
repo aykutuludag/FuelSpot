@@ -68,7 +68,7 @@
                         android:id="@+id/button_store"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/green_box"
+                        android:background="@drawable/white_box2"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/store"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -81,11 +81,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/button_store"
-                        android:background="@drawable/orange_box"
+                        android:background="@drawable/white_box2"
                         android:fontFamily="@font/gotham_book"
                         android:text="@string/help"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#f1f1f1"
+                        android:textColor="#161616"
                         app:layout_marginPercent="5%"
                         app:layout_widthPercent="40%" />
 

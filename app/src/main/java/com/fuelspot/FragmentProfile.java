@@ -36,6 +36,7 @@ import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.VehicleAdapter;
 import com.fuelspot.model.BankingItem;
 import com.fuelspot.model.CommentItem;
+import com.fuelspot.model.MessageItem;
 import com.fuelspot.model.VehicleItem;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -70,8 +71,11 @@ import static com.fuelspot.MainActivity.vehicleID;
 
 public class FragmentProfile extends Fragment {
 
-    public static List<CommentItem> userCommentList = new ArrayList<>();
-    public static List<BankingItem> userBankingList = new ArrayList<>();
+    static List<CommentItem> userCommentList = new ArrayList<>();
+    static List<BankingItem> userBankingList = new ArrayList<>();
+    static List<MessageItem> userInbox = new ArrayList<>();
+    static List<Integer> conversationIDs = new ArrayList<>();
+    static List<MessageItem> lastMessages = new ArrayList<>();
     SharedPreferences prefs;
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
@@ -82,6 +86,9 @@ public class FragmentProfile extends Fragment {
     private RequestQueue requestQueue;
     public View rootView;
     private SwipeRefreshLayout swipeContainer;
+    static int openMessage;
+    private ImageView seeInboxButton;
+    private TextView messageCountText;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -102,7 +109,7 @@ public class FragmentProfile extends Fragment {
 
             // Analytics
             Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Profile");
+            t.setScreenName("Profil");
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
@@ -117,6 +124,17 @@ public class FragmentProfile extends Fragment {
                     startActivity(intent);
                 }
             });
+
+            seeInboxButton = rootView.findViewById(R.id.imageViewInboxButton);
+            seeInboxButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UserInbox.class);
+                    startActivity(intent);
+                }
+            });
+
+            messageCountText = rootView.findViewById(R.id.textViewMessageCount);
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
@@ -207,6 +225,7 @@ public class FragmentProfile extends Fragment {
         fetchBanking();
         fetchComments();
         fetchAutomobiles();
+        fetchInbox();
     }
 
     private void fetchBanking() {
@@ -408,6 +427,71 @@ public class FragmentProfile extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         userNoCommentLayout.setVisibility(View.VISIBLE);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void fetchInbox() {
+        openMessage = 0;
+        userInbox.clear();
+        lastMessages.clear();
+        conversationIDs.clear();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_INBOX) + "?username=" + username,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    System.out.println(obj);
+
+                                    MessageItem item = new MessageItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setConversationID(obj.getInt("conversationID"));
+                                    item.setSender(obj.getString("sender"));
+                                    item.setSenderPhoto(obj.getString("senderPhoto"));
+                                    item.setReceiver(obj.getString("receiver"));
+                                    item.setReceiverPhoto(obj.getString("receiverPhoto"));
+                                    item.setTopic(obj.getString("topic"));
+                                    item.setMessage(obj.getString("message"));
+                                    item.setIsOpen(obj.getInt("isOpen"));
+                                    item.setTime(obj.getString("time"));
+                                    userInbox.add(item);
+
+                                    if (conversationIDs != null && !conversationIDs.contains(item.getConversationID())) {
+                                        conversationIDs.add(item.getConversationID());
+                                        lastMessages.add(item);
+                                        if (item.getIsOpen() == 1) {
+                                            openMessage++;
+                                        }
+                                    }
+                                }
+
+                                messageCountText.setText("" + openMessage);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
                     }
                 }) {
             @Override

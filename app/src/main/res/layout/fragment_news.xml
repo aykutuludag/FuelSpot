@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -145,25 +146,238 @@
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chartPriceIndex"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="300dp"
                     android:layout_below="@id/subtitle0"
                     android:layout_marginTop="4dp" />
 
-                <TextView
-                    android:id="@+id/dummy000"
-                    android:layout_width="wrap_content"
+                <androidx.percentlayout.widget.PercentRelativeLayout
+                    android:id="@+id/minMaxLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/chartPriceIndex"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
+                    android:layout_alignStart="@+id/chartPriceIndex"
+                    android:layout_alignEnd="@+id/chartPriceIndex"
+                    android:layout_margin="4dp">
+
+                    <RelativeLayout
+                        android:id="@+id/sortGasoline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_marginBottomPercent="1%"
+                        app:layout_marginEndPercent="1%"
+                        app:layout_marginStartPercent="20%"
+                        app:layout_marginTopPercent="1%"
+                        app:layout_widthPercent="18%">
+
+                        <ImageView
+                            android:id="@+id/gasoline"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:contentDescription="@string/gasoline"
+                            android:src="@drawable/fuel_gasoline"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/sortDiesel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/sortGasoline"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="18%">
+
+                        <ImageView
+                            android:id="@+id/diesel"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:contentDescription="@string/diesel"
+                            android:src="@drawable/fuel_diesel" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/sortLPG"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/sortDiesel"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="18%">
+
+                        <ImageView
+                            android:id="@+id/LPG"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:contentDescription="@string/lpg"
+                            android:src="@drawable/fuel_lpg"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/sortElectric"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/sortLPG"
+                        app:layout_marginPercent="1%"
+                        app:layout_widthPercent="18%">
+
+                        <ImageView
+                            android:id="@+id/electric"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="4dp"
+                            android:contentDescription="@string/electricity"
+                            android:src="@drawable/fuel_electricity"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/textViewMax"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/sortGasoline"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_black"
+                        android:text="En yüksek"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_widthPercent="20%" />
+
+                    <TextView
+                        android:id="@+id/textViewMin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textViewMax"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_black"
+                        android:text="En düşük"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_widthPercent="20%" />
+
+                    <TextView
+                        android:id="@+id/gasolinePriceMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortGasoline"
+                        android:layout_alignStart="@id/sortGasoline"
+                        android:layout_alignTop="@+id/textViewMax"
+                        android:layout_alignEnd="@id/sortGasoline"
+                        android:layout_alignBottom="@+id/textViewMax"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/gasolinePriceMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortGasoline"
+                        android:layout_alignStart="@id/sortGasoline"
+                        android:layout_alignTop="@+id/textViewMin"
+                        android:layout_alignEnd="@id/sortGasoline"
+                        android:layout_alignBottom="@+id/textViewMin"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/dieselPriceMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortDiesel"
+                        android:layout_alignStart="@id/sortDiesel"
+                        android:layout_alignTop="@+id/textViewMax"
+                        android:layout_alignEnd="@id/sortDiesel"
+                        android:layout_alignBottom="@+id/textViewMax"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/dieselPriceMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortDiesel"
+                        android:layout_alignStart="@id/sortDiesel"
+                        android:layout_alignTop="@+id/textViewMin"
+                        android:layout_alignEnd="@id/sortDiesel"
+                        android:layout_alignBottom="@+id/textViewMin"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/LPGPriceMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortLPG"
+                        android:layout_alignStart="@id/sortLPG"
+                        android:layout_alignTop="@+id/textViewMax"
+                        android:layout_alignEnd="@id/sortLPG"
+                        android:layout_alignBottom="@+id/textViewMax"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/LPGPriceMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortLPG"
+                        android:layout_alignStart="@id/sortLPG"
+                        android:layout_alignTop="@+id/textViewMin"
+                        android:layout_alignEnd="@id/sortLPG"
+                        android:layout_alignBottom="@+id/textViewMin"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/ElectricPriceMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortElectric"
+                        android:layout_alignStart="@id/sortElectric"
+                        android:layout_alignTop="@+id/textViewMax"
+                        android:layout_alignEnd="@id/sortElectric"
+                        android:layout_alignBottom="@+id/textViewMax"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/ElectricPriceMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sortElectric"
+                        android:layout_alignStart="@id/sortElectric"
+                        android:layout_alignTop="@+id/textViewMin"
+                        android:layout_alignEnd="@id/sortElectric"
+                        android:layout_alignBottom="@+id/textViewMin"
+                        android:fontFamily="@font/gotham_book"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/dummy000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textViewMin"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
                 <TextView
                     android:id="@+id/subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/dummy000"
+                    android:layout_below="@id/minMaxLayout"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/gotham_bold"

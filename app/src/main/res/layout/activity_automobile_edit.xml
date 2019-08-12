@@ -60,7 +60,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout_white2"
+                android:background="@drawable/white_box"
                 android:padding="16dp" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout_white2"
+                android:background="@drawable/white_box"
                 android:padding="16dp" />
 
             <RelativeLayout
@@ -98,7 +98,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/round_layout_white2">
+                android:background="@drawable/white_box">
 
                 <TextView
                     android:id="@+id/textView_fuelPrimary"
