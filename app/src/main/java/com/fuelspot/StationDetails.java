@@ -73,7 +73,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
@@ -464,12 +464,12 @@ public class StationDetails extends AppCompatActivity {
             fetchStation();
         }
 
-        AdView mAdView = findViewById(R.id.adView);
+        NativeExpressAdView mAdView = findViewById(R.id.nativeAdView);
         if (premium) {
             mAdView.setVisibility(View.GONE);
         } else {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+            AdRequest request = new AdRequest.Builder().build();
+            mAdView.loadAd(request);
         }
     }
 
@@ -741,7 +741,7 @@ public class StationDetails extends AppCompatActivity {
 
         literCalculator();
 
-        String titleHolder = "100 " + currencySymbol + " ile şunları satın alabilirsiniz:";
+        String titleHolder = "100 " + currencySymbol + " ile şunları satın alabilirsiniz";
         literSectionTitle.setText(titleHolder);
 
         if (howMuchGas == 0) {

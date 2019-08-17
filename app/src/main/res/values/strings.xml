@@ -6,7 +6,7 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb380327342377274</string>
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
-    <string name="banner_admob" translatable="false">ca-app-pub-6610790679720108/6457702530</string>
+    <string name="native_admob" translatable="false">ca-app-pub-6610790679720108/1785525700</string>
     <string name="copyright_text" translatable="false">FuelSpot - Made with ♥ in Ankara</string>
     <!-- Units-->
     <string name="unitSystem1" translatable="false">Litre</string>

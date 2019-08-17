@@ -47,7 +47,7 @@
                 <RelativeLayout
                     android:id="@+id/buy_premium_fromStreetView"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
@@ -661,8 +661,8 @@
                     </androidx.percentlayout.widget.PercentRelativeLayout>
                 </RelativeLayout>
 
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/adView"
+                <com.google.android.gms.ads.NativeExpressAdView
+                    android:id="@+id/nativeAdView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/facilitiesSection"
@@ -671,14 +671,15 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    ads:adSize="MEDIUM_RECTANGLE"
-                    ads:adUnitId="@string/banner_admob" />
+                    ads:adSize="300x250"
+                    ads:adUnitId="@string/native_admob" />
+
 
                 <RelativeLayout
                     android:id="@+id/campaignSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/adView"
+                    android:layout_below="@+id/nativeAdView"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"

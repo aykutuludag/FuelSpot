@@ -9,8 +9,8 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 81
-        versionName "1.2.5"
+        versionCode 82
+        versionName "1.2.6"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
     }
@@ -56,7 +56,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.gms:play-services-analytics:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-awareness:16.0.0'
+    implementation 'com.google.android.gms:play-services-awareness:17.1.0'
 
     // FIREBASE
     implementation 'com.google.firebase:firebase-core:17.0.1'

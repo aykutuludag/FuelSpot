@@ -45,7 +45,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -135,12 +135,12 @@ public class FragmentNews extends Fragment {
             t.enableAdvertisingIdCollection(true);
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
-            AdView mAdView = rootView.findViewById(R.id.adView);
+            NativeExpressAdView mAdView = rootView.findViewById(R.id.nativeAdView);
             if (premium) {
                 mAdView.setVisibility(View.GONE);
             } else {
-                AdRequest adRequest = new AdRequest.Builder().build();
-                mAdView.loadAd(adRequest);
+                AdRequest request = new AdRequest.Builder().build();
+                mAdView.loadAd(request);
             }
 
             requestQueue = Volley.newRequestQueue(getActivity());

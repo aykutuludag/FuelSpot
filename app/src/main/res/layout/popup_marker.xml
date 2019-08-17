@@ -46,11 +46,11 @@
 
         <ImageView
             android:id="@+id/gasoline"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/gasoline"
-            android:padding="4dp"
+            android:padding="6dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:srcCompat="@drawable/fuel_gasoline" />
 
@@ -70,14 +70,14 @@
 
         <ImageView
             android:id="@+id/diesel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_toEndOf="@+id/gasoline"
             android:contentDescription="@string/diesel"
             android:gravity="center"
-            android:padding="4dp"
+            android:padding="6dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:srcCompat="@drawable/fuel_diesel" />
 
@@ -97,12 +97,12 @@
 
         <ImageView
             android:id="@+id/lpg"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="4dp"
             android:layout_toEndOf="@+id/diesel"
             android:contentDescription="@string/lpg"
-            android:padding="4dp"
+            android:padding="6dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:srcCompat="@drawable/fuel_lpg" />
 

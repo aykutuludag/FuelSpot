@@ -18,7 +18,7 @@
             android:layout_below="@+id/stationLastUpdate"
             android:layout_marginBottom="8dp"
             card_view:layout_marginEndPercent="1%"
-            card_view:layout_marginStartPercent="2%"
+            card_view:layout_marginStartPercent="1%"
             card_view:layout_widthPercent="17%">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -36,6 +36,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/gotham_black"
                 android:gravity="center"
+                android:maxLines="2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#141414" />
         </RelativeLayout>
@@ -51,9 +52,9 @@
             android:padding="4dp"
             android:src="@drawable/fuel_gasoline"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            card_view:layout_marginEndPercent="1%"
-            card_view:layout_marginStartPercent="1%"
-            card_view:layout_widthPercent="14%" />
+            card_view:layout_marginEndPercent="0.5%"
+            card_view:layout_marginStartPercent="0.5%"
+            card_view:layout_widthPercent="15%" />
 
         <TextView
             android:id="@+id/priceGasoline"
@@ -62,7 +63,7 @@
             android:layout_below="@+id/gasoline"
             android:layout_alignStart="@id/gasoline"
             android:layout_alignEnd="@id/gasoline"
-            android:fontFamily="@font/gotham_bold"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -80,9 +81,9 @@
             android:padding="4dp"
             android:src="@drawable/fuel_diesel"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            card_view:layout_marginEndPercent="1%"
-            card_view:layout_marginStartPercent="1%"
-            card_view:layout_widthPercent="14%" />
+            card_view:layout_marginEndPercent="0.5%"
+            card_view:layout_marginStartPercent="0.5%"
+            card_view:layout_widthPercent="15%" />
 
         <TextView
             android:id="@+id/priceDiesel"
@@ -91,7 +92,7 @@
             android:layout_below="@+id/diesel"
             android:layout_alignStart="@id/diesel"
             android:layout_alignEnd="@id/diesel"
-            android:fontFamily="@font/gotham_bold"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -108,9 +109,9 @@
             android:padding="4dp"
             android:src="@drawable/fuel_lpg"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            card_view:layout_marginEndPercent="1%"
-            card_view:layout_marginStartPercent="1%"
-            card_view:layout_widthPercent="14%" />
+            card_view:layout_marginEndPercent="0.5%"
+            card_view:layout_marginStartPercent="0.5%"
+            card_view:layout_widthPercent="15%" />
 
         <TextView
             android:id="@+id/priceLPG"
@@ -119,7 +120,7 @@
             android:layout_below="@+id/lpg"
             android:layout_alignStart="@id/lpg"
             android:layout_alignEnd="@id/lpg"
-            android:fontFamily="@font/gotham_bold"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -135,9 +136,9 @@
             android:contentDescription="@string/electricity"
             android:padding="4dp"
             android:src="@drawable/fuel_electricity"
-            card_view:layout_marginEndPercent="1%"
-            card_view:layout_marginStartPercent="1%"
-            card_view:layout_widthPercent="14%" />
+            card_view:layout_marginEndPercent="0.5%"
+            card_view:layout_marginStartPercent="0.5%"
+            card_view:layout_widthPercent="15%" />
 
         <TextView
             android:id="@+id/priceElectricity"
@@ -146,7 +147,7 @@
             android:layout_below="@+id/electricity"
             android:layout_alignStart="@id/electricity"
             android:layout_alignEnd="@id/electricity"
-            android:fontFamily="@font/gotham_bold"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -162,9 +163,9 @@
             android:contentDescription="@string/distance"
             android:padding="4dp"
             android:src="@drawable/distance"
-            card_view:layout_marginEndPercent="1%"
-            card_view:layout_marginStartPercent="1%"
-            card_view:layout_widthPercent="14%" />
+            card_view:layout_marginEndPercent="0.5%"
+            card_view:layout_marginStartPercent="0.5%"
+            card_view:layout_widthPercent="15%" />
 
         <TextView
             android:id="@+id/distance_ofStation"
@@ -173,7 +174,7 @@
             android:layout_below="@+id/distance"
             android:layout_alignStart="@id/distance"
             android:layout_alignEnd="@id/distance"
-            android:fontFamily="@font/gotham_bold"
+            android:fontFamily="@font/gotham_book"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />

@@ -10,12 +10,13 @@
         android:id="@+id/inner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:padding="4dp">
 
         <ImageView
             android:id="@+id/gasoline"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
@@ -39,15 +40,15 @@
 
         <ImageView
             android:id="@+id/diesel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
             android:layout_toEndOf="@+id/gasoline"
             android:contentDescription="@string/diesel"
             android:gravity="center"
-            android:padding="2dp"
+            android:padding="4dp"
             app:srcCompat="@drawable/fuel_diesel" />
 
         <TextView
@@ -66,14 +67,14 @@
 
         <ImageView
             android:id="@+id/lpg"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_below="@+id/fiyatBenzin"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
             android:contentDescription="@string/lpg"
-            android:padding="2dp"
+            android:padding="4dp"
             app:srcCompat="@drawable/fuel_lpg" />
 
         <TextView
@@ -92,15 +93,15 @@
 
         <ImageView
             android:id="@+id/electric"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_below="@+id/fiyatDizel"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
             android:layout_toEndOf="@+id/lpg"
             android:contentDescription="@string/electricity"
-            android:padding="2dp"
+            android:padding="4dp"
             app:srcCompat="@drawable/fuel_electricity" />
 
         <TextView

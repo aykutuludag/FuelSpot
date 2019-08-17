@@ -29,7 +29,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/googleMapSearch"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="375dp"
             android:layout_centerHorizontal="true"
             map:cameraTargetLat="39.92505"
             map:cameraTargetLng="32.83476"
