@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         TAX_DIESEL = prefs.getFloat("taxDiesel", 0);
         TAX_LPG = prefs.getFloat("taxLPG", 0);
         TAX_ELECTRICITY = prefs.getFloat("taxElectricity", 0);
-        mapDefaultRange = prefs.getInt("RANGE", 2500);
-        mapDefaultZoom = prefs.getFloat("ZOOM", 13f);
+        mapDefaultRange = prefs.getInt("RANGE", 3000);
+        mapDefaultZoom = prefs.getFloat("ZOOM", 12.5f);
         isGeofenceOpen = prefs.getBoolean("Geofence", true);
         plateNo = prefs.getString("plateNo", "");
         vehicleID = prefs.getInt("vehicleID", 0);
@@ -509,17 +509,17 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
             if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
                 premium = true;
-                mapDefaultRange = 5000;
+                mapDefaultRange = 6000;
                 mapDefaultZoom = 12f;
             } else if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
                 hasDoubleRange = true;
-                mapDefaultRange = 5000;
+                mapDefaultRange = 6000;
                 mapDefaultZoom = 12f;
             } else {
                 hasDoubleRange = false;
                 premium = false;
-                mapDefaultRange = 2500;
-                mapDefaultZoom = 13f;
+                mapDefaultRange = 3000;
+                mapDefaultZoom = 12.5f;
             }
 
             prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();

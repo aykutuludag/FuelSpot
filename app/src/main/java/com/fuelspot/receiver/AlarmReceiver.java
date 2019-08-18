@@ -195,10 +195,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 e.printStackTrace();
                             }
                         } else {
-                            if (mapDefaultRange == 2500) {
-                                mapDefaultRange = 5000;
+                            if (mapDefaultRange == 3000) {
+                                mapDefaultRange = 6000;
                                 fetchStations();
-                            } else if (mapDefaultRange == 5000) {
+                            } else if (mapDefaultRange == 6000) {
                                 mapDefaultRange = 10000;
                                 fetchStations();
                             } else if (mapDefaultRange == 10000) {

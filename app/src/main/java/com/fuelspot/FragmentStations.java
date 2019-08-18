@@ -505,12 +505,12 @@ public class FragmentStations extends Fragment {
                                 Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            if (mapDefaultRange == 2500) {
-                                mapDefaultRange = 5000;
-                                mapDefaultZoom = 13f;
+                            if (mapDefaultRange == 3000) {
+                                mapDefaultRange = 6000;
+                                mapDefaultZoom = 12f;
                                 Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 updateMap();
-                            } else if (mapDefaultRange == 5000) {
+                            } else if (mapDefaultRange == 6000) {
                                 mapDefaultRange = 10000;
                                 mapDefaultZoom = 11.5f;
                                 Toast.makeText(getActivity(), getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();

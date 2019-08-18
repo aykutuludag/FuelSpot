@@ -144,13 +144,13 @@ public class SuperStoreActivity extends AppCompatActivity implements PurchasesUp
 
             if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
                 premium = true;
-                mapDefaultRange = 5000;
+                mapDefaultRange = 6000;
                 mapDefaultZoom = 12f;
 
                 Toast.makeText(SuperStoreActivity.this, getString(R.string.premium_successful), Toast.LENGTH_LONG).show();
             } else if (ownedSkus.contains("2x_range") || ownedSkus.contains("2x_range_super")) {
                 hasDoubleRange = true;
-                mapDefaultRange = 5000;
+                mapDefaultRange = 6000;
                 mapDefaultZoom = 12f;
 
                 Toast.makeText(SuperStoreActivity.this, getString(R.string.double_range_successful), Toast.LENGTH_LONG).show();

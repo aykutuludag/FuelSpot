@@ -73,7 +73,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
@@ -464,7 +464,7 @@ public class StationDetails extends AppCompatActivity {
             fetchStation();
         }
 
-        NativeExpressAdView mAdView = findViewById(R.id.nativeAdView);
+        final AdView mAdView = findViewById(R.id.nativeAdView);
         if (premium) {
             mAdView.setVisibility(View.GONE);
         } else {
