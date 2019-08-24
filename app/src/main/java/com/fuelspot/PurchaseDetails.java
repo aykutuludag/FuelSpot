@@ -253,7 +253,7 @@ public class PurchaseDetails extends AppCompatActivity {
         if (isPurchaseVerified == -1) {
             Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
 
-            textViewStatus.setText("Satınalma onaylanmadı. Detaylar için gelen kutusuna bakınız.");
+            textViewStatus.setText("Satınalma yapılan inceleme sonrası onaylanmadı.");
 
             addBillPhotoButton.setVisibility(View.GONE);
         } else if (isPurchaseVerified == 1) {

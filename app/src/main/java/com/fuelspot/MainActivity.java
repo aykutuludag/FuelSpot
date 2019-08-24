@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int kilometer;
     public static int mapDefaultRange;
     public static String token, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
-    public static int adCount;
+    public static int adCount = 0;
     public static InterstitialAd admobInterstitial;
     public AHBottomNavigation bottomNavigation;
     public MenuItem filterButton, favoriteButton, searchButton;

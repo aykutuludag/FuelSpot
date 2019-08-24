@@ -251,7 +251,7 @@
     <string name="premium_version_desc">2x Menzil + Reklam Yok + Sokak Görünümü + Sınırsız Favori İstasyon \n\n Premium sürüm keyfini çıkarabilmen için ilk 3 gün ücretsiz!</string>
     <string name="start_subscription">Üyeliği başlat</string>
     <string name="double_range">2x Menzil</string>
-    <string name="double_range_desc">Menzilinizi 2\'ye katlar! (5000 metre)</string>
+    <string name="double_range_desc">Menzilinizi 2\'ye katlar! (6000 metre)</string>
     <string name="buy">Satın al</string>
     <string name="reward">Ödül</string>
     <string name="insufficient_balance">Bakiye yetersiz</string>

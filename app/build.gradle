@@ -9,8 +9,8 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 83
-        versionName "1.2.7"
+        versionCode 84
+        versionName "1.2.8"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
     }
@@ -49,7 +49,7 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.android.billingclient:billing:2.0.2'
+    implementation 'com.android.billingclient:billing:2.0.3'
 
     // PLAY-SERVICES
     implementation 'com.google.android.gms:play-services-location:17.0.0'
@@ -59,8 +59,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-awareness:17.1.0'
 
     // FIREBASE
-    implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
     implementation 'com.google.firebase:firebase-appindexing:19.0.0'
     implementation 'com.google.firebase:firebase-ads:18.1.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
