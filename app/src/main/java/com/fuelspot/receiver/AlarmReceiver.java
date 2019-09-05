@@ -114,7 +114,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
                                 Location locLastKnown = new Location("");
                                 locLastKnown.setLatitude(Double.parseDouble(userlat));
                                 locLastKnown.setLongitude(Double.parseDouble(userlon));
@@ -170,7 +170,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     item.setVicinity(obj.getString("vicinity"));
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
                                     item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));

@@ -85,7 +85,6 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
-import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
@@ -165,7 +164,7 @@ public class FragmentMyStation extends Fragment {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
                                 userlat = String.valueOf(locCurrent.getLatitude());
                                 userlon = String.valueOf(locCurrent.getLongitude());
                                 prefs.edit().putString("lat", userlat).apply();
@@ -381,7 +380,6 @@ public class FragmentMyStation extends Fragment {
         info.setVicinity(superStationAddress);
         info.setCountryCode(superStationCountry);
         info.setLocation(superStationLocation);
-        info.setGoogleMapID(superGoogleID);
         info.setFacilities(superFacilities);
         info.setLicenseNo(superLicenseNo);
         info.setOwner(username);

@@ -331,13 +331,13 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         getVariables(prefs);
         queue = Volley.newRequestQueue(this);
 
+        // Initializing GoogleMaps
+        MapsInitializer.initialize(this.getApplicationContext());
+
         // Custom Tab
         customTabBuilder.enableUrlBarHiding();
         customTabBuilder.setShowTitle(true);
         customTabBuilder.setToolbarColor(Color.parseColor("#FF7439"));
-
-        // Initializing GoogleMaps
-        MapsInitializer.initialize(this);
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.mainContainer);

@@ -325,7 +325,7 @@
                     android:layout_margin="8dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:text="Aracınızı FuelSpot'a kaydederek akaryakıt alışverişlerinizde %1 bonus kazanırsınız. Kazandığınız bonusları FuelSpot Mağaza'da harcayabilirsiniz. \n\n Bu kampanya yalnızca binek otomobil ve motorsikletler için geçerlidir. Perakende alımlar kampanyaya dahil değildir."
+                    android:text="Aracınızı FuelSpot'a kaydederek akaryakıt alışverişlerinizde %1 bonus kazanırsınız. Kazandığınız bonusları FuelSpot Mağaza'da harcayabilirsiniz. Yakıt alırken FuelSpot'ı açarak gelecek bildirim aracılığıyla yakıt ekleyebilirsiniz. \n\n Bu kampanya yalnızca binek otomobil ve motorsikletler için geçerlidir. Perakende alımlar kampanyaya dahil değildir."
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121" />
 

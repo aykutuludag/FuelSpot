@@ -263,6 +263,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     //Registration finished
                     isSigned = true;
                     prefs.edit().putBoolean("isSigned", isSigned).apply();
+
                     Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();

@@ -358,7 +358,6 @@ public class AddStation extends AppCompatActivity {
                                 superStationITEM.setVicinity(stationAddress);
                                 superStationITEM.setCountryCode(stationCountry);
                                 superStationITEM.setLocation(stationCoordinates);
-                                superStationITEM.setGoogleMapID(googleID);
                                 superStationITEM.setFacilities(stationFacilities);
                                 superStationITEM.setLicenseNo(licenseNo);
                                 superStationITEM.setPhotoURL(stationLogo);
@@ -645,7 +644,6 @@ public class AddStation extends AppCompatActivity {
                                     item.setVicinity(obj.getString("vicinity"));
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
                                     item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));

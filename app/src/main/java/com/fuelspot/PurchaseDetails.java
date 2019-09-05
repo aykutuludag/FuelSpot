@@ -401,7 +401,6 @@ public class PurchaseDetails extends AppCompatActivity {
                             info.setVicinity(obj.getString("vicinity"));
                             info.setCountryCode(obj.getString("country"));
                             info.setLocation(obj.getString("location"));
-                            info.setGoogleMapID(obj.getString("googleID"));
                             info.setFacilities(obj.getString("facilities"));
                             info.setLicenseNo(obj.getString("licenseNo"));
                             info.setOwner(obj.getString("owner"));

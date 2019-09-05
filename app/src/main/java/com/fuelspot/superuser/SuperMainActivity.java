@@ -95,7 +95,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
     public static int isStationVerified, superStationID;
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
-    public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, ownedOtherFuels, superGoogleID, superFacilities, superLastUpdate;
+    public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, ownedOtherFuels, superFacilities, superLastUpdate;
     public AHBottomNavigation bottomNavigation;
     public MenuItem filterButton, favoriteButton, searchButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
@@ -115,7 +115,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         superStationAddress = prefs.getString("SuperStationAddress", "");
         superStationCountry = prefs.getString("SuperStationCountry", "");
         superStationLocation = prefs.getString("SuperStationLocation", "");
-        superGoogleID = prefs.getString("SuperGoogleID", "");
         superFacilities = prefs.getString("SuperStationFacilities", "");
         superStationLogo = prefs.getString("SuperStationLogo", "");
         ownedGasolinePrice = prefs.getFloat("superGasolinePrice", 0);
@@ -372,7 +371,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                         item.setVicinity(obj.getString("vicinity"));
                                         item.setCountryCode(obj.getString("country"));
                                         item.setLocation(obj.getString("location"));
-                                        item.setGoogleMapID(obj.getString("googleID"));
                                         item.setFacilities(obj.getString("facilities"));
                                         item.setLicenseNo(obj.getString("licenseNo"));
                                         item.setOwner(obj.getString("owner"));
@@ -451,9 +449,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
 
         superStationLocation = item.getLocation();
         prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-        superGoogleID = item.getGoogleMapID();
-        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
         superFacilities = item.getFacilities();
         prefs.edit().putString("SuperStationFacilities", superFacilities).apply();

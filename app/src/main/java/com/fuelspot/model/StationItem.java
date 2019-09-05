@@ -72,14 +72,6 @@ public class StationItem {
         this.facilities = facilities;
     }
 
-    public String getGoogleMapID() {
-        return googleMapID;
-    }
-
-    public void setGoogleMapID(String googleMapID) {
-        this.googleMapID = googleMapID;
-    }
-
     public String getLicenseNo() {
         return licenseNo;
     }

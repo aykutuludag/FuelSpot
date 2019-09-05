@@ -63,7 +63,6 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
-import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
@@ -800,7 +799,6 @@ public class SuperUpdateStation extends AppCompatActivity {
                                     item.setVicinity(obj.getString("vicinity"));
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
                                     item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));
@@ -873,9 +871,6 @@ public class SuperUpdateStation extends AppCompatActivity {
 
         superStationLocation = item.getLocation();
         prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-        superGoogleID = item.getGoogleMapID();
-        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
         superFacilities = item.getFacilities();
         prefs.edit().putString("SuperStationFacilities", superFacilities).apply();

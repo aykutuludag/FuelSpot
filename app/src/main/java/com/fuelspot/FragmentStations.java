@@ -197,7 +197,7 @@ public class FragmentStations extends Fragment {
                             super.onLocationResult(locationResult);
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 2) {
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();
@@ -448,7 +448,6 @@ public class FragmentStations extends Fragment {
                                     item.setVicinity(obj.getString("vicinity"));
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
                                     item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));

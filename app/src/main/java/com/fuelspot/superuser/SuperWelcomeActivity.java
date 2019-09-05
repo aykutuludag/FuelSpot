@@ -162,7 +162,6 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
-import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
@@ -702,7 +701,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                     item.setVicinity(obj.getString("vicinity"));
                                     item.setCountryCode(obj.getString("country"));
                                     item.setLocation(obj.getString("location"));
-                                    item.setGoogleMapID(obj.getString("googleID"));
                                     item.setFacilities(obj.getString("facilities"));
                                     item.setLicenseNo(obj.getString("licenseNo"));
                                     item.setOwner(obj.getString("owner"));
@@ -802,9 +800,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
         superStationLocation = item.getLocation();
         prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-        superGoogleID = item.getGoogleMapID();
-        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
         superFacilities = item.getFacilities();
         prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
@@ -1172,7 +1167,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 superStationAddress = obj.getString("vicinity");
                                 superStationCountry = obj.getString("country");
                                 superStationLocation = obj.getString("location");
-                                superGoogleID = obj.getString("googleID");
                                 superFacilities = obj.getString("facilities");
                                 superStationLogo = obj.getString("logoURL");
                                 ownedGasolinePrice = (float) obj.getDouble("gasolinePrice");
@@ -1190,7 +1184,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 superStationITEM.setVicinity(superStationAddress);
                                 superStationITEM.setCountryCode(superStationCountry);
                                 superStationITEM.setLocation(superStationLocation);
-                                superStationITEM.setGoogleMapID(superGoogleID);
                                 superStationITEM.setFacilities(superFacilities);
                                 superStationITEM.setLicenseNo(superLicenseNo);
                                 superStationITEM.setPhotoURL(superStationLogo);
@@ -1403,7 +1396,6 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                 prefs.edit().putString("SuperStationAddress", superStationAddress).apply();
                                 prefs.edit().putString("SuperStationCountry", superStationCountry).apply();
                                 prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-                                prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
                                 prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
                                 prefs.edit().putString("SuperStationLogo", superStationLogo).apply();
                                 prefs.edit().putFloat("superGasolinePrice", ownedGasolinePrice).apply();

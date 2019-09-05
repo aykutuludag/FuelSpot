@@ -38,7 +38,6 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.showAds;
-import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 import static com.fuelspot.superuser.SuperMainActivity.ownedDieselPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedElectricityPrice;
@@ -46,7 +45,6 @@ import static com.fuelspot.superuser.SuperMainActivity.ownedGasolinePrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedLPGPrice;
 import static com.fuelspot.superuser.SuperMainActivity.ownedOtherFuels;
 import static com.fuelspot.superuser.SuperMainActivity.superFacilities;
-import static com.fuelspot.superuser.SuperMainActivity.superGoogleID;
 import static com.fuelspot.superuser.SuperMainActivity.superLastUpdate;
 import static com.fuelspot.superuser.SuperMainActivity.superLicenseNo;
 import static com.fuelspot.superuser.SuperMainActivity.superStationAddress;
@@ -96,24 +94,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         }
     };
 
-    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            ViewHolder holder = (ViewHolder) v.getTag();
-            int position = holder.getAdapterPosition();
-            int stationID = feedItemList.get(position).getID();
-            if (userFavorites.contains(stationID + ";")) {
-                userFavorites = userFavorites.replace(stationID + ";", "");
-                Toast.makeText(mContext, mContext.getString(R.string.removed_from_favs), Toast.LENGTH_SHORT).show();
-            } else {
-                userFavorites += stationID + ";";
-                Toast.makeText(mContext, mContext.getString(R.string.added_to_favs), Toast.LENGTH_SHORT).show();
-            }
-            prefs.edit().putString("userFavorites", userFavorites).apply();
-            return false;
-        }
-    };
-
     public StationAdapter(Context context, List<StationItem> feedItemList, String whichPage) {
         this.feedItemList = feedItemList;
         this.mContext = context;
@@ -137,9 +117,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         superStationLocation = item.getLocation();
         prefs.edit().putString("SuperStationLocation", superStationLocation).apply();
-
-        superGoogleID = item.getGoogleMapID();
-        prefs.edit().putString("SuperGoogleID", superGoogleID).apply();
 
         superFacilities = item.getFacilities();
         prefs.edit().putString("SuperStationFacilities", superFacilities).apply();
@@ -267,7 +244,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
         // Handle click event on image click
         viewHolder.background.setOnClickListener(clickListener);
-        viewHolder.background.setOnLongClickListener(longClickListener);
         viewHolder.background.setTag(viewHolder);
     }
 

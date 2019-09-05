@@ -114,7 +114,6 @@ public class UserFavorites extends AppCompatActivity {
                             item.setVicinity(obj.getString("vicinity"));
                             item.setCountryCode(obj.getString("country"));
                             item.setLocation(obj.getString("location"));
-                            item.setGoogleMapID(obj.getString("googleID"));
                             item.setFacilities(obj.getString("facilities"));
                             item.setLicenseNo(obj.getString("licenseNo"));
                             item.setOwner(obj.getString("owner"));

@@ -165,7 +165,7 @@ public class StationDetails extends AppCompatActivity {
     private PopupWindow mPopupWindow;
     private RequestQueue requestQueue;
     private CircleImageView stationIcon, verifiedSection, imageViewWC, imageViewMarket, imageViewCarWash, imageViewTireRepair, imageViewMechanic, imageViewRestaurant, imageViewParkSpot, imageViewATM, imageViewMotel, imageViewMosque, imageViewCoffeeShop;
-    private Button seeAllComments;
+    private Button seeAllComments, buttonWriteReview;
     private LineChart chart;
     private Bitmap bitmap;
     private ImageView reportStationPhoto;
@@ -327,6 +327,13 @@ public class StationDetails extends AppCompatActivity {
         });
         RelativeLayout commentSection = findViewById(R.id.section_comment);
         noCommentText = findViewById(R.id.noCommentText);
+        buttonWriteReview = findViewById(R.id.button_add_comment);
+        buttonWriteReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addUpdateCommentPopup(v);
+            }
+        });
         commentSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -696,7 +703,6 @@ public class StationDetails extends AppCompatActivity {
             textElectricity.setText(electricityPrice + " " + currencySymbol);
         }
 
-        // İkincil yakıtlar v1.1
         if (otherFuelsOfStation != null && otherFuelsOfStation.length() > 0) {
             try {
                 JSONArray secondaryFuelRes = new JSONArray(otherFuelsOfStation);
@@ -721,7 +727,6 @@ public class StationDetails extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        // İkincil yakıtlar v1.1
 
         try {
             SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
@@ -846,7 +851,6 @@ public class StationDetails extends AppCompatActivity {
                 imageViewMotel.setAlpha(0.25f);
             }
 
-            /* NEW FACILITIES v1.1 */
             if (!facilitiesObj.has("CoffeeShop")) {
                 imageViewCoffeeShop.setAlpha(0.25f);
             } else {
@@ -866,7 +870,6 @@ public class StationDetails extends AppCompatActivity {
                     imageViewMosque.setAlpha(0.25f);
                 }
             }
-            /* NEW FACILITIES v1.1 */
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1022,6 +1025,7 @@ public class StationDetails extends AppCompatActivity {
                                     floatingActionButton1.setLabelText(getString(R.string.add_comment));
                                 }
 
+                                buttonWriteReview.setVisibility(View.GONE);
                                 noCommentText.setVisibility(View.GONE);
 
                                 // Calculate station score
@@ -1039,11 +1043,13 @@ public class StationDetails extends AppCompatActivity {
                                 hasAlreadyCommented = false;
                                 textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
                                 noCommentText.setVisibility(View.VISIBLE);
+                                buttonWriteReview.setVisibility(View.VISIBLE);
                             }
                         } else {
                             hasAlreadyCommented = false;
                             textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
                             noCommentText.setVisibility(View.VISIBLE);
+                            buttonWriteReview.setVisibility(View.VISIBLE);
                         }
                     }
                 },
@@ -1053,6 +1059,7 @@ public class StationDetails extends AppCompatActivity {
                         hasAlreadyCommented = false;
                         textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
                         noCommentText.setVisibility(View.VISIBLE);
+                        buttonWriteReview.setVisibility(View.VISIBLE);
                     }
                 }) {
             @Override
