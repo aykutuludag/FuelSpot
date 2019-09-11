@@ -3,14 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.fuelspot">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="com.android.vending.BILLING" />
-
     <application
         android:name=".Application"
         android:allowBackup="false"
@@ -22,28 +14,6 @@
         tools:replace="android:allowBackup"
         tools:targetApi="n">
         <activity
-            android:name=".SearchActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity">
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ActivitySearch" />
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
@@ -54,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -173,7 +144,33 @@
         <activity
             android:name=".ReportMissingStation"
             android:label="@string/title_activity_report_missing_station"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- SuperUser Class -->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddManuelFuel"
+            android:label="@string/add_fuel"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".SearchActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".ActivitySearch" />
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <!-- SuperUser Class -->
         <activity
             android:name=".superuser.SuperWelcomeActivity"
             android:screenOrientation="portrait"
@@ -208,30 +205,11 @@
             android:name=".superuser.SuperStoreActivity"
             android:label="@string/store"
             android:parentActivityName=".superuser.SuperMainActivity"
-            android:screenOrientation="portrait" /> <!-- AlarmReceiver -->
-        <receiver android:name=".receiver.AlarmReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".receiver.FenceReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.fuelspot.FENCE_RECEIVER_ACTION" />
-            </intent-filter>
-        </receiver> <!-- AdMob -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admobAppId" /> <!-- Facebook -->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name" /> <!-- AlarmReceiver -->
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -243,30 +221,30 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity> <!-- Google Maps && PlaceAutoComplete && Awareness -->
+        </activity>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admobAppId" /> <!-- AdMob -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" /> <!-- Facebook -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_key" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/google_key" /> <!-- Firebase -->
-        <service
-            android:name=".service.MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
+            android:value="@string/google_key" /> <!-- Google Maps && PlaceAutoComplete && Awareness -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" /> <!-- FileProvider -->
+            android:resource="@color/colorAccent" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -275,7 +253,40 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider>
+        </provider> <!-- Firebase -->
+        <receiver android:name=".receiver.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.FenceReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.fuelspot.FENCE_RECEIVER_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".service.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service> <!-- FileProvider -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

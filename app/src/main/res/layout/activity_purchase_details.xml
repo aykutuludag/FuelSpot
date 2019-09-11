@@ -297,47 +297,6 @@
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/white_box">
 
-                    <TextView
-                        android:id="@+id/bonus_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:fontFamily="@font/gotham_bold"
-                        android:gravity="center"
-                        android:text="@string/bonus"
-                        android:textAlignment="center"
-                        android:textColor="#161616"
-                        android:textSize="18sp" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/statusIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/bonus_title"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/icon_coin" />
-
-                    <TextView
-                        android:id="@+id/statusText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/statusIcon"
-                        android:layout_alignBottom="@id/statusIcon"
-                        android:layout_marginEnd="8dp"
-                        android:layout_toEndOf="@+id/statusIcon"
-                        android:fontFamily="@font/gotham_book"
-                        android:text="Fiş/Fatura fotoğrafı ekleyerek - FP bonus kazanabilirsiniz!"
-                        android:textAlignment="center"
-                        android:textColor="#161616" />
-
                     <Button
                         android:id="@+id/button_add_bill"
                         android:layout_width="wrap_content"
@@ -369,6 +328,47 @@
                         android:background="@drawable/icon_upload"
                         android:scaleType="fitCenter"
                         android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/bonus_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_bold"
+                        android:gravity="center"
+                        android:text="@string/bonus"
+                        android:textAlignment="center"
+                        android:textColor="#161616"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/statusText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/statusIcon"
+                        android:layout_alignBottom="@id/statusIcon"
+                        android:layout_marginEnd="8dp"
+                        android:layout_toEndOf="@+id/statusIcon"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="Fiş/Fatura fotoğrafı ekleyerek - FP bonus kazanabilirsiniz!"
+                        android:textAlignment="center"
+                        android:textColor="#161616" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/statusIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_below="@id/bonus_title"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/icon_coin" />
                 </RelativeLayout>
             </RelativeLayout>
         </ScrollView>

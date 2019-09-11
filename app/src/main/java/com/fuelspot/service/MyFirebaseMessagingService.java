@@ -6,17 +6,23 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.fuelspot.LoginActivity;
 import com.fuelspot.R;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import static com.fuelspot.MainActivity.AdMob;
+import static com.fuelspot.MainActivity.firebaseToken;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -26,8 +32,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private PendingIntent pIntent;
 
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NonNull String token) {
         Log.d("Firebase", "Refreshed token: " + token);
+        firebaseToken = token;
+        SharedPreferences prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        prefs.edit().putString("firebaseToken", firebaseToken).apply();
     }
 
     @Override
@@ -38,12 +47,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             title = getString(R.string.app_name);
         }
 
-        if (remoteMessage.getData() != null && remoteMessage.getData().size() > 0) {
+        if (remoteMessage.getData().size() > 0) {
             newsURL = remoteMessage.getData().get("URL");
         } else {
             newsURL = "https://fuelspot.com.tr";
         }
 
+        MobileAds.initialize(this, getString(R.string.admobAppId));
+        AdMob(this);
         sendNotification(title, newsURL);
     }
 

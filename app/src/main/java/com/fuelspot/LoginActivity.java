@@ -319,7 +319,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             }
         } else {
-            //First login
+            // First login
             AdMob(LoginActivity.this);
         }
     }

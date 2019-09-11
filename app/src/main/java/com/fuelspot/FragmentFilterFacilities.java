@@ -25,6 +25,7 @@ import static com.fuelspot.FragmentFilterDistributors.filterStation8;
 import static com.fuelspot.FragmentFilterDistributors.filterStation9;
 import static com.fuelspot.MainActivity.fragmentsUser;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.superuser.SuperMainActivity.fragmentsSuperUser;
 
 public class FragmentFilterFacilities extends Fragment {
 
@@ -38,7 +39,7 @@ public class FragmentFilterFacilities extends Fragment {
 
         fragmentFilter = (FragmentFilter) getActivity().getSupportFragmentManager().findFragmentByTag("FragmentFilter");
         if (isSuperUser) {
-            fragmentStations = (FragmentStations) fragmentsUser.get(2);
+            fragmentStations = (FragmentStations) fragmentsSuperUser.get(2);
         } else {
             fragmentStations = (FragmentStations) fragmentsUser.get(0);
         }

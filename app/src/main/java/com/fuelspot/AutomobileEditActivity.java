@@ -294,8 +294,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         //PlakaNO
         final EditText plateText = findViewById(R.id.editText_plate);
         plateText.setText(plateNo);
-        if (vehiclePurchaseList.size() > 0) {
-            plateText.setEnabled(false);
+        if (vehiclePurchaseList != null && vehiclePurchaseList.size() > 0) {
+            for (int i = 0; i < vehiclePurchaseList.size(); i++) {
+                if (vehiclePurchaseList.get(i).getIsVerified() == 1) {
+                    plateText.setEnabled(false);
+                    break;
+                }
+            }
         } else {
             TextWatcher mTextWatcher = new TextWatcher() {
                 @Override
@@ -331,6 +336,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             };
             plateText.setFilters(new InputFilter[]{filter});
             plateText.addTextChangedListener(mTextWatcher);
+            plateText.setEnabled(true);
         }
 
         final int vehicleNumber = userAutomobileList.size();

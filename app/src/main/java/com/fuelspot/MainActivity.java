@@ -20,8 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Base64;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -70,6 +69,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -111,11 +111,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     public static int fuelSec;
     public static int kilometer;
     public static int mapDefaultRange;
-    public static String token, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
+    public static String token, firebaseToken, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static int adCount = 0;
     public static InterstitialAd admobInterstitial;
     public AHBottomNavigation bottomNavigation;
-    public MenuItem filterButton, favoriteButton, searchButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     public static List<Fragment> fragmentsUser = new ArrayList<>(5);
     private SharedPreferences prefs;
@@ -175,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         currencySymbol = prefs.getString("userCurrencySymbol", "");
         userFavorites = prefs.getString("userFavorites", "");
         token = prefs.getString("token", "");
+        firebaseToken = prefs.getString("firebaseToken", "");
         doesStreetViewShown = prefs.getBoolean("StreetViewShown", false);
     }
 
@@ -330,6 +330,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         getVariables(prefs);
         queue = Volley.newRequestQueue(this);
+
+        if (firebaseToken.length() > 0) {
+            registerToken();
+        }
 
         // Initializing GoogleMaps
         MapsInitializer.initialize(this.getApplicationContext());
@@ -783,6 +787,53 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
+    private void registerToken() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_UPDATE_USER),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            if (response.equals("Success")) {
+                                Log.d("REGISTER_TOKEN", "SUCCESS");
+                            } else {
+                                Log.d("REGISTER_TOKEN", "FAIL");
+                            }
+                        } else {
+                            Log.d("REGISTER_TOKEN", "FAIL");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.d("REGISTER_TOKEN", "FAIL");
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("token", firebaseToken);
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
     public static void dimBehind(PopupWindow popupWindow) {
         View container;
         if (popupWindow.getBackground() == null) {
@@ -830,34 +881,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_stations, menu);
-        filterButton = menu.findItem(R.id.filter_stations);
-        favoriteButton = menu.findItem(R.id.favorite_stations);
-        searchButton = menu.findItem(R.id.search_station);
+    public boolean onTabSelected(int position, boolean wasSelected) {
+        mFragNavController.switchTab(position);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.filter_stations) {
-            new FragmentFilter().show(getSupportFragmentManager(), "FragmentFilter");
-        } else if (item.getItemId() == R.id.favorite_stations) {
-            Intent intent = new Intent(MainActivity.this, UserFavorites.class);
-            startActivity(intent);
-        } else if (item.getItemId() == R.id.search_station) {
-            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (queue != null) {
-            queue.cancelAll(this);
-        }
     }
 
     @Override
@@ -931,20 +957,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     @Override
-    public boolean onTabSelected(int position, boolean wasSelected) {
-        if (filterButton != null && favoriteButton != null) {
-            if (position == 0) {
-                filterButton.setVisible(true);
-                favoriteButton.setVisible(true);
-                searchButton.setVisible(true);
-            } else {
-                filterButton.setVisible(false);
-                favoriteButton.setVisible(false);
-                searchButton.setVisible(false);
-            }
+    public void onDestroy() {
+        super.onDestroy();
+        if (queue != null) {
+            queue.cancelAll(this);
         }
-        mFragNavController.switchTab(position);
-        return true;
     }
 
     /**

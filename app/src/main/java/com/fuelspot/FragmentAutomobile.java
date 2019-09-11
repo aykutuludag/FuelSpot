@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -104,6 +107,7 @@ public class FragmentAutomobile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_automobile, container, false);
+            setHasOptionsMenu(true);
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -195,7 +199,7 @@ public class FragmentAutomobile extends Fragment {
         Glide.with(getActivity()).load(carPhoto).apply(options).into(carPhotoHolder);
 
         kilometerText = view.findViewById(R.id.automobile_kilometer);
-        String kmHolder = kilometer + " km";
+        String kmHolder = kilometer + " KM";
         kilometerText.setText(kmHolder);
 
         textViewPlaka = view.findViewById(R.id.automobile_plateNo);
@@ -363,6 +367,7 @@ public class FragmentAutomobile extends Fragment {
 
                                     if (i < 3) {
                                         dummyPurchaseList.add(item);
+                                        buttonSeeAllPurchases.setVisibility(View.GONE);
                                     } else {
                                         buttonSeeAllPurchases.setVisibility(View.VISIBLE);
                                     }
@@ -387,7 +392,7 @@ public class FragmentAutomobile extends Fragment {
                                 }
 
                                 // We're sync consumption values in here. Passive update mechanism
-                                if (averageCons != calculateAvgPrice()) {
+                                if (averageCons != 0) {
                                     updateVehicle();
                                 }
 
@@ -577,6 +582,22 @@ public class FragmentAutomobile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_automobile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_fuel) {
+            Intent intent = new Intent(getActivity(), AddManuelFuel.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

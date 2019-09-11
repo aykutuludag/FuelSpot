@@ -70,6 +70,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -118,6 +119,8 @@ public class PurchaseDetails extends AppCompatActivity {
     private int stationID;
     SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private int remainingHour, remainingMin;
+    boolean isLocalPurchase;
+    TextView bonusText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +148,6 @@ public class PurchaseDetails extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         mMapView = findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
 
         // Variables from Intent
         purchaseID = getIntent().getIntExtra("PURCHASE_ID", 0);
@@ -168,25 +170,9 @@ public class PurchaseDetails extends AppCompatActivity {
         String purchaseTime = getIntent().getStringExtra("PURCHASE_TIME");
         // Variables from Intent
 
-        // Remaining time for uploading bill photo
-        try {
-            Date date = format.parse(purchaseTime);
-            Date dateNow = new Date(System.currentTimeMillis());
+        isLocalPurchase = stationID == -1;
 
-            int howManyHourPassed = (int) (dateNow.getTime() - date.getTime()) / (1000 * 60 * 60);
-            int howManyMinPassed = (int) (dateNow.getTime() - date.getTime() - (remainingHour * 1000 * 60 * 60)) / (1000 * 60);
-
-            if (howManyHourPassed <= 23 || howManyMinPassed <= 59) {
-                remainingHour = howManyHourPassed;
-                remainingMin = howManyMinPassed;
-            } else {
-                remainingHour = 0;
-                remainingMin = 0;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        bonusText = findViewById(R.id.bonus_title);
         istasyonLogo = findViewById(R.id.imageViewStationLogo);
         CircleImageView circleImageViewStatus = findViewById(R.id.statusIcon);
         TextView textViewStatus = findViewById(R.id.statusText);
@@ -202,6 +188,31 @@ public class PurchaseDetails extends AppCompatActivity {
         TextView vergi = findViewById(R.id.totalTax);
         TextView toplamfiyat = findViewById(R.id.totalPrice);
         RelativeTimeTextView tarih = findViewById(R.id.purchaseTime);
+
+        // Remaining time for uploading bill photo
+        if (!isLocalPurchase) {
+            try {
+                Date dateNow = Calendar.getInstance().getTime();
+                Date date = format.parse(purchaseTime);
+                float hourWithDecimal = (float) (dateNow.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+                if ((24 - hourWithDecimal) < 0) {
+                    // more than 24 hour;
+                    remainingHour = 0;
+                    remainingMin = 0;
+                } else if ((24 - hourWithDecimal) < 1) {
+                    // less than 1 hour left
+                    remainingHour = 0;
+                    remainingMin = (int) (60 * (24 - hourWithDecimal));
+                } else {
+                    // more than 1 hour left
+                    remainingHour = (int) (24 - hourWithDecimal);
+                    remainingMin = (int) (60 * (24 - hourWithDecimal - remainingHour));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -234,56 +245,70 @@ public class PurchaseDetails extends AppCompatActivity {
         addBillPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isPurchaseVerified == 1) {
-                    Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
-                } else {
-                    if (remainingHour > 0 || remainingMin > 0) {
-                        if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
-                            ImagePicker.cameraOnly().start(PurchaseDetails.this);
-                        } else {
-                            ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
-                        }
+                if (!isLocalPurchase) {
+                    if (isPurchaseVerified == 1) {
+                        Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(PurchaseDetails.this, "Üzerinden 24 saatten fazla süre geçmiş satınalmalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                        if (remainingHour > 0 || remainingMin > 0) {
+                            if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
+                                ImagePicker.cameraOnly().start(PurchaseDetails.this);
+                            } else {
+                                ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                            }
+                        } else {
+                            Toast.makeText(PurchaseDetails.this, "Üzerinden 24 saatten fazla süre geçmiş satınalmalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } else {
+                    if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
+                        ImagePicker.cameraOnly().start(PurchaseDetails.this);
+                    } else {
+                        ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                     }
                 }
             }
         });
 
-        if (isPurchaseVerified == -1) {
-            Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
+        if (!isLocalPurchase) {
+            if (isPurchaseVerified == -1) {
+                Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
 
-            textViewStatus.setText("Satınalma yapılan inceleme sonrası onaylanmadı.");
+                textViewStatus.setText("Satınalma yapılan inceleme sonrası onaylanmadı.");
 
-            addBillPhotoButton.setVisibility(View.GONE);
-        } else if (isPurchaseVerified == 1) {
-            Glide.with(this).load(R.drawable.verified).apply(options).into(circleImageViewStatus);
+                addBillPhotoButton.setVisibility(View.GONE);
+            } else if (isPurchaseVerified == 1) {
+                Glide.with(this).load(R.drawable.verified).apply(options).into(circleImageViewStatus);
 
-            textViewStatus.setText("Satınalma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
-            fab.hide();
+                textViewStatus.setText("Satınalma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
+                fab.hide();
 
-            addBillPhotoButton.setVisibility(View.GONE);
-        } else {
-            if (billPhoto != null && billPhoto.length() > 0) {
-                Glide.with(this).load(R.drawable.ic_waiting).apply(options).into(circleImageViewStatus);
-
-                textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
-
-                addBillPhotoButton.setVisibility(View.VISIBLE);
-                addBillPhotoButton.setText("Fotoğrafı güncelle");
+                addBillPhotoButton.setVisibility(View.GONE);
             } else {
-                if (remainingHour > 0 || remainingMin > 0) {
-                    Glide.with(this).load(R.drawable.money).apply(options).into(circleImageViewStatus);
+                if (billPhoto != null && billPhoto.length() > 0) {
+                    Glide.with(this).load(R.drawable.ic_waiting).apply(options).into(circleImageViewStatus);
 
-                    textViewStatus.setText("Fiş/Fatura fotoğrafı ekle, " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazan! Fotoğraf eklemek için son " + remainingHour + " saat " + remainingMin + " dakika!");
+                    textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+
+                    addBillPhotoButton.setVisibility(View.VISIBLE);
                     addBillPhotoButton.setText("Fotoğrafı güncelle");
-                    addBillPhotoButton.setText("Fotoğraf ekle");
                 } else {
-                    Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
-                    addBillPhotoButton.setVisibility(View.GONE);
-                    textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
+                    if (remainingHour > 0 || remainingMin > 0) {
+                        Glide.with(this).load(R.drawable.money).apply(options).into(circleImageViewStatus);
+
+                        textViewStatus.setText("Fiş/Fatura fotoğrafı ekle, " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazan! Fotoğraf eklemek için son " + remainingHour + " saat " + remainingMin + " dakika!");
+                        addBillPhotoButton.setText("Fotoğrafı güncelle");
+                        addBillPhotoButton.setText("Fotoğraf ekle");
+                    } else {
+                        Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
+                        addBillPhotoButton.setVisibility(View.GONE);
+                        textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
+                    }
                 }
             }
+
+        } else {
+            bonusText.setText("Fatura");
+            textViewStatus.setText("Fiş/fatura ekleyerek satın almanızı daha kolay hatırlayabilirsiniz.");
         }
 
         switch (fuelType1) {
@@ -344,7 +369,11 @@ public class PurchaseDetails extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        checkLocationPermission();
+        if (!isLocalPurchase) {
+            checkLocationPermission();
+        } else {
+            mMapView.setVisibility(View.GONE);
+        }
     }
 
     private void checkLocationPermission() {
@@ -771,4 +800,63 @@ public class PurchaseDetails extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mMapView != null) {
+            mMapView.onStart();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
+    }
+
 }

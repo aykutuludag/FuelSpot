@@ -13,6 +13,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -151,6 +154,7 @@ public class FragmentStations extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_stations, container, false);
+            setHasOptionsMenu(true);
 
             // Keep screen on
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -927,6 +931,26 @@ public class FragmentStations extends Fragment {
                 Snackbar.make(getActivity().findViewById(R.id.mainContainer), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_stations, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter_stations) {
+            new FragmentFilter().show(getActivity().getSupportFragmentManager(), "FragmentFilter");
+        } else if (item.getItemId() == R.id.favorite_stations) {
+            Intent intent = new Intent(getActivity(), UserFavorites.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.search_station) {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

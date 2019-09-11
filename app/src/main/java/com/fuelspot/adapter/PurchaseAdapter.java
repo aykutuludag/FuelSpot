@@ -164,6 +164,25 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         // Station Name
         viewHolder.stationName.setText(feedItem.getStationName());
 
+        // KM
+        viewHolder.textviewKM.setText(feedItem.getKilometer() + " km");
+        int kmDiff;
+        if (feedItemList.size() >= 2) {
+            if (i != 0) {
+                kmDiff = feedItemList.get(i - 1).getKilometer() - feedItem.getKilometer();
+            } else {
+                kmDiff = 0;
+            }
+        } else {
+            kmDiff = 0;
+        }
+
+        if (kmDiff != 0) {
+            viewHolder.textViewTrip.setText("| Alınan yol: " + kmDiff + " km");
+        } else {
+            viewHolder.textViewTrip.setText("| Alınan yol: - km");
+        }
+
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);
         viewHolder.backgroundClick.setTag(viewHolder);
@@ -177,7 +196,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout backgroundClick, type2Layout;
-        TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text, bonusText;
+        TextView price1, stationName, amount1, price2, amount2, totalPrice, type1Text, type2Text, bonusText, textviewKM, textViewTrip;
         ImageView type1, type2;
         CircleImageView stationLogo;
         RelativeTimeTextView purchaseTime;
@@ -202,6 +221,9 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             bonusText = itemView.findViewById(R.id.bonus);
             totalPrice = itemView.findViewById(R.id.totalPrice);
             purchaseTime = itemView.findViewById(R.id.purchaseTime);
+
+            textviewKM = itemView.findViewById(R.id.textViewKilometer);
+            textViewTrip = itemView.findViewById(R.id.textViewkmChange);
         }
     }
 }

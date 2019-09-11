@@ -307,28 +307,6 @@
                 android:padding="16dp"
                 android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/gotham_bold"
-                    android:text="@string/do_you_have_car"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#161616" />
-
-                <TextView
-                    android:id="@+id/textView33"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView4"
-                    android:layout_margin="8dp"
-                    android:fontFamily="@font/gotham_medium"
-                    android:gravity="center"
-                    android:text="Aracınızı FuelSpot'a kaydederek akaryakıt alışverişlerinizde %1 bonus kazanırsınız. Kazandığınız bonusları FuelSpot Mağaza'da harcayabilirsiniz. Yakıt alırken FuelSpot'ı açarak gelecek bildirim aracılığıyla yakıt ekleyebilirsiniz. \n\n Bu kampanya yalnızca binek otomobil ve motorsikletler için geçerlidir. Perakende alımlar kampanyaya dahil değildir."
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#212121" />
-
                 <Button
                     android:id="@+id/buttonAddCar"
                     android:layout_width="wrap_content"
@@ -344,6 +322,28 @@
                     android:text="@string/add_vehicle"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#161616" />
+
+                <TextView
+                    android:id="@+id/textView33"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView4"
+                    android:layout_margin="8dp"
+                    android:fontFamily="@font/gotham_medium"
+                    android:gravity="center"
+                    android:text="Aracınızı FuelSpot'a kaydederek akaryakıt alışverişlerinizde %1 bonus kazanırsınız. Kazandığınız bonusları FuelSpot Mağaza'da harcayabilirsiniz. Yakıt alırken FuelSpot'ın göndereceği bildirim aracılığıyla yakıt ekleyebilirsiniz. \n\n Bu kampanya yalnızca binek otomobil ve motorsikletler için BİLDİRİM ARACILIĞIYLA eklenen yakıt alımları için geçerlidir. Perakende alımlar kampanyaya dahil değildir."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="@string/do_you_have_car"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="#161616" />
             </RelativeLayout>
         </RelativeLayout>

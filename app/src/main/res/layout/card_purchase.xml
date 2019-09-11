@@ -20,22 +20,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.github.curioustechizen.ago.RelativeTimeTextView
-                android:id="@+id/purchaseTime"
+            <RelativeLayout
+                android:id="@+id/section_km"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/purchaseTime"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="@font/gotham_book"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textViewKilometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <TextView
+                    android:id="@+id/textViewkmChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_toEndOf="@id/textViewKilometer"
+                    android:fontFamily="@font/gotham_book"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            </RelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/bill_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/purchaseTime"
+                android:layout_below="@id/section_km"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
@@ -50,15 +73,6 @@
                     app:layout_marginStartPercent="1%"
                     app:layout_widthPercent="20%">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imageViewStationLogo"
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:src="@drawable/default_station"
-                        android:layout_centerHorizontal="true"
-                        app:civ_border_color="#90000000"
-                        app:civ_border_width="1dp" />
-
                     <TextView
                         android:id="@+id/station_name"
                         android:layout_width="match_parent"
@@ -69,7 +83,43 @@
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imageViewStationLogo"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/default_station"
+                        app:civ_border_color="#90000000"
+                        app:civ_border_width="1dp" />
                 </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/bonus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stationInfo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="@string/bonus"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#2D8D52" />
+
+                <TextView
+                    android:id="@+id/totalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bonus"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/gotham_black"
+                    android:gravity="center"
+                    android:text="@string/total"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#424242" />
 
                 <androidx.percentlayout.widget.PercentRelativeLayout
                     android:id="@+id/items_layout"
@@ -113,36 +163,6 @@
                             android:textColor="#161616" />
                     </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/amount1"
-                        android:layout_width="0dp"
-                        android:layout_height="24dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_toEndOf="@id/typeLayout"
-                        android:fontFamily="@font/gotham_book"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#161616"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="32%" />
-
-                    <TextView
-                        android:id="@+id/price1"
-                        android:layout_width="0dp"
-                        android:layout_height="24dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_toEndOf="@+id/amount1"
-                        android:fontFamily="@font/gotham_book"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#161616"
-                        app:layout_marginEndPercent="0.5%"
-                        app:layout_marginStartPercent="0.5%"
-                        app:layout_widthPercent="32%" />
-
                     <RelativeLayout
                         android:id="@+id/typeLayout2"
                         android:layout_width="match_parent"
@@ -174,6 +194,36 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/price1"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_toEndOf="@+id/amount1"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="32%" />
+
+                    <TextView
+                        android:id="@+id/amount1"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_toEndOf="@id/typeLayout"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginEndPercent="0.5%"
+                        app:layout_marginStartPercent="0.5%"
+                        app:layout_widthPercent="32%" />
+
+                    <TextView
                         android:id="@+id/amount2"
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
@@ -202,34 +252,18 @@
                         android:textColor="#161616" />
 
                 </androidx.percentlayout.widget.PercentRelativeLayout>
-
-                <TextView
-                    android:id="@+id/bonus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/stationInfo"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:text="@string/bonus"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#2D8D52" />
-
-                <TextView
-                    android:id="@+id/totalPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/bonus"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:fontFamily="@font/gotham_black"
-                    android:gravity="center"
-                    android:text="@string/total"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#424242" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <com.github.curioustechizen.ago.RelativeTimeTextView
+                android:id="@+id/purchaseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

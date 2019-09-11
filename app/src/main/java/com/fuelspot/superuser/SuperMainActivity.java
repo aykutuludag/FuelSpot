@@ -11,8 +11,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -39,16 +37,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.fuelspot.FragmentFilter;
 import com.fuelspot.FragmentNews;
 import com.fuelspot.FragmentSettings;
 import com.fuelspot.FragmentStations;
 import com.fuelspot.LoginActivity;
 import com.fuelspot.NewsDetail;
 import com.fuelspot.R;
-import com.fuelspot.SearchActivity;
 import com.fuelspot.StationDetails;
-import com.fuelspot.UserFavorites;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
@@ -97,7 +92,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
     public static float ownedGasolinePrice, ownedDieselPrice, ownedLPGPrice, ownedElectricityPrice;
     public static String superLicenseNo, superStationName, superStationAddress, superStationCountry, superStationLocation, superStationLogo, ownedOtherFuels, superFacilities, superLastUpdate;
     public AHBottomNavigation bottomNavigation;
-    public MenuItem filterButton, favoriteButton, searchButton;
     CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
     private boolean doubleBackToExitPressedOnce;
     private RequestQueue queue;
@@ -609,47 +603,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_stations, menu);
-        filterButton = menu.findItem(R.id.filter_stations);
-        filterButton.setVisible(false);
-
-        favoriteButton = menu.findItem(R.id.favorite_stations);
-        favoriteButton.setVisible(false);
-
-        searchButton = menu.findItem(R.id.search_station);
-        searchButton.setVisible(false);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.filter_stations) {
-            new FragmentFilter().show(getSupportFragmentManager(), "");
-        } else if (item.getItemId() == R.id.favorite_stations) {
-            Intent intent = new Intent(SuperMainActivity.this, UserFavorites.class);
-            startActivity(intent);
-        } else if (item.getItemId() == R.id.search_station) {
-            Intent intent = new Intent(SuperMainActivity.this, SearchActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
-        if (filterButton != null && favoriteButton != null) {
-            if (position == 2) {
-                filterButton.setVisible(true);
-                favoriteButton.setVisible(true);
-                searchButton.setVisible(true);
-            } else {
-                filterButton.setVisible(false);
-                favoriteButton.setVisible(false);
-                searchButton.setVisible(false);
-            }
-        }
         mFragNavController.switchTab(position);
         return true;
     }

@@ -29,6 +29,7 @@ import static com.fuelspot.FragmentFilterFacilities.filterByWC;
 import static com.fuelspot.MainActivity.fragmentsUser;
 import static com.fuelspot.MainActivity.fullStationList;
 import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.superuser.SuperMainActivity.fragmentsSuperUser;
 
 public class FragmentFilterDistributors extends Fragment {
 
@@ -49,7 +50,7 @@ public class FragmentFilterDistributors extends Fragment {
 
         fragmentFilter = (FragmentFilter) getActivity().getSupportFragmentManager().findFragmentByTag("FragmentFilter");
         if (isSuperUser) {
-            fragmentStations = (FragmentStations) fragmentsUser.get(2);
+            fragmentStations = (FragmentStations) fragmentsSuperUser.get(2);
         } else {
             fragmentStations = (FragmentStations) fragmentsUser.get(0);
         }

@@ -117,25 +117,6 @@ public class AddFuel extends AppCompatActivity {
     private TextView istasyonNameHolder, istasyonAdresHolder, istasyonIDHolder, fuelType1Text, fuelType2Text, fuelGrandTotal, textViewLitre, textViewLitre2, textViewBonus;
     private RecyclerView.Adapter mAdapter;
 
-    private static float taxCalculator(int fuelType, float price) {
-        float tax;
-        switch (fuelType) {
-            case 0:
-                tax = price * TAX_GASOLINE;
-                break;
-            case 1:
-                tax = price * TAX_DIESEL;
-                break;
-            case 2:
-                tax = price * TAX_LPG;
-                break;
-            default:
-                tax = price * TAX_ELECTRICITY;
-                break;
-        }
-        return tax;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -596,7 +577,11 @@ public class AddFuel extends AppCompatActivity {
                     if (totalPrice > 0) {
                         if (tempKM != 0) {
                             if (tempKM > kilometer) {
-                                addPurchase();
+                                if (selectedUnitPrice != 0 || selectedUnitPrice2 != 0) {
+                                    addPurchase();
+                                } else {
+                                    Toast.makeText(AddFuel.this, "Lütfen yakıtın birim fiyatını giriniz.", Toast.LENGTH_LONG).show();
+                                }
                             } else {
                                 Toast.makeText(AddFuel.this, getString(R.string.low_kilometer), Toast.LENGTH_LONG).show();
                             }
@@ -788,10 +773,6 @@ public class AddFuel extends AppCompatActivity {
     }
 
     private void updateTaxandGrandTotal() {
-        float tax1 = taxCalculator(fuelPri, entryPrice);
-        float tax2 = taxCalculator(fuelSec, entryPrice2);
-
-        float taxTotal = tax1 + tax2;
         totalPrice = entryPrice + entryPrice2;
         String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);

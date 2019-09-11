@@ -127,7 +127,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
                                 if (fullStationList != null) {
-                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
+                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2f))) {
                                         // User's position has been changed. Load new stations
                                         fetchStations();
                                     } else {
@@ -199,12 +199,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 fetchStations();
                             } else if (mapDefaultRange == 6000) {
                                 mapDefaultRange = 10000;
-                                fetchStations();
-                            } else if (mapDefaultRange == 10000) {
-                                mapDefaultRange = 25000;
-                                fetchStations();
-                            } else if (mapDefaultRange == 25000) {
-                                mapDefaultRange = 50000;
                                 fetchStations();
                             }
                         }
