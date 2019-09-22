@@ -84,7 +84,6 @@ import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
 import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.resizeAndRotate;
-import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userCountry;
@@ -555,7 +554,6 @@ public class AddManuelFuel extends AppCompatActivity {
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             if (response.equals("Success")) {
-                                showAds(AddManuelFuel.this, null);
                                 Toast.makeText(AddManuelFuel.this, getString(R.string.fuel_add_success), Toast.LENGTH_LONG).show();
                                 kilometer = tempKM;
                                 prefs.edit().putInt("Kilometer", kilometer).apply();

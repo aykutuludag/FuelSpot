@@ -149,7 +149,6 @@ public class FragmentStations extends Fragment {
         return fragment;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {

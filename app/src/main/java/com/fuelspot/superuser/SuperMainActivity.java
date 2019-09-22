@@ -47,7 +47,6 @@ import com.fuelspot.StationDetails;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.material.snackbar.Snackbar;
 import com.ncapdevi.fragnav.FragNavController;
 
@@ -146,9 +145,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         getVariables(prefs);
         getSuperVariables(prefs);
         queue = Volley.newRequestQueue(this);
-
-        // Activate map
-        MapsInitializer.initialize(this.getApplicationContext());
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);

@@ -57,7 +57,6 @@ import com.fuelspot.receiver.AlarmReceiver;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.maps.MapsInitializer;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.json.JSONArray;
@@ -80,7 +79,7 @@ import static com.fuelspot.StoreActivity.premiumSku;
 import static com.fuelspot.superuser.SuperStoreActivity.doubleSuperSku;
 import static com.fuelspot.superuser.SuperStoreActivity.premiumSuperSku;
 
-public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener, PurchasesUpdatedListener {
+public class MainActivity extends AppCompatActivity implements PurchasesUpdatedListener, AHBottomNavigation.OnTabSelectedListener {
 
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
     private RequestQueue queue;
-    public static boolean doesStreetViewShown;
+    public static long streetViewLastSeen;
     private BillingClient billingClient;
 
     public static int getIndexOf(String[] strings, String item) {
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         userFavorites = prefs.getString("userFavorites", "");
         token = prefs.getString("token", "");
         firebaseToken = prefs.getString("firebaseToken", "");
-        doesStreetViewShown = prefs.getBoolean("StreetViewShown", false);
+        streetViewLastSeen = prefs.getLong("StreetViewLastSeen", 0);
     }
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
@@ -335,9 +334,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
             registerToken();
         }
 
-        // Initializing GoogleMaps
-        MapsInitializer.initialize(this.getApplicationContext());
-
         // Custom Tab
         customTabBuilder.enableUrlBarHiding();
         customTabBuilder.setShowTitle(true);
@@ -354,6 +350,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         mFragNavController = builder.build();
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
+        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
+        bottomNavigation.setAccentColor(Color.parseColor("#FF4500"));
+        bottomNavigation.setInactiveColor(Color.parseColor("#626262"));
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        bottomNavigation.setBehaviorTranslationEnabled(false);
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.tab_stations, R.drawable.tab_stations, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item1);
@@ -370,11 +371,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         AHBottomNavigationItem item5 = new AHBottomNavigationItem(R.string.tab_settings, R.drawable.tab_settings, R.color.colorPrimaryDark);
         bottomNavigation.addItem(item5);
 
-        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-        bottomNavigation.setAccentColor(Color.parseColor("#FF4500"));
-        bottomNavigation.setInactiveColor(Color.parseColor("#626262"));
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        bottomNavigation.setBehaviorTranslationEnabled(false);
         bottomNavigation.setOnTabSelectedListener(this);
 
         //In-App Services
@@ -881,12 +877,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     @Override
-    public boolean onTabSelected(int position, boolean wasSelected) {
-        mFragNavController.switchTab(position);
-        return true;
-    }
-
-    @Override
     public void onBackPressed() {
         // FragmentHome OnBackPressed
         if (fragmentsUser.get(0) != null) {
@@ -974,5 +964,18 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @Override
     public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
         // DO NOTHING. WE DO NOT PURCHASE ANYTHING HERE
+    }
+
+    /**
+     * Called when a tab has been selected (clicked)
+     *
+     * @param position    int: Position of the selected tab
+     * @param wasSelected boolean: true if the tab was already selected
+     * @return boolean: true for updating the tab UI, false otherwise
+     */
+    @Override
+    public boolean onTabSelected(int position, boolean wasSelected) {
+        mFragNavController.switchTab(position);
+        return true;
     }
 }

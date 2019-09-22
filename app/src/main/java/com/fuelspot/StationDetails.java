@@ -37,6 +37,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
@@ -56,6 +57,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.GraphMarkerAdapter;
@@ -72,8 +75,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
@@ -108,7 +109,6 @@ import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.dimBehind;
-import static com.fuelspot.MainActivity.doesStreetViewShown;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -117,6 +117,7 @@ import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 import static com.fuelspot.MainActivity.streetViewCountForPremium;
+import static com.fuelspot.MainActivity.streetViewLastSeen;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userFavorites;
 import static com.fuelspot.MainActivity.userUnit;
@@ -445,6 +446,17 @@ public class StationDetails extends AppCompatActivity {
             }
         });
 
+        Button openGoogleMaps = findViewById(R.id.buttonOpenStreetView);
+        openGoogleMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomTabsIntent.Builder customTabBuilder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = customTabBuilder.build();
+                customTabsIntent.intent.setPackage("com.android.chrome");
+                customTabsIntent.launchUrl(StationDetails.this, Uri.parse("http://www.google.com/maps?layer=c&cbll=" + stationLocation.split(";")[0] + "," + stationLocation.split(";")[1]));
+            }
+        });
+
         mAdapter = new CampaignAdapter(StationDetails.this, campaignList, "USER");
         mAdapter2 = new CommentAdapter(StationDetails.this, dummyList, "STATION_COMMENTS");
 
@@ -471,12 +483,14 @@ public class StationDetails extends AppCompatActivity {
             fetchStation();
         }
 
-        final AdView mAdView = findViewById(R.id.nativeAdView);
+        // Find the Ad Container
+        RelativeLayout adContainer = findViewById(R.id.nativeAdView);
         if (premium) {
-            mAdView.setVisibility(View.GONE);
+            adContainer.setVisibility(View.GONE);
         } else {
-            AdRequest request = new AdRequest.Builder().build();
-            mAdView.loadAd(request);
+            AdView adView = new AdView(this, getString(R.string.banner_facebook), AdSize.RECTANGLE_HEIGHT_250);
+            adContainer.addView(adView);
+            adView.loadAd();
         }
     }
 
@@ -493,8 +507,8 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onStreetViewPanoramaChange(StreetViewPanoramaLocation streetViewPanoramaLocation) {
                         if (streetViewPanoramaLocation != null && streetViewPanoramaLocation.links != null) {
-                            doesStreetViewShown = true;
-                            prefs.edit().putBoolean("StreetViewShown", doesStreetViewShown).apply();
+                            streetViewLastSeen = System.currentTimeMillis();
+                            prefs.edit().putLong("StreetViewLastSeen", streetViewLastSeen).apply();
                             streetViewCountForPremium++;
                         } else {
                             Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
@@ -882,7 +896,7 @@ public class StationDetails extends AppCompatActivity {
                 mStreetViewPanoramaView.setVisibility(View.GONE);
             }
         } else {
-            if (!doesStreetViewShown) {
+            if (System.currentTimeMillis() - streetViewLastSeen >= (1000 * 60 * 60 * 24)) {
                 loadStreetView();
             } else {
                 buyPremiumLayout.setVisibility(View.VISIBLE);

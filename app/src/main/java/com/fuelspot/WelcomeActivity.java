@@ -260,7 +260,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     layoutHow3.setVisibility(View.VISIBLE);
                     layoutHow2.setVisibility(View.INVISIBLE);
                 } else {
-                    //Registration finished
+                    // Registration finished
                     isSigned = true;
                     prefs.edit().putBoolean("isSigned", isSigned).apply();
 

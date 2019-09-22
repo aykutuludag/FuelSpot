@@ -251,6 +251,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (isSigned) {
             notLogged.setVisibility(View.GONE);
 
+            // Check premium
+            if (!premium) {
+                AdMob(LoginActivity.this);
+            }
+
             // Maybe she came from firebase notification. Redirect with url
             if (getIntent().getExtras() != null) {
                 String link2 = getIntent().getExtras().getString("URL");
@@ -269,54 +274,30 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             startActivity(intent);
                             finish();
                         }
-                    }, 1250);
+                    }, 1500);
                     return;
                 }
             }
 
-            //Check user is regular or superUser
+            // Check user is regular or superUser
             if (isSuperUser) {
-                if (!premium) {
-                    AdMob(LoginActivity.this);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }, 1250);
-                } else {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }, 1250);
-                }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(LoginActivity.this, SuperMainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                }, 1500);
             } else {
-                final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                // Check user has premium and connected to internet
-                if (!premium) {
-                    AdMob(LoginActivity.this);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(intent);
-                            finish();
-                        }
-                    }, 1250);
-                } else {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(intent);
-                            finish();
-                        }
-                    }, 1250);
-                }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 1500);
             }
         } else {
             // First login

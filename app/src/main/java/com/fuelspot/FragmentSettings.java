@@ -153,17 +153,17 @@ public class FragmentSettings extends Fragment {
 
                                 buttonTax.setClickable(false);
                             } catch (JSONException e) {
-                                Toast.makeText(getActivity(), getString(R.string.error), Snackbar.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(getActivity(), getString(R.string.error), Snackbar.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getActivity(), volleyError.toString(), Snackbar.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override

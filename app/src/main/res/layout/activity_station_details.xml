@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,20 +7,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_doodle"
     tools:context=".StationDetails">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -39,11 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.gms.maps.StreetViewPanoramaView
-                    android:id="@+id/street_view_panorama"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp" />
-
                 <RelativeLayout
                     android:id="@+id/buy_premium_fromStreetView"
                     android:layout_width="match_parent"
@@ -54,46 +34,6 @@
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/white_box"
                     android:visibility="gone">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/premium_photo"
-                        android:layout_width="125dp"
-                        android:layout_height="125dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:src="@drawable/store_premium" />
-
-                    <TextView
-                        android:id="@+id/textView38"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/premium_photo"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:text="@string/premium_version"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColor="#161616" />
-
-                    <TextView
-                        android:id="@+id/textView39"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView38"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="2dp"
-                        android:fontFamily="@font/gotham_book"
-                        android:gravity="center"
-                        android:text="@string/premium_version_desc"
-                        android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#161616" />
 
                     <Button
                         android:id="@+id/buttonPurchasePremium"
@@ -109,7 +49,72 @@
                         android:text="@string/start_subscription"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616" />
+
+                    <Button
+                        android:id="@+id/buttonOpenStreetView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/textView47"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/green_box"
+                        android:clickable="false"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="Google Maps'de görüntüle"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
+
+                    <TextView
+                        android:id="@+id/textView38"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:text="Sokak görünümü"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:textColor="#161616" />
+
+                    <TextView
+                        android:id="@+id/textView47"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/buttonPurchasePremium"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="VEYA"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
+
+                    <TextView
+                        android:id="@+id/textView39"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView38"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="Sokak görünümü günlük 1 adet ile sınırlıdır. Premium sürüme geçebilir ya da Google Maps üzerinden görüntüleyebilirsiniz."
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616" />
                 </RelativeLayout>
+
+                <com.google.android.gms.maps.StreetViewPanoramaView
+                    android:id="@+id/street_view_panorama"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp" />
 
             </RelativeLayout>
 
@@ -125,26 +130,36 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp">
 
-                    <TextView
-                        android:id="@+id/station_ID"
+                    <RelativeLayout
+                        android:id="@+id/section_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textColor="#161616" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/station_photo"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_below="@id/stationLastUpdate"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="16dp"
-                        app:srcCompat="@drawable/default_station" />
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/imageView13"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_alignTop="@id/stationPoint"
+                            android:layout_alignBottom="@id/stationPoint"
+                            android:layout_toEndOf="@id/stationPoint"
+                            android:padding="4dp"
+                            fab:srcCompat="@drawable/egikyildiz" />
+
+                        <TextView
+                            android:id="@+id/stationPoint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
+                            android:padding="4dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#161616" />
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/station_name"
@@ -156,17 +171,6 @@
                         android:gravity="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textColor="#161616" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/verifiedStation"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_below="@id/station_photo"
-                        android:layout_alignBottom="@id/station_name"
-                        android:layout_marginStart="4dp"
-                        android:layout_toEndOf="@id/station_name"
-                        android:src="@drawable/verified"
-                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/station_vicinity"
@@ -180,6 +184,19 @@
                         android:fontFamily="@font/gotham_book"
                         android:gravity="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+                        android:textColor="#161616" />
+
+                    <TextView
+                        android:id="@+id/station_ID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textColor="#161616" />
 
                     <com.github.curioustechizen.ago.RelativeTimeTextView
@@ -199,36 +216,24 @@
                         android:textColor="#161616"
                         android:textSize="12sp" />
 
-                    <RelativeLayout
-                        android:id="@+id/section_comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/stationLastUpdate"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/verifiedStation"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_below="@id/station_photo"
+                        android:layout_alignBottom="@id/station_name"
+                        android:layout_marginStart="4dp"
+                        android:layout_toEndOf="@id/station_name"
+                        android:src="@drawable/verified"
+                        android:visibility="gone" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/station_photo"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_centerHorizontal="true"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/stationPoint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:padding="4dp"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-
-                        <ImageView
-                            android:id="@+id/imageView13"
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
-                            android:layout_alignTop="@id/stationPoint"
-                            android:layout_alignBottom="@id/stationPoint"
-                            android:layout_toEndOf="@id/stationPoint"
-                            android:padding="4dp"
-                            fab:srcCompat="@drawable/egikyildiz" />
-                    </RelativeLayout>
+                        android:layout_marginTop="16dp"
+                        app:srcCompat="@drawable/default_station" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -275,6 +280,46 @@
                             app:layout_marginStartPercent="10%"
                             app:layout_widthPercent="20%" />
 
+                        <ImageView
+                            android:id="@+id/diesel"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_toEndOf="@+id/gasoline"
+                            android:contentDescription="@string/diesel"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:src="@drawable/fuel_diesel"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            app:layout_widthPercent="20%" />
+
+                        <ImageView
+                            android:id="@+id/lpg"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_toEndOf="@+id/diesel"
+                            android:contentDescription="@string/lpg"
+                            android:padding="4dp"
+                            android:src="@drawable/fuel_lpg"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            app:layout_widthPercent="20%" />
+
+                        <ImageView
+                            android:id="@+id/electricity"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="4dp"
+                            android:layout_toEndOf="@+id/lpg"
+                            android:contentDescription="@string/electricity"
+                            android:padding="4dp"
+                            android:src="@drawable/fuel_electricity"
+                            app:layout_marginEndPercent="10%"
+                            app:layout_widthPercent="20%" />
+
                         <TextView
                             android:id="@+id/priceGasoline"
                             android:layout_width="wrap_content"
@@ -301,20 +346,6 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616"
                             android:textSize="12sp" />
-
-                        <ImageView
-                            android:id="@+id/diesel"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_toEndOf="@+id/gasoline"
-                            android:contentDescription="@string/diesel"
-                            android:gravity="center"
-                            android:padding="4dp"
-                            android:src="@drawable/fuel_diesel"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            app:layout_widthPercent="20%" />
 
                         <TextView
                             android:id="@+id/priceDiesel"
@@ -343,19 +374,6 @@
                             android:textColor="#161616"
                             android:textSize="12sp" />
 
-                        <ImageView
-                            android:id="@+id/lpg"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_toEndOf="@+id/diesel"
-                            android:contentDescription="@string/lpg"
-                            android:padding="4dp"
-                            android:src="@drawable/fuel_lpg"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            app:layout_widthPercent="20%" />
-
                         <TextView
                             android:id="@+id/priceLPG"
                             android:layout_width="wrap_content"
@@ -371,19 +389,6 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616"
                             tools:ignore="RtlHardcoded" />
-
-                        <ImageView
-                            android:id="@+id/electricity"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginTop="4dp"
-                            android:layout_toEndOf="@+id/lpg"
-                            android:contentDescription="@string/electricity"
-                            android:padding="4dp"
-                            android:src="@drawable/fuel_electricity"
-                            app:layout_marginEndPercent="10%"
-                            app:layout_widthPercent="20%" />
 
                         <TextView
                             android:id="@+id/priceElectricity"
@@ -661,18 +666,16 @@
                     </androidx.percentlayout.widget.PercentRelativeLayout>
                 </RelativeLayout>
 
-                <com.google.android.gms.ads.AdView
+                <RelativeLayout
                     android:id="@+id/nativeAdView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/facilitiesSection"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    ads:adSize="300x250"
-                    ads:adUnitId="@string/banner_admob" />
+                    android:layout_marginBottom="8dp" />
 
 
                 <RelativeLayout
@@ -694,16 +697,6 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#161616" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/campaignView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/title_campaigns"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@android:color/transparent"
-                        android:visibility="visible" />
-
                     <TextView
                         android:id="@+id/noCampaignText"
                         android:layout_width="wrap_content"
@@ -719,6 +712,16 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#161616"
                         android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/campaignView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title_campaigns"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@android:color/transparent"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -730,23 +733,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:id="@+id/title_comments"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:text="@string/comments"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#161616" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/commentView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/title_comments"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp" />
 
                     <Button
                         android:id="@+id/button_seeAllComments"
@@ -760,6 +746,20 @@
                         android:fontFamily="@font/gotham_medium"
                         android:padding="4dp"
                         android:text="@string/see_all"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/button_add_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/noCommentText"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/green_box"
+                        android:fontFamily="@font/gotham_medium"
+                        android:padding="8dp"
+                        android:text="@string/add_comment"
                         android:visibility="gone" />
 
                     <TextView
@@ -778,19 +778,22 @@
                         android:textColor="#161616"
                         android:visibility="gone" />
 
-                    <Button
-                        android:id="@+id/button_add_comment"
+                    <TextView
+                        android:id="@+id/title_comments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/noCommentText"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/green_box"
-                        android:fontFamily="@font/gotham_medium"
-                        android:padding="8dp"
-                        android:text="@string/add_comment"
-                        android:visibility="gone" />
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/comments"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#161616" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/commentView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title_comments"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
 
                 </RelativeLayout>
 
@@ -863,4 +866,18 @@
             fab:fab_label="@string/fab_report"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

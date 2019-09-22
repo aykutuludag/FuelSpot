@@ -339,7 +339,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             plateText.setEnabled(true);
         }
 
-        final int vehicleNumber = userAutomobileList.size();
         FloatingActionButton fab = findViewById(R.id.fab);
         if (vehiclePurchaseList.size() > 0) {
             fab.hide();
@@ -347,18 +346,13 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if (vehicleNumber > 1) {
-                    Snackbar.make(view, getString(R.string.remove_vehicle), Snackbar.LENGTH_LONG)
-                            .setAction(getString(R.string.delete), new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    deleteVehicle();
-                                }
-                            }).show();
-                } else {
-                    Snackbar.make(view, getString(R.string.at_least_2_vehicle), Snackbar.LENGTH_LONG).show();
-                }
-
+                Snackbar.make(view, getString(R.string.remove_vehicle), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.delete), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteVehicle();
+                            }
+                        }).show();
             }
         });
     }

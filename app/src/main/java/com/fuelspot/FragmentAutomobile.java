@@ -67,6 +67,7 @@ import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.kilometer;
 import static com.fuelspot.MainActivity.plateNo;
+import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.vehicleID;
@@ -513,12 +514,6 @@ public class FragmentAutomobile extends Fragment {
                 case 2:
                     carbonEmission = (int) (emissionlpg * averageCons);
                     break;
-                case 3:
-                    carbonEmission = 0;
-                    break;
-                default:
-                    carbonEmission = 0;
-                    break;
             }
             switch (fuelSec) {
                 case 0:
@@ -529,12 +524,6 @@ public class FragmentAutomobile extends Fragment {
                     break;
                 case 2:
                     carbonEmission += (int) (emissionlpg * averageCons);
-                    break;
-                case 3:
-                    carbonEmission += 0;
-                    break;
-                default:
-                    carbonEmission += 0;
                     break;
             }
 
@@ -595,7 +584,7 @@ public class FragmentAutomobile extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_fuel) {
             Intent intent = new Intent(getActivity(), AddManuelFuel.class);
-            startActivity(intent);
+            showAds(getActivity(), intent);
         }
         return super.onOptionsItemSelected(item);
     }
