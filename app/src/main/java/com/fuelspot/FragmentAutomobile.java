@@ -495,9 +495,6 @@ public class FragmentAutomobile extends Fragment {
                 case 2:
                     carbonEmission = (int) (emissionlpg * averageCons);
                     break;
-                case 3:
-                    carbonEmission = 0;
-                    break;
                 default:
                     carbonEmission = 0;
                     break;

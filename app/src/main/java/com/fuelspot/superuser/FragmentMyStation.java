@@ -172,7 +172,7 @@ public class FragmentMyStation extends Fragment {
 
                                 float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                if (distanceInMeter >= (mapDefaultRange / 2)) {
+                                if (distanceInMeter >= (mapDefaultRange / 2f)) {
                                     locLastKnown.setLatitude(Double.parseDouble(userlat));
                                     locLastKnown.setLongitude(Double.parseDouble(userlon));
                                 }

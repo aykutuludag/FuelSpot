@@ -140,7 +140,7 @@ public class AddManuelFuel extends AppCompatActivity {
 
         // Analytics
         Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Yakıt ekle");
+        t.setScreenName("Yakıt ekle - Manuel");
         t.enableAdvertisingIdCollection(true);
         t.send(new HitBuilders.ScreenViewBuilder().build());
 

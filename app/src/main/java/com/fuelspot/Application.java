@@ -6,7 +6,6 @@ import android.content.IntentFilter;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.facebook.ads.AudienceNetworkAds;
 import com.fuelspot.receiver.FenceReceiver;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -26,13 +25,6 @@ public class Application extends MultiDexApplication {
         registerReceiver(new FenceReceiver(), new IntentFilter(FENCE_RECEIVER_ACTION));
         MobileAds.initialize(this, getString(R.string.admobAppId));
         MapsInitializer.initialize(this);
-
-        if (AudienceNetworkAds.isInAdsProcess(this)) {
-            return;
-        }
-
-        AudienceNetworkAds.initialize(this);
-
     }
 
     @Override

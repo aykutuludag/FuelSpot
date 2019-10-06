@@ -9,7 +9,6 @@ public class StationItem {
     private String vicinity;
     private String countryCode;
     private String locStation;
-    private String googleMapID;
     private String facilities;
     private String licenseNo;
     private String owner;

@@ -247,7 +247,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= mapDefaultStationRange / 2) {
+                        if (distanceInMeters >= mapDefaultStationRange / 2f) {
                             MainActivity.userlat = String.valueOf(locCurrent.getLatitude());
                             MainActivity.userlon = String.valueOf(locCurrent.getLongitude());
                             prefs.edit().putString("lat", MainActivity.userlat).apply();

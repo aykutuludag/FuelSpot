@@ -414,6 +414,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_below="@+id/noBonusText"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
@@ -442,7 +443,6 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
                     android:text="@string/kilometer"
@@ -471,6 +471,20 @@
                     android:layout_margin="8dp"
                     android:background="@android:color/transparent" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/noBonusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/gotham_book"
+                android:gravity="center"
+                android:text="ÖNEMLİ: Buradan yapılan yakıt eklemelerine bonus yansıtılmaz. Bu ekrandan yapılan eklemeler aracınızın yakıt takibini yapabilmeniz içindir. Bonus kazanabilmek için bildirim aracılığıyla yakıt eklemelisiniz."
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#161616" />
 
         </RelativeLayout>
     </ScrollView>

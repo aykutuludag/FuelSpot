@@ -96,7 +96,6 @@ public class AddStation extends AppCompatActivity {
     private SharedPreferences prefs;
     private int stationID;
     private int doesStationVerified;
-    private String googleID;
     private String stationName;
     private String stationAddress;
     private String stationCoordinates;
@@ -232,7 +231,7 @@ public class AddStation extends AppCompatActivity {
 
                         float distanceInMeters = loc1.distanceTo(loc2);
 
-                        if (distanceInMeters >= mapDefaultStationRange / 2) {
+                        if (distanceInMeters >= mapDefaultStationRange / 2f) {
                             MainActivity.userlat = String.valueOf(locCurrent.getLatitude());
                             MainActivity.userlon = String.valueOf(locCurrent.getLongitude());
                             prefs.edit().putString("lat", MainActivity.userlat).apply();
@@ -342,7 +341,6 @@ public class AddStation extends AppCompatActivity {
                                 stationAddress = obj.getString("vicinity");
                                 stationCountry = obj.getString("country");
                                 stationCoordinates = obj.getString("location");
-                                googleID = obj.getString("googleID");
                                 stationFacilities = obj.getString("facilities");
                                 stationLogo = obj.getString("logoURL");
                                 gasolinePrice = (float) obj.getDouble("gasolinePrice");
@@ -404,7 +402,6 @@ public class AddStation extends AppCompatActivity {
                                 stationAddress = "";
                                 stationCountry = "";
                                 stationCoordinates = "";
-                                googleID = "";
                                 stationFacilities = "";
                                 stationLogo = "";
                                 gasolinePrice = 0;
@@ -424,7 +421,6 @@ public class AddStation extends AppCompatActivity {
                             stationAddress = "";
                             stationCountry = "";
                             stationCoordinates = "";
-                            googleID = "";
                             stationFacilities = "";
                             stationLogo = "";
                             gasolinePrice = 0;
@@ -448,7 +444,6 @@ public class AddStation extends AppCompatActivity {
                         stationAddress = "";
                         stationCountry = "";
                         stationCoordinates = "";
-                        googleID = "";
                         stationFacilities = "";
                         stationLogo = "";
                         gasolinePrice = 0;
@@ -574,18 +569,11 @@ public class AddStation extends AppCompatActivity {
                     @Override
                     public void onResponse(String res) {
                         if (res != null && res.length() > 0) {
-                            switch (res) {
-                                case "Success":
-                                    fetchOwnedStations();
-                                    break;
-                                case "Fail":
-                                    loading.dismiss();
-                                    Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
-                                default:
-                                    loading.dismiss();
-                                    Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
-                                    break;
+                            if (res.equals("Success")) {
+                                fetchOwnedStations();
+                            } else {
+                                loading.dismiss();
+                                Toast.makeText(AddStation.this, getString(R.string.error_login_fail), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             loading.dismiss();

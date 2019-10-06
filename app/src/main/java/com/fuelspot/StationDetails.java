@@ -57,8 +57,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.facebook.ads.AdSize;
-import com.facebook.ads.AdView;
 import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.GraphMarkerAdapter;
@@ -75,6 +73,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
@@ -484,13 +484,13 @@ public class StationDetails extends AppCompatActivity {
         }
 
         // Find the Ad Container
-        RelativeLayout adContainer = findViewById(R.id.nativeAdView);
+        // Find the Ad Container
+        final AdView mAdView = findViewById(R.id.nativeAdView);
         if (premium) {
-            adContainer.setVisibility(View.GONE);
+            mAdView.setVisibility(View.GONE);
         } else {
-            AdView adView = new AdView(this, getString(R.string.banner_facebook), AdSize.RECTANGLE_HEIGHT_250);
-            adContainer.addView(adView);
-            adView.loadAd();
+            AdRequest request = new AdRequest.Builder().build();
+            mAdView.loadAd(request);
         }
     }
 

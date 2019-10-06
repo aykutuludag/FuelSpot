@@ -722,16 +722,10 @@ public class SuperUpdateStation extends AppCompatActivity {
                     public void onResponse(String response) {
                         loading.dismiss();
                         if (response != null && response.length() > 0) {
-                            switch (response) {
-                                case "Success":
-                                    fetchOwnedStations();
-                                    break;
-                                case "Fail":
-                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
-                                    break;
-                                default:
-                                    Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
-                                    break;
+                            if (response.equals("Success")) {
+                                fetchOwnedStations();
+                            } else {
+                                Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(SuperUpdateStation.this, getString(R.string.station_update_fail), Toast.LENGTH_LONG).show();

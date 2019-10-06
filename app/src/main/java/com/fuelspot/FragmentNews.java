@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +27,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.ads.AdSize;
-import com.facebook.ads.AdView;
 import com.fuelspot.adapter.CampaignAdapter;
 import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
@@ -47,6 +44,8 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -137,13 +136,12 @@ public class FragmentNews extends Fragment {
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
             // Find the Ad Container
-            RelativeLayout adContainer = rootView.findViewById(R.id.nativeAdView);
+            final AdView mAdView = rootView.findViewById(R.id.nativeAdView);
             if (premium) {
-                adContainer.setVisibility(View.GONE);
+                mAdView.setVisibility(View.GONE);
             } else {
-                AdView adView = new AdView(getActivity(), getString(R.string.banner_facebook), AdSize.RECTANGLE_HEIGHT_250);
-                adContainer.addView(adView);
-                adView.loadAd();
+                AdRequest request = new AdRequest.Builder().build();
+                mAdView.loadAd(request);
             }
 
             requestQueue = Volley.newRequestQueue(getActivity());

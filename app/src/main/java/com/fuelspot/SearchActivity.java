@@ -31,8 +31,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
@@ -78,7 +76,6 @@ public class SearchActivity extends AppCompatActivity {
     Toolbar toolbar;
     List<StationItem> dummy = new ArrayList<>();
     LatLng sydney;
-    RequestOptions options;
     private RequestQueue requestQueue;
     private GoogleMap googleMap;
     private MapView mMapView;
@@ -99,11 +96,6 @@ public class SearchActivity extends AppCompatActivity {
 
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
-        options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.default_station)
-                .error(R.drawable.default_station)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         requestQueue = Volley.newRequestQueue(this);
         mRecyclerView = findViewById(R.id.singleRecyclerView);
 

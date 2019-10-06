@@ -208,7 +208,7 @@ public class FragmentStations extends Fragment {
 
                                     float distanceInMeter = locLastKnown.distanceTo(locCurrent);
 
-                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2))) {
+                                    if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2f))) {
                                         // User's position has been changed. Load the new map
                                         locLastKnown.setLatitude(Double.parseDouble(userlat));
                                         locLastKnown.setLongitude(Double.parseDouble(userlon));
