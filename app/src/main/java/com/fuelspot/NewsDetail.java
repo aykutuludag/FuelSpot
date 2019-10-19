@@ -29,8 +29,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,12 +83,6 @@ public class NewsDetail extends AppCompatActivity {
         url = extras.getString("URL");
         sourceURL = extras.getString("SOURCE_URL");
         publishDate = extras.getString("PUBLISH_DATE");
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName(url);
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         imageViewCover = findViewById(R.id.newsCover);
         textViewTitle = findViewById(R.id.newsTitle);

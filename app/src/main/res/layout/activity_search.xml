@@ -21,27 +21,296 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/googleMapSearch"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="375dp"
-            android:layout_centerHorizontal="true"
-            map:cameraTargetLat="39.92505"
-            map:cameraTargetLng="32.83476"
-            map:cameraZoom="13"
-            map:uiTiltGestures="false" />
+            android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/singleRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/googleMapSearch"
-            android:background="@android:color/transparent" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/inner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/white_box2">
 
+                <TextView
+                    android:id="@+id/textView49"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gotham_book"
+                    android:text="Bu sayfadan Türkiye sınırları içerisindeki istediğiniz il/ilçe/semt/mahalle/caddedeki istasyonları görebilirsiniz. İstasyon Arama günlük 3 adet ile sınırlıdır."
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView49"
+                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:hint="Bir yer ismi giriniz..."
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    android:textColor="#161616" />
+
+            </RelativeLayout>
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/googleMapSearch"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_below="@+id/inner1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                map:cameraTargetLat="39.92505"
+                map:cameraTargetLng="32.83476"
+                map:cameraZoom="13"
+                map:uiTiltGestures="false" />
+
+            <androidx.percentlayout.widget.PercentRelativeLayout
+                android:id="@+id/sortBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/googleMapSearch"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/white_box2">
+
+                <RelativeLayout
+                    android:id="@+id/sortSort"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/dummySortIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="Sırala"
+                        android:src="@drawable/sort" />
+
+                    <TextView
+                        android:id="@+id/imageView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dummySortIcon"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:text="Sırala"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortGasoline"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="21%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/gasoline"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/gasoline"
+                        android:src="@drawable/fuel_gasoline"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyGasoline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/gasoline"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/gasoline"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#6D6D6D"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortDiesel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/sortGasoline"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/diesel"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/diesel"
+                        android:src="@drawable/fuel_diesel" />
+
+                    <TextView
+                        android:id="@+id/dummyDiesel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/diesel"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/diesel"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortLPG"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/sortDiesel"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/LPG"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/lpg"
+                        android:src="@drawable/fuel_lpg"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyLPG"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/LPG"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/lpg"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortElectric"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/sortLPG"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/electric"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/electricity"
+                        android:src="@drawable/fuel_electricity"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyElectric"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/electric"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/electricity"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sortDistance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/sortElectric"
+                    android:alpha="0.33"
+                    app:layout_marginEndPercent="1%"
+                    app:layout_marginStartPercent="1%"
+                    app:layout_widthPercent="14%">
+
+                    <ImageView
+                        android:id="@+id/distanceToStation"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:contentDescription="@string/distance"
+                        android:src="@drawable/distance"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    <TextView
+                        android:id="@+id/dummyDistance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/distanceToStation"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/distance"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#717171"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+            </androidx.percentlayout.widget.PercentRelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sortBar"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@android:color/transparent" />
+        </RelativeLayout>
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

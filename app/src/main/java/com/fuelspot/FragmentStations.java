@@ -41,8 +41,6 @@ import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
 import com.fuelspot.receiver.AlarmReceiver;
 import com.fuelspot.superuser.SuperMainActivity;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -157,12 +155,6 @@ public class FragmentStations extends Fragment {
 
             // Keep screen on
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Stations");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
 
             // Clear objects
             shortStationList.clear();

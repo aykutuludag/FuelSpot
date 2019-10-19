@@ -38,8 +38,6 @@ import com.fuelspot.model.BankingItem;
 import com.fuelspot.model.CommentItem;
 import com.fuelspot.model.MessageItem;
 import com.fuelspot.model.VehicleItem;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,12 +104,6 @@ public class FragmentProfile extends Fragment {
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Profil");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
 
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             requestQueue = Volley.newRequestQueue(getActivity());

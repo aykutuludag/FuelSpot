@@ -37,8 +37,6 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.fuelspot.adapter.PurchaseAdapter;
 import com.fuelspot.model.PurchaseItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,12 +110,6 @@ public class FragmentAutomobile extends Fragment {
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Otomobil");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
 
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
@@ -580,8 +572,12 @@ public class FragmentAutomobile extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_fuel) {
-            Intent intent = new Intent(getActivity(), AddManuelFuel.class);
-            showAds(getActivity(), intent);
+            if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                Intent intent = new Intent(getActivity(), AddFuel.class);
+                showAds(getActivity(), intent);
+            } else {
+                Toast.makeText(getActivity(), "Yakıt ekleyebilmek için otomobil eklemeniz gerekiyor", Toast.LENGTH_LONG).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

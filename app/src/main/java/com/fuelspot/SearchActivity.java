@@ -2,24 +2,25 @@ package com.fuelspot;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputType;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -34,8 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.adapter.StationAdapter;
 import com.fuelspot.model.StationItem;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -47,38 +47,55 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
-import static com.fuelspot.MainActivity.mapDefaultStationRange;
-import static com.fuelspot.MainActivity.mapDefaultZoom;
+import static com.fuelspot.MainActivity.lastStationSearch;
+import static com.fuelspot.MainActivity.premium;
 import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
 import static com.fuelspot.MainActivity.userlon;
-import static com.fuelspot.superuser.SuperMainActivity.isStationVerified;
 
 public class SearchActivity extends AppCompatActivity {
 
-    SearchView searchView;
+    EditText editText;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     Window window;
     Toolbar toolbar;
-    List<StationItem> dummy = new ArrayList<>();
-    LatLng sydney;
     private RequestQueue requestQueue;
     private GoogleMap googleMap;
     private MapView mMapView;
+    int whichOrder = 4;
+    int searchCount;
+    private double tempLat, tempLong;
+    private float tempZoom = 12.5f;
+    private int tempRange = 3000;
+    private ArrayList<Marker> tempMarkers = new ArrayList<>();
+    private List<StationItem> tempStationList = new ArrayList<>();
+    private RelativeLayout sortGasolineLayout;
+    private RelativeLayout sortDieselLayout;
+    private RelativeLayout sortLPGLayout;
+    private RelativeLayout sortElectricityLayout;
+    private RelativeLayout sortDistanceLayout;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,59 +114,95 @@ public class SearchActivity extends AppCompatActivity {
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         requestQueue = Volley.newRequestQueue(this);
-        mRecyclerView = findViewById(R.id.singleRecyclerView);
+        prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+
+        if (System.currentTimeMillis() - lastStationSearch >= (1000 * 60 * 60 * 24)) {
+            searchCount = 3;
+            prefs.edit().putInt("SearchCounter", searchCount).apply();
+
+            lastStationSearch = System.currentTimeMillis();
+            prefs.edit().putLong("LastStationSearch", lastStationSearch).apply();
+        } else {
+            searchCount = prefs.getInt("SearchCounter", 0);
+        }
+
+        editText = findViewById(R.id.editText);
+        editText.setFocusable(false);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (premium) {
+                    int AUTOCOMPLETE_REQUEST_CODE = 1;
+                    List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG);
+                    Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("TR").build(SearchActivity.this);
+                    startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                } else {
+                    if (searchCount > 0) {
+                        int AUTOCOMPLETE_REQUEST_CODE = 1;
+                        List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG);
+                        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("TR").build(SearchActivity.this);
+                        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                    } else {
+                        Toast.makeText(SearchActivity.this, "İstasyon Arama günlük 3 adet ile sınırlıdır. Daha fazlası için premium sürüme geçebilirsiniz", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
 
         mMapView = findViewById(R.id.googleMapSearch);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("İstasyon ara");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        sortGasolineLayout = findViewById(R.id.sortGasoline);
+        sortDieselLayout = findViewById(R.id.sortDiesel);
+        sortLPGLayout = findViewById(R.id.sortLPG);
+        sortElectricityLayout = findViewById(R.id.sortElectric);
+        sortDistanceLayout = findViewById(R.id.sortDistance);
+        sortGasolineLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichOrder = 0;
+                sortBy(whichOrder);
+            }
+        });
+        sortDieselLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichOrder = 1;
+                sortBy(whichOrder);
+            }
+        });
+        sortLPGLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichOrder = 2;
+                sortBy(whichOrder);
+            }
+        });
+        sortElectricityLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichOrder = 3;
+                sortBy(whichOrder);
+            }
+        });
+        sortDistanceLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whichOrder = 4;
+                sortBy(whichOrder);
+            }
+        });
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(SearchActivity.this, 1);
+        mAdapter = new StationAdapter(SearchActivity.this, tempStationList, "NEARBY_STATIONS");
+
+        mRecyclerView = findViewById(R.id.searchRecyclerView);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.removeAllViews();
 
         checkLocationPermission();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // adds item to action bar
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        // Get Search item from action bar and Get Search service
-        MenuItem searchItem = menu.findItem(R.id.action_search_online);
-        SearchManager searchManager = (SearchManager) SearchActivity.this.getSystemService(Context.SEARCH_SERVICE);
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(SearchActivity.this.getComponentName()));
-            searchView.setIconified(false);
-            searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    // Every time when you press search button on keypad an Activity is recreated which in turn calls this function
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        // Get search query and create object of class AsyncFetch
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            int fuelspotID = Integer.parseInt(query);
-            if (searchView != null) {
-                searchView.clearFocus();
-            }
-            if (fuelspotID != 0) {
-                fetchSingleStation(fuelspotID);
-            } else {
-                Toast.makeText(SearchActivity.this, "Lütfen 1 - 99.999 arası geçerli bir sayı giriniz.", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private void checkLocationPermission() {
@@ -170,7 +223,7 @@ public class SearchActivity extends AppCompatActivity {
                 googleMap = mMap;
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                 googleMap.getUiSettings().setMapToolbarEnabled(false);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setRotateGesturesEnabled(false);
@@ -179,7 +232,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 // For zooming automatically to the location of the marker
                 LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(tempZoom).build();
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 MarkerAdapter customInfoWindow = new MarkerAdapter(SearchActivity.this);
@@ -193,6 +246,266 @@ public class SearchActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void searchStations() {
+        tempStationList.clear();
+        final ProgressDialog stationFetching = ProgressDialog.show(SearchActivity.this, "İstasyonlar aranıyor", getString(R.string.please_wait), false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + tempLat + ";" + tempLong + "&radius=" + tempRange,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        stationFetching.dismiss();
+                        showAds(SearchActivity.this, null);
+
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+                                    StationItem item = new StationItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setStationName(obj.getString("name"));
+                                    item.setVicinity(obj.getString("vicinity"));
+                                    item.setCountryCode(obj.getString("country"));
+                                    item.setLocation(obj.getString("location"));
+                                    item.setFacilities(obj.getString("facilities"));
+                                    item.setLicenseNo(obj.getString("licenseNo"));
+                                    item.setOwner(obj.getString("owner"));
+                                    item.setPhotoURL(obj.getString("logoURL"));
+                                    item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
+                                    item.setDieselPrice((float) obj.getDouble("dieselPrice"));
+                                    item.setLpgPrice((float) obj.getDouble("lpgPrice"));
+                                    item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
+                                    item.setOtherFuels(obj.getString("otherFuels"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setLastUpdated(obj.getString("lastUpdated"));
+                                    //DISTANCE START
+                                    Location locLastKnow = new Location("");
+                                    locLastKnow.setLatitude(Double.parseDouble(userlat));
+                                    locLastKnow.setLongitude(Double.parseDouble(userlon));
+
+                                    Location loc = new Location("");
+                                    String[] stationKonum = item.getLocation().split(";");
+                                    loc.setLatitude(Double.parseDouble(stationKonum[0]));
+                                    loc.setLongitude(Double.parseDouble(stationKonum[1]));
+                                    float uzaklik = locLastKnow.distanceTo(loc);
+                                    item.setDistance((int) uzaklik);
+                                    //DISTANCE END
+                                    tempStationList.add(item);
+                                }
+
+                                sortBy(whichOrder);
+
+                                if (tempStationList.size() == 33) {
+                                    Toast.makeText(SearchActivity.this, "Size en yakın 33 istasyonu görmektesiniz.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.station_found_pretext) + " " + tempStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(SearchActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            if (tempRange == 3000) {
+                                tempRange = 6000;
+                                tempZoom = 12f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                searchStations();
+                            } else if (tempRange == 6000) {
+                                tempRange = 10000;
+                                tempZoom = 11.5f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                searchStations();
+                            } else if (tempRange == 10000) {
+                                tempRange = 25000;
+                                tempZoom = 10f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                searchStations();
+                            } else if (tempRange == 25000) {
+                                tempRange = 50000;
+                                tempZoom = 9f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                                searchStations();
+                            } else {
+                                // no station within 50km
+                                Toast.makeText(SearchActivity.this, getString(R.string.no_station), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(SearchActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void sortBy(int position) {
+        switch (position) {
+            case 0:
+                Collections.sort(tempStationList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getGasolinePrice() == 0 && obj2.getGasolinePrice() == 0) {
+                            return 0;
+                        } else if (obj1.getGasolinePrice() == 0) {
+                            return 1;
+                        } else if (obj2.getGasolinePrice() == 0) {
+                            return -1;
+                        } else {
+                            return Float.compare(obj1.getGasolinePrice(), obj2.getGasolinePrice());
+                        }
+                    }
+                });
+
+                sortGasolineLayout.setAlpha(1.0f);
+                sortDieselLayout.setAlpha(0.33f);
+                sortLPGLayout.setAlpha(0.33f);
+                sortElectricityLayout.setAlpha(0.33f);
+                sortDistanceLayout.setAlpha(0.33f);
+                break;
+            case 1:
+                Collections.sort(tempStationList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getDieselPrice() == 0 && obj2.getDieselPrice() == 0) {
+                            return 0;
+                        } else if (obj1.getDieselPrice() == 0) {
+                            return 1;
+                        } else if (obj2.getDieselPrice() == 0) {
+                            return -1;
+                        } else {
+                            return Float.compare(obj1.getDieselPrice(), obj2.getDieselPrice());
+                        }
+                    }
+                });
+
+                sortGasolineLayout.setAlpha(0.33f);
+                sortDieselLayout.setAlpha(1.0f);
+                sortLPGLayout.setAlpha(0.33f);
+                sortElectricityLayout.setAlpha(0.33f);
+                sortDistanceLayout.setAlpha(0.33f);
+                break;
+            case 2:
+                Collections.sort(tempStationList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getLpgPrice() == 0 && obj2.getLpgPrice() == 0) {
+                            return 0;
+                        } else if (obj1.getLpgPrice() == 0) {
+                            return 1;
+                        } else if (obj2.getLpgPrice() == 0) {
+                            return -1;
+                        } else {
+                            return Float.compare(obj1.getLpgPrice(), obj2.getLpgPrice());
+                        }
+                    }
+                });
+
+                sortGasolineLayout.setAlpha(0.33f);
+                sortDieselLayout.setAlpha(0.33f);
+                sortLPGLayout.setAlpha(1.0f);
+                sortElectricityLayout.setAlpha(0.33f);
+                sortDistanceLayout.setAlpha(0.33f);
+                break;
+            case 3:
+                Collections.sort(tempStationList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        if (obj1.getElectricityPrice() == 0 && obj2.getElectricityPrice() == 0) {
+                            return 0;
+                        } else if (obj1.getElectricityPrice() == 0) {
+                            return 1;
+                        } else if (obj2.getElectricityPrice() == 0) {
+                            return -1;
+                        } else {
+                            return Float.compare(obj1.getElectricityPrice(), obj2.getElectricityPrice());
+                        }
+                    }
+                });
+
+                sortGasolineLayout.setAlpha(0.33f);
+                sortDieselLayout.setAlpha(0.33f);
+                sortLPGLayout.setAlpha(0.33f);
+                sortElectricityLayout.setAlpha(1.0f);
+                sortDistanceLayout.setAlpha(0.33f);
+                break;
+            case 4:
+                Collections.sort(tempStationList, new Comparator<StationItem>() {
+                    public int compare(StationItem obj1, StationItem obj2) {
+                        return Float.compare(obj1.getDistance(), obj2.getDistance());
+                    }
+                });
+
+                sortGasolineLayout.setAlpha(0.33f);
+                sortDieselLayout.setAlpha(0.33f);
+                sortLPGLayout.setAlpha(0.33f);
+                sortElectricityLayout.setAlpha(0.33f);
+                sortDistanceLayout.setAlpha(1.0f);
+                break;
+        }
+
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mAdapter);
+
+        // Clear variables
+        googleMap.clear();
+        tempMarkers.clear();
+
+        //Draw a circle with radius of tempRange
+        googleMap.addCircle(new CircleOptions()
+                .center(new LatLng(tempLat, tempLong))
+                .radius(tempRange)
+                .fillColor(0x220000FF)
+                .strokeColor(Color.parseColor("#FF5635")));
+
+        // We are waiting for loading logos
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                addMarkers();
+            }
+        }, 1000);
+    }
+
+    private void addMarkers() {
+        for (int i = 0; i < tempStationList.size(); i++) {
+            addMarker(tempStationList.get(i));
+        }
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if (tempMarkers != null && tempMarkers.size() > 0) {
+                    tempMarkers.get(0).showInfoWindow();
+                }
+            }
+        }, 250);
+    }
+
+    private void addMarker(final StationItem sItem) {
+        // Add marker
+        String[] stationKonum = sItem.getLocation().split(";");
+        LatLng sydney = new LatLng(Double.parseDouble(stationKonum[0]), Double.parseDouble(stationKonum[1]));
+
+        MarkerOptions mOptions;
+        if (sItem.getIsVerified() == 1) {
+            mOptions = new MarkerOptions().position(sydney).title(sItem.getStationName()).snippet(sItem.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
+        } else {
+            mOptions = new MarkerOptions().position(sydney).title(sItem.getStationName()).snippet(sItem.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
+
+        }
+        Marker m = googleMap.addMarker(mOptions);
+        m.setTag(sItem);
+        tempMarkers.add(m);
     }
 
     private void openStation(StationItem feedItemList) {
@@ -226,123 +539,40 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    private void fetchSingleStation(int fsID) {
-        dummy.clear();
-        //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION) + "?stationID=" + fsID,
-                new Response.Listener<String>() {
-                    @SuppressLint("CheckResult")
-                    @Override
-                    public void onResponse(String response) {
-                        if (response != null && response.length() > 0) {
-                            try {
-                                JSONArray res = new JSONArray(response);
-                                JSONObject obj = res.getJSONObject(0);
-
-                                final StationItem item = new StationItem();
-                                item.setID(obj.getInt("id"));
-                                item.setStationName(obj.getString("name"));
-                                item.setVicinity(obj.getString("vicinity"));
-                                item.setCountryCode(obj.getString("country"));
-                                item.setLocation(obj.getString("location"));
-                                item.setFacilities(obj.getString("facilities"));
-                                item.setLicenseNo(obj.getString("licenseNo"));
-                                item.setOwner(obj.getString("owner"));
-                                item.setPhotoURL(obj.getString("logoURL"));
-                                item.setGasolinePrice((float) obj.getDouble("gasolinePrice"));
-                                item.setDieselPrice((float) obj.getDouble("dieselPrice"));
-                                item.setLpgPrice((float) obj.getDouble("lpgPrice"));
-                                item.setElectricityPrice((float) obj.getDouble("electricityPrice"));
-                                item.setOtherFuels(obj.getString("otherFuels"));
-                                item.setIsVerified(obj.getInt("isVerified"));
-                                item.setLastUpdated(obj.getString("lastUpdated"));
-
-                                // DISTANCE
-                                String[] locationHolder = item.getLocation().split(";");
-                                sydney = new LatLng(Double.parseDouble(locationHolder[0]), Double.parseDouble(locationHolder[1]));
-                                Location loc1 = new Location("");
-                                loc1.setLatitude(Double.parseDouble(userlat));
-                                loc1.setLongitude(Double.parseDouble(userlon));
-                                Location loc2 = new Location("");
-                                loc2.setLatitude(sydney.latitude);
-                                loc2.setLongitude(sydney.longitude);
-                                item.setDistance((int) loc1.distanceTo(loc2));
-                                // DISTANCE
-
-                                dummy.add(item);
-
-                                GridLayoutManager mLayoutManager = new GridLayoutManager(SearchActivity.this, 1);
-                                mRecyclerView.setLayoutManager(mLayoutManager);
-                                mAdapter = new StationAdapter(SearchActivity.this, dummy, "NEARBY_STATIONS");
-                                mRecyclerView.setAdapter(mAdapter);
-                                mAdapter.notifyDataSetChanged();
-
-                                // We are waiting for loading logos
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        addMarker();
-                                    }
-                                }, 1000);
-                            } catch (JSONException e) {
-                                Toast.makeText(SearchActivity.this, e.toString(), Toast.LENGTH_LONG).show();
-                                mRecyclerView.removeAllViews();
-                            }
-                        } else {
-                            Toast.makeText(SearchActivity.this, "İstasyon bulunamadı.", Toast.LENGTH_LONG).show();
-                            mRecyclerView.removeAllViews();
-                            googleMap.clear();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(SearchActivity.this, volleyError.toString(), Toast.LENGTH_LONG).show();
-                        mRecyclerView.removeAllViews();
-                        googleMap.clear();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    private void addMarker() {
-        Marker m;
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(16f).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        googleMap.addCircle(new CircleOptions()
-                .center(sydney)
-                .radius(mapDefaultStationRange)
-                .fillColor(0x220000FF)
-                .strokeColor(Color.parseColor("#FF5635")));
-        StationItem info = dummy.get(0);
-
-        if (isStationVerified == 1) {
-            MarkerOptions mOptions = new MarkerOptions().position(sydney).title(info.getStationName()).snippet(info.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.verified_station));
-            m = googleMap.addMarker(mOptions);
-            m.setTag(info);
-        } else {
-            MarkerOptions mOptions = new MarkerOptions().position(sydney).title(info.getStationName()).snippet(info.getVicinity()).icon(BitmapDescriptorFactory.fromResource(R.drawable.distance));
-            m = googleMap.addMarker(mOptions);
-            m.setTag(info);
-        }
-        m.showInfoWindow();
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mMapView != null) {
             mMapView.onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                editText.setText(place.getName());
+
+                tempLat = place.getLatLng().latitude;
+                tempLong = place.getLatLng().longitude;
+
+                if (googleMap != null) {
+                    LatLng mCurrentLocation = new LatLng(tempLat, tempLong);
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(tempZoom).build();
+                    googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+
+                searchCount--;
+                prefs.edit().putLong("SearchCounter", searchCount).apply();
+
+                searchStations();
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("AutoCompleteError", status.getStatusMessage());
+            }
         }
     }
 

@@ -14,7 +14,7 @@
 
         <RelativeLayout
             android:id="@+id/filter_header"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center">
@@ -75,9 +75,9 @@
                     android:text="@string/wc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox3"
@@ -93,9 +93,9 @@
                     android:text="@string/market"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox4"
@@ -111,9 +111,9 @@
                     android:text="@string/carwash"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
@@ -140,9 +140,9 @@
                     android:text="@string/tire_store"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox6"
@@ -158,9 +158,9 @@
                     android:text="@string/mechanic"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox7"
@@ -176,9 +176,9 @@
                     android:text="@string/restaurant"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
@@ -205,9 +205,9 @@
                     android:text="@string/parkspot"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox9"
@@ -223,9 +223,9 @@
                     android:text="@string/atm"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox10"
@@ -241,9 +241,9 @@
                     android:text="@string/motel"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
@@ -270,9 +270,9 @@
                     android:text="@string/coffee_shop"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox12"
@@ -288,9 +288,9 @@
                     android:text="@string/mosque"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <TextView

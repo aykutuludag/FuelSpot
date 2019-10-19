@@ -63,6 +63,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation1 = isChecked;
             }
         });
+        checkBoxes.add(checkBox1);
 
 
         CheckBox checkBox2 = view.findViewById(R.id.checkBox2);
@@ -73,6 +74,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation2 = isChecked;
             }
         });
+        checkBoxes.add(checkBox2);
 
 
         CheckBox checkBox3 = view.findViewById(R.id.checkBox3);
@@ -83,6 +85,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation3 = isChecked;
             }
         });
+        checkBoxes.add(checkBox3);
 
 
         CheckBox checkBox4 = view.findViewById(R.id.checkBox4);
@@ -93,6 +96,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation4 = isChecked;
             }
         });
+        checkBoxes.add(checkBox4);
 
 
         CheckBox checkBox5 = view.findViewById(R.id.checkBox5);
@@ -103,6 +107,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation5 = isChecked;
             }
         });
+        checkBoxes.add(checkBox5);
 
 
         CheckBox checkBox6 = view.findViewById(R.id.checkBox6);
@@ -113,6 +118,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation6 = isChecked;
             }
         });
+        checkBoxes.add(checkBox6);
 
 
         CheckBox checkBox7 = view.findViewById(R.id.checkBox7);
@@ -123,6 +129,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation7 = isChecked;
             }
         });
+        checkBoxes.add(checkBox7);
 
 
         CheckBox checkBox8 = view.findViewById(R.id.checkBox8);
@@ -133,6 +140,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation8 = isChecked;
             }
         });
+        checkBoxes.add(checkBox8);
 
         CheckBox checkBox9 = view.findViewById(R.id.checkBox9);
         checkBox9.setChecked(filterStation9);
@@ -142,6 +150,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation9 = isChecked;
             }
         });
+        checkBoxes.add(checkBox9);
 
         CheckBox checkBox10 = view.findViewById(R.id.checkBox10);
         checkBox10.setChecked(filterStation10);
@@ -151,6 +160,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation10 = isChecked;
             }
         });
+        checkBoxes.add(checkBox10);
 
         CheckBox checkBox11 = view.findViewById(R.id.checkBox11);
         checkBox11.setChecked(filterStation11);
@@ -160,6 +170,7 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation11 = isChecked;
             }
         });
+        checkBoxes.add(checkBox11);
 
         CheckBox checkBox12 = view.findViewById(R.id.checkBox12);
         checkBox12.setChecked(filterStation12);
@@ -169,18 +180,6 @@ public class FragmentFilterDistributors extends Fragment {
                 filterStation12 = isChecked;
             }
         });
-
-        checkBoxes.add(checkBox1);
-        checkBoxes.add(checkBox2);
-        checkBoxes.add(checkBox3);
-        checkBoxes.add(checkBox4);
-        checkBoxes.add(checkBox5);
-        checkBoxes.add(checkBox6);
-        checkBoxes.add(checkBox7);
-        checkBoxes.add(checkBox8);
-        checkBoxes.add(checkBox9);
-        checkBoxes.add(checkBox10);
-        checkBoxes.add(checkBox11);
         checkBoxes.add(checkBox12);
 
         for (int i = 0; i < fullStationList.size(); i++) {

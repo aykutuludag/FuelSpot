@@ -46,14 +46,13 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class FragmentNews extends Fragment {
     private NestedScrollView scrollView;
     private SimpleDateFormat sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private SimpleDateFormat sdf2 = new SimpleDateFormat(UniversalTimeFormat, Locale.getDefault());
-
+    private DecimalFormat df = new DecimalFormat("#.##");
     // Price Index
     private LineChart chart;
     private List<Entry> gasolinePriceHistory = new ArrayList<>();
@@ -128,12 +127,6 @@ public class FragmentNews extends Fragment {
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Haberler");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
 
             // Find the Ad Container
             final AdView mAdView = rootView.findViewById(R.id.nativeAdView);
@@ -386,8 +379,9 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list);
                                     float max = Collections.max(list);
 
-                                    gasolineMin.setText(min + " " + currencySymbol);
-                                    gasolineMax.setText(max + " " + currencySymbol);
+
+                                    gasolineMin.setText(df.format(min) + " " + currencySymbol);
+                                    gasolineMax.setText(df.format(max) + " " + currencySymbol);
                                 } else {
                                     gasolineMin.setText("- " + currencySymbol);
                                     gasolineMax.setText("- " + currencySymbol);
@@ -405,8 +399,8 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list2);
                                     float max = Collections.max(list2);
 
-                                    dieselMin.setText(min + " " + currencySymbol);
-                                    dieselMax.setText(max + " " + currencySymbol);
+                                    dieselMin.setText(df.format(min) + " " + currencySymbol);
+                                    dieselMax.setText(df.format(max) + " " + currencySymbol);
                                 } else {
                                     dieselMin.setText("- " + currencySymbol);
                                     dieselMax.setText("- " + currencySymbol);
@@ -424,8 +418,8 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list3);
                                     float max = Collections.max(list3);
 
-                                    lpgMin.setText(min + " " + currencySymbol);
-                                    lpgMax.setText(max + " " + currencySymbol);
+                                    lpgMin.setText(df.format(min) + " " + currencySymbol);
+                                    lpgMax.setText(df.format(max) + " " + currencySymbol);
                                 } else {
                                     lpgMin.setText("- " + currencySymbol);
                                     lpgMax.setText("- " + currencySymbol);
@@ -443,8 +437,8 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list4);
                                     float max = Collections.max(list4);
 
-                                    electricityMin.setText(min + " " + currencySymbol);
-                                    electricityMax.setText(max + " " + currencySymbol);
+                                    electricityMin.setText(df.format(min) + " " + currencySymbol);
+                                    electricityMax.setText(df.format(max) + " " + currencySymbol);
                                 } else {
                                     electricityMin.setText("- " + currencySymbol);
                                     electricityMax.setText("- " + currencySymbol);

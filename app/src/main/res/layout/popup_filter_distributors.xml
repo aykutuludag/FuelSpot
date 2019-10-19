@@ -66,6 +66,7 @@
                     android:id="@+id/checkBox1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:button="@null"
                     android:drawableTop="@drawable/default_station"
                     android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
@@ -76,9 +77,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox2"
@@ -95,9 +96,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox3"
@@ -114,14 +115,14 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/inner2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/inner1"
                 android:layout_centerHorizontal="true"
@@ -135,6 +136,7 @@
                     android:id="@+id/checkBox4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:button="@null"
                     android:drawableTop="@drawable/default_station"
                     android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
@@ -145,9 +147,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox5"
@@ -164,9 +166,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox6"
@@ -183,14 +185,14 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/inner3"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/inner2"
                 android:layout_centerHorizontal="true"
@@ -204,6 +206,7 @@
                     android:id="@+id/checkBox7"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:button="@null"
                     android:drawableTop="@drawable/default_station"
                     android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
@@ -214,9 +217,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox8"
@@ -233,9 +236,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox9"
@@ -252,14 +255,14 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <androidx.percentlayout.widget.PercentRelativeLayout
                 android:id="@+id/inner4"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/inner3"
                 android:layout_centerHorizontal="true"
@@ -273,6 +276,7 @@
                     android:id="@+id/checkBox10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:button="@null"
                     android:drawableTop="@drawable/default_station"
                     android:drawableBottom="?android:attr/listChoiceIndicatorMultiple"
@@ -283,9 +287,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
 
                 <CheckBox
                     android:id="@+id/checkBox11"
@@ -302,9 +306,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="2%"
-                    app:layout_marginRightPercent="2%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.34%" />
 
                 <CheckBox
                     android:id="@+id/checkBox12"
@@ -321,9 +325,9 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#161616"
                     android:visibility="gone"
-                    app:layout_marginLeftPercent="1.5%"
-                    app:layout_marginRightPercent="1.5%"
-                    app:layout_widthPercent="30%" />
+                    app:layout_marginLeftPercent="1%"
+                    app:layout_marginRightPercent="1%"
+                    app:layout_widthPercent="31.33%" />
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
             <TextView

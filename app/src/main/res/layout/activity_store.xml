@@ -325,7 +325,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <RelativeLayout
-                        android:id="@+id/arac_kokusu"
+                        android:id="@+id/arac_kokusu3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView18"
@@ -349,7 +349,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="2dp"
-                            android:text="Araç kokusu"
+                            android:text="Araç Kokusu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="#161616" />
 
@@ -365,7 +365,7 @@
                             android:layout_marginBottom="2dp"
                             android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="5 adet FuelSpot araç kokusu sadece 9.99 FP. Sınırlı sayıda!"
+                            android:text="3 adet FuelSpot araç kokusu 9.99 FP!"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />
@@ -415,10 +415,10 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/lastik_tamir_kiti"
+                        android:id="@+id/arac_kokusu5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/arac_kokusu"
+                        android:layout_below="@+id/arac_kokusu3"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/white_box"
                         android:elevation="4dp">
@@ -429,7 +429,7 @@
                             android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
-                            android:src="@drawable/urun_lastiktamirspreyi" />
+                            android:src="@drawable/urun_fuelspotkoku" />
 
                         <TextView
                             android:id="@+id/textView43"
@@ -439,7 +439,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="2dp"
-                            android:text="Lastik tamir spreyi"
+                            android:text="Araç Kokusu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="#161616" />
 
@@ -455,7 +455,7 @@
                             android:layout_marginBottom="2dp"
                             android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir."
+                            android:text="5 adet FuelSpot araç kokusu 14.99 FP!"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />
@@ -505,10 +505,10 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/arac_bakim_seti"
+                        android:id="@+id/arac_kokusu10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/lastik_tamir_kiti"
+                        android:layout_below="@+id/arac_kokusu5"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/white_box"
                         android:elevation="4dp">
@@ -519,7 +519,7 @@
                             android:layout_height="125dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
-                            android:src="@drawable/urun_aracbakimseti" />
+                            android:src="@drawable/urun_fuelspotkoku" />
 
                         <TextView
                             android:id="@+id/textView41"
@@ -546,7 +546,7 @@
                             android:layout_marginBottom="2dp"
                             android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI."
+                            android:text="10 adet FuelSpot araç kokusu 24.99 FP!"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />

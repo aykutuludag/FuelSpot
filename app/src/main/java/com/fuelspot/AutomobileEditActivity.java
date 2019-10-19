@@ -45,8 +45,6 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.model.VehicleItem;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -108,12 +106,6 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Araç düzenle");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         //Window
         window = this.getWindow();

@@ -71,7 +71,6 @@
     <!-- FragmentNews-->
     <string name="latest_news">Son haberler</string>
     <string name="price_index">Fiyat endeksi</string>
-    <string name="fuel_distrubition_companies">Akaryakıt dağıtım şirketleri</string>
     <string name="last_update">Son güncelleme</string>
     <string name="registered_station_number">Kayıtlı istasyon:</string>
     <!-- FragmentNews-->
@@ -174,7 +173,7 @@
     <string name="atm">ATM</string>
     <string name="motel">Motel</string>
     <string name="coffee_shop">Kahveci</string>
-    <string name="mosque">Camii / Mescit</string>
+    <string name="mosque">Camii/Mescit</string>
     <!-- StationDetails-->
 
     <!-- StationComments-->
@@ -247,7 +246,7 @@
     <string name="banking_activities_desc">Burada FuelSpot üzerinde yapılan son hesap hareketlerinizi (bonus/ödüller ve satın almalar dahil, abonelikler hariç) görebilirsiniz. Aboneliklerinizi (2xRange &amp; Premium) Google Play uygulaması üzerinden yönetebilirsiniz.</string>
     <string name="current_balance">Mevcut bakiye</string>
     <string name="premium_version">Premium sürüm</string>
-    <string name="premium_version_desc">2x Menzil + Reklam Yok + Sokak Görünümü + Sınırsız Favori İstasyon \n\n Premium sürüm keyfini çıkarabilmen için ilk 3 gün ücretsiz!</string>
+    <string name="premium_version_desc">2x Menzil + Reklam Yok + Sokak Görünümü + Sınırsız Favori İstasyon + Sınırsız İstasyon Arama \n\n Premium sürüm keyfini çıkarabilmen için ilk 3 gün ücretsiz!</string>
     <string name="start_subscription">Üyeliği başlat</string>
     <string name="double_range">2x Menzil</string>
     <string name="double_range_desc">Menzilinizi 2\'ye katlar! (6000 metre)</string>
@@ -358,7 +357,6 @@
     <string name="title_activity_report_missing_station">Eksik istasyon</string>
     <string name="purchasing">Satın alınıyor</string>
     <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargoya verilecektir. Ortalama teslim süresi 2–3 iş günüdür.</string>
-    <string name="search">Ara</string>
     <string name="inbox">Gelen kutusu</string>
     <!-- AddStation-->
 </resources>

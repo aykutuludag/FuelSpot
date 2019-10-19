@@ -436,6 +436,7 @@
                 <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/inner_medium"
                     android:layout_below="@id/inner_buttons"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
@@ -486,6 +487,28 @@
                         app:layout_widthPercent="30%" />
                 </androidx.percentlayout.widget.PercentRelativeLayout>
 
+                <androidx.percentlayout.widget.PercentRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/inner_medium"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:padding="4dp">
+
+                    <Button
+                        android:id="@+id/button_shareApp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/white_box"
+                        android:drawableStart="@drawable/ic_share"
+                        android:fontFamily="@font/gotham_book"
+                        android:text="Uygulamayı paylaş"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#161616"
+                        app:layout_marginPercent="25%"
+                        app:layout_widthPercent="50%" />
+                </androidx.percentlayout.widget.PercentRelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout

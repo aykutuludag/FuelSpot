@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -57,6 +58,10 @@ import com.fuelspot.receiver.AlarmReceiver;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.json.JSONArray;
@@ -122,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     private boolean doubleBackToExitPressedOnce;
     private FragNavController mFragNavController;
     private RequestQueue queue;
-    public static long streetViewLastSeen;
+    public static long streetViewLastSeen, lastStationSearch;
     private BillingClient billingClient;
 
     public static int getIndexOf(String[] strings, String item) {
@@ -175,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         token = prefs.getString("token", "");
         firebaseToken = prefs.getString("firebaseToken", "");
         streetViewLastSeen = prefs.getLong("StreetViewLastSeen", 0);
+        lastStationSearch = prefs.getLong("lastStationSearch", 0);
     }
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
@@ -332,6 +338,18 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
         if (firebaseToken.length() > 0) {
             registerToken();
+        } else {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (task.getResult() != null && task.isSuccessful()) {
+                        // Get new Instance ID token
+                        firebaseToken = task.getResult().getToken();
+                        prefs.edit().putString("firebaseToken", firebaseToken).apply();
+                        registerToken();
+                    }
+                }
+            });
         }
 
         // Custom Tab

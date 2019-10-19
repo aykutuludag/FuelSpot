@@ -45,8 +45,6 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.VehicleAdapter;
 import com.fuelspot.model.VehicleItem;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -89,6 +87,8 @@ import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userAutomobileList;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userUnit;
+import static com.fuelspot.MainActivity.userlat;
+import static com.fuelspot.MainActivity.userlon;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.MainActivity.vehicleID;
 
@@ -128,10 +128,6 @@ public class AddFuel extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setLogo(R.drawable.brand_logo);
-        }
 
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
@@ -142,12 +138,6 @@ public class AddFuel extends AppCompatActivity {
         if (!premium) {
             AdMob(this);
         }
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Yakıt ekle");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         //Creating a Request Queue
         requestQueue = Volley.newRequestQueue(AddFuel.this);
@@ -161,13 +151,6 @@ public class AddFuel extends AppCompatActivity {
         stationFetching.setIndeterminate(true);
         stationFetching.setCancelable(false);
         stationFetching.show();
-
-        chosenStationID = getIntent().getIntExtra("STATION_ID", 0);
-        if (chosenStationID == 0) {
-            Intent intent = new Intent(AddFuel.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         scrollView = findViewById(R.id.addfuel_layout1);
 
@@ -210,8 +193,27 @@ public class AddFuel extends AppCompatActivity {
         textViewBonus = findViewById(R.id.textViewBonus);
         fuelGrandTotal = findViewById(R.id.textViewGrandTotal);
 
-        // Check whether user is at station or not
-        fetchSingleStation();
+        enterKilometer.setEnabled(false);
+        textViewLitreFiyati.setEnabled(false);
+        textViewTotalFiyat.setEnabled(false);
+        textViewLitre.setEnabled(false);
+        textViewLitreFiyati2.setEnabled(false);
+        textViewTotalFiyat2.setEnabled(false);
+        textViewLitre2.setEnabled(false);
+
+        chosenStationID = getIntent().getIntExtra("STATION_ID", 0);
+        if (chosenStationID != 0) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setLogo(R.drawable.brand_logo);
+
+            fetchSingleStation();
+        } else {
+            // Check whether user is at station or not
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            searchStations();
+        }
 
         // Get user automobiles
         mRecyclerView = findViewById(R.id.automobileView);
@@ -226,6 +228,79 @@ public class AddFuel extends AppCompatActivity {
         } else {
             fetchAutomobiles();
         }
+    }
+
+    private void searchStations() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + 50,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        stationFetching.dismiss();
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                chosenStationID = obj.getInt("id");
+                                stationName = obj.getString("name");
+                                stationAddress = obj.getString("vicinity");
+                                stationLoc = obj.getString("location");
+                                stationLogo = obj.getString("logoURL");
+                                gasolinePrice = (float) obj.getDouble("gasolinePrice");
+                                dieselPrice = (float) obj.getDouble("dieselPrice");
+                                LPGPrice = (float) obj.getDouble("lpgPrice");
+                                electricityPrice = (float) obj.getDouble("electricityPrice");
+
+                                scrollView.setAlpha(1.0f);
+                                loadLayout();
+                            } catch (JSONException e) {
+                                Toast.makeText(AddFuel.this, e.toString(), Toast.LENGTH_LONG).show();
+                                stationName = "";
+                                stationAddress = "";
+                                stationLoc = "";
+                                stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                                gasolinePrice = 0.00f;
+                                dieselPrice = 0.00f;
+                                LPGPrice = 0.00f;
+                                electricityPrice = 0.00f;
+                            }
+                        } else {
+                            Toast.makeText(AddFuel.this, "Şu an istasyonda değilsiniz! Yakıt ekleyebilmek için istasyonda olmanız gerekiyor.", Toast.LENGTH_LONG).show();
+                            stationName = "";
+                            stationAddress = "";
+                            stationLoc = "";
+                            stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                            gasolinePrice = 0.00f;
+                            dieselPrice = 0.00f;
+                            LPGPrice = 0.00f;
+                            electricityPrice = 0.00f;
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(AddFuel.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        stationName = "";
+                        stationAddress = "";
+                        stationLoc = "";
+                        stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                        gasolinePrice = 0.00f;
+                        dieselPrice = 0.00f;
+                        LPGPrice = 0.00f;
+                        electricityPrice = 0.00f;
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
     }
 
     private void fetchSingleStation() {
@@ -253,9 +328,25 @@ public class AddFuel extends AppCompatActivity {
                                 loadLayout();
                             } catch (JSONException e) {
                                 Toast.makeText(AddFuel.this, e.toString(), Toast.LENGTH_LONG).show();
+                                stationName = "";
+                                stationAddress = "";
+                                stationLoc = "";
+                                stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                                gasolinePrice = 0.00f;
+                                dieselPrice = 0.00f;
+                                LPGPrice = 0.00f;
+                                electricityPrice = 0.00f;
                             }
                         } else {
                             Toast.makeText(AddFuel.this, getString(R.string.error), Toast.LENGTH_LONG).show();
+                            stationName = "";
+                            stationAddress = "";
+                            stationLoc = "";
+                            stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                            gasolinePrice = 0.00f;
+                            dieselPrice = 0.00f;
+                            LPGPrice = 0.00f;
+                            electricityPrice = 0.00f;
                         }
                     }
                 },
@@ -264,6 +355,14 @@ public class AddFuel extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         stationFetching.dismiss();
                         Toast.makeText(AddFuel.this, volleyError.toString(), Toast.LENGTH_LONG).show();
+                        stationName = "";
+                        stationAddress = "";
+                        stationLoc = "";
+                        stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                        gasolinePrice = 0.00f;
+                        dieselPrice = 0.00f;
+                        LPGPrice = 0.00f;
+                        electricityPrice = 0.00f;
                     }
                 }) {
             @Override
@@ -371,6 +470,14 @@ public class AddFuel extends AppCompatActivity {
     }
 
     public void loadLayout() {
+        enterKilometer.setEnabled(true);
+        textViewLitreFiyati.setEnabled(true);
+        textViewTotalFiyat.setEnabled(true);
+        textViewLitre.setEnabled(true);
+        textViewLitreFiyati2.setEnabled(true);
+        textViewTotalFiyat2.setEnabled(true);
+        textViewLitre2.setEnabled(true);
+
         istasyonIDHolder.setText("" + chosenStationID);
         istasyonNameHolder.setText(stationName);
         istasyonAdresHolder.setText(stationAddress);
@@ -642,46 +749,26 @@ public class AddFuel extends AppCompatActivity {
                                 kilometer = tempKM;
                                 prefs.edit().putInt("Kilometer", kilometer).apply();
 
+
                                 showAds(AddFuel.this, null);
 
                                 AlertDialog alertDialog = new AlertDialog.Builder(AddFuel.this).create();
-                                alertDialog.setTitle("Yakıt eklendi");
-                                alertDialog.setMessage("Satınalmanız başarıyla eklendi. Fiş fotoğrafı eklediyseniz veya 24 saat içerisinde eklerseniz bonus için değerlendirmeye alınacaktır. Şimdi ne yapmak istersiniz?");
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Satınalmaları görüntüle",
+                                alertDialog.setTitle("Satınalma eklendi");
+                                alertDialog.setMessage("Satınalmanız başarıyla eklendi! Otomobil sekmesinde satınalmanızı görebilirsiniz. Fiş fotoğrafı eklediyseniz veya 24 saat içerisinde eklerseniz bonus için değerlendirmeye alınacaktır.");
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Tamam",
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 bitmap = null;
-                                                stationName = null;
+                                                stationName = "";
+                                                stationAddress = "";
                                                 chosenStationID = 0;
                                                 tempKM = 0;
-                                                stationLoc = null;
-                                                stationLogo = null;
-                                                gasolinePrice = 0;
-                                                dieselPrice = 0;
-                                                electricityPrice = 0;
-                                                LPGPrice = 0;
-
-                                                Intent intent = new Intent(AddFuel.this, LoginActivity.class);
-                                                startActivity(intent);
-
-                                                dialog.dismiss();
-                                                finish();
-                                            }
-                                        });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Çıkış",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                bitmap = null;
-                                                stationName = null;
-                                                chosenStationID = 0;
-                                                tempKM = 0;
-                                                stationLoc = null;
-                                                stationLogo = null;
-                                                gasolinePrice = 0;
-                                                dieselPrice = 0;
-                                                electricityPrice = 0;
-                                                LPGPrice = 0;
-
+                                                stationLoc = "";
+                                                stationLogo = "https://fuelspot.com.tr/default_icons/station.png";
+                                                gasolinePrice = 0.00f;
+                                                dieselPrice = 0.00f;
+                                                electricityPrice = 0.00f;
+                                                LPGPrice = 0.00f;
                                                 dialog.dismiss();
                                                 finish();
                                             }

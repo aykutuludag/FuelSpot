@@ -116,7 +116,6 @@
                     android:id="@+id/street_view_panorama"
                     android:layout_width="match_parent"
                     android:layout_height="350dp" />
-
             </RelativeLayout>
 
             <RelativeLayout

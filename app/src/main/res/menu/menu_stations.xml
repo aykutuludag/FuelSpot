@@ -11,7 +11,7 @@
     <item
         android:id="@+id/search_station"
         android:icon="@drawable/ic_search"
-        android:title="@string/search"
+        android:title="İstasyon ara"
         app:showAsAction="never" />
 
     <item

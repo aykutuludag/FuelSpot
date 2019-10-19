@@ -81,8 +81,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
     int itemNo;
     public static SkuDetails premiumSku, doubleSku;
     float price1 = 9.99f;
-    float price2 = 39.90f;
-    float price3 = 49.90f;
+    float price2 = 14.99f;
+    float price3 = 24.99f;
     RequestOptions options;
     PopupWindow mPopupWindow;
     TextView textViewCurrentBalance;
@@ -268,22 +268,22 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
         switch (itemNo) {
             case 1:
-                productName[0] = "Araç Kokusu (5 adet)";
-                productDesc[0] = "5 adet FuelSpot araç kokusu sadece 9.99 FP. Sınırlı sayıda!";
+                productName[0] = "Araç Kokusu (3 adet)";
+                productDesc[0] = "3 adet FuelSpot araç kokusu 9.99 FP!";
                 productPrice[0] = price1;
                 imageResourceID = R.drawable.popup_product1;
                 break;
             case 2:
-                productName[0] = "Lastik Tamir Spreyi";
-                productDesc[0] = "Bu mucize sprey patlayan lastiğinizi içerisindeki hava ile temas halinde kauçuklaşan sıvısıyla tamir eder hemde lastiğinize 20 psi a kadar şişirebilmektedir.";
+                productName[0] = "Araç Kokusu (5 adet)";
+                productDesc[0] = "5 adet FuelSpot araç kokusu 14.99 FP!";
                 productPrice[0] = price2;
-                imageResourceID = R.drawable.popup_product2;
+                imageResourceID = R.drawable.popup_product1;
                 break;
             case 3:
-                productName[0] = "Araç Bakım Kiti";
-                productDesc[0] = "SET İÇERİĞİ: DÖRT MEVSİM CAM TEMİZLEME SUYU 250 ML, BUZ ÇÖZÜCÜ SPREY 500 ML, YAĞMUR KAYDIRICI 170 ML, BUĞU ÖNLEYİCİ 170 ML, OCEAN ASMA KOKU ,BEZ TAŞIMA ÇANTASI";
+                productName[0] = "Araç Kokusu (10 adet)";
+                productDesc[0] = "10 adet FuelSpot araç kokusu 24.99 FP!";
                 productPrice[0] = price3;
-                imageResourceID = R.drawable.popup_product3;
+                imageResourceID = R.drawable.popup_product1;
                 break;
             default:
                 Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();

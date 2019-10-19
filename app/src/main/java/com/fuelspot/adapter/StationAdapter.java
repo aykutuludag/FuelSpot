@@ -59,7 +59,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     private List<StationItem> feedItemList;
     private String whichScreen;
     private Context mContext;
-    private DecimalFormat df = new DecimalFormat("##.##");
+    private DecimalFormat df = new DecimalFormat("#.##");
     private SharedPreferences prefs;
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -220,7 +220,13 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         viewHolder.electricityPrice.setText(elecHolder);
 
         //Distance
-        String distance = feedItem.getDistance() + " m";
+        String distance;
+        if (feedItem.getDistance() >= 1500) {
+            float km = feedItem.getDistance() / 1000f;
+            distance = df.format(km) + " KM";
+        } else {
+            distance = feedItem.getDistance() + " m";
+        }
         viewHolder.distance.setText(distance);
 
         //Last updated

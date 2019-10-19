@@ -47,8 +47,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -312,12 +310,6 @@ public class FragmentSettings extends Fragment {
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Settings");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
-
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
             requestQueue = Volley.newRequestQueue(getActivity());
@@ -458,6 +450,17 @@ public class FragmentSettings extends Fragment {
                     CustomTabsIntent customTabsIntent = builder.build();
                     customTabsIntent.intent.setPackage("com.android.chrome");
                     customTabsIntent.launchUrl(getActivity(), Uri.parse("https://fuelspot.com.tr/privacy"));
+                }
+            });
+
+            Button shareApp = rootView.findViewById(R.id.button_shareApp);
+            shareApp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent txtIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    txtIntent.setType("text/plain");
+                    txtIntent.putExtra(android.content.Intent.EXTRA_TEXT, "FuelSpot - Dijital Benzinlik https://play.google.com/store/apps/details?id=com.fuelspot");
+                    startActivity(Intent.createChooser(txtIntent, "Uygulamayı paylaş"));
                 }
             });
 

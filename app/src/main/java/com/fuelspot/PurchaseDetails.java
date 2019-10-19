@@ -47,8 +47,6 @@ import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.PurchaseItem;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -138,12 +136,6 @@ public class PurchaseDetails extends AppCompatActivity {
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Satın alma detay");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         requestQueue = Volley.newRequestQueue(this);
         mMapView = findViewById(R.id.mapView);
@@ -271,10 +263,13 @@ public class PurchaseDetails extends AppCompatActivity {
 
         if (!isLocalPurchase) {
             if (isPurchaseVerified == -1) {
-                Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
-
-                textViewStatus.setText("Satınalma yapılan inceleme sonrası onaylanmadı.");
-
+                if (billPhoto != null && billPhoto.length() > 0) {
+                    Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
+                    textViewStatus.setText("Satınalma yapılan inceleme sonrası onaylanmadı.");
+                } else {
+                    Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
+                    textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
+                }
                 addBillPhotoButton.setVisibility(View.GONE);
             } else if (isPurchaseVerified == 1) {
                 Glide.with(this).load(R.drawable.verified).apply(options).into(circleImageViewStatus);

@@ -10,10 +10,13 @@ import com.fuelspot.model.StationItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+import java.text.DecimalFormat;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
 
+    private DecimalFormat df = new DecimalFormat("#.##");
     private Context mContext;
 
     public MarkerAdapter(Context ctx) {
@@ -44,24 +47,31 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
             }
 
             if (infoWindowData.getGasolinePrice() != 0) {
-                priceOne.setText(String.valueOf(infoWindowData.getGasolinePrice()));
+                priceOne.setText(String.valueOf(df.format(infoWindowData.getGasolinePrice())));
             } else {
                 priceOne.setText("-");
             }
 
             if (infoWindowData.getDieselPrice() != 0) {
-                priceTwo.setText(String.valueOf(infoWindowData.getDieselPrice()));
+                priceTwo.setText(String.valueOf(df.format(infoWindowData.getDieselPrice())));
             } else {
                 priceTwo.setText("-");
             }
 
             if (infoWindowData.getLpgPrice() != 0) {
-                priceThree.setText(String.valueOf(infoWindowData.getLpgPrice()));
+                priceThree.setText(String.valueOf(df.format(infoWindowData.getLpgPrice())));
             } else {
                 priceThree.setText("-");
             }
 
-            distanceText.setText(infoWindowData.getDistance() + " metre uzakta");
+            String distance;
+            if (infoWindowData.getDistance() >= 1500) {
+                float km = infoWindowData.getDistance() / 1000f;
+                distance = df.format(km) + " KM uzakta";
+            } else {
+                distance = infoWindowData.getDistance() + " m uzakta";
+            }
+            distanceText.setText(distance);
 
         }
         return view;

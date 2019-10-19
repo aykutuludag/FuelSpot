@@ -43,8 +43,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.model.VehicleItem;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -114,12 +112,6 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Araç ekle");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         requestQueue = Volley.newRequestQueue(this);

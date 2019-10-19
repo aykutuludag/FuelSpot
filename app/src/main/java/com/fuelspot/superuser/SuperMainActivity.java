@@ -11,10 +11,12 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -47,7 +49,11 @@ import com.fuelspot.StationDetails;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.StationItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.json.JSONArray;
@@ -57,6 +63,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +71,7 @@ import hotchemi.android.rate.AppRate;
 
 import static com.fuelspot.MainActivity.adCount;
 import static com.fuelspot.MainActivity.companyList;
+import static com.fuelspot.MainActivity.firebaseToken;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.hasDoubleRange;
@@ -145,6 +153,22 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         getVariables(prefs);
         getSuperVariables(prefs);
         queue = Volley.newRequestQueue(this);
+
+        if (firebaseToken.length() > 0) {
+            registerToken();
+        } else {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (task.getResult() != null && task.isSuccessful()) {
+                        // Get new Instance ID token
+                        firebaseToken = task.getResult().getToken();
+                        prefs.edit().putString("firebaseToken", firebaseToken).apply();
+                        registerToken();
+                    }
+                }
+            });
+        }
 
         // Bottom navigation
         FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.pager);
@@ -585,6 +609,53 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
             //Adding request to the queue
             queue.add(stringRequest);
         }
+    }
+
+    private void registerToken() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_SUPERUSER_UPDATE),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            if (response.equals("Success")) {
+                                Log.d("REGISTER_TOKEN", "SUCCESS");
+                            } else {
+                                Log.d("REGISTER_TOKEN", "FAIL");
+                            }
+                        } else {
+                            Log.d("REGISTER_TOKEN", "FAIL");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.d("REGISTER_TOKEN", "FAIL");
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("token", firebaseToken);
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     @Override

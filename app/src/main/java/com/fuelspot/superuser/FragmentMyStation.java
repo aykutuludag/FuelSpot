@@ -37,15 +37,12 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.fuelspot.Application;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
 import com.fuelspot.StationDetails;
 import com.fuelspot.adapter.MarkerAdapter;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -136,12 +133,6 @@ public class FragmentMyStation extends Fragment {
 
             // Keep screen on
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("MyStation");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
 
             //Variables
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);

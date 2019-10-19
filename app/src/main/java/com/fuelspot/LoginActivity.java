@@ -32,8 +32,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.fuelspot.superuser.SuperMainActivity;
 import com.fuelspot.superuser.SuperWelcomeActivity;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -118,12 +116,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Analytics
-        Tracker t = ((Application) this.getApplicationContext()).getDefaultTracker();
-        t.setScreenName("LoginActivity");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         //Variables
         prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);

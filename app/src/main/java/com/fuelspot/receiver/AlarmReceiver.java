@@ -60,6 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private Context mContext;
     private SharedPreferences prefs;
     private FusedLocationProviderClient mFusedLocationClient;
+    int radius = 5000;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -74,7 +75,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // If phone restarted, this section detects that and reschedule alarm
                 scheduleAlarm();
             } else {
-                // Every 30 mins, re-create fences.
+                // Every 15 mins, re-create fences.
                 createFences();
             }
         }
@@ -153,7 +154,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void fetchStations() {
         //Showing the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + mapDefaultRange,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mContext.getString(R.string.API_SEARCH_STATIONS) + "?location=" + userlat + ";" + userlon + "&radius=" + radius,
                 new Response.Listener<String>() {
                     @SuppressLint("MissingPermission")
                     @Override
@@ -194,11 +195,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                                 e.printStackTrace();
                             }
                         } else {
-                            if (mapDefaultRange == 3000) {
-                                mapDefaultRange = 6000;
+                            if (radius == 5000) {
+                                radius = 10000;
                                 fetchStations();
-                            } else if (mapDefaultRange == 6000) {
-                                mapDefaultRange = 10000;
+                            } else if (radius == 10000) {
+                                radius = 25000;
+                                fetchStations();
+                            } else if (radius == 25000) {
+                                radius = 50000;
                                 fetchStations();
                             }
                         }

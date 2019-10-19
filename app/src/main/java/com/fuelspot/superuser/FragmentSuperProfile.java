@@ -23,11 +23,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
-import com.fuelspot.Application;
 import com.fuelspot.R;
 import com.fuelspot.adapter.StationAdapter;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -58,12 +55,6 @@ public class FragmentSuperProfile extends Fragment {
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            // Analytics
-            Tracker t = ((Application) getActivity().getApplication()).getDefaultTracker();
-            t.setScreenName("Profile");
-            t.enableAdvertisingIdCollection(true);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
 
             ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
             updateUser.setOnClickListener(new View.OnClickListener() {

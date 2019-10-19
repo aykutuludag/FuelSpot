@@ -75,8 +75,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaView;
@@ -200,12 +198,6 @@ public class StationDetails extends AppCompatActivity {
 
         //Dynamic bar colors
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("İstasyon detay");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());

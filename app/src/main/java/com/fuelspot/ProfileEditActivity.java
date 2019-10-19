@@ -48,8 +48,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -112,12 +110,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         //Window
         window = this.getWindow();
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
-
-        // Analytics
-        Tracker t = ((Application) this.getApplication()).getDefaultTracker();
-        t.setScreenName("Profil düzenle");
-        t.enableAdvertisingIdCollection(true);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         SharedPreferences prefs = this.getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         editor = prefs.edit();
