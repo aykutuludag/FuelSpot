@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -75,12 +74,10 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout card;
         TextView textViewType, textViewAmount, textViewDate;
 
         ViewHolder(View itemView) {
             super(itemView);
-            card = itemView.findViewById(R.id.single_report);
             textViewType = itemView.findViewById(R.id.banking_type);
             textViewAmount = itemView.findViewById(R.id.banking_amout);
             textViewDate = itemView.findViewById(R.id.banking_date);

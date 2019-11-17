@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -367,6 +369,7 @@ public class StationDetails extends AppCompatActivity {
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
 
+
         floatingActionButton1 = findViewById(R.id.fab1);
         if (isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
@@ -503,7 +506,7 @@ public class StationDetails extends AppCompatActivity {
                             prefs.edit().putLong("StreetViewLastSeen", streetViewLastSeen).apply();
                             streetViewCountForPremium++;
                         } else {
-                            Snackbar.make(findViewById(android.R.id.content), "Sokak görünümü bulunamadı.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), getString(R.string.no_streetview), Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -684,29 +687,33 @@ public class StationDetails extends AppCompatActivity {
         //SingleStation
         textName.setText(stationName);
         textVicinity.setText(stationVicinity);
-        textStationID.setText("" + choosenStationID);
+        textStationID.setText(String.valueOf(choosenStationID));
 
         if (gasolinePrice == 0) {
             textGasoline.setText("-");
         } else {
-            textGasoline.setText(gasolinePrice + " " + currencySymbol);
+            String benzinFiyat = gasolinePrice + " " + currencySymbol;
+            textGasoline.setText(benzinFiyat);
         }
 
         if (dieselPrice == 0) {
             textDiesel.setText("-");
         } else {
-            textDiesel.setText(dieselPrice + " " + currencySymbol);
+            String dizelFiyat = dieselPrice + " " + currencySymbol;
+            textDiesel.setText(dizelFiyat);
         }
 
         if (lpgPrice == 0) {
             textLPG.setText("-");
         } else {
-            textLPG.setText(lpgPrice + " " + currencySymbol);
+            String lpgFiyat = lpgPrice + " " + currencySymbol;
+            textLPG.setText(lpgFiyat);
         }
         if (electricityPrice == 0) {
             textElectricity.setText("-");
         } else {
-            textElectricity.setText(electricityPrice + " " + currencySymbol);
+            String elecFiyat = electricityPrice + " " + currencySymbol;
+            textElectricity.setText(elecFiyat);
         }
 
         if (otherFuelsOfStation != null && otherFuelsOfStation.length() > 0) {
@@ -716,14 +723,16 @@ public class StationDetails extends AppCompatActivity {
 
                 if (otherFuelObj.has("gasoline2") && otherFuelObj.getString("gasoline2").length() > 0) {
                     gasolinePrice2 = Float.parseFloat(otherFuelObj.getString("gasoline2"));
-                    textGasoline2.setText(gasolinePrice2 + " " + currencySymbol);
+                    String benzin2Fiyat = gasolinePrice2 + " " + currencySymbol;
+                    textGasoline2.setText(benzin2Fiyat);
                 } else {
                     textGasoline2.setText("-");
                 }
 
                 if (otherFuelObj.has("diesel2") && otherFuelObj.getString("diesel2").length() > 0) {
                     dieselPrice2 = Float.parseFloat(otherFuelObj.getString("diesel2"));
-                    textDiesel2.setText(dieselPrice2 + " " + currencySymbol);
+                    String dizel2Fiyat = dieselPrice2 + " " + currencySymbol;
+                    textDiesel2.setText(dizel2Fiyat);
                 } else {
                     textDiesel2.setText("-");
                 }
@@ -806,74 +815,74 @@ public class StationDetails extends AppCompatActivity {
             if (facilitiesObj.getInt("WC") == 1) {
                 imageViewWC.setAlpha(1.0f);
             } else {
-                imageViewWC.setAlpha(0.25f);
+                imageViewWC.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("Market") == 1) {
                 imageViewMarket.setAlpha(1.0f);
             } else {
-                imageViewMarket.setAlpha(0.25f);
+                imageViewMarket.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("CarWash") == 1) {
                 imageViewCarWash.setAlpha(1.0f);
             } else {
-                imageViewCarWash.setAlpha(0.25f);
+                imageViewCarWash.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("TireRepair") == 1) {
                 imageViewTireRepair.setAlpha(1.0f);
             } else {
-                imageViewTireRepair.setAlpha(0.25f);
+                imageViewTireRepair.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("Mechanic") == 1) {
                 imageViewMechanic.setAlpha(1.0f);
             } else {
-                imageViewMechanic.setAlpha(0.25f);
+                imageViewMechanic.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("Restaurant") == 1) {
                 imageViewRestaurant.setAlpha(1.0f);
             } else {
-                imageViewRestaurant.setAlpha(0.25f);
+                imageViewRestaurant.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("ParkSpot") == 1) {
                 imageViewParkSpot.setAlpha(1.0f);
             } else {
-                imageViewParkSpot.setAlpha(0.25f);
+                imageViewParkSpot.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("ATM") == 1) {
                 imageViewATM.setAlpha(1.0f);
             } else {
-                imageViewATM.setAlpha(0.25f);
+                imageViewATM.setAlpha(0.15f);
             }
 
             if (facilitiesObj.getInt("Motel") == 1) {
                 imageViewMotel.setAlpha(1.0f);
             } else {
-                imageViewMotel.setAlpha(0.25f);
+                imageViewMotel.setAlpha(0.15f);
             }
 
             if (!facilitiesObj.has("CoffeeShop")) {
-                imageViewCoffeeShop.setAlpha(0.25f);
+                imageViewCoffeeShop.setAlpha(0.15f);
             } else {
                 if (facilitiesObj.getInt("CoffeeShop") == 1) {
                     imageViewCoffeeShop.setAlpha(1.0f);
                 } else {
-                    imageViewCoffeeShop.setAlpha(0.25f);
+                    imageViewCoffeeShop.setAlpha(0.15f);
                 }
             }
 
             if (!facilitiesObj.has("Mosque")) {
-                imageViewMosque.setAlpha(0.25f);
+                imageViewMosque.setAlpha(0.15f);
             } else {
                 if (facilitiesObj.getInt("Mosque") == 1) {
                     imageViewMosque.setAlpha(1.0f);
                 } else {
-                    imageViewMosque.setAlpha(0.25f);
+                    imageViewMosque.setAlpha(0.15f);
                 }
             }
         } catch (JSONException e) {
@@ -983,8 +992,10 @@ public class StationDetails extends AppCompatActivity {
     }
 
     public void fetchStationComments() {
+        final String noCommentString = "0 " + getString(R.string.comments) + " - 0.0";
         sumOfPoints = 0;
         numOfComments = 0;
+        dummyList.clear();
         stationCommentList.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_STATION_COMMENTS) + "?stationID=" + choosenStationID,
                 new Response.Listener<String>() {
@@ -1037,7 +1048,8 @@ public class StationDetails extends AppCompatActivity {
                                 // Calculate station score
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 stationScore = sumOfPoints / numOfComments;
-                                textViewStationPoint.setText((int) numOfComments + " " + getString(R.string.comments) + " - " + df.format(stationScore));
+                                String commentText = (int) numOfComments + " " + getString(R.string.comments) + " - " + df.format(stationScore);
+                                textViewStationPoint.setText(commentText);
 
                                 // Display first three comments
                                 GridLayoutManager mLayoutManager = new GridLayoutManager(StationDetails.this, 1);
@@ -1047,13 +1059,13 @@ public class StationDetails extends AppCompatActivity {
                                 mRecyclerView2.setLayoutManager(mLayoutManager);
                             } catch (JSONException e) {
                                 hasAlreadyCommented = false;
-                                textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
+                                textViewStationPoint.setText(noCommentString);
                                 noCommentText.setVisibility(View.VISIBLE);
                                 buttonWriteReview.setVisibility(View.VISIBLE);
                             }
                         } else {
                             hasAlreadyCommented = false;
-                            textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
+                            textViewStationPoint.setText(noCommentString);
                             noCommentText.setVisibility(View.VISIBLE);
                             buttonWriteReview.setVisibility(View.VISIBLE);
                         }
@@ -1063,7 +1075,7 @@ public class StationDetails extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         hasAlreadyCommented = false;
-                        textViewStationPoint.setText(0 + " " + getString(R.string.comments) + " - " + 0.0);
+                        textViewStationPoint.setText(noCommentString);
                         noCommentText.setVisibility(View.VISIBLE);
                         buttonWriteReview.setVisibility(View.VISIBLE);
                     }
@@ -1144,6 +1156,9 @@ public class StationDetails extends AppCompatActivity {
                 stars = (int) rating;
             }
         });
+
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.parseColor("#2DE878"), PorterDuff.Mode.SRC_ATOP);
 
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
         // Set a click listener for the popup window close button

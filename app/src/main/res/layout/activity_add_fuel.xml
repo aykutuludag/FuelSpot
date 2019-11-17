@@ -57,6 +57,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:elevation="5dp"
                     android:src="@drawable/default_station" />
 
                 <TextView
@@ -93,7 +94,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout2">
+                android:background="@drawable/round_layout2"
+                android:elevation="5dp">
 
                 <TextView
                     android:id="@+id/automobile_title"
@@ -157,7 +159,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout2">
+                android:background="@drawable/round_layout2"
+                android:elevation="5dp">
 
                 <TextView
                     android:id="@+id/primary_f_title"
@@ -282,7 +285,6 @@
 
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:id="@+id/division3"
                 android:layout_width="match_parent"
@@ -293,6 +295,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/round_layout2"
+                android:elevation="5dp"
                 tools:visibility="gone">
 
                 <TextView
@@ -429,7 +432,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout2">
+                android:background="@drawable/round_layout2"
+                android:elevation="6dp">
 
                 <TextView
                     android:id="@+id/textViewGrandTotal"
@@ -448,7 +452,6 @@
                     android:textColor="#424242" />
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:id="@+id/totalOptionel"
                 android:layout_width="match_parent"
@@ -458,7 +461,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/round_layout2">
+                android:background="@drawable/round_layout2"
+                android:elevation="6dp">
 
                 <TextView
                     android:id="@+id/bonus_title"
@@ -486,7 +490,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="Fiş/Fatura fotoğrafı ekleyerek - FP bonus kazanabilirsiniz!"
+                    android:text="@string/add_photo"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     android:textColor="#161616" />
 
@@ -500,10 +504,10 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/orange_box"
-                    android:padding="4dp"
-                    android:text="@string/add_bill_photo"
-                    android:textColor="#ffffff" />
+                    android:background="@drawable/white_box2"
+                    android:padding="8dp"
+                    android:text="@string/add_photo"
+                    android:textColor="#161616" />
 
                 <ImageView
                     android:id="@+id/photoHolder"

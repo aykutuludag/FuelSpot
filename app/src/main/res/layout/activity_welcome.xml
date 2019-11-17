@@ -10,8 +10,14 @@
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_welcome"
         android:visibility="visible">
+
+        <com.yqritc.scalableimageview.ScalableImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/background_welcome"
+            app:scalableType="centerCrop" />
 
         <TextView
             android:id="@+id/textView1"
@@ -80,8 +86,14 @@
         android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_doodle"
         android:visibility="gone">
+
+        <com.yqritc.scalableimageview.ScalableImageView
+            android:id="@+id/image_view2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_doodle"
+            app:scalableType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -112,7 +124,7 @@
                 android:layout_margin="8dp"
                 android:fontFamily="@font/gotham_medium"
                 android:gravity="center"
-                android:text="Aracınızı FuelSpot'a kaydederek akaryakıt alışverişlerinizde %1 bonus kazanırsınız. Kazandığınız bonusları FuelSpot Mağaza'da harcayabilirsiniz. \n\n Bu kampanya yalnızca binek otomobil ve motorsikletler için geçerlidir. Perakende alımlar kampanyaya dahil değildir."
+                android:text="@string/add_vehicle_desc"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
 
@@ -362,7 +374,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_book"
                         android:padding="4dp"
-                        android:text="YOK"
+                        android:text="@string/no"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />
@@ -438,11 +450,11 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView_km"
                     android:layout_marginLeft="16dp"
-                    android:inputType="number"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
+                    android:inputType="number"
                     android:shadowColor="#3A3A3A"
                     android:textColor="#3A3A3A" />
 
@@ -499,364 +511,37 @@
         android:id="@+id/layout4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_doodle"
         android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/howto1"
             android:layout_width="match_parent"
-            android:layout_height="325dp"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:background="@drawable/white_box3"
             android:visibility="visible">
 
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="48dp"
-                android:fontFamily="@font/gotham_black"
-                android:text="@string/fuel_symbols"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <androidx.percentlayout.widget.PercentRelativeLayout
-                android:id="@+id/percentHowTo1"
+            <com.yqritc.scalableimageview.ScalableImageView
+                android:id="@+id/imageViewHowto1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textView11"
-                android:layout_marginTop="16dp">
+                android:layout_height="match_parent"
+                android:src="@drawable/howto1"
+                app:scalableType="fitXY" />
 
-                <ImageView
-                    android:id="@+id/imageView14"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_below="@id/textView11"
-                    android:layout_toStartOf="@+id/imageView15"
-                    android:contentDescription="@string/gasoline"
-                    android:padding="8dp"
-                    app:layout_marginPercent="1%"
-                    app:layout_widthPercent="18%"
-                    app:srcCompat="@drawable/fuel_gasoline" />
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView14"
-                    android:layout_alignStart="@+id/imageView14"
-                    android:layout_alignEnd="@+id/imageView14"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:text="@string/gasoline"
-                    android:textAlignment="center"
-                    android:textColor="#161616" />
-
-                <ImageView
-                    android:id="@+id/imageView15"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_below="@id/textView11"
-                    android:layout_toStartOf="@id/imageView16"
-                    android:contentDescription="@string/diesel"
-                    android:padding="8dp"
-                    app:layout_marginPercent="1%"
-                    app:layout_widthPercent="18%"
-                    app:srcCompat="@drawable/fuel_diesel" />
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView14"
-                    android:layout_alignStart="@+id/imageView15"
-                    android:layout_alignEnd="@+id/imageView15"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:text="@string/diesel"
-                    android:textAlignment="center"
-                    android:textColor="#161616" />
-
-                <ImageView
-                    android:id="@+id/imageView16"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_below="@id/textView11"
-                    android:layout_centerHorizontal="true"
-                    android:contentDescription="@string/lpg"
-                    android:padding="8dp"
-                    app:layout_marginPercent="1%"
-                    app:layout_widthPercent="18%"
-                    app:srcCompat="@drawable/fuel_lpg" />
-
-                <TextView
-                    android:id="@+id/textView17"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView14"
-                    android:layout_alignStart="@+id/imageView16"
-                    android:layout_alignEnd="@id/imageView16"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:text="@string/lpg"
-                    android:textAlignment="center"
-                    android:textColor="#161616" />
-
-                <ImageView
-                    android:id="@+id/imageView17"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_below="@id/textView11"
-                    android:layout_toEndOf="@+id/imageView16"
-                    android:contentDescription="@string/electricity"
-                    android:padding="8dp"
-                    app:layout_marginPercent="1%"
-                    app:layout_widthPercent="18%"
-                    app:srcCompat="@drawable/fuel_electricity" />
-
-                <TextView
-                    android:id="@+id/textView18"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView14"
-                    android:layout_alignStart="@+id/imageView17"
-                    android:layout_alignEnd="@+id/imageView17"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:text="@string/electricity"
-                    android:textAlignment="center"
-                    android:textColor="#161616" />
-
-                <ImageView
-                    android:id="@+id/imageView6"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_below="@id/textView11"
-                    android:layout_toEndOf="@+id/imageView17"
-                    android:contentDescription="@string/distance"
-                    android:padding="8dp"
-                    app:layout_marginPercent="1%"
-                    app:layout_widthPercent="18%"
-                    app:srcCompat="@drawable/distance" />
-
-                <TextView
-                    android:id="@+id/textView19"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView6"
-                    android:layout_alignStart="@+id/imageView6"
-                    android:layout_alignEnd="@+id/imageView6"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="center"
-                    android:text="@string/distance"
-                    android:textAlignment="center"
-                    android:textColor="#161616" />
-
-            </androidx.percentlayout.widget.PercentRelativeLayout>
-
-            <TextView
-                android:id="@+id/how_tosortExp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/percentHowTo1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/gotham_book"
-                android:gravity="center"
-                android:text="@string/how_to_sort"
-                android:textColor="#161616" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imageViewIndicator2"
-                android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@+id/imageViewIndicator2"
-                android:src="@drawable/radio_active" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="24dp"
-                android:src="@drawable/radio_passive" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imageViewIndicator"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/imageViewIndicator2"
-                android:src="@drawable/radio_passive" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/howto2"
             android:layout_width="match_parent"
-            android:layout_height="325dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/white_box3"
+            android:layout_height="match_parent"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/textViewOnayli"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="48dp"
-                android:fontFamily="@font/gotham_black"
-                android:text="@string/how_to_register_car"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <ImageView
-                android:id="@+id/imageView19"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_below="@+id/textViewOnayli"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/how_to_register_car"
-                app:srcCompat="@drawable/howaddvehicle" />
-
-            <TextView
-                android:id="@+id/textView24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView19"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="8dp"
-                android:fontFamily="@font/gotham_book"
-                android:gravity="center"
-                android:text="@string/how_to_register_car_desc"
-                android:textAlignment="center"
-                android:textColor="#161616" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imageViewIndicator8"
-                android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@+id/imageViewIndicator8"
-                android:src="@drawable/radio_passive" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="24dp"
-                android:src="@drawable/radio_active" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imageViewIndicator7"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/imageViewIndicator8"
-                android:src="@drawable/radio_passive" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/howto3"
-            android:layout_width="match_parent"
-            android:layout_height="325dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/white_box3"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textView159"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="48dp"
-                android:fontFamily="@font/gotham_black"
-                android:text="@string/how_to_add_fuel"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <ImageView
-                android:id="@+id/imageView18"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_below="@+id/textView159"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/how_to_add_fuel"
-                app:srcCompat="@drawable/howtoyakit" />
-
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView18"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/gotham_book"
-                android:gravity="center"
-                android:text="@string/how_to_add_fuel_desc"
-                android:textAlignment="center"
-                android:textColor="#161616" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imageViewIndicator5"
-                android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@+id/imageViewIndicator5"
-                android:src="@drawable/radio_passive" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="24dp"
-                android:src="@drawable/radio_passive" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageViewIndicator6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/imageViewIndicator4"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/imageViewIndicator5"
-                android:src="@drawable/radio_active" />
+            <com.yqritc.scalableimageview.ScalableImageView
+                android:id="@+id/imageViewHowto2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/howto2"
+                app:scalableType="fitXY" />
 
         </RelativeLayout>
 
@@ -864,10 +549,9 @@
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/howto1"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="-24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
             android:background="@drawable/green_box"
             android:fontFamily="@font/gotham_medium"
             android:padding="4dp"

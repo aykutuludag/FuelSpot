@@ -295,7 +295,7 @@ public class SuperUpdateStation extends AppCompatActivity {
 
                 if (otherFuelObj.has("gasoline2") && otherFuelObj.getString("gasoline2").length() > 0) {
                     gasolinePrice2 = Float.parseFloat(otherFuelObj.getString("gasoline2"));
-                    gasolineHolder2.setText("" + gasolinePrice2);
+                    gasolineHolder2.setText(String.valueOf(gasolinePrice2));
                 } else {
                     otherFuelObj.put("gasoline2", "");
                     gasolineHolder2.setText("-");
@@ -303,7 +303,7 @@ public class SuperUpdateStation extends AppCompatActivity {
 
                 if (otherFuelObj.has("diesel2") && otherFuelObj.getString("diesel2").length() > 0) {
                     dieselPrice2 = Float.parseFloat(otherFuelObj.getString("diesel2"));
-                    dieselHolder2.setText("" + dieselPrice2);
+                    dieselHolder2.setText(String.valueOf(dieselPrice2));
                 } else {
                     otherFuelObj.put("diesel2", "");
                     dieselHolder2.setText("-");

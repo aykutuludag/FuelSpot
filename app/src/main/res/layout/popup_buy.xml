@@ -232,7 +232,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="Bilgilerinizde hata var ise lütfen ilerlemeden önce profilinizden düzenleyin. Yanlış-eksik adres bildirimleri sonucu ulaşmayan kargolardan FuelSpot sorumlu değildir."
+                android:text="@string/verify_address"
                 android:textColor="#161616" />
         </RelativeLayout>
 
@@ -339,8 +339,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/gotham_bold"
-                android:gravity="center"
-                android:text="Satın alma sonrası - FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?" />
+                android:gravity="center" />
         </RelativeLayout>
 
 

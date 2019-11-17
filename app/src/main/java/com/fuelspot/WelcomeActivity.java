@@ -85,6 +85,7 @@ import static com.fuelspot.MainActivity.carPhoto;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.firebaseToken;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fuelSec;
 import static com.fuelspot.MainActivity.gender;
@@ -116,7 +117,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
     private RelativeLayout layout4;
     private RelativeLayout layoutHow1;
     private RelativeLayout layoutHow2;
-    private RelativeLayout layoutHow3;
     private ScrollView layout3;
     private Bitmap bitmap;
     private CircleImageView carPic;
@@ -171,7 +171,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
 
         layoutHow1 = findViewById(R.id.howto1);
         layoutHow2 = findViewById(R.id.howto2);
-        layoutHow3 = findViewById(R.id.howto3);
 
         options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
@@ -248,10 +247,6 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                     layoutHow2.setVisibility(View.VISIBLE);
                     layoutHow1.setVisibility(View.INVISIBLE);
                 } else if (!howto2) {
-                    howto2 = true;
-                    layoutHow3.setVisibility(View.VISIBLE);
-                    layoutHow2.setVisibility(View.INVISIBLE);
-                } else {
                     // Registration finished
                     isSigned = true;
                     prefs.edit().putBoolean("isSigned", isSigned).apply();
@@ -423,7 +418,7 @@ public class WelcomeActivity extends AppCompatActivity implements AdapterView.On
                 params.put("location", location);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
-
+                params.put("token", firebaseToken);
                 //returning parameters
                 return params;
             }

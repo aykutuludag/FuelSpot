@@ -1,4 +1,17 @@
 <resources>
+
+    <!-- GENERAL-->
+    <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
+    <string name="last_ads_info">Son reklamı görüntülediniz. Bu oturumda daha fazla reklam görmeyeceksiniz.</string>
+    <string name="distributors">Markalar</string>
+    <string name="add_photo">Fotoğraf ekle</string>
+    <string name="hour">saat</string>
+    <string name="minute">dakika</string>
+    <string name="bill">Fatura</string>
+    <string name="delete">Sil</string>
+    <string name="away">uzakta</string>
+    <!-- GENERAL-->
+
     <!-- LoginActivity-->
     <string name="loginWithGoogle">Google\'la giriş yap</string>
     <string name="loginWithFacebook">Facebook\'la giriş yap</string>
@@ -16,9 +29,11 @@
     <string name="do_you_have_car">Arabanız var mı?</string>
     <string name="yes">Evet</string>
     <string name="no_later">Hayır / Daha sonra ekleyeceğim</string>
+    <string name="add_vehicle_desc">Aracınızı FuelSpot\'a kaydederek akaryakıt alışverişlerinizde &#37;1 bonus kazanırsınız! Kazandığınız bonusları FuelSpot Mağaza\'da harcayabilirsiniz.\n\nBu kampanya yalnızca binek otomobil ve motorsikletler için geçerlidir. Perakende alımlar kampanyaya dahil değildir.</string>
     <string name="brand">Marka</string>
     <string name="vehicle_model">Model</string>
     <string name="primary_fuel_type">Birincil yakıt tipi</string>
+    <string name="no">YOK</string>
     <string name="gasoline">Benzin</string>
     <string name="diesel">Dizel</string>
     <string name="lpg">LPG</string>
@@ -30,14 +45,8 @@
     <string name="secondary_fuel_type_desc">Otomobilinizde ikincil bir yakıt sistemi yoksa (Örnek: Benzin-LPG, Hibrit araçlar) YOK seçeneğini işaretleyiniz.</string>
     <string name="kilometer">Kilometre</string>
     <string name="plate_no">Plaka</string>
-    <string name="fuel_symbols">Yakıt sembolleri</string>
-    <string name="how_to_sort">Sembollere tıklayarak seçiminize göre sıralayabilirsiniz (fiyat veya mesafe).</string>
     <string name="got_it">Anladım!</string>
-    <string name="how_to_register_car">Nasıl araç eklerim?</string>
-    <string name="how_to_register_car_desc">Profil sayfasındaki araç ekle butonuna basarak araç eklereyek online araç takibine başlayabilirsiniz.</string>
-    <string name="how_to_add_fuel">Nasıl yakıt eklerim?</string>
-    <string name="how_to_add_fuel_desc">FuelSpot istasyona yakıt almaya gittiğinizde bunu tespit edip size bildirim gönderecektir. Bildirime tıklayarak yakıt ekleyebilirsiniz.</string>
-    <string name="info_saved_welcome">Bilgileriniz kaydedildi. FuelSpot\'a tekrardan hoşgeldiniz!</string>
+    <string name="info_saved_welcome">Bilgileriniz kaydedildi. FuelSpot\'a hoşgeldiniz!</string>
     <string name="enter_plate_no">Lütfen plakanızı giriniz</string>
     <string name="plate_no_exist">Bu plaka daha önce sisteme kaydedilmiş…</string>
     <string name="vehicle_added">Araç eklendi</string>
@@ -53,9 +62,13 @@
     <string name="tab_vehicle">Otomobil</string>
     <string name="tab_profile">Profil</string>
     <string name="tab_settings">Ayarlar</string>
-    <string name="exit">Uygulamadan çıkmak için tekrar dokunun.</string>
+    <string name="popup_filter_desc">Görüntülemek istediğin markaları seçerek istemediğin istasyonları gizle!</string>
+    <string name="remove_filters">Bütün istasyonları görüntülemek için filtreleri temizleyin.</string>
+    <string name="popup_filter_desc2">İstasyondaki tesislere göre filtreleyerek ihtiyacın olanı daha kolay bulabilirsin!</string>
+    <!-- MainActivity-->
 
     <!-- FragmentStations-->
+    <string name="order">Sırala</string>
     <string name="menu_filter">Filtrele</string>
     <string name="apply">Uygula</string>
     <string name="see_all">Hepsini gör</string>
@@ -66,11 +79,14 @@
     <string name="error_no_location">Konumunuzu tespit edemedik. Lütfen konum ayarlarını kontrol ediniz</string>
     <string name="station_found_pretext">Yakın çevrende</string>
     <string name="station_found_aftertext">istasyon bulduk.</string>
+    <string name="limited_33">Size en yakın 33 istasyonu görmektesiniz.</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->
     <string name="latest_news">Son haberler</string>
     <string name="price_index">Fiyat endeksi</string>
+    <string name="highest">En Yüksek</string>
+    <string name="lowest">En Düşük</string>
     <string name="last_update">Son güncelleme</string>
     <string name="registered_station_number">Kayıtlı istasyon:</string>
     <!-- FragmentNews-->
@@ -79,6 +95,8 @@
     <string name="edit">Düzenle</string>
     <string name="user_purchases">Yakıt alımlarınız</string>
     <string name="no_purchase_user">Henüz hiç yakıt eklememişsiniz Yakıt alımlarınız ve detayları burada listelenecek…</string>
+    <string name="road_taken">| Alınan yol:</string>
+    <string name="add_vehicle_first">Yakıt ekleyebilmek için otomobil eklemeniz gerekiyor.</string>
     <!-- FragmentAutomobile-->
 
     <!-- FragmentProfile-->
@@ -120,8 +138,8 @@
     <string name="feedback_sending">Geri-bildirim gönderiliyor</string>
     <string name="thanks_for_feedback">Geri bildiriminiz için teşekkür ederiz!</string>
     <string name="contact_us">Bize ulaşın!</string>
+    <string name="share_the_app">Uygulamayı paylaş</string>
     <!-- FragmentSettings-->
-    <!-- MainActivity-->
 
     <!-- StationDetails-->
     <string name="menu_go">İstasyona git</string>
@@ -136,7 +154,11 @@
     <string name="priceHistory">Fiyat geçmişi</string>
     <string name="no_campaign_text">Bu istasyon için henüz hiç kampanya eklenmemiş…</string>
     <string name="no_comment_text">Bu istasyon için henüz hiç yorum yazılmamış…</string>
-    <string name="last_ads_info">Son reklamı görüntülediniz. Bu oturumda daha fazla reklam görmeyeceksiniz.</string>
+    <string name="on_google_maps">Google Maps\'de görüntüle</string>
+    <string name="streetview">Sokak Görünümü</string>
+    <string name="or">VEYA</string>
+    <string name="streetView_desc">Sokak Görünümü günlük 1 adet ile sınırlıdır. Premium sürüme geçebilir ya da Google Maps üzerinden görüntüleyebilirsiniz.</string>
+    <string name="no_streetview">Bu istasyon için Sokak Görünümü bulunamadı.</string>
 
     <string-array name="report_reasons">
         <item>İstasyon mevcut değil</item>
@@ -158,7 +180,7 @@
     <string name="add_comment_success">Yorum başarıyla eklendi</string>
     <string name="comment_updating">Yorumunuz güncelleniyor</string>
     <string name="update_comment">Yorumu güncelle</string>
-    <string name="comment_update_success">Yorum başarıyla güncellenddi</string>
+    <string name="comment_update_success">Yorumunuz güncellendi!</string>
     <string name="sending_report">Rapor gönderiliyor</string>
     <string name="report_send_success">Rapor başarıyla gönderildi. En kısa sürede incelenecektir.</string>
     <string name="added_to_favs">Favorilere eklendi</string>
@@ -193,9 +215,9 @@
     <string name="vehicle_updating">Otomobil güncelleniyor</string>
     <string name="vehicle_deleting">Otomobil silinyor</string>
     <string name="remove_vehicle">Otomobili sil?</string>
-    <string name="delete">Sil</string>
     <string name="vehicle_update_success">Araç başarıyla güncellendi…</string>
     <string name="vehicle_delete_success">Araç silindi…</string>
+    <string name="plate_exist">Bu plaka daha önce eklenmiş. Bir hata olduğunu düşünüyorsanız bizimle iletişime geçiniz.</string>
     <!-- AutomobileEdit-->
 
     <!-- AddAutomobile-->
@@ -203,19 +225,26 @@
     <string name="please_wait">Lütfen bekleyiniz…</string>
     <!-- AddAutomobile-->
 
-    <!-- UserPurchases-->
-    <!-- UserPurchases-->
-
-    <!-- PurchaseDetails-->
-    <!-- PurchaseDetails-->
-
     <!-- PurchaseDetails-->
     <string name="purchase">Satınalma</string>
     <string name="type">Tür</string>
     <string name="amount">Miktar</string>
     <string name="unit_price">Birim fiyat</string>
     <string name="subtotal">Ara toplam</string>
-    <string name="total">Toplam</string>
+    <string name="total">TOPLAM:</string>
+    <string name="purchase_not_verified">Satınalma onaylanmadı.</string>
+    <string name="purchase_after_24hour">Üzerinden 24 saat geçmiş satınalmalara fotoğraf eklenemez…</string>
+    <string name="purchase_verified_pre">Satınalma onaylandı! </string>
+    <string name="purchase_verified_post"> FP bonus hesabınıza yansıtılmıştır.</string>
+    <string name="purchase_under_review">Satınalma şu an incelemede! Onaylandığı takdirde hesabına bonus yansıtılacaktır.</string>
+    <string name="update_photo">Fotoğrafı güncelle</string>
+    <string name="add_bill_bonus_text_final"> Fiş/fatura fotoğrafı eklemek için son </string>
+    <string name="local_purchase_text">Daha sonra kolay hatırlamak için fiş fotoğrafı ekleyebilirsiniz.</string>
+    <string name="grand_bonus">BONUS: </string>
+    <string name="grand_tax">VERGİ: </string>
+    <string name="verified_purchase_cant_change">Onaylanmış satın almalarda değişiklik yapılamaz…</string>
+    <string name="purchase_delete_prompt">Satın alma silinecek?</string>
+    <string name="purchase_deleted">Satınalma silindi…</string>
     <!-- PurchaseDetails-->
 
     <!-- ProfileEdit-->
@@ -234,6 +263,7 @@
     <string name="pick_your_birthday">Doğum gününüzü seçin</string>
     <string name="set">Seç</string>
     <string name="cancel">İptal</string>
+    <string name="valid_email">Lütfen geçerli bir e-posta adresi giriniz</string>
     <!-- ProfileEdit-->
 
     <!-- UserFavorites-->
@@ -257,16 +287,27 @@
     <string name="premium_successful">Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!</string>
     <string name="double_range_successful">Satın alma başarılı. Menziliniz artırılıyor, teşekkürler!</string>
     <string name="purchase_failed">Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="banking_key_map"><b>Bonus:</b> Her yakıt eklemenizde <b>%1</b> bonus! \n\n <b>Ödül:</b> Bize FuelSpot\'da görünmeyen veya yanlış görünen istasyon bilgisi raporladığınızda (fiyat, tesis, marka, adres …) hesabınıza ödül yansıtılır. \n\n <b>Satınalma:</b> Mağazadan yaptığınız alışverişleri gösterir \n\n</string>
+    <string name="banking_key_map"><b>Bonus:</b> Her yakıt eklemenizde <b>&#37;1</b> bonus! \n\n <b>Ödül:</b> Bize FuelSpot\'da görünmeyen veya yanlış görünen istasyon bilgisi raporladığınızda (fiyat, tesis, marka, adres …) hesabınıza ödül yansıtılır. \n\n <b>Satınalma:</b> Mağazadan yaptığınız alışverişleri gösterir \n\n</string>
     <string name="legend">Etiketler</string>
     <string name="subscriptions">Abonelikler</string>
     <string name="process_type">İşlem türü</string>
     <string name="date">Tarih</string>
     <string name="products">Ürünler</string>
+    <string name="purchasing">Satın alınıyor</string>
+    <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargoya verilecektir. Ortalama teslim süresi 5 iş günüdür.</string>
+    <string name="arackokusu">Araç Kokusu</string>
+    <string name="arackokusu3">3 adet FuelSpot Araç Kokusu 8.99 FP!</string>
+    <string name="arackokusu5">5 adet FuelSpot Araç Kokusu 13.99 FP!</string>
+    <string name="arackokusu10">10 adet FuelSpot Araç Kokusu 24.99 FP!</string>
+    <string name="verify_address">Bilgilerinizde hata var ise lütfen ilerlemeden önce profilinizden düzenleyin. Yanlış-eksik adres bildirimleri sonucu ulaşmayan kargolardan FuelSpot sorumlu değildir.</string>
+    <string name="purchase_prompt_pre">Satın alma sonrası </string>
+    <string name="purchase_prompt_post"> - FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?</string>
+    <string name="address_missing">Adres bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
+    <string name="phone_missing">Telefon bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
+    <string name="email_missing">E-posta bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
+    <string name="fullname_missing">Ad-Soyad bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
+    <string name="unsubscribe_2x_first">2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.</string>
     <!-- UserStore-->
-
-    <!-- UserComments-->
-    <!-- UserComments-->
 
     <!-- NewsDetail-->
     <string name="share">Paylaş</string>
@@ -278,7 +319,6 @@
     <string name="station_info_loading">İstasyon bilgileri yükleniyor…</string>
     <string name="station_info">İstasyon bilgileri</string>
     <string name="automobile_info">Araç bilgileri</string>
-    <string name="add_bill_photo">Fotoğraf ekle</string>
     <string name="add_fuel">Yakıt ekle</string>
     <string name="low_kilometer">Aracınızın kilometresi önceki satın almaya göre daha yüksek olmalı</string>
     <string name="empty_kilometer">Kilometre 0\'dan farklı olmalı</string>
@@ -287,17 +327,32 @@
     <string name="adding_fuel">Yakıt ekleniyor…</string>
     <string name="fuel_add_success">Yakıt başarıyla eklendi…</string>
     <string name="the_money_you_pay">Ödediğiniz para</string>
+    <string name="add_bill_bonus_text_pre">Fiş/Fatura fotoğrafı ekleyerek </string>
+    <string name="add_bill_bonus_text_post"> FP bonus kazanabilirsiniz!</string>
+    <string name="go_station_for_fuel">Şu an istasyonda değilsiniz! Yakıt ekleyebilmek için istasyonda olmanız gerekiyor.</string>
+    <string name="enter_unit_price">Lütfen yakıtın birim fiyatını giriniz.</string>
     <!-- AddFuel-->
 
     <!-- SuperWelcome-->
+    <string name="super_promo1">İstasyon sahibi/yöneticisi misiniz? FuelSpot\'a hemen ücretsiz kaydolun, sayısız avantaj ve fırsattan yararlanın!</string>
+    <string name="super_promo2">** Daha fazla müşteri, daha fazla gelir</string>
+    <string name="super_promo3">* Kampanyalar, fırsatlar ve tanıtım imkanları</string>
+    <string name="super_promo4">* Dijital platformlarda ücretsiz reklam ve tanıtım (Google, Yandex, Yahoo vb.)</string>
+    <string name="super_promo5">* Rakiplerinizin fiyatlarını anlık takip imkanı</string>
+    <string name="super_promo6">* Sektörden son haberler, fiyat endeksleri, istatistikler, analizler</string>
+    <string name="super_promo7">* İstasyonunuzun dijital profili sizin elinizde olsun. Telefonunuzdan tek tuşla istasyonunuzu yönetin!</string>
+    <string name="super_promo8">* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!</string>
+    <string name="super_promo9">FuelSpot sayesinde yüzbinlerce araç sahibine tamamen ücretsiz ulaşacaksınız. Daha fazla bilinirlik, daha fazla müşteri!</string>
     <string name="license_no">Lisans NO</string>
     <string name="terms_accepted_text"><b>Şartlar ve Koşullar</b>\'ı okudum, kabul ediyorum.</string>
-    <string name="go_to_station_text">Kayıt işlemini tamamlayabilmek için istasyonunuzda olmalısınız. İstasyona menziline girdiğinizde (50 metre) bu yazı yeşile dönecek ve istasyon bilgiler otomatik olarak çekilecektir.</string>
+    <string name="go_to_station_text">Kayıt işlemini tamamlayabilmek için istasyonunuzda olmalısınız. İstasyona menziline girdiğinizde (50 metre) bu yazı yeşile dönecek ve istasyon bilgileri otomatik olarak yüklenecektir.</string>
     <string name="personal_info">Kişisel bilgiler</string>
+    <string name="you_are_at_station">Şu an istasyondasınız!</string>
     <!-- SuperWelcome-->
 
     <!-- SuperMainActivity-->
     <string name="station_waiting_approval">Hesabınız onay sürecindedir. Sizinle en kısa sürede iletişime geçeceğiz.</string>
+    <!-- SuperMainActivity-->
 
     <!-- FragmentMyStation-->
     <string name="tab_mystation">MyStation</string>
@@ -305,13 +360,6 @@
     <string name="comments_section_desc">İstasyonun için yazılan yorumları burada görebilir ve cevaplayabilirsin.</string>
     <string name="campaign_section_desc">Geçmiş ve devam etmekte olan kampanyaları buradan yönetebilirsin</string>
     <!-- FragmentMyStation-->
-
-    <!-- FragmentSuperProfile-->
-    <!-- FragmentSuperProfile-->
-    <!-- SuperMainActivity-->
-
-    <!-- SuperProfileEdit-->
-    <!-- SuperProfileEdit-->
 
     <!-- SuperUpdateStation-->
     <string name="prices">Fiyatlar</string>
@@ -346,17 +394,29 @@
     <string name="company_campaigns">Firma kampanyaları</string>
     <!-- SuperCampaigns-->
 
-    <!-- SuperStore-->
-    <!-- SuperStore-->
-
     <!-- AddStation-->
     <string name="add_station">İstasyon ekle</string>
+    <string name="has_been_verified">Bu istasyon daha önce onaylanmış.</string>
     <!-- AddStation-->
 
     <!-- ReportMissingStation-->
     <string name="title_activity_report_missing_station">Eksik istasyon</string>
-    <string name="purchasing">Satın alınıyor</string>
-    <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargoya verilecektir. Ortalama teslim süresi 2–3 iş günüdür.</string>
+    <string name="mark_missing_station">Haritadan istasyonun konumunu işaretleyiniz.</string>
+    <string name="station_photo">İstasyon fotoğrafı</string>
+    <string name="station_photo_desc">Lütfen istasyonun fiyat tabelasının fotoğrafını ekleyiniz. Net ve okunaklı çekilen fiyat tabelası fotoğrafları doğrulama sürecini hızlandırmaktadır. Doğrulanan bildirimleriniz için bonus kazanırsınız!</string>
+    <string name="select_distributor">Lütfen istasyonun markasını seçiniz…</string>
+    <!-- ReportMissingStation-->
+
+    <!-- MessagingActivity-->
     <string name="inbox">Gelen kutusu</string>
-    <!-- AddStation-->
+    <string name="conversation_ended">Bu görüşme sonlandırılmış.</string>
+    <string name="enter_message">Lütfen mesajınızı giriniz.</string>
+    <!-- MessagingActivity-->
+
+    <!-- SearchActivity-->
+    <string name="station_search">İstasyon Ara</string>
+    <string name="search_station_desc">Bu sayfadan Türkiye sınırları içerisindeki istediğiniz il/ilçe/semt/mahalle/caddedeki istasyonları görebilirsiniz. İstasyon Arama günlük 3 adet ile sınırlıdır.</string>
+    <string name="search_hint">Bir yer ismi giriniz…</string>
+    <string name="station_search_limit">İstasyon Arama günlük 3 adet ile sınırlıdır. Daha fazlası için premium sürüme geçebilirsiniz!</string>
+    <!-- SearchActivity-->
 </resources>

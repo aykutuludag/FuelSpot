@@ -58,8 +58,6 @@ public class MessagingActivity extends AppCompatActivity {
     private Window window;
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
-    private GridLayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
     private RequestQueue requestQueue;
     private int conversationID;
 
@@ -115,7 +113,7 @@ public class MessagingActivity extends AppCompatActivity {
                 if (messageText != null && messageText.length() > 0) {
                     sendMessage();
                 } else {
-                    Toast.makeText(MessagingActivity.this, "Lütfen mesajınızı giriniz.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MessagingActivity.this, getString(R.string.enter_message), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -132,8 +130,8 @@ public class MessagingActivity extends AppCompatActivity {
             }
         }
 
-        mAdapter = new InboxAdapter(MessagingActivity.this, conversation, "MESSENGER");
-        mLayoutManager = new GridLayoutManager(MessagingActivity.this, 1);
+        RecyclerView.Adapter mAdapter = new InboxAdapter(MessagingActivity.this, conversation, "MESSENGER");
+        GridLayoutManager mLayoutManager = new GridLayoutManager(MessagingActivity.this, 1);
 
         mAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);

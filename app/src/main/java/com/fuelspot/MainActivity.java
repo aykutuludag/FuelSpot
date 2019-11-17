@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     public static int fuelSec;
     public static int kilometer;
     public static int mapDefaultRange;
+
     public static String token, firebaseToken, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static int adCount = 0;
     public static InterstitialAd admobInterstitial;
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     private FragNavController mFragNavController;
     private RequestQueue queue;
     public static long streetViewLastSeen, lastStationSearch;
+    public static int searchCount;
     private BillingClient billingClient;
 
     public static int getIndexOf(String[] strings, String item) {
@@ -181,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         firebaseToken = prefs.getString("firebaseToken", "");
         streetViewLastSeen = prefs.getLong("StreetViewLastSeen", 0);
         lastStationSearch = prefs.getLong("lastStationSearch", 0);
+        searchCount = prefs.getInt("searchCount", 0);
     }
 
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
@@ -336,9 +339,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         getVariables(prefs);
         queue = Volley.newRequestQueue(this);
 
-        if (firebaseToken.length() > 0) {
-            registerToken();
-        } else {
+        if (firebaseToken.length() == 0) {
             FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                 @Override
                 public void onComplete(@NonNull Task<InstanceIdResult> task) {
@@ -844,8 +845,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         };
 
         //Adding request to the queue
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        queue.add(stringRequest);
     }
 
     public static void dimBehind(PopupWindow popupWindow) {

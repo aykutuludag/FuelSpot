@@ -80,8 +80,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
     int itemNo;
     public static SkuDetails premiumSku, doubleSku;
-    float price1 = 9.99f;
-    float price2 = 14.99f;
+    float price1 = 8.99f;
+    float price2 = 13.99f;
     float price3 = 24.99f;
     RequestOptions options;
     PopupWindow mPopupWindow;
@@ -123,7 +123,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         mRecyclerView = findViewById(R.id.bankingView);
         Button buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
         if (premium) {
-            buttonBuyPremium.setText("Aktif");
+            buttonBuyPremium.setText(getString(R.string.active));
         } else {
             buttonBuyPremium.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,10 +132,10 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                         if (!hasDoubleRange) {
                             buyPremium();
                         } else {
-                            Toast.makeText(StoreActivity.this, "Premium aboneliğini başlatabilmek için öncelikle Google Play uygulamasından 2x-Range aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(StoreActivity.this, getString(R.string.unsubscribe_2x_first), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(StoreActivity.this, "Google Play serverları ile bağlantı kurulurken bir sorun oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(StoreActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -143,7 +143,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
         Button buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
         if (hasDoubleRange) {
-            buttonBuyDoubleRange.setText("Aktif");
+            buttonBuyDoubleRange.setText(getString(R.string.active));
         } else {
             buttonBuyDoubleRange.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -152,17 +152,18 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                         if (!premium) {
                             buyDoubleRange();
                         } else {
-                            Toast.makeText(StoreActivity.this, "2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(StoreActivity.this, getString(R.string.unsubscribe_2x_first), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(StoreActivity.this, "Google Play serverları ile bağlantı kurulurken bir sorun oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(StoreActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 }
             });
         }
 
         TextView textViewPrice1 = findViewById(R.id.textView_price1);
-        textViewPrice1.setText(price1 + " FP");
+        String p1 = price1 + " FP";
+        textViewPrice1.setText(p1);
         Button buttonAracKokusu = findViewById(R.id.button_item1);
         buttonAracKokusu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +178,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         });
 
         TextView textViewPrice2 = findViewById(R.id.textView_price2);
-        textViewPrice2.setText(price2 + " FP");
+        String p2 = price2 + " FP";
+        textViewPrice2.setText(p2);
         Button buttonLastikSpreyi = findViewById(R.id.button_item2);
         buttonLastikSpreyi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,7 +194,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         });
 
         TextView textViewPrice3 = findViewById(R.id.textView_price3);
-        textViewPrice3.setText(price3 + " FP");
+        String p3 = price3 + " FP";
+        textViewPrice3.setText(p3);
         Button buttonBakimKiti = findViewById(R.id.button_item3);
         buttonBakimKiti.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,20 +271,20 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
         switch (itemNo) {
             case 1:
-                productName[0] = "Araç Kokusu (3 adet)";
-                productDesc[0] = "3 adet FuelSpot araç kokusu 9.99 FP!";
+                productName[0] = getString(R.string.arackokusu) + " (3)";
+                productDesc[0] = getString(R.string.arackokusu3);
                 productPrice[0] = price1;
                 imageResourceID = R.drawable.popup_product1;
                 break;
             case 2:
-                productName[0] = "Araç Kokusu (5 adet)";
-                productDesc[0] = "5 adet FuelSpot araç kokusu 14.99 FP!";
+                productName[0] = getString(R.string.arackokusu) + " (5)";
+                productDesc[0] = getString(R.string.arackokusu5);
                 productPrice[0] = price2;
                 imageResourceID = R.drawable.popup_product1;
                 break;
             case 3:
-                productName[0] = "Araç Kokusu (10 adet)";
-                productDesc[0] = "10 adet FuelSpot araç kokusu 24.99 FP!";
+                productName[0] = getString(R.string.arackokusu) + " (10)";
+                productDesc[0] = getString(R.string.arackokusu10);
                 productPrice[0] = price3;
                 imageResourceID = R.drawable.popup_product1;
                 break;
@@ -310,7 +313,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         urunTitle1.setText(productName[0]);
 
         TextView urunFiyat1 = customView.findViewById(R.id.urunfiyat);
-        urunFiyat1.setText(productPrice[0] + " FP");
+        String dummy = productPrice[0] + " FP";
+        urunFiyat1.setText(dummy);
 
         TextView urunAciklama = customView.findViewById(R.id.urunaciklama);
         urunAciklama.setText(productDesc[0]);
@@ -339,11 +343,13 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         Glide.with(StoreActivity.this).load(imageResourceID).apply(options).into(urunPhoto2);
 
         TextView urunFiyat2 = customView.findViewById(R.id.urunfiyatFinal);
-        urunFiyat2.setText(productPrice[0] + " FP");
+        String dummy2 = productPrice[0] + " FP";
+        urunFiyat2.setText(dummy2);
 
         TextView finalPromptText = customView.findViewById(R.id.finalPrompt);
         float kalan = userFSMoney - productPrice[0];
-        finalPromptText.setText("Satın alma sonrası " + String.format(Locale.getDefault(), "%.2f", kalan) + " FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?");
+        String dummy3 = getString(R.string.purchase_prompt_pre) + String.format(Locale.getDefault(), "%.2f", kalan) + getString(R.string.purchase_prompt_post);
+        finalPromptText.setText(dummy3);
 
         Button buttonContinue = customView.findViewById(R.id.buttonProcessPurchase);
         buttonContinue.setOnClickListener(new View.OnClickListener() {
@@ -364,16 +370,16 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                                         layout3.setVisibility(View.VISIBLE);
                                         whichPage[0] = 3;
                                     } else {
-                                        Toast.makeText(StoreActivity.this, "Adres bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(StoreActivity.this, getString(R.string.address_missing), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Toast.makeText(StoreActivity.this, "Telefon bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(StoreActivity.this, getString(R.string.phone_missing), Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(StoreActivity.this, "E-posta bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(StoreActivity.this, getString(R.string.email_missing), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(StoreActivity.this, "Ad-Soyad bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(StoreActivity.this, getString(R.string.fullname_missing), Toast.LENGTH_LONG).show();
                         }
                         break;
                     case 3:

@@ -133,6 +133,7 @@ import static com.fuelspot.MainActivity.companyList;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.firebaseToken;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.getVariables;
@@ -892,6 +893,9 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
             }
         });
 
+        TextView usernameHolder = findViewById(R.id.userUsername);
+        usernameHolder.setText(username);
+
         EditText editTextFullName = findViewById(R.id.editFullName);
         editTextFullName.setText(name);
         editTextFullName.addTextChangedListener(new TextWatcher() {
@@ -1211,13 +1215,17 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                                         });
                                 // Station Icon
 
-                                loadStationDetails();
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     public void run() {
                                         addMarker();
                                     }
                                 }, 1000);
+
+                                stationHint.setText(getString(R.string.you_are_at_station));
+                                stationHint.setTextColor(Color.parseColor("#2DE878"));
+
+                                loadStationDetails();
                             } catch (JSONException e) {
                                 superStationName = "";
                                 superStationAddress = "";
@@ -1290,10 +1298,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
     private void loadStationDetails() {
         if (isStationVerified == 1) {
             stationHint.setTextColor(Color.parseColor("#ff0000"));
-            stationHint.setText("Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.");
-        } else {
-            stationHint.setText("Şu anda istasyondasınız!");
-            stationHint.setTextColor(Color.parseColor("#2DE778"));
+            stationHint.setText(getString(R.string.has_been_verified));
         }
 
         if (companyList != null && companyList.size() > 0) {
@@ -1515,6 +1520,7 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                 params.put("phoneNumber", userPhoneNumber);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
+                params.put("token", firebaseToken);
 
                 //returning parameters
                 return params;

@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +45,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.VehicleAdapter;
+import com.fuelspot.model.PurchaseItem;
 import com.fuelspot.model.VehicleItem;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -59,6 +61,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.fuelspot.FragmentAutomobile.dummyPurchaseList;
+import static com.fuelspot.FragmentAutomobile.vehiclePurchaseList;
 import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
@@ -166,8 +170,9 @@ public class AddFuel extends AppCompatActivity {
 
         TextView textViewUnitPrice = findViewById(R.id.textViewUnit);
         TextView textViewUnitPrice2 = findViewById(R.id.textViewUnit2);
-        textViewUnitPrice.setText(currencySymbol + " / " + userUnit);
-        textViewUnitPrice2.setText(currencySymbol + " / " + userUnit);
+        String dum = currencySymbol + " / " + userUnit;
+        textViewUnitPrice.setText(dum);
+        textViewUnitPrice2.setText(dum);
 
         TextView textViewCurrency = findViewById(R.id.textViewCurrency);
         TextView textViewCurrency2 = findViewById(R.id.textViewCurrency2);
@@ -265,7 +270,7 @@ public class AddFuel extends AppCompatActivity {
                                 electricityPrice = 0.00f;
                             }
                         } else {
-                            Toast.makeText(AddFuel.this, "Şu an istasyonda değilsiniz! Yakıt ekleyebilmek için istasyonda olmanız gerekiyor.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddFuel.this, getString(R.string.go_station_for_fuel), Toast.LENGTH_LONG).show();
                             stationName = "";
                             stationAddress = "";
                             stationLoc = "";
@@ -478,7 +483,7 @@ public class AddFuel extends AppCompatActivity {
         textViewTotalFiyat2.setEnabled(true);
         textViewLitre2.setEnabled(true);
 
-        istasyonIDHolder.setText("" + chosenStationID);
+        istasyonIDHolder.setText(String.valueOf(chosenStationID));
         istasyonNameHolder.setText(stationName);
         istasyonAdresHolder.setText(stationAddress);
 
@@ -687,7 +692,7 @@ public class AddFuel extends AppCompatActivity {
                                 if (selectedUnitPrice != 0 || selectedUnitPrice2 != 0) {
                                     addPurchase();
                                 } else {
-                                    Toast.makeText(AddFuel.this, "Lütfen yakıtın birim fiyatını giriniz.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddFuel.this, getString(R.string.enter_unit_price), Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Toast.makeText(AddFuel.this, getString(R.string.low_kilometer), Toast.LENGTH_LONG).show();
@@ -749,6 +754,7 @@ public class AddFuel extends AppCompatActivity {
                                 kilometer = tempKM;
                                 prefs.edit().putInt("Kilometer", kilometer).apply();
 
+                                fetchVehiclePurchases();
 
                                 showAds(AddFuel.this, null);
 
@@ -859,11 +865,81 @@ public class AddFuel extends AppCompatActivity {
 
     }
 
+    private void fetchVehiclePurchases() {
+        dummyPurchaseList.clear();
+        vehiclePurchaseList.clear();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_PURCHASES) + "?plateNo=" + plateNo,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    PurchaseItem item = new PurchaseItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setPurchaseTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("stationID"));
+                                    item.setStationName(obj.getString("stationName"));
+                                    item.setStationIcon(obj.getString("stationIcon"));
+                                    item.setStationLocation(obj.getString("stationLocation"));
+                                    item.setPlateNo(obj.getString("plateNo"));
+                                    item.setFuelType(obj.getInt("fuelType"));
+                                    item.setFuelPrice((float) obj.getDouble("fuelPrice"));
+                                    item.setFuelLiter((float) obj.getDouble("fuelLiter"));
+                                    item.setFuelTax((float) obj.getDouble("fuelTax"));
+                                    item.setSubTotal((float) obj.getDouble("subTotal"));
+                                    item.setFuelType2(obj.getInt("fuelType2"));
+                                    item.setFuelPrice2((float) obj.getDouble("fuelPrice2"));
+                                    item.setFuelLiter2((float) obj.getDouble("fuelLiter2"));
+                                    item.setFuelTax2((float) obj.getDouble("fuelTax2"));
+                                    item.setSubTotal2((float) obj.getDouble("subTotal2"));
+                                    item.setBonus((float) obj.getDouble("bonus"));
+                                    item.setTotalPrice((float) obj.getDouble("totalPrice"));
+                                    item.setBillPhoto(obj.getString("billPhoto"));
+                                    item.setIsVerified(obj.getInt("isVerified"));
+                                    item.setKilometer(obj.getInt("kilometer"));
+                                    vehiclePurchaseList.add(item);
+
+                                    if (i < 3) {
+                                        dummyPurchaseList.add(item);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Showing toast
+                        volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     private void updateTaxandGrandTotal() {
         totalPrice = entryPrice + entryPrice2;
-        String totalHolder = getString(R.string.total) + ": " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
+        String totalHolder = getString(R.string.total) + " " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencyCode;
         fuelGrandTotal.setText(totalHolder);
-        textViewBonus.setText("Fiş/Fatura fotoğrafı ekleyerek " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazanabilirsiniz!");
+        String dummy = getString(R.string.add_bill_bonus_text_pre) + " " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " " + getString(R.string.add_bill_bonus_text_post);
+        textViewBonus.setText(dummy);
     }
 
     private void coloredBars(int color1, int color2) {
@@ -875,6 +951,15 @@ public class AddFuel extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

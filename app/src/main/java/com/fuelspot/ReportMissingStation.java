@@ -158,10 +158,10 @@ public class ReportMissingStation extends AppCompatActivity {
                         reportDetails = "{konum: " + dummyLocation + " marka: " + dummyBrandName + " }";
                         sendReporttoServer();
                     } else {
-                        Toast.makeText(ReportMissingStation.this, "Lütfen istasyonun markasını seçiniz...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReportMissingStation.this, getString(R.string.select_distributor), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(ReportMissingStation.this, "Lütfen istasyonun konumunu seçiniz...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReportMissingStation.this, getString(R.string.mark_missing_station), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -47,12 +47,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/markerMap"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/white_box">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_layout2">
 
                 <TextView
                     android:id="@+id/dummy01"
@@ -65,9 +64,9 @@
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_black"
                     android:gravity="center"
-                    android:text="Haritadan istasyonun konumunu işaretleyiniz."
+                    android:text="@string/mark_missing_station"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121" />
 
                 <TextView
@@ -109,7 +108,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="4dp"
                     android:fontFamily="@font/gotham_bold"
-                    android:text="Fotoğraf"
+                    android:text="@string/station_photo"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <TextView
@@ -123,10 +122,9 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="4dp"
                     android:gravity="center"
-                    android:text="İstasyona / fiyat tabelasına ait bir fotoğraf ekleyiniz. Fotoğraf raporunuzu doğrulamamız oldukça kolaylaştırmaktadır. Doğrulanan hesabınıza bonus yansıtılır."
+                    android:text="@string/station_photo_desc"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#161616" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <ImageView
                     android:id="@+id/missingPhoto"

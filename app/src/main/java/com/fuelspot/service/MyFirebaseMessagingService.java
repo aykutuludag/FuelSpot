@@ -15,14 +15,28 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.fuelspot.LoginActivity;
 import com.fuelspot.R;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
 import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.firebaseToken;
+import static com.fuelspot.MainActivity.isSigned;
+import static com.fuelspot.MainActivity.isSuperUser;
+import static com.fuelspot.MainActivity.token;
+import static com.fuelspot.MainActivity.username;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -37,6 +51,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         firebaseToken = token;
         SharedPreferences prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
         prefs.edit().putString("firebaseToken", firebaseToken).apply();
+
+        if (isSigned) {
+            registerToken();
+        }
     }
 
     @Override
@@ -106,5 +124,59 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setVibrate(new long[]{500, 500, 500, 500})
                 .setContentIntent(pIntent);
+    }
+
+    private void registerToken() {
+        String url;
+        if (isSuperUser) {
+            url = getString(R.string.API_SUPERUSER_UPDATE);
+        } else {
+            url = getString(R.string.API_UPDATE_USER);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            if (response.equals("Success")) {
+                                Log.d("REGISTER_TOKEN", "SUCCESS");
+                            } else {
+                                Log.d("REGISTER_TOKEN", "FAIL");
+                            }
+                        } else {
+                            Log.d("REGISTER_TOKEN", "FAIL");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.d("REGISTER_TOKEN", "FAIL");
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                //Creating parameters
+                Map<String, String> params = new Hashtable<>();
+
+                //Adding parameters
+                params.put("username", username);
+                params.put("token", firebaseToken);
+                //returning parameters
+                return params;
+            }
+        };
+
+        //Adding request to the queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }

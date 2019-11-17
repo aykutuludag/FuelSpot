@@ -68,6 +68,7 @@ import java.util.Locale;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultStationRange;
@@ -351,11 +352,20 @@ public class FragmentMyStation extends Fragment {
         textName.setText(superStationName);
         textVicinity.setText(superStationAddress);
         distanceInMeters = loc1.distanceTo(loc2);
-        textDistance.setText((int) distanceInMeters + " m");
-        textGasoline.setText(ownedGasolinePrice + "TL");
-        textDiesel.setText(ownedDieselPrice + "TL");
-        textLPG.setText(ownedLPGPrice + "TL");
-        textElectricity.setText(ownedElectricityPrice + "TL");
+        String mesafe = (int) distanceInMeters + " m";
+        textDistance.setText(mesafe);
+
+        String benzin = ownedGasolinePrice + " " + currencySymbol;
+        textGasoline.setText(benzin);
+
+        String dizel = ownedDieselPrice + " " + currencySymbol;
+        textDiesel.setText(dizel);
+
+        String otogaz = ownedLPGPrice + " " + currencySymbol;
+        textLPG.setText(otogaz);
+
+        String elektrik = ownedElectricityPrice + " " + currencySymbol;
+        textElectricity.setText(elektrik);
 
         //Last updated
         try {

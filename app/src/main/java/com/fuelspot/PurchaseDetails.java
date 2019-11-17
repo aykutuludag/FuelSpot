@@ -210,12 +210,12 @@ public class PurchaseDetails extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Satın alma silinecek", Snackbar.LENGTH_LONG)
-                        .setAction("SİL", new View.OnClickListener() {
+                Snackbar.make(view, getString(R.string.purchase_delete_prompt), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.delete), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (isPurchaseVerified == 1) {
-                                    Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PurchaseDetails.this, getString(R.string.verified_purchase_cant_change), Toast.LENGTH_LONG).show();
                                 } else {
                                     deletePurchase();
                                 }
@@ -239,7 +239,7 @@ public class PurchaseDetails extends AppCompatActivity {
             public void onClick(View v) {
                 if (!isLocalPurchase) {
                     if (isPurchaseVerified == 1) {
-                        Toast.makeText(PurchaseDetails.this, "Onaylanmış satın almalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PurchaseDetails.this, getString(R.string.verified_purchase_cant_change), Toast.LENGTH_LONG).show();
                     } else {
                         if (remainingHour > 0 || remainingMin > 0) {
                             if (MainActivity.verifyFilePickerPermission(PurchaseDetails.this)) {
@@ -248,7 +248,7 @@ public class PurchaseDetails extends AppCompatActivity {
                                 ActivityCompat.requestPermissions(PurchaseDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                             }
                         } else {
-                            Toast.makeText(PurchaseDetails.this, "Üzerinden 24 saatten fazla süre geçmiş satınalmalarda değişiklik yapılamaz...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PurchaseDetails.this, getString(R.string.purchase_after_24hour), Toast.LENGTH_LONG).show();
                         }
                     }
                 } else {
@@ -265,16 +265,16 @@ public class PurchaseDetails extends AppCompatActivity {
             if (isPurchaseVerified == -1) {
                 if (billPhoto != null && billPhoto.length() > 0) {
                     Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
-                    textViewStatus.setText("Satınalma yapılan inceleme sonrası onaylanmadı.");
+                    textViewStatus.setText(getString(R.string.purchase_not_verified));
                 } else {
                     Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
-                    textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
+                    textViewStatus.setText(getString(R.string.purchase_after_24hour));
                 }
                 addBillPhotoButton.setVisibility(View.GONE);
             } else if (isPurchaseVerified == 1) {
                 Glide.with(this).load(R.drawable.verified).apply(options).into(circleImageViewStatus);
-
-                textViewStatus.setText("Satınalma onaylandı! " + String.format(Locale.getDefault(), "%.2f", bonus) + " FP bonus hesabınıza yansıtılmıştır.");
+                String bonusText = getString(R.string.purchase_verified_pre) + String.format(Locale.getDefault(), "%.2f", bonus) + getString(R.string.purchase_verified_post);
+                textViewStatus.setText(bonusText);
                 fab.hide();
 
                 addBillPhotoButton.setVisibility(View.GONE);
@@ -282,28 +282,27 @@ public class PurchaseDetails extends AppCompatActivity {
                 if (billPhoto != null && billPhoto.length() > 0) {
                     Glide.with(this).load(R.drawable.ic_waiting).apply(options).into(circleImageViewStatus);
 
-                    textViewStatus.setText("Satınalma incelemede! Onaylandığı takdirde bonus hesabınıza yansıtılacaktır.");
+                    textViewStatus.setText(getString(R.string.purchase_under_review));
 
                     addBillPhotoButton.setVisibility(View.VISIBLE);
-                    addBillPhotoButton.setText("Fotoğrafı güncelle");
+                    addBillPhotoButton.setText(getString(R.string.update_photo));
                 } else {
                     if (remainingHour > 0 || remainingMin > 0) {
                         Glide.with(this).load(R.drawable.money).apply(options).into(circleImageViewStatus);
-
-                        textViewStatus.setText("Fiş/Fatura fotoğrafı ekle, " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " FP bonus kazan! Fotoğraf eklemek için son " + remainingHour + " saat " + remainingMin + " dakika!");
-                        addBillPhotoButton.setText("Fotoğrafı güncelle");
-                        addBillPhotoButton.setText("Fotoğraf ekle");
+                        String addFoto = getString(R.string.add_bill_bonus_text_pre) + " " + String.format(Locale.getDefault(), "%.2f", totalPrice / 100f) + " " + getString(R.string.add_bill_bonus_text_post) + " " + getString(R.string.add_bill_bonus_text_final) + " " + remainingHour + " " + getString(R.string.hour) + " " + remainingMin + " " + getString(R.string.minute) + "!";
+                        textViewStatus.setText(addFoto);
+                        addBillPhotoButton.setText(getString(R.string.add_photo));
                     } else {
                         Glide.with(this).load(R.drawable.cancel).apply(options).into(circleImageViewStatus);
                         addBillPhotoButton.setVisibility(View.GONE);
-                        textViewStatus.setText("Üzerinden 24 saatten fazla süre geçmiş satınalmalarda fiş/fatura eklenemez...");
+                        textViewStatus.setText(getString(R.string.purchase_after_24hour));
                     }
                 }
             }
 
         } else {
-            bonusText.setText("Fatura");
-            textViewStatus.setText("Fiş/fatura ekleyerek satın almanızı daha kolay hatırlayabilirsiniz.");
+            bonusText.setText(getString(R.string.bill));
+            textViewStatus.setText(getString(R.string.local_purchase_text));
         }
 
         switch (fuelType1) {
@@ -320,8 +319,11 @@ public class PurchaseDetails extends AppCompatActivity {
                 Glide.with(this).load(R.drawable.fuel_electricity).into(tur1);
                 break;
         }
-        birimFiyat1.setText(fuelPrice1 + " " + currencySymbol);
-        litre1.setText(fuelLiter1 + " " + userUnit);
+        String priceString = fuelPrice1 + " " + currencySymbol;
+        birimFiyat1.setText(priceString);
+
+        String litreString = fuelLiter1 + " " + userUnit;
+        litre1.setText(litreString);
         String priceHolder = String.format(Locale.getDefault(), "%.2f", subTotal) + " " + currencySymbol;
         fiyat1.setText(priceHolder);
 
@@ -340,8 +342,11 @@ public class PurchaseDetails extends AppCompatActivity {
                     Glide.with(this).load(R.drawable.fuel_electricity).into(tur2);
                     break;
             }
-            birimFiyat2.setText(fuelPrice2 + " " + currencySymbol);
-            litre2.setText(fuelLiter2 + " " + userUnit);
+            String priceString2 = fuelPrice2 + " " + currencySymbol;
+            birimFiyat2.setText(priceString2);
+
+            String litreString2 = fuelLiter2 + " " + userUnit;
+            litre2.setText(litreString2);
             String priceHolder2 = String.format(Locale.getDefault(), "%.2f", subTotal2) + " " + currencySymbol;
             fiyat2.setText(priceHolder2);
         } else {
@@ -351,10 +356,10 @@ public class PurchaseDetails extends AppCompatActivity {
         }
 
         float totalVergiMoney = subTotal * fuelTax1 + subTotal2 * fuelTax2;
-        String taxHolder = "VERGİ: " + String.format(Locale.getDefault(), "%.2f", totalVergiMoney) + " " + currencySymbol;
+        String taxHolder = getString(R.string.grand_tax) + " " + String.format(Locale.getDefault(), "%.2f", totalVergiMoney) + " " + currencySymbol;
         vergi.setText(taxHolder);
 
-        String totalHolder = "TOPLAM : " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencySymbol;
+        String totalHolder = getString(R.string.total) + " " + String.format(Locale.getDefault(), "%.2f", totalPrice) + " " + currencySymbol;
         toplamfiyat.setText(totalHolder);
 
         try {
@@ -543,14 +548,8 @@ public class PurchaseDetails extends AppCompatActivity {
                         if (response != null && response.length() > 0) {
                             switch (response) {
                                 case "Success":
-                                    Toast.makeText(PurchaseDetails.this, "Satın alma silindi", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PurchaseDetails.this, getString(R.string.purchase_deleted), Toast.LENGTH_LONG).show();
                                     fetchVehiclePurchases();
-                                    Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        public void run() {
-                                            finish();
-                                        }
-                                    }, 1000);
                                     break;
                                 case "Fail":
                                     Toast.makeText(PurchaseDetails.this, getString(R.string.error), Toast.LENGTH_LONG).show();
@@ -700,6 +699,8 @@ public class PurchaseDetails extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
+
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {

@@ -99,7 +99,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         // AMOUNT 1
-        viewHolder.amount1.setText(feedItem.getFuelLiter() + " " + userUnit);
+        String kacLitre = feedItem.getFuelLiter() + " " + userUnit;
+        viewHolder.amount1.setText(kacLitre);
 
         // PRICE 1
         String priceHolder = String.format(Locale.getDefault(), "%.2f", feedItem.getSubTotal()) + " " + currencySymbol;
@@ -128,7 +129,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             }
 
             // AMOUNT 2
-            viewHolder.amount2.setText(String.format(Locale.getDefault(), "%.1f", feedItem.getFuelLiter2()) + " " + userUnit);
+            String kacLitre2 = String.format(Locale.getDefault(), "%.1f", feedItem.getFuelLiter2()) + " " + userUnit;
+            viewHolder.amount2.setText(kacLitre2);
 
             // PRICE 2
             String priceHolder2 = String.format(Locale.getDefault(), "%.2f", feedItem.getSubTotal2()) + " " + currencySymbol;
@@ -140,11 +142,11 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         // Bonus
-        String bonusHolder = "BONUS: " + String.format(Locale.getDefault(), "%.2f", feedItem.getBonus()) + " FP";
+        String bonusHolder = mContext.getString(R.string.grand_bonus) + " " + String.format(Locale.getDefault(), "%.2f", feedItem.getBonus()) + " FP";
         viewHolder.bonusText.setText(bonusHolder);
 
         //TotalPrice
-        String totalPriceHolder = "TOPLAM: " + String.format(Locale.getDefault(), "%.2f", feedItem.getTotalPrice()) + " " + currencySymbol;
+        String totalPriceHolder = mContext.getString(R.string.total) + " " + String.format(Locale.getDefault(), "%.2f", feedItem.getTotalPrice()) + " " + currencySymbol;
         viewHolder.totalPrice.setText(totalPriceHolder);
 
         // PurchaseTime
@@ -165,7 +167,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         viewHolder.stationName.setText(feedItem.getStationName());
 
         // KM
-        viewHolder.textviewKM.setText(feedItem.getKilometer() + " km");
+        String mesafe = feedItem.getKilometer() + " KM";
+        viewHolder.textviewKM.setText(mesafe);
         int kmDiff;
         if (feedItemList.size() >= 2) {
             if (i != 0) {
@@ -178,9 +181,11 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         }
 
         if (kmDiff != 0) {
-            viewHolder.textViewTrip.setText("| Alınan yol: " + kmDiff + " km");
+            String trip = mContext.getString(R.string.road_taken) + " " + kmDiff + " KM";
+            viewHolder.textViewTrip.setText(trip);
         } else {
-            viewHolder.textViewTrip.setText("| Alınan yol: - km");
+            String noTrip = mContext.getString(R.string.road_taken) + " " + "- KM";
+            viewHolder.textViewTrip.setText(noTrip);
         }
 
         // Handle click event on image click

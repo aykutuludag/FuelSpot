@@ -102,6 +102,7 @@ public class FragmentNews extends Fragment {
     private int otherStations;
     private int totalStation;
     private SwipeRefreshLayout swipeContainer;
+    String naMevcut = "- " + currencySymbol;
 
     List<Float> list = new ArrayList<>();
     List<Float> list2 = new ArrayList<>();
@@ -380,11 +381,14 @@ public class FragmentNews extends Fragment {
                                     float max = Collections.max(list);
 
 
-                                    gasolineMin.setText(df.format(min) + " " + currencySymbol);
-                                    gasolineMax.setText(df.format(max) + " " + currencySymbol);
+                                    String benzinMin = df.format(min) + " " + currencySymbol;
+                                    gasolineMin.setText(benzinMin);
+
+                                    String benzinMax = df.format(max) + " " + currencySymbol;
+                                    gasolineMax.setText(benzinMax);
                                 } else {
-                                    gasolineMin.setText("- " + currencySymbol);
-                                    gasolineMax.setText("- " + currencySymbol);
+                                    gasolineMin.setText(naMevcut);
+                                    gasolineMax.setText(naMevcut);
                                 }
 
                                 if (dieselPriceHistory.size() > 0) {
@@ -399,11 +403,14 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list2);
                                     float max = Collections.max(list2);
 
-                                    dieselMin.setText(df.format(min) + " " + currencySymbol);
-                                    dieselMax.setText(df.format(max) + " " + currencySymbol);
+                                    String dizelMin = df.format(min) + " " + currencySymbol;
+                                    dieselMin.setText(dizelMin);
+
+                                    String dizelMax = df.format(max) + " " + currencySymbol;
+                                    dieselMax.setText(dizelMax);
                                 } else {
-                                    dieselMin.setText("- " + currencySymbol);
-                                    dieselMax.setText("- " + currencySymbol);
+                                    dieselMin.setText(naMevcut);
+                                    dieselMax.setText(naMevcut);
                                 }
 
                                 if (lpgPriceHistory.size() > 0) {
@@ -418,11 +425,14 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list3);
                                     float max = Collections.max(list3);
 
-                                    lpgMin.setText(df.format(min) + " " + currencySymbol);
-                                    lpgMax.setText(df.format(max) + " " + currencySymbol);
+                                    String otogazMin = df.format(min) + " " + currencySymbol;
+                                    lpgMin.setText(otogazMin);
+
+                                    String otogazMax = df.format(max) + " " + currencySymbol;
+                                    lpgMax.setText(otogazMax);
                                 } else {
-                                    lpgMin.setText("- " + currencySymbol);
-                                    lpgMax.setText("- " + currencySymbol);
+                                    lpgMin.setText(naMevcut);
+                                    lpgMax.setText(naMevcut);
                                 }
 
                                 if (elecPriceHistory.size() > 0) {
@@ -437,11 +447,14 @@ public class FragmentNews extends Fragment {
                                     float min = Collections.min(list4);
                                     float max = Collections.max(list4);
 
-                                    electricityMin.setText(df.format(min) + " " + currencySymbol);
-                                    electricityMax.setText(df.format(max) + " " + currencySymbol);
+                                    String elecMin = df.format(min) + " " + currencySymbol;
+                                    electricityMin.setText(elecMin);
+
+                                    String elecMax = df.format(max) + " " + currencySymbol;
+                                    electricityMax.setText(elecMax);
                                 } else {
-                                    electricityMin.setText("- " + currencySymbol);
-                                    electricityMax.setText("- " + currencySymbol);
+                                    electricityMin.setText(naMevcut);
+                                    electricityMax.setText(naMevcut);
                                 }
 
                                 LineData lineData = new LineData(dataSets);

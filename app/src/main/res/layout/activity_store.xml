@@ -349,7 +349,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="2dp"
-                            android:text="Araç Kokusu"
+                            android:text="@string/arackokusu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="#161616" />
 
@@ -365,7 +365,7 @@
                             android:layout_marginBottom="2dp"
                             android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="3 adet FuelSpot araç kokusu 9.99 FP!"
+                            android:text="@string/arackokusu3"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />
@@ -439,7 +439,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="2dp"
-                            android:text="Araç Kokusu"
+                            android:text="@string/arackokusu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="#161616" />
 
@@ -455,7 +455,7 @@
                             android:layout_marginBottom="2dp"
                             android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="5 adet FuelSpot araç kokusu 14.99 FP!"
+                            android:text="@string/arackokusu5"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />
@@ -530,7 +530,7 @@
                             android:layout_marginTop="2dp"
                             android:layout_marginBottom="2dp"
                             android:gravity="center"
-                            android:text="Araç bakım seti"
+                            android:text="@string/arackokusu"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="#161616" />
 
@@ -546,7 +546,7 @@
                             android:layout_marginBottom="2dp"
                             android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="10 adet FuelSpot araç kokusu 24.99 FP!"
+                            android:text="@string/arackokusu10"
                             android:textAlignment="center"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />

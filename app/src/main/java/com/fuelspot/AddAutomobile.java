@@ -249,7 +249,7 @@ public class AddAutomobile extends AppCompatActivity implements AdapterView.OnIt
 
         //Kilometre
         EditText eText = findViewById(R.id.editText_km);
-        eText.setText("" + dummyKilometer);
+        eText.setText(String.valueOf(dummyKilometer));
         eText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -40,7 +40,6 @@
         android:layout_below="@+id/popup_comment_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:progressTint="#5EFFAA"
         android:scaleX="0.75"
         android:scaleY="0.75"
         android:stepSize="1" />

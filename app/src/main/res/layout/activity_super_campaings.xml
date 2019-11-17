@@ -51,7 +51,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="Aktif bir kampanyanız bulunmamaktadır."
+                android:text="@string/no_campaign_text"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -96,7 +96,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="Kampanya bulunamadı..."
+                android:text="@string/no_campaign_text"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -129,7 +129,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="Kampanya bulunamadı..."
+                android:text="@string/no_campaign_text"
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView

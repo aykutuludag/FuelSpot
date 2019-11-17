@@ -75,7 +75,6 @@ import static com.fuelspot.MainActivity.firebaseToken;
 import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.hasDoubleRange;
-import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.mapDefaultRange;
 import static com.fuelspot.MainActivity.mapDefaultZoom;
@@ -126,7 +125,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         superLicenseNo = prefs.getString("SuperLicenseNo", "");
         isStationVerified = prefs.getInt("isStationVerified", 0);
         superLastUpdate = prefs.getString("SuperLastUpdate", "");
-        isGeofenceOpen = prefs.getBoolean("Geofence", false);
     }
 
     @Override
@@ -154,9 +152,7 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
         getSuperVariables(prefs);
         queue = Volley.newRequestQueue(this);
 
-        if (firebaseToken.length() > 0) {
-            registerToken();
-        } else {
+        if (firebaseToken.length() == 0) {
             FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                 @Override
                 public void onComplete(@NonNull Task<InstanceIdResult> task) {
@@ -410,22 +406,27 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                                         item.setDistance((int) uzaklik);
                                         //DISTANCE END
                                         listOfOwnedStations.add(item);
-                                    }
 
-                                    if (superStationID == 0) {
-                                        chooseStation(listOfOwnedStations.get(0));
-                                    } else {
-                                        // User already selected station.
-                                        for (int k = 0; k < listOfOwnedStations.size(); k++) {
-                                            if (superStationID == listOfOwnedStations.get(k).getID()) {
-                                                chooseStation(listOfOwnedStations.get(k));
+                                        if (superStationID == 0) {
+                                            chooseStation(item);
+                                        } else {
+                                            // User already selected station.
+                                            if (superStationID == item.getID()) {
+                                                chooseStation(item);
                                                 break;
                                             }
                                         }
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                    // For safety.
+                                    isStationVerified = -1;
+                                    // For safety.
                                 }
+                            } else {
+                                // For safety.
+                                isStationVerified = -1;
+                                // For safety.
                             }
                         }
                     },
@@ -433,6 +434,9 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             volleyError.printStackTrace();
+                            // For safety.
+                            isStationVerified = -1;
+                            // For safety.
                         }
                     }) {
                 @Override

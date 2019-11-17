@@ -12,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,7 +69,10 @@ import java.util.Map;
 import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.lastStationSearch;
+import static com.fuelspot.MainActivity.mapDefaultRange;
+import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.searchCount;
 import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userlat;
@@ -84,10 +89,7 @@ public class SearchActivity extends AppCompatActivity {
     private GoogleMap googleMap;
     private MapView mMapView;
     int whichOrder = 4;
-    int searchCount;
     private double tempLat, tempLong;
-    private float tempZoom = 12.5f;
-    private int tempRange = 3000;
     private ArrayList<Marker> tempMarkers = new ArrayList<>();
     private List<StationItem> tempStationList = new ArrayList<>();
     private RelativeLayout sortGasolineLayout;
@@ -96,6 +98,7 @@ public class SearchActivity extends AppCompatActivity {
     private RelativeLayout sortElectricityLayout;
     private RelativeLayout sortDistanceLayout;
     private SharedPreferences prefs;
+    NestedScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,16 +119,19 @@ public class SearchActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
 
-        if (System.currentTimeMillis() - lastStationSearch >= (1000 * 60 * 60 * 24)) {
-            searchCount = 3;
-            prefs.edit().putInt("SearchCounter", searchCount).apply();
+        if (!premium) {
+            if (System.currentTimeMillis() - lastStationSearch >= (1000 * 60 * 60 * 24)) {
+                searchCount = 3;
+                prefs.edit().putInt("searchCount", searchCount).apply();
 
-            lastStationSearch = System.currentTimeMillis();
-            prefs.edit().putLong("LastStationSearch", lastStationSearch).apply();
-        } else {
-            searchCount = prefs.getInt("SearchCounter", 0);
+                lastStationSearch = System.currentTimeMillis();
+                prefs.edit().putLong("lastStationSearch", lastStationSearch).apply();
+            } else {
+                searchCount = prefs.getInt("searchCount", 0);
+            }
         }
 
+        scrollView = findViewById(R.id.scrollViewSearch);
         editText = findViewById(R.id.editText);
         editText.setFocusable(false);
         editText.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +149,7 @@ public class SearchActivity extends AppCompatActivity {
                         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).setCountry("TR").build(SearchActivity.this);
                         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
                     } else {
-                        Toast.makeText(SearchActivity.this, "İstasyon Arama günlük 3 adet ile sınırlıdır. Daha fazlası için premium sürüme geçebilirsiniz", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.station_search_limit), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -230,9 +236,30 @@ public class SearchActivity extends AppCompatActivity {
                 googleMap.getUiSettings().setTiltGesturesEnabled(false);
                 googleMap.setTrafficEnabled(true);
 
+                googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        scrollView.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+                googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        scrollView.requestDisallowInterceptTouchEvent(false);
+                    }
+                });
+
                 // For zooming automatically to the location of the marker
                 LatLng mCurrentLocation = new LatLng(Double.parseDouble(userlat), Double.parseDouble(userlon));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(tempZoom).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 MarkerAdapter customInfoWindow = new MarkerAdapter(SearchActivity.this);
@@ -251,7 +278,7 @@ public class SearchActivity extends AppCompatActivity {
     private void searchStations() {
         tempStationList.clear();
         final ProgressDialog stationFetching = ProgressDialog.show(SearchActivity.this, "İstasyonlar aranıyor", getString(R.string.please_wait), false, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + tempLat + ";" + tempLong + "&radius=" + tempRange,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_SEARCH_STATIONS) + "?location=" + tempLat + ";" + tempLong + "&radius=" + mapDefaultRange,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -299,7 +326,7 @@ public class SearchActivity extends AppCompatActivity {
                                 sortBy(whichOrder);
 
                                 if (tempStationList.size() == 33) {
-                                    Toast.makeText(SearchActivity.this, "Size en yakın 33 istasyonu görmektesiniz.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SearchActivity.this, getString(R.string.limited_33), Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(SearchActivity.this, getString(R.string.station_found_pretext) + " " + tempStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
                                 }
@@ -307,25 +334,25 @@ public class SearchActivity extends AppCompatActivity {
                                 Toast.makeText(SearchActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            if (tempRange == 3000) {
-                                tempRange = 6000;
-                                tempZoom = 12f;
-                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                            if (mapDefaultRange == 3000) {
+                                mapDefaultRange = 6000;
+                                mapDefaultZoom = 12f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 searchStations();
-                            } else if (tempRange == 6000) {
-                                tempRange = 10000;
-                                tempZoom = 11.5f;
-                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                            } else if (mapDefaultRange == 6000) {
+                                mapDefaultRange = 10000;
+                                mapDefaultZoom = 11.5f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 searchStations();
-                            } else if (tempRange == 10000) {
-                                tempRange = 25000;
-                                tempZoom = 10f;
-                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                            } else if (mapDefaultRange == 10000) {
+                                mapDefaultRange = 25000;
+                                mapDefaultZoom = 10f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 searchStations();
-                            } else if (tempRange == 25000) {
-                                tempRange = 50000;
-                                tempZoom = 9f;
-                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + tempRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
+                            } else if (mapDefaultRange == 25000) {
+                                mapDefaultRange = 50000;
+                                mapDefaultZoom = 9f;
+                                Toast.makeText(SearchActivity.this, getString(R.string.station_not_found_retry) + " " + mapDefaultRange + getString(R.string.metre), Toast.LENGTH_SHORT).show();
                                 searchStations();
                             } else {
                                 // no station within 50km
@@ -463,7 +490,7 @@ public class SearchActivity extends AppCompatActivity {
         //Draw a circle with radius of tempRange
         googleMap.addCircle(new CircleOptions()
                 .center(new LatLng(tempLat, tempLong))
-                .radius(tempRange)
+                .radius(mapDefaultRange)
                 .fillColor(0x220000FF)
                 .strokeColor(Color.parseColor("#FF5635")));
 
@@ -560,12 +587,12 @@ public class SearchActivity extends AppCompatActivity {
 
                 if (googleMap != null) {
                     LatLng mCurrentLocation = new LatLng(tempLat, tempLong);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(tempZoom).build();
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(mapDefaultZoom).build();
                     googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
 
                 searchCount--;
-                prefs.edit().putLong("SearchCounter", searchCount).apply();
+                prefs.edit().putInt("searchCount", searchCount).apply();
 
                 searchStations();
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
@@ -574,6 +601,15 @@ public class SearchActivity extends AppCompatActivity {
                 Log.i("AutoCompleteError", status.getStatusMessage());
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("MissingPermission")

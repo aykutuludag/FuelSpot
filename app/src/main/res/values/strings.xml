@@ -7,12 +7,16 @@
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
     <string name="banner_admob" translatable="false">ca-app-pub-6610790679720108/6457702530</string>
-    <string name="copyright_text" translatable="false">FuelSpot - Made with ♥ in Ankara</string>
+    <string name="copyright_text" translatable="false">© FuelSpot 2019 - Made with ♥ in Ankara</string>
+    <string name="copyright_short" translatable="false">© FuelSpot 2019</string>
+
     <!-- Units-->
     <string name="unitSystem1" translatable="false">Litre</string>
     <string name="unitSystem2" translatable="false">Galon</string>
     <string name="unitSystem3" translatable="false">Imperial galon</string>
     <string name="electricity_unit" translatable="false">kWh</string>
+    <string name="hour">hour</string>
+    <string name="minute">mins</string>
     <!-- Units-->
 
     <!-- Social-->
@@ -86,6 +90,16 @@
     <string name="API_ORDER" translatable="false">https://fuelspot.com.tr/api/v1.0/other/order.php</string>
     <!-- NON TRANSLATABLE PART END -->
 
+    <!-- GENERAL-->
+    <string name="last_ads_info">You have viewed last advertisement. You won\'t see more advertisement on this session.</string>
+    <string name="exit">Touch again to exit the application.</string>
+    <string name="distributors">Distributors</string>
+    <string name="add_photo">Add photo</string>
+    <string name="bill">Bill</string>
+    <string name="delete">Delete</string>
+    <string name="away">away</string>
+    <!-- GENERAL-->
+
     <!-- LoginActivity-->
     <string name="loginWithGoogle">Login with Google</string>
     <string name="loginWithFacebook">Login with Facebook</string>
@@ -103,9 +117,11 @@
     <string name="do_you_have_car">Do you have a car?</string>
     <string name="yes">Yes</string>
     <string name="no_later">No / I will add it later</string>
+    <string name="add_vehicle_desc">By adding your vehicle into FuelSpot, you will get 1&#37; for every fuel intake! You can spend your bonus on FuelSpot Store.\n\nThis campaign is only valid for personal vehicles and motorcycles. Retail purchases are not eligible for this campaign.</string>
     <string name="brand">Brand</string>
     <string name="vehicle_model">Model</string>
     <string name="primary_fuel_type">Primary fuel type</string>
+    <string name="no">NO</string>
     <string name="gasoline">Gasoline</string>
     <string name="diesel">Diesel</string>
     <string name="lpg">LPG</string>
@@ -117,13 +133,7 @@
     <string name="secondary_fuel_type_desc">If you don\'t have secondary fuel system, select NO</string>
     <string name="kilometer">Kilometer</string>
     <string name="plate_no">Plate no</string>
-    <string name="fuel_symbols">Fuel symbols</string>
-    <string name="how_to_sort">By clicking symbols you can order station by your choice (price or distance).</string>
     <string name="got_it">Got it!</string>
-    <string name="how_to_register_car">How to register my car?</string>
-    <string name="how_to_register_car_desc">You can add your vehicle clicking add new vehicle button on your profile. To earn bonus, don\'t forget to add your car!</string>
-    <string name="how_to_add_fuel">How to add fuel?</string>
-    <string name="how_to_add_fuel_desc">When you go to station, FuelSpot will detect it and send notification. Follow instruction and get your bonus!</string>
     <string name="info_saved_welcome">Your information was saved. Welcome to FuelSpot!</string>
     <string name="enter_plate_no">Please enter your plate no</string>
     <string name="plate_no_exist">This plate no has been added to system…</string>
@@ -140,9 +150,13 @@
     <string name="tab_vehicle">Vehicle</string>
     <string name="tab_profile">Profile</string>
     <string name="tab_settings">Settings</string>
-    <string name="exit">Touch again to exit the application.</string>
+    <string name="popup_filter_desc">Pick the distributors you want to see and filter unwanted stations!</string>
+    <string name="remove_filters">Remove all filters to show all stations.</string>
+    <string name="popup_filter_desc2">By filtering facilities, you can find whatever you need easily.</string>
+    <!-- MainActivity-->
 
     <!-- FragmentStations-->
+    <string name="order">Order</string>
     <string name="menu_filter">Filter</string>
     <string name="apply">Apply</string>
     <string name="see_all">See all</string>
@@ -153,11 +167,14 @@
     <string name="metre">metre</string>
     <string name="no_station">We couldn\'t find any station within 50 kilometers range…</string>
     <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
+    <string name="limited_33">You are seeing 33 stations which are closest to you.</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->
     <string name="latest_news">Latest news</string>
     <string name="price_index">Price index</string>
+    <string name="highest">Highest</string>
+    <string name="lowest">Lowest</string>
     <string name="last_update">Last update</string>
     <string name="registered_station_number">Registered station number:</string>
     <!-- FragmentNews-->
@@ -166,6 +183,9 @@
     <string name="edit">Edit</string>
     <string name="user_purchases">Your purchases</string>
     <string name="no_purchase_user">You didn\'t purchase any fuel. Your purchases and details will be listed here…</string>
+    <string name="road_taken">| Road taken:</string>
+    <string name="add_vehicle_first">You have to add your vehicle before adding fuel.</string>
+    <string name="plate_exist">This plate has already been added to FuelSpot. If you think this is a mistake, please contact us.</string>
     <!-- FragmentAutomobile-->
 
     <!-- FragmentProfile-->
@@ -207,8 +227,8 @@
     <string name="feedback_sending">Sending feedback</string>
     <string name="thanks_for_feedback">Thank you for feedback!</string>
     <string name="contact_us">Contact us!</string>
+    <string name="share_the_app">Share the app</string>
     <!-- FragmentSettings-->
-    <!-- MainActivity-->
 
     <!-- StationDetails-->
     <string name="menu_go">Go to station</string>
@@ -223,7 +243,11 @@
     <string name="priceHistory">Price history</string>
     <string name="no_campaign_text">There is no campaigns for this station yet…</string>
     <string name="no_comment_text">There is no reviews for this station yet…</string>
-    <string name="last_ads_info">You have viewed last advertisement. You won\'t see more advertisement on this session.</string>
+    <string name="on_google_maps">View on Google Maps</string>
+    <string name="streetview">StreetView</string>
+    <string name="or">OR</string>
+    <string name="streetView_desc">StreetView is limited 1 view per day. You can start Premium subscription or view on Google Maps.</string>
+    <string name="no_streetview">There is no StreetView for this station.</string>
 
     <string-array name="report_reasons">
         <item>Station doesn\'t exist</item>
@@ -280,7 +304,6 @@
     <string name="vehicle_updating">Automobile updating</string>
     <string name="vehicle_deleting">Automobile deleting</string>
     <string name="remove_vehicle">Remove automobile?</string>
-    <string name="delete">Delete</string>
     <string name="vehicle_update_success">Automobile updated successfully</string>
     <string name="vehicle_delete_success">Automobile deleted…</string>
     <!-- AutomobileEdit-->
@@ -290,20 +313,27 @@
     <string name="please_wait">Please wait…</string>
     <!-- AddAutomobile-->
 
-    <!-- UserPurchases-->
-    <!-- UserPurchases-->
-
-    <!-- PurchaseDetails-->
-    <!-- PurchaseDetails-->
-
     <!-- PurchaseDetails-->
     <string name="purchase">Purchase</string>
     <string name="type">Type</string>
     <string name="amount">Amount</string>
     <string name="unit_price">Unit price</string>
     <string name="subtotal">Subtotal</string>
-    <string name="total">Total</string>
+    <string name="total">TOTAL:</string>
     <string name="bonus" translatable="false">Bonus</string>
+    <string name="purchase_not_verified">Purchase does not verified.</string>
+    <string name="purchase_after_24hour">You can not add bill photo after 24 hours…</string>
+    <string name="purchase_verified_pre">Purchase has been verified!</string>
+    <string name="purchase_verified_post"> FP bonus is credited to your account.</string>
+    <string name="purchase_under_review">Your purchase is currently under review. You will get bonus if purchase is verified.</string>
+    <string name="update_photo">Update photo</string>
+    <string name="add_bill_bonus_text_final"> You can add photo within </string>
+    <string name="local_purchase_text">You can add bill photo to remind later easily.</string>
+    <string name="grand_bonus">BONUS:</string>
+    <string name="grand_tax">TAX:</string>
+    <string name="verified_purchase_cant_change">You can\'t edit verified purchase…</string>
+    <string name="purchase_delete_prompt">Purchase will be deleted?</string>
+    <string name="purchase_deleted">Purchase has been deleted…</string>
     <!-- PurchaseDetails-->
 
     <!-- ProfileEdit-->
@@ -322,6 +352,7 @@
     <string name="pick_your_birthday">Pick your birthday</string>
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>
+    <string name="valid_email">Please enter a valid e-mail address</string>
     <!-- ProfileEdit-->
 
     <!-- UserFavorites-->
@@ -345,16 +376,27 @@
     <string name="premium_successful">Purchase successful. You\'re switching to the premium version, thanks!</string>
     <string name="double_range_successful">Purchase successful. Your range is increasing, thanks!</string>
     <string name="purchase_failed">Purchase failed. Please try again later.</string>
-    <string name="banking_key_map"><b>Bonus:</b> Earn <b>1%</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
+    <string name="banking_key_map"><b>Bonus:</b> Get <b>1&#37;</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
     <string name="legend">Legend</string>
     <string name="subscriptions">Subscriptions</string>
     <string name="process_type">Process type</string>
     <string name="date">Date</string>
     <string name="products">Products</string>
+    <string name="purchasing">Purchasing</string>
+    <string name="purchase_succeed">Purchase successful! Average delivery time is 5 business day.</string>
+    <string name="arackokusu">Car Smell</string>
+    <string name="arackokusu3">3 FuelSpot Car Smell 8.99 FP!</string>
+    <string name="arackokusu5">5 FuelSpot Car Smell 13.99 FP!</string>
+    <string name="arackokusu10">10 FuelSpot Car Smell 24.99 FP!</string>
+    <string name="verify_address">Please check your info before proceeding order. FuelSpot does not take responsibility for missing deliveries because of incorrect address/receiver information.</string>
+    <string name="purchase_prompt_pre">You will have </string>
+    <string name="purchase_prompt_post"> FP after purchase. Do you confirm purchase?</string>
+    <string name="address_missing">Address is missing. Please add address information from Profile Edit and try again.</string>
+    <string name="phone_missing">Phone number is missing. Please add address information from Profile Edit and try again.</string>
+    <string name="email_missing">E-mail is missing. Please add address information from Profile Edit and try again.</string>
+    <string name="fullname_missing">Full Name is missing. Please add address information from Profile Edit and try again.</string>
+    <string name="unsubscribe_2x_first">You need to unsubscribe 2x-Range before starting Premium subscription. You can manage your subscriptions on Google Play app.</string>
     <!-- UserStore-->
-
-    <!-- UserComments-->
-    <!-- UserComments-->
 
     <!-- NewsDetail-->
     <string name="share">Share</string>
@@ -366,7 +408,6 @@
     <string name="station_info_loading">Station info loading…</string>
     <string name="station_info">Station info</string>
     <string name="automobile_info">Automobile info</string>
-    <string name="add_bill_photo">Add photo</string>
     <string name="add_fuel">Add fuel</string>
     <string name="low_kilometer">Your vehicle\'s kilometer must be higher than previous purchase.</string>
     <string name="empty_kilometer">Kilometer must be different than 0</string>
@@ -375,31 +416,36 @@
     <string name="adding_fuel">Adding fuel…</string>
     <string name="fuel_add_success">Fuel added successfully…</string>
     <string name="the_money_you_pay">The money you pay</string>
+    <string name="add_bill_bonus_text_pre">You will get</string>
+    <string name="add_bill_bonus_text_post">FP bonus by adding bill photo!</string>
+    <string name="go_station_for_fuel">You are not at the station! You have to be at the station for adding purchase.</string>
+    <string name="enter_unit_price">Please enter the unit price of fuel.</string>
     <!-- AddFuel-->
 
     <!-- SuperWelcome-->
+    <string name="super_promo1">Are you station owner/manager? Register FuelSpot now and access unlimited opportunity and tools for free!</string>
+    <string name="super_promo2">* More customer, More income</string>
+    <string name="super_promo3">* Campaigns, opportunities and free promotions</string>
+    <string name="super_promo4">* Free ads and promotions on digital platforms (Google, Yandex, Yahoo etc.)</string>
+    <string name="super_promo5">* Follow rival station prices instantly</string>
+    <string name="super_promo6">* Latest news from petroleum industry, price indexes, stats and analysis</string>
+    <string name="super_promo7">* Get your digital profile of station! Manage station just one tap on the phone.</string>
+    <string name="super_promo8">* Answer customer comments regularly and increase customer loyalty.</string>
+    <string name="super_promo9">You will reach hundreds of thousands automobile owners for free! More recognition, more customer!</string>
     <string name="license_no">License no</string>
     <string name="terms_accepted_text">I have read and accept the <b>Terms and Conditions</b>.</string>
     <string name="go_to_station_text">To complete registration process, you must be at your station. When you enter the station perimeter, this text will turn into green and station info will be fetched automatically.</string>
     <string name="personal_info">Personal info</string>
+    <string name="you_are_at_station">You are at station!</string>
     <!-- SuperWelcome-->
 
-    <!-- SuperMainActivity-->
-    <string name="station_waiting_approval">Your account is under approval. A representative will contact you as soon as possible.</string>
-
     <!-- FragmentMyStation-->
+    <string name="station_waiting_approval">Your account is under approval. A representative will contact you as soon as possible.</string>
     <string name="tab_mystation">MyStation</string>
     <string name="station_update_desc">You can manage base station info (prices, facilities, address…) in here.</string>
     <string name="comments_section_desc">You can see reviews for station by users and reply them in here.</string>
     <string name="campaign_section_desc">You can manage ongoing and past campaigns in here.</string>
     <!-- FragmentMyStation-->
-
-    <!-- FragmentSuperProfile-->
-    <!-- FragmentSuperProfile-->
-    <!-- SuperMainActivity-->
-
-    <!-- SuperProfileEdit-->
-    <!-- SuperProfileEdit-->
 
     <!-- SuperUpdateStation-->
     <string name="prices">Prices</string>
@@ -434,17 +480,29 @@
     <string name="company_campaigns">Company campaigns</string>
     <!-- SuperCampaigns-->
 
-    <!-- SuperStore-->
-    <!-- SuperStore-->
-
     <!-- AddStation-->
     <string name="add_station">Add station</string>
+    <string name="has_been_verified">This station has been verified.</string>
     <!-- AddStation-->
 
     <!-- ReportMissingStation-->
     <string name="title_activity_report_missing_station">Missing station</string>
-    <string name="purchasing">Purchasing</string>
-    <string name="purchase_succeed">Satın alma başarılı! Ürününüz en kısa sürede kargolanacaktır.</string>
+    <string name="mark_missing_station">Mark the location of station on the map</string>
+    <string name="station_photo">Station photo</string>
+    <string name="station_photo_desc">Please add a photo of price sign of station. Clear and readable photo of price sign would accelerate verification process significantly. You will receive rewards for every verified report!</string>
+    <string name="select_distributor">Please select the distributor of the station…</string>
+    <!-- ReportMissingStation-->
+
+    <!-- MessagingActivity-->
     <string name="inbox">Inbox</string>
-    <!-- AddStation-->
+    <string name="conversation_ended">This conversation is ended.</string>
+    <string name="enter_message">Please enter your message.</string>
+    <!-- MessagingActivity-->
+
+    <!-- SearchActivity-->
+    <string name="station_search">Station Search</string>
+    <string name="search_station_desc">You can search stations anywhere inside Turkey. Your search query can contain province/district/neighborhood/street etc. Station Search is limited for 3 searchs per day.</string>
+    <string name="search_hint">Enter a place name…</string>
+    <string name="station_search_limit">Station Search is limited for 3 queries per day. If you want more, you can subscribe Premium version!</string>
+    <!-- SearchActivity-->
 </resources>

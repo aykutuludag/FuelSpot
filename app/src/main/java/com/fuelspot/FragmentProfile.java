@@ -85,7 +85,6 @@ public class FragmentProfile extends Fragment {
     public View rootView;
     private SwipeRefreshLayout swipeContainer;
     static int openMessage;
-    private ImageView seeInboxButton;
     private TextView messageCountText;
 
     public static FragmentProfile newInstance() {
@@ -117,7 +116,7 @@ public class FragmentProfile extends Fragment {
                 }
             });
 
-            seeInboxButton = rootView.findViewById(R.id.imageViewInboxButton);
+            ImageView seeInboxButton = rootView.findViewById(R.id.imageViewInboxButton);
             seeInboxButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -473,7 +472,7 @@ public class FragmentProfile extends Fragment {
                                     }
                                 }
 
-                                messageCountText.setText("" + openMessage);
+                                messageCountText.setText(String.valueOf(openMessage));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -508,6 +507,10 @@ public class FragmentProfile extends Fragment {
 
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
+        }
+
+        if (mAdapter2 != null) {
+            mAdapter2.notifyDataSetChanged();
         }
     }
 }

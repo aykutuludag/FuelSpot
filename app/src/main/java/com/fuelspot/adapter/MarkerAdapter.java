@@ -67,9 +67,9 @@ public class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
             String distance;
             if (infoWindowData.getDistance() >= 1500) {
                 float km = infoWindowData.getDistance() / 1000f;
-                distance = df.format(km) + " KM uzakta";
+                distance = df.format(km) + " KM " + mContext.getString(R.string.away);
             } else {
-                distance = infoWindowData.getDistance() + " m uzakta";
+                distance = infoWindowData.getDistance() + " m " + mContext.getString(R.string.away);
             }
             distanceText.setText(distance);
 

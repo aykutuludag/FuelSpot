@@ -576,7 +576,7 @@ public class FragmentAutomobile extends Fragment {
                 Intent intent = new Intent(getActivity(), AddFuel.class);
                 showAds(getActivity(), intent);
             } else {
-                Toast.makeText(getActivity(), "Yakıt ekleyebilmek için otomobil eklemeniz gerekiyor", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.add_vehicle_first), Toast.LENGTH_LONG).show();
             }
         }
         return super.onOptionsItemSelected(item);

@@ -229,7 +229,7 @@
                         android:button="@drawable/radiobutton"
                         android:fontFamily="@font/gotham_book"
                         android:padding="4dp"
-                        android:text="YOK"
+                        android:text="@string/no"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#757575" />

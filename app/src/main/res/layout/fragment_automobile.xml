@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +19,8 @@
             <RelativeLayout
                 android:id="@+id/userRegularLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                tools:visibility="visible">
 
                 <RelativeLayout
                     android:id="@+id/header_vehicle"
@@ -332,7 +334,7 @@
                     android:layout_margin="8dp"
                     android:fontFamily="@font/gotham_medium"
                     android:gravity="center"
-                    android:text="Aracınızı FuelSpot'a kaydederek akaryakıt alışverişlerinizde %1 bonus kazanırsınız. Kazandığınız bonusları FuelSpot Mağaza'da harcayabilirsiniz. Yakıt alırken FuelSpot'ın göndereceği bildirim aracılığıyla yakıt ekleyebilirsiniz. \n\n Bu kampanya yalnızca binek otomobil ve motosikletler için BİLDİRİM ARACILIĞIYLA veya İSTASYONDAYKEN yakıt ekle butonu (sağ üstte) aracılığıyla eklenen yakıt alımları için geçerlidir. Perakende alımlar kampanyaya dahil değildir."
+                    android:text="@string/add_vehicle_desc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#212121" />
 

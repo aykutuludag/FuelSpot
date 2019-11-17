@@ -385,7 +385,7 @@ public class AddStation extends AppCompatActivity {
 
                                 if (doesStationVerified == 1) {
                                     stationHint.setTextColor(Color.parseColor("#ff0000"));
-                                    stationHint.setText("Bu istasyon daha önce onaylanmış.");
+                                    stationHint.setText(getString(R.string.has_been_verified));
                                 } else {
                                     stationHint.setTextColor(Color.parseColor("#2DE778"));
                                 }

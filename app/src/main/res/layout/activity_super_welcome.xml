@@ -54,7 +54,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="İstasyon yöneticisi misiniz? FuelSpot'a hemen ücretsiz kaydolun sayısız avantaj ve fırsattan yararlanın!"
+                android:text="@string/super_promo1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#161616" />
 
@@ -70,7 +70,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* Daha fazla müşteri, daha fazla gelir"
+                android:text="@string/super_promo2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -86,7 +86,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* Kampanyalar, fırsatlar ve tanıtım imkanları"
+                android:text="@string/super_promo3"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -102,7 +102,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* Dijital platformlarda ücretsiz reklam ve tanıtım (Google, Yandex, Yahoo vb.)"
+                android:text="@string/super_promo4"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -118,7 +118,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* Rakiplerinizin fiyatlarını anlık takip imkanı"
+                android:text="@string/super_promo5"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -134,7 +134,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* Sektörden son haberler, fiyat endeksleri, istatistikler, analizler"
+                android:text="@string/super_promo6"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -150,7 +150,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* İstasyonunuzun dijital profili sizin elinizde olsun. Telefonunuzdan tek tuşla istasyonunuzu yönetin!"
+                android:text="@string/super_promo7"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -166,7 +166,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="* İstasyonunuza yazılan yorumları cevaplayın, daha fazla müşteri ilgisi çekin!"
+                android:text="@string/super_promo8"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
 
@@ -283,7 +283,7 @@
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/gotham_medium"
             android:gravity="center"
-            android:text="FuelSpot, istasyon sahiplerine hitap eden, daha geniş kitlelere ulaşmalarını sağlayıp karlılık ve verimliliği artırmayı yönelik bir platformdur."
+            android:text="@string/super_promo9"
             android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
             android:textColor="#ffffff" />
 

@@ -240,10 +240,14 @@
         </activity>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admobAppId" /> <!-- AdMob -->
+            android:value="@string/admobAppId" />
+
+        <!-- AdMob -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" /> <!-- Facebook -->
+            android:value="@string/facebook_app_id" />
+
+        <!-- Facebook -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -253,7 +257,9 @@
             android:value="@string/google_key" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/google_key" /> <!-- Google Maps && PlaceAutoComplete && Awareness -->
+            android:value="@string/google_key" />
+
+        <!-- Google Maps && PlaceAutoComplete && Awareness -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />

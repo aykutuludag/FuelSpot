@@ -40,7 +40,7 @@
                 android:layout_toEndOf="@id/imageView"
                 android:fontFamily="@font/gotham_book"
                 android:gravity="center"
-                android:text="Görüntülemek istediğin markaları seçerek istemediğin istasyonları gizle!"
+                android:text="@string/popup_filter_desc"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#161616" />
@@ -340,7 +340,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/gotham_book"
-                android:text="Bütün istasyonları görüntülemek için filtreleri temizleyin."
+                android:text="@string/remove_filters"
                 android:textAlignment="center"
                 android:textColor="#212121" />
 

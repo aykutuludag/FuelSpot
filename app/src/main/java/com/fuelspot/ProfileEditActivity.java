@@ -67,6 +67,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
 import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.email;
+import static com.fuelspot.MainActivity.firebaseToken;
 import static com.fuelspot.MainActivity.gender;
 import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.isNetworkConnected;
@@ -342,10 +343,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                                 Toast.makeText(ProfileEditActivity.this, response, Toast.LENGTH_LONG).show();
                                 finish();
                             } else {
-                                Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ProfileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(ProfileEditActivity.this, "The request failed. Please check the form and try again...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ProfileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
                 },
@@ -354,7 +355,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         //Showing toast
                         loading.dismiss();
-                        Toast.makeText(ProfileEditActivity.this, "Something went wrong with our servers. Please try again later.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ProfileEditActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -384,6 +385,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 params.put("location", location);
                 params.put("country", userCountry);
                 params.put("language", userDisplayLanguage);
+                params.put("token", firebaseToken);
                 //returning parameters
                 return params;
             }
@@ -421,10 +423,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                     if (email.contains("@")) {
                         updateUserInfo();
                     } else {
-                        Toast.makeText(ProfileEditActivity.this, "Lütfen geçerli bir e-posta adresi giriniz", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ProfileEditActivity.this, getString(R.string.valid_email), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(ProfileEditActivity.this, "İnternet bağlantısında bir sorun var", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileEditActivity.this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:

@@ -2,6 +2,9 @@ package com.fuelspot.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -389,6 +392,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
 
         viewHolder.rating.setRating(feedItem.getRating());
+        LayerDrawable stars = (LayerDrawable) viewHolder.rating.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.parseColor("#2DE878"), PorterDuff.Mode.SRC_ATOP);
 
         if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
             viewHolder.answerView.setVisibility(View.VISIBLE);
