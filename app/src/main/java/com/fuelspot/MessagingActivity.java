@@ -41,7 +41,6 @@ import java.util.Map;
 
 import static com.fuelspot.FragmentProfile.conversationIDs;
 import static com.fuelspot.FragmentProfile.lastMessages;
-import static com.fuelspot.FragmentProfile.openMessage;
 import static com.fuelspot.FragmentProfile.userInbox;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.token;
@@ -207,7 +206,6 @@ public class MessagingActivity extends AppCompatActivity {
     }
 
     private void fetchInbox() {
-        openMessage = 0;
         userInbox.clear();
         lastMessages.clear();
         conversationIDs.clear();
@@ -222,7 +220,6 @@ public class MessagingActivity extends AppCompatActivity {
 
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
-                                    System.out.println(obj);
 
                                     MessageItem item = new MessageItem();
                                     item.setID(obj.getInt("id"));
@@ -240,9 +237,6 @@ public class MessagingActivity extends AppCompatActivity {
                                     if (conversationIDs != null && !conversationIDs.contains(item.getConversationID())) {
                                         conversationIDs.add(item.getConversationID());
                                         lastMessages.add(item);
-                                        if (item.getIsOpen() == 1) {
-                                            openMessage++;
-                                        }
                                     }
                                 }
 

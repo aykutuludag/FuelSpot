@@ -7,13 +7,16 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -84,8 +87,6 @@ public class FragmentProfile extends Fragment {
     private RequestQueue requestQueue;
     public View rootView;
     private SwipeRefreshLayout swipeContainer;
-    static int openMessage;
-    private TextView messageCountText;
 
     public static FragmentProfile newInstance() {
         Bundle args = new Bundle();
@@ -100,32 +101,13 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+            setHasOptionsMenu(true);
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             prefs = getActivity().getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
             requestQueue = Volley.newRequestQueue(getActivity());
-
-            ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
-            updateUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            ImageView seeInboxButton = rootView.findViewById(R.id.imageViewInboxButton);
-            seeInboxButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), UserInbox.class);
-                    startActivity(intent);
-                }
-            });
-
-            messageCountText = rootView.findViewById(R.id.textViewMessageCount);
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.automobileView);
@@ -433,7 +415,6 @@ public class FragmentProfile extends Fragment {
     }
 
     private void fetchInbox() {
-        openMessage = 0;
         userInbox.clear();
         lastMessages.clear();
         conversationIDs.clear();
@@ -448,7 +429,6 @@ public class FragmentProfile extends Fragment {
 
                                 for (int i = 0; i < res.length(); i++) {
                                     JSONObject obj = res.getJSONObject(i);
-                                    System.out.println(obj);
 
                                     MessageItem item = new MessageItem();
                                     item.setID(obj.getInt("id"));
@@ -467,12 +447,10 @@ public class FragmentProfile extends Fragment {
                                         conversationIDs.add(item.getConversationID());
                                         lastMessages.add(item);
                                         if (item.getIsOpen() == 1) {
-                                            openMessage++;
+                                            Toast.makeText(getActivity(), getString(R.string.new_message), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 }
-
-                                messageCountText.setText(String.valueOf(openMessage));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -495,6 +473,24 @@ public class FragmentProfile extends Fragment {
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.edit_profile) {
+            Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.show_inbox) {
+            Intent intent = new Intent(getActivity(), UserInbox.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

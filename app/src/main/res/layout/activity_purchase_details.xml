@@ -355,13 +355,14 @@
                         android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/statusIcon"
                         android:fontFamily="@font/gotham_book"
+                        android:gravity="center"
                         android:textAlignment="center"
                         android:textColor="#161616" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/statusIcon"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_below="@id/bonus_title"
                         android:layout_alignParentStart="true"
                         android:layout_marginStart="8dp"

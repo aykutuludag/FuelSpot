@@ -323,12 +323,18 @@ public class StationDetails extends AppCompatActivity {
         RelativeLayout commentSection = findViewById(R.id.section_comment);
         noCommentText = findViewById(R.id.noCommentText);
         buttonWriteReview = findViewById(R.id.button_add_comment);
-        buttonWriteReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addUpdateCommentPopup(v);
-            }
-        });
+        if (isSuperUser) {
+            buttonWriteReview.setVisibility(View.GONE);
+        } else {
+            buttonWriteReview.setVisibility(View.VISIBLE);
+            buttonWriteReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addUpdateCommentPopup(v);
+                }
+            });
+        }
+
         commentSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,8 +374,6 @@ public class StationDetails extends AppCompatActivity {
 
         // FABs
         materialDesignFAM = findViewById(R.id.material_design_android_floating_action_menu);
-
-
         floatingActionButton1 = findViewById(R.id.fab1);
         if (isSuperUser) {
             floatingActionButton1.setVisibility(View.GONE);
@@ -1061,13 +1065,17 @@ public class StationDetails extends AppCompatActivity {
                                 hasAlreadyCommented = false;
                                 textViewStationPoint.setText(noCommentString);
                                 noCommentText.setVisibility(View.VISIBLE);
-                                buttonWriteReview.setVisibility(View.VISIBLE);
+                                if (!isSuperUser) {
+                                    buttonWriteReview.setVisibility(View.VISIBLE);
+                                }
                             }
                         } else {
                             hasAlreadyCommented = false;
                             textViewStationPoint.setText(noCommentString);
                             noCommentText.setVisibility(View.VISIBLE);
-                            buttonWriteReview.setVisibility(View.VISIBLE);
+                            if (!isSuperUser) {
+                                buttonWriteReview.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 },
@@ -1077,7 +1085,9 @@ public class StationDetails extends AppCompatActivity {
                         hasAlreadyCommented = false;
                         textViewStationPoint.setText(noCommentString);
                         noCommentText.setVisibility(View.VISIBLE);
-                        buttonWriteReview.setVisibility(View.VISIBLE);
+                        if (!isSuperUser) {
+                            buttonWriteReview.setVisibility(View.VISIBLE);
+                        }
                     }
                 }) {
             @Override

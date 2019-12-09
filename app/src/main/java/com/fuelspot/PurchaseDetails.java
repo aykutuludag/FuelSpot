@@ -273,7 +273,7 @@ public class PurchaseDetails extends AppCompatActivity {
                 addBillPhotoButton.setVisibility(View.GONE);
             } else if (isPurchaseVerified == 1) {
                 Glide.with(this).load(R.drawable.verified).apply(options).into(circleImageViewStatus);
-                String bonusText = getString(R.string.purchase_verified_pre) + String.format(Locale.getDefault(), "%.2f", bonus) + getString(R.string.purchase_verified_post);
+                String bonusText = getString(R.string.purchase_verified_pre) + " " + String.format(Locale.getDefault(), "%.2f", bonus) + getString(R.string.purchase_verified_post);
                 textViewStatus.setText(bonusText);
                 fab.hide();
 

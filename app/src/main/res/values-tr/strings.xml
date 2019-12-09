@@ -235,10 +235,10 @@
     <string name="purchase_not_verified">Satınalma onaylanmadı.</string>
     <string name="purchase_after_24hour">Üzerinden 24 saat geçmiş satınalmalara fotoğraf eklenemez…</string>
     <string name="purchase_verified_pre">Satınalma onaylandı! </string>
-    <string name="purchase_verified_post"> FP bonus hesabınıza yansıtılmıştır.</string>
+    <string name="purchase_verified_post">FP bonus hesabınıza yansıtılmıştır.</string>
     <string name="purchase_under_review">Satınalma şu an incelemede! Onaylandığı takdirde hesabına bonus yansıtılacaktır.</string>
     <string name="update_photo">Fotoğrafı güncelle</string>
-    <string name="add_bill_bonus_text_final"> Fiş/fatura fotoğrafı eklemek için son </string>
+    <string name="add_bill_bonus_text_final"> Fotoğraf eklemek için son </string>
     <string name="local_purchase_text">Daha sonra kolay hatırlamak için fiş fotoğrafı ekleyebilirsiniz.</string>
     <string name="grand_bonus">BONUS: </string>
     <string name="grand_tax">VERGİ: </string>
@@ -411,6 +411,7 @@
     <string name="inbox">Gelen kutusu</string>
     <string name="conversation_ended">Bu görüşme sonlandırılmış.</string>
     <string name="enter_message">Lütfen mesajınızı giriniz.</string>
+    <string name="new_message">Yeni mesajınız var!</string>
     <!-- MessagingActivity-->
 
     <!-- SearchActivity-->

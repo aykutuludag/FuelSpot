@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.fuelspot.R;
+import com.fuelspot.UserInbox;
 import com.fuelspot.adapter.StationAdapter;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,18 +55,10 @@ public class FragmentSuperProfile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_super_profile, container, false);
+            setHasOptionsMenu(true);
 
             // Keep screen off
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            ImageView updateUser = rootView.findViewById(R.id.updateUserInfo);
-            updateUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), SuperProfileEdit.class);
-                    startActivity(intent);
-                }
-            });
 
             // Automobiles
             mRecyclerView = rootView.findViewById(R.id.stationViewAdmin);
@@ -140,6 +135,24 @@ public class FragmentSuperProfile extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.edit_profile) {
+            Intent intent = new Intent(getActivity(), SuperProfileEdit.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.show_inbox) {
+            Intent intent = new Intent(getActivity(), UserInbox.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

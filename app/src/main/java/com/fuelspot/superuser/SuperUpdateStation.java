@@ -765,7 +765,6 @@ public class SuperUpdateStation extends AppCompatActivity {
                 params.put("electricityPrice", String.valueOf(ownedElectricityPrice));
                 String dummy2 = "[" + otherFuelObj + "]";
                 params.put("otherFuels", dummy2);
-                System.out.println(dummy2);
                 //returning parameters
                 return params;
             }

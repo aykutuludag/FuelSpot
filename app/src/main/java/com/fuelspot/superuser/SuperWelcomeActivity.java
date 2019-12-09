@@ -1063,14 +1063,18 @@ public class SuperWelcomeActivity extends AppCompatActivity implements GoogleApi
                     if (userPhoneNumber != null && userPhoneNumber.length() > 0) {
                         if (email != null && email.length() > 0) {
                             if (superLicenseNo != null && superLicenseNo.length() > 0) {
-                                if (termsAndConditions.isChecked()) {
-                                    if (isStationVerified == 0) {
-                                        superUserRegistration();
+                                if (birthday != null && birthday.length() > 0) {
+                                    if (termsAndConditions.isChecked()) {
+                                        if (isStationVerified == 0) {
+                                            superUserRegistration();
+                                        } else {
+                                            Toast.makeText(SuperWelcomeActivity.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(SuperWelcomeActivity.this, "Bu istasyon daha önce onaylanmış. Bir hata olduğunu düşünüyorsanız lütfen bizimle iletişime geçiniz.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(SuperWelcomeActivity.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Toast.makeText(SuperWelcomeActivity.this, "Lütfen şartlar ve koşulları onaylayınız.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SuperWelcomeActivity.this, "Lütfen doğum gününüzü giriniz.", Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Toast.makeText(SuperWelcomeActivity.this, "Lütfen istasyon lisans numarasını giriniz", Toast.LENGTH_LONG).show();

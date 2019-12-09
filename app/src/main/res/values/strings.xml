@@ -324,7 +324,7 @@
     <string name="purchase_not_verified">Purchase does not verified.</string>
     <string name="purchase_after_24hour">You can not add bill photo after 24 hours…</string>
     <string name="purchase_verified_pre">Purchase has been verified!</string>
-    <string name="purchase_verified_post"> FP bonus is credited to your account.</string>
+    <string name="purchase_verified_post">FP bonus is credited to your account.</string>
     <string name="purchase_under_review">Your purchase is currently under review. You will get bonus if purchase is verified.</string>
     <string name="update_photo">Update photo</string>
     <string name="add_bill_bonus_text_final"> You can add photo within </string>
@@ -497,6 +497,7 @@
     <string name="inbox">Inbox</string>
     <string name="conversation_ended">This conversation is ended.</string>
     <string name="enter_message">Please enter your message.</string>
+    <string name="new_message">You have a new message!</string>
     <!-- MessagingActivity-->
 
     <!-- SearchActivity-->

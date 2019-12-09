@@ -31,7 +31,6 @@ import java.util.Map;
 
 import static com.fuelspot.FragmentProfile.conversationIDs;
 import static com.fuelspot.FragmentProfile.lastMessages;
-import static com.fuelspot.FragmentProfile.openMessage;
 import static com.fuelspot.FragmentProfile.userInbox;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
@@ -96,7 +95,6 @@ public class UserInbox extends AppCompatActivity {
 
     // Depends on user, it changes with user comments or station comments
     private void fetchInbox() {
-        openMessage = 0;
         userInbox.clear();
         lastMessages.clear();
         conversationIDs.clear();
@@ -129,9 +127,6 @@ public class UserInbox extends AppCompatActivity {
                                     if (conversationIDs != null && !conversationIDs.contains(item.getConversationID())) {
                                         conversationIDs.add(item.getConversationID());
                                         lastMessages.add(item);
-                                        if (item.getIsOpen() == 1) {
-                                            openMessage++;
-                                        }
                                     }
                                 }
 

@@ -301,16 +301,6 @@ public class FragmentAutomobile extends Fragment {
             }
         }
 
-        //EditProfile
-        ImageView updateCar = view.findViewById(R.id.updateCarInfo);
-        updateCar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AutomobileEditActivity.class);
-                startActivity(intent);
-            }
-        });
-
         fetchVehiclePurchases();
     }
 
@@ -571,7 +561,10 @@ public class FragmentAutomobile extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_fuel) {
+        if (item.getItemId() == R.id.edit_automobile) {
+            Intent intent = new Intent(getActivity(), AutomobileEditActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.add_fuel) {
             if (userAutomobileList != null && userAutomobileList.size() > 0) {
                 Intent intent = new Intent(getActivity(), AddFuel.class);
                 showAds(getActivity(), intent);

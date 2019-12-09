@@ -21,45 +21,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp">
 
-                <ImageView
-                    android:id="@+id/imageViewInboxButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:srcCompat="@drawable/ic_inbox" />
-
-                <TextView
-                    android:id="@+id/textViewMessageCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignStart="@+id/imageViewInboxButton"
-                    android:layout_alignTop="@id/imageViewInboxButton"
-                    android:layout_alignEnd="@+id/imageViewInboxButton"
-                    android:layout_alignBottom="@+id/imageViewInboxButton"
-                    android:fontFamily="@font/gotham_bold"
-                    android:gravity="bottom|end"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#FF4500" />
-
-                <ImageView
-                    android:id="@+id/updateUserInfo"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:contentDescription="@string/edit"
-                    android:padding="4dp"
-                    app:srcCompat="@drawable/edit" />
-
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
                     android:layout_width="150dp"

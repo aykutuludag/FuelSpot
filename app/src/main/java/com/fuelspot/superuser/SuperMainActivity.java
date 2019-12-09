@@ -327,7 +327,6 @@ public class SuperMainActivity extends AppCompatActivity implements AHBottomNavi
             ArrayList<String> ownedSkus = new ArrayList<>();
             for (int i = 0; i < billingResult.getPurchasesList().size(); i++) {
                 ownedSkus.add(billingResult.getPurchasesList().get(i).getSku());
-                System.out.println(billingResult.getPurchasesList().get(i));
             }
 
             if (ownedSkus.contains("premium") || ownedSkus.contains("premium_super")) {
