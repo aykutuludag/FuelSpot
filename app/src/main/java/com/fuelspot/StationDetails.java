@@ -1,6 +1,7 @@
 package com.fuelspot;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -132,6 +133,7 @@ public class StationDetails extends AppCompatActivity {
     private List<CampaignItem> campaignList = new ArrayList<>();
     public static int stars = 5;
     public static int choosenStationID;
+    public static boolean fromNotification;
     public static int userCommentID;
     public static float numOfComments;
     public static float sumOfPoints;
@@ -461,6 +463,7 @@ public class StationDetails extends AppCompatActivity {
 
         // Nerden gelirse gelsin stationID boş olamaz.
         choosenStationID = getIntent().getIntExtra("STATION_ID", 0);
+        fromNotification = getIntent().getBooleanExtra("FROM_NOTIFICATION", false);
         stationName = getIntent().getStringExtra("STATION_NAME");
         if (stationName != null && stationName.length() > 0) {
             getSupportActionBar().setTitle(stationName);
@@ -482,7 +485,6 @@ public class StationDetails extends AppCompatActivity {
             fetchStation();
         }
 
-        // Find the Ad Container
         // Find the Ad Container
         final AdView mAdView = findViewById(R.id.nativeAdView);
         if (premium) {
@@ -725,7 +727,7 @@ public class StationDetails extends AppCompatActivity {
                 JSONArray secondaryFuelRes = new JSONArray(otherFuelsOfStation);
                 otherFuelObj = secondaryFuelRes.getJSONObject(0);
 
-                if (otherFuelObj.has("gasoline2") && otherFuelObj.getString("gasoline2").length() > 0) {
+                if (otherFuelObj.has("gasoline2") && Float.parseFloat(otherFuelObj.getString("gasoline2")) != 0) {
                     gasolinePrice2 = Float.parseFloat(otherFuelObj.getString("gasoline2"));
                     String benzin2Fiyat = gasolinePrice2 + " " + currencySymbol;
                     textGasoline2.setText(benzin2Fiyat);
@@ -733,7 +735,7 @@ public class StationDetails extends AppCompatActivity {
                     textGasoline2.setText("-");
                 }
 
-                if (otherFuelObj.has("diesel2") && otherFuelObj.getString("diesel2").length() > 0) {
+                if (otherFuelObj.has("diesel2") && Float.parseFloat(otherFuelObj.getString("diesel2")) != 0) {
                     dieselPrice2 = Float.parseFloat(otherFuelObj.getString("diesel2"));
                     String dizel2Fiyat = dieselPrice2 + " " + currencySymbol;
                     textDiesel2.setText(dizel2Fiyat);
@@ -907,6 +909,13 @@ public class StationDetails extends AppCompatActivity {
                 buyPremiumLayout.setVisibility(View.VISIBLE);
                 mStreetViewPanoramaView.setVisibility(View.GONE);
             }
+        }
+
+        // If s/he came from nofication, show reportPrices
+        if (fromNotification) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(63000);
+            reportPrices(scrollView.getRootView());
         }
 
         fetchStationFinance();

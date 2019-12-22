@@ -23,7 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.LoginActivity;
 import com.fuelspot.R;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -31,7 +30,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.firebaseToken;
 import static com.fuelspot.MainActivity.isSigned;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -71,8 +69,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             newsURL = "https://fuelspot.com.tr";
         }
 
-        MobileAds.initialize(this, getString(R.string.admobAppId));
-        AdMob(this);
         sendNotification(title, newsURL);
     }
 

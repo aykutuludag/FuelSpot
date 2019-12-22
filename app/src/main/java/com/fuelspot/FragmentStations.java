@@ -192,7 +192,7 @@ public class FragmentStations extends Fragment {
                             super.onLocationResult(locationResult);
                             Location locCurrent = locationResult.getLastLocation();
                             if (locCurrent != null) {
-                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
+                                if (locCurrent.getAccuracy() <= mapDefaultStationRange * 10) {
                                     userlat = String.valueOf(locCurrent.getLatitude());
                                     userlon = String.valueOf(locCurrent.getLongitude());
                                     prefs.edit().putString("lat", userlat).apply();

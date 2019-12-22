@@ -10,6 +10,7 @@
     <string name="bill">Fatura</string>
     <string name="delete">Sil</string>
     <string name="away">uzakta</string>
+    <string name="data_loading">Bilgiler yükleniyor</string>
     <!-- GENERAL-->
 
     <!-- LoginActivity-->
@@ -89,6 +90,7 @@
     <string name="lowest">En Düşük</string>
     <string name="last_update">Son güncelleme</string>
     <string name="registered_station_number">Kayıtlı istasyon:</string>
+    <string name="news_info">FuelSpot zam/indirim haberlerini bildirim olarak sizlerle anında paylaşmaktadır. Böylece satın almalarınızı ayarlayarak deponuzu daha ucuza doldurabilirsiniz!</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
@@ -97,6 +99,7 @@
     <string name="no_purchase_user">Henüz hiç yakıt eklememişsiniz Yakıt alımlarınız ve detayları burada listelenecek…</string>
     <string name="road_taken">| Alınan yol:</string>
     <string name="add_vehicle_first">Yakıt ekleyebilmek için otomobil eklemeniz gerekiyor.</string>
+    <string name="add_vehicle_first2">Araç düzenleyebilmek için bir araç eklemeniz gerekiyor.</string>
     <!-- FragmentAutomobile-->
 
     <!-- FragmentProfile-->
@@ -229,7 +232,7 @@
     <string name="purchase">Satınalma</string>
     <string name="type">Tür</string>
     <string name="amount">Miktar</string>
-    <string name="unit_price">Birim fiyat</string>
+    <string name="unit_price">Litre fiyatı</string>
     <string name="subtotal">Ara toplam</string>
     <string name="total">TOPLAM:</string>
     <string name="purchase_not_verified">Satınalma onaylanmadı.</string>
@@ -315,7 +318,7 @@
     <!-- NewsDetail-->
 
     <!-- AddFuel-->
-    <string name="geofence_notification_title">Yakıt mı alıyorsun? Eklemek için hemen tıkla!</string>
+    <string name="geofence_notification_title">Şu an istasyonunda mısınız?</string>
     <string name="station_info_loading">İstasyon bilgileri yükleniyor…</string>
     <string name="station_info">İstasyon bilgileri</string>
     <string name="automobile_info">Araç bilgileri</string>
@@ -330,7 +333,7 @@
     <string name="add_bill_bonus_text_pre">Fiş/Fatura fotoğrafı ekleyerek </string>
     <string name="add_bill_bonus_text_post"> FP bonus kazanabilirsiniz!</string>
     <string name="go_station_for_fuel">Şu an istasyonda değilsiniz! Yakıt ekleyebilmek için istasyonda olmanız gerekiyor.</string>
-    <string name="enter_unit_price">Lütfen yakıtın birim fiyatını giriniz.</string>
+    <string name="enter_unit_price">Lütfen yakıtın litre fiyatını giriniz.</string>
     <!-- AddFuel-->
 
     <!-- SuperWelcome-->

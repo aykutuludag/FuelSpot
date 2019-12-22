@@ -98,6 +98,7 @@
     <string name="bill">Bill</string>
     <string name="delete">Delete</string>
     <string name="away">away</string>
+    <string name="data_loading">Loading data</string>
     <!-- GENERAL-->
 
     <!-- LoginActivity-->
@@ -177,6 +178,7 @@
     <string name="lowest">Lowest</string>
     <string name="last_update">Last update</string>
     <string name="registered_station_number">Registered station number:</string>
+    <string name="news_info">FuelSpot delivers latest raise/discount news as notification. Therefore you will able to manage your purchases better and save your money!</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->
@@ -185,6 +187,7 @@
     <string name="no_purchase_user">You didn\'t purchase any fuel. Your purchases and details will be listed here…</string>
     <string name="road_taken">| Road taken:</string>
     <string name="add_vehicle_first">You have to add your vehicle before adding fuel.</string>
+    <string name="add_vehicle_first2">You have to add your vehicle before adding fuel.</string>
     <string name="plate_exist">This plate has already been added to FuelSpot. If you think this is a mistake, please contact us.</string>
     <!-- FragmentAutomobile-->
 
@@ -404,7 +407,7 @@
     <!-- NewsDetail-->
 
     <!-- AddFuel-->
-    <string name="geofence_notification_title">Are you purchasing fuel? Click here to add it!</string>
+    <string name="geofence_notification_title">Are you at fuel station right now?</string>
     <string name="station_info_loading">Station info loading…</string>
     <string name="station_info">Station info</string>
     <string name="automobile_info">Automobile info</string>

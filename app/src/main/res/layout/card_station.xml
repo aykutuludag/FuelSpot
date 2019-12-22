@@ -73,6 +73,19 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />
 
+        <TextView
+            android:id="@+id/priceGasoline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/priceGasoline"
+            android:layout_alignStart="@id/gasoline"
+            android:layout_alignEnd="@id/gasoline"
+            android:fontFamily="@font/gotham_book"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="#212121"
+            android:textSize="12sp" />
+
         <ImageView
             android:id="@+id/diesel"
             android:layout_width="0dp"
@@ -101,6 +114,19 @@
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="#212121" />
+
+        <TextView
+            android:id="@+id/priceDiesel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/priceDiesel"
+            android:layout_alignStart="@id/diesel"
+            android:layout_alignEnd="@id/diesel"
+            android:fontFamily="@font/gotham_book"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="#212121"
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/lpg"

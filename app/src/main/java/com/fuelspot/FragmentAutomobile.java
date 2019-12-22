@@ -562,8 +562,12 @@ public class FragmentAutomobile extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.edit_automobile) {
-            Intent intent = new Intent(getActivity(), AutomobileEditActivity.class);
-            startActivity(intent);
+            if (userAutomobileList != null && userAutomobileList.size() > 0) {
+                Intent intent = new Intent(getActivity(), AutomobileEditActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.add_vehicle_first2), Toast.LENGTH_LONG).show();
+            }
         } else if (item.getItemId() == R.id.add_fuel) {
             if (userAutomobileList != null && userAutomobileList.size() > 0) {
                 Intent intent = new Intent(getActivity(), AddFuel.class);

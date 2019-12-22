@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -86,6 +87,7 @@ import static com.fuelspot.superuser.SuperStoreActivity.premiumSuperSku;
 
 public class MainActivity extends AppCompatActivity implements PurchasesUpdatedListener, AHBottomNavigation.OnTabSelectedListener {
 
+    public static final String INTENT_LOAD_AD = "LOAD_AD";
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
     public static final int GOOGLE_LOGIN = 100;
@@ -131,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     public static long streetViewLastSeen, lastStationSearch;
     public static int searchCount;
     private BillingClient billingClient;
+    ProgressDialog waitForLoad;
 
     public static int getIndexOf(String[] strings, String item) {
         for (int i = 0; i < strings.length; i++) {
@@ -281,12 +284,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                         mContext.startActivity(intent);
                     }
                 }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    AdMob(mContext);
-                }
             });
 
             admobInterstitial.show();
@@ -396,38 +393,54 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         InAppBilling();
 
         // AppRater
-        AppRate.with(this).setInstallDays(0).setLaunchTimes(5).setRemindInterval(3).monitor();
+        AppRate.with(this).setInstallDays(0).setLaunchTimes(3).setRemindInterval(3).monitor();
         AppRate.showRateDialogIfMeetsConditions(this);
-
-        // Fetch automobile modes once for each session
-        fetchAutomobileModels();
 
         // Fetch user vehicles once for each session
         fetchAutomobiles();
-
-        // Fetch companies once for each session
-        fetchCompanies();
 
         // Fetch globalCampaigns once for each session
         fetchGlobalCampaigns();
 
         if (savedInstanceState == null) {
             if (isSigned) {
-                mFragNavController.switchTab(FragNavController.TAB1);
-
                 // AppDeepLinking
-                String link = getIntent().getDataString();
+                final String link = getIntent().getDataString();
                 if (link != null && link.length() > 0) {
-                    urlStructure(link);
+                    waitForLoad = new ProgressDialog(MainActivity.this);
+                    waitForLoad.setTitle(getString(R.string.data_loading));
+                    waitForLoad.setMessage(getString(R.string.please_wait));
+                    waitForLoad.setIndeterminate(true);
+                    waitForLoad.setCancelable(false);
+                    waitForLoad.show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            urlStructure(link);
+                        }
+                    }, 3500);
                 }
 
                 // Firebase Cloud Messaging
                 if (getIntent().getExtras() != null) {
-                    String link2 = getIntent().getExtras().getString("URL");
+                    final String link2 = getIntent().getExtras().getString("URL");
                     if (link2 != null && link2.length() > 0) {
-                        urlStructure(link2);
+                        waitForLoad = new ProgressDialog(MainActivity.this);
+                        waitForLoad.setTitle(getString(R.string.data_loading));
+                        waitForLoad.setMessage(getString(R.string.please_wait));
+                        waitForLoad.setIndeterminate(true);
+                        waitForLoad.setCancelable(false);
+                        waitForLoad.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                urlStructure(link2);
+                            }
+                        }, 3500);
                     }
                 }
+
+                mFragNavController.switchTab(FragNavController.TAB1);
             } else {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
@@ -437,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     }
 
     void urlStructure(String URL) {
+        waitForLoad.dismiss();
         if (URL.contains("fuelspot.com.tr/news")) {
             Intent intent = new Intent(MainActivity.this, NewsDetail.class);
             intent.putExtra("URL", URL);
@@ -610,49 +624,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         }
     }
 
-    private void fetchAutomobileModels() {
-        if (automobileModels == null || automobileModels.size() == 0) {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_MODELS),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            if (response != null && response.length() > 0) {
-                                try {
-                                    JSONArray res = new JSONArray(response);
-
-                                    for (int i = 0; i < res.length(); i++) {
-                                        JSONObject obj = res.getJSONObject(i);
-                                        VehicleItem item = new VehicleItem();
-                                        item.setID(obj.getInt("id"));
-                                        item.setVehicleBrand(obj.getString("brand"));
-                                        item.setVehicleModel(obj.getString("models"));
-                                        automobileModels.add(item);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            volleyError.printStackTrace();
-                        }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Authorization", "Bearer " + token);
-                    return headers;
-                }
-            };
-
-            //Adding request to the queue
-            queue.add(stringRequest);
-        }
-    }
-
     private void chooseVehicle(VehicleItem item) {
         vehicleID = item.getID();
         prefs.edit().putInt("vehicleID", vehicleID).apply();
@@ -685,10 +656,9 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         prefs.edit().putInt("carbonEmission", carbonEmission).apply();
     }
 
-    private void fetchCompanies() {
-        if (companyList == null || companyList.size() == 0) {
-            //Showing the progress dialog
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_COMPANY),
+    private void fetchGlobalCampaigns() {
+        if (globalCampaignList == null || globalCampaignList.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -713,72 +683,23 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                 } else {
                                     try {
                                         JSONArray res = new JSONArray(response);
-
                                         for (int i = 0; i < res.length(); i++) {
                                             JSONObject obj = res.getJSONObject(i);
 
-                                            CompanyItem item = new CompanyItem();
+                                            CampaignItem item = new CampaignItem();
                                             item.setID(obj.getInt("id"));
-                                            item.setName(obj.getString("companyName"));
-                                            item.setLogo(obj.getString("companyLogo"));
-                                            item.setWebsite(obj.getString("companyWebsite"));
-                                            item.setPhone(obj.getString("companyPhone"));
-                                            item.setAddress(obj.getString("companyAddress"));
-                                            item.setNumOfVerifieds(obj.getInt("numOfVerifieds"));
-                                            item.setNumOfStations(obj.getInt("numOfStations"));
-                                            companyList.add(item);
+                                            item.setStationID(-1);
+                                            item.setCompanyName(obj.getString("companyName"));
+                                            item.setCampaignName(obj.getString("campaignName"));
+                                            item.setCampaignDesc(obj.getString("campaignDesc"));
+                                            item.setCampaignPhoto(obj.getString("campaignPhoto"));
+                                            item.setCampaignStart(obj.getString("campaignStart"));
+                                            item.setCampaignEnd(obj.getString("campaignEnd"));
+                                            globalCampaignList.add(item);
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                }
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            volleyError.printStackTrace();
-                        }
-                    }) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    HashMap<String, String> headers = new HashMap<>();
-                    headers.put("Authorization", "Bearer " + token);
-                    return headers;
-                }
-            };
-
-            //Adding request to the queue
-            queue.add(stringRequest);
-        }
-    }
-
-    private void fetchGlobalCampaigns() {
-        if (globalCampaignList == null || globalCampaignList.size() == 0) {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_GLOBAL_CAMPAINGS),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            if (response != null && response.length() > 0) {
-                                try {
-                                    JSONArray res = new JSONArray(response);
-                                    for (int i = 0; i < res.length(); i++) {
-                                        JSONObject obj = res.getJSONObject(i);
-
-                                        CampaignItem item = new CampaignItem();
-                                        item.setID(obj.getInt("id"));
-                                        item.setStationID(-1);
-                                        item.setCompanyName(obj.getString("companyName"));
-                                        item.setCampaignName(obj.getString("campaignName"));
-                                        item.setCampaignDesc(obj.getString("campaignDesc"));
-                                        item.setCampaignPhoto(obj.getString("campaignPhoto"));
-                                        item.setCampaignStart(obj.getString("campaignStart"));
-                                        item.setCampaignEnd(obj.getString("campaignEnd"));
-                                        globalCampaignList.add(item);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
                                 }
                             }
                         }
@@ -926,7 +847,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
 
                 new Handler().postDelayed(new Runnable() {
-
                     @Override
                     public void run() {
                         doubleBackToExitPressedOnce = false;

@@ -85,7 +85,7 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
 
     private Bitmap bitmap;
     private CircleImageView carPic;
-    private Spinner spinner2;
+    private Spinner spinner, spinner2;
     private SharedPreferences.Editor editor;
     private Window window;
     private Toolbar toolbar;
@@ -146,21 +146,25 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
         });
 
         //MARKA SEÇİMİ
-        String[] carManufactures = new String[automobileModels.size()];
-
-        for (int i = 0; i < automobileModels.size(); i++) {
-            carManufactures[i] = automobileModels.get(i).getVehicleBrand();
-        }
-
-        Spinner spinner = findViewById(R.id.spinner_brands);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carManufactures);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(MainActivity.getIndexOf(carManufactures, MainActivity.carBrand), true);
+        spinner = findViewById(R.id.spinner_brands);
 
         //MODEL SEÇİMİ
         spinner2 = findViewById(R.id.spinner_models);
+
+        if (automobileModels != null && automobileModels.size() > 0) {
+            String[] carManufactures = new String[automobileModels.size()];
+
+            for (int i = 0; i < automobileModels.size(); i++) {
+                carManufactures[i] = automobileModels.get(i).getVehicleBrand();
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carManufactures);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setOnItemSelectedListener(this);
+            spinner.setAdapter(adapter);
+        } else {
+            fetchAutomobileModels();
+        }
 
         //Yakıt seçenekleri
         RadioButton gasoline = findViewById(R.id.gasoline);
@@ -347,6 +351,60 @@ public class AutomobileEditActivity extends AppCompatActivity implements Adapter
                         }).show();
             }
         });
+    }
+
+    private void fetchAutomobileModels() {
+        if (automobileModels == null || automobileModels.size() == 0) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_AUTOMOBILE_MODELS),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response != null && response.length() > 0) {
+                                try {
+                                    JSONArray res = new JSONArray(response);
+
+                                    for (int i = 0; i < res.length(); i++) {
+                                        JSONObject obj = res.getJSONObject(i);
+                                        VehicleItem item = new VehicleItem();
+                                        item.setID(obj.getInt("id"));
+                                        item.setVehicleBrand(obj.getString("brand"));
+                                        item.setVehicleModel(obj.getString("models"));
+                                        automobileModels.add(item);
+                                    }
+
+                                    String[] carManufactures = new String[automobileModels.size()];
+
+                                    for (int i = 0; i < automobileModels.size(); i++) {
+                                        carManufactures[i] = automobileModels.get(i).getVehicleBrand();
+                                    }
+
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(AutomobileEditActivity.this, android.R.layout.simple_spinner_item, carManufactures);
+                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spinner.setOnItemSelectedListener(AutomobileEditActivity.this);
+                                    spinner.setAdapter(adapter);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            volleyError.printStackTrace();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
+
+            //Adding request to the queue
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void updateVehicle() {

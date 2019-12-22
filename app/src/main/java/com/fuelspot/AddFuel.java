@@ -1,6 +1,7 @@
 package com.fuelspot;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -107,6 +108,7 @@ public class AddFuel extends AppCompatActivity {
     private RequestQueue requestQueue;
     private RequestOptions options;
     private int chosenStationID, tempKM;
+    private boolean fromNotification;
     private String stationName, stationAddress, stationLoc, stationLogo;
     private float gasolinePrice, dieselPrice, LPGPrice, electricityPrice, selectedUnitPrice, buyedLiter, entryPrice, selectedTaxRate, selectedUnitPrice2, buyedLiter2, entryPrice2, selectedTaxRate2, totalPrice;
     /* LAYOUT 1 ÖĞELER */
@@ -147,6 +149,10 @@ public class AddFuel extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(AddFuel.this);
         options = new RequestOptions().centerCrop().placeholder(R.drawable.icon_upload).error(R.drawable.icon_upload)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
+        // Cancel notification
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(63000);
 
         // ProgressDialogs
         stationFetching = new ProgressDialog(AddFuel.this);
@@ -207,6 +213,7 @@ public class AddFuel extends AppCompatActivity {
         textViewLitre2.setEnabled(false);
 
         chosenStationID = getIntent().getIntExtra("STATION_ID", 0);
+        fromNotification = getIntent().getBooleanExtra("FROM_NOTIFICATION", false);
         if (chosenStationID != 0) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setLogo(R.drawable.brand_logo);
@@ -667,6 +674,9 @@ public class AddFuel extends AppCompatActivity {
             }
         });
 
+        // This section initiate bonus text
+        updateTaxandGrandTotal();
+
         photoHolder = findViewById(R.id.photoHolder);
 
         buttonAddBill = findViewById(R.id.button_add_bill);
@@ -775,6 +785,10 @@ public class AddFuel extends AppCompatActivity {
                                                 dieselPrice = 0.00f;
                                                 electricityPrice = 0.00f;
                                                 LPGPrice = 0.00f;
+                                                if (fromNotification) {
+                                                    Intent intent = new Intent(AddFuel.this, LoginActivity.class);
+                                                    startActivity(intent);
+                                                }
                                                 dialog.dismiss();
                                                 finish();
                                             }

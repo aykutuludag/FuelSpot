@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 
-import androidx.annotation.NonNull;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,8 +22,6 @@ import com.google.android.gms.awareness.fence.AwarenessFence;
 import com.google.android.gms.awareness.fence.FenceUpdateRequest;
 import com.google.android.gms.awareness.fence.LocationFence;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -115,7 +111,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         super.onLocationResult(locationResult);
                         Location locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
-                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 5) {
+                            if (locCurrent.getAccuracy() <= mapDefaultStationRange * 10) {
                                 Location locLastKnown = new Location("");
                                 locLastKnown.setLatitude(Double.parseDouble(userlat));
                                 locLastKnown.setLongitude(Double.parseDouble(userlon));
@@ -230,16 +226,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void registerFence(final String fenceKey, final AwarenessFence fence) {
         Intent intent = new Intent(FENCE_RECEIVER_ACTION);
         mPendingIntent = PendingIntent.getBroadcast(mContext, 13200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Awareness.FenceApi.updateFences(client, new FenceUpdateRequest.Builder().addFence(fenceKey, fence, mPendingIntent).build()).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    System.out.println("Fence was successfully registered.");
-                } else {
-                    System.out.println("Fence could not be registered: " + status);
-                }
-            }
-        });
+        Awareness.FenceApi.updateFences(client, new FenceUpdateRequest.Builder().addFence(fenceKey, fence, mPendingIntent).build());
 
         if (doesLocationWorking) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);

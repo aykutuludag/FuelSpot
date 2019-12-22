@@ -58,6 +58,7 @@ import java.util.Map;
 
 import static com.fuelspot.MainActivity.AdMob;
 import static com.fuelspot.MainActivity.GOOGLE_LOGIN;
+import static com.fuelspot.MainActivity.admobInterstitial;
 import static com.fuelspot.MainActivity.birthday;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.email;
@@ -245,7 +246,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             // Check premium
             if (!premium) {
-                AdMob(LoginActivity.this);
+                if (admobInterstitial == null || !admobInterstitial.isLoaded()) {
+                    AdMob(LoginActivity.this);
+                }
             }
 
             // Maybe she came from firebase notification. Redirect with url

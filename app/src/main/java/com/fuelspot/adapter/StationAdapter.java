@@ -28,6 +28,10 @@ import com.fuelspot.StationDetails;
 import com.fuelspot.model.StationItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -240,6 +244,34 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             }
         }
 
+        // Second fuels
+        if (feedItem.getOtherFuels() != null && feedItem.getOtherFuels().length() > 0) {
+            try {
+                JSONArray secondaryFuelRes = new JSONArray(feedItem.getOtherFuels());
+                JSONObject otherFuelObj = secondaryFuelRes.getJSONObject(0);
+
+                if (otherFuelObj.has("gasoline2") && Float.parseFloat(otherFuelObj.getString("gasoline2")) != 0) {
+                    float gasolinePrice2 = Float.parseFloat(otherFuelObj.getString("gasoline2"));
+                    String benzin2Fiyat = gasolinePrice2 + " " + currencySymbol;
+                    viewHolder.gasolinePrice2.setText(benzin2Fiyat);
+                } else {
+                    viewHolder.gasolinePrice2.setText("-");
+                }
+
+                if (otherFuelObj.has("diesel2") && Float.parseFloat(otherFuelObj.getString("diesel2")) != 0) {
+                    float dieselPrice2 = Float.parseFloat(otherFuelObj.getString("diesel2"));
+                    String dizel2Fiyat = dieselPrice2 + " " + currencySymbol;
+                    viewHolder.dieselPrice2.setText(dizel2Fiyat);
+                } else {
+                    viewHolder.dieselPrice2.setText("-");
+                }
+            } catch (JSONException e) {
+                viewHolder.gasolinePrice2.setVisibility(View.GONE);
+                viewHolder.dieselPrice2.setVisibility(View.GONE);
+                e.printStackTrace();
+            }
+        }
+
         if (whichScreen.equals("SUPERUSER_STATIONS")) {
             if (feedItem.getID() == superStationID) {
                 viewHolder.background.setBackgroundResource(R.drawable.white_box_stroke);
@@ -260,7 +292,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView stationName, gasolinePrice, dieselPrice, lpgPrice, electricityPrice, distance;
+        TextView stationName, gasolinePrice, dieselPrice, lpgPrice, electricityPrice, distance, gasolinePrice2, dieselPrice2;
         RelativeTimeTextView lastUpdated;
         ImageView stationPic;
         RelativeLayout background;
@@ -276,6 +308,8 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             lastUpdated = itemView.findViewById(R.id.stationLastUpdate);
             stationPic = itemView.findViewById(R.id.station_photo);
             distance = itemView.findViewById(R.id.distance_ofStation);
+            gasolinePrice2 = itemView.findViewById(R.id.priceGasoline2);
+            dieselPrice2 = itemView.findViewById(R.id.priceDiesel2);
         }
     }
 }

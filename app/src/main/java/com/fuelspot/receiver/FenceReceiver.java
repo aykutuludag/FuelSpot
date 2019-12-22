@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.fuelspot.AddFuel;
 import com.fuelspot.R;
+import com.fuelspot.StationDetails;
 import com.google.android.gms.awareness.fence.FenceState;
 
 import static com.fuelspot.MainActivity.FENCE_RECEIVER_ACTION;
@@ -50,10 +51,18 @@ public class FenceReceiver extends BroadcastReceiver {
     }
 
     private void sendNotification(String stationID) {
-        Intent intentLauncher = new Intent(mContext, AddFuel.class);
-        intentLauncher.putExtra("STATION_ID", Integer.parseInt(stationID));
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, 13200, intentLauncher, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Intent intentAddFuel = new Intent(mContext, AddFuel.class);
+        intentAddFuel.putExtra("STATION_ID", Integer.parseInt(stationID));
+        intentAddFuel.putExtra("FROM_NOTIFICATION", true);
+        PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, 13200, intentAddFuel, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Intent intentReportPrice = new Intent(mContext, StationDetails.class);
+        intentReportPrice.putExtra("STATION_ID", Integer.parseInt(stationID));
+        intentReportPrice.putExtra("FROM_NOTIFICATION", true);
+        PendingIntent mPendingIntent2 = PendingIntent.getActivity(mContext, 13200, intentReportPrice, PendingIntent.FLAG_CANCEL_CURRENT);
+
 
         NotificationCompat.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -75,13 +84,14 @@ public class FenceReceiver extends BroadcastReceiver {
                 .setContentText(mContext.getString(R.string.geofence_notification_title))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                .setContentIntent(mPendingIntent)
+                .addAction(R.drawable.ic_add_fuel, mContext.getString(R.string.add_fuel), mPendingIntent)
+                .addAction(R.drawable.money, mContext.getString(R.string.fab_report_price), mPendingIntent2)
                 .setLargeIcon(bm)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setVibrate(new long[]{500, 500, 500, 500});
 
         // Send notification
         Notification notification = builder.build();
-        notificationManager.notify(0, notification);
+        notificationManager.notify(63000, notification);
     }
 }
