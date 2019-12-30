@@ -87,7 +87,6 @@ import static com.fuelspot.superuser.SuperStoreActivity.premiumSuperSku;
 
 public class MainActivity extends AppCompatActivity implements PurchasesUpdatedListener, AHBottomNavigation.OnTabSelectedListener {
 
-    public static final String INTENT_LOAD_AD = "LOAD_AD";
     public static final int REQUEST_STORAGE = 0;
     public static final int REQUEST_LOCATION = 1;
     public static final int GOOGLE_LOGIN = 100;
@@ -309,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
         }
     }
 

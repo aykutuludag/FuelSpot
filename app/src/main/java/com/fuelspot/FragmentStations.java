@@ -491,7 +491,7 @@ public class FragmentStations extends Fragment {
                                 sortBy(whichOrder);
 
                                 if (fullStationList.size() == 33) {
-                                    Toast.makeText(getActivity(), "Size en yakın 33 istasyonu görmektesiniz.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), getString(R.string.limited_33), Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(getActivity(), getString(R.string.station_found_pretext) + " " + fullStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
                                 }
