@@ -99,6 +99,7 @@ import static com.fuelspot.MainActivity.PERMISSIONS_LOCATION;
 import static com.fuelspot.MainActivity.REQUEST_LOCATION;
 import static com.fuelspot.MainActivity.fuelPri;
 import static com.fuelspot.MainActivity.fullStationList;
+import static com.fuelspot.MainActivity.isGeofenceOpen;
 import static com.fuelspot.MainActivity.isLocationEnabled;
 import static com.fuelspot.MainActivity.isNetworkConnected;
 import static com.fuelspot.MainActivity.isSuperUser;
@@ -479,10 +480,14 @@ public class FragmentStations extends Fragment {
                                         // Sort by distance
                                         whichOrder = 4;
                                     } else {
-                                        AlarmBuilder(getActivity());
-
                                         // Sort by fuelType
                                         whichOrder = fuelPri;
+
+                                        if (isGeofenceOpen) {
+                                            AlarmBuilder(getActivity());
+                                        } else {
+                                            cancelGeofenceAlarm();
+                                        }
                                     }
 
                                     ((MainActivity) getActivity()).bottomNavigation.setNotification(fullStationList.size(), 0);

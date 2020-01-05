@@ -7,7 +7,7 @@
     android:layout_margin="8dp"
     android:background="@drawable/white_box"
     android:elevation="4dp"
-    android:padding="2dp">
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/popup_comment_title"
@@ -15,40 +15,53 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:text="@string/add_comment"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#161616"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ratingBar"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/popup_comment_title"
+        android:layout_margin="8dp"
         android:ems="10"
+        android:hint="@string/add_comment"
         android:inputType="textMultiLine"
+        android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/popup_comment_title"
+        android:layout_below="@+id/editTextComment"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:scaleX="0.75"
         android:scaleY="0.75"
         android:stepSize="1" />
+
+    <ImageView
+        android:id="@+id/imageViewCommentPic"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/ratingBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/icon_upload" />
 
     <Button
         android:id="@+id/buttonSendComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextComment"
+        android:layout_below="@+id/imageViewCommentPic"
         android:layout_centerHorizontal="true"
         android:layout_margin="8dp"
         android:background="@drawable/orange_box"

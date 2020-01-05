@@ -255,6 +255,16 @@
                 </androidx.percentlayout.widget.PercentRelativeLayout>
             </androidx.percentlayout.widget.PercentRelativeLayout>
 
+            <com.yqritc.scalableimageview.ScalableImageView
+                android:id="@+id/imageViewBillPic"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/bill_section"
+
+                android:src="@drawable/icon_upload"
+                android:visibility="gone"
+                app:scalableType="centerCrop" />
+
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/purchaseTime"
                 android:layout_width="wrap_content"

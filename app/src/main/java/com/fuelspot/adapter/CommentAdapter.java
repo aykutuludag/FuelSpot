@@ -39,6 +39,7 @@ import com.fuelspot.StationDetails;
 import com.fuelspot.model.CommentItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.google.android.material.snackbar.Snackbar;
+import com.yqritc.scalableimageview.ScalableImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -395,6 +396,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         LayerDrawable stars = (LayerDrawable) viewHolder.rating.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.parseColor("#2DE878"), PorterDuff.Mode.SRC_ATOP);
 
+        if (feedItem.getCommentPhoto() != null && feedItem.getCommentPhoto().length() > 0) {
+            viewHolder.commentPhoto.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(feedItem.getCommentPhoto()).into(viewHolder.commentPhoto);
+        }
+
         if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
             viewHolder.answerView.setVisibility(View.VISIBLE);
 
@@ -428,6 +434,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         RelativeTimeTextView time, replyTime;
         ImageView profilePic, logo;
         RatingBar rating;
+        ScalableImageView commentPhoto;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -441,6 +448,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             answerHolder = itemView.findViewById(R.id.answer);
             replyTime = itemView.findViewById(R.id.textViewReplyTime);
             logo = itemView.findViewById(R.id.imageViewLogo);
+            commentPhoto = itemView.findViewById(R.id.imageViewPicture);
         }
     }
 }

@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,6 +29,8 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +61,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private SharedPreferences prefs;
     private FusedLocationProviderClient mFusedLocationClient;
     int radius = 5000;
+    Location locCurrent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -71,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // If phone restarted, this section detects that and reschedule alarm
                 scheduleAlarm();
             } else {
-                // Every 60 mins, re-create fences.
+                // Every 15 mins, re-create fences.
                 createFences();
             }
         }
@@ -85,7 +90,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, mPendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
         }
     }
 
@@ -99,8 +104,61 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .build();
         client.connect();
 
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                // Got last known location. In some rare situations this can be null.
+                if (location != null && location.getAccuracy() <= mapDefaultStationRange * 10) {
+                    if (System.currentTimeMillis() - location.getTime() <= 10 * 60 * 1000) {
+                        locCurrent = location;
+
+                        Location locLastKnown = new Location("");
+                        locLastKnown.setLatitude(Double.parseDouble(userlat));
+                        locLastKnown.setLongitude(Double.parseDouble(userlon));
+
+                        userlat = String.valueOf(locCurrent.getLatitude());
+                        userlon = String.valueOf(locCurrent.getLongitude());
+                        prefs.edit().putString("lat", userlat).apply();
+                        prefs.edit().putString("lon", userlon).apply();
+
+                        float distanceInMeter = locLastKnown.distanceTo(locCurrent);
+
+                        if (fullStationList != null) {
+                            if (fullStationList.size() == 0 || (distanceInMeter >= (mapDefaultRange / 2f))) {
+                                // User's position has been changed. Load new stations
+                                fetchStations();
+                            } else {
+                                for (int i = 0; i < fullStationList.size(); i++) {
+                                    double stationLat = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[0]);
+                                    double stationLon = Double.parseDouble(fullStationList.get(i).getLocation().split(";")[1]);
+                                    locationFence = LocationFence.in(stationLat, stationLon, 50, 10000L);
+                                    AwarenessFence userAtStation = AwarenessFence.and(locationFence);
+                                    registerFence(String.valueOf(fullStationList.get(i).getID()), userAtStation);
+                                }
+                            }
+                        } else {
+                            fetchStations();
+                        }
+                    } else {
+                        getNewLocation(mContext);
+                    }
+                } else {
+                    getNewLocation(mContext);
+                }
+            }
+        });
+
+        mFusedLocationClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                getNewLocation(mContext);
+            }
+        });
+    }
+
+    void getNewLocation(final Context mContext) {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(60 * 60 * 1000);
+        mLocationRequest.setInterval(5000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationCallback = new LocationCallback() {
@@ -109,7 +167,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 if (mContext != null && locationResult != null) {
                     synchronized (this) {
                         super.onLocationResult(locationResult);
-                        Location locCurrent = locationResult.getLastLocation();
+                        locCurrent = locationResult.getLastLocation();
                         if (locCurrent != null) {
                             if (locCurrent.getAccuracy() <= mapDefaultStationRange * 10) {
                                 Location locLastKnown = new Location("");
@@ -229,7 +287,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Awareness.FenceApi.updateFences(client, new FenceUpdateRequest.Builder().addFence(fenceKey, fence, mPendingIntent).build());
 
         if (doesLocationWorking) {
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+            if (mLocationCallback != null) {
+                mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+            }
             doesLocationWorking = false;
         }
     }

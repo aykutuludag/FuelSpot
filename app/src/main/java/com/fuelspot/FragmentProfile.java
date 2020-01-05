@@ -371,6 +371,7 @@ public class FragmentProfile extends Fragment {
                                     item.setUsername(obj.getString("username"));
                                     item.setProfile_pic(obj.getString("user_photo"));
                                     item.setRating(obj.getInt("stars"));
+                                    item.setCommentPhoto(obj.getString("comment_photo"));
                                     item.setAnswer(obj.getString("answer"));
                                     item.setReplyTime(obj.getString("replyTime"));
                                     item.setLogo(obj.getString("logo"));

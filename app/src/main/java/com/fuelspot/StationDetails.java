@@ -171,8 +171,7 @@ public class StationDetails extends AppCompatActivity {
     private Button seeAllComments, buttonWriteReview;
     private LineChart chart;
     private Bitmap bitmap;
-    private ImageView reportStationPhoto;
-    private ImageView reportPricePhoto;
+    private ImageView reportStationPhoto, reportPricePhoto, commentStationPhoto;
     private RequestOptions options;
     private SharedPreferences prefs;
     private int reportRequest;
@@ -1027,6 +1026,7 @@ public class StationDetails extends AppCompatActivity {
                                     item.setProfile_pic(obj.getString("user_photo"));
                                     item.setUsername(obj.getString("username"));
                                     item.setRating(obj.getInt("stars"));
+                                    item.setCommentPhoto(obj.getString("comment_photo"));
                                     item.setAnswer(obj.getString("answer"));
                                     item.setReplyTime(obj.getString("replyTime"));
                                     item.setLogo(obj.getString("logo"));
@@ -1112,6 +1112,9 @@ public class StationDetails extends AppCompatActivity {
     }
 
     private void addUpdateCommentPopup(View view) {
+        // Clear image
+        bitmap = null;
+
         LayoutInflater inflater = (LayoutInflater) StationDetails.this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_comment, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1179,6 +1182,19 @@ public class StationDetails extends AppCompatActivity {
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.parseColor("#2DE878"), PorterDuff.Mode.SRC_ATOP);
 
+        commentStationPhoto = customView.findViewById(R.id.imageViewCommentPic);
+        commentStationPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reportRequest = 2;
+                if (MainActivity.verifyFilePickerPermission(StationDetails.this)) {
+                    ImagePicker.create(StationDetails.this).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(StationDetails.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
+
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
         // Set a click listener for the popup window close button
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -1232,6 +1248,11 @@ public class StationDetails extends AppCompatActivity {
                 params.put("username", username);
                 params.put("stars", String.valueOf(stars));
                 params.put("user_photo", photo);
+                if (bitmap != null) {
+                    params.put("commentPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("commentPhoto", "");
+                }
 
                 //returning parameters
                 return params;
@@ -1664,6 +1685,9 @@ public class StationDetails extends AppCompatActivity {
                             break;
                         case 1:
                             Glide.with(StationDetails.this).load(bitmap).apply(options).into(reportPricePhoto);
+                            break;
+                        case 2:
+                            Glide.with(StationDetails.this).load(bitmap).apply(options).into(commentStationPhoto);
                             break;
                     }
                 } catch (IOException e) {

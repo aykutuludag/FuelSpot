@@ -17,6 +17,7 @@ import com.fuelspot.PurchaseDetails;
 import com.fuelspot.R;
 import com.fuelspot.model.PurchaseItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.yqritc.scalableimageview.ScalableImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -188,6 +189,11 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             viewHolder.textViewTrip.setText(noTrip);
         }
 
+        if (feedItem.getBillPhoto() != null && feedItem.getBillPhoto().length() > 0) {
+            viewHolder.imageViewBillPhoto.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(feedItem.getBillPhoto()).into(viewHolder.imageViewBillPhoto);
+        }
+
         // Handle click event on image click
         viewHolder.backgroundClick.setOnClickListener(clickListener);
         viewHolder.backgroundClick.setTag(viewHolder);
@@ -205,6 +211,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         ImageView type1, type2;
         CircleImageView stationLogo;
         RelativeTimeTextView purchaseTime;
+        ScalableImageView imageViewBillPhoto;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -229,6 +236,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
             textviewKM = itemView.findViewById(R.id.textViewKilometer);
             textViewTrip = itemView.findViewById(R.id.textViewkmChange);
+            imageViewBillPhoto = itemView.findViewById(R.id.imageViewBillPic);
         }
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_comment"
     android:layout_width="wrap_content"
@@ -76,11 +77,20 @@
                 android:scaleX="0.4"
                 android:scaleY="0.4" />
 
+            <com.yqritc.scalableimageview.ScalableImageView
+                android:id="@+id/imageViewPicture"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_below="@+id/ratingBar"
+                android:src="@drawable/icon_upload"
+                android:visibility="gone"
+                app:scalableType="centerCrop" />
+
             <RelativeLayout
                 android:id="@+id/answerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ratingBar"
+                android:layout_below="@id/imageViewPicture"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"

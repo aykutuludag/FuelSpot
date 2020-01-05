@@ -552,6 +552,7 @@ public class SearchActivity extends AppCompatActivity {
         intent.putExtra("IS_VERIFIED", feedItemList.getIsVerified());
         intent.putExtra("STATION_FACILITIES", feedItemList.getFacilities());
         showAds(SearchActivity.this, intent);
+        finish();
     }
 
 

@@ -9,6 +9,7 @@ public class CommentItem {
     private String username;
     private String profile_pic;
     private int rate;
+    private String commentPhoto;
     private String answer;
     private String replyTime;
     private String logo;
@@ -67,6 +68,14 @@ public class CommentItem {
 
     public void setRating(int rate) {
         this.rate = rate;
+    }
+
+    public String getCommentPhoto() {
+        return commentPhoto;
+    }
+
+    public void setCommentPhoto(String commentPhoto) {
+        this.commentPhoto = commentPhoto;
     }
 
     public String getAnswer() {
