@@ -393,9 +393,9 @@
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chartPriceIndex"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="325dp"
                     android:layout_below="@id/subtitle0"
-                    android:layout_marginTop="4dp" />
+                    android:layout_margin="4dp" />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/chart3"
