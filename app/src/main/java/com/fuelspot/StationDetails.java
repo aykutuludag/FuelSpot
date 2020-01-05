@@ -138,7 +138,7 @@ public class StationDetails extends AppCompatActivity {
     public static float numOfComments;
     public static float sumOfPoints;
     public static float stationScore;
-    public static String userComment;
+    public static String userComment, commentPhoto;
     public static boolean hasAlreadyCommented;
     private static int isStationVerified;
     JSONObject otherFuelObj;
@@ -1043,6 +1043,7 @@ public class StationDetails extends AppCompatActivity {
                                         userCommentID = obj.getInt("id");
                                         userComment = obj.getString("comment");
                                         stars = obj.getInt("stars");
+                                        commentPhoto = obj.getString("comment_photo");
                                     }
 
                                     sumOfPoints += obj.getInt("stars");
@@ -1183,6 +1184,9 @@ public class StationDetails extends AppCompatActivity {
         stars.getDrawable(2).setColorFilter(Color.parseColor("#2DE878"), PorterDuff.Mode.SRC_ATOP);
 
         commentStationPhoto = customView.findViewById(R.id.imageViewCommentPic);
+        if (commentPhoto != null && commentPhoto.length() > 0) {
+            Glide.with(StationDetails.this).load(commentPhoto).apply(options).into(commentStationPhoto);
+        }
         commentStationPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1304,9 +1308,16 @@ public class StationDetails extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
+                params.put("username", username);
+                params.put("stationID", String.valueOf(choosenStationID));
                 params.put("commentID", String.valueOf(userCommentID));
                 params.put("comment", userComment);
                 params.put("stars", String.valueOf(stars));
+                if (bitmap != null) {
+                    params.put("commentPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("commentPhoto", "");
+                }
 
                 //returning parameters
                 return params;

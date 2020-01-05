@@ -1,6 +1,10 @@
 package com.fuelspot;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +25,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,6 +40,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.model.CommentItem;
 import com.github.clans.fab.FloatingActionButton;
@@ -43,16 +55,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
+import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.dimBehind;
+import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
+import static com.fuelspot.MainActivity.resizeAndRotate;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.StationDetails.choosenStationID;
+import static com.fuelspot.StationDetails.commentPhoto;
 import static com.fuelspot.StationDetails.hasAlreadyCommented;
 import static com.fuelspot.StationDetails.numOfComments;
 import static com.fuelspot.StationDetails.stars;
@@ -73,6 +91,9 @@ public class StationComments extends AppCompatActivity {
     private Toolbar toolbar;
     private FloatingActionMenu materialDesignFAM;
     private int istasyonID;
+    ImageView commentStationPhoto;
+    Bitmap bitmap;
+    private RequestOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +112,8 @@ public class StationComments extends AppCompatActivity {
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         //Comments
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.default_station).error(R.drawable.default_station)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         requestQueue = Volley.newRequestQueue(StationComments.this);
         mRecyclerView = findViewById(R.id.commentView);
 
@@ -220,6 +243,18 @@ public class StationComments extends AppCompatActivity {
             }
         });
 
+        commentStationPhoto = customView.findViewById(R.id.imageViewCommentPic);
+        commentStationPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivity.verifyFilePickerPermission(StationComments.this)) {
+                    ImagePicker.create(StationComments.this).single().start();
+                } else {
+                    ActivityCompat.requestPermissions(StationComments.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                }
+            }
+        });
+
         ImageView closeButton = customView.findViewById(R.id.imageViewClose);
         // Set a click listener for the popup window close button
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -267,9 +302,16 @@ public class StationComments extends AppCompatActivity {
                 Map<String, String> params = new Hashtable<>();
 
                 //Adding parameters
+                params.put("username", username);
+                params.put("stationID", String.valueOf(choosenStationID));
                 params.put("commentID", String.valueOf(userCommentID));
                 params.put("comment", userComment);
                 params.put("stars", String.valueOf(stars));
+                if (bitmap != null) {
+                    params.put("commentPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("commentPhoto", "");
+                }
 
                 //returning parameters
                 return params;
@@ -330,6 +372,11 @@ public class StationComments extends AppCompatActivity {
                 params.put("username", username);
                 params.put("stars", String.valueOf(stars));
                 params.put("user_photo", photo);
+                if (bitmap != null) {
+                    params.put("commentPhoto", getStringImage(bitmap));
+                } else {
+                    params.put("commentPhoto", "");
+                }
 
                 //returning parameters
                 return params;
@@ -377,6 +424,7 @@ public class StationComments extends AppCompatActivity {
                                         userCommentID = obj.getInt("id");
                                         userComment = obj.getString("comment");
                                         stars = obj.getInt("stars");
+                                        commentPhoto = obj.getString("comment_photo");
                                     }
                                 }
 
@@ -433,6 +481,52 @@ public class StationComments extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == REQUEST_STORAGE) {
+            if (ActivityCompat.checkSelfPermission(StationComments.this, PERMISSIONS_STORAGE[1]) == PackageManager.PERMISSION_GRANTED) {
+                ImagePicker.create(StationComments.this).single().start();
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.permission_denied), Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Imagepicker
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            if (image != null) {
+                try {
+                    bitmap = BitmapFactory.decodeFile(image.getPath());
+                    ExifInterface ei = new ExifInterface(image.getPath());
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_NORMAL:
+                            bitmap = resizeAndRotate(bitmap, 0);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            bitmap = resizeAndRotate(bitmap, 90);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            bitmap = resizeAndRotate(bitmap, 180);
+                            break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            bitmap = resizeAndRotate(bitmap, 270);
+                            break;
+                    }
+
+                    Glide.with(StationComments.this).load(bitmap).apply(options).into(commentStationPhoto);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
