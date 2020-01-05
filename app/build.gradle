@@ -9,8 +9,8 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 93
-        versionName "1.4"
+        versionCode 94
+        versionName "1.4.1"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
         resConfigs "en", "tr"

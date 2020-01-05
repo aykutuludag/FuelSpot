@@ -29,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fuelspot.R;
 import com.fuelspot.model.CampaignItem;
 import com.fuelspot.superuser.SuperCampaings;
+import com.yqritc.scalableimageview.ScalableImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -134,7 +135,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
         SimpleDateFormat dtformat = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
         SimpleDateFormat shortFormat = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
 
-        ImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
+        ScalableImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
         Glide.with(mContext).load(cItem.getCampaignPhoto()).into(imgPopup);
 
         TextView titlePopup = customView.findViewById(R.id.campaignTitle);
@@ -255,7 +256,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
 
         CardView cardView;
         TextView campaignTitle;
-        ImageView campaignPhoto;
+        ScalableImageView campaignPhoto;
 
         ViewHolder(View itemView) {
             super(itemView);

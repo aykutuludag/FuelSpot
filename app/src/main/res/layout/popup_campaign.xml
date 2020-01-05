@@ -8,15 +8,14 @@
     android:background="@drawable/white_box"
     android:padding="4dp">
 
-    <ImageView
+    <com.yqritc.scalableimageview.ScalableImageView
         android:id="@+id/campaignPhoto"
         android:layout_width="match_parent"
-        android:layout_height="225dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/white_box"
+        android:layout_height="250dp"
         android:contentDescription="@string/campaign_photo"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/default_campaign" />
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/default_campaign"
+        app:scalableType="centerCrop" />
 
     <RelativeLayout
         android:layout_width="match_parent"
