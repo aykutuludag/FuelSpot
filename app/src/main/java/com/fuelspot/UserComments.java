@@ -3,7 +3,6 @@ package com.fuelspot;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -76,17 +75,22 @@ public class UserComments extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        loadComments();
     }
 
     private void loadComments() {
-        mAdapter = new CommentAdapter(UserComments.this, userCommentList, "USER_COMMENTS");
-        mLayoutManager = new GridLayoutManager(UserComments.this, 1);
+        if (userCommentList != null && userCommentList.size() > 0) {
+            mAdapter = new CommentAdapter(UserComments.this, userCommentList, "USER_COMMENTS");
+            mLayoutManager = new GridLayoutManager(UserComments.this, 1);
 
-        mAdapter.notifyDataSetChanged();
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        swipeContainer.setRefreshing(false);
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            swipeContainer.setRefreshing(false);
+        } else {
+            fetchComments();
+        }
     }
 
     // Depends on user, it changes with user comments or station comments
@@ -159,12 +163,6 @@ public class UserComments extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadComments();
     }
 
     @Override

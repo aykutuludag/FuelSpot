@@ -77,17 +77,23 @@ public class UserPurchases extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        loadPurchases();
     }
 
     private void loadPurchases() {
-        mAdapter = new PurchaseAdapter(UserPurchases.this, vehiclePurchaseList);
-        mLayoutManager = new GridLayoutManager(UserPurchases.this, 1);
+        if (vehiclePurchaseList != null && vehiclePurchaseList.size() > 0) {
+            mAdapter = new PurchaseAdapter(UserPurchases.this, vehiclePurchaseList);
+            mLayoutManager = new GridLayoutManager(UserPurchases.this, 1);
 
-        mAdapter.notifyDataSetChanged();
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        swipeContainer.setRefreshing(false);
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            swipeContainer.setRefreshing(false);
+        } else {
+            fetchPurchases();
+        }
     }
 
     private void fetchPurchases() {
@@ -166,12 +172,6 @@ public class UserPurchases extends AppCompatActivity {
         } else {
             toolbar.setBackgroundColor(color2);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadPurchases();
     }
 
     @Override

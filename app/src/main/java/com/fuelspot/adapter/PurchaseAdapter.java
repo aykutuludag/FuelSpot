@@ -192,6 +192,8 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         if (feedItem.getBillPhoto() != null && feedItem.getBillPhoto().length() > 0) {
             viewHolder.imageViewBillPhoto.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(feedItem.getBillPhoto()).into(viewHolder.imageViewBillPhoto);
+        } else {
+            viewHolder.imageViewBillPhoto.setVisibility(View.GONE);
         }
 
         // Handle click event on image click

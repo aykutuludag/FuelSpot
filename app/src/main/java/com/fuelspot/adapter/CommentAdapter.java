@@ -399,6 +399,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         if (feedItem.getCommentPhoto() != null && feedItem.getCommentPhoto().length() > 0) {
             viewHolder.commentPhoto.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(feedItem.getCommentPhoto()).into(viewHolder.commentPhoto);
+        } else {
+            viewHolder.commentPhoto.setVisibility(View.GONE);
         }
 
         if (feedItem.getAnswer() != null && feedItem.getAnswer().length() > 0) {
