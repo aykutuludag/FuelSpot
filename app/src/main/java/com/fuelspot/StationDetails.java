@@ -1601,8 +1601,12 @@ public class StationDetails extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         settingsItem = menu.findItem(R.id.menu_fav);
-        if (userFavorites.contains(choosenStationID + ";")) {
-            settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav_orange));
+        if (userFavorites != null && userFavorites.length() > 0) {
+            if (userFavorites.contains(choosenStationID + ";")) {
+                settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav_orange));
+            } else {
+                settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav));
+            }
         } else {
             settingsItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_fav));
         }
