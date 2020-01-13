@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/single_comment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@drawable/white_box"
+    android:elevation="4dp"
+    android:padding="4dp">
+
+    <ImageView
+        android:id="@+id/imageViewCommentPic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:minHeight="500dp"
+        app:srcCompat="@drawable/icon_upload" />
+
+    <TextView
+        android:id="@+id/textViewDateFull"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="#60000000"
+        android:padding="8dp"
+        android:textColor="#f1f1f1" />
+
+    <RelativeLayout
+        android:id="@+id/commentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/imageViewCommentPic"
+        android:layout_alignEnd="@id/imageViewCommentPic"
+        android:layout_alignBottom="@id/imageViewCommentPic">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewUserIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/default_profile" />
+
+        <TextView
+            android:id="@+id/textViewCommentFull"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_toEndOf="@+id/imageViewUserIcon"
+            android:background="#60000000"
+            android:padding="8dp"
+            android:textAlignment="viewStart"
+            android:textColor="#f1f1f1" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/userActionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewCommentPic"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/button_shareApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/white_box"
+            android:drawableStart="@drawable/edit"
+            android:fontFamily="@font/gotham_book"
+            android:text="@string/update_comment"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+
+
+        <Button
+            android:id="@+id/button_shareApp2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/white_box"
+            android:drawableStart="@drawable/delete"
+            android:fontFamily="@font/gotham_book"
+            android:text="@string/remove_comment"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/superUserActionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewCommentPic"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/button_addDeleteAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_box"
+            android:drawableStart="@drawable/edit"
+            android:fontFamily="@font/gotham_book"
+            android:text="@string/add_answer"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#161616" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:contentDescription="@string/cancel"
+        app:srcCompat="@drawable/cancel" />
+
+</RelativeLayout>

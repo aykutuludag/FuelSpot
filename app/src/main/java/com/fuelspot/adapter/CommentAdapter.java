@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -65,9 +67,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private Context mContext;
     private String whichScreen;
     private PopupWindow mPopupWindow;
-    private String commentUserName;
     private String answer;
-    private int commentID;
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -83,105 +83,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     showAds(mContext, intent);
                     break;
                 case "STATION_COMMENTS":
-                    String text = null;
-                    commentID = yItem.getID();
-                    commentUserName = yItem.getUsername();
-                    answer = yItem.getAnswer();
-
-                    if (isSuperUser) {
-                        for (int i = 0; i < listOfOwnedStations.size(); i++) {
-                            if ((listOfOwnedStations.get(i).getID() == yItem.getStationID()) && listOfOwnedStations.get(i).getIsVerified() == 1) {
-                                if (answer != null && answer.length() > 0) {
-                                    // Delete answer
-                                    text = mContext.getString(R.string.remove_answer);
-                                } else {
-                                    // Add answer
-                                    text = mContext.getString(R.string.answer_it);
-                                }
-                                break;
-                            }
-                        }
-                    } else {
-                        if (username.equals(commentUserName)) {
-                            // Delete comment
-                            text = mContext.getString(R.string.remove_comment);
-                        }
-                    }
-
-
-                    if (text != null) {
-                        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                                .setAction(mContext.getString(R.string.yes), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (isSuperUser) {
-                                            if (answer != null && answer.length() > 0) {
-                                                deleteAnswer(commentID);
-                                            } else {
-                                                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-                                                View customView = inflater.inflate(R.layout.popup_answer, null);
-                                                mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                                if (Build.VERSION.SDK_INT >= 21) {
-                                                    mPopupWindow.setElevation(5.0f);
-                                                }
-                                                Button sendAnswer = customView.findViewById(R.id.buttonAddAnswer);
-                                                sendAnswer.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        if (answer != null && answer.length() > 0) {
-                                                            addAnswer(commentID, answer);
-                                                        } else {
-                                                            Toast.makeText(mContext, mContext.getString(R.string.empty_answer), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                });
-
-                                                EditText getComment = customView.findViewById(R.id.editTextAnswer);
-                                                if (answer != null && answer.length() > 0) {
-                                                    getComment.setText(answer);
-                                                }
-                                                getComment.addTextChangedListener(new TextWatcher() {
-                                                    @Override
-                                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void afterTextChanged(Editable s) {
-                                                        if (s != null && s.length() > 0) {
-                                                            answer = s.toString();
-                                                        }
-                                                    }
-                                                });
-
-                                                ImageView closeButton = customView.findViewById(R.id.imageViewClose);
-                                                // Set a click listener for the popup window close button
-                                                closeButton.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        // Dismiss the popup window
-                                                        mPopupWindow.dismiss();
-                                                    }
-                                                });
-
-                                                mPopupWindow.update();
-                                                mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-                                                dimBehind(mPopupWindow);
-                                            }
-                                        } else {
-                                            if (username.equals(commentUserName)) {
-                                                // Delete comment
-                                                deleteComment(commentID);
-                                            }
-                                        }
-                                    }
-                                }).show();
-                    }
+                    openBigComment(yItem, view);
                     break;
                 default:
                     // Do nothing
@@ -246,6 +148,137 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
+    }
+
+    private void openBigComment(final CommentItem cItem, final View view) {
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_comment_big, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        LinearLayout userActionLayout = customView.findViewById(R.id.userActionLayout);
+        LinearLayout superActionLayout = customView.findViewById(R.id.superUserActionLayout);
+        Button addDeleteAnswer = customView.findViewById(R.id.button_addDeleteAnswer);
+
+        if (isSuperUser) {
+            for (int i = 0; i < listOfOwnedStations.size(); i++) {
+                if ((listOfOwnedStations.get(i).getID() == cItem.getStationID()) && listOfOwnedStations.get(i).getIsVerified() == 1) {
+                    // Enable SuperActionLayout
+                    superActionLayout.setVisibility(View.VISIBLE);
+
+                    if (cItem.getAnswer().length() > 0) {
+                        // ButtonDeleteAnswer
+                        addDeleteAnswer.setText(mContext.getString(R.string.remove_answer));
+                        addDeleteAnswer.setCompoundDrawables(ContextCompat.getDrawable(mContext, R.drawable.delete), null, null, null);
+                        addDeleteAnswer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Snackbar.make(view, mContext.getString(R.string.yes), Snackbar.LENGTH_LONG).setAction(mContext.getString(R.string.yes), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        deleteAnswer(cItem.getID());
+                                    }
+                                }).show();
+                            }
+                        });
+                    } else {
+                        // ButtonAddAnswer
+                        addDeleteAnswer.setText(mContext.getString(R.string.answer_it));
+                        addDeleteAnswer.setCompoundDrawables(ContextCompat.getDrawable(mContext, R.drawable.edit), null, null, null);
+                        addDeleteAnswer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                answerPopup(v);
+                            }
+                        });
+                    }
+                    break;
+                }
+            }
+
+
+        } else {
+            if (username.equals(cItem.getUsername())) {
+                // Enable UserActionLayout
+                userActionLayout.setVisibility(View.VISIBLE);
+            } else {
+                // Disable/Hide UserActionLayout
+                userActionLayout.setVisibility(View.GONE);
+            }
+        }
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
+    }
+
+    private void answerPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup_answer, null);
+        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mPopupWindow.setElevation(5.0f);
+        }
+        Button sendAnswer = customView.findViewById(R.id.buttonAddAnswer);
+        sendAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (answer != null && answer.length() > 0) {
+                    addAnswer(commentID, answer);
+                } else {
+                    Toast.makeText(mContext, mContext.getString(R.string.empty_answer), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        EditText getComment = customView.findViewById(R.id.editTextAnswer);
+        if (answer != null && answer.length() > 0) {
+            getComment.setText(answer);
+        }
+        getComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.length() > 0) {
+                    answer = s.toString();
+                }
+            }
+        });
+
+        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                mPopupWindow.dismiss();
+            }
+        });
+
+        mPopupWindow.update();
+        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        dimBehind(mPopupWindow);
     }
 
     private void addAnswer(final int commentID, final String userAnswer) {
