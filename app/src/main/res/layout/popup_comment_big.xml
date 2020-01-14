@@ -4,20 +4,20 @@
     android:id="@+id/single_comment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="4dp"
     android:background="@drawable/white_box"
     android:elevation="4dp"
-    android:padding="4dp">
+    android:padding="2dp">
 
     <ImageView
-        android:id="@+id/imageViewCommentPic"
+        android:id="@+id/imageViewCommentBig"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:minHeight="500dp"
+        android:minHeight="550dp"
         app:srcCompat="@drawable/icon_upload" />
 
-    <TextView
+    <com.github.curioustechizen.ago.RelativeTimeTextView
         android:id="@+id/textViewDateFull"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,25 +31,23 @@
         android:id="@+id/commentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/imageViewCommentPic"
-        android:layout_alignEnd="@id/imageViewCommentPic"
-        android:layout_alignBottom="@id/imageViewCommentPic">
+        android:layout_alignStart="@id/imageViewCommentBig"
+        android:layout_alignEnd="@id/imageViewCommentBig"
+        android:layout_alignBottom="@id/imageViewCommentBig">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewUserIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/default_profile" />
 
         <TextView
             android:id="@+id/textViewCommentFull"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
+            android:layout_height="48dp"
             android:layout_toEndOf="@+id/imageViewUserIcon"
             android:background="#60000000"
-            android:padding="8dp"
-            android:textAlignment="viewStart"
+            android:padding="2dp"
             android:textColor="#f1f1f1" />
 
     </RelativeLayout>
@@ -58,12 +56,12 @@
         android:id="@+id/userActionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageViewCommentPic"
+        android:layout_below="@id/imageViewCommentBig"
         android:orientation="horizontal"
         android:visibility="gone">
 
         <Button
-            android:id="@+id/button_shareApp"
+            android:id="@+id/button_updateComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -77,7 +75,7 @@
 
 
         <Button
-            android:id="@+id/button_shareApp2"
+            android:id="@+id/button_removeComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -94,7 +92,7 @@
         android:id="@+id/superUserActionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageViewCommentPic"
+        android:layout_below="@id/imageViewCommentBig"
         android:orientation="horizontal"
         android:visibility="gone">
 

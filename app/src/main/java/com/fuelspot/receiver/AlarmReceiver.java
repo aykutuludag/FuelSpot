@@ -76,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // If phone restarted, this section detects that and reschedule alarm
                 scheduleAlarm();
             } else {
-                // Every 15 mins, re-create fences.
+                // Every 30 mins, re-create fences.
                 createFences();
             }
         }
@@ -90,7 +90,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (alarmManager != null) {
             Calendar currentTime = Calendar.getInstance();
-            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, currentTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, mPendingIntent);
         }
     }
 
