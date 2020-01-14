@@ -76,14 +76,14 @@ public class UserComments extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+        mAdapter = new CommentAdapter(UserComments.this, userCommentList, "USER_COMMENTS");
+        mLayoutManager = new GridLayoutManager(UserComments.this, 1);
+
         loadComments();
     }
 
     private void loadComments() {
         if (userCommentList != null && userCommentList.size() > 0) {
-            mAdapter = new CommentAdapter(UserComments.this, userCommentList, "USER_COMMENTS");
-            mLayoutManager = new GridLayoutManager(UserComments.this, 1);
-
             mAdapter.notifyDataSetChanged();
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(mLayoutManager);

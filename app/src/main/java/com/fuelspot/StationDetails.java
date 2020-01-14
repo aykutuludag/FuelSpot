@@ -1112,7 +1112,7 @@ public class StationDetails extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void addUpdateCommentPopup(View view) {
+    public void addUpdateCommentPopup(View view) {
         // Clear image
         bitmap = null;
 

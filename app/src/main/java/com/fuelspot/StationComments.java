@@ -179,7 +179,7 @@ public class StationComments extends AppCompatActivity {
         }
     }
 
-    private void addUpdateCommentPopup(View view) {
+    public void addUpdateCommentPopup(View view) {
         LayoutInflater inflater = (LayoutInflater) StationComments.this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup_comment, null);
         mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

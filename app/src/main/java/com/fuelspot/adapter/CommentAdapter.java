@@ -1,10 +1,8 @@
 package com.fuelspot.adapter;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
@@ -39,7 +37,6 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
 import com.fuelspot.StationDetails;
@@ -62,9 +59,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.dimBehind;
-import static com.fuelspot.MainActivity.getStringImage;
 import static com.fuelspot.MainActivity.isSuperUser;
-import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.showAds;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
@@ -77,9 +72,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private String whichScreen;
     private PopupWindow mPopupWindow;
     private String answer;
-    SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
-    private ImageView imageViewCommentPhoto;
-    private Bitmap bitmap;
+    private SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private RequestQueue requestQueue;
     private RequestOptions options;
 
@@ -88,7 +81,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         public void onClick(final View view) {
             CommentAdapter.ViewHolder holder = (CommentAdapter.ViewHolder) view.getTag();
             int position = holder.getAdapterPosition();
-            CommentItem yItem = feedItemList.get(position);
+            final CommentItem yItem = feedItemList.get(position);
 
             switch (whichScreen) {
                 case "USER_COMMENTS":
@@ -102,7 +95,28 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         openBigComment(yItem, view);
                     } else {
                         if (hasAlreadyCommented) {
-
+                            final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                            alertDialog.setTitle(mContext.getString(R.string.your_comment));
+                            alertDialog.setMessage(mContext.getString(R.string.snackbar_comment_desc));
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.remove_comment),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            alertDialog.dismiss();
+                                            deleteComment(yItem.getID());
+                                        }
+                                    });
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.update_comment),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            alertDialog.dismiss();
+                                            if (mContext instanceof StationComments) {
+                                                ((StationComments) mContext).addUpdateCommentPopup(view);
+                                            } else if (mContext instanceof StationDetails) {
+                                                ((StationDetails) mContext).addUpdateCommentPopup(view);
+                                            }
+                                        }
+                                    });
+                            alertDialog.show();
                         }
                     }
                     break;
@@ -151,7 +165,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 mPopupWindow.dismiss();
-                addUpdateCommentPopup(v, cItem);
+                if (mContext instanceof StationComments) {
+                    ((StationComments) mContext).addUpdateCommentPopup(v);
+                } else if (mContext instanceof StationDetails) {
+                    ((StationDetails) mContext).addUpdateCommentPopup(v);
+                }
             }
         });
         Button removeCommentButton = customView.findViewById(R.id.button_removeComment);
@@ -164,6 +182,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                                mPopupWindow.dismiss();
                                 deleteComment(cItem.getID());
                             }
                         });
@@ -241,220 +261,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         dimBehind(mPopupWindow);
     }
 
-    private void addUpdateCommentPopup(final View view, final CommentItem commentItem) {
-        // Clear image
-        bitmap = null;
-
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View customView = inflater.inflate(R.layout.popup_comment, null);
-        mPopupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (Build.VERSION.SDK_INT >= 21) {
-            mPopupWindow.setElevation(5.0f);
-        }
-
-        final TextView titlePopup = customView.findViewById(R.id.popup_comment_title);
-        final Button sendAnswer = customView.findViewById(R.id.buttonSendComment);
-        sendAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (hasAlreadyCommented) {
-                    updateComment(commentItem);
-                } else {
-                    addComment(commentItem);
-                }
-            }
-        });
-
-        if (hasAlreadyCommented) {
-            titlePopup.setText(mContext.getString(R.string.update_comment));
-            sendAnswer.setText(mContext.getString(R.string.update_comment));
-        } else {
-            titlePopup.setText(mContext.getString(R.string.add_comment));
-            sendAnswer.setText(mContext.getString(R.string.add_comment));
-        }
-
-        EditText getComment = customView.findViewById(R.id.editTextComment);
-        if (commentItem.getComment().length() > 0) {
-            getComment.setText(commentItem.getComment());
-        }
-        getComment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.length() > 0) {
-                    commentItem.setComment(s.toString());
-                }
-            }
-        });
-
-        final RatingBar ratingBar = customView.findViewById(R.id.ratingBar);
-        ratingBar.setRating(commentItem.getRating());
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                commentItem.setRating((int) rating);
-            }
-        });
-
-        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
-        stars.getDrawable(2).setColorFilter(Color.parseColor("#2DE878"), PorterDuff.Mode.SRC_ATOP);
-
-        imageViewCommentPhoto = customView.findViewById(R.id.imageViewCommentPic);
-        if (commentItem.getCommentPhoto().length() > 0) {
-            Glide.with(mContext).load(commentItem.getCommentPhoto()).apply(options).into(imageViewCommentPhoto);
-        }
-        imageViewCommentPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainActivity.verifyFilePickerPermission(mContext)) {
-                    //     ImagePicker.create((MainActivity) mContext).single().start();
-                } else {
-                    //     ActivityCompat.requestPermissions((MainActivity) mContext, PERMISSIONS_STORAGE, REQUEST_STORAGE);
-                }
-            }
-        });
-
-        ImageView closeButton = customView.findViewById(R.id.imageViewClose);
-        // Set a click listener for the popup window close button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dismiss the popup window
-                mPopupWindow.dismiss();
-            }
-        });
-
-        mPopupWindow.update();
-        mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        dimBehind(mPopupWindow);
-    }
-
-    private void addComment(final CommentItem cItem) {
-        final ProgressDialog loading = ProgressDialog.show(mContext, mContext.getString(R.string.comment_adding), mContext.getString(R.string.please_wait), true, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_ADD_COMMENT),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        loading.dismiss();
-                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        mPopupWindow.dismiss();
-                        hasAlreadyCommented = true;
-                        if (mContext instanceof StationComments) {
-                            ((StationComments) mContext).fetchStationComments();
-                        } else if (mContext instanceof StationDetails) {
-                            ((StationDetails) mContext).fetchStationComments();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("comment", cItem.getComment());
-                params.put("stationID", String.valueOf(cItem.getStationID()));
-                params.put("username", username);
-                params.put("stars", String.valueOf(cItem.getRating()));
-                params.put("user_photo", photo);
-                if (bitmap != null) {
-                    params.put("commentPhoto", getStringImage(bitmap));
-                }
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
-
-    private void updateComment(final CommentItem commentItem) {
-        final ProgressDialog loading = ProgressDialog.show(mContext, mContext.getString(R.string.comment_updating), mContext.getString(R.string.please_wait), true, false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_UPDATE_COMMENT),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        loading.dismiss();
-
-                        if (response != null && response.length() > 0) {
-                            if ("Success".equals(response)) {
-                                Toast.makeText(mContext, mContext.getString(R.string.comment_update_success), Toast.LENGTH_SHORT).show();
-                                mPopupWindow.dismiss();
-                                if (mContext instanceof StationComments) {
-                                    ((StationComments) mContext).fetchStationComments();
-                                } else if (mContext instanceof StationDetails) {
-                                    ((StationDetails) mContext).fetchStationComments();
-                                }
-                            } else {
-                                Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(mContext, volleyError.toString(), Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                //Creating parameters
-                Map<String, String> params = new Hashtable<>();
-
-                //Adding parameters
-                params.put("username", commentItem.getUsername());
-                params.put("stationID", String.valueOf(commentItem.getStationID()));
-                params.put("commentID", String.valueOf(commentItem.getID()));
-                params.put("comment", commentItem.getComment());
-                params.put("stars", String.valueOf(commentItem.getRating()));
-                if (bitmap != null) {
-                    params.put("commentPhoto", getStringImage(bitmap));
-                }
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-    }
 
     private void deleteComment(final int id) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, mContext.getString(R.string.API_DELETE_COMMENT),
@@ -463,7 +269,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             if (response.equals("Success")) {
-                                mPopupWindow.dismiss();
                                 Toast.makeText(mContext, mContext.getString(R.string.comment_delete_success), Toast.LENGTH_LONG).show();
                                 if (mContext instanceof StationComments) {
                                     ((StationComments) mContext).fetchStationComments();
