@@ -205,6 +205,7 @@
     <string name="remove_answer">Cevabı sil?</string>
     <string name="answer_it">Cevapla!</string>
     <string name="remove_comment">Yorumu sil</string>
+    <string name="remove_comment_prompt">Yorumu silmek istediğinize emin misiniz?</string>
     <string name="empty_answer">Lütfen cevabınızı giriniz…</string>
     <string name="answer_delete_success">Cevap başarıyla silindi</string>
     <string name="comment_delete_success">Yorum başarıyla silindi</string>

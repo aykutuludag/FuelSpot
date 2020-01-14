@@ -2,6 +2,7 @@ package com.fuelspot.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +39,6 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.esafirm.imagepicker.features.ImagePicker;
 import com.fuelspot.MainActivity;
 import com.fuelspot.R;
 import com.fuelspot.StationComments;
@@ -60,8 +60,6 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static com.fuelspot.MainActivity.PERMISSIONS_STORAGE;
-import static com.fuelspot.MainActivity.REQUEST_STORAGE;
 import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.getStringImage;
@@ -84,6 +82,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private Bitmap bitmap;
     private RequestQueue requestQueue;
     private RequestOptions options;
+
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
@@ -119,8 +118,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.feedItemList = feedItemList;
         this.mContext = context;
         this.whichScreen = whichPage;
-        requestQueue = Volley.newRequestQueue(mContext);
-        options = new RequestOptions().centerCrop().placeholder(R.drawable.icon_upload).error(R.drawable.icon_upload).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
     }
 
     private void openBigComment(final CommentItem cItem, final View view) {
@@ -153,6 +150,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         updateCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPopupWindow.dismiss();
                 addUpdateCommentPopup(v, cItem);
             }
         });
@@ -160,12 +158,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         removeCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(view, mContext.getString(R.string.remove_comment), Snackbar.LENGTH_LONG).setAction(mContext.getString(R.string.yes), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        deleteComment(cItem.getID());
-                    }
-                }).show();
+                final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                alertDialog.setTitle(mContext.getString(R.string.remove_comment));
+                alertDialog.setMessage(mContext.getString(R.string.remove_comment_prompt));
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.yes),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteComment(cItem.getID());
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         });
 
@@ -200,6 +208,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         addDeleteAnswer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                mPopupWindow.dismiss();
                                 answerPopup(v, cItem);
                             }
                         });
@@ -307,9 +316,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 if (MainActivity.verifyFilePickerPermission(mContext)) {
-                    ImagePicker.create((MainActivity) mContext).single().start();
+                    //     ImagePicker.create((MainActivity) mContext).single().start();
                 } else {
-                    ActivityCompat.requestPermissions((MainActivity) mContext, PERMISSIONS_STORAGE, REQUEST_STORAGE);
+                    //     ActivityCompat.requestPermissions((MainActivity) mContext, PERMISSIONS_STORAGE, REQUEST_STORAGE);
                 }
             }
         });
@@ -373,8 +382,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 params.put("user_photo", photo);
                 if (bitmap != null) {
                     params.put("commentPhoto", getStringImage(bitmap));
-                } else {
-                    params.put("commentPhoto", "");
                 }
 
                 //returning parameters
@@ -438,8 +445,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 params.put("stars", String.valueOf(commentItem.getRating()));
                 if (bitmap != null) {
                     params.put("commentPhoto", getStringImage(bitmap));
-                } else {
-                    params.put("commentPhoto", "");
                 }
 
                 //returning parameters
@@ -458,6 +463,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     public void onResponse(String response) {
                         if (response != null && response.length() > 0) {
                             if (response.equals("Success")) {
+                                mPopupWindow.dismiss();
                                 Toast.makeText(mContext, mContext.getString(R.string.comment_delete_success), Toast.LENGTH_LONG).show();
                                 if (mContext instanceof StationComments) {
                                     ((StationComments) mContext).fetchStationComments();
@@ -497,8 +503,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 return params;
             }
         };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
@@ -610,8 +614,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
@@ -664,8 +666,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
         //Adding request to the queue
         requestQueue.add(stringRequest);
     }
@@ -681,6 +681,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(@NonNull CommentAdapter.ViewHolder viewHolder, int i) {
         CommentItem feedItem = feedItemList.get(i);
 
+        requestQueue = Volley.newRequestQueue(mContext);
+        options = new RequestOptions().centerCrop().placeholder(R.drawable.icon_upload).error(R.drawable.icon_upload).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+
         viewHolder.username.setText(feedItem.getUsername());
 
         Date date = new Date();
@@ -694,11 +697,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         viewHolder.commentHolder.setText(feedItem.getComment());
 
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.default_profile)
-                .error(R.drawable.default_profile)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
 
         viewHolder.rating.setRating(feedItem.getRating());
