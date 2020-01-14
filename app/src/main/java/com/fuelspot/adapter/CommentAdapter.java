@@ -42,7 +42,6 @@ import com.fuelspot.StationComments;
 import com.fuelspot.StationDetails;
 import com.fuelspot.model.CommentItem;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.google.android.material.snackbar.Snackbar;
 import com.yqritc.scalableimageview.ScalableImageView;
 
 import java.text.ParseException;
@@ -65,13 +64,13 @@ import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.username;
 import static com.fuelspot.StationDetails.hasAlreadyCommented;
 import static com.fuelspot.superuser.SuperMainActivity.listOfOwnedStations;
+import static com.fuelspot.superuser.SuperMainActivity.superStationLogo;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private List<CommentItem> feedItemList;
     private Context mContext;
     private String whichScreen;
     private PopupWindow mPopupWindow;
-    private String answer;
     private SimpleDateFormat format = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
     private RequestQueue requestQueue;
     private RequestOptions options;
@@ -94,29 +93,72 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     if (yItem.getCommentPhoto().length() > 0) {
                         openBigComment(yItem, view);
                     } else {
-                        if (hasAlreadyCommented) {
-                            final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
-                            alertDialog.setTitle(mContext.getString(R.string.your_comment));
-                            alertDialog.setMessage(mContext.getString(R.string.snackbar_comment_desc));
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.remove_comment),
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            alertDialog.dismiss();
-                                            deleteComment(yItem.getID());
-                                        }
-                                    });
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.update_comment),
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            alertDialog.dismiss();
-                                            if (mContext instanceof StationComments) {
-                                                ((StationComments) mContext).addUpdateCommentPopup(view);
-                                            } else if (mContext instanceof StationDetails) {
-                                                ((StationDetails) mContext).addUpdateCommentPopup(view);
+                        if (isSuperUser) {
+                            for (int i = 0; i < listOfOwnedStations.size(); i++) {
+                                if ((listOfOwnedStations.get(i).getID() == yItem.getStationID()) && listOfOwnedStations.get(i).getIsVerified() == 1) {
+                                    if (yItem.getAnswer().length() > 0) {
+                                        final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                                        alertDialog.setMessage(mContext.getString(R.string.remove_answer_prompt));
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.remove_answer),
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        alertDialog.dismiss();
+                                                        deleteAnswer(yItem.getID());
+                                                    }
+                                                });
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.cancel),
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        alertDialog.dismiss();
+                                                    }
+                                                });
+                                        alertDialog.show();
+                                    } else {
+                                        final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                                        alertDialog.setMessage(mContext.getString(R.string.add_answer_desc));
+                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, mContext.getString(R.string.answer_it),
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        alertDialog.dismiss();
+                                                        answerPopup(view, yItem);
+                                                    }
+                                                });
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.cancel),
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        alertDialog.dismiss();
+                                                    }
+                                                });
+                                        alertDialog.show();
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (hasAlreadyCommented) {
+                                final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                                alertDialog.setTitle(mContext.getString(R.string.your_comment));
+                                alertDialog.setMessage(mContext.getString(R.string.snackbar_comment_desc));
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.remove_comment),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                alertDialog.dismiss();
+                                                deleteComment(yItem.getID());
                                             }
-                                        }
-                                    });
-                            alertDialog.show();
+                                        });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.update_comment),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                alertDialog.dismiss();
+                                                if (mContext instanceof StationComments) {
+                                                    ((StationComments) mContext).addUpdateCommentPopup(view);
+                                                } else if (mContext instanceof StationDetails) {
+                                                    ((StationDetails) mContext).addUpdateCommentPopup(view);
+                                                }
+                                            }
+                                        });
+                                alertDialog.show();
+                            }
                         }
                     }
                     break;
@@ -213,12 +255,23 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         addDeleteAnswer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Snackbar.make(view, mContext.getString(R.string.remove_answer), Snackbar.LENGTH_LONG).setAction(mContext.getString(R.string.yes), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        deleteAnswer(cItem.getID());
-                                    }
-                                }).show();
+                                final AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                                alertDialog.setMessage(mContext.getString(R.string.remove_answer_prompt));
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, mContext.getString(R.string.remove_answer),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                alertDialog.dismiss();
+                                                mPopupWindow.dismiss();
+                                                deleteAnswer(cItem.getID());
+                                            }
+                                        });
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getString(R.string.cancel),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                alertDialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
                             }
                         });
                     } else {
@@ -324,7 +377,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         sendAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (answer != null && answer.length() > 0) {
+                if (cItem.getAnswer().length() > 0) {
+                    cItem.setLogo(superStationLogo);
                     addAnswer(cItem);
                 } else {
                     Toast.makeText(mContext, mContext.getString(R.string.empty_answer), Toast.LENGTH_SHORT).show();
@@ -332,11 +386,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
         });
 
-        EditText getComment = customView.findViewById(R.id.editTextAnswer);
-        if (answer != null && answer.length() > 0) {
-            getComment.setText(answer);
+        EditText getanswer = customView.findViewById(R.id.editTextAnswer);
+        if (cItem.getAnswer().length() > 0) {
+            getanswer.setText(cItem.getAnswer());
         }
-        getComment.addTextChangedListener(new TextWatcher() {
+        getanswer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -350,7 +404,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.length() > 0) {
-                    answer = s.toString();
+                    cItem.setAnswer(s.toString());
                 }
             }
         });
@@ -431,7 +485,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         if (response != null && response.length() > 0) {
                             if ("Success".equals(response)) {
                                 Toast.makeText(mContext, mContext.getString(R.string.answer_delete_success), Toast.LENGTH_LONG).show();
-                                mPopupWindow.dismiss();
                                 if (mContext instanceof StationComments) {
                                     ((StationComments) mContext).fetchStationComments();
                                 } else if (mContext instanceof StationDetails) {

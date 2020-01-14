@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 29
         versionCode 94
-        versionName "1.4.1"
+        versionName "1.5"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
         resConfigs "en", "tr"
@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-    implementation 'androidx.fragment:fragment:1.2.0-rc04'
+    implementation 'androidx.fragment:fragment:1.2.0-rc05'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.browser:browser:1.2.0'
