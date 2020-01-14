@@ -309,8 +309,6 @@ public class StationComments extends AppCompatActivity {
                 params.put("stars", String.valueOf(stars));
                 if (bitmap != null) {
                     params.put("commentPhoto", getStringImage(bitmap));
-                } else {
-                    params.put("commentPhoto", "");
                 }
 
                 //returning parameters
@@ -374,8 +372,6 @@ public class StationComments extends AppCompatActivity {
                 params.put("user_photo", photo);
                 if (bitmap != null) {
                     params.put("commentPhoto", getStringImage(bitmap));
-                } else {
-                    params.put("commentPhoto", "");
                 }
 
                 //returning parameters
