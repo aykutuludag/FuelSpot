@@ -80,9 +80,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
     int itemNo;
     public static SkuDetails premiumSku, doubleSku;
-    float price1 = 8.99f;
-    float price2 = 13.99f;
-    float price3 = 24.99f;
+    float priceDoubleRange = 0.15f;
+    float pricePremium = 0.25f;
     RequestOptions options;
     PopupWindow mPopupWindow;
     TextView textViewCurrentBalance;
@@ -121,25 +120,6 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         textViewCurrentBalance.setText(holder);
 
         mRecyclerView = findViewById(R.id.bankingView);
-        Button buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
-        if (premium) {
-            buttonBuyPremium.setText(getString(R.string.active));
-        } else {
-            buttonBuyPremium.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (billingClient != null) {
-                        if (!hasDoubleRange) {
-                            buyPremium();
-                        } else {
-                            Toast.makeText(StoreActivity.this, getString(R.string.unsubscribe_2x_first), Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(StoreActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }
 
         Button buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
         if (hasDoubleRange) {
@@ -160,54 +140,67 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                 }
             });
         }
-
-        TextView textViewPrice1 = findViewById(R.id.textView_price1);
-        String p1 = price1 + " FP";
-        textViewPrice1.setText(p1);
-        Button buttonAracKokusu = findViewById(R.id.button_item1);
-        buttonAracKokusu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userFSMoney >= price1) {
-                    itemNo = 1;
-                    buyRealItem(itemNo, v);
-                } else {
-                    Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
+        Button buttonDoubleRangeWithFP = findViewById(R.id.buttonPurchaseRangeWithFP);
+        if (hasDoubleRange) {
+            buttonDoubleRangeWithFP.setText(getString(R.string.active));
+        } else {
+            buttonDoubleRangeWithFP.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (userFSMoney >= priceDoubleRange) {
+                        if (!premium) {
+                            itemNo = 1;
+                            buyRealItem(itemNo, v);
+                        } else {
+                            Toast.makeText(StoreActivity.this, getString(R.string.unsubscribe_2x_first), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        TextView textViewPrice2 = findViewById(R.id.textView_price2);
-        String p2 = price2 + " FP";
-        textViewPrice2.setText(p2);
-        Button buttonLastikSpreyi = findViewById(R.id.button_item2);
-        buttonLastikSpreyi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userFSMoney >= price2) {
-                    itemNo = 2;
-                    buyRealItem(itemNo, v);
-                } else {
-                    Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
-        TextView textViewPrice3 = findViewById(R.id.textView_price3);
-        String p3 = price3 + " FP";
-        textViewPrice3.setText(p3);
-        Button buttonBakimKiti = findViewById(R.id.button_item3);
-        buttonBakimKiti.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (userFSMoney >= price3) {
-                    itemNo = 3;
-                    buyRealItem(itemNo, v);
-                } else {
-                    Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
+        Button buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
+        if (premium) {
+            buttonBuyPremium.setText(getString(R.string.active));
+        } else {
+            buttonBuyPremium.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (billingClient != null) {
+                        if (!hasDoubleRange) {
+                            buyPremium();
+                        } else {
+                            Toast.makeText(StoreActivity.this, getString(R.string.unsubscribe_2x_first), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(StoreActivity.this, getString(R.string.error), Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
-        });
+            });
+        }
+        Button buttonPremiumWithFP = findViewById(R.id.buttonPurchasePremiumWithFP);
+        if (premium) {
+            buttonPremiumWithFP.setText(getString(R.string.active));
+        } else {
+            buttonPremiumWithFP.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (userFSMoney >= pricePremium) {
+                        if (!hasDoubleRange) {
+                            itemNo = 2;
+                            buyRealItem(itemNo, v);
+                        } else {
+                            Toast.makeText(StoreActivity.this, getString(R.string.unsubscribe_2x_first), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(StoreActivity.this, getString(R.string.insufficient_balance), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
 
         loadTransactions();
         InAppBilling();
@@ -245,13 +238,11 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
     }
 
     private void buyPremium() {
-        Toast.makeText(StoreActivity.this, getString(R.string.premium_version_desc), Toast.LENGTH_LONG).show();
         BillingFlowParams flowParams = BillingFlowParams.newBuilder().setSkuDetails(premiumSku).build();
         billingClient.launchBillingFlow(StoreActivity.this, flowParams);
     }
 
     private void buyDoubleRange() {
-        Toast.makeText(StoreActivity.this, getString(R.string.double_range_desc), Toast.LENGTH_LONG).show();
         BillingFlowParams flowParams = BillingFlowParams.newBuilder().setSkuDetails(doubleSku).build();
         billingClient.launchBillingFlow(StoreActivity.this, flowParams);
     }
@@ -271,21 +262,15 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
         switch (itemNo) {
             case 1:
-                productName[0] = getString(R.string.arackokusu) + " (3)";
-                productDesc[0] = getString(R.string.arackokusu3);
-                productPrice[0] = price1;
+                productName[0] = getString(R.string.double_range);
+                productDesc[0] = getString(R.string.double_range_desc);
+                productPrice[0] = priceDoubleRange;
                 imageResourceID = R.drawable.popup_product1;
                 break;
             case 2:
-                productName[0] = getString(R.string.arackokusu) + " (5)";
-                productDesc[0] = getString(R.string.arackokusu5);
-                productPrice[0] = price2;
-                imageResourceID = R.drawable.popup_product1;
-                break;
-            case 3:
-                productName[0] = getString(R.string.arackokusu) + " (10)";
-                productDesc[0] = getString(R.string.arackokusu10);
-                productPrice[0] = price3;
+                productName[0] = getString(R.string.premium_version);
+                productDesc[0] = getString(R.string.premium_version_desc);
+                productPrice[0] = pricePremium;
                 imageResourceID = R.drawable.popup_product1;
                 break;
             default:
@@ -348,7 +333,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
         TextView finalPromptText = customView.findViewById(R.id.finalPrompt);
         float kalan = userFSMoney - productPrice[0];
-        String dummy3 = getString(R.string.purchase_prompt_pre) + String.format(Locale.getDefault(), "%.2f", kalan) + getString(R.string.purchase_prompt_post);
+        String dummy3 = getString(R.string.purchase_prompt_pre) + " " + String.format(Locale.getDefault(), "%.2f", kalan) + " " + getString(R.string.purchase_prompt_post);
         finalPromptText.setText(dummy3);
 
         Button buttonContinue = customView.findViewById(R.id.buttonProcessPurchase);
@@ -413,7 +398,11 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                         loading.dismiss();
                         if (response != null && response.equals("Success")) {
                             mPopupWindow.dismiss();
-                            Toast.makeText(StoreActivity.this, getString(R.string.purchase_succeed), Toast.LENGTH_SHORT).show();
+                            if (itemNo == 1) {
+                                Toast.makeText(StoreActivity.this, getString(R.string.double_range_successful), Toast.LENGTH_LONG).show();
+                            } else if (itemNo == 2) {
+                                Toast.makeText(StoreActivity.this, getString(R.string.premium_successful), Toast.LENGTH_LONG).show();
+                            }
                             fetchBanking();
                         } else {
                             Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_SHORT).show();

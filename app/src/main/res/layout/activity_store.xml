@@ -165,19 +165,14 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp">
 
-                <RelativeLayout
-                    android:id="@+id/inner_store1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:fontFamily="@font/gotham_bold"
-                        android:text="@string/subscriptions"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/gotham_bold"
+                    android:text="@string/store"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <RelativeLayout
                         android:id="@+id/double_range_layout"
@@ -227,19 +222,51 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />
 
-                        <Button
-                            android:id="@+id/buttonPurchaseRange"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/textView399"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/green_box"
-                            android:fontFamily="@font/gotham_book"
-                            android:text="@string/start_subscription"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
+                            android:gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:weightSum="5">
+
+                            <Button
+                                android:id="@+id/buttonPurchaseRangeWithFP"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:layout_weight="2"
+                                android:background="@drawable/green_box"
+                                android:fontFamily="@font/gotham_book"
+                                android:text="@string/subs_2xrange_fp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                android:textColor="#161616" />
+
+                            <TextView
+                                android:id="@+id/textView3888"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/or"
+                                android:textAlignment="center"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                android:textColor="#161616" />
+
+                            <Button
+                                android:id="@+id/buttonPurchaseRange"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:layout_weight="2"
+                                android:background="@drawable/green_box"
+                                android:fontFamily="@font/gotham_book"
+                                android:text="@string/start_subscription"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                android:textColor="#161616" />
+
+                        </LinearLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -291,310 +318,51 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#161616" />
 
-                        <Button
-                            android:id="@+id/buttonPurchasePremium"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/textView39"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/green_box"
-                            android:fontFamily="@font/gotham_book"
-                            android:text="@string/start_subscription"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/inner_store2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/inner_store1"
-                    android:layout_marginTop="8dp">
-
-                    <TextView
-                        android:id="@+id/textView18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:fontFamily="@font/gotham_bold"
-                        android:text="@string/products"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-                    <RelativeLayout
-                        android:id="@+id/arac_kokusu3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView18"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/white_box"
-                        android:elevation="4dp">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/productPhoto1"
-                            android:layout_width="125dp"
-                            android:layout_height="125dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/urun_fuelspotkoku" />
-
-                        <TextView
-                            android:id="@+id/textView45"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/productPhoto1"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:text="@string/arackokusu"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#161616" />
-
-                        <TextView
-                            android:id="@+id/textView46"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textView45"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="2dp"
-                            android:fontFamily="@font/gotham_book"
                             android:gravity="center"
-                            android:text="@string/arackokusu3"
-                            android:textAlignment="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-
-                        <Button
-                            android:id="@+id/button_item1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/textView46"
-                            android:layout_centerHorizontal="true"
                             android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/green_box"
-                            android:fontFamily="@font/gotham_book"
-                            android:text="@string/buy"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
+                            android:weightSum="5">
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:id="@+id/imageView7"
-                                android:layout_width="wrap_content"
+                            <Button
+                                android:id="@+id/buttonPurchasePremiumWithFP"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                app:srcCompat="@drawable/icon_coin" />
+                                android:layout_margin="4dp"
+                                android:layout_weight="2"
+                                android:background="@drawable/green_box"
+                                android:fontFamily="@font/gotham_book"
+                                android:text="@string/subs_premium_fp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                android:textColor="#161616" />
 
                             <TextView
-                                android:id="@+id/textView_price1"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/textView51"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/imageView7"
-                                android:layout_centerHorizontal="true"
-                                android:fontFamily="@font/gotham_bold"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:layout_weight="1"
+                                android:text="@string/or"
+                                android:textAlignment="center"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="#161616" />
-                        </RelativeLayout>
-                    </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/arac_kokusu5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/arac_kokusu3"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/white_box"
-                        android:elevation="4dp">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/productPhoto2"
-                            android:layout_width="125dp"
-                            android:layout_height="125dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/urun_fuelspotkoku" />
-
-                        <TextView
-                            android:id="@+id/textView43"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/productPhoto2"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:text="@string/arackokusu"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#161616" />
-
-                        <TextView
-                            android:id="@+id/textView44"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textView43"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="2dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/arackokusu5"
-                            android:textAlignment="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-
-                        <Button
-                            android:id="@+id/button_item2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/textView44"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/green_box"
-                            android:fontFamily="@font/gotham_book"
-                            android:text="@string/buy"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:id="@+id/imageView78"
-                                android:layout_width="wrap_content"
+                            <Button
+                                android:id="@+id/buttonPurchasePremium"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                app:srcCompat="@drawable/icon_coin" />
-
-                            <TextView
-                                android:id="@+id/textView_price2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/imageView78"
-                                android:layout_centerHorizontal="true"
-                                android:fontFamily="@font/gotham_bold"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:layout_margin="4dp"
+                                android:layout_weight="2"
+                                android:background="@drawable/green_box"
+                                android:fontFamily="@font/gotham_book"
+                                android:text="@string/start_subscription"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                                 android:textColor="#161616" />
-                        </RelativeLayout>
+                        </LinearLayout>
                     </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/arac_kokusu10"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/arac_kokusu5"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/white_box"
-                        android:elevation="4dp">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/productPhoto3"
-                            android:layout_width="125dp"
-                            android:layout_height="125dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/urun_fuelspotkoku" />
-
-                        <TextView
-                            android:id="@+id/textView41"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/productPhoto3"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:gravity="center"
-                            android:text="@string/arackokusu"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="#161616" />
-
-                        <TextView
-                            android:id="@+id/textView42"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textView41"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="2dp"
-                            android:fontFamily="@font/gotham_book"
-                            android:gravity="center"
-                            android:text="@string/arackokusu10"
-                            android:textAlignment="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-
-                        <Button
-                            android:id="@+id/button_item3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/textView42"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/green_box"
-                            android:fontFamily="@font/gotham_book"
-                            android:text="@string/buy"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#161616" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:id="@+id/imageView76"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                app:srcCompat="@drawable/icon_coin" />
-
-                            <TextView
-                                android:id="@+id/textView_price3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/imageView76"
-                                android:layout_centerHorizontal="true"
-                                android:fontFamily="@font/gotham_bold"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                android:textColor="#161616" />
-                        </RelativeLayout>
-                    </RelativeLayout>
-                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

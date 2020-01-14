@@ -370,7 +370,7 @@
 
     <!-- UserStore-->
     <string name="banking_activities">Latest transactions</string>
-    <string name="banking_activities_desc">You can see your latest transactions (including bonus/rewards and purchases, excluding subscriptions) on FuelSpot. If you want to manage your subscriptions (2xRange &amp; Premium), you can check them on Google Play application.</string>
+    <string name="banking_activities_desc">You can see your latest transactions (including bonus/rewards and purchases) on FuelSpot via Fuel Point (FP). If you want to manage your subscriptions (2xRange &amp; Premium), you can check them on Google Play application.</string>
     <string name="current_balance">Current balance</string>
     <string name="premium_version">Premium version</string>
     <string name="premium_version_desc">2x-Range + No-Ads + Unlimited Street View + Unlimited Favorite Station + Unlimited Station Search \n\n The first 3 days are free!</string>
@@ -396,7 +396,7 @@
     <string name="arackokusu3">3 FuelSpot Car Smell 8.99 FP!</string>
     <string name="arackokusu5">5 FuelSpot Car Smell 13.99 FP!</string>
     <string name="arackokusu10">10 FuelSpot Car Smell 24.99 FP!</string>
-    <string name="verify_address">Please check your info before proceeding order. FuelSpot does not take responsibility for missing deliveries because of incorrect address/receiver information.</string>
+    <string name="verify_address">Please check your info before proceeding order.</string>
     <string name="purchase_prompt_pre">You will have </string>
     <string name="purchase_prompt_post"> FP after purchase. Do you confirm purchase?</string>
     <string name="address_missing">Address is missing. Please add address information from Profile Edit and try again.</string>
@@ -404,6 +404,8 @@
     <string name="email_missing">E-mail is missing. Please add address information from Profile Edit and try again.</string>
     <string name="fullname_missing">Full Name is missing. Please add address information from Profile Edit and try again.</string>
     <string name="unsubscribe_2x_first">You need to unsubscribe 2x-Range before starting Premium subscription. You can manage your subscriptions on Google Play app.</string>
+    <string name="subs_2xrange_fp">8.99 FP (30 days)</string>
+    <string name="subs_premium_fp">14.99 FP (30 days)</string>
     <!-- UserStore-->
 
     <!-- NewsDetail-->

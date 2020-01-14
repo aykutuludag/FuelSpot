@@ -281,7 +281,7 @@
 
     <!-- UserStore-->
     <string name="banking_activities">Son hesap hareketleri</string>
-    <string name="banking_activities_desc">Burada FuelSpot üzerinde yapılan son hesap hareketlerinizi (bonus/ödüller ve satın almalar dahil, abonelikler hariç) görebilirsiniz. Aboneliklerinizi (2xRange &amp; Premium) Google Play uygulaması üzerinden yönetebilirsiniz.</string>
+    <string name="banking_activities_desc">Burada FuelSpot üzerinde gerçekleşen son hesap hareketlerinizi (bonus/ödüller ve satın almalar dahil) görebilirsiniz. Aboneliklerinizi (2xRange &amp; Premium) Google Play uygulaması üzerinden yönetebilirsiniz.</string>
     <string name="current_balance">Mevcut bakiye</string>
     <string name="premium_version">Premium sürüm</string>
     <string name="premium_version_desc">2x Menzil + Reklam Yok + Sokak Görünümü + Sınırsız Favori İstasyon + Sınırsız İstasyon Arama \n\n Premium sürüm keyfini çıkarabilmen için ilk 3 gün ücretsiz!</string>
@@ -307,14 +307,16 @@
     <string name="arackokusu3">3 adet FuelSpot Araç Kokusu 8.99 FP!</string>
     <string name="arackokusu5">5 adet FuelSpot Araç Kokusu 13.99 FP!</string>
     <string name="arackokusu10">10 adet FuelSpot Araç Kokusu 24.99 FP!</string>
-    <string name="verify_address">Bilgilerinizde hata var ise lütfen ilerlemeden önce profilinizden düzenleyin. Yanlış-eksik adres bildirimleri sonucu ulaşmayan kargolardan FuelSpot sorumlu değildir.</string>
+    <string name="verify_address">Bilgilerinizde hata var ise lütfen ilerlemeden önce profilinizden düzenleyiniz.</string>
     <string name="purchase_prompt_pre">Satın alma sonrası </string>
-    <string name="purchase_prompt_post"> - FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?</string>
+    <string name="purchase_prompt_post">FP bakiyeniz kalacaktır. Satın almayı onaylıyor musunuz?</string>
     <string name="address_missing">Adres bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="phone_missing">Telefon bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="email_missing">E-posta bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="fullname_missing">Ad-Soyad bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="unsubscribe_2x_first">2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.</string>
+    <string name="subs_2xrange_fp">8.99 FP (30 gün)</string>
+    <string name="subs_premium_fp">14.99 FP (30 gün)</string>
     <!-- UserStore-->
 
     <!-- NewsDetail-->
