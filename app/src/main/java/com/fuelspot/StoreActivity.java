@@ -399,10 +399,24 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                         if (response != null && response.equals("Success")) {
                             mPopupWindow.dismiss();
                             if (itemNo == 1) {
+                                hasDoubleRange = true;
+                                mapDefaultRange = 6000;
+                                mapDefaultZoom = 12f;
+
                                 Toast.makeText(StoreActivity.this, getString(R.string.double_range_successful), Toast.LENGTH_LONG).show();
                             } else if (itemNo == 2) {
+                                premium = true;
+                                mapDefaultRange = 6000;
+                                mapDefaultZoom = 12f;
+
                                 Toast.makeText(StoreActivity.this, getString(R.string.premium_successful), Toast.LENGTH_LONG).show();
                             }
+
+                            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+                            prefs.edit().putBoolean("hasPremium", premium).apply();
+                            prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+                            prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+
                             fetchBanking();
                         } else {
                             Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_SHORT).show();

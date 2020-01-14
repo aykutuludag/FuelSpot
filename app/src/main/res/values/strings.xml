@@ -88,6 +88,7 @@
     <string name="API_COMPANY" translatable="false">https://fuelspot.com.tr/api/v1.0/other/company.php</string>
     <string name="API_BANKING" translatable="false">https://fuelspot.com.tr/api/v1.0/other/banking.php</string>
     <string name="API_ORDER" translatable="false">https://fuelspot.com.tr/api/v1.0/other/order.php</string>
+    <string name="API_FETCH_ORDER" translatable="false">https://fuelspot.com.tr/api/v1.0/other/fetch-order.php</string>
     <!-- NON TRANSLATABLE PART END -->
 
     <!-- GENERAL-->

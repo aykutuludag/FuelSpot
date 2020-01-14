@@ -388,18 +388,21 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
         bottomNavigation.setOnTabSelectedListener(this);
 
-        //In-App Services
-        InAppBilling();
-
         // AppRater
         AppRate.with(this).setInstallDays(0).setLaunchTimes(3).setRemindInterval(3).monitor();
         AppRate.showRateDialogIfMeetsConditions(this);
+
+        //In-App Services
+        InAppBilling();
 
         // Fetch user vehicles once for each session
         fetchAutomobiles();
 
         // Fetch globalCampaigns once for each session
         fetchGlobalCampaigns();
+
+        // Fetch order once for each session (FuelSpot local system)
+        fetchOrder();
 
         if (savedInstanceState == null) {
             if (isSigned) {
@@ -720,6 +723,75 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
             //Adding request to the queue
             queue.add(stringRequest);
         }
+    }
+
+    private void fetchOrder() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_ORDER) + "?username=" + username,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("ANAN: " + response);
+                        if (response != null && response.length() > 0) {
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                JSONObject obj = res.getJSONObject(0);
+
+                                String productName = obj.getString("product");
+
+                                if (productName.equals(getString(R.string.double_range))) {
+                                    hasDoubleRange = true;
+                                    mapDefaultRange = 6000;
+                                    mapDefaultZoom = 12f;
+                                } else if (productName.equals(getString(R.string.premium_version))) {
+                                    premium = true;
+                                    mapDefaultRange = 6000;
+                                    mapDefaultZoom = 12f;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                hasDoubleRange = false;
+                                premium = false;
+                                mapDefaultRange = 3000;
+                                mapDefaultZoom = 12.5f;
+                            }
+                        } else {
+                            hasDoubleRange = false;
+                            premium = false;
+                            mapDefaultRange = 3000;
+                            mapDefaultZoom = 12.5f;
+                        }
+
+                        prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+                        prefs.edit().putBoolean("hasPremium", premium).apply();
+                        prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+                        prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        hasDoubleRange = false;
+                        premium = false;
+                        mapDefaultRange = 3000;
+                        mapDefaultZoom = 12.5f;
+
+                        prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+                        prefs.edit().putBoolean("hasPremium", premium).apply();
+                        prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+                        prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        queue.add(stringRequest);
     }
 
     private void registerToken() {
