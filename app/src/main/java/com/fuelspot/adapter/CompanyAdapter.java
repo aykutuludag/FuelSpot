@@ -54,7 +54,7 @@ public class CompanyAdapter extends BaseAdapter {
                 .placeholder(R.drawable.default_station)
                 .error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(mContext).load(feedItemList.get(position).getLogo()).apply(options).into(circleImageViewCompanyLogo);
+        Glide.with(mContext.getApplicationContext()).load(feedItemList.get(position).getLogo()).apply(options).into(circleImageViewCompanyLogo);
 
         TextView textViewCompanyName = convertView.findViewById(R.id.company_name);
         textViewCompanyName.setText(feedItemList.get(position).getName());

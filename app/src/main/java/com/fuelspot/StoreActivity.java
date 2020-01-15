@@ -2,6 +2,7 @@ package com.fuelspot;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -62,6 +63,7 @@ import static com.fuelspot.FragmentProfile.userBankingList;
 import static com.fuelspot.MainActivity.currencyCode;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.dimBehind;
+import static com.fuelspot.MainActivity.doubleRangeProductCode;
 import static com.fuelspot.MainActivity.email;
 import static com.fuelspot.MainActivity.hasDoubleRange;
 import static com.fuelspot.MainActivity.location;
@@ -70,6 +72,7 @@ import static com.fuelspot.MainActivity.mapDefaultZoom;
 import static com.fuelspot.MainActivity.name;
 import static com.fuelspot.MainActivity.photo;
 import static com.fuelspot.MainActivity.premium;
+import static com.fuelspot.MainActivity.premiumProductCode;
 import static com.fuelspot.MainActivity.token;
 import static com.fuelspot.MainActivity.userCountry;
 import static com.fuelspot.MainActivity.userFSMoney;
@@ -122,8 +125,13 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         mRecyclerView = findViewById(R.id.bankingView);
 
         Button buttonBuyDoubleRange = findViewById(R.id.buttonPurchaseRange);
+        Button buttonDoubleRangeWithFP = findViewById(R.id.buttonPurchaseRangeWithFP);
+        TextView dummyOr0 = findViewById(R.id.textView3888);
+
         if (hasDoubleRange) {
-            buttonBuyDoubleRange.setText(getString(R.string.active));
+            buttonBuyDoubleRange.setVisibility(View.GONE);
+            buttonDoubleRangeWithFP.setVisibility(View.GONE);
+            dummyOr0.setVisibility(View.GONE);
         } else {
             buttonBuyDoubleRange.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -139,11 +147,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                     }
                 }
             });
-        }
-        Button buttonDoubleRangeWithFP = findViewById(R.id.buttonPurchaseRangeWithFP);
-        if (hasDoubleRange) {
-            buttonDoubleRangeWithFP.setText(getString(R.string.active));
-        } else {
+
             buttonDoubleRangeWithFP.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -161,10 +165,14 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
             });
         }
 
-
         Button buttonBuyPremium = findViewById(R.id.buttonPurchasePremium);
+        Button buttonPremiumWithFP = findViewById(R.id.buttonPurchasePremiumWithFP);
+        TextView dummyOr1 = findViewById(R.id.textView51);
+
         if (premium) {
-            buttonBuyPremium.setText(getString(R.string.active));
+            buttonBuyPremium.setVisibility(View.GONE);
+            buttonPremiumWithFP.setVisibility(View.GONE);
+            dummyOr1.setVisibility(View.GONE);
         } else {
             buttonBuyPremium.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,11 +188,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                     }
                 }
             });
-        }
-        Button buttonPremiumWithFP = findViewById(R.id.buttonPurchasePremiumWithFP);
-        if (premium) {
-            buttonPremiumWithFP.setText(getString(R.string.active));
-        } else {
+
             buttonPremiumWithFP.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -256,18 +260,21 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
         final int[] whichPage = {1};
         final String[] productName = new String[1];
+        final String[] productCode = new String[1];
         final String[] productDesc = new String[1];
         final float[] productPrice = new float[1];
         int imageResourceID = R.drawable.default_campaign;
 
         switch (itemNo) {
             case 1:
+                productCode[0] = doubleRangeProductCode;
                 productName[0] = getString(R.string.double_range);
                 productDesc[0] = getString(R.string.double_range_desc);
                 productPrice[0] = priceDoubleRange;
                 imageResourceID = R.drawable.popup_product1;
                 break;
             case 2:
+                productCode[0] = premiumProductCode;
                 productName[0] = getString(R.string.premium_version);
                 productDesc[0] = getString(R.string.premium_version_desc);
                 productPrice[0] = pricePremium;
@@ -368,7 +375,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                         }
                         break;
                     case 3:
-                        processPurchase(productName[0], productPrice[0]);
+                        processPurchase(productCode[0], productPrice[0]);
                         break;
                 }
             }
@@ -389,7 +396,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
         dimBehind(mPopupWindow);
     }
 
-    private void processPurchase(final String productName, final float productPrice) {
+    private void processPurchase(final String productCode, final float productPrice) {
         final ProgressDialog loading = ProgressDialog.show(StoreActivity.this, getString(R.string.purchasing), getString(R.string.please_wait), false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.API_ORDER),
                 new Response.Listener<String>() {
@@ -416,8 +423,6 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
                             prefs.edit().putBoolean("hasPremium", premium).apply();
                             prefs.edit().putInt("RANGE", mapDefaultRange).apply();
                             prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
-
-                            fetchBanking();
                         } else {
                             Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_SHORT).show();
                         }
@@ -444,7 +449,7 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
                 //Adding parameters
                 params.put("username", username);
-                params.put("product", productName);
+                params.put("product", productCode);
                 params.put("price", String.valueOf(productPrice));
                 params.put("name", name);
                 params.put("address", location);
@@ -552,6 +557,11 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
             prefs.edit().putBoolean("hasPremium", premium).apply();
             prefs.edit().putInt("RANGE", mapDefaultRange).apply();
             prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+
+            Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         } else {
             Toast.makeText(StoreActivity.this, getString(R.string.purchase_failed), Toast.LENGTH_LONG).show();
         }

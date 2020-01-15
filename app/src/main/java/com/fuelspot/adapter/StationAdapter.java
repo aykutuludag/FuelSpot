@@ -174,7 +174,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 .error(R.drawable.default_station)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
 
-        Glide.with(mContext).load(feedItem.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
+        Glide.with(mContext.getApplicationContext()).load(feedItem.getPhotoURL()).apply(options).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;

@@ -71,7 +71,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .placeholder(R.drawable.default_news)
                 .error(R.drawable.default_news)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(mContext).load(feedItem.getPhoto()).apply(options).into(viewHolder.background);
+        Glide.with(mContext.getApplicationContext()).load(feedItem.getPhoto()).apply(options).into(viewHolder.background);
 
         // Handle click event on both title and image click
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {

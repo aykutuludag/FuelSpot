@@ -382,8 +382,8 @@
     <string name="reward">Reward</string>
     <string name="insufficient_balance">Your balance is insufficient</string>
     <string name="active">Active</string>
-    <string name="premium_successful">Purchase successful. You\'re switching to the premium version, thanks!</string>
-    <string name="double_range_successful">Purchase successful. Your range is increasing, thanks!</string>
+    <string name="premium_successful">Purchase successful. You will be premium when you open app again!!</string>
+    <string name="double_range_successful">Purchase successful. Your range will be increased when you open app again!</string>
     <string name="purchase_failed">Purchase failed. Please try again later.</string>
     <string name="banking_key_map"><b>Bonus:</b> Get <b>1&#37;</b> bonus for every fuel adding! \n\n <b>Reward:</b> You will receive reward when you report station info/missing station. \n\n <b>Purchase:</b> Indicates your purchases over Store</string>
     <string name="legend">Legend</string>
@@ -405,7 +405,7 @@
     <string name="email_missing">E-mail is missing. Please add address information from Profile Edit and try again.</string>
     <string name="fullname_missing">Full Name is missing. Please add address information from Profile Edit and try again.</string>
     <string name="unsubscribe_2x_first">You need to unsubscribe 2x-Range before starting Premium subscription. You can manage your subscriptions on Google Play app.</string>
-    <string name="subs_2xrange_fp">8.99 FP (30 days)</string>
+    <string name="subs_2xrange_fp">7.99 FP (30 days)</string>
     <string name="subs_premium_fp">14.99 FP (30 days)</string>
     <!-- UserStore-->
 

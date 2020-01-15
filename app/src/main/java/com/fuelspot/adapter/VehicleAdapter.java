@@ -84,7 +84,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
         RequestOptions options = new RequestOptions().centerCrop().placeholder(R.drawable.default_automobile).error(R.drawable.default_automobile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(mContext).load(feedItem.getVehiclePhoto()).apply(options).into(viewHolder.carPhoto);
+        Glide.with(mContext.getApplicationContext()).load(feedItem.getVehiclePhoto()).apply(options).into(viewHolder.carPhoto);
 
         if (vehicleID == 0) {
             changeVehicle(feedItem);

@@ -82,19 +82,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
         // FUEL TYPE 1
         switch (feedItem.getFuelType()) {
             case 0:
-                Glide.with(mContext).load(R.drawable.fuel_gasoline).into(viewHolder.type1);
+                Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_gasoline).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.gasoline));
                 break;
             case 1:
-                Glide.with(mContext).load(R.drawable.fuel_diesel).into(viewHolder.type1);
+                Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_diesel).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.diesel));
                 break;
             case 2:
-                Glide.with(mContext).load(R.drawable.fuel_lpg).into(viewHolder.type1);
+                Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_lpg).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.lpg));
                 break;
             case 3:
-                Glide.with(mContext).load(R.drawable.fuel_electricity).into(viewHolder.type1);
+                Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_electricity).into(viewHolder.type1);
                 viewHolder.type1Text.setText(mContext.getString(R.string.electricity));
                 break;
         }
@@ -112,19 +112,19 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
             // FUEL TYPE 2
             switch (feedItem.getFuelType2()) {
                 case 0:
-                    Glide.with(mContext).load(R.drawable.fuel_gasoline).into(viewHolder.type2);
+                    Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_gasoline).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.gasoline));
                     break;
                 case 1:
-                    Glide.with(mContext).load(R.drawable.fuel_diesel).into(viewHolder.type2);
+                    Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_diesel).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.diesel));
                     break;
                 case 2:
-                    Glide.with(mContext).load(R.drawable.fuel_lpg).into(viewHolder.type2);
+                    Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_lpg).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.lpg));
                     break;
                 case 3:
-                    Glide.with(mContext).load(R.drawable.fuel_electricity).into(viewHolder.type2);
+                    Glide.with(mContext.getApplicationContext()).load(R.drawable.fuel_electricity).into(viewHolder.type2);
                     viewHolder.type2Text.setText(mContext.getString(R.string.electricity));
                     break;
             }
@@ -161,7 +161,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         //Station Icon
         if (feedItem.getStationIcon() != null && feedItem.getStationIcon().length() > 0) {
-            Glide.with(mContext).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);
+            Glide.with(mContext.getApplicationContext()).load(feedItem.getStationIcon()).into(viewHolder.stationLogo);
         }
 
         // Station Name
@@ -191,7 +191,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.ViewHo
 
         if (feedItem.getBillPhoto() != null && feedItem.getBillPhoto().length() > 0) {
             viewHolder.imageViewBillPhoto.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(feedItem.getBillPhoto()).into(viewHolder.imageViewBillPhoto);
+            Glide.with(mContext.getApplicationContext()).load(feedItem.getBillPhoto()).into(viewHolder.imageViewBillPhoto);
         } else {
             viewHolder.imageViewBillPhoto.setVisibility(View.GONE);
         }

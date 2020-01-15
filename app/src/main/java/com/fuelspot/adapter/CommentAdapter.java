@@ -185,7 +185,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         }
 
         ImageView imageBig = customView.findViewById(R.id.imageViewCommentBig);
-        Glide.with(mContext).load(cItem.getCommentPhoto()).apply(options).into(imageBig);
+        Glide.with(mContext.getApplicationContext()).load(cItem.getCommentPhoto()).apply(options).into(imageBig);
 
         RelativeTimeTextView relText = customView.findViewById(R.id.textViewDateFull);
         try {
@@ -196,7 +196,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         }
 
         CircleImageView userCircleImage = customView.findViewById(R.id.imageViewUserIcon);
-        Glide.with(mContext).load(cItem.getProfile_pic()).apply(options).into(userCircleImage);
+        Glide.with(mContext.getApplicationContext()).load(cItem.getProfile_pic()).apply(options).into(userCircleImage);
 
         TextView textViewYorum = customView.findViewById(R.id.textViewCommentFull);
         textViewYorum.setText(cItem.getComment());
@@ -555,7 +555,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         viewHolder.commentHolder.setText(feedItem.getComment());
 
-        Glide.with(mContext).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
+        Glide.with(mContext.getApplicationContext()).load(feedItem.getProfile_pic()).apply(options).into(viewHolder.profilePic);
 
         viewHolder.rating.setRating(feedItem.getRating());
         LayerDrawable stars = (LayerDrawable) viewHolder.rating.getProgressDrawable();
@@ -563,7 +563,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         if (feedItem.getCommentPhoto() != null && feedItem.getCommentPhoto().length() > 0) {
             viewHolder.commentPhoto.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(feedItem.getCommentPhoto()).into(viewHolder.commentPhoto);
+            Glide.with(mContext.getApplicationContext()).load(feedItem.getCommentPhoto()).into(viewHolder.commentPhoto);
         } else {
             viewHolder.commentPhoto.setVisibility(View.GONE);
         }
@@ -580,7 +580,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
 
             //Station Icon
-            Glide.with(mContext).load(feedItem.getLogo()).into(viewHolder.logo);
+            Glide.with(mContext.getApplicationContext()).load(feedItem.getLogo()).into(viewHolder.logo);
         }
 
         // Handle click event on image click

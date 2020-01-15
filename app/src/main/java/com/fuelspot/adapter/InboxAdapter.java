@@ -93,7 +93,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 .placeholder(R.drawable.default_profile)
                 .error(R.drawable.default_profile)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        Glide.with(mContext).load(feedItem.getSenderPhoto()).apply(options).into(viewHolder.senderImage);
+        Glide.with(mContext.getApplicationContext()).load(feedItem.getSenderPhoto()).apply(options).into(viewHolder.senderImage);
 
 
         // Handle click event on image click

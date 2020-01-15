@@ -71,11 +71,16 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import hotchemi.android.rate.AppRate;
@@ -116,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
     public static int fuelSec;
     public static int kilometer;
     public static int mapDefaultRange;
+    public static String doubleRangeProductCode = "2XMENZIL_132";
+    public static String premiumProductCode = "PREMIUM_063";
 
     public static String token, firebaseToken, userPhoneNumber, plateNo, userlat, userlon, name, email, photo, carPhoto, gender, birthday, location, userCountry, userCountryName, userDisplayLanguage, currencyCode, currencySymbol, username, carBrand, carModel, userUnit, userFavorites;
     public static int adCount = 0;
@@ -401,9 +408,6 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
         // Fetch globalCampaigns once for each session
         fetchGlobalCampaigns();
 
-        // Fetch order once for each session (FuelSpot local system)
-        fetchOrder();
-
         if (savedInstanceState == null) {
             if (isSigned) {
                 // AppDeepLinking
@@ -551,10 +555,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                 mapDefaultRange = 6000;
                 mapDefaultZoom = 12f;
             } else {
-                hasDoubleRange = false;
-                premium = false;
-                mapDefaultRange = 3000;
-                mapDefaultZoom = 12.5f;
+                // Check local purchases
+                fetchOrder();
             }
 
             prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
@@ -737,49 +739,71 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
                                 JSONObject obj = res.getJSONObject(0);
 
                                 String productName = obj.getString("product");
+                                String dateString = obj.getString("time");
 
-                                if (productName.equals(getString(R.string.double_range))) {
-                                    hasDoubleRange = true;
-                                    mapDefaultRange = 6000;
-                                    mapDefaultZoom = 12f;
-                                } else if (productName.equals(getString(R.string.premium_version))) {
-                                    premium = true;
-                                    mapDefaultRange = 6000;
-                                    mapDefaultZoom = 12f;
+                                DateFormat formatter = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
+
+                                try {
+                                    Date baslangicZaman = formatter.parse(dateString);
+                                    long days30 = 86400000 * 30L;
+
+                                    System.out.println("ANAN: " + (days30));
+                                    if (productName.equals(doubleRangeProductCode)) {
+                                        if (System.currentTimeMillis() - baslangicZaman.getTime() < days30) {
+                                            hasDoubleRange = true;
+                                            mapDefaultRange = 6000;
+                                            mapDefaultZoom = 12f;
+                                        } else {
+                                            // Expired
+                                            hasDoubleRange = false;
+                                            mapDefaultRange = 3000;
+                                            mapDefaultZoom = 12.5f;
+                                        }
+                                    } else if (productName.equals(premiumProductCode)) {
+                                        if (System.currentTimeMillis() - baslangicZaman.getTime() < days30) {
+                                            premium = true;
+                                            mapDefaultRange = 6000;
+                                            mapDefaultZoom = 12f;
+                                        } else {
+                                            // Expired
+                                            premium = false;
+                                            mapDefaultRange = 3000;
+                                            mapDefaultZoom = 12.5f;
+                                        }
+                                    } else {
+                                        hasDoubleRange = false;
+                                        premium = false;
+                                        mapDefaultRange = 3000;
+                                        mapDefaultZoom = 12.5f;
+                                    }
+
+                                    prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+                                    prefs.edit().putBoolean("hasPremium", premium).apply();
+                                    prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+                                    prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                hasDoubleRange = false;
-                                premium = false;
-                                mapDefaultRange = 3000;
-                                mapDefaultZoom = 12.5f;
                             }
                         } else {
                             hasDoubleRange = false;
                             premium = false;
                             mapDefaultRange = 3000;
                             mapDefaultZoom = 12.5f;
-                        }
 
-                        prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
-                        prefs.edit().putBoolean("hasPremium", premium).apply();
-                        prefs.edit().putInt("RANGE", mapDefaultRange).apply();
-                        prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+                            prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
+                            prefs.edit().putBoolean("hasPremium", premium).apply();
+                            prefs.edit().putInt("RANGE", mapDefaultRange).apply();
+                            prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        hasDoubleRange = false;
-                        premium = false;
-                        mapDefaultRange = 3000;
-                        mapDefaultZoom = 12.5f;
-
-                        prefs.edit().putBoolean("hasDoubleRange", hasDoubleRange).apply();
-                        prefs.edit().putBoolean("hasPremium", premium).apply();
-                        prefs.edit().putInt("RANGE", mapDefaultRange).apply();
-                        prefs.edit().putFloat("ZOOM", mapDefaultZoom).apply();
                     }
                 }) {
             @Override

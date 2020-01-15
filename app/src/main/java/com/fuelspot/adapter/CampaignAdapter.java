@@ -136,7 +136,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
         SimpleDateFormat shortFormat = new SimpleDateFormat(shortTimeFormat, Locale.getDefault());
 
         ScalableImageView imgPopup = customView.findViewById(R.id.campaignPhoto);
-        Glide.with(mContext).load(cItem.getCampaignPhoto()).into(imgPopup);
+        Glide.with(mContext.getApplicationContext()).load(cItem.getCampaignPhoto()).into(imgPopup);
 
         TextView titlePopup = customView.findViewById(R.id.campaignTitle);
         titlePopup.setText(cItem.getCampaignName());
@@ -240,7 +240,7 @@ public class CampaignAdapter extends RecyclerView.Adapter<CampaignAdapter.ViewHo
 
         viewHolder.campaignTitle.setText(feedItem.getCampaignName());
 
-        Glide.with(mContext).load(feedItem.getCampaignPhoto()).apply(options).into(viewHolder.campaignPhoto);
+        Glide.with(mContext.getApplicationContext()).load(feedItem.getCampaignPhoto()).apply(options).into(viewHolder.campaignPhoto);
 
         // Handle click event on image click
         viewHolder.cardView.setOnClickListener(clickListener);

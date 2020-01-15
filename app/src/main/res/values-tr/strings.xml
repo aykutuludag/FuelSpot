@@ -292,8 +292,8 @@
     <string name="reward">Ödül</string>
     <string name="insufficient_balance">Bakiye yetersiz</string>
     <string name="active">Aktif</string>
-    <string name="premium_successful">Satın alma başarılı. Premium sürüme geçiriliyorsunuz, teşekkürler!</string>
-    <string name="double_range_successful">Satın alma başarılı. Menziliniz artırılıyor, teşekkürler!</string>
+    <string name="premium_successful">Satın alma başarılı. Uygulamaya bir sonraki girişte premium sürüme geçmiş olacaksınız!</string>
+    <string name="double_range_successful">Satın alma başarılı. Uygulamaya bir sonraki girişinizde menziliniz 2 katına çıkacaktır!</string>
     <string name="purchase_failed">Satın alma başarısız. Lütfen daha sonra tekrar deneyiniz.</string>
     <string name="banking_key_map"><b>Bonus:</b> Her yakıt eklemenizde <b>&#37;1</b> bonus! \n\n <b>Ödül:</b> Bize FuelSpot\'da görünmeyen veya yanlış görünen istasyon bilgisi raporladığınızda (fiyat, tesis, marka, adres …) hesabınıza ödül yansıtılır. \n\n <b>Satınalma:</b> Mağazadan yaptığınız alışverişleri gösterir \n\n</string>
     <string name="legend">Etiketler</string>
@@ -314,8 +314,8 @@
     <string name="phone_missing">Telefon bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="email_missing">E-posta bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="fullname_missing">Ad-Soyad bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
-    <string name="unsubscribe_2x_first">2x-Range aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.</string>
-    <string name="subs_2xrange_fp">8.99 FP (30 gün)</string>
+    <string name="unsubscribe_2x_first">2x-Menzil aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.</string>
+    <string name="subs_2xrange_fp">7.99 FP (30 gün)</string>
     <string name="subs_premium_fp">14.99 FP (30 gün)</string>
     <!-- UserStore-->
 
