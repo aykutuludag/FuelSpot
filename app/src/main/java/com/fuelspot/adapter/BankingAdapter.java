@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.doubleRangeProductCode;
+import static com.fuelspot.MainActivity.premiumProductCode;
 import static com.fuelspot.MainActivity.shortTimeFormat;
 
 public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHolder> {
@@ -45,11 +47,17 @@ public class BankingAdapter extends RecyclerView.Adapter<BankingAdapter.ViewHold
             case "reward":
                 viewHolder.textViewType.setText(mContext.getString(R.string.reward));
                 break;
-            case "purchase":
-                viewHolder.textViewType.setText(mContext.getString(R.string.purchase));
-                break;
             case "bonus":
                 viewHolder.textViewType.setText(mContext.getString(R.string.bonus));
+                break;
+            case "purchase":
+                if (feedItem.getNotes().equals(doubleRangeProductCode)) {
+                    viewHolder.textViewType.setText(mContext.getString(R.string.double_range));
+                } else if (feedItem.getNotes().equals(premiumProductCode)) {
+                    viewHolder.textViewType.setText(mContext.getString(R.string.premium_version));
+                } else {
+                    viewHolder.textViewType.setText(mContext.getString(R.string.purchase));
+                }
                 break;
         }
 
