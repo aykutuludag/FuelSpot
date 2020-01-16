@@ -83,8 +83,8 @@ public class StoreActivity extends AppCompatActivity implements PurchasesUpdated
 
     int itemNo;
     public static SkuDetails premiumSku, doubleSku;
-    float priceDoubleRange = 0.15f;
-    float pricePremium = 0.25f;
+    float priceDoubleRange = 7.99f;
+    float pricePremium = 14.99f;
     RequestOptions options;
     PopupWindow mPopupWindow;
     TextView textViewCurrentBalance;
