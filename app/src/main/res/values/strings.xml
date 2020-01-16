@@ -405,7 +405,7 @@
     <string name="email_missing">E-mail is missing. Please add address information from Profile Edit and try again.</string>
     <string name="fullname_missing">Full Name is missing. Please add address information from Profile Edit and try again.</string>
     <string name="unsubscribe_2x_first">You need to unsubscribe 2x-Range before starting Premium subscription. You can manage your subscriptions on Google Play app.</string>
-    <string name="subs_2xrange_fp">7.99 FP (30 days)</string>
+    <string name="subs_2xrange_fp">6.99 FP (30 days)</string>
     <string name="subs_premium_fp">14.99 FP (30 days)</string>
     <!-- UserStore-->
 

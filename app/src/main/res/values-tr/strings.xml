@@ -315,7 +315,7 @@
     <string name="email_missing">E-posta bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="fullname_missing">Ad-Soyad bilgisi eksik. Profilden düzenleyip tekrar deneyiniz.</string>
     <string name="unsubscribe_2x_first">2x-Menzil aboneliğini başlatabilmek için öncelikle Google Play uygulamasından Premium aboneliğinizi iptal etmeniz gerekiyor.</string>
-    <string name="subs_2xrange_fp">7.99 FP (30 gün)</string>
+    <string name="subs_2xrange_fp">6.99 FP (30 gün)</string>
     <string name="subs_premium_fp">14.99 FP (30 gün)</string>
     <!-- UserStore-->
 
