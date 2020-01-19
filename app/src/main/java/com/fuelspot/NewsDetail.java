@@ -1,7 +1,9 @@
 package com.fuelspot;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -42,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.fuelspot.MainActivity.USTimeFormat;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.token;
 
 public class NewsDetail extends AppCompatActivity {
@@ -71,6 +74,8 @@ public class NewsDetail extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         requestQueue = Volley.newRequestQueue(this);
+        SharedPreferences prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        getVariables(prefs);
 
         //Color statusbar and actionbar
         coloredBars(Color.argb(45, 0, 0, 0), Color.argb(45, 0, 0, 0));

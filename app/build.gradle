@@ -9,7 +9,7 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 94
+        versionCode 95
         versionName "1.5"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'

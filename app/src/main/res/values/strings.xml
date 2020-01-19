@@ -7,8 +7,8 @@
     <string name="admobAppId" translatable="false">ca-app-pub-6610790679720108~8710500827</string>
     <string name="interstitial_admob" translatable="false">ca-app-pub-6610790679720108/1277969021</string>
     <string name="banner_admob" translatable="false">ca-app-pub-6610790679720108/6457702530</string>
-    <string name="copyright_text" translatable="false">© FuelSpot 2019 - Made with ♥ in Ankara</string>
-    <string name="copyright_short" translatable="false">© FuelSpot 2019</string>
+    <string name="copyright_text" translatable="false">© FuelSpot 2020 - Made with ♥ in Ankara</string>
+    <string name="copyright_short" translatable="false">© FuelSpot 2020</string>
 
     <!-- Units-->
     <string name="unitSystem1" translatable="false">Litre</string>
@@ -169,7 +169,7 @@
     <string name="metre">metre</string>
     <string name="no_station">We couldn\'t find any station within 50 kilometers range…</string>
     <string name="error_no_location">We couldn\'t determine your location. Please try again.</string>
-    <string name="limited_33">You are seeing 33 stations which are closest to you.</string>
+    <string name="limited_25">You are seeing 25 stations which are closest to you.</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->

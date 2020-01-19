@@ -80,7 +80,7 @@
     <string name="error_no_location">Konumunuzu tespit edemedik. Lütfen konum ayarlarını kontrol ediniz</string>
     <string name="station_found_pretext">Yakın çevrende</string>
     <string name="station_found_aftertext">istasyon bulduk.</string>
-    <string name="limited_33">Size en yakın 33 istasyonu görmektesiniz.</string>
+    <string name="limited_25">Size en yakın 25 istasyonu görmektesiniz.</string>
     <!-- FragmentStations-->
 
     <!-- FragmentNews-->

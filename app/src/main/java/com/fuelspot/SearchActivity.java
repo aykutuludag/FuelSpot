@@ -325,8 +325,8 @@ public class SearchActivity extends AppCompatActivity {
 
                                 sortBy(whichOrder);
 
-                                if (tempStationList.size() == 33) {
-                                    Toast.makeText(SearchActivity.this, getString(R.string.limited_33), Toast.LENGTH_LONG).show();
+                                if (tempStationList.size() == 25) {
+                                    Toast.makeText(SearchActivity.this, getString(R.string.limited_25), Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(SearchActivity.this, getString(R.string.station_found_pretext) + " " + tempStationList.size() + " " + getString(R.string.station_found_aftertext), Toast.LENGTH_LONG).show();
                                 }

@@ -111,6 +111,7 @@ import static com.fuelspot.MainActivity.USTimeFormat;
 import static com.fuelspot.MainActivity.currencySymbol;
 import static com.fuelspot.MainActivity.dimBehind;
 import static com.fuelspot.MainActivity.getStringImage;
+import static com.fuelspot.MainActivity.getVariables;
 import static com.fuelspot.MainActivity.globalCampaignList;
 import static com.fuelspot.MainActivity.isSuperUser;
 import static com.fuelspot.MainActivity.photo;
@@ -203,8 +204,10 @@ public class StationDetails extends AppCompatActivity {
         coloredBars(Color.parseColor("#616161"), Color.parseColor("#ffffff"));
 
         prefs = getSharedPreferences("ProfileInformation", Context.MODE_PRIVATE);
+        getVariables(prefs);
         sdf = new SimpleDateFormat(USTimeFormat, Locale.getDefault());
         requestQueue = Volley.newRequestQueue(StationDetails.this);
+
 
         scrollView = findViewById(R.id.scrollView);
         noCampaignText = findViewById(R.id.noCampaignText);
