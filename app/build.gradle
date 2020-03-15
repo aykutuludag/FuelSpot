@@ -3,14 +3,14 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '29.0.3'
 
     defaultConfig {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 95
-        versionName "1.5"
+        versionCode 96
+        versionName "1.5.1"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
         resConfigs "en", "tr"
@@ -43,36 +43,36 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-    implementation 'androidx.fragment:fragment:1.2.0-rc05'
+    implementation 'androidx.fragment:fragment:1.2.2'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha03'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.android.billingclient:billing:2.1.0'
-    implementation 'com.google.android.libraries.places:places:2.1.0'
+    implementation 'com.google.android.libraries.places:places:2.2.0'
 
     // PLAY-SERVICES
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-awareness:17.1.0'
+    implementation 'com.google.android.gms:play-services-awareness:18.0.0'
 
     // FIREBASE
-    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.3'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.google.firebase:firebase-appindexing:19.0.0'
-    implementation 'com.google.firebase:firebase-ads:18.3.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.firebase:firebase-appindexing:19.1.0'
+    implementation 'com.google.firebase:firebase-ads:19.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
 
     // FACEBOOK
-    implementation 'com.facebook.android:facebook-core:5.13.0'
-    implementation 'com.facebook.android:facebook-login:5.13.0'
+    implementation 'com.facebook.android:facebook-core:6.2.0'
+    implementation 'com.facebook.android:facebook-login:6.2.0'
 
     // 3RD PARTY
-    implementation 'de.hdodenhof:circleimageview:3.0.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.amirdew:JSON:v1.0.0'
     implementation 'com.github.curioustechizen.android-ago:library:1.4.0'
     implementation 'com.github.hotchemi:android-rate:1.0.1'
