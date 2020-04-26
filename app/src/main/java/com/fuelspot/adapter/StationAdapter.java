@@ -272,6 +272,91 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             }
         }
 
+        // Facilities
+        String facilitiesOfStation = feedItem.getFacilities();
+        if (facilitiesOfStation != null && facilitiesOfStation.length() > 0) {
+            try {
+                JSONArray facilitiesRes = new JSONArray(facilitiesOfStation);
+                JSONObject facilitiesObj = facilitiesRes.getJSONObject(0);
+
+                if (facilitiesObj.getInt("WC") == 1) {
+                    viewHolder.facilities1.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities1.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("Market") == 1) {
+                    viewHolder.facilities2.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities2.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("CarWash") == 1) {
+                    viewHolder.facilities3.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities3.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("TireRepair") == 1) {
+                    viewHolder.facilities4.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities4.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("Mechanic") == 1) {
+                    viewHolder.facilities5.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities5.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("Restaurant") == 1) {
+                    viewHolder.facilities6.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities6.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("ParkSpot") == 1) {
+                    viewHolder.facilities7.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities7.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("ATM") == 1) {
+                    viewHolder.facilities8.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities8.setVisibility(View.GONE);
+                }
+
+                if (facilitiesObj.getInt("Motel") == 1) {
+                    viewHolder.facilities9.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.facilities9.setVisibility(View.GONE);
+                }
+
+                if (!facilitiesObj.has("CoffeeShop")) {
+                    viewHolder.facilities10.setVisibility(View.GONE);
+                } else {
+                    if (facilitiesObj.getInt("CoffeeShop") == 1) {
+                        viewHolder.facilities10.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.facilities10.setVisibility(View.GONE);
+                    }
+                }
+
+                if (!facilitiesObj.has("Mosque")) {
+                    viewHolder.facilities11.setVisibility(View.GONE);
+                } else {
+                    if (facilitiesObj.getInt("Mosque") == 1) {
+                        viewHolder.facilities11.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.facilities11.setVisibility(View.GONE);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         if (whichScreen.equals("SUPERUSER_STATIONS")) {
             if (feedItem.getID() == superStationID) {
                 viewHolder.background.setBackgroundResource(R.drawable.white_box_stroke);
@@ -295,6 +380,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         TextView stationName, gasolinePrice, dieselPrice, lpgPrice, electricityPrice, distance, gasolinePrice2, dieselPrice2;
         RelativeTimeTextView lastUpdated;
         ImageView stationPic;
+        ImageView facilities1, facilities2, facilities3, facilities4, facilities5, facilities6, facilities7, facilities8, facilities9, facilities10, facilities11;
         RelativeLayout background;
 
         ViewHolder(View itemView) {
@@ -310,6 +396,17 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             distance = itemView.findViewById(R.id.distance_ofStation);
             gasolinePrice2 = itemView.findViewById(R.id.priceGasoline2);
             dieselPrice2 = itemView.findViewById(R.id.priceDiesel2);
+            facilities1 = itemView.findViewById(R.id.imageViewTesis1);
+            facilities2 = itemView.findViewById(R.id.imageViewTesis2);
+            facilities3 = itemView.findViewById(R.id.imageViewTesis3);
+            facilities4 = itemView.findViewById(R.id.imageViewTesis4);
+            facilities5 = itemView.findViewById(R.id.imageViewTesis5);
+            facilities6 = itemView.findViewById(R.id.imageViewTesis6);
+            facilities7 = itemView.findViewById(R.id.imageViewTesis7);
+            facilities8 = itemView.findViewById(R.id.imageViewTesis8);
+            facilities9 = itemView.findViewById(R.id.imageViewTesis9);
+            facilities10 = itemView.findViewById(R.id.imageViewTesis10);
+            facilities11 = itemView.findViewById(R.id.imageViewTesis11);
         }
     }
 }

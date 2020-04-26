@@ -31,8 +31,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fuelspot.adapter.CampaignAdapter;
+import com.fuelspot.adapter.CommentAdapter;
 import com.fuelspot.adapter.GraphMarkerAdapter;
 import com.fuelspot.adapter.NewsAdapter;
+import com.fuelspot.model.CommentItem;
 import com.fuelspot.model.CompanyItem;
 import com.fuelspot.model.NewsItem;
 import com.github.mikephil.charting.charts.LineChart;
@@ -80,10 +82,10 @@ import static com.fuelspot.MainActivity.userUnit;
 
 public class FragmentNews extends Fragment {
 
-    private RecyclerView mRecyclerView, mRecyclerViewKampanya;
+    static List<CommentItem> lastCommentList = new ArrayList<>();
     private GridLayoutManager mLayoutManager;
     static List<NewsItem> newsFeed = new ArrayList<>();
-    private RecyclerView.Adapter mAdapter;
+    Button seeAllComments;
     public View rootView;
     private RequestQueue requestQueue;
     private NestedScrollView scrollView;
@@ -111,6 +113,8 @@ public class FragmentNews extends Fragment {
     List<Float> list2 = new ArrayList<>();
     List<Float> list3 = new ArrayList<>();
     List<Float> list4 = new ArrayList<>();
+    private RecyclerView mRecyclerView, mRecyclerViewKampanya, mRecyclerViewYorumlar;
+    private RecyclerView.Adapter mAdapter, mAdapter2;
 
     private TextView gasolineMin, gasolineMax, dieselMin, dieselMax, lpgMin, lpgMax, electricityMin, electricityMax;
 
@@ -148,6 +152,8 @@ public class FragmentNews extends Fragment {
             mRecyclerView.setNestedScrollingEnabled(false);
             mRecyclerViewKampanya = rootView.findViewById(R.id.kampanyaView);
             mRecyclerViewKampanya.setNestedScrollingEnabled(false);
+            mRecyclerViewYorumlar = rootView.findViewById(R.id.lastCommentView);
+            mRecyclerViewYorumlar.setNestedScrollingEnabled(false);
 
             chart = rootView.findViewById(R.id.chartPriceIndex);
             chart.setScaleEnabled(false);
@@ -220,9 +226,19 @@ public class FragmentNews extends Fragment {
                     android.R.color.holo_orange_light,
                     android.R.color.holo_red_light);
 
+            seeAllComments = rootView.findViewById(R.id.button_seeAllComments);
+            seeAllComments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), LastComments.class);
+                    startActivity(intent);
+                }
+            });
+
             // ÜLKE SEÇİMİ
             if (isNetworkConnected(getActivity())) {
                 fetchNews(userCountry);
+                fetchLastComments();
                 loadGlobalCampaigns();
                 fetchCountryFinance(userCountry);
                 parseCompanies();
@@ -300,6 +316,71 @@ public class FragmentNews extends Fragment {
                     public void onErrorResponse(VolleyError volleyError) {
                         swipeContainer.setRefreshing(false);
                         volleyError.printStackTrace();
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+
+        //Adding request to the queue
+        requestQueue.add(stringRequest);
+    }
+
+    private void fetchLastComments() {
+        lastCommentList.clear();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getString(R.string.API_FETCH_LAST_COMMENTS),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response != null && response.length() > 0) {
+                            List<CommentItem> dummyList = new ArrayList<>();
+                            try {
+                                JSONArray res = new JSONArray(response);
+                                for (int i = 0; i < res.length(); i++) {
+                                    JSONObject obj = res.getJSONObject(i);
+
+                                    CommentItem item = new CommentItem();
+                                    item.setID(obj.getInt("id"));
+                                    item.setComment(obj.getString("comment"));
+                                    item.setTime(obj.getString("time"));
+                                    item.setStationID(obj.getInt("station_id"));
+                                    item.setUsername(obj.getString("username"));
+                                    item.setProfile_pic(obj.getString("user_photo"));
+                                    item.setRating(obj.getInt("stars"));
+                                    item.setCommentPhoto(obj.getString("comment_photo"));
+                                    item.setAnswer(obj.getString("answer"));
+                                    item.setReplyTime(obj.getString("replyTime"));
+                                    item.setLogo(obj.getString("logo"));
+                                    lastCommentList.add(item);
+
+                                    if (i < 3) {
+                                        dummyList.add(item);
+                                    } else {
+                                        seeAllComments.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                mAdapter2 = new CommentAdapter(getActivity(), dummyList, "USER_COMMENTS");
+                                GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
+                                mAdapter2.notifyDataSetChanged();
+                                mRecyclerViewYorumlar.setAdapter(mAdapter2);
+                                mRecyclerViewYorumlar.setLayoutManager(mLayoutManager);
+                            } catch (JSONException e) {
+                                seeAllComments.setVisibility(View.GONE);
+                            }
+                        } else {
+                            seeAllComments.setVisibility(View.GONE);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        seeAllComments.setVisibility(View.GONE);
                     }
                 }) {
             @Override

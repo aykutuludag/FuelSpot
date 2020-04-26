@@ -15,19 +15,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "82431707983-01jonejfrtpn8ie1cdteucjds5k3ov3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fuelspot",
+            "certificate_hash": "82155d0824c4bad51e3b92ecac2522163580f460"
+          }
+        },
+        {
+          "client_id": "82431707983-tf318mj2tm6fs8ppdijcu83r60oago98.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fuelspot",
+            "certificate_hash": "48e50caac5567d21d1464fc0ef73fa5c2f721dbf"
+          }
+        },
+        {
           "client_id": "82431707983-ghj5clc2668lh1o7bgvg58k95h9dqorc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fuelspot",
             "certificate_hash": "45aa7b44f14e37d025890b699d4c4a1e81949c92"
-          }
-        },
-        {
-          "client_id": "82431707983-nacu6ra1hrss5pd5c072ge1n3fbtk6n0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fuelspot",
-            "certificate_hash": "48e50caac5567d21d1464fc0ef73fa5c2f721dbf"
           }
         },
         {
@@ -37,24 +45,25 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCWJQ1LJYb3P5J0-hng71OcmG_Wr9mDfi8"
+          "current_key": "AIzaSyAYL33WnxHUGcetc-pO-ZbcjqKw7PCmq_c"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "82431707983-je28ruu6o78s0fen5bkggus357dkde4p.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "82431707983-anjm48hd99d7sfu8e0i3uo4hor2j1smc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fuelspot",
+                "app_store_id": "1469165630"
+              }
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       },
       "admob_app_id": "ca-app-pub-6610790679720108~8710500827"

@@ -91,6 +91,7 @@
     <string name="last_update">Son güncelleme</string>
     <string name="registered_station_number">Kayıtlı istasyon:</string>
     <string name="news_info">FuelSpot zam/indirim haberlerini bildirim olarak sizlerle anında paylaşmaktadır. Böylece satın almalarınızı ayarlayarak deponuzu daha ucuza doldurabilirsiniz!</string>
+    <string name="last_comments">Son yorumlar</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->

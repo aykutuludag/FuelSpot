@@ -62,6 +62,7 @@
     <string name="API_FETCH_STATION_COMMENTS" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/fetch-station.php</string> <!-- Station's comments -->
     <string name="API_ADD_ANSWER" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/answer/add.php</string>
     <string name="API_DELETE_ANSWER" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/answer/delete.php</string>
+    <string name="API_FETCH_LAST_COMMENTS" translatable="false">https://fuelspot.com.tr/api/v1.0/comment/fetch-last.php</string>
 
     <!-- CAMPAIGNS APIs -->
     <string name="API_CREATE_CAMPAING" translatable="false">https://fuelspot.com.tr/api/v1.0/campaign/add.php</string>
@@ -180,6 +181,7 @@
     <string name="last_update">Last update</string>
     <string name="registered_station_number">Registered station number:</string>
     <string name="news_info">FuelSpot delivers latest raise/discount news as notification. Therefore you will able to manage your purchases better and save your money!</string>
+    <string name="last_comments">Last comments</string>
     <!-- FragmentNews-->
 
     <!-- FragmentAutomobile-->

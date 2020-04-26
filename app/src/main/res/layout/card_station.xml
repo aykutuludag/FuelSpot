@@ -220,5 +220,144 @@
             android:fontFamily="@font/gotham_book"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/baseInfoLayout"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imageViewTesis1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_wc" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis1"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_market" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis3"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis2"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_carwash" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis4"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis3"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_tirerepair" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis5"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis4"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_mechanic" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis6"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis5"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_restaurant" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis7"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis6"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_parkspot" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis8"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis7"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_atm" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis9"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis8"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_motel" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis10"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis9"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_kahveci" />
+
+            <ImageView
+                android:id="@+id/imageViewTesis11"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/imageViewTesis10"
+                android:visibility="gone"
+                card_view:srcCompat="@drawable/tesis_cami" />
+        </RelativeLayout>
     </androidx.percentlayout.widget.PercentRelativeLayout>
 </androidx.cardview.widget.CardView>

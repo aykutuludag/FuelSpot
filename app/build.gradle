@@ -9,8 +9,8 @@ android {
         applicationId "com.fuelspot"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 96
-        versionName "1.5.1"
+        versionCode 97
+        versionName "1.6"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
         resConfigs "en", "tr"
@@ -43,29 +43,28 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-    implementation 'androidx.fragment:fragment:1.2.2'
+    implementation 'androidx.fragment:fragment:1.2.4'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation 'androidx.exifinterface:exifinterface:1.2.0'
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'com.android.billingclient:billing:2.2.0'
     implementation 'com.google.android.libraries.places:places:2.2.0'
 
     // PLAY-SERVICES
     implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-awareness:18.0.0'
 
     // FIREBASE
-    implementation 'com.google.firebase:firebase-analytics:17.2.3'
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.google.firebase:firebase-appindexing:19.1.0'
-    implementation 'com.google.firebase:firebase-ads:19.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
+    implementation 'com.google.firebase:firebase-analytics:17.4.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.6'
+    implementation 'com.google.firebase:firebase-ads:19.1.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
 
     // FACEBOOK
     implementation 'com.facebook.android:facebook-core:6.2.0'
