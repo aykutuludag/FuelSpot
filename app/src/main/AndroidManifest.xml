@@ -294,7 +294,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- Firebase -->
         <receiver
             android:name=".receiver.FenceReceiver"
             android:exported="false">
@@ -303,6 +302,7 @@
             </intent-filter>
         </receiver>
 
+        <!-- Firebase -->
         <service
             android:name=".service.MyFirebaseMessagingService"
             android:exported="false">

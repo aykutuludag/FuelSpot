@@ -272,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements PurchasesUpdatedL
 
     public static void AdMob(final Context mContext) {
         if (adCount < 2) {
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("EEB32226D1D806C1259761D5FF4A8C41").build();
-            admobInterstitial = new com.google.android.gms.ads.InterstitialAd(mContext);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            admobInterstitial = new InterstitialAd(mContext);
             admobInterstitial.setAdUnitId(mContext.getString(R.string.interstitial_admob));
             admobInterstitial.loadAd(adRequest);
         }
